@@ -75,18 +75,13 @@ describe(parseUrl(import.meta.url), () => {
         expect([]).toVerifySteps();
 
         click("input");
+
+        monitorEvents("input");
+
         clear();
 
         expect("input").not.toHaveValue();
         expect([
-            // Click
-            "input.pointerdown",
-            "input.mousedown",
-            "input.focus",
-            "input.pointerup",
-            "input.mouseup",
-            "input.click",
-            // Clear
             "input.keydown",
             "input.select",
             "input.keyup",
@@ -141,6 +136,14 @@ describe(parseUrl(import.meta.url), () => {
         click("button");
 
         expect([
+            // Hover
+            "button.pointerover",
+            "button.mouseover",
+            "button.pointerenter",
+            "button.mouseenter",
+            "button.pointermove",
+            "button.mousemove",
+            // Click
             "button.pointerdown",
             "button.mousedown",
             "button.focus",
@@ -159,23 +162,27 @@ describe(parseUrl(import.meta.url), () => {
             </ul>
         `);
 
-        monitorEvents("body");
+        monitorEvents("body", (ev) => ev.type.startsWith("key") && formatKeyBoardEvent(ev));
         monitorEvents("li", (ev) => `${ev.target.id}.${ev.type}`);
 
         // Drag & cancel
         drag("#first-item").cancel();
 
         expect([
+            // Move to first
+            "first-item.pointerover",
+            "first-item.mouseover",
+            "first-item.pointerenter",
+            "first-item.mouseenter",
+            "first-item.pointermove",
+            "first-item.mousemove",
             // Drag first
             "first-item.pointerdown",
-            "body.pointerdown",
             "first-item.mousedown",
-            "body.mousedown",
             "first-item.dragstart",
-            "body.dragstart",
             // Cancel
-            "body.keydown",
-            "body.keyup",
+            "keydown:Escape",
+            "keyup:Escape",
         ]).toVerifySteps();
 
         // Drag & drop
@@ -184,129 +191,129 @@ describe(parseUrl(import.meta.url), () => {
         expect([
             // Drag first
             "first-item.pointerdown",
-            "body.pointerdown",
             "first-item.mousedown",
-            "body.mousedown",
             "first-item.dragstart",
-            "body.dragstart",
-            // Move to third
-            "first-item.pointermove",
-            "body.pointermove",
-            "first-item.mousemove",
-            "body.mousemove",
+            // Leave first
             "first-item.drag",
-            "body.drag",
-            "third-item.pointerenter",
-            "third-item.mouseenter",
+            "first-item.dragover",
+            "first-item.dragleave",
+            // Move to third
             "third-item.dragenter",
-            "body.dragenter",
+            "third-item.drag",
+            "third-item.dragover",
             // Drop
-            "third-item.pointerup",
-            "body.pointerup",
-            "third-item.mouseup",
-            "body.mouseup",
             "third-item.dragend",
-            "body.dragend",
         ]).toVerifySteps();
 
         // Drag, move & cancel
         drag("#first-item").moveTo("#third-item").cancel();
 
         expect([
+            // Leave third
+            "third-item.pointermove",
+            "third-item.mousemove",
+            "third-item.pointerout",
+            "third-item.mouseout",
+            "third-item.pointerleave",
+            "third-item.mouseleave",
+            // Move to first
+            "first-item.pointerover",
+            "first-item.mouseover",
+            "first-item.pointerenter",
+            "first-item.mouseenter",
+            "first-item.pointermove",
+            "first-item.mousemove",
             // Drag first
             "first-item.pointerdown",
-            "body.pointerdown",
             "first-item.mousedown",
-            "body.mousedown",
             "first-item.dragstart",
-            "body.dragstart",
-            // Move to third
-            "first-item.pointermove",
-            "body.pointermove",
-            "first-item.mousemove",
-            "body.mousemove",
+            // Leave first
             "first-item.drag",
-            "body.drag",
-            "third-item.pointerenter",
-            "third-item.mouseenter",
+            "first-item.dragover",
+            "first-item.dragleave",
+            // Move to third
             "third-item.dragenter",
-            "body.dragenter",
+            "third-item.drag",
+            "third-item.dragover",
             // Cancel
-            "body.keydown",
-            "body.keyup",
+            "keydown:Escape",
+            "keyup:Escape",
         ]).toVerifySteps();
 
         // Drag, move & drop
         drag("#first-item").moveTo("#third-item").drop();
 
         expect([
+            // Leave third
+            "third-item.pointermove",
+            "third-item.mousemove",
+            "third-item.pointerout",
+            "third-item.mouseout",
+            "third-item.pointerleave",
+            "third-item.mouseleave",
+            // Move to first
+            "first-item.pointerover",
+            "first-item.mouseover",
+            "first-item.pointerenter",
+            "first-item.mouseenter",
+            "first-item.pointermove",
+            "first-item.mousemove",
             // Drag first
             "first-item.pointerdown",
-            "body.pointerdown",
             "first-item.mousedown",
-            "body.mousedown",
             "first-item.dragstart",
-            "body.dragstart",
-            // Move to third
-            "first-item.pointermove",
-            "body.pointermove",
-            "first-item.mousemove",
-            "body.mousemove",
+            // Leave first
             "first-item.drag",
-            "body.drag",
-            "third-item.pointerenter",
-            "third-item.mouseenter",
+            "first-item.dragover",
+            "first-item.dragleave",
+            // Move to third
             "third-item.dragenter",
-            "body.dragenter",
+            "third-item.drag",
+            "third-item.dragover",
             // Drop
-            "third-item.pointerup",
-            "body.pointerup",
-            "third-item.mouseup",
-            "body.mouseup",
             "third-item.dragend",
-            "body.dragend",
         ]).toVerifySteps();
 
         // Drag, move & drop (different target)
         drag("#first-item").moveTo("#second-item").drop("#third-item");
 
         expect([
+            // Leave third
+            "third-item.pointermove",
+            "third-item.mousemove",
+            "third-item.pointerout",
+            "third-item.mouseout",
+            "third-item.pointerleave",
+            "third-item.mouseleave",
+            // Move to first
+            "first-item.pointerover",
+            "first-item.mouseover",
+            "first-item.pointerenter",
+            "first-item.mouseenter",
+            "first-item.pointermove",
+            "first-item.mousemove",
             // Drag first
             "first-item.pointerdown",
-            "body.pointerdown",
             "first-item.mousedown",
-            "body.mousedown",
             "first-item.dragstart",
-            "body.dragstart",
+            // Leave first
+            "first-item.drag",
+            "first-item.dragover",
+            "first-item.dragleave",
             // Move to second
-            "first-item.pointermove",
-            "body.pointermove",
-            "first-item.mousemove",
-            "body.mousemove",
-            "first-item.drag",
-            "body.drag",
-            "second-item.pointerenter",
-            "second-item.mouseenter",
             "second-item.dragenter",
-            "body.dragenter",
+            "second-item.drag",
+            "second-item.dragover",
+            // Leave second
+            "second-item.drag",
+            "second-item.dragover",
+            "second-item.dragleave",
             // Move to third
-            "first-item.pointermove",
-            "body.pointermove",
-            "first-item.mousemove",
-            "body.mousemove",
-            "first-item.drag",
-            "body.drag",
-            "third-item.pointerenter",
-            "third-item.mouseenter",
             "third-item.dragenter",
-            "body.dragenter",
+            "third-item.drag",
+            "third-item.dragover",
             // Drop
-            "third-item.pointerup",
-            "body.pointerup",
-            "third-item.mouseup",
-            "body.mouseup",
             "third-item.dragend",
-            "body.dragend",
         ]).toVerifySteps();
     });
 
@@ -319,22 +326,26 @@ describe(parseUrl(import.meta.url), () => {
             </ul>
         `);
 
-        monitorEvents("body");
+        monitorEvents("body", (ev) => ev.type.startsWith("key") && formatKeyBoardEvent(ev));
         monitorEvents("li", (ev) => `${ev.target.id}.${ev.type}`);
 
         // Drag & cancel
         drag("#first-item").cancel();
 
         expect([
+            // Move to first
+            "first-item.pointerover",
+            "first-item.mouseover",
+            "first-item.pointerenter",
+            "first-item.mouseenter",
+            "first-item.pointermove",
+            "first-item.mousemove",
             // Drag first
             "first-item.pointerdown",
-            "body.pointerdown",
             "first-item.mousedown",
-            "body.mousedown",
-
             // Cancel
-            "body.keydown",
-            "body.keyup",
+            "keydown:Escape",
+            "keyup:Escape",
         ]).toVerifySteps();
 
         // Drag & drop
@@ -343,104 +354,158 @@ describe(parseUrl(import.meta.url), () => {
         expect([
             // Drag first
             "first-item.pointerdown",
-            "body.pointerdown",
             "first-item.mousedown",
-            "body.mousedown",
-
-            // Move to third
+            // Leave first
             "first-item.pointermove",
-            "body.pointermove",
             "first-item.mousemove",
-            "body.mousemove",
+            "first-item.pointerout",
+            "first-item.mouseout",
+            "first-item.pointerleave",
+            "first-item.mouseleave",
+            // Move to third
+            "third-item.pointerover",
+            "third-item.mouseover",
             "third-item.pointerenter",
             "third-item.mouseenter",
-
+            "third-item.pointermove",
+            "third-item.mousemove",
             // Drop
             "third-item.pointerup",
-            "body.pointerup",
             "third-item.mouseup",
-            "body.mouseup",
         ]).toVerifySteps();
 
         // Drag, move & cancel
         drag("#first-item").moveTo("#third-item").cancel();
 
         expect([
+            // Leave third
+            "third-item.pointermove",
+            "third-item.mousemove",
+            "third-item.pointerout",
+            "third-item.mouseout",
+            "third-item.pointerleave",
+            "third-item.mouseleave",
+            // Move to first
+            "first-item.pointerover",
+            "first-item.mouseover",
+            "first-item.pointerenter",
+            "first-item.mouseenter",
+            "first-item.pointermove",
+            "first-item.mousemove",
             // Drag first
             "first-item.pointerdown",
-            "body.pointerdown",
             "first-item.mousedown",
-            "body.mousedown",
-
-            // Move to third
+            // Leave first
             "first-item.pointermove",
-            "body.pointermove",
             "first-item.mousemove",
-            "body.mousemove",
+            "first-item.pointerout",
+            "first-item.mouseout",
+            "first-item.pointerleave",
+            "first-item.mouseleave",
+            // Move to third
+            "third-item.pointerover",
+            "third-item.mouseover",
             "third-item.pointerenter",
             "third-item.mouseenter",
-
+            "third-item.pointermove",
+            "third-item.mousemove",
             // Cancel
-            "body.keydown",
-            "body.keyup",
+            "keydown:Escape",
+            "keyup:Escape",
         ]).toVerifySteps();
 
         // Drag, move & drop
         drag("#first-item").moveTo("#third-item").drop();
 
         expect([
+            // Leave third
+            "third-item.pointermove",
+            "third-item.mousemove",
+            "third-item.pointerout",
+            "third-item.mouseout",
+            "third-item.pointerleave",
+            "third-item.mouseleave",
+            // Move to first
+            "first-item.pointerover",
+            "first-item.mouseover",
+            "first-item.pointerenter",
+            "first-item.mouseenter",
+            "first-item.pointermove",
+            "first-item.mousemove",
             // Drag first
             "first-item.pointerdown",
-            "body.pointerdown",
             "first-item.mousedown",
-            "body.mousedown",
-
-            // Move to third
+            // Leave first
             "first-item.pointermove",
-            "body.pointermove",
             "first-item.mousemove",
-            "body.mousemove",
+            "first-item.pointerout",
+            "first-item.mouseout",
+            "first-item.pointerleave",
+            "first-item.mouseleave",
+            // Move to third
+            "third-item.pointerover",
+            "third-item.mouseover",
             "third-item.pointerenter",
             "third-item.mouseenter",
-
+            "third-item.pointermove",
+            "third-item.mousemove",
             // Drop
             "third-item.pointerup",
-            "body.pointerup",
             "third-item.mouseup",
-            "body.mouseup",
         ]).toVerifySteps();
 
         // Drag, move & drop (different target)
         drag("#first-item").moveTo("#second-item").drop("#third-item");
 
         expect([
+            // Leave third
+            "third-item.pointermove",
+            "third-item.mousemove",
+            "third-item.pointerout",
+            "third-item.mouseout",
+            "third-item.pointerleave",
+            "third-item.mouseleave",
+            // Move to first
+            "first-item.pointerover",
+            "first-item.mouseover",
+            "first-item.pointerenter",
+            "first-item.mouseenter",
+            "first-item.pointermove",
+            "first-item.mousemove",
             // Drag first
             "first-item.pointerdown",
-            "body.pointerdown",
             "first-item.mousedown",
-            "body.mousedown",
-
-            // Move to second
+            // Leave first
             "first-item.pointermove",
-            "body.pointermove",
             "first-item.mousemove",
-            "body.mousemove",
+            "first-item.pointerout",
+            "first-item.mouseout",
+            "first-item.pointerleave",
+            "first-item.mouseleave",
+            // Move to second
+            "second-item.pointerover",
+            "second-item.mouseover",
             "second-item.pointerenter",
             "second-item.mouseenter",
-
+            "second-item.pointermove",
+            "second-item.mousemove",
+            // Leave second
+            "second-item.pointermove",
+            "second-item.mousemove",
+            "second-item.pointerout",
+            "second-item.mouseout",
+            "second-item.pointerleave",
+            "second-item.mouseleave",
             // Move to third
-            "first-item.pointermove",
-            "body.pointermove",
-            "first-item.mousemove",
-            "body.mousemove",
+            "third-item.pointerover",
+            "third-item.mouseover",
             "third-item.pointerenter",
             "third-item.mouseenter",
-
+            "third-item.pointermove",
+            "third-item.mousemove",
             // Drop
             "third-item.pointerup",
-            "body.pointerup",
             "third-item.mouseup",
-            "body.mouseup",
         ]).toVerifySteps();
     });
 
@@ -451,18 +516,13 @@ describe(parseUrl(import.meta.url), () => {
         expect([]).toVerifySteps();
 
         click("input");
+
+        monitorEvents("input");
+
         fill("Test value");
 
         expect("input").toHaveValue("Test value");
         expect([
-            // Click
-            "input.pointerdown",
-            "input.mousedown",
-            "input.focus",
-            "input.pointerup",
-            "input.mouseup",
-            "input.click",
-            // Fill
             ...[..."Test value"].flatMap(() => ["input.keydown", "input.input", "input.keyup"]),
         ]).toVerifySteps();
     });
@@ -587,32 +647,10 @@ describe(parseUrl(import.meta.url), () => {
             "button.pointermove",
             "button.mousemove",
         ]).toVerifySteps();
-    });
 
-    test.tags`no focus`("keyDown", async () => {
-        await mount(/* xml */ `<input type="text" />`);
-        monitorEvents("input");
+        hover("button");
 
-        click("input");
-        keyDown("a");
-
-        expect([
-            // Click
-            "input.pointerdown",
-            "input.mousedown",
-            "input.focus",
-            "input.pointerup",
-            "input.mouseup",
-            "input.click",
-            // Key down
-            "input.keydown",
-            "input.input",
-        ]).toVerifySteps();
-
-        keyUp("a");
-
-        expect("input").toHaveValue("a");
-        expect(["input.keyup"]).toVerifySteps();
+        expect(["button.pointermove", "button.mousemove"]).toVerifySteps();
     });
 
     test("leave", async () => {
@@ -622,7 +660,7 @@ describe(parseUrl(import.meta.url), () => {
 
         monitorEvents("button");
 
-        leave("button");
+        leave();
 
         expect([
             "button.pointermove",
@@ -657,7 +695,19 @@ describe(parseUrl(import.meta.url), () => {
 
         pointerDown("button");
 
-        expect(["button.pointerdown", "button.mousedown", "button.focus"]).toVerifySteps();
+        expect([
+            // Pointer enter on button
+            "button.pointerover",
+            "button.mouseover",
+            "button.pointerenter",
+            "button.mouseenter",
+            "button.pointermove",
+            "button.mousemove",
+            // Pointer down
+            "button.pointerdown",
+            "button.mousedown",
+            "button.focus",
+        ]).toVerifySteps();
 
         pointerUp("button");
 
@@ -671,23 +721,10 @@ describe(parseUrl(import.meta.url), () => {
 
         monitorEvents("input");
 
-        click("input");
         press("a");
 
         expect("input").toHaveValue("a");
-        expect([
-            // Click
-            "input.pointerdown",
-            "input.mousedown",
-            "input.focus",
-            "input.pointerup",
-            "input.mouseup",
-            "input.click",
-            // Key press
-            "input.keydown",
-            "input.input",
-            "input.keyup",
-        ]).toVerifySteps();
+        expect(["input.keydown", "input.input", "input.keyup"]).toVerifySteps();
     });
 
     test("press key on number input", async () => {
@@ -805,19 +842,12 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("input").toHaveProperty("checked", false);
 
+        monitorEvents("input");
+
         press(" "); // false -> true
 
         expect("input").toHaveProperty("checked", true);
         expect([
-            // Click
-            "input.pointerdown",
-            "input.mousedown",
-            "input.focus",
-            "input.pointerup",
-            "input.mouseup",
-            "input.click",
-            "input.input",
-            "input.change",
             // Key press
             "input.keydown",
             "input.input",
@@ -1006,26 +1036,18 @@ describe(parseUrl(import.meta.url), () => {
                 <option value="c">C</option>
             </select>
         `);
-        monitorEvents("select");
 
         expect("select").toHaveValue("a"); // default to first option
         expect([]).toVerifySteps();
 
         click("select");
+
+        monitorEvents("select");
+
         select("b");
 
         expect("select").toHaveValue("b");
-        expect([
-            // Click
-            "select.pointerdown",
-            "select.mousedown",
-            "select.focus",
-            "select.pointerup",
-            "select.mouseup",
-            "select.click",
-            // Select
-            "select.change",
-        ]).toVerifySteps();
+        expect(["select.change"]).toVerifySteps();
     });
 
     test("can trigger synthetic event handlers", async () => {
