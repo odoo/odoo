@@ -254,6 +254,7 @@ class AccountChartTemplate(models.AbstractModel):
             return (
                 tax.amount_type != template.get('amount_type', 'percent')
                 or tax.amount != template.get('amount', 0)
+                or not tax.active
             )
 
         obsolete_xmlid = set()
