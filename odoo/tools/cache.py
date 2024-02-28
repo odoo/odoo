@@ -6,6 +6,7 @@ from collections import Counter, defaultdict
 from decorator import decorator
 from inspect import signature, Parameter
 import logging
+import time
 import warnings
 
 unsafe_eval = eval
@@ -15,12 +16,14 @@ _logger = logging.getLogger(__name__)
 
 class ormcache_counter(object):
     """ Statistic counters for cache entries. """
-    __slots__ = ['hit', 'miss', 'err']
+    __slots__ = ['hit', 'miss', 'err', 'gen_time', 'cache_name']
 
     def __init__(self):
         self.hit = 0
         self.miss = 0
         self.err = 0
+        self.gen_time = 0
+        self.cache_name = None
 
     @property
     def ratio(self):
@@ -64,7 +67,8 @@ class ormcache(object):
 
     def add_value(self, *args, cache_value=None, **kwargs):
         model = args[0]
-        d, key0, _ = self.lru(model)
+        d, key0, counter = self.lru(model)
+        counter.cache_name = self.cache_name
         key = key0 + self.key(*args, **kwargs)
         d[key] = cache_value
 
@@ -101,7 +105,10 @@ class ormcache(object):
             return r
         except KeyError:
             counter.miss += 1
+            counter.cache_name = self.cache_name
+            start = time.time()
             value = d[key] = self.method(*args, **kwargs)
+            counter.gen_time += time.time() - start
             return value
         except TypeError:
             _logger.warning("cache lookup error on %r", key, exc_info=True)
@@ -112,7 +119,6 @@ class ormcache(object):
         """ Clear the registry cache """
         warnings.warn('Deprecated method ormcache.clear(model, *args), use registry.clear_cache() instead')
         model.pool.clear_all_caches()
-
 
 class ormcache_context(ormcache):
     """ This LRU cache decorator is a variant of :class:`ormcache`, with an
@@ -142,32 +148,29 @@ class ormcache_context(ormcache):
         self.key = unsafe_eval(code)
 
 
-def log_ormcache_stats(sig=None, frame=None):
+def log_ormcache_stats(sig=None, frame=None):   # noqa: ARG001 (arguments are there for signals)
     """ Log statistics of ormcache usage by database, model, and method. """
     from odoo.modules.registry import Registry
-    import threading
-
-    me = threading.current_thread()
-    me_dbname = getattr(me, 'dbname', 'n/a')
-
-    def _log_ormcache_stats(cache_name, cache):
-        entries = Counter(k[:2] for k in cache.d)
-        # show entries sorted by model name, method name
-        for key in sorted(entries, key=lambda key: (key[0], key[1].__name__)):
-            model, method = key
-            stat = STAT[(dbname, model, method)]
-            _logger.info(
-                "%s, %6d entries, %6d hit, %6d miss, %6d err, %4.1f%% ratio, for %s.%s",
-                cache_name.rjust(25), entries[key], stat.hit, stat.miss, stat.err, stat.ratio, model, method.__name__,
-            )
-
-    for dbname, reg in sorted(Registry.registries.d.items()):
-        # set logger prefix to dbname
-        me.dbname = dbname
-        for cache_name, cache in reg._Registry__caches.items():
-            _log_ormcache_stats(cache_name, cache)
-
-    me.dbname = me_dbname
+    cache_entries = {}
+    current_db = None
+    cache_stats = ['Caches stats:']
+    for (dbname, model, method), stat in sorted(STAT.items(), key=lambda k: (k[0][0] or '~', k[0][1], k[0][2].__name__)):
+        dbname_display = dbname or "<no_db>"
+        if current_db != dbname_display:
+            current_db = dbname_display
+            cache_stats.append(f"Database {dbname_display}")
+        if dbname:   # mainly for MockPool
+            if (dbname, stat.cache_name) not in cache_entries:
+                cache = Registry.registries.d[dbname]._Registry__caches[stat.cache_name]
+                cache_entries[dbname, stat.cache_name] = Counter(k[:2] for k in cache.d)
+            nb_entries = cache_entries[dbname, stat.cache_name][model, method]
+        else:
+            nb_entries = 0
+        cache_name = stat.cache_name.rjust(25)
+        cache_stats.append(
+            f"{cache_name}, {nb_entries:6d} entries, {stat.hit:6d} hit, {stat.miss:6d} miss, {stat.err:6d} err, {stat.gen_time:10.3f}s time, {stat.ratio:6.1f}% ratio for {model}.{method.__name__}"
+        )
+    _logger.info('\n'.join(cache_stats))
 
 
 def get_cache_key_counter(bound_method, *args, **kwargs):
