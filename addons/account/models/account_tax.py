@@ -809,7 +809,7 @@ class AccountTax(models.Model):
                 if tax.include_base_amount:
                     base = recompute_base(base, incl_tax_amounts)
                     store_included_tax_total = True
-                if tax.price_include or self._context.get('force_price_include'):
+                if self._context.get('force_price_include', tax.price_include):
                     if tax.amount_type == 'percent':
                         incl_tax_amounts['percent_taxes'].append((i, tax.amount * sum_repartition_factor))
                     elif tax.amount_type == 'division':
