@@ -39,6 +39,8 @@ const FIXTURE_STYLE = [
     `top: ${FIXTURE_OFFSET}px`,
 ].join(";");
 
+const destroyed = new WeakSet();
+
 customElements.define("hoot-fixture", class HootFixture extends HTMLElement {});
 
 //-----------------------------------------------------------------------------
@@ -57,6 +59,18 @@ export function makeFixtureManager(runner) {
         shouldPrepareNextFixture = true;
         fixture.remove();
         fixture = null;
+    };
+
+    /**
+     * @param {App | Component} target
+     */
+    const destroy = (target) => {
+        const app = target instanceof App ? target : target.__owl__.app;
+        if (destroyed.has(app)) {
+            return;
+        }
+        destroyed.add(app);
+        app.destroy();
     };
 
     const getFixture = () => {
@@ -95,7 +109,7 @@ export function makeFixtureManager(runner) {
             ...config,
         });
 
-        runner.after(() => app.destroy());
+        runner.after(() => destroy(app));
 
         return app.mount(target || getFixture());
     };
@@ -129,5 +143,6 @@ export function makeFixtureManager(runner) {
         setup: setupFixture,
         get: getFixture,
         mount: mountOnFixture,
+        destroy,
     };
 }

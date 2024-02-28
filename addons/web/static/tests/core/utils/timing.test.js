@@ -1,8 +1,7 @@
-import { describe, expect, mountOnFixture, test } from "@odoo/hoot";
+import { describe, destroy, expect, mountOnFixture, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { Deferred, advanceTime, animationFrame, microTick, runAllTimers } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
-import { destroyComponent } from "@web/../tests/web_test_helpers";
 
 import {
     batched,
@@ -410,7 +409,7 @@ describe("useDebounced", () => {
         await advanceTime(999);
         expect([]).toVerifySteps();
 
-        destroyComponent(component);
+        destroy(component);
         await advanceTime(1);
         expect([]).toVerifySteps();
     });
@@ -440,7 +439,7 @@ describe("useDebounced", () => {
         await advanceTime(999);
         expect([]).toVerifySteps();
 
-        destroyComponent(component);
+        destroy(component);
         expect(["debounced: hello"]).toVerifySteps();
     });
 
@@ -465,7 +464,7 @@ describe("useDebounced", () => {
         await advanceTime(1);
         expect(["debounced"]).toVerifySteps();
 
-        destroyComponent(component);
+        destroy(component);
         await advanceTime(1);
         expect([]).toVerifySteps();
     });
@@ -505,7 +504,7 @@ describe("useThrottleForAnimation", () => {
         click(`button.c`);
         expect([]).toVerifySteps();
 
-        destroyComponent(component);
+        destroy(component);
         await animationFrame();
         expect([]).toVerifySteps();
     });

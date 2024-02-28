@@ -44,6 +44,7 @@ export const beforeEach = runner.exportFn(runner.beforeEach);
 export const onError = runner.exportFn(runner.onError);
 
 // Fixture
+export const destroy = runner.fixture.destroy;
 export const getFixture = runner.fixture.get;
 export const mountOnFixture = runner.fixture.mount;
 
