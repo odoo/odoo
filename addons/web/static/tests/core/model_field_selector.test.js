@@ -18,7 +18,7 @@ import {
     clickPrev,
     followRelation,
     getFocusedFieldName,
-} from "@web/../tests/_framework/condition_tree_editor_test_helpers";
+} from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 

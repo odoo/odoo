@@ -16,7 +16,7 @@ import {
     openModelFieldSelectorPopover,
     selectOperator,
     SELECTORS as treeEditorSELECTORS,
-} from "@web/../tests/_framework/condition_tree_editor_test_helpers";
+} from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import { click, edit, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
