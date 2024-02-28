@@ -1,13 +1,18 @@
-import { beforeEach, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAllAttributes } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
-import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    getService,
+    mountWithCleanup,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { session } from "@web/session";
-
 import { SwitchCompanyMenu } from "@web/webclient/switch_company_menu/switch_company_menu";
+import { runAllTimers } from "../../lib/hoot/hoot-mock";
 
 const ORIGINAL_TOGGLE_DELAY = SwitchCompanyMenu.toggleDelay;
 
@@ -24,8 +29,10 @@ async function createSwitchCompanyMenu(routerParams = {}, toggleDelay = 0) {
             },
         });
     }
-    return await mountWithCleanup(SwitchCompanyMenu);
+    await mountWithCleanup(SwitchCompanyMenu);
 }
+
+describe.current.tags("desktop");
 
 beforeEach(() => {
     patchWithCleanup(session.user_companies, {
@@ -41,7 +48,7 @@ beforeEach(() => {
     });
 });
 
-test.tags("desktop")("basic rendering", async () => {
+test("basic rendering", async () => {
     await createSwitchCompanyMenu();
 
     expect("div.o_switch_company_menu").toHaveCount(1);
@@ -57,13 +64,13 @@ test.tags("desktop")("basic rendering", async () => {
     expect(".dropdown-menu").toHaveText("Hermit\nHerman's\nHeroes TM\nHercules\nHulk");
 });
 
-test.tags("desktop")("companies can be toggled: toggle a second company", async () => {
+test("companies can be toggled: toggle a second company", async () => {
     const prom = new Deferred();
     function onPushState(url) {
         expect.step(url.split("?")[1]);
         prom.resolve();
     }
-    const scMenu = await createSwitchCompanyMenu({ onPushState });
+    await createSwitchCompanyMenu({ onPushState });
 
     /**
      *   [x] **Hermit**
@@ -72,8 +79,8 @@ test.tags("desktop")("companies can be toggled: toggle a second company", async 
      *   [ ]    Hercules
      *   [ ]    Hulk
      */
-    expect(scMenu.env.services.company.activeCompanyIds).toEqual([3]);
-    expect(scMenu.env.services.company.currentCompany.id).toBe(3);
+    expect(getService("company").activeCompanyIds).toEqual([3]);
+    expect(getService("company").currentCompany.id).toBe(3);
     await contains(".dropdown-toggle").click();
     expect("[data-company-id]").toHaveCount(5);
     expect("[data-company-id] .fa-check-square").toHaveCount(1);
@@ -122,13 +129,13 @@ test.tags("desktop")("companies can be toggled: toggle a second company", async 
     expect(["cids=3-2&_company_switching=1"]).toVerifySteps();
 });
 
-test.tags("desktop")("can toggle multiple companies at once", async () => {
+test("can toggle multiple companies at once", async () => {
     const prom = new Deferred();
     function onPushState(url) {
         expect.step(url.split("?")[1]);
         prom.resolve();
     }
-    const scMenu = await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
+    await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
 
     /**
      *   [ ] Hermit          -> toggle all
@@ -137,8 +144,8 @@ test.tags("desktop")("can toggle multiple companies at once", async () => {
      *   [ ]    Hercules
      *   [ ]    Hulk
      */
-    expect(scMenu.env.services.company.activeCompanyIds).toEqual([3]);
-    expect(scMenu.env.services.company.currentCompany.id).toBe(3);
+    expect(getService("company").activeCompanyIds).toEqual([3]);
+    expect(getService("company").currentCompany.id).toBe(3);
     await contains(".dropdown-toggle").click();
     expect("[data-company-id]").toHaveCount(5);
     expect("[data-company-id] .fa-check-square").toHaveCount(1);
@@ -163,8 +170,8 @@ test.tags("desktop")("can toggle multiple companies at once", async () => {
     expect(["cids=2-1-4-5&_company_switching=1"]).toVerifySteps();
 });
 
-test.tags("desktop")("single company selected: toggling it off will keep it", async () => {
-    const scMenu = await createSwitchCompanyMenu();
+test("single company selected: toggling it off will keep it", async () => {
+    await createSwitchCompanyMenu();
 
     /**
      *   [x] **Hermit**
@@ -174,8 +181,8 @@ test.tags("desktop")("single company selected: toggling it off will keep it", as
      *   [ ]    Hulk
      */
     expect(router.current).toEqual({ cids: 3 });
-    expect(scMenu.env.services.company.activeCompanyIds).toEqual([3]);
-    expect(scMenu.env.services.company.currentCompany.id).toBe(3);
+    expect(getService("company").activeCompanyIds).toEqual([3]);
+    expect(getService("company").currentCompany.id).toBe(3);
     await contains(".dropdown-toggle").click();
     expect("[data-company-id]").toHaveCount(5);
     expect("[data-company-id] .fa-check-square").toHaveCount(1);
@@ -189,22 +196,24 @@ test.tags("desktop")("single company selected: toggling it off will keep it", as
      *   [ ]    Hulk
      */
     await contains(".toggle_company:eq(0)").click();
+    await runAllTimers();
+
     expect(router.current).toEqual({
         cids: 3,
         _company_switching: 1,
     });
-    expect(scMenu.env.services.company.activeCompanyIds).toEqual([3]);
-    expect(scMenu.env.services.company.currentCompany.id).toBe(3);
+    expect(getService("company").activeCompanyIds).toEqual([3]);
+    expect(getService("company").currentCompany.id).toBe(3);
     expect(".dropdown-menu").toHaveCount(1, { message: "dropdown is still opened" });
     expect("[data-company-id] .fa-check-square").toHaveCount(0);
     expect("[data-company-id] .fa-square-o").toHaveCount(5);
 });
 
-test.tags("desktop")("single company mode: companies can be logged in", async () => {
+test("single company mode: companies can be logged in", async () => {
     function onPushState(url) {
         expect.step(url.split("?")[1]);
     }
-    const scMenu = await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
+    await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
 
     /**
      *   [x] **Hermit**
@@ -213,8 +222,8 @@ test.tags("desktop")("single company mode: companies can be logged in", async ()
      *   [ ]    Hercules
      *   [ ]    Hulk
      */
-    expect(scMenu.env.services.company.activeCompanyIds).toEqual([3]);
-    expect(scMenu.env.services.company.currentCompany.id).toBe(3);
+    expect(getService("company").activeCompanyIds).toEqual([3]);
+    expect(getService("company").currentCompany.id).toBe(3);
     await contains(".dropdown-toggle").click();
     expect("[data-company-id]").toHaveCount(5);
     expect("[data-company-id] .fa-check-square").toHaveCount(1);
@@ -232,12 +241,12 @@ test.tags("desktop")("single company mode: companies can be logged in", async ()
     expect(["cids=2&_company_switching=1"]).toVerifySteps();
 });
 
-test.tags("desktop")("multi company mode: log into a non selected company", async () => {
+test("multi company mode: log into a non selected company", async () => {
     function onPushState(url) {
         expect.step(url.split("?")[1]);
     }
-    Object.assign(browser.location, { search: "cids=3-1" });
-    const scMenu = await createSwitchCompanyMenu({ onPushState });
+    browser.location.search = "cids=3-1";
+    await createSwitchCompanyMenu({ onPushState });
 
     /**
      *   [x] Hermit
@@ -246,8 +255,8 @@ test.tags("desktop")("multi company mode: log into a non selected company", asyn
      *   [ ]    Hercules
      *   [ ]    Hulk
      */
-    expect(scMenu.env.services.company.activeCompanyIds).toEqual([3, 1]);
-    expect(scMenu.env.services.company.currentCompany.id).toBe(3);
+    expect(getService("company").activeCompanyIds).toEqual([3, 1]);
+    expect(getService("company").currentCompany.id).toBe(3);
     await contains(".dropdown-toggle").click();
     expect("[data-company-id]").toHaveCount(5);
     expect("[data-company-id] .fa-check-square").toHaveCount(2);
@@ -265,12 +274,12 @@ test.tags("desktop")("multi company mode: log into a non selected company", asyn
     expect(["cids=2&_company_switching=1"]).toVerifySteps();
 });
 
-test.tags("desktop")("multi company mode: log into an already selected company", async () => {
+test("multi company mode: log into an already selected company", async () => {
     function onPushState(url) {
         expect.step(url.split("?")[1]);
     }
-    Object.assign(browser.location, { search: "cids=2-1" });
-    const scMenu = await createSwitchCompanyMenu({ onPushState });
+    browser.location.search = "cids=2-1";
+    await createSwitchCompanyMenu({ onPushState });
 
     /**
      *   [ ] Hermit
@@ -279,8 +288,8 @@ test.tags("desktop")("multi company mode: log into an already selected company",
      *   [ ]    Hercules
      *   [ ]    Hulk
      */
-    expect(scMenu.env.services.company.activeCompanyIds).toEqual([2, 1]);
-    expect(scMenu.env.services.company.currentCompany.id).toBe(2);
+    expect(getService("company").activeCompanyIds).toEqual([2, 1]);
+    expect(getService("company").currentCompany.id).toBe(2);
     await contains(".dropdown-toggle").click();
     expect("[data-company-id]").toHaveCount(5);
     expect("[data-company-id] .fa-check-square").toHaveCount(2);
@@ -298,11 +307,11 @@ test.tags("desktop")("multi company mode: log into an already selected company",
     expect(["cids=1-4-5&_company_switching=1"]).toVerifySteps();
 });
 
-test.tags("desktop")("companies can be logged in even if some toggled within delay", async () => {
+test("companies can be logged in even if some toggled within delay", async () => {
     function onPushState(url) {
         expect.step(url.split("?")[1]);
     }
-    const scMenu = await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
+    await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
 
     /**
      *   [x] **Hermit**
@@ -311,8 +320,8 @@ test.tags("desktop")("companies can be logged in even if some toggled within del
      *   [ ]    Hercules
      *   [ ]    Hulk
      */
-    expect(scMenu.env.services.company.activeCompanyIds).toEqual([3]);
-    expect(scMenu.env.services.company.currentCompany.id).toBe(3);
+    expect(getService("company").activeCompanyIds).toEqual([3]);
+    expect(getService("company").currentCompany.id).toBe(3);
     await contains(".dropdown-toggle").click();
     expect("[data-company-id]").toHaveCount(5);
     expect("[data-company-id] .fa-check-square").toHaveCount(1);
