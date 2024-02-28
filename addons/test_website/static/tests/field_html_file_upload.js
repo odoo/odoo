@@ -8,6 +8,7 @@ import testUtils from '@web/../tests/legacy/helpers/test_utils';
 import { uploadService } from '@web_editor/components/upload_progress_toast/upload_service';
 import { unsplashService } from '@web_unsplash/services/unsplash_service';
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { click } from "@web/../tests/utils";
 import weTestUtils from '@web_editor/../tests/test_utils';
 import {Wysiwyg} from '@web_editor/js/wysiwyg/wysiwyg';
 import { useEffect } from "@odoo/owl";
@@ -42,7 +43,7 @@ QUnit.module('field html file upload', {
     },
 }, function () {
     QUnit.test('media dialog: upload', async function (assert) {
-        assert.expect(4);
+        assert.expect(8);
         const onAttachmentChangeTriggered = testUtils.makeTestPromise();
         patchWithCleanup(HtmlField.prototype, {
             _onAttachmentChange(event) {
@@ -52,6 +53,7 @@ QUnit.module('field html file upload', {
         });
         const defFileSelector = testUtils.makeTestPromise();
         const onChangeTriggered = testUtils.makeTestPromise();
+        const webSaveTriggered = testUtils.makeTestPromise();
         patchWithCleanup(FileSelectorControlPanel.prototype, {
             setup() {
                 super.setup();
@@ -95,13 +97,34 @@ QUnit.module('field html file upload', {
                 </form>`,
         };
         const mockRPC = (route, args) => {
-            if (route === "/web_editor/attachment/add_data") {
-                return Promise.resolve({"id": 5, "name": "test.jpg", "description": false, "mimetype": "image/jpeg", "checksum": "7951a43bbfb08fd742224ada280913d1897b89ab",
-                                        "url": false, "type": "binary", "res_id": 1, "res_model": "note.note", "public": false, "access_token": false,
-                                        "image_src": "/web/image/1-a0e63e61/test.jpg", "image_width": 1, "image_height": 1, "original_id": false
-                                        });
-            }
-            else if (route === "/web/dataset/call_kw/ir.attachment/generate_access_token") {
+        if (args.method === "web_save") {
+            const createVals = args.args[1];
+            assert.ok(createVals && createVals.attachment_ids);
+            assert.equal(createVals.attachment_ids[0][0], 4); // link command
+            assert.equal(createVals.attachment_ids[0][1], 5); // on attachment id "5"
+            webSaveTriggered.resolve();
+        }
+        if (route === "/web_editor/attachment/add_data") {
+                const attachment = {
+                    id: 5,
+                    name: "test.jpg",
+                    description: false,
+                    mimetype: "image/jpeg",
+                    checksum: "7951a43bbfb08fd742224ada280913d1897b89ab",
+                    url: false,
+                    type: "binary",
+                    res_id: 0,
+                    res_model: "mail.compose.message",
+                    public: false,
+                    access_token: false,
+                    image_src: "/web/image/1-a0e63e61/test.jpg",
+                    image_width: 1,
+                    image_height: 1,
+                    original_id: false,
+                };
+                serverData.models['ir.attachment'].records.push({...attachment});
+                return Promise.resolve(attachment);
+            } else if (route === "/web/dataset/call_kw/ir.attachment/generate_access_token") {
                 return Promise.resolve(["129a52e1-6bf2-470a-830e-8e368b022e13"]);
             }
         };
@@ -138,5 +161,8 @@ QUnit.module('field html file upload', {
         // wait to check that dom is properly updated
         await new Promise((res, _) => setTimeout(() => res(false), 400));
         assert.ok(fixture.querySelector('.o_attachment[title="test.jpg"]'));
+
+        await click(".o_form_button_save");
+        await webSaveTriggered;
     });
 });
