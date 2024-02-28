@@ -1145,6 +1145,11 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         })
         order_payment.with_context(**payment_context).check()
 
+        # Make sure the invoice contains the payment method used
+        # TODO: We might want to test the whole PDF content in another test
+        invoice_pdf_content = str(order.account_move.get_invoice_pdf_report_attachment()[0])
+        self.assertTrue("using Cash" in invoice_pdf_content)
+
         # I create a refund
         refund_action = order.refund()
         refund = self.PosOrder.browse(refund_action['res_id'])
