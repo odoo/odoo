@@ -8,6 +8,7 @@ from odoo.tools.misc import format_date
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
+    l10n_latam_new_check_ids = fields.One2many('l10n_latam.account.payment.check', 'payment_id')
     l10n_latam_check_ids = fields.Many2many(
         comodel_name='l10n_latam.account.payment.check',
         relation='account_payment_account_payment_check_rel',
@@ -23,10 +24,27 @@ class AccountPayment(models.Model):
     )
     amount = fields.Monetary(compute="_compute_amount", readonly=False)
 
-    @api.depends('l10n_latam_check_ids.amount')
+    @api.depends('l10n_latam_check_ids.amount', 'l10n_latam_new_check_ids')
     def _compute_amount(self):
         for rec in self.filtered('l10n_latam_check_ids'):
             rec.amount = sum(self.l10n_latam_check_ids.mapped('amount'))
+        for rec in self.filtered('l10n_latam_new_check_ids'):
+            rec.amount = sum(self.l10n_latam_new_check_ids.mapped('amount'))
+
+    def action_post(self):
+        super().action_post()
+        # TODO : to look for another alternative.
+        (self.l10n_latam_check_ids or self.l10n_latam_new_check_ids)._compute_check_info()
+
+    def action_cancel(self):
+        super().action_cancel()
+        # TODO : to look for another alternative.
+        (self.l10n_latam_check_ids or self.l10n_latam_new_check_ids)._compute_check_info()
+
+    def action_draft(self):
+        super().action_draft()
+        # TODO : to look for another alternative.
+        (self.l10n_latam_check_ids or self.l10n_latam_new_check_ids)._compute_check_info()
 
     # @api.depends('payment_method_line_id', 'l10n_latam_check_issuer_vat', 'l10n_latam_check_bank_id', 'company_id',
     #              'l10n_latam_check_number', 'l10n_latam_check_id', 'state', 'date', 'is_internal_transfer', 'amount', 'currency_id')

@@ -7,8 +7,26 @@
         <field name="arch" type="xml">
             <group>
                 <group name="latam_checks" string="Checks" invisible="payment_method_code not in ['in_third_party_checks', 'out_third_party_checks', 'new_third_party_checks', 'own_checks']" colspan="2">
-                    <field name="l10n_latam_check_ids" nolabel="1" colspan="2" readonly="state != 'draft' and payment_method_code in ['in_third_party_checks', 'own_checks', 'new_third_party_checks']">
-                        <tree editable="bottom">
+                    <field name="l10n_latam_new_check_ids" invisible="payment_method_code not in ['new_third_party_checks', 'own_checks']" nolabel="1" colspan="2" readonly="state != 'draft'">
+                        <tree name="new_checks" editable="bottom">
+                            <field name="company_id" column_invisible="True"/>
+                            <field name="currency_id" column_invisible="True"/>
+                            <field name="name" />
+                            <field name="l10n_latam_check_bank_id" />
+                            <field name="l10n_latam_check_issuer_vat" />
+                            <field name="l10n_latam_check_payment_date" />
+                            <field name="amount" />
+                        </tree>
+                    </field>
+                    <field name="l10n_latam_check_ids" widget="one2many" invisible="payment_method_code not in ['in_third_party_checks', 'out_third_party_checks']"
+                        domain="
+                            [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', journal_id), ('company_id', '=', company_id)]
+                                if payment_type == 'outbound' else
+                            [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', destination_journal_id), ('company_id', '=', company_id)]
+                                if is_internal_transfer else
+                            [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', False), ('company_id', '=', company_id)]" options="{'no_create': True}"
+                            nolabel="1" colspan="2" readonly="state != 'draft'">
+                        <tree name="mew_checks" editable="bottom" no_open="1">
                             <field name="company_id" column_invisible="True"/>
                             <field name="currency_id" column_invisible="True"/>
                             <field name="name" />

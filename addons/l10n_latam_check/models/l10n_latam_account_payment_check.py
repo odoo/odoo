@@ -11,8 +11,13 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
     _name = 'l10n_latam.account.payment.check'
     _description = 'Account payment check'
     _check_company_auto = True
+    _inherits = {'account.payment': 'payment_id'}
 
-    payment_ids = fields.Many2many(
+    payment_id = fields.Many2one(
+        'account.payment',
+    )
+
+    l10n_latam_check_operation_ids = fields.Many2many(
         comodel_name='account.payment',
         relation='account_payment_account_payment_check_rel',
         column1="check_id",
@@ -26,16 +31,10 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
         string="Check Current Journal",
         compute='_compute_check_info', store=True,
     )
-    partner_id = fields.Many2one(
-        comodel_name='res.partner',
-        string="Partner",
-        compute='_compute_check_info', store=True,
-    )
 
-    company_id = fields.Many2one('res.company')
-    currency_id = fields.Many2one('res.currency')
+    company_id = fields.Many2one(related='payment_id.company_id')
+    currency_id = fields.Many2one(related='payment_id.currency_id')
     name = fields.Char(string='Number')
-
     l10n_latam_check_bank_id = fields.Many2one(
         comodel_name='res.bank',
         string='Check Bank',
@@ -51,17 +50,16 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
         readonly=False,
     )
     amount = fields.Monetary()
-    state = fields.Selection([
-            ('on_hand', 'on hand')
-        ],
-        compute='_compute_check_info', store=True,
-    )
+    # check_state = fields.Selection([
+    #         ('on_hand', 'on hand')
+    #     ],
+    #     compute='_compute_check_info', store=True,
+    # )
 
-    @api.depends('payment_ids.state')
+    @api.depends('state', 'l10n_latam_check_operation_ids.state')
     def _compute_check_info(self):
         for rec in self:
-            last_operation = rec.payment_ids.filtered(lambda x: x.state == 'posted').sorted(key=lambda payment: (payment.date, payment.id))[-1]
-            first_operation = rec.payment_ids.filtered(lambda x: x.state == 'posted').sorted(key=lambda payment: (payment.date, payment.id))[:1]
+            last_operation = (rec.payment_id + rec.l10n_latam_check_operation_ids).filtered(lambda x: x.state == 'posted').sorted(key=lambda payment: (payment.date, payment.id))[-1:]
             if not last_operation:
                 rec.l10n_latam_check_current_journal_id = False
                 continue
@@ -71,12 +69,6 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
                 rec.l10n_latam_check_current_journal_id = last_operation.journal_id
             else:
                 rec.l10n_latam_check_current_journal_id = False
-            if first_operation.payment_method_code in ['in_third_party_checks', 'new_third_party_checks', 'own_checks']:
-                rec.partner_id = first_operation.partner_id.id
-            else:
-                rec.partner_id = False
-
-            rec.state = False
 
     def button_open_check_operations(self):
         ''' Redirect the user to the invoice(s) paid by this payment.
@@ -84,7 +76,7 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
         '''
         self.ensure_one()
 
-        operations = (self.payment_ids.filtered(lambda x: x.state == 'posted'))
+        operations = ((self.l10n_latam_check_operation_ids + self.payment_id).filtered(lambda x: x.state == 'posted'))
         action = {
             'name': _("Check Operations"),
             'type': 'ir.actions.act_window',

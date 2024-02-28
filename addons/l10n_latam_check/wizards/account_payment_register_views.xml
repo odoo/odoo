@@ -8,7 +8,12 @@
         <field name="arch" type="xml">
             <group>
                 <group>
-                    <field name="l10n_latam_check_ids" invisible="payment_method_code not in ['in_third_party_checks', 'out_third_party_checks']" required="payment_method_code in ['in_third_party_checks', 'out_third_party_checks']" 
+                    <field name="l10n_latam_check_ids" invisible="payment_method_code not in ['in_third_party_checks', 'out_third_party_checks']" 
+                      domain="
+                            [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', journal_id), ('company_id', '=', company_id)]
+                                if payment_type == 'outbound' else
+                            [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', False), ('company_id', '=', company_id)]"
+                    required="payment_method_code in ['in_third_party_checks', 'out_third_party_checks']"
                         widget="many2many_tags" options="{'no_create': True}"/>
                 </group>
                 <group name="latam_checks" string="Checks" invisible="payment_method_code not in ['new_third_party_checks', 'own_checks'] and  can_edit_wizard and (not can_group_payments or can_group_payments and group_payment)" colspan="2">
