@@ -110,6 +110,7 @@ class ResConfigSettings(models.TransientModel):
     point_of_sale_ticket_unique_code = fields.Boolean(related='company_id.point_of_sale_ticket_unique_code', readonly=False)
     pos_show_product_images = fields.Boolean(related='pos_config_id.show_product_images', readonly=False)
     pos_show_category_images = fields.Boolean(related='pos_config_id.show_category_images', readonly=False)
+    pos_note_ids = fields.Many2many(related='pos_config_id.note_ids', readonly=False)
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -31,10 +31,13 @@
                     <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
                     <t t-esc="line.customerNote" />
                 </li>
-                <li t-if="line.internalNote" class="internal-note w-100 p-2 my-1 rounded text-bg-info text-info bg-opacity-25 text-break">
-                    <i class="fa fa-tag me-1" role="img" aria-label="Note" title="Note"/>
-                    <t t-esc="line.internalNote" />
-                </li>
+                <t t-if="line.internalNote" class="list-inline">
+                    <t t-foreach="line.internalNote.split('\n')" t-as="note" t-key="note_index">
+                        <li t-if="note.trim() !== ''" class="internal-note ms-1 p-2 badge rounded-pill bg-info text-info bg-opacity-25" style="font-size: 0.85rem;">
+                            <t t-esc="note" />
+                        </li>
+                    </t>
+                </t>
             </ul>
         </li>
     </t>

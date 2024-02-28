@@ -91,7 +91,7 @@ export class Orderline extends PosModel {
         this.set_product_lot(this.product);
         options.quantity ? this.set_quantity(options.quantity) : this.set_quantity(1);
         this.discount = 0;
-        this.note = "";
+        this.note = this.note || "";
         this.custom_attribute_value_ids = [];
         this.hasChange = false;
         this.skipChange = false;
@@ -163,6 +163,7 @@ export class Orderline extends PosModel {
             );
             this.pack_lot_lines.push(pack_lot_line);
         }
+        this.note = json.note;
         this.tax_ids = this.compute_related_tax(
             json.tax_ids && json.tax_ids.length !== 0 ? json.tax_ids[0][2] : undefined
         );
@@ -199,6 +200,7 @@ export class Orderline extends PosModel {
         orderline.selected = false;
         orderline.price_type = this.price_type;
         orderline.customerNote = this.customerNote;
+        orderline.note = this.note;
         return orderline;
     }
     getDisplayClasses() {
@@ -527,6 +529,7 @@ export class Orderline extends PosModel {
             combo_line_ids: this.combo_line_ids?.map((line) => line.id),
             combo_parent_id: this.combo_parent_id?.id,
             combo_line_id: this.combo_line_id?.id,
+            note: this.note,
         };
     }
 

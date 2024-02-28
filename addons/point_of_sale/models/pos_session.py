@@ -256,6 +256,10 @@ class PosSession(models.Model):
                 'domain': [('id', '=', config_id.currency_id.id)],
                 'fields': ['id', 'name', 'symbol', 'position', 'rounding', 'rate', 'decimal_places'],
             },
+            'pos.note': {
+                'domain': [('id', '=', config_id.note_ids.ids)] if config_id.note_ids else [],
+                'fields': ['name'],
+            },
         }
 
         return params

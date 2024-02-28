@@ -76,20 +76,9 @@ patch(Order.prototype, {
 });
 
 patch(Orderline.prototype, {
-    setup() {
-        super.setup(...arguments);
-        this.note = this.note || "";
-    },
-    //@override
-    clone() {
-        const orderline = super.clone(...arguments);
-        orderline.note = this.note;
-        return orderline;
-    },
     //@override
     export_as_JSON() {
         const json = super.export_as_JSON(...arguments);
-        json.note = this.note;
         if (this.pos.config.iface_printers) {
             json.uuid = this.uuid;
         }
@@ -98,7 +87,6 @@ patch(Orderline.prototype, {
     //@override
     init_from_JSON(json) {
         super.init_from_JSON(...arguments);
-        this.note = json.note;
         if (this.pos.config.iface_printers) {
             this.uuid = json.uuid;
         }

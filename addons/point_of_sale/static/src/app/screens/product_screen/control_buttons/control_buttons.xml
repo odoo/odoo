@@ -12,7 +12,7 @@
             </button>
             <OrderlineNoteButton
                 icon="'fa fa-tag'"
-                label="'Internal Note'"
+                label="internalNoteLabel"
                 getter="(orderline) => orderline.getNote()"
                 setter="(orderline, note) => orderline.setNote(note)" />
             <OrderlineNoteButton t-if="!pos.config.module_pos_restaurant"/>
