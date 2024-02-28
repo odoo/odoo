@@ -1,26 +1,29 @@
-import { after, describe, expect, test } from "@odoo/hoot";
-import { observe } from "@odoo/hoot-dom";
+import { describe, expect, test } from "@odoo/hoot";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { assets, loadCSS, loadJS } from "@web/core/assets";
 
 describe.current.tags("headless");
 
+/**
+ * @param {(node: Node) => void} callback
+ */
+const mockHeadAppendChild = (callback) =>
+    patchWithCleanup(document.head, {
+        appendChild: callback,
+    });
+
 test("loadJS: load invalid JS lib", async () => {
     expect.assertions(4);
 
-    after(
-        observe(document.head, (mutations) => {
-            for (const mutation of mutations) {
-                for (const script of mutation.addedNodes) {
-                    expect(script).toBeInstanceOf(HTMLScriptElement);
-                    expect(script).toHaveAttribute("type", "text/javascript");
-                    expect(script).toHaveAttribute("src", "/some/invalid/file.js");
+    mockHeadAppendChild((node) => {
+        expect(node).toBeInstanceOf(HTMLScriptElement);
+        expect(node).toHaveAttribute("type", "text/javascript");
+        expect(node).toHaveAttribute("src", "/some/invalid/file.js");
 
-                    after(() => script.remove());
-                }
-            }
-        })
-    );
+        // Simulates a failed request to an invalid file.
+        node.dispatchEvent(new ErrorEvent("error"));
+    });
 
     await expect(loadJS("/some/invalid/file.js")).rejects.toThrow(
         /The loading of \/some\/invalid\/file.js failed/,
@@ -33,20 +36,15 @@ test("loadCSS: load invalid CSS lib", async () => {
 
     assets.retries = { count: 3, delay: 1, extraDelay: 1 }; // Fail fast.
 
-    after(
-        observe(document.head, (mutations) => {
-            for (const mutation of mutations) {
-                for (const link of mutation.addedNodes) {
-                    expect(link).toBeInstanceOf(HTMLLinkElement);
-                    expect(link).toHaveAttribute("rel", "stylesheet");
-                    expect(link).toHaveAttribute("type", "text/css");
-                    expect(link).toHaveAttribute("href", "/some/invalid/file.css");
+    mockHeadAppendChild((node) => {
+        expect(node).toBeInstanceOf(HTMLLinkElement);
+        expect(node).toHaveAttribute("rel", "stylesheet");
+        expect(node).toHaveAttribute("type", "text/css");
+        expect(node).toHaveAttribute("href", "/some/invalid/file.css");
 
-                    after(() => link.remove());
-                }
-            }
-        })
-    );
+        // Simulates a failed request to an invalid file.
+        node.dispatchEvent(new ErrorEvent("error"));
+    });
 
     await expect(loadCSS("/some/invalid/file.css")).rejects.toThrow(
         /The loading of \/some\/invalid\/file.css failed/,
