@@ -19,9 +19,9 @@ import {
     waitForNone,
     waitUntil,
 } from "../../../hoot-dom/hoot-dom";
-import { describe, expect, getFixture, test } from "../../hoot";
+import { describe, expect, getFixture, mountOnFixture, test } from "../../hoot";
 import { tick } from "../../hoot-mock";
-import { mount, parseUrl } from "../local_helpers";
+import { parseUrl } from "../local_helpers";
 
 /**
  * @param {...string} queryAllSelectors
@@ -149,7 +149,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
     });
 
     test("getActiveElement", async () => {
-        await mount(/* xml */ `<iframe srcdoc="&lt;input &gt;"></iframe>`);
+        await mountOnFixture(/* xml */ `<iframe srcdoc="&lt;input &gt;"></iframe>`);
 
         await waitForIframes();
 
@@ -174,7 +174,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
             }
         );
 
-        await mount(/* xml */ `<shadow-input></shadow-input>`);
+        await mountOnFixture(/* xml */ `<shadow-input></shadow-input>`);
 
         expect("shadow-input:shadow input").not.toBeFocused();
 
@@ -186,7 +186,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
     });
 
     test("getFocusableElements", async () => {
-        await mount(/* xml */ `
+        await mountOnFixture(/* xml */ `
             <input class="input" />
             <div class="div" tabindex="0">aaa</div>
             <button class="disabled-button" disabled="disabled">Disabled button</button>
@@ -201,7 +201,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
     });
 
     test("getNextFocusableElement", async () => {
-        await mount(/* xml */ `
+        await mountOnFixture(/* xml */ `
             <input class="input" />
             <div class="div" tabindex="0">aaa</div>
             <button class="disabled-button" disabled="disabled">Disabled button</button>
@@ -214,7 +214,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
     });
 
     test("getParentFrame", async () => {
-        await mount(/* xml */ `
+        await mountOnFixture(/* xml */ `
             <div class="root"></div>
         `);
 
@@ -230,7 +230,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
     });
 
     test("getPreviousFocusableElement", async () => {
-        await mount(/* xml */ `
+        await mountOnFixture(/* xml */ `
             <input class="input" />
             <div class="div" tabindex="0">aaa</div>
             <button class="disabled-button" disabled="disabled">Disabled button</button>
@@ -243,7 +243,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
     });
 
     test("getRect", async () => {
-        await mount(/* xml */ `
+        await mountOnFixture(/* xml */ `
             <div class="root relative">
                 ${makeSquare({ left: 10, top: 20, padding: 5 }, "target")}
             </div>
@@ -280,14 +280,14 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
     });
 
     test("isFocusable", async () => {
-        await mount(FULL_HTML_TEMPLATE);
+        await mountOnFixture(FULL_HTML_TEMPLATE);
 
         expect(isFocusable("input:first")).toBe(true);
         expect(isFocusable("li:first")).toBe(false);
     });
 
     test("isDisplayed", async () => {
-        await mount(FULL_HTML_TEMPLATE);
+        await mountOnFixture(FULL_HTML_TEMPLATE);
 
         expect(isDisplayed(document)).toBe(true);
         expect(isDisplayed(document.body)).toBe(true);
@@ -300,7 +300,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
     });
 
     test("isVisible", async () => {
-        await mount(FULL_HTML_TEMPLATE);
+        await mountOnFixture(FULL_HTML_TEMPLATE);
 
         expect(isVisible(document)).toBe(true);
         expect(isVisible(document.body)).toBe(true);
@@ -333,7 +333,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
     });
 
     test("waitFor: already in fixture", async () => {
-        await mount(FULL_HTML_TEMPLATE);
+        await mountOnFixture(FULL_HTML_TEMPLATE);
 
         waitFor(".title").then((el) => {
             expect.step(el.className);
@@ -384,13 +384,13 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
     });
 
     test("waitForNone: rejects", async () => {
-        await mount(FULL_HTML_TEMPLATE);
+        await mountOnFixture(FULL_HTML_TEMPLATE);
 
         await expect(waitForNone(".title", { timeout: 1 })).rejects.toThrow();
     });
 
     test("waitForNone; delete elements", async () => {
-        await mount(FULL_HTML_TEMPLATE);
+        await mountOnFixture(FULL_HTML_TEMPLATE);
 
         waitForNone(".title").then(() => expect.step("none"));
         expect(".title").toHaveCount(3);
@@ -432,7 +432,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
 
     describe("queryAll", () => {
         test("native selectors", async () => {
-            await mount(FULL_HTML_TEMPLATE);
+            await mountOnFixture(FULL_HTML_TEMPLATE);
 
             for (const selector of [
                 "main",
@@ -448,7 +448,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test("custom pseudo-classes", async () => {
-            await mount(FULL_HTML_TEMPLATE);
+            await mountOnFixture(FULL_HTML_TEMPLATE);
 
             await waitForIframes();
 
@@ -486,7 +486,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test("advanced use cases", async () => {
-            await mount(FULL_HTML_TEMPLATE);
+            await mountOnFixture(FULL_HTML_TEMPLATE);
 
             // Comma-separated selectors
             expectSelector("p:contains(ipsum),:has(form:contains('Form title'))").toEqualNodes(
@@ -513,7 +513,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         // fake contexts accordingly as I'm fixing them.
 
         test("comma-separated long selector: no match", async () => {
-            await mount(/* xml */ `
+            await mountOnFixture(/* xml */ `
                 <div class="o_we_customize_panel">
                     <we-customizeblock-option class="snippet-option-ImageTools">
                         <div class="o_we_so_color_palette o_we_widget_opened">
@@ -532,7 +532,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test("comma-separated long selector: match first", async () => {
-            await mount(/* xml */ `
+            await mountOnFixture(/* xml */ `
                 <div class="o_we_customize_panel">
                     <we-customizeblock-option class="snippet-option-ImageTools">
                         <we-select data-name="shape_img_opt">
@@ -548,7 +548,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test("comma-separated long selector: match second", async () => {
-            await mount(/* xml */ `
+            await mountOnFixture(/* xml */ `
                 <div class="o_we_customize_panel">
                     <we-customizeblock-option class="snippet-option-ImageTools">
                         <div title='we-select[data-name="shape_img_opt"] we-toggler'>
@@ -564,7 +564,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test("comma-separated :contains", async () => {
-            await mount(/* xml */ `
+            await mountOnFixture(/* xml */ `
                 <div class="o_menu_sections">
                     <a class="dropdown-item">Products</a>
                 </div>
@@ -582,7 +582,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test(":contains with line return", async () => {
-            await mount(/* xml */ `
+            await mountOnFixture(/* xml */ `
                 <span>
                     <div>Matrix (PAV11, PAV22, PAV31)</div>
                     <div>PA4: PAV41</div>
@@ -594,7 +594,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test(":has(...):first", async () => {
-            await mount(/* xml */ `
+            await mountOnFixture(/* xml */ `
                 <a href="/web/event/1"></a>
                 <a target="" href="/web/event/2">
                     <span>Conference for Architects TEST</span>
@@ -610,7 +610,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test(":eq", async () => {
-            await mount(/* xml */ `
+            await mountOnFixture(/* xml */ `
                 <ul>
                     <li>a</li>
                     <li>b</li>
@@ -625,7 +625,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test(":empty", async () => {
-            await mount(/* xml */ `
+            await mountOnFixture(/* xml */ `
                 <input class="empty" />
                 <input class="value" value="value" />
             `);
@@ -635,7 +635,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test("regular :contains", async () => {
-            await mount(/* xml */ `
+            await mountOnFixture(/* xml */ `
                 <div class="website_links_click_chart">
                     <div class="title">
                         0 clicks
@@ -655,7 +655,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test("other regular :contains", async () => {
-            await mount(/* xml */ `
+            await mountOnFixture(/* xml */ `
                 <ul
                     class="o-autocomplete--dropdown-menu ui-widget show dropdown-menu ui-autocomplete"
                     style="position: fixed; top: 283.75px; left: 168.938px"
@@ -690,7 +690,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test(":iframe", async () => {
-            await mount(/* xml */ `
+            await mountOnFixture(/* xml */ `
                 <iframe srcdoc="&lt;p&gt;Iframe text content&lt;/p&gt;"></iframe>
             `);
 
@@ -702,7 +702,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test(":contains with brackets", async () => {
-            await mount(/* xml */ `
+            await mountOnFixture(/* xml */ `
                 <div class="o_content">
                     <div class="o_field_widget" name="messages">
                         <table class="o_list_view table table-sm table-hover table-striped o_list_view_ungrouped">
@@ -729,7 +729,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test(":eq in the middle of a selector", async () => {
-            await mount(/* xml */ `
+            await mountOnFixture(/* xml */ `
                 <ul>
                     <li class="oe_overlay o_draggable"></li>
                     <li class="oe_overlay o_draggable"></li>
@@ -743,7 +743,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test("combinator +", async () => {
-            await mount(/* xml */ `
+            await mountOnFixture(/* xml */ `
                 <form class="js_attributes">
                     <input type="checkbox" />
                     <label>Steel - Test</label>
@@ -756,7 +756,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test("multiple + combinators", async () => {
-            await mount(/* xml */ `
+            await mountOnFixture(/* xml */ `
                 <div class="s_cover">
                     <span class="o_text_highlight">
                         <span class="o_text_highlight_item">
@@ -780,7 +780,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test(":last", async () => {
-            await mount(/* xml */ `
+            await mountOnFixture(/* xml */ `
                 <div class="o_field_widget" name="messages">
                     <table class="o_list_view table table-sm table-hover table-striped o_list_view_ungrouped">
                         <tbody>
@@ -804,7 +804,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test("select :contains & :value", async () => {
-            await mount(/* xml */ `
+            await mountOnFixture(/* xml */ `
                 <select class="configurator_select form-select form-select-lg">
                     <option value="217" selected="">Metal</option>
                     <option value="218">Wood</option>
@@ -821,7 +821,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test("invalid selectors", async () => {
-            await mount(FULL_HTML_TEMPLATE);
+            await mountOnFixture(FULL_HTML_TEMPLATE);
 
             expect(() => queryAll`[colspan=1]`).toThrow(); // missing quotes
             expect(() => queryAll`[href=/]`).toThrow(); // missing quotes
@@ -832,14 +832,14 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         });
 
         test("queryAllTexts", async () => {
-            await mount(FULL_HTML_TEMPLATE);
+            await mountOnFixture(FULL_HTML_TEMPLATE);
 
             expect(queryAllTexts(".title")).toEqual(["Title", "List header", "Form title"]);
             expect(queryAllTexts("footer")).toEqual(["FooterBack to top"]);
         });
 
         test("queryOne", async () => {
-            await mount(FULL_HTML_TEMPLATE);
+            await mountOnFixture(FULL_HTML_TEMPLATE);
 
             expect(queryOne(".title:first")).toBe(getFixture().querySelector("header .title"));
 
@@ -880,7 +880,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
                 const queryAllTimes = [];
 
                 for (let i = 0; i < 100; i++) {
-                    mount(template);
+                    mountOnFixture(template);
 
                     jQueryTimes.push(time(() => jQuery(selector)));
                     queryAllTimes.push(time(() => queryAll(selector)));

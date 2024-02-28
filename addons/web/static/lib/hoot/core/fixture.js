@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { App } from "@odoo/owl";
+import { App, Component, xml } from "@odoo/owl";
 import { defineRootNode, getActiveElement } from "@web/../lib/hoot-dom/helpers/dom";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import { HootError } from "../hoot_utils";
@@ -100,6 +100,13 @@ export function makeFixtureManager(runner) {
     const mountOnFixture = (ComponentClass, config, target) => {
         if (target && !fixture) {
             throw new HootError(`Cannot mount on a custom target before the fixture is created.`);
+        }
+
+        if (typeof ComponentClass === "string") {
+            ComponentClass = class extends Component {
+                static props = {};
+                static template = xml`${ComponentClass}`;
+            };
         }
 
         const app = new App(ComponentClass, {
