@@ -5960,27 +5960,85 @@ class BaseModel(metaclass=MetaModel):
     def sorted(self, key: Callable[[Self], typing.Any] | str | None = None, reverse: bool = False) -> Self:
         """Return the recordset ``self`` ordered by ``key``.
 
-        :param key: either a function of one argument that returns a
-            comparison key for each record, or a field name, or ``None``, in
-            which case records are ordered according the default model's order
+        :param key:
+            It can be either of:
+
+            * a function of one argument that returns a comparison key for each record
+            * a string representing a comma-separated list of field names with optional
+              NULLS (FIRST|LAST), and (ASC|DESC) directions
+            * ``None``, in which case records are ordered according the default model's order
         :param reverse: if ``True``, return the result in reverse order
 
         .. code-block:: python3
 
             # sort records by name
             records.sorted(key=lambda r: r.name)
+            # sort records by name in descending order, then by id
+            records.sorted('name DESC, id')
+            # sort records using default order
+            records.sorted()
         """
-        if key is None:
-            if any(self._ids):
-                ids = self.search([('id', 'in', self.ids)])._ids
-            else:  # Don't support new ids because search() doesn't work on new records
-                ids = self._ids
-            ids = tuple(reversed(ids)) if reverse else ids
-        else:
-            if isinstance(key, str):
-                key = itemgetter(key)
-            ids = tuple(item.id for item in sorted(self, key=key, reverse=reverse))
+        if len(self) < 2:
+            return self
+        if isinstance(key, str):
+            key = self._sorted_order_to_function(key)
+        elif key is None:
+            key = self._sorted_order_to_function(self._order)
+        ids = tuple(item.id for item in sorted(self, key=key, reverse=reverse))
         return self.__class__(self.env, ids, self._prefetch_ids)
+
+    @api.model
+    def _sorted_order_to_function(self, order: str) -> Callable[[BaseModel], tuple]:
+        def order_to_function(order_part):
+            order_match = regex_order.match(order_part)
+            if not order_match:
+                raise ValueError(f"Invalid order {order!r} to sort")
+            field_name = order_match['field']
+            property_name = order_match['property']
+            reverse = (order_match['direction'] or '').upper() == 'DESC'
+            nulls = (order_match['nulls'] or '').upper()
+            if nulls:
+                nulls_first = nulls == 'NULLS FIRST'
+            else:
+                nulls_first = reverse
+
+            field = self._fields[field_name]
+            field_expr = f'{field_name}.{property_name}' if property_name else field_name
+            if field.type == 'many2one' and (not property_name or property_name == 'id'):
+                seen = self.env.context.get('__m2o_order_seen_sorted', ())
+                if field in seen:
+                    return lambda _: None
+                comodel = self.env[field.comodel_name].with_context(__m2o_order_seen_sorted=frozenset((field, *seen)))
+                func_comodel = comodel._sorted_order_to_function(property_name or comodel._order)
+
+                def getter(rec):
+                    value = rec[field_name]
+                    if not value:
+                        return None
+                    return func_comodel(value)
+            elif field.relational:
+                raise ValueError(f"Invalid order on relational field {order_part!r} to sort")
+            elif field.type == 'boolean':
+                getter = field.expression_getter(field_expr)
+            else:
+                raw_getter = field.expression_getter(field_expr)
+
+                def getter(rec):
+                    value = raw_getter(rec)
+                    return value if value is not False else None
+
+            comparator = functools.partial(
+                ReversibleComparator,
+                reverse=reverse,
+                none_first=nulls_first,
+            )
+            return lambda rec: comparator(getter(rec))
+
+        item_makers = [
+            order_to_function(order_part)
+            for order_part in order.split(',')
+        ]
+        return lambda rec: tuple(fn(rec) for fn in item_makers)
 
     @api.private
     def update(self, values: ValuesType) -> None:
@@ -6695,6 +6753,38 @@ class Model(AbstractModel):
     _auto: bool = True          # automatically create database backend
     _register: bool = False     # not visible in ORM registry, meant to be python-inherited only
     _abstract: typing.Literal[False] = False  # not abstract
+
+
+@functools.total_ordering
+class ReversibleComparator:
+    __slots__ = ('__item', '__none_first', '__reverse')
+
+    def __init__(self, item, reverse: bool, none_first: bool):
+        self.__item = item
+        self.__reverse = reverse
+        self.__none_first = none_first
+
+    def __lt__(self, other: ReversibleComparator) -> bool:
+        item = self.__item
+        item_cmp = other.__item
+        if item == item_cmp:
+            return False
+        if item is None:
+            return self.__none_first
+        if item_cmp is None:
+            return not self.__none_first
+        if self.__reverse:
+            item, item_cmp = item_cmp, item
+        return item < item_cmp
+
+    def __eq__(self, other: ReversibleComparator) -> bool:
+        return self.__item == other.__item
+
+    def __hash__(self):
+        return hash(self.__item)
+
+    def __repr__(self):
+        return f"<ReversibleComparator {self.__item!r}{' reverse' if self.__reverse else ''}>"
 
 
 def itemgetter_tuple(items):

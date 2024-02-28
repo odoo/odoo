@@ -15,6 +15,7 @@ from . import (
     test_related_translation,
     test_schema,
     test_search,
+    test_sort,
     test_timeit,
     test_ui,
     test_unity_read,
