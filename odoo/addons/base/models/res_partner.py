@@ -117,13 +117,10 @@ class PartnerCategory(models.Model):
     parent_id = fields.Many2one('res.partner.category', string='Parent Category', index=True, ondelete='cascade')
     child_ids = fields.One2many('res.partner.category', 'parent_id', string='Child Tags')
     active = fields.Boolean(default=True, help="The active field allows you to hide the category without removing it.")
-    parent_path = fields.Char(index=True)
     partner_ids = fields.Many2many('res.partner', column1='category_id', column2='partner_id', string='Partners', copy=False)
 
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
-        if not self._check_recursion():
-            raise ValidationError(_('You can not create recursive tags.'))
+    def _raise_check_recursion(self, cyclic_records):
+        raise ValidationError(_('You can not create recursive tags.'))
 
     @api.depends('parent_id')
     def _compute_display_name(self):

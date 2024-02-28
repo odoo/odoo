@@ -18,7 +18,6 @@ class ProductCategory(models.Model):
         'Complete Name', compute='_compute_complete_name', recursive=True,
         store=True)
     parent_id = fields.Many2one('product.category', 'Parent Category', index=True, ondelete='cascade')
-    parent_path = fields.Char(index=True)
     child_id = fields.One2many('product.category', 'parent_id', 'Child Categories')
     product_count = fields.Integer(
         '# Products', compute='_compute_product_count',
@@ -42,10 +41,8 @@ class ProductCategory(models.Model):
                 product_count += group_data.get(sub_categ_id, 0)
             categ.product_count = product_count
 
-    @api.constrains('parent_id')
-    def _check_category_recursion(self):
-        if not self._check_recursion():
-            raise ValidationError(_('You cannot create recursive categories.'))
+    def _raise_check_recursion(self, cyclic_records):
+        raise ValidationError(_('You cannot create recursive categories.'))
 
     @api.model
     def name_create(self, name):

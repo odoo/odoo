@@ -34,7 +34,6 @@ class Company(models.Model):
     parent_id = fields.Many2one('res.company', string='Parent Company', index=True, ondelete='restrict')
     child_ids = fields.One2many('res.company', 'parent_id', string='Branches')
     all_child_ids = fields.One2many('res.company', 'parent_id', context={'active_test': False})
-    parent_path = fields.Char(index=True)
     parent_ids = fields.Many2many('res.company', compute='_compute_parent_ids', compute_sudo=True)
     root_id = fields.Many2one('res.company', compute='_compute_parent_ids', compute_sudo=True)
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
@@ -112,7 +111,7 @@ class Company(models.Model):
     def _compute_parent_ids(self):
         for company in self.with_context(active_test=False):
             company.parent_ids = self.browse(int(id) for id in company.parent_path.split('/') if id) if company.parent_path else company
-            company.root_id = company.parent_ids[0]
+            company.root_id = company.parent_ids[:1]
 
     # TODO @api.depends(): currently now way to formulate the dependency on the
     # partner's contact address

@@ -28,7 +28,6 @@ class IrUiMenu(models.Model):
     sequence = fields.Integer(default=10)
     child_id = fields.One2many('ir.ui.menu', 'parent_id', string='Child IDs')
     parent_id = fields.Many2one('ir.ui.menu', string='Parent Menu', index=True, ondelete="restrict")
-    parent_path = fields.Char(index=True)
     groups_id = fields.Many2many('res.groups', 'ir_ui_menu_group_rel',
                                  'menu_id', 'gid', string='Groups',
                                  help="If you have groups, the visibility of this menu will be based on these groups. "\
@@ -68,10 +67,8 @@ class IrUiMenu(models.Model):
         except FileNotFoundError:
             return False
 
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
-        if not self._check_recursion():
-            raise ValidationError(_('Error! You cannot create recursive menus.'))
+    def _raise_check_recursion(self, cyclic_records):
+        raise ValidationError(_('Error! You cannot create recursive menus.'))
 
     @api.model
     @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'debug')

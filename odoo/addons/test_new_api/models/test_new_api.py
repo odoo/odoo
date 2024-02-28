@@ -22,7 +22,6 @@ class Category(models.Model):
     name = fields.Char(required=True)
     color = fields.Integer('Color Index')
     parent = fields.Many2one('test_new_api.category', ondelete='cascade')
-    parent_path = fields.Char(index=True)
     depth = fields.Integer(compute="_compute_depth")
     root_categ = fields.Many2one(_name, compute='_compute_root_categ')
     display_name = fields.Char(compute='_compute_display_name', recursive=True,
@@ -2018,3 +2017,10 @@ class ModelAutovacuumed(models.Model):
     @api.autovacuum
     def _gc(self):
         self.search([('expire_at', '<', datetime.datetime.now() - datetime.timedelta(days=1))]).unlink()
+
+
+class ParentSetNull(models.Model):
+    _name = _description = 'test_new_api.parent_set_null'
+    _parent_store = True
+
+    parent_id = fields.Many2one('test_new_api.parent_set_null')
