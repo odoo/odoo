@@ -38,6 +38,11 @@ class WebSuite(odoo.tests.HttpCase):
         self.browser_js('/web/tests/next?headless&loglevel=2&tag=-mobile', "", "", login='admin', timeout=1800, success_signal="[HOOT] test suite succeeded", error_checker=unit_test_error_checker)
 
     @odoo.tests.no_retry
+    def test_hoot(self):
+        # HOOT tests suite
+        self.browser_js('/web/static/lib/hoot/tests/index.html?headless&loglevel=2', "", "", login='admin', timeout=1800, success_signal="[HOOT] test suite succeeded", error_checker=unit_test_error_checker)
+
+    @odoo.tests.no_retry
     def test_qunit_desktop(self):
         # ! DEPRECATED
         self.browser_js('/web/tests?mod=web', "", "", login='admin', timeout=1800, success_signal="QUnit test suite done.", error_checker=qunit_error_checker)

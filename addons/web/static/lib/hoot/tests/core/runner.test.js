@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { describe, expect, test } from "@odoo/hoot";
+import { after, describe, expect, test } from "@odoo/hoot";
 import { TestRunner } from "../../core/runner";
 import { Suite } from "../../core/suite";
 import { parseUrl } from "../local_helpers";
@@ -61,6 +61,10 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("can register test tags", async () => {
+        const warn = console.warn;
+        console.warn = (message) => expect.step(message);
+        after(() => (console.warn = warn));
+
         const runner = new TestRunner();
         runner.describe("suite", () => {
             let testFn = runner.test.debug.only.skip; // 3
@@ -74,5 +78,8 @@ describe(parseUrl(import.meta.url), () => {
 
         expect(runner.tags.size).toBe(13);
         expect(runner.tests.values().next().value.tags.length).toBe(13);
+        expect([
+            `%c[HOOT]%c test "suite/tagged test" is explicitly included but marked as skipped: "skip" modifier has been ignored`,
+        ]).toVerifySteps();
     });
 });

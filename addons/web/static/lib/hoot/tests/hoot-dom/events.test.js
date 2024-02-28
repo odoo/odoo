@@ -47,12 +47,21 @@ const monitorEvents = (target, formatStep) => {
             if (!type) {
                 continue;
             }
-            const off = on(element, type, (ev) => {
-                expect.step(formatStep(ev));
-                if (ev.type === "submit") {
-                    ev.preventDefault();
-                }
-            });
+            const passive = type !== "submit";
+            const off = on(
+                element,
+                type,
+                (ev) => {
+                    const step = formatStep(ev);
+                    if (step) {
+                        expect.step(formatStep(ev));
+                    }
+                    if (!passive) {
+                        ev.preventDefault();
+                    }
+                },
+                { passive }
+            );
             after(off);
         }
     }
