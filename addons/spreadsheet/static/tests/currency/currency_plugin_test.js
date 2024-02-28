@@ -30,7 +30,7 @@ QUnit.test("get default currency format when it's not in the config", async (ass
             }
         },
     });
-    assert.throws(() => model.getters.getCompanyCurrencyFormat(), "Data is loading");
+    assert.strictEqual(model.getters.getCompanyCurrencyFormat().isPending(), true);
     await nextTick();
     assert.strictEqual(model.getters.getCompanyCurrencyFormat(), "#,##0.00[$θ]");
     assert.verifySteps([]);
@@ -52,7 +52,7 @@ QUnit.test("get specific currency format", async (assert) => {
             }
         },
     });
-    assert.throws(() => model.getters.getCompanyCurrencyFormat(42), "Data is loading");
+    assert.strictEqual(model.getters.getCompanyCurrencyFormat(42).isPending(), true);
     await nextTick();
     assert.strictEqual(model.getters.getCompanyCurrencyFormat(42), "#,##0.00[$O]");
 });

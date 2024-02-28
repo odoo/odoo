@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { EvaluationError, helpers, registries } from "@odoo/o-spreadsheet";
+import { CellErrorType, helpers, registries } from "@odoo/o-spreadsheet";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 import { toServerDateString } from "@spreadsheet/helpers/helpers";
 import { _t } from "@web/core/l10n/translation";
@@ -14,6 +14,11 @@ const { createCurrencyFormat } = helpers;
  * @property {string} symbol
  * @property {number} decimalPlaces
  * @property {"before" | "after"} position
+ */
+
+/**
+ * @template T
+ * @typedef {import("@spreadsheet/data_sources/loadable").Loadable} Loadable<T>
  */
 
 export class CurrencyPlugin extends OdooUIPlugin {
@@ -49,17 +54,23 @@ export class CurrencyPlugin extends OdooUIPlugin {
      * @param {string} from Currency from
      * @param {string} to Currency to
      * @param {string} date
-     * @returns {number|string}
+     * @returns {{ value: number|false}}
      */
     getCurrencyRate(from, to, date) {
-        const data = this.serverData.batch.get("res.currency.rate", "get_rates_for_spreadsheet", {
-            from,
-            to,
-            date: date ? toServerDateString(date) : undefined,
-        });
-        const rate = data !== undefined ? data.rate : undefined;
-        if (rate === false) {
-            throw new EvaluationError(_t("Currency rate unavailable."));
+        const rate = this.serverData.batch
+            .get("res.currency.rate", "get_rates_for_spreadsheet", {
+                from,
+                to,
+                date: date ? toServerDateString(date) : undefined,
+            })
+            .toEvaluationValue("rate");
+        if (rate.value === false) {
+            {
+                return {
+                    value: CellErrorType.GenericError, // change to #N/A?
+                    message: _t("Currency rate unavailable."),
+                };
+            }
         }
         return rate;
     }
@@ -82,7 +93,7 @@ export class CurrencyPlugin extends OdooUIPlugin {
     /**
      * Returns the default display format of a the company currency
      * @param {number} [companyId]
-     * @returns {string | undefined}
+     * @returns {Loadable<string> | string | undefined}
      */
     getCompanyCurrencyFormat(companyId) {
         if (!companyId && this.currentCompanyCurrencyFormat) {
@@ -93,10 +104,13 @@ export class CurrencyPlugin extends OdooUIPlugin {
             "get_company_currency_for_spreadsheet",
             [companyId]
         );
-        if (currency === false) {
-            throw new EvaluationError(_t("Currency not available for this company."));
+        if (currency.isResolved()) {
+            if (!currency.value) {
+                return undefined;
+            }
+            return this.computeFormatFromCurrency(currency.value);
         }
-        return this.computeFormatFromCurrency(currency);
+        return currency;
     }
 }
 
