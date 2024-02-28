@@ -171,6 +171,10 @@
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_line_filter"/>
             <field name="arch" type="xml">
+                <xpath expr="//filter[@name='month']" position="before">
+                    <filter name="mine" string="My Timesheets" domain="[('user_id', '=', uid)]"/>
+                    <separator/>
+                </xpath>
                 <xpath expr="//group[@name='groupby']" position="before">
                     <field name="employee_id"/>
                     <field name="project_id"/>
@@ -178,7 +182,6 @@
                     <field name="parent_task_id"/>
                     <field name="department_id"/>
                     <field name="manager_id"/>
-                    <filter name="mine" string="My Timesheets" domain="[('user_id', '=', uid)]"/>
                 </xpath>
                 <xpath expr="//group[@name='groupby']" position="inside">
                     <filter string="Project" name="groupby_project" domain="[]" context="{'group_by': 'project_id'}"/>
