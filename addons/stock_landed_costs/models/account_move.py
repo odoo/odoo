@@ -78,5 +78,5 @@ class AccountMoveLine(models.Model):
         else:
             self.is_landed_costs_line = False
 
-    def _can_use_stock_accounts(self):
-        return super()._can_use_stock_accounts() or (self.product_id.type == 'service' and self.product_id.landed_cost_ok)
+    def _eligible_for_cogs(self):
+        return super()._eligible_for_cogs() or (self.product_id.type == 'service' and self.product_id.landed_cost_ok)
