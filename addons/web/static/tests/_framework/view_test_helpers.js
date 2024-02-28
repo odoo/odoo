@@ -70,6 +70,8 @@ const buildSelector = (base, params) => {
  * @returns {typeof View.props}
  */
 const parseViewProps = (params) => {
+    const viewProps = { ...params };
+
     // View & search view arch
     if (
         "arch" in params ||
@@ -77,17 +79,22 @@ const parseViewProps = (params) => {
         "searchViewId" in params ||
         "viewId" in params
     ) {
-        params.viewId ||= 123_456_789;
-        params.searchViewId ||= 987_654_321;
-        registerDefaultView(params.resModel, params.viewId, params.type, params.arch);
-        registerDefaultView(params.resModel, params.searchViewId, "search", params.searchViewArch);
+        viewProps.viewId ||= 123_456_789;
+        viewProps.searchViewId ||= 987_654_321;
+        registerDefaultView(viewProps.resModel, viewProps.viewId, viewProps.type, viewProps.arch);
+        registerDefaultView(
+            viewProps.resModel,
+            viewProps.searchViewId,
+            "search",
+            viewProps.searchViewArch
+        );
     }
 
-    delete params.arch;
-    delete params.config;
-    delete params.searchViewArch;
+    delete viewProps.arch;
+    delete viewProps.config;
+    delete viewProps.searchViewArch;
 
-    return params;
+    return viewProps;
 };
 
 /**
