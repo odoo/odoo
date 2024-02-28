@@ -2056,6 +2056,13 @@ X[]
                         contentAfter: `<p>abc</p><p>[]def</p>`,
                     });
                 });
+                it('should not delete in contenteditable=false', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p contenteditable="false">ab[]cdef</p>`,
+                        stepFunction: deleteBackward,
+                        contentAfter: `<p contenteditable="false">ab[]cdef</p>`,
+                    });
+                });
             });
             describe('Line breaks', () => {
                 describe('Single', () => {
@@ -3400,6 +3407,28 @@ X[]
                     contentBefore: '<p>ab</p><p>[<br></p><p>d]ef</p>',
                     stepFunction: deleteBackward,
                     contentAfter: '<p>ab</p><p>[]<br></p><p>ef</p>',
+                });
+            });
+            it('should not delete in contenteditable=false 1', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p contenteditable="false">ab[cd]ef</p>`,
+                    stepFunction: deleteBackward,
+                    contentAfter: `<p contenteditable="false">ab[cd]ef</p>`,
+                });
+            });
+            it('should not delete in contenteditable=false 2', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<div contenteditable="false">
+                                        <p>a[b</p>
+                                        <p>cd</p>
+                                        <p>e]f</p>
+                                    </div>`,
+                    stepFunction: deleteBackward,
+                    contentAfter: `<div contenteditable="false">
+                                        <p>a[b</p>
+                                        <p>cd</p>
+                                        <p>e]f</p>
+                                    </div>`,
                 });
             });
         });
