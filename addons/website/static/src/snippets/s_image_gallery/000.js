@@ -64,14 +64,26 @@ const GalleryWidget = publicWidget.Widget.extend({
             self.$modal = undefined;
         });
         this.$modal.find('.modal-content, .modal-body.o_slideshow').css('height', '100%');
+        this.$modal[0].tabIndex = "-1";
         this.$modal.appendTo(document.body);
 
+        this.__onModalKeydown = this._onModalKeydown.bind(this);
         this.$modal.one('shown.bs.modal', function () {
             self.trigger_up('widgets_start_request', {
                 editableMode: false,
                 $target: self.$modal.find('.modal-body.o_slideshow'),
             });
+            self.$modal[0].addEventListener("keydown", self.__onModalKeydown);
         });
+        this.$modal.one("hide.bs.modal", () => {
+            this.$modal[0].removeEventListener("keydown", this.__onModalKeydown);
+        });
+    },
+    _onModalKeydown(ev) {
+        if (ev.key === "ArrowLeft" || ev.key === "ArrowRight") {
+            const side = ev.key === "ArrowLeft" ? "prev" : "next";
+            this.$modal[0].querySelector(`.carousel-control-${side}`).click();
+        }
     },
 });
 
