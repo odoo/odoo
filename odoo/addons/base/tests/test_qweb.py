@@ -1644,6 +1644,21 @@ class TestQWebBasic(TransactionCase):
             markupsafe.Markup(f'<p>{p_instruction}</p>'),
             "Should have the processing instruction")
 
+    def test_render_widget_contact(self):
+        u = self.env['res.users'].create({
+            'name': 'Test',
+            'login': 'test@example.com',
+        })
+        u.name = ""
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy"><root><span t-esc="user" t-options='{"widget": "contact", "fields": ["name"]}' /></root></t>
+            """
+        })
+        self.env['ir.qweb']._render(view1.id, {'user': u})  # should not crash
+
     def test_void_element(self):
         view = self.env['ir.ui.view'].create({
             'name': 'master',
