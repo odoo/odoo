@@ -23,10 +23,16 @@ class Invite(models.TransientModel):
         model = result.get('res_model')
         res_id = result.get('res_id')
         if model and res_id:
-            document = self.env['ir.model']._get(model).display_name
-            title = self.env[model].browse(res_id).display_name
-            msg_fmt = _('%(user_name)s invited you to follow %(document)s document: %(title)s')
+            model_display_name = self.env['ir.model']._get(model).display_name
+            document = self.env[model].browse(res_id)
+            title = document.display_name
+            link = html.A(
+                _('View the document'),
+                href=document.get_base_url() + document.get_portal_url()
+            )
+            msg_fmt = _('%(user_name)s invited you to follow %(model_display_name)s document: %(title)s')
         else:
+            link = None
             msg_fmt = _('%(user_name)s invited you to follow a new document.')
 
         text = msg_fmt % locals()
@@ -34,6 +40,8 @@ class Invite(models.TransientModel):
             html.P(_('Hello,')),
             html.P(text)
         )
+        if link is not None:
+            message.append(link)
         result['message'] = etree.tostring(message)
         return result
 
