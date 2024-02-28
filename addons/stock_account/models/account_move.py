@@ -242,7 +242,7 @@ class AccountMoveLine(models.Model):
     def _compute_account_id(self):
         super()._compute_account_id()
         input_lines = self.filtered(lambda line: (
-            line._can_use_stock_accounts()
+            line._eligible_for_cogs()
             and line.move_id.company_id.anglo_saxon_accounting
             and line.move_id.is_purchase_document()
         ))
@@ -271,9 +271,6 @@ class AccountMoveLine(models.Model):
 
     def _get_valued_in_moves(self):
         return self.env['stock.move']
-
-    def _can_use_stock_accounts(self):
-        return self.product_id.type == 'product' and self.product_id.categ_id.property_valuation == 'real_time'
 
     def _stock_account_get_anglo_saxon_price_unit(self):
         self.ensure_one()
