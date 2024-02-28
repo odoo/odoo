@@ -705,7 +705,7 @@ class ProductProduct(models.Model):
         # price to estimate the anglo saxon price unit.
         missing = qty_to_invoice - qty_valued
         for sml in stock_moves.move_line_ids:
-            if not sml.owner_id or sml.owner_id == sml.company_id.partner_id:
+            if not sml._should_exclude_for_valuation():
                 continue
             missing -= sml.product_uom_id._compute_quantity(sml.qty_done, self.uom_id, rounding_method='HALF-UP')
         if float_compare(missing, 0, precision_rounding=self.uom_id.rounding) > 0:
