@@ -241,18 +241,22 @@ class MailActivityMixin(models.AbstractModel):
     def write(self, vals):
         # Delete activities of archived record.
         if 'active' in vals and vals['active'] is False:
-            self.env['mail.activity'].sudo().search(
+            to_unlink = self.env['mail.activity'].sudo().search(
                 [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
-            ).unlink()
+            )
+            if to_unlink:
+                to_unlink.unlink()
         return super(MailActivityMixin, self).write(vals)
 
     def unlink(self):
         """ Override unlink to delete records activities through (res_model, res_id). """
         record_ids = self.ids
         result = super(MailActivityMixin, self).unlink()
-        self.env['mail.activity'].sudo().search(
+        to_unlink = self.env['mail.activity'].sudo().search(
             [('res_model', '=', self._name), ('res_id', 'in', record_ids)]
-        ).unlink()
+        )
+        if to_unlink:
+            to_unlink.unlink()
         return result
 
     def _read_group_groupby(self, groupby_spec, query):
@@ -297,10 +301,12 @@ class MailActivityMixin(models.AbstractModel):
         record_to_deactivate = self.filtered(lambda rec: rec[rec._active_name])
         if record_to_deactivate:
             # use a sudo to bypass every access rights; all activities should be removed
-            self.env['mail.activity'].sudo().search([
+            to_unlink = self.env['mail.activity'].sudo().search([
                 ('res_model', '=', self._name),
                 ('res_id', 'in', record_to_deactivate.ids)
-            ]).unlink()
+            ])
+            if to_unlink:
+                to_unlink.unlink()
         return super(MailActivityMixin, self).toggle_active()
 
     def activity_send_mail(self, template_id):
@@ -325,12 +331,12 @@ class MailActivityMixin(models.AbstractModel):
         :param additional_domain: if set, filter on that domain;
         """
         if self.env.context.get('mail_activity_automation_skip'):
-            return False
+            return self.env['mail.activity']
 
         Data = self.env['ir.model.data'].sudo()
         activity_types_ids = [type_id for type_id in (Data._xmlid_to_res_id(xmlid, raise_if_not_found=False) for xmlid in act_type_xmlids) if type_id]
         if not any(activity_types_ids):
-            return False
+            return self.env['mail.activity']
 
         domain = [
             '&', '&', '&',
@@ -470,5 +476,7 @@ class MailActivityMixin(models.AbstractModel):
         activity_types_ids = [act_type_id for act_type_id in activity_types_ids if act_type_id]
         if not any(activity_types_ids):
             return False
-        self.activity_search(act_type_xmlids, user_id=user_id).unlink()
+        to_unlink = self.activity_search(act_type_xmlids, user_id=user_id)
+        if to_unlink:
+            to_unlink.unlink()
         return True

@@ -91,7 +91,8 @@ class StockLocation(models.Model):
                             existing_rule = existing_rules[(rule.route_id, rule.picking_type_id, rule.action, location)]
                             if not existing_rule.active:
                                 rules_to_unarchive += existing_rule
-        self.env['stock.rule'].create(new_rules_vals)
+        if new_rules_vals:
+            self.env['stock.rule'].create(new_rules_vals)
         rules_to_unarchive.action_unarchive()
 
     def _archive_subcontracting_location_rules(self):

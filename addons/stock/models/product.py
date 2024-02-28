@@ -568,9 +568,11 @@ class Product(models.Model):
 
     def write(self, values):
         if 'active' in values:
-            self.filtered(lambda p: p.active != values['active']).with_context(active_test=False).orderpoint_ids.write({
-                'active': values['active']
-            })
+            orderpoints_to_activate = self.filtered(lambda p: p.active != values['active']).with_context(active_test=False).orderpoint_ids
+            if orderpoints_to_activate:
+                orderpoints_to_activate.write({
+                    'active': values['active']
+                })
         return super().write(values)
 
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):

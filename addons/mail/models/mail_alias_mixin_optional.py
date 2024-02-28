@@ -139,7 +139,8 @@ class AliasMixinOptional(models.AbstractModel):
         """ Delete the given records, and cascade-delete their corresponding alias. """
         aliases = self.mapped('alias_id')
         res = super().unlink()
-        aliases.sudo().unlink()
+        if aliases:
+            aliases.sudo().unlink()
         return res
 
     def copy_data(self, default=None):

@@ -392,9 +392,10 @@ class Project(models.Model):
             lambda task: not task.display_in_project
         )
         project.write({'tasks': [Command.set(new_tasks.ids)]})
-        subtasks_not_displayed.write({
-            'display_in_project': False
-        })
+        if subtasks_not_displayed:
+            subtasks_not_displayed.write({
+                'display_in_project': False
+            })
         return True
 
     def copy_data(self, default=None):
@@ -409,7 +410,7 @@ class Project(models.Model):
         for old_project, new_project in zip(self, new_projects):
             for follower in old_project.message_follower_ids:
                 new_project.message_subscribe(partner_ids=follower.partner_id.ids, subtype_ids=follower.subtype_ids.ids)
-            if old_project.allow_milestones:
+            if old_project.allow_milestones and self.milestone_ids:
                 new_project.milestone_ids = self.milestone_ids.copy().ids
             if 'tasks' not in default:
                 old_project.map_tasks(new_project.id)

@@ -32,13 +32,19 @@ class EventRegistration(models.Model):
         # as registrations can be automatically confirmed, or even created directly
         # with a state given in values
         if not self.env.context.get('event_lead_rule_skip'):
-            self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'create')]).sudo()._run_on_registrations(registrations)
+            rules = self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'create')]).sudo()
+            if rules:
+                rules._run_on_registrations(registrations)
             open_registrations = registrations.filtered(lambda reg: reg.state == 'open')
             if open_registrations:
-                self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'confirm')]).sudo()._run_on_registrations(open_registrations)
+                rules = self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'confirm')]).sudo()
+                if rules:
+                    rules._run_on_registrations(open_registrations)
             done_registrations = registrations.filtered(lambda reg: reg.state == 'done')
             if done_registrations:
-                self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'done')]).sudo()._run_on_registrations(done_registrations)
+                rules = self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'done')]).sudo()
+                if rules:
+                    rules._run_on_registrations(done_registrations)
 
         return registrations
 
@@ -70,9 +76,13 @@ class EventRegistration(models.Model):
         # handle triggers based on state
         if not event_lead_rule_skip:
             if vals.get('state') == 'open':
-                self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'confirm')]).sudo()._run_on_registrations(self)
+                rules = self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'confirm')]).sudo()
+                if rules:
+                    rules._run_on_registrations(self)
             elif vals.get('state') == 'done':
-                self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'done')]).sudo()._run_on_registrations(self)
+                rules = self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'done')]).sudo()
+                if rules:
+                    rules._run_on_registrations(self)
 
         return res
 

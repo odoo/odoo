@@ -30,11 +30,12 @@ class AccountPaymentMethod(models.Model):
 
                 journals = self.env['account.journal'].search(method_domain)
 
-                self.env['account.payment.method.line'].create([{
-                    'name': method.name,
-                    'payment_method_id': method.id,
-                    'journal_id': journal.id
-                } for journal in journals])
+                if journals:
+                    self.env['account.payment.method.line'].create([{
+                        'name': method.name,
+                        'payment_method_id': method.id,
+                        'journal_id': journal.id
+                    } for journal in journals])
         return payment_methods
 
     @api.model

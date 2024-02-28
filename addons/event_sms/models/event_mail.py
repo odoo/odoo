@@ -88,6 +88,7 @@ class EventMailRegistration(models.Model):
                 template=reg_mail.scheduler_id.template_ref,
                 mass_keep_log=True
             )
-        todo.write({'mail_sent': True})
+        if todo:
+            todo.write({'mail_sent': True})
 
         return super(EventMailRegistration, self).execute()

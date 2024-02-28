@@ -309,7 +309,9 @@ class Company(models.Model):
             })
 
         # Make sure that the selected currencies are enabled
-        companies.currency_id.sudo().filtered(lambda c: not c.active).active = True
+        to_active = companies.currency_id.sudo().filtered(lambda c: not c.active)
+        if to_active:
+            to_active.active = True
 
         return companies
 

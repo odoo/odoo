@@ -46,9 +46,10 @@ class ProductTemplate(models.Model):
                     new_product_category.property_cost_method)
                 out_svl_vals_list, products_orig_quantity_svl, products = Product\
                     ._svl_empty_stock(description, product_template=product_template)
-                out_stock_valuation_layers = SVL.create(out_svl_vals_list)
-                if product_template.valuation == 'real_time':
-                    move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
+                if out_svl_vals_list:
+                    out_stock_valuation_layers = SVL.create(out_svl_vals_list)
+                    if product_template.valuation == 'real_time':
+                        move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
                 impacted_templates[product_template] = (products, description, products_orig_quantity_svl)
 
         res = super(ProductTemplate, self).write(vals)
@@ -56,9 +57,10 @@ class ProductTemplate(models.Model):
         for product_template, (products, description, products_orig_quantity_svl) in impacted_templates.items():
             # Replenish the stock with the new cost method.
             in_svl_vals_list = products._svl_replenish_stock(description, products_orig_quantity_svl)
-            in_stock_valuation_layers = SVL.create(in_svl_vals_list)
-            if product_template.valuation == 'real_time':
-                move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
+            if in_svl_vals_list:
+                in_stock_valuation_layers = SVL.create(in_svl_vals_list)
+                if product_template.valuation == 'real_time':
+                    move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
 
         # Check access right
         if move_vals_list and not self.env['stock.valuation.layer'].check_access_rights('read', raise_exception=False):
@@ -257,8 +259,9 @@ class ProductProduct(models.Model):
                 'quantity': 0,
             }
             svl_vals_list.append(svl_vals)
+        if not svl_vals_list:
+            return
         stock_valuation_layers = self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
-
         # Handle account moves.
         product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in self}
         am_vals_list = []
@@ -316,9 +319,10 @@ class ProductProduct(models.Model):
             }
             am_vals_list.append(move_vals)
 
-        account_moves = self.env['account.move'].sudo().create(am_vals_list)
-        if account_moves:
-            account_moves._post()
+        if am_vals_list:
+            account_moves = self.env['account.move'].sudo().create(am_vals_list)
+            if account_moves:
+                account_moves._post()
 
     def _run_fifo(self, quantity, company):
         self.ensure_one()
@@ -828,9 +832,10 @@ class ProductCategory(models.Model):
                         product_category.display_name, product_category.property_valuation, new_valuation)
                 out_svl_vals_list, products_orig_quantity_svl, products = Product\
                     ._svl_empty_stock(description, product_category=product_category)
-                out_stock_valuation_layers = SVL.sudo().create(out_svl_vals_list)
-                if product_category.property_valuation == 'real_time':
-                    move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
+                if out_svl_vals_list:
+                    out_stock_valuation_layers = SVL.sudo().create(out_svl_vals_list)
+                    if product_category.property_valuation == 'real_time':
+                        move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
                 impacted_categories[product_category] = (products, description, products_orig_quantity_svl)
 
         res = super(ProductCategory, self).write(vals)
@@ -838,9 +843,10 @@ class ProductCategory(models.Model):
         for product_category, (products, description, products_orig_quantity_svl) in impacted_categories.items():
             # Replenish the stock with the new cost method.
             in_svl_vals_list = products._svl_replenish_stock(description, products_orig_quantity_svl)
-            in_stock_valuation_layers = SVL.sudo().create(in_svl_vals_list)
-            if product_category.property_valuation == 'real_time':
-                move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
+            if in_svl_vals_list:
+                in_stock_valuation_layers = SVL.sudo().create(in_svl_vals_list)
+                if product_category.property_valuation == 'real_time':
+                    move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
 
         # Check access right
         if move_vals_list and not self.env['stock.valuation.layer'].check_access_rights('read', raise_exception=False):

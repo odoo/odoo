@@ -177,7 +177,9 @@ class AccountChartTemplate(models.AbstractModel):
         if not reload_template and (not company.root_id._existing_accounting() or self.env.ref('base.module_account').demo):
             for model in ('account.move',) + TEMPLATE_MODELS[::-1]:
                 if not company.parent_id:
-                    self.env[model].sudo().with_context(active_test=False).search([('company_id', 'child_of', company.id)]).with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
+                    to_unlink = self.env[model].sudo().with_context(active_test=False).search([('company_id', 'child_of', company.id)])
+                    if to_unlink:
+                        to_unlink.with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
 
         data = self._get_chart_template_data(template_code)
         template_data = data.pop('template_data')
@@ -664,9 +666,10 @@ class AccountChartTemplate(models.AbstractModel):
             for company_attr_name in accounts_data:
                 company[company_attr_name] = company.parent_ids[0][company_attr_name]
         else:
-            accounts = self.env['account.account'].create(accounts_data.values())
-            for company_attr_name, account in zip(accounts_data.keys(), accounts):
-                company[company_attr_name] = account
+            if accounts_data:
+                accounts = self.env['account.account'].create(accounts_data.values())
+                for company_attr_name, account in zip(accounts_data.keys(), accounts):
+                    company[company_attr_name] = account
 
     @api.model
     def _instantiate_foreign_taxes(self, country, company):

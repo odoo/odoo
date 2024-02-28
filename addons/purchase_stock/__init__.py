@@ -13,4 +13,5 @@ def _create_buy_rules(env):
     were already created.
     """
     warehouse_ids = env['stock.warehouse'].search([('buy_pull_id', '=', False)])
-    warehouse_ids.write({'buy_to_resupply': True})
+    if warehouse_ids:
+        warehouse_ids.write({'buy_to_resupply': True})

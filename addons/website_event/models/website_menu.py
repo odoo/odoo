@@ -19,7 +19,8 @@ class WebsiteMenu(models.Model):
 
         # manually remove website_event_menus to call their ``unlink`` method. Otherwise
         # super unlinks at db level and skip model-specific behavior.
-        website_event_menus.unlink()
+        if website_event_menus:
+            website_event_menus.unlink()
         res = super(WebsiteMenu, self).unlink()
 
         # update events

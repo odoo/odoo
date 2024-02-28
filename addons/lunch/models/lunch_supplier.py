@@ -197,7 +197,9 @@ class LunchSupplier(models.Model):
             if topping_values:
                 topping_values.update({'topping_category': 3})
         if values.get('company_id'):
-            self.env['lunch.order'].search([('supplier_id', 'in', self.ids)]).write({'company_id': values['company_id']})
+            to_add_company = self.env['lunch.order'].search([('supplier_id', 'in', self.ids)])
+            if to_add_company:
+                to_add_company.write({'company_id': values['company_id']})
         res = super().write(values)
         if not CRON_DEPENDS.isdisjoint(values):
             # flush automatic_email_time field to call _sql_constraints

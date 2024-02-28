@@ -378,7 +378,8 @@ class Property(models.Model):
                     'value': value,
                     'type': self.env[model]._fields[name].type,
                 })
-        self.sudo().create(vals_list)
+        if vals_list:
+            self.sudo().create(vals_list)
 
     @api.model
     def search_multi(self, name, model, operator, value):

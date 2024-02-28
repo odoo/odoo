@@ -476,7 +476,9 @@ class PurchaseOrder(models.Model):
     def button_approve(self, force=False):
         self = self.filtered(lambda order: order._approval_allowed())
         self.write({'state': 'purchase', 'date_approve': fields.Datetime.now()})
-        self.filtered(lambda p: p.company_id.po_lock == 'lock').write({'state': 'done'})
+        to_approve = self.filtered(lambda p: p.company_id.po_lock == 'lock')
+        if to_approve:
+            to_approve.write({'state': 'done'})
         return {}
 
     def button_draft(self):

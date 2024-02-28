@@ -145,7 +145,8 @@ class ProductTemplateAttributeValue(models.Model):
                 # We catch all kind of exceptions to be sure that the operation
                 # doesn't fail.
                 ptav_to_archive += ptav
-        ptav_to_archive.write({'ptav_active': False})
+        if ptav_to_archive:
+            ptav_to_archive.write({'ptav_active': False})
         return True
 
     @api.depends('attribute_id')

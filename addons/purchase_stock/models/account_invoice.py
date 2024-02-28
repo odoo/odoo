@@ -114,7 +114,9 @@ class AccountMove(models.Model):
 
     def _post(self, soft=True):
         if not self._context.get('move_reverse_cancel'):
-            self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_in_lines_vals())
+            to_create = self._stock_account_prepare_anglo_saxon_in_lines_vals()
+            if to_create:
+                self.env['account.move.line'].create(to_create)
 
         # Create correction layer and impact accounts if invoice price is different
         stock_valuation_layers = self.env['stock.valuation.layer'].sudo()

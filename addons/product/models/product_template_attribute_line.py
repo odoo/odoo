@@ -242,11 +242,14 @@ class ProductTemplateAttributeLine(models.Model):
                     })
             # Handle active at each step in case a following line might want to
             # re-use a value that was archived at a previous step.
-            ptav_to_activate.write({'ptav_active': True})
-            ptav_to_unlink.write({'ptav_active': False})
+            if ptav_to_activate:
+                ptav_to_activate.write({'ptav_active': True})
+            if ptav_to_unlink:
+                ptav_to_unlink.write({'ptav_active': False})
         if ptav_to_unlink:
             ptav_to_unlink.unlink()
-        ProductTemplateAttributeValue.create(ptav_to_create)
+        if ptav_to_create:
+            ProductTemplateAttributeValue.create(ptav_to_create)
         self.product_tmpl_id._create_variant_ids()
 
     def _without_no_variant_attributes(self):

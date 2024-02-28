@@ -936,8 +936,9 @@ class Channel(models.Model):
                 to_update_as_joined += channel_partners.filtered(lambda cp: cp.member_status == 'invited')
             for partner in target_partners - channel_partners.partner_id:
                 to_create_channel_partners_values.append(dict(channel_id=channel.id, partner_id=partner.id, member_status=member_status))
-
-        new_slide_channel_partners = SlideChannelPartnerSudo.create(to_create_channel_partners_values)
+        new_slide_channel_partners = SlideChannelPartnerSudo
+        if to_create_channel_partners_values:
+            new_slide_channel_partners = SlideChannelPartnerSudo.create(to_create_channel_partners_values)
         to_update_as_joined.member_status = 'joined'
         to_update_as_joined._recompute_completion()
 

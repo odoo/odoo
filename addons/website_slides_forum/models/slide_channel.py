@@ -37,7 +37,7 @@ class Channel(models.Model):
         res = super(Channel, self).write(vals)
         if 'forum_id' in vals:
             self.forum_id.privacy = False
-            if old_forum != self.forum_id:
+            if old_forum and old_forum != self.forum_id:
                 old_forum.write({
                     'privacy': 'private',
                     'authorized_group_id': self.env.ref('website_slides.group_website_slides_officer').id,

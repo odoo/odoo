@@ -169,7 +169,8 @@ class HrWorkEntry(models.Model):
             entries_intervals = entries._to_intervals()
             overlapping_entries = self._from_intervals(entries_intervals & calendar_intervals)
             outside_entries |= entries - overlapping_entries
-        outside_entries.write({'state': 'conflict'})
+        if outside_entries:
+            outside_entries.write({'state': 'conflict'})
         return bool(outside_entries)
 
     def _to_intervals(self):

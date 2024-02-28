@@ -97,8 +97,10 @@ class Onboarding(models.Model):
         onboardings_to_refresh_progress = self.filtered(
             lambda o: o.is_per_company and o.progress_ids and not o.progress_ids.company_id
         )
-        onboardings_to_refresh_progress.progress_ids.unlink()
-        onboardings_to_refresh_progress._create_progress()
+        if onboardings_to_refresh_progress.progress_ids:
+            onboardings_to_refresh_progress.progress_ids.unlink()
+        if onboardings_to_refresh_progress:
+            onboardings_to_refresh_progress._create_progress()
 
     def action_toggle_visibility(self):
         self.current_progress_id.action_toggle_visibility()
@@ -106,7 +108,8 @@ class Onboarding(models.Model):
     def _search_or_create_progress(self):
         """Create Progress record(s) as necessary for the context."""
         onboardings_without_progress = self.filtered(lambda onboarding: not onboarding.current_progress_id)
-        onboardings_without_progress._create_progress()
+        if onboardings_without_progress:
+            onboardings_without_progress._create_progress()
         return self.current_progress_id
 
     def _create_progress(self):

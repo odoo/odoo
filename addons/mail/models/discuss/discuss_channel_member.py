@@ -171,7 +171,8 @@ class ChannelMember(models.Model):
     def _unmute(self):
         # Unmute notifications for the all the channel members whose mute date is passed.
         members = self.search([("mute_until_dt", "<=", fields.Datetime.now())])
-        members.write({"mute_until_dt": False})
+        if members:
+            members.write({"mute_until_dt": False})
         notifications = []
         for member in members:
             channel_data = {

@@ -68,4 +68,6 @@ class Employee(models.Model):
                             work_hours_count
                         )
                     )
-        return self.env['account.analytic.line'].sudo().create(lines_vals)
+        if lines_vals:
+            return self.env['account.analytic.line'].sudo().create(lines_vals)
+        return self.env['account.analytic.line'].sudo()

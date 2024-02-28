@@ -230,7 +230,8 @@ class StockMove(models.Model):
                 missing_lot_values = []
                 for lot_product_id, lot_name in filter(lambda l: l[0] in moves_product_ids, lots_data):
                     missing_lot_values.append({'company_id': self.company_id.id, 'product_id': lot_product_id, 'name': lot_name})
-                valid_lots |= self.env['stock.lot'].create(missing_lot_values)
+                if missing_lot_values:
+                    valid_lots |= self.env['stock.lot'].create(missing_lot_values)
         return valid_lots
 
     def _add_mls_related_to_order(self, related_order_lines, are_qties_done=True):
@@ -269,7 +270,8 @@ class StockMove(models.Model):
                         move_lines_to_create.append(ml_vals)
                         mls_qties.append(qty)
                         sum_of_lots += qty
-            self.env['stock.move.line'].create(move_lines_to_create)
+            if move_lines_to_create:
+                self.env['stock.move.line'].create(move_lines_to_create)
         else:
             for move in moves_remaining:
                 for line in lines_data[move.product_id.id]['order_lines']:

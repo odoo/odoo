@@ -1220,8 +1220,10 @@ class AccountMoveLine(models.Model):
         lines_to_modify = self.env['account.move.line'].browse([
             line.id for line in self if line.parent_state == "posted"
         ])
-        lines_to_modify.analytic_line_ids.unlink()
-        lines_to_modify._create_analytic_lines()
+        if lines_to_modify.analytic_line_ids:
+            lines_to_modify.analytic_line_ids.unlink()
+        if lines_to_modify:
+            lines_to_modify._create_analytic_lines()
 
     @api.onchange('account_id')
     def _inverse_account_id(self):
@@ -2394,17 +2396,18 @@ class AccountMoveLine(models.Model):
 
         # ==== Create the partials ====
         # Link the newly created partials to the plan. There are needed later for caba exchange entries.
-        partials = self.env['account.partial.reconcile'].create(partials_values_list)
-        start_range = 0
-        for plan_results, plan in zip(all_plan_results, plan_list):
-            size = len(plan_results)
-            plan['partials'] = partials[start_range:start_range + size]
-            start_range += size
+        if partials_values_list:
+            partials = self.env['account.partial.reconcile'].create(partials_values_list)
+            start_range = 0
+            for plan_results, plan in zip(all_plan_results, plan_list):
+                size = len(plan_results)
+                plan['partials'] = partials[start_range:start_range + size]
+                start_range += size
 
-        # ==== Create the partial exchange journal entries ====
-        exchange_moves = self._create_exchange_difference_moves(exchange_diff_values_list)
-        for index, exchange_move in zip(exchange_diff_partial_index, exchange_moves):
-            partials[index].exchange_move_id = exchange_move
+            # ==== Create the partial exchange journal entries ====
+            exchange_moves = self._create_exchange_difference_moves(exchange_diff_values_list)
+            for index, exchange_move in zip(exchange_diff_partial_index, exchange_moves):
+                partials[index].exchange_move_id = exchange_move
 
         # ==== Create entries for cash basis taxes ====
         def is_cash_basis_needed(account):
@@ -2534,8 +2537,8 @@ class AccountMoveLine(models.Model):
                     'reconciled_line_ids': [Command.link(aml.id) for aml in amls],
                 })
                 full_reconcile_full_batch_index.append(full_batch_index)
-
-        self.env['account.full.reconcile'].create(full_reconcile_values_list)
+        if full_reconcile_values_list:
+            self.env['account.full.reconcile'].create(full_reconcile_values_list)
 
         # === Cash basis rounding autoreconciliation ===
         # In case a cash basis rounding difference line got created for the transition account, we reconcile it with the corresponding lines
@@ -2986,7 +2989,8 @@ class AccountMoveLine(models.Model):
         for line in self:
             analytic_line_vals.extend(line._prepare_analytic_lines())
 
-        self.env['account.analytic.line'].create(analytic_line_vals)
+        if analytic_line_vals:
+            self.env['account.analytic.line'].create(analytic_line_vals)
 
     def _prepare_analytic_lines(self):
         self.ensure_one()

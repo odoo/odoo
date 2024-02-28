@@ -2477,7 +2477,7 @@ class Binary(Field):
 
     def create(self, record_values):
         assert self.attachment
-        if not record_values:
+        if not [x for (x,y) in record_values if y]:
             return
         # create the attachments that store the values
         env = record_values[0][0].env
@@ -2526,7 +2526,8 @@ class Binary(Field):
                 ])
             if value:
                 # update the existing attachments
-                atts.write({'datas': value})
+                if atts:
+                    atts.write({'datas': value})
                 atts_records = records.browse(atts.mapped('res_id'))
                 # create the missing attachments
                 missing = (real_records - atts_records)
@@ -2541,7 +2542,7 @@ class Binary(Field):
                         }
                         for record in missing
                     ])
-            else:
+            elif atts:
                 atts.unlink()
 
 

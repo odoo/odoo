@@ -193,7 +193,9 @@ class HrWorkEntry(models.Model):
             return super().unlink()
 
     def _reset_conflicting_state(self):
-        self.filtered(lambda w: w.state == 'conflict').write({'state': 'draft'})
+        to_reset = self.filtered(lambda w: w.state == 'conflict')
+        if to_reset:
+            to_reset.write({'state': 'draft'})
 
     @contextmanager
     def _error_checking(self, start=None, stop=None, skip=False, employee_ids=False):

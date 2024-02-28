@@ -232,7 +232,7 @@ class Location(models.Model):
                     raise UserError(_(
                         "You can't disable locations %s because they still contain products.",
                         ', '.join(children_quants.mapped('location_id.display_name'))))
-                else:
+                elif children_location - self:
                     super(Location, children_location - self).with_context(do_not_check_quant=True).write({
                         'active': values['active'],
                     })

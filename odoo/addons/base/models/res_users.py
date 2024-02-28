@@ -1349,7 +1349,8 @@ class GroupsImplied(models.Model):
         :param implied_group: the implied group to add
         """
         groups = self.filtered(lambda g: implied_group not in g.implied_ids)
-        groups.write({'implied_ids': [Command.link(implied_group.id)]})
+        if groups:
+            groups.write({'implied_ids': [Command.link(implied_group.id)]})
 
     def _remove_group(self, implied_group):
         """ Remove the given group from the implied groups of the current group

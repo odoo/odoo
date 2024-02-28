@@ -33,9 +33,11 @@ class AccountMove(models.Model):
         # OVERRIDE to write the partner on the membership lines.
         res = super(AccountMove, self).write(vals)
         if 'partner_id' in vals:
-            self.env['membership.membership_line'].search([
+            to_write = self.env['membership.membership_line'].search([
                 ('account_invoice_line', 'in', self.mapped('invoice_line_ids').ids)
-            ]).write({'partner': vals['partner_id']})
+            ])
+            if to_write:
+                to_write.write({'partner': vals['partner_id']})
         return res
 
 

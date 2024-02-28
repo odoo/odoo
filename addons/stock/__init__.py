@@ -10,10 +10,12 @@ from . import populate
 
 # TODO: Apply proper fix & remove in master
 def pre_init_hook(env):
-    env['ir.model.data'].search([
+    to_unlink = env['ir.model.data'].search([
         ('model', 'like', 'stock'),
         ('module', '=', 'stock')
-    ]).unlink()
+    ])
+    if to_unlink:
+        to_unlink.unlink()
 
 def _assign_default_mail_template_picking_id(env):
     company_ids_without_default_mail_template_id = env['res.company'].search([
@@ -27,4 +29,5 @@ def _assign_default_mail_template_picking_id(env):
 
 def uninstall_hook(env):
     picking_type_ids = env["stock.picking.type"].with_context({"active_test": False}).search([])
-    picking_type_ids.sequence_id.unlink()
+    if picking_type_ids.sequence_id:
+        picking_type_ids.sequence_id.unlink()

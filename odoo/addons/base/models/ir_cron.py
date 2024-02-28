@@ -534,4 +534,6 @@ class ir_cron_trigger(models.Model):
 
     @api.autovacuum
     def _gc_cron_triggers(self):
-        self.search([('call_at', '<', datetime.now() + relativedelta(weeks=-1))]).unlink()
+        to_unlink = self.search([('call_at', '<', datetime.now() + relativedelta(weeks=-1))])
+        if to_unlink:
+            to_unlink.unlink()

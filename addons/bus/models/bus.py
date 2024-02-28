@@ -54,7 +54,10 @@ class ImBus(models.Model):
     def _gc_messages(self):
         timeout_ago = fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT*2)
         domain = [('create_date', '<', timeout_ago)]
-        return self.sudo().search(domain).unlink()
+        to_unlink = self.sudo().search(domain)
+        if to_unlink:
+            return to_unlink.unlink()
+        return True
 
     @api.model
     def _sendmany(self, notifications):
@@ -70,7 +73,8 @@ class ImBus(models.Model):
                     'payload': message,
                 })
             })
-        self.sudo().create(values)
+        if values:
+            self.sudo().create(values)
         if channels:
             # We have to wait until the notifications are commited in database.
             # When calling `NOTIFY imbus`, notifications will be fetched in the

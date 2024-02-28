@@ -177,7 +177,10 @@ class IrDefault(models.Model):
         domain = [('field_id.ttype', '=', 'many2one'),
                   ('field_id.relation', '=', records._name),
                   ('json_value', 'in', json_vals)]
-        return self.search(domain).unlink()
+        to_discard = self.search(domain)
+        if to_discard:
+            return to_discard.unlink()
+        return True
 
     @api.model
     def discard_values(self, model_name, field_name, values):

@@ -803,7 +803,8 @@ Please change the quantity done or the rounding precision of your unit of measur
         ml_to_unlink = self.env['stock.move.line'].browse(ml_to_unlink)
         moves_not_to_recompute = self.env['stock.move'].browse(moves_not_to_recompute)
 
-        ml_to_unlink.unlink()
+        if ml_to_unlink:
+            ml_to_unlink.unlink()
         # `write` on `stock.move.line` doesn't call `_recompute_state` (unlike to `unlink`),
         # so it must be called for each move where no move line has been deleted.
         (moves_to_unreserve - moves_not_to_recompute)._recompute_state()
@@ -1338,13 +1339,17 @@ Please change the quantity done or the rounding precision of your unit of measur
                 move.product_id, move.product_uom_qty, move.product_uom,
                 move.location_id, move.rule_id and move.rule_id.name or "/",
                 origin, move.company_id, values))
-        self.env['procurement.group'].run(procurement_requests, raise_user_error=not self.env.context.get('from_orderpoint'))
+        if procurement_requests:
+            self.env['procurement.group'].run(procurement_requests, raise_user_error=not self.env.context.get('from_orderpoint'))
 
-        move_to_confirm.write({'state': 'confirmed'})
-        (move_waiting | move_create_proc).write({'state': 'waiting'})
+        if move_to_confirm:
+            move_to_confirm.write({'state': 'confirmed'})
+        if move_waiting or move_create_proc:
+            (move_waiting | move_create_proc).write({'state': 'waiting'})
         # procure_method sometimes changes with certain workflows so just in case, apply to all moves
-        (move_to_confirm | move_waiting | move_create_proc).filtered(lambda m: m.picking_type_id.reservation_method == 'at_confirm')\
-            .write({'reservation_date': fields.Date.today()})
+        to_set_reservation_date = (move_to_confirm | move_waiting | move_create_proc).filtered(lambda m: m.picking_type_id.reservation_method == 'at_confirm')
+        if to_set_reservation_date:
+            to_set_reservation_date.write({'reservation_date': fields.Date.today()})
 
         # assign picking in batch for all confirmed move that share the same details
         for moves_ids in to_assign.values():
@@ -1707,9 +1712,12 @@ Please change the quantity done or the rounding precision of your unit of measur
             if move.product_id.tracking == 'serial':
                 move.next_serial_count = move.product_uom_qty
 
-        self.env['stock.move.line'].create(move_line_vals_list)
-        StockMove.browse(partially_available_moves_ids).write({'state': 'partially_available'})
-        StockMove.browse(assigned_moves_ids).write({'state': 'assigned'})
+        if move_line_vals_list:
+            self.env['stock.move.line'].create(move_line_vals_list)
+        if partially_available_moves_ids:
+            StockMove.browse(partially_available_moves_ids).write({'state': 'partially_available'})
+        if assigned_moves_ids:
+            StockMove.browse(assigned_moves_ids).write({'state': 'assigned'})
         if not self.env.context.get('bypass_entire_pack'):
             self.picking_id._check_entire_pack()
         StockMove.browse(moves_to_redirect).move_line_ids._apply_putaway_strategy()
@@ -1732,15 +1740,17 @@ Please change the quantity done or the rounding precision of your unit of measur
             else:
                 if all(state in ('done', 'cancel') for state in siblings_states):
                     move_dest_ids = move.move_dest_ids
-                    move_dest_ids.write({
-                        'procure_method': 'make_to_stock',
-                        'move_orig_ids': [Command.unlink(move.id)]
-                    })
-        moves_to_cancel.write({
-            'state': 'cancel',
-            'move_orig_ids': [(5, 0, 0)],
-            'procure_method': 'make_to_stock',
-        })
+                    if move_dest_ids:
+                        move_dest_ids.write({
+                            'procure_method': 'make_to_stock',
+                            'move_orig_ids': [Command.unlink(move.id)]
+                        })
+        if moves_to_cancel:
+            moves_to_cancel.write({
+                'state': 'cancel',
+                'move_orig_ids': [(5, 0, 0)],
+                'procure_method': 'make_to_stock',
+            })
         return True
 
     def _prepare_extra_move_vals(self, qty):
@@ -1802,9 +1812,11 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     def _action_done(self, cancel_backorder=False):
         moves = self.filtered(
-            lambda move: move.state == 'draft'
-            or float_is_zero(move.product_uom_qty, precision_digits=move.product_uom.rounding)
-        )._action_confirm(merge=False)  # MRP allows scrapping draft moves
+            lambda m: m.state == 'draft'
+            or float_is_zero(m.product_uom_qty, precision_digits=m.product_uom.rounding)
+        )
+        if moves: # MRP allows scrapping draft moves
+            moves = moves._action_confirm(merge=False)
         moves = (self | moves).exists().filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_ids_todo = OrderedSet()
 
@@ -1819,7 +1831,8 @@ Please change the quantity done or the rounding precision of your unit of measur
             if (move.quantity <= 0 or not move.picked) and not move.is_inventory:
                 if float_compare(move.product_uom_qty, 0.0, precision_rounding=move.product_uom.rounding) == 0 or cancel_backorder:
                     move._action_cancel()
-        self.env['stock.move.line'].browse(ml_ids_to_unlink).unlink()
+        if ml_ids_to_unlink:
+            self.env['stock.move.line'].browse(ml_ids_to_unlink).unlink()
 
         # Create extra moves where necessary
         for move in moves:
@@ -1830,7 +1843,8 @@ Please change the quantity done or the rounding precision of your unit of measur
             moves_ids_todo |= move._create_extra_move().ids
 
         moves_todo = self.browse(moves_ids_todo)
-        moves_todo._check_company()
+        if moves_todo:
+            moves_todo._check_company()
         if not cancel_backorder:
             # Split moves where necessary and move quants
             backorder_moves_vals = []
@@ -1843,10 +1857,11 @@ Please change the quantity done or the rounding precision of your unit of measur
                     qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
                     new_move_vals = move._split(qty_split)
                     backorder_moves_vals += new_move_vals
-            backorder_moves = self.env['stock.move'].create(backorder_moves_vals)
-            # The backorder moves are not yet in their own picking. We do not want to check entire packs for those
-            # ones as it could messed up the result_package_id of the moves being currently validated
-            backorder_moves.with_context(bypass_entire_pack=True)._action_confirm(merge=False)
+            if backorder_moves_vals:
+                backorder_moves = self.env['stock.move'].create(backorder_moves_vals)
+                # The backorder moves are not yet in their own picking. We do not want to check entire packs for those
+                # ones as it could messed up the result_package_id of the moves being currently validated
+                backorder_moves.with_context(bypass_entire_pack=True)._action_confirm(merge=False)
         moves_todo.mapped('move_line_ids').sorted()._action_done()
         # Check the consistency of the result packages; there should be an unique location across
         # the contained quants.
@@ -1858,7 +1873,8 @@ Please change the quantity done or the rounding precision of your unit of measur
         if any(ml.package_id and ml.package_id == ml.result_package_id for ml in moves_todo.move_line_ids):
             self.env['stock.quant']._unlink_zero_quants()
         picking = moves_todo.mapped('picking_id')
-        moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
+        if moves_todo:
+            moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
 
         move_dests_per_company = defaultdict(lambda: self.env['stock.move'])
 
@@ -1889,7 +1905,9 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     def unlink(self):
         # With the non plannified picking, draft moves could have some move lines.
-        self.with_context(prefetch_fields=False).mapped('move_line_ids').unlink()
+        to_unlink = self.with_context(prefetch_fields=False).mapped('move_line_ids')
+        if to_unlink:
+            to_unlink.unlink()
         return super(StockMove, self).unlink()
 
     def _prepare_move_split_vals(self, qty):

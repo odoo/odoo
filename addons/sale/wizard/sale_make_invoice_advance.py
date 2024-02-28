@@ -164,8 +164,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     self._prepare_down_payment_section_values(order)
                 )
 
-            values, accounts = self._prepare_down_payment_lines_values(order)
-            down_payment_lines = SaleOrderline.create(values)
+            vals_list, accounts = self._prepare_down_payment_lines_values(order)
+            if not vals_list:
+                return self.env['account.move'].sudo()
+            down_payment_lines = SaleOrderline.create(vals_list)
 
             invoice = self.env['account.move'].sudo().create(
                 self._prepare_invoice_values(order, down_payment_lines, accounts)

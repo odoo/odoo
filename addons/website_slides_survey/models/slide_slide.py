@@ -24,9 +24,11 @@ class SlidePartnerRelation(models.Model):
     def _compute_field_value(self, field):
         super()._compute_field_value(field)
         if field.name == 'survey_scoring_success':
-            self.filtered('survey_scoring_success').write({
-                'completed': True
-            })
+            to_complete = self.filtered('survey_scoring_success')
+            if to_complete:
+                to_complete.write({
+                    'completed': True
+                })
 
     def _recompute_completion(self):
         super(SlidePartnerRelation, self)._recompute_completion()
@@ -123,10 +125,12 @@ class Slide(models.Model):
         If the survey is unlinked from the slide, the challenge category must be reset to 'certification'"""
         if old_surveys:
             old_certification_challenges = old_surveys.mapped('certification_badge_id').challenge_ids
-            old_certification_challenges.write({'challenge_category': 'certification'})
+            if old_certification_challenges:
+                old_certification_challenges.write({'challenge_category': 'certification'})
         if not unlink:
             certification_challenges = self.survey_id.certification_badge_id.challenge_ids
-            certification_challenges.write({'challenge_category': 'slides'})
+            if certification_challenges:
+                certification_challenges.write({'challenge_category': 'slides'})
 
     def _generate_certification_url(self):
         """ get a map of certification url for certification slide from `self`. The url will come from the survey user input:

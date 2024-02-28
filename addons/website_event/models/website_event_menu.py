@@ -20,5 +20,6 @@ class EventMenu(models.Model):
         ], string="Menu Type", required=True)
 
     def unlink(self):
-        self.view_id.sudo().unlink()
+        if self.view_id:
+            self.view_id.sudo().unlink()
         return super(EventMenu, self).unlink()

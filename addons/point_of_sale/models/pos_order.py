@@ -186,7 +186,8 @@ class PosOrder(models.Model):
 
     def _clean_payment_lines(self):
         self.ensure_one()
-        self.payment_ids.unlink()
+        if self.payment_ids:
+            self.payment_ids.unlink()
 
     def _process_payment_lines(self, pos_order, order, pos_session, draft):
         """Create account.bank.statement.lines from the dictionary given to the parent function.
@@ -1003,7 +1004,8 @@ class PosOrder(models.Model):
                     destination_id = picking_type.default_location_dest_id.id
 
                 pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(destination_id, self.lines, picking_type, self.partner_id)
-                pickings.write({'pos_session_id': self.session_id.id, 'pos_order_id': self.id, 'origin': self.name})
+                if pickings:
+                    pickings.write({'pos_session_id': self.session_id.id, 'pos_order_id': self.id, 'origin': self.name})
 
     def add_payment(self, data):
         """Create a new payment for the order"""
@@ -1491,7 +1493,8 @@ class PosOrderLine(models.Model):
                 for product_id, lines in lines_by_tracked_product:
                     lines = self.env['pos.order.line'].concat(*lines)
                     moves = pickings_to_confirm.move_ids.filtered(lambda m: m.product_id.id == product_id)
-                    moves.move_line_ids.unlink()
+                    if moves.move_line_ids:
+                        moves.move_line_ids.unlink()
                     moves._add_mls_related_to_order(lines, are_qties_done=False)
                     moves._recompute_state()
         return True

@@ -126,8 +126,8 @@ class StockMove(models.Model):
                 so_line_vals[-1]['price_unit'] = 0.0
             elif move.price_unit:
                 so_line_vals[-1]['price_unit'] = move.price_unit
-
-        self.env['sale.order.line'].create(so_line_vals)
+        if so_line_vals:
+            self.env['sale.order.line'].create(so_line_vals)
 
     def _clean_repair_sale_order_line(self):
         self.filtered(

@@ -646,7 +646,9 @@ class PosSession(models.Model):
             if self.move_id.line_ids:
                 self.move_id.sudo().with_company(self.company_id)._post()
                 # Set the uninvoiced orders' state to 'done'
-                self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
+                to_done = self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')])
+                if to_done:
+                    to_done.write({'state': 'done'})
             else:
                 self.move_id.sudo().unlink()
             self.sudo().with_company(self.company_id)._reconcile_account_move_lines(data)
@@ -1184,14 +1186,17 @@ class PosSession(models.Model):
         if not float_is_zero(rounding_difference['amount'], precision_rounding=self.currency_id.rounding) or not float_is_zero(rounding_difference['amount_converted'], precision_rounding=self.currency_id.rounding):
             rounding_vals = [self._get_rounding_difference_vals(rounding_difference['amount'], rounding_difference['amount_converted'])]
 
-        MoveLine.create(tax_vals)
-        move_line_ids = MoveLine.create([self._get_sale_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in sales.items()])
-        for key, ml_id in zip(sales.keys(), move_line_ids.ids):
-            sales[key]['move_line_id'] = ml_id
-        MoveLine.create(
-            [self._get_stock_expense_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in stock_expense.items()]
-            + rounding_vals
-        )
+        if tax_vals:
+            MoveLine.create(tax_vals)
+        vals_list = [self._get_sale_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in sales.items()]
+        if vals_list:
+            move_line_ids = MoveLine.create(vals_list)
+            for key, ml_id in zip(sales.keys(), move_line_ids.ids):
+                sales[key]['move_line_id'] = ml_id
+        to_create = ([self._get_stock_expense_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in stock_expense.items()]
+            + rounding_vals)
+        if to_create:
+            MoveLine.create(to_create)
 
         return data
 
@@ -1231,7 +1236,8 @@ class PosSession(models.Model):
         # Entries related to 'pay_later' payment method- should not be excluded from follow-ups
         for val in vals:
             val['blocked'] = False
-        MoveLine.create(vals)
+        if vals:
+            MoveLine.create(vals)
         return data
 
     def _create_combine_account_payment(self, payment_method, amounts, diff_amount):
@@ -1350,14 +1356,18 @@ class PosSession(models.Model):
 
         # create the statement lines and account move lines
         BankStatementLine = self.env['account.bank.statement.line']
-        split_cash_statement_lines = {}
-        combine_cash_statement_lines = {}
-        split_cash_receivable_lines = {}
-        combine_cash_receivable_lines = {}
-        split_cash_statement_lines = BankStatementLine.create(split_cash_statement_line_vals).mapped('move_id.line_ids').filtered(lambda line: line.account_id.account_type == 'asset_receivable')
-        combine_cash_statement_lines = BankStatementLine.create(combine_cash_statement_line_vals).mapped('move_id.line_ids').filtered(lambda line: line.account_id.account_type == 'asset_receivable')
-        split_cash_receivable_lines = MoveLine.create(split_cash_receivable_vals)
-        combine_cash_receivable_lines = MoveLine.create(combine_cash_receivable_vals)
+        split_cash_statement_lines = MoveLine
+        combine_cash_statement_lines = MoveLine
+        split_cash_receivable_lines = MoveLine
+        combine_cash_receivable_lines = MoveLine
+        if split_cash_statement_line_vals:
+            split_cash_statement_lines = BankStatementLine.create(split_cash_statement_line_vals).mapped('move_id.line_ids').filtered(lambda line: line.account_id.account_type == 'asset_receivable')
+        if combine_cash_statement_line_vals:
+            combine_cash_statement_lines = BankStatementLine.create(combine_cash_statement_line_vals).mapped('move_id.line_ids').filtered(lambda line: line.account_id.account_type == 'asset_receivable')
+        if split_cash_receivable_vals:
+            split_cash_receivable_lines = MoveLine.create(split_cash_receivable_vals)
+        if combine_cash_receivable_vals:
+            combine_cash_receivable_lines = MoveLine.create(combine_cash_receivable_vals)
 
         data.update(
             {'split_cash_statement_lines':    split_cash_statement_lines,
@@ -1469,9 +1479,11 @@ class PosSession(models.Model):
         stock_moves = self.env['stock.move'].search([('picking_id', 'in', pickings.ids)])
         stock_account_move_lines = self.env['account.move'].search([('stock_move_id', 'in', stock_moves.ids)]).mapped('line_ids')
         for account_id in stock_output_lines:
-            ( stock_output_lines[account_id]
-            | stock_account_move_lines.filtered(lambda aml: aml.account_id == account_id)
-            ).filtered(lambda aml: not aml.reconciled).reconcile()
+            to_reconcile = (stock_output_lines[account_id]
+                            | stock_account_move_lines.filtered(lambda aml: aml.account_id == account_id)
+                            ).filtered(lambda aml: not aml.reconciled)
+            if to_reconcile:
+                to_reconcile.reconcile()
         return data
 
     def _get_rounding_difference_vals(self, amount, amount_converted):

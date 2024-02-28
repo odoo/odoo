@@ -826,4 +826,5 @@ class MailActivity(models.Model):
             return
         deadline_threshold_dt = datetime.now() - relativedelta(years=year_threshold)
         old_overdue_activities = self.env['mail.activity'].search([('date_deadline', '<', deadline_threshold_dt)], limit=10_000)
-        old_overdue_activities.unlink()
+        if old_overdue_activities:
+            old_overdue_activities.unlink()

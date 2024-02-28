@@ -68,10 +68,12 @@ class ProductWishlist(models.Model):
     @api.autovacuum
     def _gc_sessions(self, *args, **kwargs):
         """Remove wishlists for unexisting sessions."""
-        self.with_context(active_test=False).search([
+        to_unlink = self.with_context(active_test=False).search([
             ("create_date", "<", fields.Datetime.to_string(datetime.now() - timedelta(weeks=kwargs.get('wishlist_week', 5)))),
             ("partner_id", "=", False),
-        ]).unlink()
+        ])
+        if to_unlink:
+            to_unlink.unlink()
 
 
 class ResPartner(models.Model):

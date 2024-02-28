@@ -143,9 +143,11 @@ class ProductProduct(models.Model):
 
     def write(self, values):
         if 'active' in values:
-            self.filtered(lambda p: p.active != values['active']).with_context(active_test=False).variant_bom_ids.write({
-                'active': values['active']
-            })
+            to_activate = self.filtered(lambda p: p.active != values['active']).with_context(active_test=False).variant_bom_ids
+            if to_activate:
+                to_activate.write({
+                    'active': values['active']
+                })
         return super().write(values)
 
     def get_components(self):

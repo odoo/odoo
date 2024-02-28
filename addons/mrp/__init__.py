@@ -27,7 +27,8 @@ def _create_warehouse_data(env):
     installed after some warehouses were already created.
     """
     warehouse_ids = env['stock.warehouse'].search([('manufacture_pull_id', '=', False)])
-    warehouse_ids.write({'manufacture_to_resupply': True})
+    if warehouse_ids:
+        warehouse_ids.write({'manufacture_to_resupply': True})
 
 def uninstall_hook(env):
     warehouses = env["stock.warehouse"].search([])

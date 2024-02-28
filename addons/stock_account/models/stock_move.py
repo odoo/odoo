@@ -34,7 +34,8 @@ class StockMove(models.Model):
         return action_data
 
     def _action_cancel(self):
-        self.analytic_account_line_ids.unlink()
+        if self.analytic_account_line_ids:
+            self.analytic_account_line_ids.unlink()
         return super()._action_cancel()
 
     def _should_force_price_unit(self):

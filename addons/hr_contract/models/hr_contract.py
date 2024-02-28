@@ -261,7 +261,8 @@ class Contract(models.Model):
 
     def _assign_open_contract(self):
         for contract in self:
-            contract.employee_id.sudo().write({'contract_id': contract.id})
+            if contract.employee_id:
+                contract.employee_id.sudo().write({'contract_id': contract.id})
 
     @api.depends('wage')
     def _compute_contract_wage(self):

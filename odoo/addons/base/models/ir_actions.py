@@ -89,7 +89,8 @@ class IrActions(models.Model):
         """unlink ir.action.todo which are related to actions which will be deleted.
            NOTE: ondelete cascade will not work on ir.actions.actions so we will need to do it manually."""
         todos = self.env['ir.actions.todo'].search([('action_id', 'in', self.ids)])
-        todos.unlink()
+        if todos:
+            todos.unlink()
         res = super(IrActions, self).unlink()
         # self.get_bindings() depends on action records
         self.env.registry.clear_cache()

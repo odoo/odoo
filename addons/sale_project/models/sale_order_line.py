@@ -200,15 +200,16 @@ class SaleOrderLine(models.Model):
             values['name'] = "%s - %s" % (values['name'], self.product_id.project_template_id.name)
             # The no_create_folder context key is used in documents_project
             project = self.product_id.project_template_id.with_context(no_create_folder=True).copy(values)
-            project.tasks.write({
-                'sale_line_id': self.id,
-                'partner_id': self.order_id.partner_id.id,
-            })
-            # duplicating a project doesn't set the SO on sub-tasks
-            project.tasks.filtered('parent_id').write({
-                'sale_line_id': self.id,
-                'sale_order_id': self.order_id.id,
-            })
+            if project.tasks:
+                project.tasks.write({
+                    'sale_line_id': self.id,
+                    'partner_id': self.order_id.partner_id.id,
+                })
+                # duplicating a project doesn't set the SO on sub-tasks
+                project.tasks.filtered('parent_id').write({
+                    'sale_line_id': self.id,
+                    'sale_order_id': self.order_id.id,
+                })
         else:
             project_only_sol_count = self.env['sale.order.line'].search_count([
                 ('order_id', '=', self.order_id.id),

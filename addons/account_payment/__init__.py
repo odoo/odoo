@@ -16,7 +16,9 @@ def post_init_hook(env):
 def uninstall_hook(env):
     """ Delete `account.payment.method` records created for the installed payment providers. """
     installed_providers = env['payment.provider'].search([('module_id.state', '=', 'installed')])
-    env['account.payment.method'].search([
+    to_unlink = env['account.payment.method'].search([
         ('code', 'in', installed_providers.mapped('code')),
         ('payment_type', '=', 'inbound'),
-    ]).unlink()
+    ])
+    if to_unlink:
+        to_unlink.unlink()
