@@ -997,13 +997,13 @@ class AccountTax(models.Model):
 
             # Round them like what the creation of tax lines would do.
             for key, values in amount_per_tax_repartition_line_id.items():
-                currency = self.env['res.currency'].browse(key['currency_id'])
+                currency = self.env['res.currency'].browse(key['currency_id']) or comp_currency
                 values['tax_amount_rounded'] = comp_currency.round(values['tax_amount'])
                 values['tax_amount_currency_rounded'] = currency.round(values['tax_amount_currency'])
 
             # Dispatch the amount accross the tax values.
             for key, values in amount_per_tax_repartition_line_id.items():
-                foreign_currency = self.env['res.currency'].browse(key['currency_id'])
+                foreign_currency = self.env['res.currency'].browse(key['currency_id']) or comp_currency
                 for currency, amount_field in ((comp_currency, 'tax_amount'), (foreign_currency, 'tax_amount_currency')):
                     raw_value = values[amount_field]
                     rounded_value = values[f'{amount_field}_rounded']
