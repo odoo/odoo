@@ -214,9 +214,9 @@ class KeyboardUSBDriver(Driver):
         scanner_name = ['barcode', 'scanner', 'reader']
         is_scanner = any(x in device_name for x in scanner_name) or self.dev.interface_protocol == '0'
 
-        file_path = Path.home() / 'odoo-keyboard-is-scanner.conf'
-        if file_path.exists():
-            data = json.loads(file_path.read_text())
+        keyboard_is_scanner = helpers.read_configuration(helpers.IOTConfKeys.ODOO_KEYBOARD_IS_SCANNER)
+        if keyboard_is_scanner:
+            data = json.loads(keyboard_is_scanner)
             is_scanner = data.get(self.device_identifier, {}).get('is_scanner', is_scanner)
         return is_scanner
 
@@ -256,13 +256,13 @@ class KeyboardUSBDriver(Driver):
         We need that in order to keep the selected type of device after a reboot.
         """
         is_scanner = {'is_scanner': data.get('is_scanner')}
-        file_path = Path.home() / 'odoo-keyboard-is-scanner.conf'
-        if file_path.exists():
-            data = json.loads(file_path.read_text())
+        keyboard_is_scanner = helpers.read_configuration(helpers.IOTConfKeys.ODOO_KEYBOARD_IS_SCANNER)
+        if keyboard_is_scanner:
+            data = json.loads(keyboard_is_scanner)
         else:
             data = {}
         data[self.device_identifier] = is_scanner
-        helpers.write_file('odoo-keyboard-is-scanner.conf', json.dumps(data))
+        helpers.write_configuration(helpers.IOTConfKeys.ODOO_KEYBOARD_IS_SCANNER, json.dumps(data))
         self._set_device_type('scanner') if is_scanner.get('is_scanner') else self._set_device_type()
 
     def _update_layout(self, data):

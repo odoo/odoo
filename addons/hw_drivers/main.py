@@ -34,13 +34,17 @@ iot_devices = {}
 
 
 class Manager(Thread):
+    def __init__(self):
+        super(Manager, self).__init__()
+        helpers.check_configuration()
+
     def send_alldevices(self, iot_client=None):
         """
         This method send IoT Box and devices informations to Odoo database
         """
         server = helpers.get_odoo_server_url()
         if server:
-            subject = helpers.read_file_first_line('odoo-subject.conf')
+            subject = helpers.read_configuration(helpers.IOTConfKeys.ODOO_SUBJECT)
             if subject:
                 domain = helpers.get_ip().replace('.', '-') + subject.strip('*')
             else:

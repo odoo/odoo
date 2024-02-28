@@ -24,6 +24,7 @@ import secrets
 from odoo import _, http, service
 from odoo.tools.func import lazy_property
 from odoo.tools.misc import file_path
+from odoo.tools import config
 
 _logger = logging.getLogger(__name__)
 
@@ -36,6 +37,20 @@ except ImportError:
 # Helper
 #----------------------------------------------------------
 
+#----------------------------------------------------------
+# Name for the keys in odoo.conf
+#----------------------------------------------------------
+class IOTConfKeys(Enum):
+    BOX_VERSION = "box_version"
+    ODOO_DB_UUID = "odoo_db_uuid"
+    ODOO_ENTERPRISE_CODE = "odoo_enterprise_code"
+    ODOO_KEYBOARD_IS_SCANNER = "odoo_keyboard_is_scanner"
+    ODOO_REMOTE_SERVER = "odoo_remote_server"
+    ODOO_SIX_PAYEMENT_TERM = "odoo_six_payment_terminal"
+    ODOO_SUBJECT = "odoo_subject"
+    TOKEN_KEY = "token"
+    WIFI_ESSID = "wifi_ssid"
+    WIFI_PASSWORD = "wifi_password"
 
 class CertificateStatus(Enum):
     OK = 1
@@ -188,10 +203,10 @@ def save_conf_server(url, token, db_uuid, enterprise_code):
     """
     Save config to connect IoT to the server
     """
-    write_file('odoo-remote-server.conf', url)
-    write_file('token', token)
-    write_file('odoo-db-uuid.conf', db_uuid or '')
-    write_file('odoo-enterprise-code.conf', enterprise_code or '')
+    write_configuration(IOTConfKeys.ODOO_REMOTE_SERVER, url)
+    write_configuration(IOTConfKeys.TOKEN_KEY, token)
+    write_configuration(IOTConfKeys.ODOO_DB_UUID, db_uuid or '')
+    write_configuration(IOTConfKeys.ODOO_ENTERPRISE_CODE, enterprise_code or '')
 
 def generate_password():
     """
@@ -267,16 +282,16 @@ def get_odoo_server_url():
         ap = subprocess.call(['systemctl', 'is-active', '--quiet', 'hostapd']) # if service is active return 0 else inactive
         if not ap:
             return False
-    return read_file_first_line('odoo-remote-server.conf')
+    return read_configuration(IOTConfKeys.ODOO_REMOTE_SERVER)
 
 def get_token():
-    return read_file_first_line('token')
+    return read_configuration(IOTConfKeys.TOKEN_KEY)
 
 def get_version():
     if platform.system() == 'Linux':
-        return read_file_first_line('/var/odoo/iotbox_version')
+        return read_configuration(IOTConfKeys.BOX_VERSION)
     elif platform.system() == 'Windows':
-        return 'W23_11'
+        return 'W24_01'
 
 def get_wifi_essid():
     wifi_options = []
@@ -292,8 +307,8 @@ def load_certificate():
     """
     Send a request to Odoo with customer db_uuid and enterprise_code to get a true certificate
     """
-    db_uuid = read_file_first_line('odoo-db-uuid.conf')
-    enterprise_code = read_file_first_line('odoo-enterprise-code.conf')
+    db_uuid = read_configuration(IOTConfKeys.ODOO_DB_UUID)
+    enterprise_code = read_configuration(IOTConfKeys.ODOO_ENTERPRISE_CODE)
     if not (db_uuid and enterprise_code):
         return "ERR_IOT_HTTPS_LOAD_NO_CREDENTIAL"
 
@@ -324,7 +339,7 @@ def load_certificate():
     if not result:
         return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
 
-    write_file('odoo-subject.conf', result['subject_cn'])
+    write_configuration(IOTConfKeys.ODOO_SUBJECT, result['subject_cn'])
     if platform.system() == 'Linux':
         with writable():
             Path('/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
@@ -409,6 +424,80 @@ def read_file_first_line(filename):
     if path.exists():
         with path.open('r') as f:
             return f.readline().strip('\n')
+
+def read_file_first_two_lines(filename):
+    path = path_file(filename)
+    if path.exists():
+        with path.open('r') as f:
+            first_line = f.readline().strip('\n')
+            second_line = f.readline().strip('\n')
+            return first_line, second_line
+
+def read_configuration(key):
+    return config.options[key]
+
+def write_configuration(key, value):
+    with writable():
+        config.options[key] = value
+        config.save(key)
+
+def remove_configuration(key):
+    with writable():
+        config.options[key] = ""
+        config.save(key)
+
+def upgrade_configuration(filename, key):
+    """
+    Upgrade from a previous version, check if some xxx.conf files are
+    present in the home dir, if yes then load the (one line) value,
+    store it in the related key of the config file (odoo.conf) and
+    delete the xxx.conf file
+    """
+    if path_file(filename).exists():
+        value = read_file_first_line(filename)
+        if value:
+            write_configuration(key, value)
+        unlink_file(filename)
+
+def check_configuration():
+    # First, create all the keys if they don't exists
+    for value in [e.value for e in IOTConfKeys]:
+        if not config.options.get(value, False):
+            write_configuration(value, "")
+
+    # Second, read/delete existing xxx.conf files, and update config.options if any
+    upgrade_configuration('odoo-db-uuid.conf', IOTConfKeys.ODOO_DB_UUID)
+    upgrade_configuration('odoo-enterprise-code.conf', IOTConfKeys.ODOO_ENTERPRISE_CODE)
+    upgrade_configuration('odoo-keyboard-is-scanner.conf', IOTConfKeys.ODOO_KEYBOARD_IS_SCANNER)
+    upgrade_configuration('odoo-remote-server.conf', IOTConfKeys.ODOO_REMOTE_SERVER)
+    upgrade_configuration('odoo-six-payment-terminal.conf', IOTConfKeys.ODOO_SIX_PAYEMENT_TERM)
+    upgrade_configuration('odoo-subject', IOTConfKeys.ODOO_SUBJECT)
+    upgrade_configuration('token', IOTConfKeys.TOKEN_KEY)
+
+    # The file wifi_network.txt has 2 lines, hence it can't be
+    # dealed with the read_file_first_line function, hence with the upgrade_configuration
+    if path_file('wifi_network.txt').exists():
+        ssid, password = read_file_first_two_lines('wifi_network.txt')
+        if ssid:
+            write_configuration(IOTConfKeys.WIFI_ESSID, ssid)
+        if password:
+            write_configuration(IOTConfKeys.WIFI_PASSWORD, password)
+        unlink_file('wifi_network.txt')
+
+
+    # The iot box image version is stored in /home/pi/iotbox_version
+    # hence we just copy it to the related key of the conf file
+    # This can't be done with the secure file_open nor with the
+    # upgrade_configuration because we want to read this file at each boot
+    # to stay aware of an image upgrade
+    try:
+        if platform.system() == 'Windows':
+            version = get_version()
+        else:
+            version = read_file_first_line('iotbox_version')
+        write_configuration(IOTConfKeys.BOX_VERSION, version)
+    except subprocess.CalledProcessError as e:
+        _logger.error('Reading /home/pi/iotbox_version, error: %s', e)
 
 def unlink_file(filename):
     with writable():
