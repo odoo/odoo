@@ -136,7 +136,7 @@ from . import tools
 from . import models
 from . import fields
 from . import api
-from odoo.tools.translate import _, _lt
+from odoo.tools.translate import _, _ct, _lt, _lct
 from odoo.fields import Command
 
 #----------------------------------------------------------

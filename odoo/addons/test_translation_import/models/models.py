@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
-from odoo import fields, models, _, _lt
+from odoo import fields, models, _, _ct, _lt, _lct
 from odoo.tools.translate import xml_translate
+
 
 class TestTranslationImportModel1(models.Model):
     _name = 'test.translation.import.model1'
@@ -17,14 +17,26 @@ class TestTranslationImportModel1(models.Model):
         _('slot')  # a code translation for both python and js(static/src/xml/js_template.xml)
         return _('Code, English')
 
+    def get_code_context_translation(self):
+        return _ct('context', 'Code, English')
+
     def get_code_lazy_translation(self):
         return _lt('Code Lazy, English')
+
+    def get_code_lazy_context_translation(self):
+        return _lct('context', 'Code Lazy, English')
 
     def get_code_placeholder_translation(self, *args, **kwargs):
         return _('Code, %s, English', *args, **kwargs)
 
+    def get_code_context_placeholder_translation(self, *args, **kwargs):
+        return _ct('context', 'Code, %s, English', *args, **kwargs)
+
     def get_code_named_placeholder_translation(self, *args, **kwargs):
         return _('Code, %(num)s, %(symbol)s, English', *args, **kwargs)
+
+    def get_code_context_named_placeholder_translation(self, *args, **kwargs):
+        return _ct('context', 'Code, %(num)s, %(symbol)s, English', *args, **kwargs)
 
 
 class TestTranslationImportModel2(models.Model):

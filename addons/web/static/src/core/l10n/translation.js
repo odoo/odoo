@@ -14,13 +14,31 @@ export const translationIsReady = new Deferred();
  */
 export function _t(term, ...values) {
     if (translatedTerms[translationLoaded]) {
-        const translation = translatedTerms[term] ?? term;
+        let translation = translatedTerms[term] ?? term;
+        if (typeof translation === "object") {
+            translation = translation[""] ?? term;
+        }
         if (values.length === 0) {
             return translation;
         }
         return sprintf(translation, ...values);
     } else {
         return new LazyTranslatedString(term, ...values);
+    }
+}
+
+export function _ct(context, term, ...values) {
+    if (translatedTerms[translationLoaded]) {
+        let translation = term;
+        if (translatedTerms[term] && typeof translatedTerms[term] === "object") {
+            translation = translatedTerms[term][context] ?? term
+        }
+        if (values.length === 0) {
+            return translation;
+        }
+        return sprintf(translation, ...values);
+    } else {
+        return new LazyContextuallyTranslatedString(context, term, ...values);
     }
 }
 
@@ -32,7 +50,36 @@ class LazyTranslatedString extends String {
     valueOf() {
         const term = super.valueOf();
         if (translatedTerms[translationLoaded]) {
-            const translation = translatedTerms[term] ?? term;
+            let translation = translatedTerms[term] ?? term;
+            if (typeof translation === "object") {
+                translation = translation[""] ?? term;
+            }
+            if (this.values.length === 0) {
+                return translation;
+            }
+            return sprintf(translation, ...this.values);
+        } else {
+            throw new Error(`translation error`);
+        }
+    }
+    toString() {
+        return this.valueOf();
+    }
+}
+
+class LazyContextuallyTranslatedString extends String {
+    constructor(context, term, ...values) {
+        super(term);
+        this.values = values;
+        this.context = context;
+    }
+    valueOf() {
+        const term = super.valueOf();
+        if (translatedTerms[translationLoaded]) {
+            let translation = term;
+            if (translatedTerms[term] && typeof translatedTerms[term] === "object") {
+                translation = translatedTerms[term][this.context] ?? term
+            }
             if (this.values.length === 0) {
                 return translation;
             }

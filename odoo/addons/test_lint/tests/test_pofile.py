@@ -18,7 +18,7 @@ class PotLinter(TransactionCase):
             elif entry['type'] == 'model_terms':
                 return ('model_terms', entry['name'], entry['imd_name'], entry['src'])
             elif entry['type'] == 'code':
-                return ('code', entry['src'])
+                return ('code', entry['src'], entry['context'])
 
         # retrieve all modules, and their corresponding POT file
         for module in get_modules():
