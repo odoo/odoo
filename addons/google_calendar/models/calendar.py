@@ -276,11 +276,11 @@ class Meeting(models.Model):
 
     def _google_values(self):
         if self.allday:
-            start = {'date': self.start_date.isoformat()}
-            end = {'date': (self.stop_date + relativedelta(days=1)).isoformat()}
+            start = {'date': self.start_date.isoformat(), 'dateTime': None}
+            end = {'date': (self.stop_date + relativedelta(days=1)).isoformat(), 'dateTime': None}
         else:
-            start = {'dateTime': pytz.utc.localize(self.start).isoformat()}
-            end = {'dateTime': pytz.utc.localize(self.stop).isoformat()}
+            start = {'dateTime': pytz.utc.localize(self.start).isoformat(), 'date': None}
+            end = {'dateTime': pytz.utc.localize(self.stop).isoformat(), 'date': None}
         reminders = [{
             'method': "email" if alarm.alarm_type == "email" else "popup",
             'minutes': alarm.duration_minutes

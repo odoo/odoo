@@ -171,6 +171,8 @@ class Meeting(models.Model):
     stop_date = fields.Date(
         'End Date', store=True, tracking=True,
         compute='_compute_dates', inverse='_inverse_dates')
+    display_start = fields.Char('Start Date', compute='_compute_display_start')
+    display_stop = fields.Char('Stop Date', compute='_compute_display_stop')
     duration = fields.Float('Duration', compute='_compute_duration', store=True, readonly=False)
     # linked document
     res_id = fields.Many2oneReference('Document ID', model_field='res_model')
@@ -341,6 +343,16 @@ class Meeting(models.Model):
             else:
                 meeting.start_date = False
                 meeting.stop_date = False
+
+    @api.depends('allday', 'start')
+    def _compute_display_start(self):
+        for event in self:
+            event.display_start = self._get_display_date(event.allday, event.start)
+
+    @api.depends('allday', 'stop')
+    def _compute_display_stop(self):
+        for event in self:
+            event.display_stop = self._get_display_date(event.allday, event.stop)
 
     @api.depends('stop', 'start')
     def _compute_duration(self):
@@ -1376,6 +1388,19 @@ class Meeting(models.Model):
     def _get_customer_summary(self):
         """:return (str): The summary to include in calendar exports"""
         return self.name or ''
+
+    @api.model
+    def _get_display_date(self, allday, date_time):
+        timezone = self._context.get('tz') or self.env.user.partner_id.tz or 'UTC'
+        format_date, format_time = self._get_date_formats()
+        self_tz = self.with_context(tz=timezone)
+        date = fields.Datetime.context_timestamp(self_tz, fields.Datetime.from_string(date_time))
+        to_text = pycompat.to_text
+        date_str = to_text(date.strftime(format_date))
+        time_str = to_text(date.strftime(format_time))
+        if allday:
+            return date_str
+        return "%s %s" % (date_str, time_str)
 
     @api.model
     def _get_display_time(self, start, stop, zduration, zallday):
