@@ -341,7 +341,7 @@ class ProductProduct(models.Model):
         if not self.default_code:
             return
 
-        domain = [('default_code', '=', self.default_code)]
+        domain = [('default_code', '=', self.default_code), ('company_id', 'in', (False, self.company_id.id))]
         if self.id.origin:
             domain.append(('id', '!=', self.id.origin))
 
