@@ -858,9 +858,9 @@ export class PosStore extends Reactive {
             this.set_order(orderList[0]);
         }
     }
-    async _syncAllOrdersFromServer() {
+    async _syncAllOrdersFromServer(domain = []) {
         await this._removeOrdersFromServer();
-        const ordersJson = await this._getOrdersJson();
+        const ordersJson = await this._getOrdersJson(domain);
         let message = null;
         message = await this._addPricelists(ordersJson);
         let messageFp = null;
@@ -878,7 +878,7 @@ export class PosStore extends Reactive {
         this.sortOrders();
         return message;
     }
-    async _getOrdersJson() {
+    async _getOrdersJson(domain = []) {
         return await this.data.call("pos.order", "export_for_ui_shared_order", [], {
             config_id: this.config.id,
         });
@@ -1718,6 +1718,10 @@ export class PosStore extends Reactive {
             cashier: this.get_cashier()?.name,
             header: this.config.receipt_header,
         };
+    }
+
+    shouldLoadOrders() {
+        return this.config.raw.trusted_config_ids.length > 0;
     }
 
     isChildPartner(partner) {

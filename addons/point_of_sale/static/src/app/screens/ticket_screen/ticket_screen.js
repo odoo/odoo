@@ -14,6 +14,7 @@ import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/
 import { CenteredIcon } from "@point_of_sale/app/generic_components/centered_icon/centered_icon";
 import { ReprintReceiptButton } from "@point_of_sale/app/screens/ticket_screen/reprint_receipt_button/reprint_receipt_button";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
+import { SelectPartnerButton } from "@point_of_sale/app/screens/product_screen/control_buttons/select_partner_button/select_partner_button";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, useState } from "@odoo/owl";
 import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
@@ -33,6 +34,7 @@ export class TicketScreen extends Component {
         ReprintReceiptButton,
         SearchBar,
         Numpad,
+        SelectPartnerButton,
     };
     static props = {
         destinationOrder: { type: Object, optional: true },
@@ -733,6 +735,9 @@ export class TicketScreen extends Component {
      */
     async _fetchSyncedOrders() {
         const domain = this._computeSyncedOrdersDomain();
+        await this._fetchPaidOrders(domain);
+    }
+    async _fetchPaidOrders(domain) {
         const limit = this._state.syncedOrders.nPerPage;
         const offset =
             (this._state.syncedOrders.currentPage - 1) * this._state.syncedOrders.nPerPage;
@@ -752,7 +757,9 @@ export class TicketScreen extends Component {
         const idsNotUpToDate = ordersInfo.filter((orderInfo) => {
             return deserializeDateTime(orderInfo[1]) > cacheDate;
         });
-        const idsToLoad = idsNotInCache.concat(idsNotUpToDate).map((info) => info[0]);
+        const idsToLoad = [...new Set([...idsNotInCache, ...idsNotUpToDate])].map(
+            (info) => info[0]
+        );
         if (idsToLoad.length > 0) {
             const fetchedOrders = await this.pos.data.call("pos.order", "export_for_ui", [
                 idsToLoad,

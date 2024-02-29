@@ -35,6 +35,16 @@ class PosOrder(models.Model):
         return sum(tax.get('amount', 0.0) for tax in taxes)
 
     @api.model
+    def _generate_unique_id(self, *args, config_id=None, prefix="Order"):
+        """
+        param: args: tuple of (session)id, login_number, sequence_number)
+        """
+        if config_id:
+            session_id = config_id.current_session_id
+            return f"{prefix} {session_id.name}-{str(session_id.login_number % 1000).zfill(3)}-{str(session_id.sequence_number % 10000).zfill(4)}"
+        return f"{prefix} {args[0]:0>5}-{args[1]:0>3}-{args[2]:0>4}"
+
+    @api.model
     def _order_fields(self, ui_order):
         process_line = partial(self.env['pos.order.line']._order_line_fields, session_id=ui_order['pos_session_id'])
         return {
@@ -478,7 +488,7 @@ class PosOrder(models.Model):
     @api.model
     def _complete_values_from_session(self, session, values):
         if values.get('state') and values['state'] == 'paid' and not values.get('name'):
-            values['name'] = self._compute_order_name()
+            values['name'] = self._compute_order_name_from_vals(session, values)
         values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
         values.setdefault('fiscal_position_id', session.config_id.default_fiscal_position_id.id)
         values.setdefault('company_id', session.config_id.company_id.id)
@@ -490,11 +500,15 @@ class PosOrder(models.Model):
                 vals['name'] = self._compute_order_name()
         return super(PosOrder, self).write(vals)
 
-    def _compute_order_name(self):
-        if self.refunded_order_id.exists():
-            return self.refunded_order_id.name + _(' REFUND')
+    @api.model
+    def _compute_order_name_from_vals(self, session, vals):
+        if vals.get('refunded_order_id'):
+            return ','.join(vals['refunded_order_id'].name) + _(' REFUND')
         else:
-            return self.session_id.config_id.sequence_id._next()
+            return session.config_id.sequence_id._next()
+
+    def _compute_order_name(self):
+        return self._compute_order_name_from_vals(self.session_id, {'refunded_order_id': self.refunded_order_id})
 
     def action_stock_picking(self):
         self.ensure_one()

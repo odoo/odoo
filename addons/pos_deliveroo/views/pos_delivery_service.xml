@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_deliveroo.view_pos_delivery_service_view_inherit" model="ir.ui.view">
+        <field name="name">pos.delivery.service.form.inherit</field>
+        <field name="model">pos.delivery.service</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_delivery_service_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='client_secret']" position="after">
+                <field name="webhook_secret" invisible="service != 'deliveroo'" required="service == 'deliveroo'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

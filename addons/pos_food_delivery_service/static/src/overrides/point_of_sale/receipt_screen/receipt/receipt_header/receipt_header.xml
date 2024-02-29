@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_food_delivery_service.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('cashier')]" position="before">
+            <t t-if="props.data.delivery.provider_name">
+                <div>--------------------------------</div>
+                <h2 class="delivery-service-name" t-esc="props.data.delivery.provider_name"/>
+                <div>
+                    <span>Order note: <t t-esc="props.data.delivery.note" /></span>
+                </div>
+                <div>--------------------------------</div>
+                <span>Submitted <t t-esc="props.data.delivery.date_order"/></span>
+                <div>--------------------------------</div>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('cashier')]" position="attributes">
+            <attribute name="t-else"></attribute>
+        </xpath>
+    </t>
+</templates>
