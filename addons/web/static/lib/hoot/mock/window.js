@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { whenReady } from "@odoo/owl";
-import { isInDOM, mockedMatchMedia } from "@web/../lib/hoot-dom/helpers/dom";
+import { getCurrentDimensions, isInDOM, mockedMatchMedia } from "@web/../lib/hoot-dom/helpers/dom";
 import { MockMath } from "./math";
 import { mockNavigator } from "./navigator";
 import {
@@ -32,7 +32,7 @@ import {
 // Global
 //-----------------------------------------------------------------------------
 
-const { Object, document } = globalThis;
+const { Object, document, innerWidth, innerHeight, outerWidth, outerHeight } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -178,27 +178,31 @@ const DOCUMENT_MOCK_DESCRIPTORS = {
     },
 };
 const WINDOW_MOCK_DESCRIPTORS = {
+    cancelAnimationFrame: { value: mockedCancelAnimationFrame, writable: false },
+    clearInterval: { value: mockedClearInterval, writable: false },
+    clearTimeout: { value: mockedClearTimeout, writable: false },
     Date: { value: MockDate, writable: false },
+    fetch: { value: mockedFetch, writable: false },
+    history: { value: mockHistory },
+    innerHeight: { get: () => getCurrentDimensions().height || innerHeight },
+    innerWidth: { get: () => getCurrentDimensions().width || innerWidth },
+    localStorage: { value: mockLocalStorage, writable: false },
+    matchMedia: { value: mockedMatchMedia },
     Math: { value: MockMath },
+    navigator: { value: mockNavigator },
     Notification: { value: MockNotification },
+    outerHeight: { get: () => getCurrentDimensions().height || outerHeight },
+    outerWidth: { get: () => getCurrentDimensions().width || outerWidth },
     Request: { value: MockRequest, writable: false },
+    requestAnimationFrame: { value: mockedRequestAnimationFrame, writable: false },
     Response: { value: MockResponse, writable: false },
+    sessionStorage: { value: mockSessionStorage, writable: false },
+    setInterval: { value: mockedSetInterval, writable: false },
+    setTimeout: { value: mockedSetTimeout, writable: false },
     SharedWorker: { value: MockSharedWorker },
     WebSocket: { value: MockWebSocket },
     Worker: { value: MockWorker },
     XMLHttpRequest: { value: MockXMLHttpRequest },
-    cancelAnimationFrame: { value: mockedCancelAnimationFrame, writable: false },
-    clearInterval: { value: mockedClearInterval, writable: false },
-    clearTimeout: { value: mockedClearTimeout, writable: false },
-    fetch: { value: mockedFetch, writable: false },
-    history: { value: mockHistory },
-    localStorage: { value: mockLocalStorage, writable: false },
-    matchMedia: { value: mockedMatchMedia },
-    navigator: { value: mockNavigator },
-    requestAnimationFrame: { value: mockedRequestAnimationFrame, writable: false },
-    sessionStorage: { value: mockSessionStorage, writable: false },
-    setInterval: { value: mockedSetInterval, writable: false },
-    setTimeout: { value: mockedSetTimeout, writable: false },
 };
 
 //-----------------------------------------------------------------------------
