@@ -1,9 +1,10 @@
-from odoo import Command, models
+from odoo import api, Command, models
 
 
 class AccountAccount(models.Model):
     _inherit = 'account.account'
 
+    @api.model_create_multi
     def create(self, vals_list):
         # EXTENDS account - ensure there is a tag on created MX accounts
         # The computation is a bit naive and might not be correct in all cases.
