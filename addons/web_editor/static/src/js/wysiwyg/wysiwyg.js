@@ -223,7 +223,7 @@ const Wysiwyg = Widget.extend({
             onChange: options.onChange,
             plugins: options.editorPlugins,
             direction: localization.direction || 'ltr',
-            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
+            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading', 'o_link_in_selection'],
         }, editorCollaborationOptions));
 
         document.addEventListener("mousemove", this._signalOnline, true);
@@ -1026,6 +1026,16 @@ const Wysiwyg = Widget.extend({
             characterData: true,
             attributeOldValue: true,
         };
+        const filterFieldMutations = (mutations) =>
+            mutations.filter((mutation) => {
+                if (mutation.type === "childList") {
+                    const node = mutation.addedNodes[0] || mutation.removedNodes[0];
+                    if (node.matches && node.matches("[data-o-link-zws]")) {
+                        return false;
+                    }
+                }
+                return true;
+            });
         if (this.odooFieldObservers) {
             for (let observerData of this.odooFieldObservers) {
                 observerData.observer.observe(observerData.field, observerOptions);
@@ -1038,6 +1048,7 @@ const Wysiwyg = Widget.extend({
             $odooFields.each((i, field) => {
                 const observer = new MutationObserver((mutations) => {
                     mutations = this.odooEditor.filterMutationRecords(mutations);
+                    mutations = filterFieldMutations(mutations);
                     if (!mutations.length) {
                         return;
                     }
