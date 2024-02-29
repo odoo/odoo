@@ -9,7 +9,7 @@ import { formatMany2one } from "@web/views/fields/formatters";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 import { Component, onWillStart, useState, xml } from "@odoo/owl";
-import {serializeDate, serializeDateTime} from "../core/l10n/dates";
+import { serializeDate, serializeDateTime } from "../core/l10n/dates";
 
 const debugRegistry = registry.category("debug");
 
@@ -27,7 +27,7 @@ class GetViewDialog extends Component {
     static template = "web.DebugMenu.GetViewDialog";
     static components = { Dialog };
     static props = {
-        arch: { type: Element },
+        arch: { type: String },
         close: { type: Function },
     };
 
@@ -41,7 +41,7 @@ export function getView({ component, env }) {
         type: "item",
         description: _t("Get View"),
         callback: () => {
-            env.services.dialog.add(GetViewDialog, { arch: component.props.arch });
+            env.services.dialog.add(GetViewDialog, { arch: component.env.config.rawArch });
         },
         sequence: 340,
     };
@@ -338,9 +338,9 @@ class SetDefaultDialog extends Component {
             return field.name === this.state.fieldToSet;
         }).value;
 
-        if(fieldToSet.constructor.name.toLowerCase() === "date"){
+        if (fieldToSet.constructor.name.toLowerCase() === "date") {
             fieldToSet = serializeDate(fieldToSet);
-        } else if (fieldToSet.constructor.name.toLowerCase() === "datetime"){
+        } else if (fieldToSet.constructor.name.toLowerCase() === "datetime") {
             fieldToSet = serializeDateTime(fieldToSet);
         }
         await this.orm.call("ir.default", "set", [
