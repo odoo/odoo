@@ -113,7 +113,7 @@ export class PosOrder extends Base {
             footer: this.config.receipt_footer,
             // FIXME: isn't there a better way to handle this date?
             shippingDate:
-                this.shippingDate && formatDate(DateTime.fromJSDate(new Date(this.shippingDate))),
+                this.shipping_date && formatDate(DateTime.fromJSDate(new Date(this.shipping_date))),
             headerData: {
                 ...headerData,
                 trackingNumber: this.trackingNumber,
@@ -989,11 +989,11 @@ export class PosOrder extends Base {
     /* ---- Ship later --- */
     //FIXME remove this
     setShippingDate(shippingDate) {
-        this.shippingDate = shippingDate;
+        this.shipping_date = shippingDate;
     }
     //FIXME remove this
     getShippingDate() {
-        return this.shippingDate;
+        return this.shipping_date;
     }
 
     getHasRefundLines() {

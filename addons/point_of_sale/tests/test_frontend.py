@@ -528,6 +528,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({
             'iface_tipproduct': True,
             'tip_product_id': self.tip.id,
+            'ship_later': True
         })
 
         # open a session, the /pos/ui controller will redirect to it
