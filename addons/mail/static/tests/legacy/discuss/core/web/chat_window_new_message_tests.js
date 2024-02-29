@@ -147,3 +147,27 @@ QUnit.test("new message autocomplete should automatically select first result", 
     await insertText(".o-discuss-ChannelSelector input", "131");
     await contains(".o-discuss-ChannelSelector-suggestion a.o-mail-NavigableList-active");
 });
+
+QUnit.test('open chat from "new message" chat window should unfold existing window', async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({
+                fold_state: "folded",
+                partner_id: pyEnv.currentPartnerId,
+            }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+        name: "John",
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click("button", { text: "New Message" });
+    await insertText(".o-discuss-ChannelSelector input", "John");
+    await click(".o-discuss-ChannelSelector-suggestion a");
+    await contains(".o-mail-ChatWindow", { count: 0, text: "New message" });
+    await contains(".o-mail-Thread");
+});

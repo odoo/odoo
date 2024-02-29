@@ -955,12 +955,13 @@ class Channel(models.Model):
     # User methods
     @api.model
     @api.returns('self', lambda channel: channel._channel_info()[0])
-    def channel_get(self, partners_to, pin=True):
+    def channel_get(self, partners_to, pin=True, force_open=False):
         """ Get the canonical private channel between some partners, create it if needed.
             To reuse an old channel (conversation), this one must be private, and contains
             only the given partners.
             :param partners_to : list of res.partner ids to add to the conversation
             :param pin : True if getting the channel should pin it for the current user
+            :param force_open : True if getting the channel should open it for the current user
             :returns: channel_info of the created or existing channel
             :rtype: dict
         """
@@ -991,12 +992,15 @@ class Channel(models.Model):
         if result:
             # get the existing channel between the given partners
             channel = self.browse(result[0].get('channel_id'))
-            # pin up the channel for the current partner
-            if pin:
-                self.env['discuss.channel.member'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', channel.id)]).write({
-                    'is_pinned': True,
-                    'last_interest_dt': fields.Datetime.now(),
-                })
+            # pin or open the channel for the current partner
+            if pin or open:
+                member = self.env['discuss.channel.member'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', channel.id)])
+                vals = {'last_interest_dt': fields.Datetime.now()}
+                if pin:
+                    vals['is_pinned'] = True
+                if force_open:
+                    vals['fold_state'] = "open"
+                member.write(vals)
             channel._broadcast(self.env.user.partner_id.ids)
         else:
             # create a new one
