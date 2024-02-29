@@ -45,8 +45,7 @@ class ChooseDeliveryPackage(models.TransientModel):
             return {'warning': warning_mess}
 
     def action_put_in_pack(self):
-        move_line_ids = self.picking_id._package_move_lines()
-
+        move_line_ids = self.picking_id._package_move_lines(batch_pack=self.env.context.get("batch_pack"))
         delivery_package = self.picking_id._put_in_pack(move_line_ids)
         # write shipping weight and package type on 'stock_quant_package' if needed
         if self.delivery_package_type_id:
