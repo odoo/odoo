@@ -722,41 +722,72 @@ class Task(models.Model):
         not_project_user = not self.env.user.has_group('project.group_project_user')
         if not_project_user:
             vals_list = [{k: v for k, v in vals.items() if k in self.SELF_READABLE_FIELDS} for vals in vals_list]
+
+        milestone_mapping = self.env.context.get('milestone_mapping', {})
         for task, vals in zip(self, vals_list):
-            has_default_name = bool(default.get('name', ''))
-            if not has_default_name:
-                vals['name'] = _("%s (copy)", task.name)
-                vals['child_ids'] = [child.copy({'name': _("%s (copy)", child.name)}).id for child in task.child_ids]
-            else:
-                vals['child_ids'] = [child.copy({'name': child.name}).id for child in task.child_ids]
+
+            vals['stage_id'] = task.stage_id.id
+            vals['name'] = task.name if self.env.context.get('copy_project') else _("%s (copy)", task.name)
             if task.recurrence_id:
                 vals['recurrence_id'] = task.recurrence_id.copy().id
+            if task.allow_milestones:
+                vals['milestone_id'] = milestone_mapping.get(vals['milestone_id'], vals['milestone_id'])
+            if task.child_ids:
+                default = {
+                    'depend_on_ids': False,
+                    'dependent_ids': False,
+                    'parent_id': False,
+                }
+                vals['child_ids'] = [Command.create(child_id.copy_data(default)[0]) for child_id in task.child_ids]
         return vals_list
 
+    def _create_task_mapping(self, copied_tasks):
+        """
+        Thanks to the way create and command.create is handled, when a task with 2 children is copied, we have the guarantee that the children of the
+        copied task will have the same index in the child_ids recordset. We can use this behavior to create a mapping containing all the original tasks and their copy.
+        :return:
+            task_mapping: a dict containing the mapping of the original task ids and their copied task (k: original_task.id, v: new_task)
+            task_dependencies: a dict containing the ids of the dependencies of the original task when they have one.
+            (k: original_task_id, v: [original_task.depend_on_ids.ids, original_task.dependent_ids.ids]
+        """
+        task_mapping, task_dependencies = {}, {}
+        for original_task, copied_task in zip(self, copied_tasks):
+            task_mapping[original_task.id] = copied_task
+            if original_task.allow_task_dependencies and (original_task.depend_on_ids or original_task.dependent_ids):
+                task_dependencies[original_task.id] = [original_task.depend_on_ids.ids, original_task.dependent_ids.ids]
+            if original_task.child_ids:
+                # If the task has children, we have to call the method create_task_mapping to get their ids and dependencies mapping too.
+                children_mapping, children_dependencies = original_task.child_ids._create_task_mapping(copied_task.child_ids)
+                task_mapping.update(children_mapping)
+                task_dependencies.update(children_dependencies)
+        return task_mapping, task_dependencies
+
     def copy(self, default=None):
-        if 'task_mapping' not in self.env.context:
-            self = self.with_context(task_mapping={})
+        default = default or {}
+        default.update({
+            'depend_on_ids': False,
+            'dependent_ids': False,
+        })
         copied_tasks = super(Task, self.with_context(
             mail_auto_subscribe_no_notify=True,
             mail_create_nosubscribe=True,
             mail_create_nolog=True,
         )).copy(default=default)
-        for old_task, new_task in zip(self, copied_tasks):
-            if old_task.allow_task_dependencies:
-                task_mapping = self.env.context.get('task_mapping')
-                task_mapping[old_task.id] = new_task.id
-                new_tasks = task_mapping.values()
-                old_task.write({
-                    'depend_on_ids': [Command.unlink(t.id) for t in old_task.depend_on_ids if t.id in new_tasks],
-                    'dependent_ids': [Command.unlink(t.id) for t in old_task.dependent_ids if t.id in new_tasks],
-                })
-                new_task.write({
-                    'depend_on_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in old_task.depend_on_ids],
-                    'dependent_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in old_task.dependent_ids],
-                })
-            if old_task.allow_milestones:
-                milestone_mapping = self.env.context.get('milestone_mapping', {})
-                new_task.milestone_id = milestone_mapping.get(new_task.milestone_id.id, new_task.milestone_id.id)
+
+        task_mapping, task_dependencies = self._create_task_mapping(copied_tasks)
+
+        for original_task_id, (depend_on_ids, dependant_ids) in task_dependencies.items():
+            # If one of the task_id in the dependencies mapping is also a key of the task_mapping, it means that this task was copied too.
+            # In this case, we should exchange this id with the id of the corresponding copied task
+            task_mapping[original_task_id].depend_on_ids = [
+                task_id if task_id not in task_mapping else task_mapping[task_id].id
+                for task_id in depend_on_ids
+            ]
+            task_mapping[original_task_id].dependent_ids = [
+                task_id if task_id not in task_mapping else task_mapping[task_id].id
+                for task_id in dependant_ids
+            ]
+
         return copied_tasks
 
     @api.model

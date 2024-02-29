@@ -34,8 +34,8 @@ class Project(models.Model):
     sale_order_state = fields.Selection(related='sale_order_id.state')
 
     @api.model
-    def _map_tasks_default_values(self, task, project):
-        defaults = super()._map_tasks_default_values(task, project)
+    def _map_tasks_default_values(self, project):
+        defaults = super()._map_tasks_default_values(project)
         defaults['sale_line_id'] = False
         return defaults
 

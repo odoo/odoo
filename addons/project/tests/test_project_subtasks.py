@@ -309,6 +309,40 @@ class TestProjectSubtasks(TestProjectCommon):
         subtask_not_display_in_project_copy = project_copy.task_ids.child_ids.filtered(lambda t: not t.display_in_project)
         self.assertEqual(len(subtask_not_display_in_project_copy), 4, "No subtask should be displayed in the duplicate project")
 
+    def test_subtask_copy_name(self):
+        """ This test ensure that the name of task and project have the '(copy)' added to their name when needed.
+            If a project is copied, the project's name should contain the 'copy' but the project's task should keep the same name as their original.
+            If a task is copied (alone or in a recordset), its name as well as the name of its children should contain the 'copy'.
+        """
+        project = self.env['project.project'].create({
+            'name': 'Project',
+        })
+        task_A = self.env['project.task'].create({
+            'name': 'Task A',
+            'project_id': project.id,
+            'display_in_project': True,
+            'child_ids': [Command.create({
+                'name': 'Subtask A 1',
+                'child_ids': [Command.create({
+                    'name': 'Sub Subtask A 1',
+                })]
+            }), Command.create({
+                'name': 'Subtask A 2',
+            })]
+        })
+        project_copied = project.copy()
+        self.assertEqual(project_copied.name, 'Project (copy)', 'The name of the project should contains the extra (copy).')
+        parent_task = self.env['project.task'].search([('project_id', '=', project_copied.id), ('parent_id', '=', False)])
+        self.assertEqual(parent_task.name, 'Task A', 'The task is copied from project.copy(). Its name should be the same.')
+        self.assertEqual(parent_task.child_ids[0].name, 'Subtask A 1', 'The task is copied from project.copy(). Its name should be the same.')
+        self.assertEqual(parent_task.child_ids[1].name, 'Subtask A 2', 'The task is copied from project.copy(). Its name should be the same.')
+        self.assertEqual(parent_task.child_ids[0].child_ids.name, 'Sub Subtask A 1', 'The task is copied from project.copy(). Its name should be the same.')
+        copied_task = task_A.copy()
+        self.assertEqual(copied_task.name, 'Task A (copy)', 'The task is copied from task.copy(). Its name should contain the extra (copy).')
+        self.assertEqual(copied_task.child_ids[0].name, 'Subtask A 1 (copy)', 'The task is copied from task.copy(). Its name should contain the extra (copy).')
+        self.assertEqual(copied_task.child_ids[1].name, 'Subtask A 2 (copy)', 'The task is copied from task.copy(). Its name should contain the extra (copy).')
+        self.assertEqual(copied_task.child_ids[0].child_ids.name, 'Sub Subtask A 1 (copy)', 'The task is copied from task.copy(). Its name should contain the extra (copy).')
+
     def test_subtask_unlinking(self):
         task_form = Form(self.task_1.with_context({'tracking_disable': True}))
         with task_form.child_ids.new() as child_task_form:

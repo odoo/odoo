@@ -352,12 +352,11 @@ class Project(models.Model):
                 project.access_instruction_message = ''
 
     @api.model
-    def _map_tasks_default_values(self, task, project):
-        """ get the default value for the copied task on project duplication """
+    def _map_tasks_default_values(self, project):
+        """ get the default value for the copied task on project duplication.
+        The stage_id, name field will be set for each task in the overwritten copy_data function in project.task """
         return {
-            'stage_id': task.stage_id.id,
-            'name': task.name,
-            'state': task.state,
+            'state': '01_in_progress',
             'company_id': project.company_id.id,
             'project_id': project.id,
         }
@@ -367,13 +366,12 @@ class Project(models.Model):
         project = self.browse(new_project_id)
         new_tasks = self.env['project.task']
         # We want to copy archived task, but do not propagate an active_test context key
-        task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id), ('parent_id', '=', False)]).ids
+        tasks = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id), ('parent_id', '=', False)])
         if self.allow_task_dependencies and 'task_mapping' not in self.env.context:
             self = self.with_context(task_mapping=dict())
-        for task in self.env['project.task'].browse(task_ids):
-            # preserve task name and stage, normally altered during copy
-            defaults = self._map_tasks_default_values(task, project)
-            new_tasks |= task.copy(defaults)
+        # preserve task name and stage, normally altered during copy
+        defaults = self._map_tasks_default_values(project)
+        new_tasks = tasks.with_context(copy_project=True).copy(defaults)
         all_subtasks = new_tasks._get_all_subtasks()
         subtasks_not_displayed = all_subtasks.filtered(
             lambda task: not task.display_in_project
@@ -392,6 +390,8 @@ class Project(models.Model):
 
     def copy(self, default=None):
         default = dict(default or {})
+        # Since we dont want to copy the milestones if the original project has the feature disabled, we set the milestones to False by default.
+        default['milestone_ids'] = False
         new_projects = super(Project, self.with_context(mail_auto_subscribe_no_notify=True, mail_create_nosubscribe=True)).copy(default=default)
         if 'milestone_mapping' not in self.env.context:
             self = self.with_context(milestone_mapping={})
