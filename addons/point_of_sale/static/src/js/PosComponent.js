@@ -10,7 +10,7 @@ odoo.define('point_of_sale.PosComponent', function (require) {
         setup() {
             onRendered(() => {
                 if (this.env.isDebug()) {
-                    console.log('Rendered:', this.constructor.name);
+                    // console.log('Rendered:', this.constructor.name);
                 }
             });
         }
