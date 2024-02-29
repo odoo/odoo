@@ -2620,6 +2620,16 @@ export class OdooEditor extends EventTarget {
                     insertText(selection, ev.data === null ? ev.dataTransfer.getData('text/plain') : ev.data);
                     selection.collapseToEnd();
                 }
+                // Firefox does not remove trailing <br> on insertText in an
+                // empty line.
+                const focusNode = selection.focusNode;
+                if (
+                    focusNode.nextSibling &&
+                    focusNode.nextSibling.nodeName === 'BR' &&
+                    lastLeaf(focusNode.parentElement) === focusNode.nextSibling
+                ) {
+                    focusNode.nextSibling.remove();
+                }
                 // Check for url after user insert a space so we won't transform an incomplete url.
                 if (
                     ev.data &&
