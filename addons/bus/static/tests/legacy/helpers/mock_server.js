@@ -17,13 +17,13 @@ patch(MockServer.prototype, {
         super.init(...arguments);
         Object.assign(this, TEST_USER_IDS);
         const self = this;
+        this.notificationQueue = [];
         this.websocketWorker = patchWebsocketWorkerWithCleanup({
             _sendToServer(message) {
                 self._performWebsocketRequest(message);
                 super._sendToServer(message);
             },
         });
-        this.notificationsToBeResolved = [];
         this.lastBusNotificationId = 0;
         this.channelsByUser = {};
         for (const modelName in this.models) {
@@ -71,7 +71,9 @@ patch(MockServer.prototype, {
             this._mockIrWebsocket__updatePresence(inactivity_period, im_status_ids_by_model);
         } else if (event_name === "subscribe") {
             const { channels } = data;
-            this.channelsByUser[this.pyEnv?.currentUser] = channels;
+            this.channelsByUser[this.pyEnv?.currentUser] = this.pyEnv
+                ? this._mockIrWebsocket__buildBusChannelList(channels)
+                : channels;
         }
         const callbackFn = registry
             .category("mock_server_websocket_callbacks")
@@ -109,15 +111,22 @@ patch(MockServer.prototype, {
                   context: { active_test: false },
               })[0]
             : null;
-        const channels = this._mockIrWebsocket__buildBusChannelList().concat(
-            this.channelsByUser[authenticatedUser]
-        );
+        const channels =
+            this.channelsByUser[authenticatedUser] ?? this._mockIrWebsocket__buildBusChannelList();
         notifications = notifications.filter(([target]) =>
             channels.some((channel) => {
                 if (typeof target === "string") {
                     return channel === target;
                 }
-                return channel?.__model === target?.model && channel?.id === target?.id;
+                if (Array.isArray(channel) !== Array.isArray(target)) {
+                    return false;
+                }
+                if (Array.isArray(channel)) {
+                    const { __model: cModel, id: cId } = channel[0];
+                    const { __model: tModel, id: tId } = target[0];
+                    return cModel === tModel && cId === tId && channel[1] === target[1];
+                }
+                return channel?.__model === target.__model && channel?.id === target?.id;
             })
         );
         if (notifications.length === 0) {
@@ -126,11 +135,30 @@ patch(MockServer.prototype, {
         for (const notification of notifications) {
             const [type, payload] = notification.slice(1, notification.length);
             values.push({ id: ++this.lastBusNotificationId, message: { payload, type } });
-            if (this.debug) {
-                console.log("%c[bus]", "color: #c6e; font-weight: bold;", type, payload);
-            }
         }
-        this.websocketWorker.broadcast("notification", values);
+        this.notificationQueue.push(...values);
+        if (this.notificationQueue.length === values.length) {
+            this._planNotificationSending();
+        }
+    },
+
+    /**
+     * Helper to send the pending notifications to the client. This method is
+     * push to the micro task queue to simulate server-side batching of
+     * notifications.
+     */
+    _planNotificationSending() {
+        queueMicrotask(() => {
+            if (this.debug) {
+                console.group("%c[BUS]", "color: #c6e; font-weight: bold;");
+                for (const { message } of this.notificationQueue) {
+                    console.log(message.type, message.payload);
+                }
+                console.groupEnd();
+            }
+            this.websocketWorker.broadcast("notification", this.notificationQueue);
+            this.notificationQueue = [];
+        });
     },
     /**
      * Simulate the lost of the connection by simulating a closeEvent on
