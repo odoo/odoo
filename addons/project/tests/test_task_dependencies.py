@@ -147,6 +147,12 @@ class TestTaskDependencies(TestProjectCommon):
         self.assertEqual(task1_copy_copy.depend_on_ids.ids, [self.task_1.id],
                          "Copy should not alter the relation if the other task is in a different project")
 
+        self.project_pigs.allow_task_dependencies = False
+        project_pigs_no_dep = self.project_pigs.copy()
+        self.assertFalse(project_pigs_no_dep.allow_task_dependencies, 'The copied project should have the dependencies feature disabled')
+        self.assertFalse(project_pigs_no_dep.task_ids.depend_on_ids, 'The copied task should not have any dependencies')
+        self.assertFalse(project_pigs_no_dep.task_ids.dependent_ids, 'The copied task should not have any dependencies')
+
     def test_duplicate_project_with_subtask_dependencies(self):
         self.project_goats.allow_task_dependencies = True
         parent_task = self.env['project.task'].with_context({'mail_create_nolog': True}).create({

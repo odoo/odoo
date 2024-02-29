@@ -143,6 +143,24 @@ class TestProjectMilestone(TestProjectCommon):
             self.assertEqual(orig_task.milestone_id.name, copied_task.milestone_id.name,
                              "the copied milestone should be a copy of the original ")
 
+    def test_duplicate_project_with_milestones_disabled(self):
+        """ This test ensures that when a project that has some milestones linked to it but with the milesones feature disabled is copied,
+            the copy does not have the feature enabled, and none of the milestones have been copied."""
+        extra_milestone_pigs = self.env['project.milestone'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Test Extra Milestone',
+            'project_id': self.project_pigs.id,
+        })
+
+        self.task_1.milestone_id = self.milestone_pigs
+        self.task_2.milestone_id = extra_milestone_pigs
+        self.project_pigs.allow_milestones = False
+        project_copied = self.project_pigs.copy()
+        self.assertFalse(project_copied.allow_milestones, "The project copied should have the milestone feature disabled")
+        self.assertFalse(project_copied.milestone_ids, "The project copied should not have any milestone.")
+        for task in project_copied.task_ids:
+            self.assertFalse(task.milestone_id, "None of the project's task should have a milestone.")
+
+
     def test_basic_milestone_write(self):
         """ Testing basic milestone/project write operation on task, i.e:
                 1. Set/change the milestone of a task
