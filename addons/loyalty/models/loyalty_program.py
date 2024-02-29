@@ -606,7 +606,7 @@ class LoyaltyProgram(models.Model):
         be explicitly removed from an incoming vals dict unless, of course, it was actually a visible field.
         """
         for vals in vals_list:
-            if 'trigger_product_ids' in vals and vals['program_type'] not in ['gift_card', 'ewallet']:
+            if 'trigger_product_ids' in vals and vals.get('program_type') not in ['gift_card', 'ewallet']:
                 del vals['trigger_product_ids']
 
         return super().create(vals_list)
