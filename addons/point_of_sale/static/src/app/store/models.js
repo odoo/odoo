@@ -2006,6 +2006,9 @@ export class Order extends PosModel {
         if (options.tax_ids) {
             orderline.compute_related_tax(options.tax_ids);
         }
+        if (options.combo_line_id) {
+            orderline.combo_line_id = options.combo_line_id;
+        }
     }
     get_selected_orderline() {
         return this.selected_orderline;
