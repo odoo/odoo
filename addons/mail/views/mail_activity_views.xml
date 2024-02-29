@@ -235,6 +235,10 @@
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <form string="Log an Activity" create="false" delete="false">
+                <header>
+                    <button string="Mark as Done" class="btn-primary"
+                            name="action_done_redirect_to_other" type="object"/>
+                </header>
                 <sheet string="Activity">
                     <field name="res_model" invisible="1"/>
                     <field name="display_name" invisible="1"/>
@@ -258,9 +262,10 @@
         <field name="model">mail.activity</field>
         <field name="arch" type="xml">
             <search string="Activity">
-                <field name="res_model"/>
+                <field name="res_name"/>
                 <field name="summary"/>
                 <field name="activity_type_id"/>
+                <field name="res_model"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
@@ -336,6 +341,7 @@
                 No activities.
             </p>
         </field>
+        <field name="target">main</field>
     </record>
 
     <record id="mail_activity_action_without_access_view_tree" model="ir.actions.act_window.view">
