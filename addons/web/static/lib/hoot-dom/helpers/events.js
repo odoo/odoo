@@ -322,6 +322,14 @@ const getPosition = (element, options) => {
 };
 
 /**
+ * @param {Node} target
+ */
+const getStringSelection = (target) =>
+    Number.isInteger(target.selectionStart) &&
+    Number.isInteger(target.selectionEnd) &&
+    [target.selectionStart, target.selectionEnd].join(",");
+
+/**
  * @param {Node} node
  * @param  {...string} tagNames
  */
@@ -618,13 +626,16 @@ const triggerFocus = (target) => {
         }
     }
     if (isNodeFocusable(target)) {
+        const previousSelection = getStringSelection(target);
+
         // If document is focused, this will trigger a trusted "focus" event
         target.focus();
         if (!document.hasFocus()) {
             // When document is not focused: manually trigger a "focus" event
             dispatch(target, "focus", { relatedTarget: previous });
         }
-        if (!isNil(target.selectionStart) && !isNil(target.selectionEnd)) {
+
+        if (previousSelection && previousSelection === getStringSelection(target)) {
             target.selectionStart = target.selectionEnd = target.value.length;
         }
     }
