@@ -131,6 +131,7 @@ QUnit.test("two tabs adding a different channel", async () => {
 });
 
 QUnit.test("channel management from multiple tabs", async (assert) => {
+    await startServer();
     addBusServicesToRegistry();
     patchWebsocketWorkerWithCleanup({
         _sendToServer({ event_name, data }) {
@@ -159,6 +160,7 @@ QUnit.test("channel management from multiple tabs", async (assert) => {
 });
 
 QUnit.test("channels subscription after disconnection", async (assert) => {
+    await startServer();
     addBusServicesToRegistry();
     const worker = patchWebsocketWorkerWithCleanup();
     const env = await makeTestEnv({ activateMockServer: true });

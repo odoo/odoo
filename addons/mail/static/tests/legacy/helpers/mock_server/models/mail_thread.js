@@ -345,12 +345,22 @@ patch(MockServer.prototype, {
             for (const channel of channels) {
                 const now = serializeDateTime(today());
                 notifications.push([
-                    channel,
+                    [channel, "members"],
                     "mail.record/insert",
                     {
                         Thread: {
                             id: channel.id,
                             is_pinned: true,
+                            model: "discuss.channel",
+                        },
+                    },
+                ]);
+                notifications.push([
+                    channel,
+                    "mail.record/insert",
+                    {
+                        Thread: {
+                            id: channel.id,
                             last_interest_dt: now,
                             model: "discuss.channel",
                         },

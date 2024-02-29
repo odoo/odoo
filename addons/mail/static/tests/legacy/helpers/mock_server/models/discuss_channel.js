@@ -244,6 +244,11 @@ patch(MockServer.prototype, {
         this.pyEnv["discuss.channel"].write([channel.id], {
             channel_member_ids: [[2, channelMember.id]],
         });
+        this._mockDiscussChannelMessagePost(channel.id, {
+            author_id: this.pyEnv.currentPartnerId,
+            body: '<div class="o_mail_notification">left the channel</div>',
+            subtype_xmlid: "mail.mt_comment",
+        });
         this.pyEnv["bus.bus"]._sendone(
             this.pyEnv.currentPartner,
             "discuss.channel/leave",
@@ -259,19 +264,6 @@ patch(MockServer.prototype, {
                 model: "discuss.channel",
             },
         });
-
-        /**
-         * Leave message not posted here because it would send the new message
-         * notification on a separate bus notification list from the unsubscribe
-         * itself which would lead to the channel being pinned again (handler
-         * for unsubscribe is weak and is relying on both of them to be sent
-         * together on the bus).
-         */
-        // this._mockDiscussChannelMessagePost(channel.id, {
-        //     author_id: this.pyEnv.currentPartnerId,
-        //     body: '<div class="o_mail_notification">left the channel</div>',
-        //     subtype_xmlid: "mail.mt_comment",
-        // });
         return true;
     },
     /**
@@ -303,7 +295,10 @@ patch(MockServer.prototype, {
                 })
             );
             this.pyEnv["bus.bus"]._sendone(partner, "discuss.channel/joined", {
-                channel: this._mockDiscussChannel__channel_basic_info([channel.id]),
+                channel: {
+                    ...this._mockDiscussChannel__channel_basic_info([channel.id]),
+                    is_pinned: true,
+                },
                 invited_by_user_id: this.pyEnv.currentUserId,
             });
         }
@@ -422,6 +417,9 @@ patch(MockServer.prototype, {
     _mockDiscussChannelChannelFetched(ids) {
         const channels = this.getRecords("discuss.channel", [["id", "in", ids]]);
         for (const channel of channels) {
+            if (!["chat", "whatsapp"].includes(channel.channel_type)) {
+                continue;
+            }
             const channelMessages = this.getRecords("mail.message", [
                 ["model", "=", "discuss.channel"],
                 ["res_id", "=", channel.id],

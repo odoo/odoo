@@ -8,6 +8,7 @@ import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import { mockTimeout, triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
 import { rpc } from "@web/core/network/rpc";
+import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferred";
 
 QUnit.module("livechat session");
 
@@ -67,6 +68,7 @@ QUnit.test("Seen message is saved on the server", async (assert) => {
     await insertText(".o-mail-Composer-input", "Hello, I need help!");
     triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello, I need help!" });
+    await waitUntilSubscribe();
     const initialSeenMessageId = env.services["im_livechat.livechat"].thread.seen_message_id;
     $(".o-mail-Composer-input").blur();
     await pyEnv.withUser(pyEnv.adminUserId, () =>

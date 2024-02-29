@@ -1062,6 +1062,7 @@ export class Record {
     static RO_QUEUE = []; // record-onchanges
     /** @type {Record[]} */
     static RD_QUEUE = []; // record-deletes
+    static RHD_QUEUE = []; // record-hard-deletes
     static UPDATE = 0;
     /** @param {() => any} fn */
     static MAKE_UPDATE(fn) {
@@ -1078,7 +1079,8 @@ export class Record {
                 Record.FD_QUEUE.length > 0 ||
                 Record.FU_QUEUE.length > 0 ||
                 Record.RO_QUEUE.length > 0 ||
-                Record.RD_QUEUE.length > 0
+                Record.RD_QUEUE.length > 0 ||
+                Record.RHD_QUEUE.length > 0
             ) {
                 const FC_QUEUE = [...Record.FC_QUEUE];
                 const FS_QUEUE = [...Record.FS_QUEUE];
@@ -1087,6 +1089,7 @@ export class Record {
                 const FU_QUEUE = [...Record.FU_QUEUE];
                 const RO_QUEUE = [...Record.RO_QUEUE];
                 const RD_QUEUE = [...Record.RD_QUEUE];
+                const RHD_QUEUE = [...Record.RHD_QUEUE];
                 Record.FC_QUEUE.length = 0;
                 Record.FS_QUEUE.length = 0;
                 Record.FA_QUEUE.length = 0;
@@ -1094,6 +1097,7 @@ export class Record {
                 Record.FU_QUEUE.length = 0;
                 Record.RO_QUEUE.length = 0;
                 Record.RD_QUEUE.length = 0;
+                Record.RHD_QUEUE.length = 0;
                 while (FC_QUEUE.length > 0) {
                     const field = FC_QUEUE.pop();
                     field.requestCompute({ force: true });
@@ -1151,6 +1155,10 @@ export class Record {
                             }
                         }
                     }
+                    this.ADD_QUEUE(record, "hard_delete");
+                }
+                while (RHD_QUEUE.length > 0) {
+                    const record = RHD_QUEUE.pop();
                     delete record.Model.records[record.localId];
                     record.Model._rawStore.recordByLocalId.delete(record.localId);
                 }
@@ -1171,6 +1179,11 @@ export class Record {
             if (type === "delete") {
                 if (!Record.RD_QUEUE.includes(record)) {
                     Record.RD_QUEUE.push(record);
+                }
+            }
+            if (type === "hard_delete") {
+                if (!Record.RHD_QUEUE.includes(record)) {
+                    Record.RHD_QUEUE.push(record);
                 }
             }
         } else {

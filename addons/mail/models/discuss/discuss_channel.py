@@ -359,10 +359,10 @@ class Channel(models.Model):
         # side effect of unsubscribe that wasn't taken into account because
         # channel_info is called before actually unpinning the channel
         channel_info['is_pinned'] = False
-        self.env['bus.bus']._sendone(partner, 'discuss.channel/leave', channel_info)
         notification = Markup('<div class="o_mail_notification">%s</div>') % _('left the channel')
         # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
         self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
+        self.env['bus.bus']._sendone(partner, 'discuss.channel/leave', channel_info)
         self.env['bus.bus']._sendone(self, 'mail.record/insert', {
             'Thread': {
                 'channelMembers': [('DELETE', {'id': member.id})],
@@ -605,13 +605,15 @@ class Channel(models.Model):
         payload = {
             "Thread": {
                 "id": self.id,
-                "is_pinned": True,
                 "last_interest_dt": fields.Datetime.now(),
                 "model": "discuss.channel",
             },
         }
         bus_notifications = [
             (self, "mail.record/insert", payload),
+            ((self, "members"), "mail.record/insert", {
+                "Thread": {"id": self.id, "is_pinned": True, "model": "discuss.channel"}
+            }),
             (self, "discuss.channel/new_message", {"id": self.id, "message": message_format}),
         ]
         # sudo: bus.bus - sending on safe channel (discuss.channel)

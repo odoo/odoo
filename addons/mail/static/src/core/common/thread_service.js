@@ -548,9 +548,6 @@ export class ThreadService {
         if (pushState) {
             router.pushState({ active_id: activeId });
         }
-        if (!thread.is_pinned) {
-            thread.isLocallyPinned = true;
-        }
     }
 
     /**
