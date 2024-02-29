@@ -1,4 +1,6 @@
-const { loader } = odoo;
+//-----------------------------------------------------------------------------
+// Internal
+//-----------------------------------------------------------------------------
 
 /**
  * We remove all the attributes `src` and `alt` from the template and replace them by
@@ -12,17 +14,37 @@ const { loader } = odoo;
  * @param {Element} template
  */
 const replaceAttributes = (template) => {
-    for (const attributeName of ["alt", "src"]) {
-        for (const prefix of ["", "t-att-", "t-attf-"]) {
-            const fullAttribute = `${prefix}${attributeName}`;
-            const dataAttribute = `${prefix}data-${attributeName}`;
+    for (const [attribute, defaultValue] of ATTRIBUTE_DEFAULT_VALUES) {
+        for (const prefix of ATTRIBUTE_PREFIXES) {
+            const fullAttribute = `${prefix}${attribute}`;
+            const dataAttribute = `${prefix}data-${attribute}`;
             for (const element of template.querySelectorAll(`[${fullAttribute}]`)) {
                 element.setAttribute(dataAttribute, element.getAttribute(fullAttribute));
-                element.removeAttribute(fullAttribute);
+                if (attribute !== fullAttribute) {
+                    element.removeAttribute(fullAttribute);
+                }
+                element.setAttribute(attribute, defaultValue);
             }
         }
     }
 };
+
+const ATTRIBUTE_DEFAULT_VALUES = [
+    // "alt": empty string
+    ["alt", ""],
+    // "src": 1x1 fuschia image
+    [
+        "src",
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==",
+    ],
+];
+const ATTRIBUTE_PREFIXES = ["", "t-att-", "t-attf-"];
+
+const { loader } = odoo;
+
+//-----------------------------------------------------------------------------
+// Exports
+//-----------------------------------------------------------------------------
 
 /**
  * @param {string} name
