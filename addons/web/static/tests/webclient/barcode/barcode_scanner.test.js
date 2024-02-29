@@ -72,15 +72,13 @@ test("Barcode scanner crop overlay", async () => {
 
     const firstBarcodeFound = scanBarcode(env);
     await videoReady;
-    const { drop, moveTo } = await contains(".o_crop_icon").drag();
-    await moveTo(".o_crop_container", {
+    await contains(".o_crop_icon").dragAndDrop(".o_crop_container", {
         relative: true,
         position: {
             x: 0,
             y: 0,
         },
     });
-    await drop();
 
     const firstValueScanned = await firstBarcodeFound;
     expect(firstValueScanned).toBe(firstBarcodeValue, {

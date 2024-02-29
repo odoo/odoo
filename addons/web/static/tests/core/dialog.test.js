@@ -1,13 +1,13 @@
-import { expect, test, describe } from "@odoo/hoot";
-import { keyDown, queryAll, queryOne, keyUp, press, drag, resize } from "@odoo/hoot-dom";
+import { describe, expect, test } from "@odoo/hoot";
+import { keyDown, keyUp, press, queryAll, queryOne, resize } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { makeDialogMockEnv } from "@web/../tests/_framework/env_test_helpers";
+import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
+import { useService } from "@web/core/utils/hooks";
 
-import { Component, useState, onMounted, xml } from "@odoo/owl";
+import { Component, onMounted, useState, xml } from "@odoo/owl";
 
 describe.current.tags("desktop");
 
@@ -331,7 +331,7 @@ test("dialog can be moved", async () => {
 
     const header = queryOne(".modal-header");
     const headerRect = header.getBoundingClientRect();
-    drag(header).drop(".modal-content", {
+    await contains(header).dragAndDrop(".modal-content", {
         position: {
             // the util function sets the source coordinates at (x; y) + (w/2; h/2)
             // so we need to move the dialog based on these coordinates.
@@ -339,7 +339,6 @@ test("dialog can be moved", async () => {
             y: headerRect.y + headerRect.height / 2 + 50,
         },
     });
-    await animationFrame();
     expect(".modal-content").toHaveStyle({
         top: "50px",
         left: "20px",
@@ -361,7 +360,7 @@ test("dialog's position is reset on resize", async () => {
 
     const header = queryOne(".modal-header");
     const headerRect = header.getBoundingClientRect();
-    drag(header).drop(".modal-content", {
+    await contains(header).dragAndDrop(".modal-content", {
         position: {
             // the util function sets the source coordinates at (x; y) + (w/2; h/2)
             // so we need to move the dialog based on these coordinates.
@@ -369,7 +368,6 @@ test("dialog's position is reset on resize", async () => {
             y: headerRect.y + headerRect.height / 2 + 50,
         },
     });
-    await animationFrame();
     expect(".modal-content").toHaveStyle({
         top: "50px",
         left: "20px",
