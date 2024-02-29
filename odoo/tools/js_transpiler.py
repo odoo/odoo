@@ -126,7 +126,7 @@ EXPORT_FCT_RE = re.compile(r"""
     ^
     (?P<space>\s*)                          # space and empty line
     export\s+                               # export
-    (?P<type>(async\s+)?function)\s+        # async function or function
+    (?P<type>(async\s+)?function\*?)\s+     # async function or function or generator
     (?P<identifier>\w+)                     # name the function
     """, re.MULTILINE | re.VERBOSE)
 

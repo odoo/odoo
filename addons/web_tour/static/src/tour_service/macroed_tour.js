@@ -16,6 +16,7 @@ import { iter } from "@web/core/utils/functions";
 import { session } from "@web/session";
 import { utils } from "@web/core/ui/ui_service";
 import { delay } from "@web/core/utils/concurrency";
+import { rangeAround } from "@web/core/utils/arrays";
 
 /**
  * @typedef {import("@web/core/macro").MacroDescriptor} MacroDescriptor
@@ -93,17 +94,12 @@ function describeFailedStepSimple(step, tour) {
  * @param {TourStep} step
  * @param {Tour} tour
  */
-function describeFailedStepDetailed(step, tour) {
-    const offset = 3;
-    const stepIndex = tour.steps.findIndex((s) => s === step);
-    const start = stepIndex - offset >= 0 ? stepIndex - offset : 0;
-    const end =
-        stepIndex + offset + 1 <= tour.steps.length ? stepIndex + offset + 1 : tour.steps.length;
+function describeFailedStepDetailed(tour, step) {
     let result = "";
-    for (let i = start; i < end; i++) {
-        const highlight = i === stepIndex;
+    for (const elem of rangeAround(tour.tourSteps, step.index, 3)) {
+        const highlight = elem === step;
         const stepString = JSON.stringify(
-            tour.steps[i],
+            elem,
             (_key, value) => {
                 if (typeof value === "function") {
                     return "[function]";
@@ -113,8 +109,7 @@ function describeFailedStepDetailed(step, tour) {
             },
             2
         );
-        result += `\n${highlight ? "----- FAILING STEP -----\n" : ""}${stepString},${highlight ? "\n-----------------------" : ""
-            }`;
+        result += `\n${highlight ? "----- FAILING STEP -----\n" : ""}${stepString},${highlight ? "\n-----------------------" : ""}`;
     }
     return `${describeFailedStepSimple(step, tour)}\n\n${result.trim()}`;
 }
@@ -258,7 +253,6 @@ function shouldOmit(step, mode) {
 export class MacroedTour {
     #tourSteps = [];
     #startIndex = 0;
-    #tourTimeout = undefined;
     constructor(tour, options={}) {
         if (typeof tour.steps !== "function") {
             throw new Error(`tour.steps has to be a function that returns TourStep[]`);
@@ -283,7 +277,7 @@ export class MacroedTour {
             const omitted = shouldOmit(step, this.mode);
             const localIndex = !omitted ? index++ : index;
             const completed = localIndex < this.#startIndex;
-            step = { ...step, omitted, completed, definitionIndex, index };
+            step = { ...step, omitted, completed, definitionIndex, index: localIndex };
             if (!omitted && !completed) {
                 step.shadow_dom = step.shadow_dom ?? this.shadow_dom;
                 if (step.shadow_dom) {
@@ -434,18 +428,18 @@ export class MacroedTour {
             const willUnload = await callWithUnloadCheck(async () => {
                 await this.tryToDoAction(() =>
                     // `this.anchor` is expected in many `step.run`.
-                    step.run.call({ anchor: stepEl }, actionHelper)
+                    step.run.call({ anchor: stepEl }, actionHelper), step
                 );
             });
             result = willUnload && "will unload";
         } else if (step.run !== undefined) {
             const m = step.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
-            await tryToDoAction(() => actionHelper[m[1]](m[2]));
+            await this.tryToDoAction(() => actionHelper[m[1]](m[2]), step);
         } else if (!step.isCheck) {
-            if (stepIndex === tour.steps.length - 1) {
-                console.warn('Tour %s: ignoring action (auto) of last step', tour.name);
+            if (step.index === this.tourSteps.length - 1) {
+                console.warn('Tour %s: ignoring action (auto) of last step', this.name);
             } else {
-                await tryToDoAction(() => actionHelper.auto());
+                await this.tryToDoAction(() => actionHelper.auto(), step);
             }
         }
         await new Promise(r => delay(0).then(() => requestAnimationFrame(r)));
