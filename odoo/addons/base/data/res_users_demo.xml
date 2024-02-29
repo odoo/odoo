@@ -39,6 +39,10 @@
             <field name="image_1920" type="base64" file="base/static/img/user_demo-image.png"/>
         </record>
 
+        <record id="partner_demo" model="res.partner">
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+
         <record model="res.partner" id="base.partner_root">
             <field name="tz">Europe/Brussels</field>
         </record>
@@ -54,6 +58,7 @@
             <field name="phone">+1 555-555-5555</field>
             <field name="email">admin@yourcompany.example.com</field>
             <field name="tz">Europe/Brussels</field>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="image_1920" type="base64" file="base/static/img/partner_root-image.png"/>
         </record>
 
