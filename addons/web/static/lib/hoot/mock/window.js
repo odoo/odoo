@@ -210,14 +210,14 @@ const WINDOW_MOCK_DESCRIPTORS = {
 //-----------------------------------------------------------------------------
 
 export function cleanupWindow() {
-    // Cookies
+    // Cookies, history and location
     mockCookie.clear();
-
-    // History
     mockHistory.__clear();
-
-    // Location
     mockLocation.__clear();
+
+    // Storages
+    mockLocalStorage.clear();
+    mockSessionStorage.clear();
 
     // Title
     mockTitle = "";
