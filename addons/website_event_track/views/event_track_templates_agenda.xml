@@ -191,7 +191,13 @@
         <div class="o_we_agenda_card_content position-relative d-flex flex-column justify-content-center my-1">
             <div class="o_we_agenda_card_title mb-1">
                 <t t-if="track.website_published or is_event_user">
+<<<<<<< HEAD
                     <a t-att-href="'/event/%s/track/%s' % (slug(event), slug(track))" class="text-reset fw-bold stretched-link">
+||||||| parent of 830ad63cb245 (temp)
+                    <a t-att-href="'/event/%s/track/%s' % (slug(event), slug(track))" class="text-black text-bold">
+=======
+                    <a t-att-href="'/event/%s/track/%s' % (slug(event), slug(track))" class="text-reset text-bold">
+>>>>>>> 830ad63cb245 (temp)
                         <t t-out="track.name"/>
                     </a>
                 </t>

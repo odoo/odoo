@@ -28,8 +28,16 @@
 <!-- Main topbar -->
 <template id="session_topbar" name="Tracks Tools">
     <div>
+<<<<<<< HEAD
         <div class="o_wesession_topbar_filters o_wevent_index_topbar_filters d-print-none d-flex flex-wrap align-items-center justify-content-end gap-2 w-100 mt-1 mt-lg-3 mb-3">
             <h3 class="my-0 me-auto pe-sm-4">Talks</h3>
+||||||| parent of 830ad63cb245 (temp)
+        <div class="o_wesession_topbar_filters o_wevent_index_topbar_filters d-print-none d-flex flex-wrap align-items-center justify-content-end gap-2 w-100 mb-3">
+            <h3 class="my-0 me-auto pe-sm-4">Talks</h3>
+=======
+        <div class="o_wesession_topbar_filters o_wevent_index_topbar_filters d-print-none d-flex flex-wrap align-items-center justify-content-end gap-2 w-100 mb-3">
+            <h3 class="mt-3 mb-3 me-auto pe-sm-4">Talks</h3>
+>>>>>>> 830ad63cb245 (temp)
             <!-- Optional wishlist filter -->
             <div t-if="option_track_wishlist" class="dropdown d-none d-lg-block">
                 <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
@@ -241,6 +249,7 @@
                 <t t-set="tracks_header_name" t-value="tracks_info['name']"/>
                 <t t-set="tracks" t-value="tracks_info['tracks']"/>
                 <!-- DAY HEADER -->
+<<<<<<< HEAD
                 <div class="o_we_track_day_header d-flex align-items-center position-relative py-3">
                    <time class="d-flex flex-grow-1 align-items-end gap-2" t-if="tracks_date" t-att-datetime="tracks_date">
                         <span class="o_wevent_day_header_number lh-1" t-out="tracks_date" t-options="{'widget': 'date', 'format': 'dd'}"/>
@@ -248,6 +257,25 @@
                             <div class="lh-1 fw-bold" t-out="tracks_date" t-options="{'widget': 'date', 'format': 'MMMM YYYY'}"/>
                             <span class="lh-1" t-out="tracks_date" t-options="{'widget': 'date', 'format': 'EEEE '}"/>
                             <span class="d-none d-md-inline small lh-1 text-muted">(timezone: <t t-out="event.date_tz"/>)</span>
+||||||| parent of 830ad63cb245 (temp)
+                <div t-attf-class="o_we_track_day_header d-flex align-items-center py-3">
+                    <div class="d-flex flex-grow-1 flex-column" t-if="tracks_date">
+                        <span class="m-0 fw-bold" t-out="tracks_date"
+                            t-options="{'widget': 'date', 'format': 'EEEE '}"/>
+                        <div class="d-flex align-items-center justify-content-start">
+                            <span class="h3 mb-0 fw-bold" t-out="tracks_date"
+                                t-options="{'widget': 'date', 'format': 'dd MMMM YYYY'}"/>
+                                <span class="small ms-2 fw-light">(<t t-out="event.date_tz"/>)</span>
+=======
+                <div class="o_we_track_day_header d-flex align-items-center position-relative py-3">
+                    <div class="d-flex flex-grow-1 flex-column" t-if="tracks_date">
+                        <span class="m-0 fw-bold" t-out="tracks_date"
+                            t-options="{'widget': 'date', 'format': 'EEEE '}"/>
+                        <div class="d-flex align-items-center justify-content-start">
+                            <span class="h3 mb-0 fw-bold" t-out="tracks_date"
+                                t-options="{'widget': 'date', 'format': 'dd MMMM YYYY'}"/>
+                                <span class="small ms-2 fw-light">(<t t-out="event.date_tz"/>)</span>
+>>>>>>> 830ad63cb245 (temp)
                         </div>
                     </time>
                     <div class="d-flex flex-grow-1" t-elif="tracks_header_name">
@@ -458,14 +486,26 @@
             slug(event),
             keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))
         )"
+<<<<<<< HEAD
         t-att-class="'badge rounded-pill text-decoration-none %s' % ('text-bg-primary opacity-75-hover' if tag in search_tags else 'o_badge o_badge_clickable o_badge_color_0')"
+||||||| parent of 830ad63cb245 (temp)
+        t-att-class="'badge %s' % ('text-bg-primary' if tag in search_tags else 'o_tag_color_hovered_0')"
+=======
+        t-att-class="'badge rounded-pill text-decoration-none %s' % ('text-bg-primary opacity-75-hover' if tag in search_tags else 'o_tag_color_hovered_0')"
+>>>>>>> 830ad63cb245 (temp)
         t-out="tag.name"/>
     <a t-else=""
         t-att-href="'/event/%s/track?%s'% (
             slug(event),
             keep_query('*', tags=str(tag.ids))
         )"
+<<<<<<< HEAD
         t-att-class="'badge rounded-pill text-decoration-none o_badge o_badge_clickable o_badge_color_%s' % (tag.color)"
+||||||| parent of 830ad63cb245 (temp)
+        t-att-class="'badge o_tag_color_hovered_%s' % (tag.color)"
+=======
+        t-att-class="'badge rounded-pill text-decoration-none o_tag_color_hovered_%s' % (tag.color)"
+>>>>>>> 830ad63cb245 (temp)
         t-out="tag.name"/>
 </template>
 
@@ -474,7 +514,13 @@
         t-att-class="'badge %s' % ('text-bg-primary' if tag in search_tags else 'o_badge_color_0')"
         t-out="tag.name"/>
     <span t-else=""
+<<<<<<< HEAD
         t-att-class="'badge rounded-pill o_badge_color_%s' % (tag.color)"
+||||||| parent of 830ad63cb245 (temp)
+        t-att-class="'badge o_tag_color_%s' % (tag.color)"
+=======
+        t-att-class="'badge rounded-pill o_tag_color_%s' % (tag.color)"
+>>>>>>> 830ad63cb245 (temp)
         t-out="tag.name"/>
 </template>
 

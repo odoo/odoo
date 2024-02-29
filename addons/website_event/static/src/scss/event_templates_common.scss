@@ -85,9 +85,62 @@ $o-wevent-color: $body-color;
             border: 1px solid var(--o-border-color);
             border-left: 3px solid var(--base);
         }
+<<<<<<< HEAD
 
         .event_track > div {
             border-top: 3px solid var(--base);
+||||||| parent of 830ad63cb245 (temp)
+        // background color-based for new styling
+        @for $size from 2 through length($o-colors) {
+            .event_color_#{$size - 1} {
+                &.event_track{
+                    $-bg: adjust-color(nth($o-colors, $size), $lightness: 40%, $saturation: 15%);
+                    @include o-print-color($-bg, background-color, bg-opacity);
+                    > div{
+                        border-top: 3px solid adjust-color(nth($o-colors, $size), $lightness: 10%, $saturation: 15%);
+                    }
+                }
+                &.o_wesession_list_item{
+                    border-color: adjust-color(nth($o-colors, $size), $lightness: 30%, $saturation: 15%);
+                    background-color: unset;
+                }
+            }
+        }
+        .event_color_0 {
+            background-color: unset;
+            &.event_track{
+                border-top: 1px solid lighten($o-wevent-bg-color-base-contrast, 50%);
+            }
+            &.o_wesession_list_item{
+                border-color: $o-wevent-bg-color-light;
+            }
+=======
+        // background color-based for new styling
+        @for $size from 2 through length($o-colors) {
+            .event_color_#{$size - 1} {
+                &.event_track{
+                    $-bg: adjust-color(nth($o-colors, $size), $lightness: 40%, $saturation: 15%);
+                    @include o-print-color($-bg, background-color, bg-opacity);
+                    > div{
+                        border-top: 3px solid adjust-color(nth($o-colors, $size), $lightness: 10%, $saturation: 15%);
+                    }
+                }
+                &.o_wesession_list_item{
+                    border-color: adjust-color(nth($o-colors, $size), $lightness: 30%, $saturation: 15%);
+                    background-color: unset;
+                }
+            }
+        }
+        .event_color_0 {
+            color: $o-wevent-bg-color-base-contrast;
+
+            &.event_track{
+                border-top: 1px solid lighten($o-wevent-bg-color-base-contrast, 50%);
+            }
+            &.o_wesession_list_item{
+                border-color: $o-wevent-bg-color-light;
+            }
+>>>>>>> 830ad63cb245 (temp)
         }
 
         .o_wevent_online_page_container {

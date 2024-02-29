@@ -10,11 +10,25 @@
     }
 
     // Ensure menu labels are not split
+<<<<<<< HEAD
     #o_wevent_submenu_desktop {
         .nav {
             column-gap: map-get($spacers, 3);
 
             .nav-link {
+||||||| parent of 830ad63cb245 (temp)
+    #o_wevent_event_submenu {
+        li.nav-item {
+            white-space: nowrap;
+            
+            a{
+=======
+    #o_wevent_event_submenu {
+        li.nav-item {
+            white-space: nowrap;
+            
+            > a {
+>>>>>>> 830ad63cb245 (temp)
                 padding: 0;
 
                 &.active {
@@ -90,6 +104,7 @@
     }
 }
 
+<<<<<<< HEAD
 #modal_ticket_registration {
     // Handle overflow behaviors.
     #registration_form, #o_wevent_tickets, #o_wevent_tickets_collapse {
@@ -97,6 +112,32 @@
         flex: 1 1 auto;
         display: flex;
         flex-direction: column;
+||||||| parent of 830ad63cb245 (temp)
+/*
+ * EVENT PAGE VIEW
+ */
+=======
+#modal_ticket_registration {
+    // Handle overflow behaviors.
+    #registration_form, #o_wevent_tickets, #o_wevent_tickets_collapse {
+        position: relative;
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+
+        @include media-breakpoint-up(sm) {
+            :not(.s_popup) > & {
+                overflow: auto;
+                min-height: 0;
+            }
+        }
+    }
+}
+
+/*
+ * EVENT PAGE VIEW
+ */
+>>>>>>> 830ad63cb245 (temp)
 
         @include media-breakpoint-up(sm) {
             :not(.s_popup) > & {

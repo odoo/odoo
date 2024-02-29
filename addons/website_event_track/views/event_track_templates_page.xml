@@ -85,7 +85,13 @@
                     <div class="d-flex flex-wrap gap-1">
                         <t t-foreach="track.tag_ids" t-as="tag">
                             <span t-if="tag.color"
+<<<<<<< HEAD
                                 t-att-class="'badge o_badge_color_%s' % (tag.color)"
+||||||| parent of 830ad63cb245 (temp)
+                                t-att-class="'badge o_tag_color_hovered_%s' % (tag.color)"
+=======
+                                t-att-class="'badge o_tag_color_%s' % (tag.color)"
+>>>>>>> 830ad63cb245 (temp)
                                 t-out="tag.name"/>
                         </t>
                     </div>
@@ -153,6 +159,18 @@
                      placeholder="e.g. &quot;This talk will be about...&quot;"/>
                 <div class="alert alert-info mt-3 o_wesession_track_main_empty_descr_warning">
                     This track does not have a description.
+<<<<<<< HEAD
+||||||| parent of 830ad63cb245 (temp)
+                    <a t-attf-href="?{{ keep_query('*', enable_editor=1) }}">
+                        <i class="oi oi-fw oi-arrow-right"></i>
+                        Write one.
+                    </a>
+=======
+                    <a class="alert-link" t-attf-href="?{{ keep_query('*', enable_editor=1) }}">
+                        <i class="oi oi-fw oi-arrow-right"></i>
+                        Write one.
+                    </a>
+>>>>>>> 830ad63cb245 (temp)
                 </div>
             </t>
         </div>

@@ -8,6 +8,12 @@
                  itemscope="itemscope" itemtype="http://schema.org/Event">
                 <section>
                     <div class="container overflow-hidden">
+<<<<<<< HEAD
+||||||| parent of 830ad63cb245 (temp)
+                        <h3>Get A Booth</h3>
+=======
+                        <h3 class="mt-3 mb-4">Get A Booth</h3>
+>>>>>>> 830ad63cb245 (temp)
                         <div class="row g-0">
                             <t t-out="0"/>
                         </div>
@@ -57,11 +63,25 @@
                           t-attf-action="/event/#{slug(event)}/booth/register" t-att-data-event-id="event.id">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                         <div class="row mb-3">
+<<<<<<< HEAD
                             <h5 class="mt-0 mb-3">Choose your type of booth</h5>
+||||||| parent of 830ad63cb245 (temp)
+                            <h4 class="mb-3">Choose your type of booth</h4>
+=======
+                            <h4 class="h5 mt-0 mb-3">Choose your type of booth</h4>
+>>>>>>> 830ad63cb245 (temp)
                             <t t-foreach="event.event_booth_category_ids" t-as="booth_category">
                                 <t t-set="booth_category_unavailable" t-value="booth_category not in available_booth_category_ids"/>
+<<<<<<< HEAD
                                 <div t-attf-class="col-md-6 col-lg-4 mb-4 {{ (len(event.event_booth_category_ids) &gt; 3) and 'col-xxl-3' }}">
                                     <label t-attf-class="d-block h-100 #{'o_wbooth_category_unavailable overflow-hidden' if booth_category_unavailable else ''}">
+||||||| parent of 830ad63cb245 (temp)
+                                <div class="col-md-6 col-lg-4 mb-2">
+                                    <label t-attf-class="d-block h-100 #{'o_wbooth_category_unavailable' if booth_category_unavailable else ''}">
+=======
+                                <div class="col-md-6 col-lg-4 mb-4">
+                                    <label t-attf-class="d-block h-100 #{'o_wbooth_category_unavailable overflow-hidden' if booth_category_unavailable else ''}">
+>>>>>>> 830ad63cb245 (temp)
                                         <input type="radio" name="booth_category_id" t-att-value="booth_category.id" t-att-disabled="booth_category_unavailable"
                                             t-att-checked="booth_category.id == selected_booth_category_id"/>
                                         <div class="card h-100">
@@ -70,6 +90,14 @@
                                             <div class="card-body d-flex flex-wrap w-100 gap-2 justify-content-between flex-grow-0 pb-0">
                                                 <h5 name="booth_category_name" class="card-title my-0" t-out="booth_category.name"/>
                                                 <span class="booth_category_price"></span>
+<<<<<<< HEAD
+||||||| parent of 830ad63cb245 (temp)
+                                                <div t-attf-id="o_wbooth_booth_description_#{booth_category.id}"
+                                                    t-field="booth_category.description"/>
+=======
+                                                <div class="flex-basis-100 flex-grow-1 pb-2 mx-n3 small" t-attf-id="o_wbooth_booth_description_#{booth_category.id}"
+                                                    t-field="booth_category.description"/>
+>>>>>>> 830ad63cb245 (temp)
                                             </div>
                                              <div class="w-100 small" t-attf-id="o_wbooth_booth_description_#{booth_category.id}" t-field="booth_category.description"/>
                                         </div>
@@ -83,9 +111,19 @@
                         <t t-if="available_booth_category_ids">
                             <div class="row">
                                 <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+<<<<<<< HEAD
                                     <h5 class="my-0">Location</h5>
                                     <div t-if="event.exhibition_map" class="ms-2 small">
                                         <a class="text-decoration-none text-center" href="#" data-bs-toggle="modal" data-bs-target="#mapModal"><i class="fa fa-map-o me-1"/>View Plan</a>
+||||||| parent of 830ad63cb245 (temp)
+                                    <h4 class="mb-0">Location</h4>
+                                    <div t-if="event.exhibition_map">
+                                        <a class="text-decoration-none text-center" href="#" data-bs-toggle="modal" data-bs-target="#mapModal"><i class="fa fa-map-o me-2"/>View Plan</a>
+=======
+                                    <h4 class="h5 mb-0">Location</h4>
+                                    <div t-if="event.exhibition_map">
+                                        <a class="text-decoration-none text-center" href="#" data-bs-toggle="modal" data-bs-target="#mapModal"><i class="fa fa-map-o me-2"/>View Plan</a>
+>>>>>>> 830ad63cb245 (temp)
                                         <div role="dialog" id="mapModal" class="modal" tabindex="-1">
                                             <div class="modal-dialog modal-lg">
                                                 <div class="modal-content">
@@ -104,10 +142,22 @@
                                         <span>Sorry, several booths are now sold out. Please change your choices before validating again.</span>
                                     </div>
                                 </div>
+<<<<<<< HEAD
                                 <div class="pt24 pb48" name="booth_registration_submit">
                                     <div class="d-flex align-items-center justify-content-end gap-2">
                                         <button type="submit" class="o_wbooth_registration_submit btn btn-primary btn-block" disabled="true">
                                             <span>Book my Booth<small>(s)</small></span>
+||||||| parent of 830ad63cb245 (temp)
+                                <div class="my-3" name="booth_registration_submit">
+                                    <div class="d-flex flex-column align-content-end justify-content-end pt-3 border-top">
+                                        <button type="submit" class="o_wbooth_registration_submit btn btn-primary btn-block ms-auto fw-bold" disabled="true">
+                                            <span>Book my Booth(s)</span>
+=======
+                                <div class="my-3" name="booth_registration_submit">
+                                    <div class="d-flex align-items-center justify-content-end pt-3 gap-2 mt-4 mb-5">
+                                        <button type="submit" class="o_wbooth_registration_submit btn btn-primary btn-block" disabled="true">
+                                            <span>Book my Booth(s)</span>
+>>>>>>> 830ad63cb245 (temp)
                                         </button>
                                     </div>
                                 </div>

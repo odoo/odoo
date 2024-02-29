@@ -7,14 +7,226 @@
         <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES OF ALL EVENTS</t>
         <div class="oe_structure" id="oe_structure_website_event_track_proposal_1" t-att-data-editor-message="editor_message"/>
         <div class="container">
+<<<<<<< HEAD
             <t t-call="website_event.navbar"/>
 
             <div class="row mb-3">
                 <div t-att-class="event.website_track_proposal and 'col-lg-8 col-xl-9 pe-xxl-5' or 'col-12'">
                     <!-- Default Title (editable) -->
+||||||| parent of 830ad63cb245 (temp)
+            <section class="row mb-3">
+                <div class="col-lg-8 col-xl-9">
+                    <t t-call="website_event.navbar"/>
+                    <section>
+                        <h3>Call for Proposals</h3>
+                    </section>
+                    <section id="forms" t-if="not event.website_track_proposal">
+                        <h2>Proposals are closed!</h2>
+                        <p>
+                            This event does not accept proposals.
+                        </p>
+                    </section>
+=======
+            <section class="row mb-3">
+                <div class="col-lg-8 col-xl-9 pe-xxl-5">
+                    <t t-call="website_event.navbar"/>
+                    <section class="pt-3">
+                        <h3 class="mt-0 mb-4">Call for Proposals</h3>
+                    </section>
+                    <section id="forms" t-if="not event.website_track_proposal">
+                        <h2>Proposals are closed!</h2>
+                        <p>
+                            This event does not accept proposals.
+                        </p>
+                    </section>
+>>>>>>> 830ad63cb245 (temp)
                     <div class="oe_structure">
+<<<<<<< HEAD
                         <section class="pt24 pb24">
                             <h3 class="my-0">Call for Proposals</h3>
+||||||| parent of 830ad63cb245 (temp)
+                    <section>
+                        <h4 class="mt-3">
+                            Introduction
+                        </h4>
+                        <p class="lead">
+                            We will accept a broad range of
+                            presentations, from reports on academic and
+                            commercial projects to tutorials and case
+                            studies. As long as the presentation is
+                            interesting and potentially useful to the
+                            audience, it will be considered for
+                            inclusion in the programme.
+                        </p>
+                        <br/>
+                    </section>
+                </div>
+                    <div>
+                        <section id="forms" t-if="event.website_track_proposal">
+                            <form class="js_website_submit_form o_website_event_track_proposal_form mt-3" t-att-data-event-id="event.id" enctype="multipart/form-data">
+                                <input name="csrf_token" type="hidden" t-att-value="request.csrf_token()"/>
+                                <div id="track_intro">
+                                    <h4 class="mt-3">Talk Intro</h4>
+                                    <div class="form-text text-muted mb16">
+                                        What is your talk about?
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="track_name" style="width: 200px" >
+                                            <span class="o_wetrack_proposal_label_content">Talk Title</span>
+                                            <span>*</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input name="track_name" type="text" class="form-control form-field" required="True"/>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="description" style="width: 200px" >
+                                            <span class="o_wetrack_proposal_label_content">Talk Introduction</span>
+                                            <span>*</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <textarea name="description" class="form-control" required="True"/>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="tags" style="width: 200px">Categories</label>
+                                        <div class="col-sm o_website_event_track_proposal_form_tags">
+                                            <input name="tags" type="text" class="form-control o_wetrack_select2_tags"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div id="speaker_profile">
+                                    <h4 class="mt-3">Speaker Profile</h4>
+                                    <div class="form-text text-muted mb16">
+                                        Who will give this talk? We will show this to attendees to showcase your talk.
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="partner_name" style="width: 200px">Name</label>
+                                        <div class="col-sm"><input name="partner_name" type="text" class="form-control"/></div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="partner_email" style="width: 200px">Email</label>
+                                        <div class="col-sm"><input name="partner_email" type="email" class="form-control" /></div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="partner_phone" style="width: 200px">Phone</label>
+                                        <div class="col-sm"><input name="partner_phone" type="text" class="form-control"/></div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="image" style="width: 200px">Picture</label><br/>
+                                        <div class="col-sm"><input name="image" class="form-control" type="file" accept="image/*" style="width: 100%"/></div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="partner_function" style="width: 200px">Job Title</label>
+                                        <div class="col-sm"><input name="partner_function" type="text" class="form-control"/></div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="partner_biography" style="width: 200px" >Biography</label>
+                                        <div class="col-sm"><textarea name="partner_biography" class="form-control"/></div>
+                                    </div>
+                                </div>
+                                <t t-call="website_event_track.event_track_proposal_contact_details"/>
+                                <div class="o_form_buttons d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary o_wetrack_proposal_submit_button">Submit Proposal</button>
+                                    <span class="o_wetrack_proposal_error_section text-danger d-none ml8">
+                                        <i class="fa fa-close mr4" role="img" aria-label="Error" title="Error"/>
+                                        <span class="o_wetrack_proposal_error_message"/>
+                                    </span>
+                                </div>
+                            </form>
+=======
+                    <section>
+                        <h4 class="mt-0">
+                            Introduction
+                        </h4>
+                        <p class="lead">
+                            We will accept a broad range of
+                            presentations, from reports on academic and
+                            commercial projects to tutorials and case
+                            studies. As long as the presentation is
+                            interesting and potentially useful to the
+                            audience, it will be considered for
+                            inclusion in the programme.
+                        </p>
+                        <br/>
+                    </section>
+                </div>
+                    <div>
+                        <section id="forms" t-if="event.website_track_proposal">
+                            <form class="js_website_submit_form o_website_event_track_proposal_form row mt-3" t-att-data-event-id="event.id" enctype="multipart/form-data">
+                                <input name="csrf_token" type="hidden" t-att-value="request.csrf_token()"/>
+                                <div id="track_intro" class="col-12">
+                                    <h4 class="mt-3">Talk Intro</h4>
+                                    <div class="form-text text-muted mb16">
+                                        What is your talk about?
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="track_name" style="width: 200px" >
+                                            <span class="o_wetrack_proposal_label_content">Talk Title</span>
+                                            <span>*</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input name="track_name" type="text" class="form-control form-field" required="True"/>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="description" style="width: 200px" >
+                                            <span class="o_wetrack_proposal_label_content">Talk Introduction</span>
+                                            <span>*</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <textarea name="description" class="form-control" rows="4" required="True"/>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="tags" style="width: 200px">Categories</label>
+                                        <div class="col-sm o_website_event_track_proposal_form_tags">
+                                            <input name="tags" type="text" class="form-control o_wetrack_select2_tags"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div id="speaker_profile" class="col-12">
+                                    <h4 class="mt-3">Speaker Profile</h4>
+                                    <div class="form-text text-muted mb16">
+                                        Who will give this talk? We will show this to attendees to showcase your talk.
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="partner_name" style="width: 200px">Name</label>
+                                        <div class="col-sm"><input name="partner_name" type="text" class="form-control"/></div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="partner_email" style="width: 200px">Email</label>
+                                        <div class="col-sm"><input name="partner_email" type="email" class="form-control" /></div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="partner_phone" style="width: 200px">Phone</label>
+                                        <div class="col-sm"><input name="partner_phone" type="text" class="form-control"/></div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="image" style="width: 200px">Picture</label><br/>
+                                        <div class="col-sm"><input name="image" class="form-control" type="file" accept="image/*" style="width: 100%"/></div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="partner_function" style="width: 200px">Job Title</label>
+                                        <div class="col-sm"><input name="partner_function" type="text" class="form-control"/></div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-sm-auto" for="partner_biography" style="width: 200px" >Biography</label>
+                                        <div class="col-sm"><textarea name="partner_biography" rows="4" class="form-control"/></div>
+                                    </div>
+                                </div>
+                                <t t-call="website_event_track.event_track_proposal_contact_details"/>
+                                <div class="o_form_buttons col-12 d-flex align-items-center pb-5">
+                                    <button type="submit" class="btn btn-primary o_wetrack_proposal_submit_button">Submit Proposal</button>
+                                    <span class="o_wetrack_proposal_error_section text-danger d-none ml8">
+                                        <i class="fa fa-close mr4" role="img" aria-label="Error" title="Error"/>
+                                        <span class="o_wetrack_proposal_error_message"/>
+                                    </span>
+                                </div>
+                            </form>
+>>>>>>> 830ad63cb245 (temp)
                         </section>
                     </div>
 
@@ -165,8 +377,14 @@
             <label class="fw-normal" for="add_contact_information">Contact me through a different email/phone</label>
         </div>
         <div class="o_wetrack_contact_information d-none">
+<<<<<<< HEAD
             <hr/>
             <h5 class="mt-0 mb-1">Contact Information</h5>
+||||||| parent of 830ad63cb245 (temp)
+            <h4><b>Contact Information</b></h4>
+=======
+            <h4><b class="fw-normal">Contact Information</b></h4>
+>>>>>>> 830ad63cb245 (temp)
             <div class="form-text text-muted mb16">
                 How can our team get in touch with you?
             </div> 
