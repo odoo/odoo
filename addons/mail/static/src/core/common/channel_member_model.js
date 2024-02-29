@@ -21,6 +21,13 @@ export class ChannelMember extends Record {
     persona = Record.one("Persona", { inverse: "channelMembers" });
     rtcSession = Record.one("RtcSession");
     thread = Record.one("Thread", { inverse: "channelMembers" });
+    threadAsSelf = Record.one("Thread", {
+        compute() {
+            if (this._store.self?.eq(this.persona)) {
+                return this.thread;
+            }
+        },
+    });
     fetched_message_id = Record.one("Message");
     seen_message_id = Record.one("Message");
 

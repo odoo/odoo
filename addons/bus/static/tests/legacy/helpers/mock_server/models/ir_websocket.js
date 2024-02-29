@@ -41,8 +41,9 @@ patch(MockServer.prototype, {
     /**
      * Simulates `_build_bus_channel_list` on `ir.websocket`.
      */
-    _mockIrWebsocket__buildBusChannelList() {
-        const channels = ["broadcast"];
+    _mockIrWebsocket__buildBusChannelList(channels = []) {
+        channels = [...channels];
+        channels.push("broadcast");
         const authenticatedUserId = this.pyEnv.cookie.get("authenticated_user_sid");
         const authenticatedPartner = authenticatedUserId
             ? this.pyEnv["res.partner"].searchRead([["user_ids", "in", [authenticatedUserId]]], {
@@ -50,7 +51,7 @@ patch(MockServer.prototype, {
               })[0]
             : null;
         if (authenticatedPartner) {
-            channels.push({ model: "res.partner", id: authenticatedPartner.id });
+            channels.push(authenticatedPartner);
         }
         return channels;
     },

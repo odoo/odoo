@@ -32,8 +32,8 @@ patch(MockServer.prototype, {
     /**
      * Simulates `_build_bus_channel_list` on `ir.websocket`.
      */
-    _mockIrWebsocket__buildBusChannelList() {
-        const channels = super._mockIrWebsocket__buildBusChannelList();
+    _mockIrWebsocket__buildBusChannelList(channels) {
+        channels = [...super._mockIrWebsocket__buildBusChannelList(channels)];
         const guest = this._mockMailGuest__getGuestFromContext();
         const authenticatedUserId = this.pyEnv.cookie.get("authenticated_user_sid");
         const authenticatedPartner = authenticatedUserId
@@ -47,15 +47,35 @@ patch(MockServer.prototype, {
         if (guest) {
             channels.push({ model: "mail.guest", id: guest.id });
         }
-        const userChannelIds = this.pyEnv["discuss.channel.member"]
-            .searchRead([
-                guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", authenticatedPartner.id],
-            ])
-            .map((member) =>
-                Array.isArray(member.channel_id) ? member.channel_id[0] : member.channel_id
-            );
-        for (const channelId of userChannelIds) {
-            channels.push({ model: "discuss.channel", id: channelId });
+        const discussChannelIds = channels
+            .filter((c) => typeof c === "string" && c.startsWith("discuss.channel_"))
+            .map((c) => Number(c.split("_")[1]));
+
+        channels = channels.filter(
+            (c) => typeof c !== "string" || !c.startsWith("discuss.channel_")
+        );
+        const allChannels = this.pyEnv["discuss.channel"].searchRead([
+            [
+                "id",
+                "in",
+                this.pyEnv["discuss.channel.member"]
+                    .searchRead([
+                        "|",
+                        guest
+                            ? ["guest_id", "=", guest.id]
+                            : ["partner_id", "=", authenticatedPartner.id],
+                        ["channel_id", "in", discussChannelIds],
+                    ])
+                    .map((member) =>
+                        Array.isArray(member.channel_id) ? member.channel_id[0] : member.channel_id
+                    ),
+            ],
+        ]);
+        for (const channel of allChannels) {
+            channels.push(channel);
+            if (!discussChannelIds.includes(channel.id)) {
+                channels.push([channel, "members"]);
+            }
         }
         return channels;
     },
