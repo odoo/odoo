@@ -48,6 +48,30 @@ export class DiscussAppCategory extends Record {
     });
     /** @type {number} */
     sequence;
+    _openLocally = false;
+
+    get open() {
+        return this.serverStateKey ? this._store.settings[this.serverStateKey] : this._openLocally;
+    }
+
+    set open(value) {
+        if (this.serverStateKey) {
+            this._store.settings[this.serverStateKey] = value;
+            this._store.env.services.orm.call(
+                "res.users.settings",
+                "set_res_users_settings",
+                [[this._store.settings.id]],
+                {
+                    new_settings: {
+                        [this.serverStateKey]: value,
+                    },
+                }
+            );
+        } else {
+            this._openLocally = value;
+        }
+    }
+
     /** @type {string} */
     serverStateKey;
     /** @type {string} */
