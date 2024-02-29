@@ -15,7 +15,7 @@ import {
 import { iter } from "@web/core/utils/functions";
 import { session } from "@web/session";
 import { utils } from "@web/core/ui/ui_service";
-import { delay } from "@web/core/utils/concurrency";
+import { Deferred, delay, KeepLast } from "@web/core/utils/concurrency";
 import { rangeAround } from "@web/core/utils/arrays";
 
 /**
@@ -466,72 +466,64 @@ export class MacroedTour {
     }
 
     /** @type {TourStepCompiler} */
-    _compileStepManual(step) {
-        const tour = this.tour;
-        const stepIndex = step.index;
-        const { pointer, onStepConsummed } = this.options;
-        let proceedWith = null;
-        let removeListeners = () => { };
-        return [
-            {
-                action: () => console.log(step.trigger),
-            },
-            {
-                trigger: () => {
+    *_compileStepManual(step) {
+        let removeListeners;
+        let actionResolve;
+        let actionDeferred;
+
+        const { pointer } = this.options;
+        const debouncedToggleOpen = debounce(pointer.showContent, 50, true);
+
+        const updatePointer = (anchorEl) => {
+            pointer.setState({
+                onMouseEnter: () => debouncedToggleOpen(true),
+                onMouseLeave: () => debouncedToggleOpen(false),
+            });
+            pointer.pointTo(anchorEl, step);
+        };
+        const onConsume = () => {
+            pointer.hide();
+            removeListeners();
+            actionResolve(false); // API of macro.advance => to next step
+        }
+
+        const onTriggerEnter = ({ enteredCount }) => {
+            actionDeferred = new Deferred();
+            if (!enteredCount) {
+                console.log(step.trigger);
+            }
+            if (enteredCount) {
+                if (removeListeners) {
                     removeListeners();
+                    removeListeners = undefined;
+                }
+                if (actionDeferred) {
+                    actionDeferred.resolve("stay on step");
+                    actionDeferred = undefined;
+                }
+                pointer.hide();
+            }
+        }
+        const onAction = (stepEl) => {
+            const consumeEvent = step.consumeEvent || getConsumeEventType(stepEl, step.run);
+            const anchorEl = getAnchorEl(stepEl, consumeEvent);
+            const prom = new Promise(resolve => {
+                actionResolve = resolve;
+            })
+            removeListeners = setupListeners({
+                anchorEl,
+                consumeEvent,
+                onMouseEnter: () => pointer.showContent(true),
+                onMouseLeave: () => pointer.showContent(false),
+                onScroll: () => updatePointer(anchorEl),
+                onConsume,
+            });
 
-                    if (proceedWith) {
-                        return proceedWith;
-                    }
+            updatePointer(anchorEl);
+            return prom;
+        }
 
-                    const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(step);
-
-                    if (skipEl) {
-                        return skipEl;
-                    }
-
-                    const stepEl = extraTriggerOkay && (triggerEl || altEl);
-
-                    if (stepEl && canContinue(stepEl, step)) {
-                        const consumeEvent =
-                            step.consumeEvent || getConsumeEventType(stepEl, step.run);
-                        const anchorEl = getAnchorEl(stepEl, consumeEvent);
-                        const debouncedToggleOpen = debounce(pointer.showContent, 50, true);
-
-                        const updatePointer = () => {
-                            pointer.setState({
-                                onMouseEnter: () => debouncedToggleOpen(true),
-                                onMouseLeave: () => debouncedToggleOpen(false),
-                            });
-                            pointer.pointTo(anchorEl, step);
-                        };
-
-                        removeListeners = setupListeners({
-                            anchorEl,
-                            consumeEvent,
-                            onMouseEnter: () => pointer.showContent(true),
-                            onMouseLeave: () => pointer.showContent(false),
-                            onScroll: updatePointer,
-                            onConsume: () => {
-                                proceedWith = stepEl;
-                                pointer.hide();
-                            },
-                        });
-
-                        updatePointer();
-                    } else {
-                        pointer.hide();
-                    }
-                },
-                action: () => {
-                    step.completed = true;
-                    tourState.set(this.name, "currentIndex", stepIndex + 1);
-                    pointer.hide();
-                    proceedWith = null;
-                    onStepConsummed(tour, step);
-                },
-            },
-        ];
+        yield this._stepExecute(step, onTriggerEnter, onAction);
     }
 }
 
