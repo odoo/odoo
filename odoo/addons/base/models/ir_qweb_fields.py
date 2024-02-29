@@ -639,13 +639,26 @@ class DurationConverter(models.AbstractModel):
             v, r = divmod(r, secs_per_unit)
             if not v:
                 continue
-            section = babel.dates.format_timedelta(
-                v*secs_per_unit,
-                granularity=round_to,
-                add_direction=options.get('add_direction'),
-                format=options.get('format', 'long'),
-                threshold=1,
-                locale=locale)
+            try:
+                section = babel.dates.format_timedelta(
+                    v*secs_per_unit,
+                    granularity=round_to,
+                    add_direction=options.get('add_direction'),
+                    format=options.get('format', 'long'),
+                    threshold=1,
+                    locale=locale)
+            except KeyError:
+                # in case of wrong implementation of babel, try to fallback on en_US locale.
+                # https://github.com/python-babel/babel/pull/827/files
+                # Some bugs already fixed in 2.10 but ubuntu22 is 2.8
+                localeUS = babel_locale_parse('en_US')
+                section = babel.dates.format_timedelta(
+                    v*secs_per_unit,
+                    granularity=round_to,
+                    add_direction=options.get('add_direction'),
+                    format=options.get('format', 'long'),
+                    threshold=1,
+                    locale=localeUS)
             if section:
                 sections.append(section)
 

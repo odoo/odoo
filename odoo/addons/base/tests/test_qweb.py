@@ -1659,6 +1659,17 @@ class TestQWebBasic(TransactionCase):
         })
         self.env['ir.qweb']._render(view1.id, {'user': u})  # should not crash
 
+    def test_render_widget_duration_fallback(self):
+        self.env['res.lang'].with_context(active_test=False).search([('code', '=', 'pt_BR')]).active = True
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy"><root><span t-esc="3600" t-options='{"widget": "duration", "format": "short"}' /></root></t>
+            """
+        })
+        self.env['ir.qweb'].with_context(lang='pt_BR')._render(view1.id, {})  # should not crash
+
     def test_void_element(self):
         view = self.env['ir.ui.view'].create({
             'name': 'master',
