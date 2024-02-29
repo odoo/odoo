@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 import { assignDefined } from "@mail/utils/common/misc";
 
@@ -16,14 +15,7 @@ const threadPatch = {
         super.setup();
         this.fetchChannelMutex = new Mutex();
         this.fetchChannelInfoDeferred = undefined;
-        this.fetchChannelInfoState = Record.attr("not_fetched", {
-            /** @this {import("models").Thread} */
-            onUpdate() {
-                if (this.fetchChannelInfoState === "fetched") {
-                    this._store.updateBusSubscription();
-                }
-            },
-        });
+        this.fetchChannelInfoState = "not_fetched";
     },
     get SETTINGS() {
         return [

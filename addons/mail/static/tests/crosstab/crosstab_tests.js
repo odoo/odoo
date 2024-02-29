@@ -3,7 +3,6 @@
 import { rpc } from "@web/core/network/rpc";
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferred";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
@@ -114,18 +113,6 @@ QUnit.test("Channel subscription is renewed when channel is added from invite", 
     });
     await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
     await assertSteps(["update-channels"]);
-});
-
-QUnit.test("Channel subscription is renewed when channel is left", async () => {
-    const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "Sales" });
-    const { openDiscuss } = await start();
-    await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel");
-    await waitUntilSubscribe();
-    await click(".o-mail-DiscussSidebarChannel .btn[title='Leave this channel']");
-    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
-    await waitUntilSubscribe();
 });
 
 QUnit.test("Adding attachments", async () => {

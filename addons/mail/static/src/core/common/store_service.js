@@ -49,7 +49,6 @@ export class Store extends BaseStore {
     /** @type {typeof import("@mail/core/common/volume_model").Volume} */
     Volume;
 
-    knownChannelIds = new Set();
     /** This is the current logged partner / guest */
     self = Record.one("Persona");
     /**
@@ -211,42 +210,10 @@ export class Store extends BaseStore {
 
     setup() {
         super.setup();
-        this.updateBusSubscription = debounce(this.updateBusSubscription, 0); // Wait for thread fully inserted.
-    }
-
-    updateBusSubscription() {
-        if (!this.isMessagingReady) {
-            return;
-        }
-        const allSelfChannelIds = new Set();
-        for (const thread of Object.values(this.Thread.records)) {
-            if (
-                thread.model === "discuss.channel" &&
-                thread.fetchChannelInfoState === "fetched" &&
-                thread.hasSelfAsMember
-            ) {
-                if (thread.selfMember.memberSince < this.env.services["bus_service"].startedAt) {
-                    this.knownChannelIds.add(thread.id);
-                }
-                allSelfChannelIds.add(thread.id);
-            }
-        }
-        let shouldUpdateChannels = false;
-        for (const id of allSelfChannelIds) {
-            if (!this.knownChannelIds.has(id)) {
-                shouldUpdateChannels = true;
-                this.knownChannelIds.add(id);
-            }
-        }
-        for (const id of this.knownChannelIds) {
-            if (!allSelfChannelIds.has(id)) {
-                shouldUpdateChannels = true;
-                this.knownChannelIds.delete(id);
-            }
-        }
-        if (shouldUpdateChannels) {
-            this.env.services["bus_service"].forceUpdateChannels();
-        }
+        this.updateBusSubscription = debounce(
+            () => this.env.services.bus_service.forceUpdateChannels(),
+            0
+        );
     }
 }
 Store.register();
@@ -261,7 +228,6 @@ export const storeService = {
         const store = makeStore(env);
         store.discuss = { activeTab: "main" };
         store.settings = {};
-        Record.onChange(store.Thread, "records", () => store.updateBusSubscription());
         services.ui.bus.addEventListener("resize", () => {
             store.discuss.activeTab = "main";
             if (

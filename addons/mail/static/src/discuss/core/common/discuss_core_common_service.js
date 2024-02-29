@@ -24,7 +24,6 @@ export class DiscussCoreCommon {
 
     setup() {
         this.messagingService.isReady.then(() => {
-            this.store.updateBusSubscription();
             this.busService.subscribe("discuss.channel/joined", async (payload) => {
                 const { channel, invited_by_user_id: invitedByUserId } = payload;
                 const thread = this.store.Thread.insert(channel);
