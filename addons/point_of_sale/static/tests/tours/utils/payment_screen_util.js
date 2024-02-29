@@ -275,7 +275,7 @@ export function clickShipLaterButton() {
         },
         {
             content: "click confirm button",
-            trigger: ".button.confirm",
+            trigger: ".btn:contains('Confirm')",
         },
     ];
 }
@@ -297,4 +297,14 @@ export function clickPartnerButton() {
 
 export function clickCustomer(name) {
     return [PartnerList.clickPartner(name)];
+}
+
+export function shippingLaterHighlighted() {
+    return [
+        {
+            content: "Shipping later button is highlighted",
+            trigger: ".button:contains('Ship Later').highlight",
+            isCheck: true,
+        },
+    ];
 }
