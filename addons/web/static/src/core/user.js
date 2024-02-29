@@ -29,7 +29,7 @@ export function _makeUser(session) {
         user_settings,
         partner_write_date: writeDate,
     } = session;
-    let settings = user_settings;
+    const settings = user_settings || {};
 
     // Delete user-related information from the session, s.t. there's a single source of truth
     delete session.home_action_id;
@@ -107,7 +107,7 @@ export function _makeUser(session) {
         async setUserSettings(key, value) {
             const model = "res.users.settings";
             const method = "set_res_users_settings";
-            settings = await rpc(`/web/dataset/call_kw/${model}/${method}`, {
+            const changedSettings = await rpc(`/web/dataset/call_kw/${model}/${method}`, {
                 model,
                 method,
                 args: [[this.settings.id]],
@@ -118,6 +118,7 @@ export function _makeUser(session) {
                     context: this.context,
                 },
             });
+            Object.assign(settings, changedSettings);
         },
     };
 
