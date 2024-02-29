@@ -185,8 +185,7 @@ class ProductTemplate(models.Model):
                 'pricelist': pricelist and pricelist.id
             })
 
-            product_id = combination_info['product_id'] or self.product_variant_id.id
-            product = self.env['product.product'].browse(product_id).with_context(context).sudo()
+            product = (self.env['product.product'].browse(combination_info['product_id']) or self).with_context(context)
             partner = self.env.user.partner_id
             company_id = current_website.company_id
 
@@ -194,29 +193,46 @@ class ProductTemplate(models.Model):
             fpos = self.env['account.fiscal.position'].sudo().get_fiscal_position(partner.id)
             product_taxes = product.sudo().taxes_id.filtered(lambda x: x.company_id == company_id)
             taxes = fpos.map_tax(product_taxes)
-            today = fields.Date.context_today(self)
 
             # The list_price is always the price of one.
             quantity_1 = 1
-            combination_info['price'] = product._get_tax_included_unit_price(
-                company_id, company_id.currency_id, today, 'sale',
+            # _get_tax_included_unit_price requires a product.product to be called, but it can
+            # be an empty record
+            _product = self.env['product.product'].browse(combination_info['product_id'])
+            combination_info['price'] = _product._get_tax_included_unit_price(
+                company_id,
+                pricelist.currency_id,
+                None,  # No conversion
+                'sale',
+                product_taxes=product_taxes,
                 product_price_unit=combination_info['price'],
                 fiscal_position=fpos,
+                product_currency=pricelist.currency_id,
             )
             price = taxes.compute_all(combination_info['price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             if pricelist.discount_policy == 'without_discount':
-                combination_info['list_price'] = product._get_tax_included_unit_price(
-                company_id, company_id.currency_id, today, 'sale',
-                product_price_unit=combination_info['list_price'],
-                fiscal_position=fpos,
-            )
+                combination_info['list_price'] = _product._get_tax_included_unit_price(
+                    company_id,
+                    pricelist.currency_id,
+                    None,  # No conversion
+                    'sale',
+                    product_taxes=product_taxes,
+                    product_price_unit=combination_info['list_price'],
+                    fiscal_position=fpos,
+                    product_currency=pricelist.currency_id,
+                )
                 list_price = taxes.compute_all(combination_info['list_price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             else:
                 list_price = price
-            combination_info['price_extra'] = product._get_tax_included_unit_price(
-                company_id, company_id.currency_id, today, 'sale',
+            combination_info['price_extra'] = _product._get_tax_included_unit_price(
+                company_id,
+                pricelist.currency_id,
+                None,  # No conversion
+                'sale',
+                product_taxes=product_taxes,
                 product_price_unit=combination_info['price_extra'],
                 fiscal_position=fpos,
+                product_currency=pricelist.currency_id,
             )
             price_extra = taxes.compute_all(combination_info['price_extra'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             has_discounted_price = pricelist.currency_id.compare_amounts(list_price, price) == 1
