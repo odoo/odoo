@@ -2870,6 +2870,20 @@ X[]
                                     </div>`,
                 });
             });
+            it('should not remove a paragraph element after a div', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<div>abc[def</div><p>ghi]</p>`,
+                    stepFunction: deleteBackward,
+                    contentAfter: `<div>abc[]</div><p><br></p>`,
+                });
+            });
+            it('should not remove a h1 element after a table', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<table><tbody><tr><td>ab</td><td>c[d</td><td>ef</td></tr></tbody></table><h1>ghi]</h1>`,
+                    stepFunction: deleteBackward,
+                    contentAfter: `<table><tbody><tr><td>ab</td><td>c[]</td><td><br></td></tr></tbody></table><h1><br></h1>`,
+                });
+            });
         });
 
     });

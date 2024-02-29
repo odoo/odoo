@@ -1450,7 +1450,7 @@ export function isUnbreakable(node) {
     }
     return (
         isUnremovable(node) || // An unremovable node is always unbreakable.
-        ['THEAD', 'TBODY', 'TFOOT', 'TR', 'TH', 'TD', 'SECTION', 'DIV'].includes(node.tagName) ||
+        ['TABLE', 'THEAD', 'TBODY', 'TFOOT', 'TR', 'TH', 'TD', 'SECTION', 'DIV'].includes(node.tagName) ||
         node.hasAttribute('t') ||
         (node.nodeType === Node.ELEMENT_NODE &&
             (node.nodeName === 'T' ||
@@ -1541,7 +1541,7 @@ export function getInSelection(document, selector) {
 
 // This is a list of "paragraph-related elements", defined as elements that
 // behave like paragraphs.
-const paragraphRelatedElements = [
+export const paragraphRelatedElements = [
     'P',
     'H1',
     'H2',
