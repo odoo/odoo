@@ -165,13 +165,13 @@ export class DiscussCoreCommon {
     async startChat(partnerIds, inChatWindow) {
         const partners_to = [...new Set([this.store.self.id, ...partnerIds])];
         if (partners_to.length === 1) {
-            const chat = await this.threadService.joinChat(partners_to[0]);
+            const chat = await this.threadService.joinChat(partners_to[0], inChatWindow);
             this.threadService.open(chat, inChatWindow);
         } else if (partners_to.length === 2) {
             const correspondentId = partners_to.find(
                 (partnerId) => partnerId !== this.store.self.id
             );
-            const chat = await this.threadService.joinChat(correspondentId);
+            const chat = await this.threadService.joinChat(correspondentId, inChatWindow);
             this.threadService.open(chat, inChatWindow);
         } else {
             await this.createGroupChat({ partners_to });
