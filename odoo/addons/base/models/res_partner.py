@@ -112,9 +112,10 @@ class PartnerCategory(models.Model):
     def _get_default_color(self):
         return randint(1, 11)
 
-    name = fields.Char(string='Tag Name', required=True, translate=True)
-    color = fields.Integer(string='Color', default=_get_default_color)
-    parent_id = fields.Many2one('res.partner.category', string='Parent Category', index=True, ondelete='cascade')
+    name = fields.Char('Name', required=True, translate=True)
+    display_name = fields.Char('Display Name', compute='_compute_display_name', search='_search_display_name')
+    color = fields.Integer(string='Color', default=_get_default_color, aggregator=False)
+    parent_id = fields.Many2one('res.partner.category', string='Category', index=True, ondelete='cascade')
     child_ids = fields.One2many('res.partner.category', 'parent_id', string='Child Tags')
     active = fields.Boolean(default=True, help="The active field allows you to hide the category without removing it.")
     parent_path = fields.Char(index=True)
@@ -147,6 +148,9 @@ class PartnerCategory(models.Model):
             domain = [('name', operator, name)] + domain
         return self._search(domain, limit=limit, order=order)
 
+    @api.model
+    def _search_display_name(self, operator, value):
+        return [('id', 'child_of', self._search([('name', operator, value)]))]
 
 class PartnerTitle(models.Model):
     _name = 'res.partner.title'

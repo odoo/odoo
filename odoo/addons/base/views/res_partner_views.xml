@@ -237,7 +237,7 @@
                                 invisible="is_company"/>
                             <field name="active_lang_count" invisible="1"/>
                             <field name="lang" invisible="active_lang_count &lt;= 1"/>
-                            <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"
+                            <field name="category_id" widget="many2many_tags" options="{'color_field': 'color'}"
                                    placeholder='e.g. "B2B", "VIP", "Consulting", ...'/>
                         </group>
                     </group>
@@ -651,8 +651,9 @@
             <field name="model">res.partner.category</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Contact Tags">
-                    <field name="display_name"/>
+                <tree string="Contact Tags" editable="bottom" multi_edit="1" sample="1">
+                    <field name="name" placeholder='e.g. "Roadshow"'/>
+                    <field name="parent_id" string="Category" domain="[('id', '!=', id)]"/>
                     <field name="color" widget="color_picker"/>
                 </tree>
             </field>
@@ -663,10 +664,14 @@
             <field name="model">res.partner.category</field>
             <field name="arch" type="xml">
                 <search string="Search Partner Category">
-                    <field name="name"/>
-                    <field name="display_name"/>
+                    <field name="name" string="Name"/>
+                    <field name="display_name" string="Category" />
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <group string="Group By">
+                        <filter string="Category" name="group_parent_id" context="{'group_by': 'parent_id'}"/>
+                        <filter string="Color" name="group_color" context="{'group_by': 'color'}"/>
+                    </group>
                 </search>
             </field>
         </record>
