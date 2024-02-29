@@ -295,104 +295,93 @@ export class MacroedTour {
         this.mode = params.mode || this.mode || "auto";
     }
 
+    _stepExecute(step, onTriggerEnter=() => {}, onAction=() => {}) {
+        let skipAction;
+        const trigger = () => {
+            onTriggerEnter();
+            skipAction = false;
+            const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(step);
+
+            let stepEl = extraTriggerOkay && (triggerEl || altEl);
+
+            if (skipEl) {
+                skipAction = true;
+                stepEl = skipEl;
+            }
+
+            if (!stepEl) {
+                return false;
+            }
+
+            return canContinue(stepEl, step) && stepEl;
+        }
+        const action = async (stepEl) => {
+            let result;
+            if (!skipAction) {
+                result = await onAction(stepEl, step);
+            }
+            step.completed = true;
+            tourState.set(this.name, "currentIndex", step.index + 1);
+            this.options.onStepConsummed(this, step);
+            return result;
+        }
+        return { trigger, action };
+    }
+
     /** @type {TourStepCompiler} */
-    _compileStepAuto(step) {
+    *_compileStepAuto(step) {
         const { pointer, stepDelay, keepWatchBrowser, showPointerDuration, onStepConsummed } =
             this.options;
-        let skipAction = false;
-        const tour = this;
-        const stepIndex = step.index;
-        return [
-            {
-                action: async () => {
-                    // This delay is important for making the current set of tour tests pass.
-                    // IMPROVEMENT: Find a way to remove this delay.
-                    await new Promise((resolve) => requestAnimationFrame(resolve));
-                },
-            },
-            {
-                action: async () => {
-                    skipAction = false;
-                    console.log(`Tour ${tour.name} on step: '${describeStep(step)}'`);
-                    if (!keepWatchBrowser) {
-                        clearTimeout(this.#tourTimeout);
-                        this.#tourTimeout = setTimeout(() => {
-                            // The logged text shows the relative position of the failed step.
-                            // Useful for finding the failed step.
-                            //console.warn(describeFailedStepDetailed(step, tour));
-                            // console.error notifies the test runner that the tour failed.
-                            //console.error(describeFailedStepSimple(step, tour));
-                        }, (step.timeout || 10000) + stepDelay);
-                    }
-                    await new Promise((resolve) => browser.setTimeout(resolve, stepDelay));
-                },
-            },
-            {
-                trigger: () => {
-                    const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(step);
 
-                    let stepEl = extraTriggerOkay && (triggerEl || altEl);
+        const delayToAction = (step.timeout || 10000) + stepDelay;
+        let timeout;
+        const onTriggerEnter = () => {
+            if (!keepWatchBrowser) {
+                timeout = setTimeout(() => {
+                    console.log("LPE_ERROR", step)
+                }, delayToAction)
+            }
+        }
+        const onAction = async (stepEl) => {
+            clearTimeout(timeout);
+            if (showPointerDuration > 0) {
+                // Useful in watch mode.
+                pointer.pointTo(stepEl, step);
+                await new Promise((r) => browser.setTimeout(r, showPointerDuration));
+                pointer.hide();
+            }
 
-                    if (skipEl) {
-                        skipAction = true;
-                        stepEl = skipEl;
-                    }
+            const consumeEvent = step.consumeEvent || getConsumeEventType(stepEl, step.run);
+            // When in auto mode, we are not waiting for an event to be consumed, so the
+            // anchor is just the step element.
+            const $anchorEl = $(stepEl);
 
-                    if (!stepEl) {
-                        return false;
-                    }
+            // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
+            const actionHelper = new RunningTourActionHelper({
+                consume_event: consumeEvent,
+                anchor: stepEl,
+            });
 
-                    return canContinue(stepEl, step) && stepEl;
-                },
-                action: async (stepEl) => {
-                    tourState.set(tour.name, "currentIndex", stepIndex + 1);
+            let result;
+            debugger;
+            if (typeof step.run === "function") {
+                const willUnload = await callWithUnloadCheck(() =>
+                    // `this.$anchor` is expected in many `step.run`.
+                    step.run.call({ anchor: stepEl }, actionHelper)
+                );
+                result = willUnload && "will unload"; // return string: truthy value designed to stop the macro
+            } else if (step.run !== undefined) {
+                const m = step.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
+                result = actionHelper[m[1]](m[2]);
+            } else if (!step.isCheck) {
+                result = actionHelper.auto();
+            }
+            await result.catch(() => { debugger});
+            await new Promise(r => requestAnimationFrame(r));
+            return result;
+        }
 
-                    if (skipAction) {
-                        return;
-                    }
-
-                    const consumeEvent = step.consumeEvent || getConsumeEventType(stepEl, step.run);
-                    // When in auto mode, we are not waiting for an event to be consumed, so the
-                    // anchor is just the step element.
-                    const $anchorEl = $(stepEl);
-
-                    if (showPointerDuration > 0) {
-                        // Useful in watch mode.
-                        pointer.pointTo($anchorEl.get(0), step);
-                        await new Promise((r) => browser.setTimeout(r, showPointerDuration));
-                        pointer.hide();
-                    }
-
-                    // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
-                    const actionHelper = new RunningTourActionHelper({
-                        consume_event: consumeEvent,
-                        $anchor: $anchorEl,
-                    });
-
-                    let result;
-                    if (typeof step.run === "function") {
-                        const willUnload = await callWithUnloadCheck(() =>
-                            // `this.$anchor` is expected in many `step.run`.
-                            step.run.call({ $anchor: $anchorEl }, actionHelper)
-                        );
-                        result = willUnload && "will unload";
-                    } else if (step.run !== undefined) {
-                        const m = step.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
-                        actionHelper[m[1]](m[2]);
-                    } else if (!step.isCheck) {
-                        actionHelper.auto();
-                    }
-
-                    return result;
-                },
-            },
-            {
-                action: () => {
-                    step.completed = true;
-                    onStepConsummed(tour, step);
-                },
-            },
-        ];
+       yield this._stepExecute(step, onTriggerEnter, onAction);
     }
 
     /** @type {TourStepCompiler} */
