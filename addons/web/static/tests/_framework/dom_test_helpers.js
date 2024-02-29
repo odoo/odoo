@@ -4,18 +4,18 @@ import {
     drag,
     edit,
     fill,
+    getActiveElement,
     hover,
     keyDown,
     keyUp,
     pointerDown,
     press,
-    queryOne,
+    scroll,
     select,
     uncheck,
     waitFor,
 } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
-import { ensureArray } from "@web/core/utils/arrays";
+import { advanceTime, animationFrame } from "@odoo/hoot-mock";
 
 /**
  * @typedef {import("@odoo/hoot-dom").DragHelpers} DragHelpers
@@ -23,6 +23,8 @@ import { ensureArray } from "@web/core/utils/arrays";
  * @typedef {import("@odoo/hoot-dom").InputValue} InputValue
  * @typedef {import("@odoo/hoot-dom").KeyStrokes} KeyStrokes
  * @typedef {import("@odoo/hoot-dom").PointerOptions} PointerOptions
+ * @typedef {import("@odoo/hoot-dom").Position} Position
+ * @typedef {import("@odoo/hoot-dom").QueryOptions} QueryOptions
  * @typedef {import("@odoo/hoot-dom").Target} Target
  *
  * @typedef {{
@@ -31,6 +33,12 @@ import { ensureArray } from "@web/core/utils/arrays";
  *  metaKey?: boolean;
  *  shiftKey?: boolean;
  * }} KeyModifierOptions
+ *
+ * @typedef {{
+ *  cancel: () => Promise<void>;
+ *  drop: () => Promise<AsyncDragHelpers>;
+ *  moveTo: (...args: Parameters<DragHelpers["moveTo"]>) => Promise<void>;
+ * }} AsyncDragHelpers
  */
 
 /**
@@ -43,51 +51,13 @@ import { ensureArray } from "@web/core/utils/arrays";
  * @typedef {(...args: Parameters<T>) => MaybePromise<ReturnType<T>>} Promisify
  */
 
-/**
- * @template Async
- * @typedef {import("@odoo/hoot-dom").QueryOptions} QueryOptions
- */
-
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
 
-/**
- * @template P, R
- * @param {(...args: P) => R} fn
- * @param  {P} args
- * @returns {() => T}
- */
-const bind =
-    (fn, ...args) =>
-    (...additionalArgs) =>
-        fn(...args, ...additionalArgs);
-
-/**
- * @template T
- * @param {Target} target
- * @param  {...(target: Target, options: any) => MaybePromise<T>} interactions
- */
-const interact = async (target, ...interactions) => {
-    const actions = [];
-    const options = {};
-    for (const interaction of interactions) {
-        if (typeof interaction === "function") {
-            actions.push(interaction);
-        } else {
-            Object.assign(options, interaction);
-        }
-    }
-    const targetElement = target && queryOne(target, options);
-    const results = [];
-    for (const interaction of actions) {
-        const result = await interaction(targetElement, options);
-        if (result) {
-            results.push(...ensureArray(result));
-        }
-    }
+const dragEffectDelay = async () => {
+    await advanceTime(20);
     await animationFrame();
-    return results;
 };
 
 //-----------------------------------------------------------------------------
@@ -103,73 +73,161 @@ export function contains(target, options) {
         return contains(String.raw(...arguments));
     }
 
-    /**
-     * @template T
-     * @param  {...T} actions
-     */
-    const run = (...actions) =>
-        waitFor(target, { visible: true, ...options }).then((node) => interact(node, ...actions));
+    const focusCurrent = async () => {
+        const node = await nodePromise;
+        if (node !== getActiveElement()) {
+            pointerDown(node);
+        }
+    };
+
+    const nodePromise = waitFor(target, { visible: true, ...options });
     return {
         /**
          * @param {PointerOptions} [options]
          */
-        check: (options) => run(check, options),
+        check: async (options) => {
+            check(await nodePromise, options);
+            await animationFrame();
+        },
         /**
          * @param {PointerOptions & KeyModifierOptions} [options]
          */
-        click: (options) => {
-            const actions = [click];
+        click: async (options) => {
+            const actions = [() => click(node, options)];
             if (options?.altKey) {
-                actions.unshift(bind(keyDown, "Alt"));
-                actions.push(bind(keyUp, "Alt"));
+                actions.unshift(() => keyDown("Alt"));
+                actions.push(() => keyUp("Alt"));
             }
             if (options?.ctrlKey) {
-                actions.unshift(bind(keyDown, "Control"));
-                actions.push(bind(keyUp, "Control"));
+                actions.unshift(() => keyDown("Control"));
+                actions.push(() => keyUp("Control"));
             }
             if (options?.metaKey) {
-                actions.unshift(bind(keyDown, "Meta"));
-                actions.push(bind(keyUp, "Meta"));
+                actions.unshift(() => keyDown("Meta"));
+                actions.push(() => keyUp("Meta"));
             }
             if (options?.shiftKey) {
-                actions.unshift(bind(keyDown, "Shift"));
-                actions.push(bind(keyUp, "Shift"));
+                actions.unshift(() => keyDown("Shift"));
+                actions.push(() => keyUp("Shift"));
             }
-            return run(options, ...actions);
+
+            const node = await nodePromise;
+            for (const action of actions) {
+                action();
+            }
+            await animationFrame();
         },
         /**
          * @param {PointerOptions} [options]
-         * @returns {Promise<DragHelpers>}
+         * @returns {Promise<AsyncDragHelpers>}
          */
         drag: async (options) => {
-            const [helpers] = await run(drag, options);
-            return helpers;
+            /** @type {AsyncDragHelpers["cancel"]} */
+            const asyncCancel = async () => {
+                cancel();
+                await dragEffectDelay();
+            };
+
+            /** @type {AsyncDragHelpers["drop"]} */
+            const asyncDrop = async () => {
+                drop();
+                await dragEffectDelay();
+            };
+
+            /** @type {AsyncDragHelpers["moveTo"]} */
+            const asyncMoveTo = async (to, options) => {
+                moveTo(to, options);
+                await dragEffectDelay();
+            };
+
+            const node = await nodePromise;
+            const { cancel, drop, moveTo } = drag(node, options);
+            await dragEffectDelay();
+
+            hover(node, {
+                position: {
+                    x: 100,
+                    y: 100,
+                },
+                relative: true,
+            });
+            await dragEffectDelay();
+
+            return {
+                cancel: asyncCancel,
+                drop: asyncDrop,
+                moveTo: asyncMoveTo,
+            };
+        },
+        /**
+         * @param {Target} target
+         * @param {PointerOptions} [options]
+         */
+        dragAndDrop: async (target, options) => {
+            const { drop, moveTo } = drag(await nodePromise);
+            await dragEffectDelay();
+
+            moveTo(target, options);
+            await dragEffectDelay();
+
+            drop();
+            await dragEffectDelay();
         },
         /**
          * @param {InputValue} value
          * @param {FillOptions} [options]
          */
-        edit: (value, options) =>
-            run(pointerDown, bind(edit, value, { confirm: true, ...options })),
+        edit: async (value, options) => {
+            await focusCurrent();
+            edit(value, { confirm: true, ...options });
+            await animationFrame();
+        },
         /**
          * @param {InputValue} value
          * @param {FillOptions} [options]
          */
-        fill: (value, options) =>
-            run(pointerDown, bind(fill, value, { confirm: true, ...options })),
-        focus: () => run(pointerDown),
-        hover: () => run(hover),
+        fill: async (value, options) => {
+            await focusCurrent();
+            fill(value, { confirm: true, ...options });
+            await animationFrame();
+        },
+        focus: async () => {
+            await focusCurrent();
+            await animationFrame();
+        },
+        hover: async () => {
+            hover(await nodePromise);
+            await animationFrame();
+        },
         /**
          * @param {KeyStrokes} keyStrokes
          */
-        press: (keyStrokes) => run(pointerDown, bind(press, keyStrokes)),
+        press: async (keyStrokes) => {
+            await focusCurrent();
+            press(keyStrokes);
+            await animationFrame();
+        },
+        /**
+         * @param {Position} position
+         */
+        scroll: async (position) => {
+            scroll(await nodePromise, position);
+            await animationFrame();
+        },
         /**
          * @param {InputValue} value
          */
-        select: (value) => run(pointerDown, bind(select, value)),
+        select: async (value) => {
+            await focusCurrent();
+            select(value);
+            await animationFrame();
+        },
         /**
          * @param {PointerOptions} [options]
          */
-        uncheck: (options) => run(uncheck, options),
+        uncheck: async (options) => {
+            uncheck(await nodePromise, options);
+            await animationFrame();
+        },
     };
 }
