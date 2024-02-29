@@ -15,6 +15,7 @@ import {
 import { iter } from "@web/core/utils/functions";
 import { session } from "@web/session";
 import { utils } from "@web/core/ui/ui_service";
+import { delay } from "@web/core/utils/concurrency";
 
 /**
  * @typedef {import("@web/core/macro").MacroDescriptor} MacroDescriptor
@@ -206,6 +207,38 @@ function setupListeners({
     };
 }
 
+/**
+ * @param {TourStep} step
+ * @param {Tour} tour
+ * @param {Array<string>} [errors]
+ */
+function throwError(tour, step, errors = []) {
+    const debugMode = tourState.get(tour.name, "debug");
+    const triggersFound = tourState.get(tour.name, "triggersFound");
+    // The logged text shows the relative position of the failed step.
+    // Useful for finding the failed step.
+    console.warn(describeFailedStepDetailed(tour, step));
+    // console.error notifies the test runner that the tour failed.
+    console.error(describeFailedStepSimple(tour, step));
+    if (triggersFound) {
+        console.error(`Triggers have been found. The error seems to be in run()`);
+    } else {
+        console.error(
+            `The error appears to be that one or more items in the following list cannot be found in DOM. : ${JSON.stringify(
+                pick(step, "trigger", "extra_trigger", "alt_trigger", "skip_trigger")
+            )}`
+        );
+    }
+    if (errors.length) {
+        console.error(errors.join(", "));
+    }
+    tourState.set(tour.name, "hasError", true);
+    if (debugMode !== false) {
+        // eslint-disable-next-line no-debugger
+        debugger;
+    }
+}
+
 const isKeyDefined = (key, obj) => key in obj && obj[key] !== undefined;
 const odooEdition = (session.server_version_info || []).at(-1) === "e" ? "enterprise" : "community";
 
@@ -283,6 +316,15 @@ export class MacroedTour {
             }
             yield* compile(tourStep);
         }
+        yield { action: () => {
+            if (!tourState.get(this.name, "hasError")) {
+                tourState.clear(this.name);
+                this.options.pointer.stop();
+                this.options.onTourEnd(this);
+            } else {
+                console.error("tour not succeeded");
+            }
+        } }
     }
 
     resetRun(params = {}) {
@@ -295,10 +337,20 @@ export class MacroedTour {
         this.mode = params.mode || this.mode || "auto";
     }
 
+    async tryToDoAction(action, step) {
+        try {
+            await action();
+        } catch (error) {
+            throwError(this, step, [error.message]);
+        }
+    }
+
     _stepExecute(step, onTriggerEnter=() => {}, onAction=() => {}) {
         let skipAction;
+        let enteredCount = 0;
         const trigger = () => {
-            onTriggerEnter();
+            onTriggerEnter({ enteredCount });
+            enteredCount++;
             skipAction = false;
             const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(step);
 
@@ -318,7 +370,7 @@ export class MacroedTour {
         const action = async (stepEl) => {
             let result;
             if (!skipAction) {
-                result = await onAction(stepEl, step);
+                result = await onAction(stepEl);
             }
             step.completed = true;
             tourState.set(this.name, "currentIndex", step.index + 1);
@@ -330,58 +382,93 @@ export class MacroedTour {
 
     /** @type {TourStepCompiler} */
     *_compileStepAuto(step) {
-        const { pointer, stepDelay, keepWatchBrowser, showPointerDuration, onStepConsummed } =
+        const { pointer, stepDelay, keepWatchBrowser, showPointerDuration } =
             this.options;
+        const debugMode = tourState.get(this.name, "debug");
 
         const delayToAction = (step.timeout || 10000) + stepDelay;
         let timeout;
-        const onTriggerEnter = () => {
-            if (!keepWatchBrowser) {
+        const onTriggerEnter = ({enteredCount}) => {
+            if (!enteredCount) {
+                console.log(`Tour ${this.name} on step: '${describeStep(step)}'`);
+                tourState.set(this.name, "triggersFound", false);
+                if (step.break && debugMode !== false) {
+                    // eslint-disable-next-line no-debugger
+                    debugger;
+                }
+            }
+            if (!keepWatchBrowser && !enteredCount) {
                 timeout = setTimeout(() => {
-                    console.log("LPE_ERROR", step)
+                    throwError(this, step)
                 }, delayToAction)
             }
         }
         const onAction = async (stepEl) => {
             clearTimeout(timeout);
+            tourState.set(this.name, "triggersFound", true);
             if (showPointerDuration > 0) {
                 // Useful in watch mode.
                 pointer.pointTo(stepEl, step);
                 await new Promise((r) => browser.setTimeout(r, showPointerDuration));
                 pointer.hide();
             }
-
-            const consumeEvent = step.consumeEvent || getConsumeEventType(stepEl, step.run);
-            // When in auto mode, we are not waiting for an event to be consumed, so the
-            // anchor is just the step element.
-            const $anchorEl = $(stepEl);
-
-            // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
-            const actionHelper = new RunningTourActionHelper({
-                consume_event: consumeEvent,
-                anchor: stepEl,
-            });
-
-            let result;
-            debugger;
-            if (typeof step.run === "function") {
-                const willUnload = await callWithUnloadCheck(() =>
-                    // `this.$anchor` is expected in many `step.run`.
-                    step.run.call({ anchor: stepEl }, actionHelper)
-                );
-                result = willUnload && "will unload"; // return string: truthy value designed to stop the macro
-            } else if (step.run !== undefined) {
-                const m = step.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
-                result = actionHelper[m[1]](m[2]);
-            } else if (!step.isCheck) {
-                result = actionHelper.auto();
-            }
-            await result.catch(() => { debugger});
-            await new Promise(r => requestAnimationFrame(r));
-            return result;
+            return this._autoRunStep(step, stepEl);
         }
 
-       yield this._stepExecute(step, onTriggerEnter, onAction);
+        yield this._stepExecute(step, onTriggerEnter, onAction);
+        if (step.pause && debugMode !== false) {
+            yield { action: this._actionPause.bind(this) }
+        }
+    }
+
+    async _autoRunStep(step, stepEl) {
+        const consumeEvent = step.consumeEvent || getConsumeEventType(stepEl, step.run);
+        // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
+        const actionHelper = new RunningTourActionHelper({
+            consume_event: consumeEvent,
+            anchor: stepEl,
+        });
+
+        let result;
+        if (typeof step.run === "function") {
+            const willUnload = await callWithUnloadCheck(async () => {
+                await this.tryToDoAction(() =>
+                    // `this.anchor` is expected in many `step.run`.
+                    step.run.call({ anchor: stepEl }, actionHelper)
+                );
+            });
+            result = willUnload && "will unload";
+        } else if (step.run !== undefined) {
+            const m = step.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
+            await tryToDoAction(() => actionHelper[m[1]](m[2]));
+        } else if (!step.isCheck) {
+            if (stepIndex === tour.steps.length - 1) {
+                console.warn('Tour %s: ignoring action (auto) of last step', tour.name);
+            } else {
+                await tryToDoAction(() => actionHelper.auto());
+            }
+        }
+        await new Promise(r => delay(0).then(() => requestAnimationFrame(r)));
+        return result;
+    }
+
+    _actionPause() {
+        const styles = [
+            "background: black; color: white; font-size: 14px",
+            "background: black; color: orange; font-size: 14px",
+        ];
+        console.log(
+            `%cTour is paused. Use %cplay()%c to continue.`,
+            styles[0],
+            styles[1],
+            styles[0]
+        );
+        return new Promise((resolve) => {
+            window.play = () => {
+                resolve();
+                delete window.play;
+            };
+        });
     }
 
     /** @type {TourStepCompiler} */

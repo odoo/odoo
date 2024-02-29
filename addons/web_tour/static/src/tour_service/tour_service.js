@@ -81,7 +81,7 @@ export const tourService = {
             let message;
             if (typeof rainbowManMessage === "function") {
                 message = rainbowManMessage({
-                    isTourConsumed: (name) => consumedTours.has(name),
+                    isTourConsumed: (name) => runner.consumedTours.has(name),
                 });
             } else if (typeof rainbowManMessage === "string") {
                 message = rainbowManMessage;

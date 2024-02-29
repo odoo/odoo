@@ -7,6 +7,7 @@ import { tourState } from "./tour_state";
 import { callWithUnloadCheck } from "./tour_utils";
 import { MacroEngine } from "@web/core/macro";
 import { createPointerState } from "./tour_pointer_state";
+import { browser } from "@web/core/browser/browser";
 
 export class TourRunner {
 
@@ -105,6 +106,7 @@ export class TourRunner {
         }
         const tour = new MacroedTour(tourDescr, {
             onStepConsummed: this.onStepConsummed.bind(this),
+            onTourEnd: this.onTourEnd.bind(this),
         });
         this.tours[name] = tour;
         tour.wait_for.then(() => {
@@ -135,9 +137,8 @@ export class TourRunner {
         if (mode === "manual") {
             this.consumedTours.add(name);
         }
-        pointer.stop();
         // Used to signal the python test runner that the tour finished without error.
-        browser.console.log("test successful");
+        browser.console.log("tour succeeded");
         this.runningTours.delete(name);
     }
 
