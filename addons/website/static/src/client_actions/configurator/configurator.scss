@@ -1,6 +1,7 @@
 .o_configurator_container {
     @include o-position-absolute(0, 0, 0, 0);
     background-color: $o-view-background-color;
+    $input-font-size: 40%;
 
     .o_configurator_screen {
 
@@ -122,6 +123,9 @@
                     &:focus {
                         color: inherit;
                         outline: none;
+                    }
+                    &::placeholder {
+                        font-size: $input-font-size;
                     }
                 }
 
