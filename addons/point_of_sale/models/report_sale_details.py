@@ -198,8 +198,9 @@ class ReportSaleDetails(models.AbstractModel):
                     'quantity': qty,
                     'price_unit': price_unit,
                     'discount': discount,
-                    'uom': product.uom_id.name
-                } for (product, price_unit, discount), qty in product_list.items()], key=lambda l: l['product_name']),
+                    'uom': product.uom_id.name,
+                    'total_paid': product_total
+                } for (product, price_unit, discount), (qty, product_total) in product_list.items()], key=lambda l: l['product_name']),
             }
             products.append(category_dictionnary)
         products = sorted(products, key=lambda l: str(l['name']))
@@ -214,8 +215,9 @@ class ReportSaleDetails(models.AbstractModel):
                     'quantity': qty,
                     'price_unit': price_unit,
                     'discount': discount,
-                    'uom': product.uom_id.name
-                } for (product, price_unit, discount), qty in product_list.items()], key=lambda l: l['product_name']),
+                    'uom': product.uom_id.name,
+                    'total_paid': product_total
+                } for (product, price_unit, discount), (qty, product_total) in product_list.items()], key=lambda l: l['product_name']),
             }
             refund_products.append(category_dictionnary)
         refund_products = sorted(refund_products, key=lambda l: str(l['name']))
@@ -286,8 +288,9 @@ class ReportSaleDetails(models.AbstractModel):
         key1 = line.product_id.product_tmpl_id.pos_categ_id.name
         key2 = (line.product_id, line.price_unit, line.discount)
         products.setdefault(key1, {})
-        products[key1].setdefault(key2, 0.0)
-        products[key1][key2] += line.qty
+        products[key1].setdefault(key2, [0.0, 0.0])
+        products[key1][key2][0] += line.qty
+        products[key1][key2][1] += line.currency_id.round(line.price_unit * line.qty * (100 - line.discount) / 100.0)
 
         if line.tax_ids_after_fiscal_position:
             line_taxes = line.tax_ids_after_fiscal_position.sudo().compute_all(line.price_unit * (1-(line.discount or 0.0)/100.0), currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
@@ -313,8 +316,7 @@ class ReportSaleDetails(models.AbstractModel):
             total_cat = 0
             for product in category_dict['products']:
                 qty_cat += product['quantity']
-                total_cat += (product['quantity'] * product['price_unit']) * (100 - product['discount']) / 100
-                product['total_paid'] = (product['quantity'] * product['price_unit']) * (100 - product['discount']) / 100
+                total_cat += product['total_paid']
             category_dict['total'] = total_cat
             category_dict['qty'] = qty_cat
             all_qty += qty_cat
