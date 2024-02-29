@@ -16,18 +16,18 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
             // Order1: Generates 2 points.
             ProductScreen.addOrderline("Whiteboard Pen", "2"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner AAA"),
+            ProductScreen.clickCustomer("AAA Test Partner"),
             PosLoyalty.orderTotalIs("6.40"),
             PosLoyalty.finalizeOrder("Cash", "10"),
 
             // Order2: Consumes points to get free product.
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner AAA"),
+            ProductScreen.clickCustomer("AAA Test Partner"),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             ProductScreen.selectedOrderlineHas("Whiteboard Pen", "1.00"),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             ProductScreen.selectedOrderlineHas("Whiteboard Pen", "2.00"),
-            // At this point, Test Partner AAA has 4 points.
+            // At this point, AAA Test Partner has 4 points.
             PosLoyalty.isRewardButtonHighlighted(true),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             ProductScreen.selectedOrderlineHas("Whiteboard Pen", "3.00"),
@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
             ProductScreen.addOrderline("Whiteboard Pen", "4"),
             PosLoyalty.orderTotalIs("12.80"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner AAA"),
+            ProductScreen.clickCustomer("AAA Test Partner"),
             PosLoyalty.isRewardButtonHighlighted(true),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1.00"),
@@ -77,12 +77,12 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", {
         [
             ProductScreen.clickHomeCategory(),
 
-            // Order1: Immediately set the customer to Test Partner AAA which has 4 points.
+            // Order1: Immediately set the customer to AAA Test Partner which has 4 points.
             // - He has enough points to purchase a free product but since there is still
             //   no product in the order, reward button should not yet be highlighted.
             // - Furthermore, clicking the reward product should not add it as reward product.
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner AAA"),
+            ProductScreen.clickCustomer("AAA Test Partner"),
             // No item in the order, so reward button is off.
             PosLoyalty.isRewardButtonHighlighted(false),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
@@ -93,11 +93,11 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", {
             PosLoyalty.orderTotalIs("3.20"),
             PosLoyalty.finalizeOrder("Cash", "10"),
 
-            // Order2: Generate 4 points for Test Partner CCC.
+            // Order2: Generate 4 points for CCC Test Partner.
             // - Reference: Order2_CCC
-            // - But set Test Partner BBB first as the customer.
+            // - But set BBB Test Partner first as the customer.
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner BBB"),
+            ProductScreen.clickCustomer("BBB Test Partner"),
             PosLoyalty.isRewardButtonHighlighted(false),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             ProductScreen.selectedOrderlineHas("Whiteboard Pen", "1.00"),
@@ -110,21 +110,21 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", {
             ProductScreen.selectedOrderlineHas("Whiteboard Pen", "4.00"),
             PosLoyalty.isRewardButtonHighlighted(true),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner CCC"),
-            PosLoyalty.customerIs("Test Partner CCC"),
+            ProductScreen.clickCustomer("CCC Test Partner"),
+            PosLoyalty.customerIs("CCC Test Partner"),
             PosLoyalty.orderTotalIs("12.80"),
             PosLoyalty.finalizeOrder("Cash", "20"),
 
-            // Order3: Generate 3 points for Test Partner BBB.
+            // Order3: Generate 3 points for BBB Test Partner.
             // - Reference: Order3_BBB
-            // - But set Test Partner CCC first as the customer.
+            // - But set CCC Test Partner first as the customer.
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner CCC"),
+            ProductScreen.clickCustomer("CCC Test Partner"),
             PosLoyalty.isRewardButtonHighlighted(false),
             ProductScreen.addOrderline("Whiteboard Pen", "3"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner BBB"),
-            PosLoyalty.customerIs("Test Partner BBB"),
+            ProductScreen.clickCustomer("BBB Test Partner"),
+            PosLoyalty.customerIs("BBB Test Partner"),
             PosLoyalty.orderTotalIs("9.60"),
             PosLoyalty.finalizeOrder("Cash", "10"),
 
@@ -134,7 +134,7 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", {
             ProductScreen.selectedOrderlineHas("Whiteboard Pen", "1.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner CCC"),
+            ProductScreen.clickCustomer("CCC Test Partner"),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
             PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1.00"),
@@ -158,7 +158,7 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram3", {
             // Generates 10.2 points and use points to get the reward product with zero sale price
             ProductScreen.addOrderline("Desk Organizer", "2"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner AAA"),
+            ProductScreen.clickCustomer("AAA Test Partner"),
 
             // At this point, the free_product program is triggered.
             // The reward button should be highlighted.
