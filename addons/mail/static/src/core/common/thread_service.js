@@ -693,13 +693,16 @@ export class ThreadService {
     }
 
     getDiscussSidebarCategoryCounter(categoryId) {
-        return this.store.discuss[categoryId].threads.reduce((acc, channel) => {
-            if (categoryId === "channels") {
-                return channel.message_needaction_counter > 0 ? acc + 1 : acc;
-            } else {
-                return channel.message_unread_counter > 0 ? acc + 1 : acc;
-            }
-        }, 0);
+        return this.store.DiscussAppCategory.get({ id: categoryId }).threads.reduce(
+            (acc, channel) => {
+                if (categoryId === "channels") {
+                    return channel.message_needaction_counter > 0 ? acc + 1 : acc;
+                } else {
+                    return channel.message_unread_counter > 0 ? acc + 1 : acc;
+                }
+            },
+            0
+        );
     }
 
     /**

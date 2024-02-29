@@ -21,7 +21,7 @@ class TestDiscussFullPerformance(HttpCase):
     #     4: settings
     _query_count_init_store = 16
     _query_count = 48 + 1  # +1 is necessary to fix nondeterministic issue on runbot
-    _query_count_discuss_channels = 68
+    _query_count_discuss_channels = 69
 
     def setUp(self):
         super().setUp()
@@ -97,12 +97,12 @@ class TestDiscussFullPerformance(HttpCase):
         # create groups
         self.channel_group_1 = self.env['discuss.channel'].create_group((self.users[0] + self.users[12]).partner_id.ids)
         # create livechats
-        im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
+        self.im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
         self.env['bus.presence'].create({'user_id': self.users[0].id, 'status': 'online'})  # make available for livechat (ignore leave)
         self.authenticate('test1', self.password)
         self.channel_livechat_1 = self.env['discuss.channel'].browse(self.make_jsonrpc_request("/im_livechat/get_session", {
             'anonymous_name': 'anon 1',
-            'channel_id': im_livechat_channel.id,
+            'channel_id': self.im_livechat_channel.id,
             'previous_operator_id': self.users[0].partner_id.id,
         })["Thread"]['id'])
         self.channel_livechat_1.with_user(self.users[1]).message_post(body="test")
@@ -110,7 +110,7 @@ class TestDiscussFullPerformance(HttpCase):
         with patch("odoo.http.GeoIP.country_code", new_callable=PropertyMock(return_value=self.env.ref('base.be').code)):
             self.channel_livechat_2 = self.env['discuss.channel'].browse(self.make_jsonrpc_request("/im_livechat/get_session", {
                 'anonymous_name': 'anon 2',
-                'channel_id': im_livechat_channel.id,
+                'channel_id': self.im_livechat_channel.id,
                 'previous_operator_id': self.users[0].partner_id.id,
             })["Thread"]['id'])
         guest_sudo = self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.guest_id).guest_id.sudo()
@@ -197,7 +197,6 @@ class TestDiscussFullPerformance(HttpCase):
                     "id": self.env["res.users.settings"]._find_or_create_for_user(self.users[0]).id,
                     "is_discuss_sidebar_category_channel_open": True,
                     "is_discuss_sidebar_category_chat_open": True,
-                    "is_discuss_sidebar_category_livechat_open": True,
                     "livechat_lang_ids": [],
                     "livechat_username": False,
                     "push_to_talk_key": False,
@@ -1197,6 +1196,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "is_editable": False,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
+                "livechatChannel": {"id": self.im_livechat_channel.id, "name": "support"},
                 "message_needaction_counter": 0,
                 "name": "test1 Ernest Employee",
                 "custom_notifications": False,
@@ -1281,6 +1281,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "is_editable": False,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
+                "livechatChannel": {"id": self.im_livechat_channel.id, "name": "support"},
                 "message_needaction_counter": 0,
                 "name": "anon 2 Ernest Employee",
                 "custom_notifications": False,
