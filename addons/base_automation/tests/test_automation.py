@@ -112,3 +112,46 @@ class TestAutomation(TransactionCaseWithUserDemo):
         # simulate a onchange call on name
         result = self_portal.onchange({}, [], {"name": {}, "active": {}})
         self.assertEqual(result["value"]["active"], False)
+
+    def test_04_on_create_or_write_differentiate(self):
+        """
+            The purpose is to differentiate create and empty write.
+        """
+        model = self.env.ref("base.model_res_partner")
+        model_field_id = self.env['ir.model.fields'].search([('model', '=', model.model), ('name', '=', 'id')], limit=1)
+        automation = self.env["base.automation"].create({
+            "name": "Test automated action",
+            "trigger": "on_create_or_write",
+            "model_id": model.id,
+            "trigger_field_ids": [Command.set([model_field_id.id])],
+        })
+        action = self.env["ir.actions.server"].create({
+            "name": "Modify name",
+            "base_automation_id": automation.id,
+            "model_id": model.id,
+            "state": "code",
+            "code": "record.write({'name': 'Modified Name'})"
+        })
+        action.flush_recordset()
+        automation.write({"action_server_ids": [Command.link(action.id)]})
+        # action cached was cached with admin, force CacheMiss
+        automation.env.clear()
+
+        server_action = self.env["ir.actions.server"].create({
+            "name": "Empty write",
+            "model_id": model.id,
+            "state": "code",
+            "code": "record.write({})"
+        })
+
+        partner = self.env[model.model].create({'name': 'Test Name'})
+        self.assertEqual(partner.name, 'Modified Name', 'The automatic action must be performed')
+        partner.name = 'Reset Name'
+        self.assertEqual(partner.name, 'Reset Name', 'The automatic action must not be performed')
+
+        context = {
+            'active_model': model.model,
+            'active_id': partner.id,
+        }
+        server_action.with_context(context).run()
+        self.assertEqual(partner.name, 'Reset Name', 'The automatic action must not be performed')
