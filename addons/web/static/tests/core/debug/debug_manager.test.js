@@ -285,7 +285,7 @@ describe.tags("desktop")("DebugMenu", () => {
         await contains(".o_debug_manager button").click();
         await contains(".dropdown-menu .dropdown-item:contains('Get View')").click();
         expect(".modal").toHaveCount(1);
-        expect(".modal-body").toHaveText(`<tree><field name="name" field_id="name_0"/></tree>`);
+        expect(".modal-body").toHaveText(`<tree><field name="name"/></tree>`);
     });
 
     test("can edit a pivot view", async () => {
