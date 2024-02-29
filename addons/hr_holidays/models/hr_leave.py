@@ -797,7 +797,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                     target = ', '.join(leave.employee_ids.mapped('name'))
                 display_date = format_date(self.env, date_from_utc) or ""
                 if leave.number_of_days > 1 and date_from_utc and date_to_utc:
-                    display_date += ' / %s' % format_date(self.env, date_to_utc) or ""
+                    display_date += ' - %s' % format_date(self.env, date_to_utc) or ""
                 if not target or self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
                     leave.display_name = _("%(leave_type)s: %(duration)s (%(start)s)",
                         leave_type=time_off_type_display,
@@ -1577,7 +1577,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             to_do_confirm_activity.activity_feedback(['hr_holidays.mail_act_leave_approval'])
         if to_do:
             to_do.activity_feedback(['hr_holidays.mail_act_leave_approval', 'hr_holidays.mail_act_leave_second_approval'])
-        self.env['mail.activity'].create(activity_vals)
+        self.env['mail.activity'].with_context(short_name=False).create(activity_vals)
 
     ####################################################
     # Messaging methods
