@@ -52,7 +52,17 @@ class PricelistItem(models.Model):
             ('0_product_variant', "Product Variant"),
         ],
         string="Apply On",
-        default='3_global',
+        default='1_product',
+        required=True,
+        help="Pricelist Item applicable on selected option")
+
+    display_applied_on = fields.Selection(
+        selection=[
+            ('1_product', "Product"),
+            ('2_product_category', "Category"),
+        ],
+        string="Apply On",
+        default='1_product',
         required=True,
         help="Pricelist Item applicable on selected option")
 
@@ -89,11 +99,11 @@ class PricelistItem(models.Model):
 
     compute_price = fields.Selection(
         selection=[
-            ('fixed', "Fixed Price"),
             ('percentage', "Discount"),
             ('formula', "Formula"),
+            ('fixed', "Fixed Price"),
         ],
-        index=True, default='fixed', required=True)
+        index=True, default='percentage', required=True)
 
     fixed_price = fields.Float(string="Fixed Price", digits='Product Price')
     percent_price = fields.Float(
@@ -154,10 +164,13 @@ class PricelistItem(models.Model):
             if item.compute_price == 'fixed':
                 item.price = formatLang(
                     item.env, item.fixed_price, monetary=True, dp="Product Price", currency_obj=item.currency_id)
-            elif item.compute_price == 'percentage':
-                item.price = _("%s %% discount", item.percent_price)
+            elif item.compute_price == 'percentage' or not (surcharge := item.price_surcharge):
+                percent_price = item.price_discount if item.compute_price == 'formula' else item.percent_price
+                percentage = int(percent_price) if percent_price.is_integer() else percent_price
+                item.price = _("%s %% discount", percentage)
             else:
-                item.price = _("%(percentage)s %% discount and %(price)s surcharge", percentage=item.price_discount, price=item.price_surcharge)
+                percentage = int(item.price_discount) if item.price_discount.is_integer() else item.price_discount
+                item.price = _("%(percentage)s %% discount and %(price)s surcharge", percentage=percentage, price=surcharge)
 
     @api.depends_context('lang')
     @api.depends('compute_price', 'price_discount', 'price_surcharge', 'base', 'price_round')
@@ -238,6 +251,17 @@ class PricelistItem(models.Model):
                 'price_max_margin': 0.0,
             })
 
+    @api.onchange('display_applied_on')
+    def _onchange_display_applied_on(self):
+        for item in self:
+            if item.display_applied_on == '1_product':
+                item.applied_on = '1_product'
+                item.compute_price = 'fixed'
+            if item.display_applied_on == '2_product_category':
+                item.applied_on = '2_product_category'
+                item.compute_price = 'percentage'
+
+
     @api.onchange('product_id')
     def _onchange_product_id(self):
         has_product_id = self.filtered('product_id')
@@ -258,9 +282,8 @@ class PricelistItem(models.Model):
 
     @api.onchange('product_id', 'product_tmpl_id', 'categ_id')
     def _onchange_rule_content(self):
-        if not self.env.user.has_group('product.group_sale_pricelist') and not self.env.context.get('default_applied_on', False):
-            # If advanced pricelists are disabled (applied_on field is not visible)
-            # AND we aren't coming from a specific product template/variant.
+        if not self.env.context.get('default_applied_on', False):
+            # If we aren't coming from a specific product template/variant.
             variants_rules = self.filtered('product_id')
             template_rules = (self-variants_rules).filtered('product_tmpl_id')
             variants_rules.update({'applied_on': '0_product_variant'})
@@ -305,6 +328,13 @@ class PricelistItem(models.Model):
         return super().write(values)
 
     #=== BUSINESS METHODS ===#
+
+    def _is_product_variant_invisibile(self):
+        return (
+            not self.product_tmpl_id and
+            self.product_tmpl_id.product_variant_count <= 0 and
+            self.display_applied_on == '1_product'
+        )
 
     def _is_applicable_for(self, product, qty_in_product_uom):
         """Check whether the current rule is valid for the given product & qty.
@@ -438,8 +468,8 @@ class PricelistItem(models.Model):
         return price
 
     def _compute_price_before_discount(self, *args, **kwargs):
-        """Compute the base price of the lowest pricelist rule whose pricelist discount_policy
-        is set to show the discount to the customer.
+        """Compute the base price of the lowest pricelist rule
+        show the discount by default if percentage rule.
 
         :param product: recordset of product (product.product/product.template)
         :param float qty: quantity of products requested (in given uom)
@@ -451,16 +481,17 @@ class PricelistItem(models.Model):
         :rtype: float
         """
         pricelist_rule = self
-        if pricelist_rule and pricelist_rule.pricelist_id.discount_policy == 'without_discount':
+        if pricelist_rule and pricelist_rule.compute_price == 'percentage':
             pricelist_item = pricelist_rule
             # Find the lowest pricelist rule whose pricelist is configured to show the discount
             # to the customer.
             while (
                 pricelist_item.base == 'pricelist'
-                and pricelist_item.base_pricelist_id.discount_policy == 'without_discount'
             ):
                 rule_id = pricelist_item.base_pricelist_id._get_product_rule(*args, **kwargs)
-                pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
+                rule_pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
+                if rule_pricelist_item and rule_pricelist_item.compute_price == 'percentage':
+                    pricelist_item = pricelist_rule
 
             pricelist_rule = pricelist_item
 

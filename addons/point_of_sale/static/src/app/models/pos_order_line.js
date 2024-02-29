@@ -517,9 +517,7 @@ export class PosOrderline extends Base {
     }
 
     display_discount_policy() {
-        return this.order_id.pricelist_id
-            ? this.order_id.pricelist_id.discount_policy
-            : "with_discount";
+        return this.discount_policy;
     }
 
     get_lst_price() {

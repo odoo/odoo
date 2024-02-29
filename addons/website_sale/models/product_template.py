@@ -268,7 +268,6 @@ class ProductTemplate(models.Model):
         date = fields.Date.context_today(self)
 
         sales_prices = pricelist._get_products_price(self, 1.0)
-        show_discount = pricelist and pricelist.discount_policy == 'without_discount'
         show_strike_price = self.env.user.has_group('website_sale.group_product_price_comparison')
         website = self.env['website'].get_current_website()
 
@@ -299,7 +298,7 @@ class ProductTemplate(models.Model):
                         round=False
                     )
 
-            elif show_discount and price_list_contains_template:
+            elif price_list_contains_template:
                 base_price = base_sales_prices[template.id]
 
                 # Compare_list_price are never tax included
@@ -500,10 +499,7 @@ class ProductTemplate(models.Model):
             target_currency=currency,
         )
 
-        if pricelist.discount_policy == 'without_discount':
-            has_discounted_price = currency.compare_amounts(list_price, pricelist_price) == 1
-        else:
-            has_discounted_price = False
+        has_discounted_price = currency.compare_amounts(list_price, pricelist_price) == 1
 
         combination_info = {
             'price_extra': price_extra,
@@ -548,7 +544,11 @@ class ProductTemplate(models.Model):
             'taxes': taxes,  # taxes after fpos mapping
         })
 
-        if pricelist.discount_policy != 'without_discount':
+        if pricelist._get_product_rule_policy(
+            product=product_or_template,
+            quantity=quantity,
+            target_currency=currency,
+        ) != 'percentage':
             # Leftover from before cleanup, different behavior between ecommerce & backend configurator
             # probably to keep product sales price hidden from customers ?
             combination_info['list_price'] = combination_info['price']

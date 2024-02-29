@@ -63,9 +63,19 @@ class TestWebsiteEventSaleCommon(TransactionCase):
         })
 
         def create_pricelist(currency, name, policy):
+            if policy == 'with_discount':
+                return cls.env['product.pricelist'].create({
+                    'currency_id': currency.id,
+                    'item_ids': [(5, 0, 0), (0, 0, {
+                        'applied_on': '3_global',
+                        'compute_price': 'formula',
+                        'price_discount': 10,
+                    })],
+                    'name': name,
+                    'selectable': True,
+                })
             return cls.env['product.pricelist'].create({
                 'currency_id': currency.id,
-                'discount_policy': policy,
                 'item_ids': [(5, 0, 0), (0, 0, {
                     'applied_on': '3_global',
                     'compute_price': 'percentage',

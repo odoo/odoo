@@ -13,7 +13,7 @@
     <!-- Add price information on tickets (multi tickets, aka in collapse) -->
     <xpath expr="//div[hasclass('o_wevent_registration_multi_select')]" position="inside">
         <t t-if="ticket.price">
-            <t t-if="(ticket.price - ticket.price_reduce) &gt; 0 and website.pricelist_id.discount_policy == 'without_discount'">
+            <t t-if="(ticket.price - ticket.price_reduce) &gt; 0">
                 <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
                      class="text-danger me-1"
                      t-field="ticket.price"
@@ -56,7 +56,7 @@
     <xpath expr="//div[hasclass('o_wevent_registration_single_select')]" position="before">
         <div class="flex-md-grow-1 me-2 text-end">
             <t t-if="tickets.price">
-                <t t-if="(tickets.price - tickets.price_reduce) &gt;0 and website.pricelist_id.discount_policy == 'without_discount'">
+                <t t-if="(tickets.price - tickets.price_reduce) &gt;0">
                     <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
                          class="text-danger me-1"
                          t-field="tickets.price"

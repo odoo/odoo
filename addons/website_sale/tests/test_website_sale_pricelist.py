@@ -204,25 +204,23 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             'taxes_id': False,
         })
         self.website.pricelist_id.write({
-            'discount_policy': 'with_discount',
             'item_ids': [Command.clear(), Command.create({
                 'applied_on': '1_product',
                 'product_tmpl_id': product.product_tmpl_id.id,
                 'min_quantity': 500,
-                'compute_price': 'percentage',
-                'percent_price': 63,
+                'compute_price': 'formula',
+                'price_discount': 63,
             })]
         })
         promo_pricelist = self.env['product.pricelist'].create({
             'name': 'Super Pricelist',
-            'discount_policy': 'without_discount',
             'item_ids': [Command.create({
                 'applied_on': '1_product',
                 'product_tmpl_id': product.product_tmpl_id.id,
                 'base': 'pricelist',
                 'base_pricelist_id': self.website.pricelist_id.id,
-                'compute_price': 'formula',
-                'price_discount': 25
+                'compute_price': 'percentage',
+                'percent_price': 25
             })]
         })
         so = self.env['sale.order'].create({
@@ -252,7 +250,6 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             'taxes_id': False,
         })
         self.website.pricelist_id.write({
-            'discount_policy': 'without_discount',
             'item_ids': [
                 Command.clear(),
                 Command.create({
@@ -283,25 +280,6 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         self.assertEqual(sol.price_unit, 10.0, 'Pricelist price should be applied')
         self.assertEqual(sol.discount, 0, 'Pricelist price should be applied')
         self.assertEqual(sol.price_total, 60.0)
-
-    def test_get_right_discount(self):
-        """ Test that `_get_sales_prices` from `product_template`
-        returns a dict with just `price_reduce` (no discount) as key
-        when the product is tax included.
-        """
-        self.env.company.country_id = self.env.ref('base.us')
-
-        product = self.env['product.template'].create({
-            'name': 'Event Product',
-            'list_price': 10.0,
-            'taxes_id': [Command.create({
-                'name': "Tax 10",
-                'amount': 10,
-            })],
-        })
-
-        prices = product._get_sales_prices(self.list_christmas, self.env['account.fiscal.position'])
-        self.assertFalse('base_price' in prices[product.id])
 
     def test_pricelist_item_based_on_cost_for_templates(self):
         """ Test that `_get_sales_prices` from `product_template` computes the correct price when
@@ -358,7 +336,6 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         """
         self.env['res.config.settings'].create({                  # Set Settings:
             'show_line_subtotals_tax_selection': 'tax_included',  # Set "Tax Included" on the "Display Product Prices"
-            'product_pricelist_setting': 'advanced',              # advanced pricelist (discounts, etc.)
             'group_product_price_comparison': True,               # price comparison
         }).execute()
 
@@ -376,7 +353,6 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             'is_published': True,
         })
         self.pricelist.write({
-            'discount_policy': 'without_discount',
             'item_ids': [Command.create({
                 'price_discount': 20,
                 'compute_price': 'formula',

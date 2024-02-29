@@ -110,8 +110,12 @@ class SaleOrderLine(models.Model):
         if self.event_booth_pending_ids and self.event_id:
             company = self.event_id.company_id or self.env.company
             pricelist = self.order_id.pricelist_id
-            if pricelist.discount_policy == "with_discount":
-                event_booths = self.event_booth_pending_ids.with_context(**self._get_pricelist_price_context())
+            price_context = self._get_pricelist_price_context()
+            if pricelist._get_product_rule_policy(
+                self.product_id,
+                quantity=price_context['quantity']
+            ) != 'percentage':
+                event_booths = self.event_booth_pending_ids.with_context(**price_context)
                 total_price = sum(booth.booth_category_id.price_reduce for booth in event_booths)
             else:
                 total_price = sum(booth.price for booth in self.event_booth_pending_ids)

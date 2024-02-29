@@ -56,7 +56,6 @@
             <tree string="Pricelist Rules" editable="bottom">
                 <!-- Scope = coming from a product/product template -->
                 <field name="pricelist_id" string="Pricelist" options="{'no_create_edit':1, 'no_open': 1}"/>
-                <field name="name" string="Applied On"/>
                 <field name="company_id" column_invisible="True"/>
                 <field name="categ_id" column_invisible="True"/>
                 <field name="product_tmpl_id"
@@ -75,13 +74,13 @@
                     ('categ_id', '=', context.get('default_categ_id', 0)), '|', ('company_id', '=', company_id), ('company_id', '=', False)
                   ]"
                   options="{'no_create_edit':1, 'no_open': 1}"/>
+                <field name="fixed_price" widget="monetary" string="Price" required='1'/>
                 <field name="min_quantity" colspan="4"/>
                 <field name="currency_id" column_invisible="True"/>
-                <field name="fixed_price" string="Price" required='1'/>
                 <field name="date_start" optional="show"/>
                 <field name="date_end" optional="show"/>
                 <field name="applied_on" column_invisible="True"/>
-                <field name="company_id" groups="base.group_multi_company" optional="show" options="{'no_create':1, 'no_open': 1}"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide" options="{'no_create':1, 'no_open': 1}"/>
             </tree>
         </field>
     </record>
@@ -94,15 +93,21 @@
                 <sheet>
                     <field name="name" invisible="1"/>
                     <field name="company_id" invisible="1"/>
-                    <group name="pricelist_rule_computation" groups="product.group_sale_pricelist" string="Price Computation">
+                    <group name="pricelist_rule_computation">
                         <group name="pricelist_rule_method">
-                            <field name="compute_price" string="Computation" widget="radio"/>
+                            <field name="display_applied_on" widget="radio" options="{'horizontal': true}"/>
+                            <field name="categ_id" options="{'no_create':1}" invisible="display_applied_on != '2_product_category'" required="display_applied_on == '2_product_category'"/>
+                            <field name="product_tmpl_id" options="{'no_create':1}" invisible="display_applied_on != '1_product'" required="display_applied_on == '1_product'"/>
+                            <t t-if="product_tmpl_id and product_tmpl_id.product_variant_count > 0">
+                                <field name="product_id" options="{'no_create':1}"/>
+                            </t>
+                            <field name="compute_price" string="Computation" widget="radio" options="{'horizontal': true}" invisible="display_applied_on == '1_product'"/>
                         </group>
                         <div class="alert alert-info" role="alert" groups="uom.group_uom">
                             The computed price is expressed in the default Unit of Measure of the product.
                         </div>
                     </group>
-                    <group name="pricelist_rule_base" groups="product.group_sale_pricelist">
+                    <group name="pricelist_rule_base">
                         <group>
                             <field name="price" invisible="1"/>
                             <field name="fixed_price"

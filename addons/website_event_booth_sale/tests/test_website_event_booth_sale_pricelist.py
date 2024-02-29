@@ -40,11 +40,10 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
         # set pricelist to 0 - currency: company
         self.pricelist.write({
             'currency_id': self.env.company.currency_id.id,
-            'discount_policy': 'with_discount',
             'item_ids': [(5, 0, 0), (0, 0, {
                 'applied_on': '3_global',
-                'compute_price': 'percentage',
-                'percent_price': 0,
+                'compute_price': 'formula',
+                'price_discount': 0,
             })],
             'name': 'With Discount Included',
         })
@@ -56,7 +55,6 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
         # set pricelist to 10% - without discount
         self.pricelist.write({
             'currency_id': self.currency_test.id,
-            'discount_policy': 'without_discount',
             'item_ids': [(5, 0, 0), (0, 0, {
                 'applied_on': '3_global',
                 'compute_price': 'percentage',
@@ -71,7 +69,11 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
 
         # set pricelist to 10% - with discount
         self.pricelist.write({
-            'discount_policy': 'with_discount',
+            'item_ids': [(5, 0, 0), (0, 0, {
+                'applied_on': '3_global',
+                'compute_price': 'formula',
+                'price_discount': 10,
+            })],
             'name': 'With Discount Included',
         })
         with MockRequest(self.env, sale_order_id=self.so.id, website=self.current_website):

@@ -24,7 +24,6 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         pricelist = self.env['product.pricelist'].create({
             'name': "test_get_combination_info",
             'currency_id': self.other_currency.id,
-            'discount_policy': 'with_discount',
             'company_id': self.env.company.id,
             'item_ids': [Command.create({
                 'price_discount': 10,
@@ -56,7 +55,7 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         self.assertEqual(combination_info['price'], 2222 * discount_rate * currency_ratio)
         self.assertEqual(combination_info['list_price'], 2222 * discount_rate * currency_ratio)
         self.assertEqual(combination_info['price_extra'], 222 * currency_ratio)
-        self.assertEqual(combination_info['has_discounted_price'], False)
+        self.assertEqual(combination_info['has_discounted_price'], True)
 
         # CASE: B2C setting
         website.show_line_subtotals_tax_selection = 'tax_included'
@@ -65,11 +64,16 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         self.assertEqual(combination_info['price'], 2222 * discount_rate * currency_ratio * tax_ratio)
         self.assertEqual(combination_info['list_price'], 2222 * discount_rate * currency_ratio * tax_ratio)
         self.assertEqual(combination_info['price_extra'], round(222 * currency_ratio * tax_ratio, 2))
-        self.assertEqual(combination_info['has_discounted_price'], False)
+        self.assertEqual(combination_info['has_discounted_price'], True)
 
         # CASE: pricelist 'without_discount'
-        pricelist.discount_policy = 'without_discount'
-
+        pricelist.write({
+            'item_ids': [
+                Command.create({
+                    'percent_price': 10,
+                    'compute_price': 'percentage',
+                })],
+        })
         combination_info = product_template._get_combination_info()
         self.assertEqual(combination_info['price'], pricelist.currency_id.round(2222 * discount_rate * currency_ratio * tax_ratio), 0)
         self.assertEqual(combination_info['list_price'], pricelist.currency_id.round(2222 * currency_ratio * tax_ratio), 0)

@@ -230,7 +230,7 @@ class PosOrder(models.Model):
             line = line_values['record']
             invoice_lines_values = self._get_invoice_lines_values(line_values, line)
             invoice_lines.append((0, None, invoice_lines_values))
-            if line.order_id.pricelist_id.discount_policy == 'without_discount' and float_compare(line.price_unit, line.product_id.lst_price, precision_rounding=self.currency_id.rounding) < 0:
+            if line.discount_policy == 'without_discount' and float_compare(line.price_unit, line.product_id.lst_price, precision_rounding=self.currency_id.rounding) < 0:
                 invoice_lines.append((0, None, {
                     'name': _('Price discount from %(original_price)s to %(discounted_price)s',
                               original_price=float_repr(line.product_id.lst_price, self.currency_id.decimal_places),
@@ -1194,6 +1194,14 @@ class PosOrderLine(models.Model):
     combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines') # FIXME rename to child_line_ids
 
     combo_line_id = fields.Many2one('pos.combo.line', string='Combo Line')
+    discount_policy = fields.Selection(selection=[
+            ('with_discount', "Discount included in the price"),
+            ('without_discount', "Show public price & discount to the customer"),
+        ],
+        default='with_discount',
+        compute='_compute_discount_policy',
+        store=True,
+    )
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -1214,6 +1222,15 @@ class PosOrderLine(models.Model):
     def _compute_refund_qty(self):
         for orderline in self:
             orderline.refunded_qty = -sum(orderline.mapped('refund_orderline_ids.qty'))
+
+    @api.depends('order_id.pricelist_id', 'product_id', 'qty')
+    def _compute_discount_policy(self):
+        for line in self:
+            line.discount_policy = 'without_discount' if line.order_id.pricelist_id._get_product_rule_policy(
+                line.product_id,
+                quantity=line.qty,
+                uom=line.product_uom_id,
+            ) == 'percentage' else 'with_discount'
 
     def _prepare_refund_data(self, refund_order, PosOrderLineLot):
         """

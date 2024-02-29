@@ -65,7 +65,6 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
             'company_id': cls.env.company.id,
             'selectable': True,
             'sequence': 2,
-            'discount_policy': 'with_discount',
             'item_ids': [
                 Command.create({
                     'applied_on': '1_product',
@@ -87,19 +86,18 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
             'company_id': cls.env.company.id,
             'selectable': True,
             'sequence': 3,
-            'discount_policy': 'without_discount',
             'item_ids': [
                 Command.create({
                     'applied_on': '1_product',
                     'product_tmpl_id': cls.test_product_with_pricelist.id,
-                    'compute_price': 'fixed',
-                    'fixed_price': 1500,
+                    'compute_price': 'percentage',
+                    'percent_price': 25,
                 }),
                 Command.create({
                     'applied_on': '1_product',
                     'product_tmpl_id': cls.test_product_with_pricelist_and_compare_list_price.id,
-                    'compute_price': 'fixed',
-                    'fixed_price': 3500,
+                    'compute_price': 'percentage',
+                    'percent_price': 12.5,
                 })
             ]
         })

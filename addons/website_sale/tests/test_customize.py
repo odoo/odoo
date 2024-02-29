@@ -79,7 +79,6 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         # Make sure pricelist rule exist
         self.env['product.pricelist'].create({
             'name': 'Base Pricelist',
-            'discount_policy': 'without_discount',
             'item_ids': [Command.create({
                 'base': 'list_price',
                 'applied_on': '1_product',

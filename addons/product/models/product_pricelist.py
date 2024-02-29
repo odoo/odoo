@@ -10,7 +10,7 @@ class Pricelist(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Pricelist"
     _rec_names_search = ['name', 'currency_id']  # TODO check if should be removed
-    _order = "sequence asc, id asc"
+    _order = "sequence, id, name"
 
     def _default_currency_id(self):
         return self.env.company.currency_id.id
@@ -43,16 +43,6 @@ class Pricelist(models.Model):
         column2='res_country_group_id',
         string="Country Groups",
         tracking=10,
-    )
-
-    discount_policy = fields.Selection(
-        selection=[
-            ('with_discount', "Discount included in the price"),
-            ('without_discount', "Show public price & discount to the customer"),
-        ],
-        default='with_discount',
-        required=True,
-        tracking=15,
     )
 
     item_ids = fields.One2many(
@@ -159,6 +149,27 @@ class Pricelist(models.Model):
         """
         self and self.ensure_one()  # self is at most one record
         return self._compute_price_rule(product, *args, compute_price=False, **kwargs)[product.id][1]
+
+    def _get_product_rule_policy(self, product, *args, **kwargs):
+        """Compute the pricelist price & rule for the specified product, qty & uom.
+
+        Note: self and self.ensure_one()
+
+        :param product: product record (product.product/product.template)
+        :param float quantity: quantity of products requested (in given uom)
+        :param currency: record of currency (res.currency) (optional)
+        :param uom: unit of measure (uom.uom record) (optional)
+            If not specified, prices returned are expressed in product uoms
+        :param date: date to use for price computation and currency conversions (optional)
+        :type date: date or datetime
+
+        :returns: applied pricelist rule id
+        :rtype: int or False
+        """
+
+        self and self.ensure_one()
+        rule_id = self._get_product_rule(product, *args, **kwargs)
+        return self.env['product.pricelist.item'].browse(rule_id).compute_price
 
     def _compute_price_rule(
             self, products, quantity, currency=None, uom=None, date=False, compute_price=True,
