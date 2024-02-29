@@ -145,6 +145,7 @@ QUnit.test("can join a chat conversation", async (assert) => {
             args: [],
             kwargs: {
                 partners_to: [partnerId],
+                force_open: false,
                 context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
             },
         })}`,

@@ -466,9 +466,10 @@ export class ThreadService {
         return thread;
     }
 
-    async joinChat(id) {
+    async joinChat(id, forceOpen = false) {
         const data = await this.orm.call("discuss.channel", "channel_get", [], {
             partners_to: [id],
+            force_open: forceOpen,
         });
         const thread = this.store.Thread.insert(data);
         return thread;
