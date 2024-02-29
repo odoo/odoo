@@ -3,7 +3,6 @@
 import { HootDomError, getTag, isFirefox, isIterable } from "../hoot_dom_utils";
 import {
     getActiveElement,
-    getDefaultRootNode,
     getDocument,
     getNextFocusableElement,
     getPreviousFocusableElement,
@@ -1902,27 +1901,17 @@ export function setupEventActions(fixture) {
  * The target will be resized to the given dimensions, enforced by `!important` style
  * attributes.
  *
- * @param {Target} target
  * @param {Dimensions} dimensions
- * @param {QueryOptions} [options]
  * @returns {Event[]}
  * @example
  *  resize("body", { width: 1000, height: 500 }); // Resizes <body> to 1000x500
  */
-export function resize(target, dimensions, options) {
+export function resize(dimensions) {
     const [width, height] = parseDimensions(dimensions);
-    const element = getFirstTarget(target, options);
-    if (element === getDefaultRootNode()) {
-        setDimensions(width, height);
-    } else {
-        if (!Number.isNaN(width)) {
-            element.style.setProperty("width", `${width}px`, "important");
-        }
-        if (!Number.isNaN(height)) {
-            element.style.setProperty("height", `${height}px`, "important");
-        }
-    }
-    dispatch(element, "resize");
+
+    setDimensions(width, height);
+
+    dispatch(getWindow(), "resize");
 
     return logEvents("resize");
 }
