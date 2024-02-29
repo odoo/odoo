@@ -324,3 +324,32 @@ class TestDeliveryCost(common.TransactionCase):
         })
         shipping_weight = sale_order._get_estimated_weight()
         self.assertEqual(shipping_weight, self.product_4.weight, "Only positive quantity products' weights should be included in estimated weight")
+
+    def test_fixed_price_margins(self):
+        """
+         margins should be ignored for fixed price carriers
+        """
+        sale_order = self.SaleOrder.create({
+            'partner_id': self.partner_18.id,
+            'name': 'SO - neg',
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.product_4.id,
+                    'product_uom_qty': 1,
+                    'product_uom': self.product_uom_unit.id,
+                }),
+            ]
+        })
+        self.normal_delivery.fixed_margin = 100
+        self.normal_delivery.margin = 4.2
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context(default_order_id=sale_order.id,
+                          default_carrier_id=self.normal_delivery.id))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
+
+        line = self.SaleOrderLine.search([
+            ('order_id', '=', sale_order.id),
+            ('product_id', '=', self.normal_delivery.product_id.id),
+            ('is_delivery', '=', True)
+        ])
+        self.assertEqual(line.price_unit, self.normal_delivery.fixed_price)
