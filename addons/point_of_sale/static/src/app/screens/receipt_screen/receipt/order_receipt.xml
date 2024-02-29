@@ -123,10 +123,10 @@
             </div>
 
             <br/>
-            <t t-if="props.shippingDate">
+            <t t-if="props.data.shippingDate">
                 <div class="pos-receipt-order-data">
                     Expected delivery:
-                    <div><t t-esc="props.shippingDate" /></div>
+                    <div><t t-esc="props.data.shippingDate" /></div>
                 </div>
             </t>
 
