@@ -1688,13 +1688,13 @@ export function useFixture() {}
  * @see {@link waitUntil}
  * @param {Target} target
  * @param {QueryOptions & WaitOptions} [options]
- * @returns {Promise<Node[]>}
+ * @returns {Promise<Node>}
  * @example
  *  const button = await waitFor(`button`);
  *  button.click();
  */
 export function waitFor(target, options) {
-    return waitUntil(() => queryAll(target, options)[0], {
+    return waitUntil(() => queryFirst(target, options), {
         message: `Could not find elements matching "${target}" within %timeout% milliseconds`,
         ...options,
     });

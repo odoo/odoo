@@ -1,6 +1,7 @@
 /** @odoo-module alias=@odoo/hoot-dom default=false */
 
 /**
+ * @typedef {import("./helpers/dom").Position} Position
  * @typedef {import("./helpers/dom").QueryOptions} QueryOptions
  * @typedef {import("./helpers/dom").Target} Target
  *
@@ -13,6 +14,7 @@
  */
 
 export {
+    getActiveElement,
     getFocusableElements,
     getNextFocusableElement,
     getPreviousFocusableElement,
