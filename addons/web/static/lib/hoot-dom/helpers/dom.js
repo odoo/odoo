@@ -817,6 +817,10 @@ export function getActiveElement(node) {
     return activeElement;
 }
 
+export function getCurrentDimensions() {
+    return currentDimensions;
+}
+
 export function getDefaultRootNode() {
     return getDefaultRoot();
 }
@@ -1649,12 +1653,13 @@ export function registerPseudoClass(pseudoClass, predicate) {
  * @param {number} height
  */
 export function setDimensions(width, height) {
-    Object.assign(currentDimensions, { width, height });
     const defaultRoot = getDefaultRoot();
     if (!Number.isNaN(width)) {
+        currentDimensions.width = width;
         defaultRoot.style.setProperty("width", `${width}px`, "important");
     }
     if (!Number.isNaN(height)) {
+        currentDimensions.height = height;
         defaultRoot.style.setProperty("height", `${height}px`, "important");
     }
 }
