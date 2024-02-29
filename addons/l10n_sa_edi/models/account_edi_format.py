@@ -1,4 +1,5 @@
 import json
+import pytz
 from hashlib import sha256
 from base64 import b64decode, b64encode
 from lxml import etree
@@ -435,7 +436,11 @@ class AccountEdiFormat(models.Model):
             errors.append(_set_missing_partner_fields(supplier_missing_info, _("Supplier")))
         if customer_missing_info:
             errors.append(_set_missing_partner_fields(customer_missing_info, _("Customer")))
-        if invoice.invoice_date > date.today():
+        user_timezone = pytz.timezone(self.env.user.tz or 'utc')
+        invoice_datetime = datetime.combine(invoice.invoice_date, datetime.min.time())
+        user_invoice_datetime = user_timezone.localize(invoice_datetime)
+        utcnow = pytz.utc.localize(datetime.now())
+        if user_invoice_datetime > utcnow:
             errors.append(_("- Please, make sure the invoice date is set to either the same as or before Today."))
         if invoice.move_type in ('in_refund', 'out_refund') and not invoice._l10n_sa_check_refund_reason():
             errors.append(
