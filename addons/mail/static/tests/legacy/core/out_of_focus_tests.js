@@ -1,6 +1,7 @@
 /** @odoo-module alias=@mail/../tests/core/out_of_focus_tests default=false */
 
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
+import { startServer } from "@bus/../tests/legacy/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
@@ -9,7 +10,10 @@ import { assertSteps, contains, step } from "@web/../tests/utils";
 QUnit.module("out of focus");
 
 QUnit.test("Spaces in notifications are not encoded", async () => {
-    const { pyEnv } = await start({
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
+    const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
+    await start({
         async mockRPC(route, args, originalRpc) {
             if (route === "/mail/action" && args.init_messaging) {
                 const res = await originalRpc(...arguments);
@@ -21,8 +25,6 @@ QUnit.test("Spaces in notifications are not encoded", async () => {
             presence: makeFakePresenceService({ isOdooFocused: () => false }),
         },
     });
-    const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
-    const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
