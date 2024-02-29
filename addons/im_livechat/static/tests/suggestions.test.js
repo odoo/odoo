@@ -1,15 +1,17 @@
-/* @odoo-module */
+import { test } from "@odoo/hoot";
+import {
+    contains,
+    insertText,
+    openDiscuss,
+    startClient,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { defineLivechatModels } from "./livechat_test_helpers";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+defineLivechatModels();
 
-import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { contains, insertText } from "@web/../tests/utils";
-
-QUnit.module("suggestion");
-
-QUnit.test("Suggestions are shown after delimiter was used in text (:)", async () => {
+test("Suggestions are shown after delimiter was used in text (:)", async () => {
     const pyEnv = await startServer();
     pyEnv["mail.shortcode"].create({
         source: "hello",
@@ -19,11 +21,11 @@ QUnit.test("Suggestions are shown after delimiter was used in text (:)", async (
         anonymous_name: "Visitor",
         channel_type: "livechat",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
-            Command.create({ partner_id: pyEnv.publicPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: serverState.publicPartnerId }),
         ],
     });
-    const { openDiscuss } = await start();
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", ":");
     await contains(".o-mail-Composer-suggestion strong", { text: "hello" });

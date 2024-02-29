@@ -1,5 +1,6 @@
 import { models } from "@web/../tests/web_test_helpers";
 import { capitalize } from "@web/core/utils/strings";
+import { parseModelParams } from "../mail_mock_server";
 
 /**
  * @typedef {import("@web/../tests/web_test_helpers").ModelRecord} ModelRecord
@@ -25,19 +26,33 @@ export class MailTrackingValue extends models.ServerModel {
     }
 
     /**
-     * @param {ModelRecord} initialValue
-     * @param {ModelRecord} newValue
-     * @param {string} fieldName
-     * @param {Object} field
-     * @param {models.ServerModel} model
+     * @param {ModelRecord} initial_value
+     * @param {ModelRecord} new_value
+     * @param {string} col_name
+     * @param {Object} col_info
+     * @param {models.ServerModel} record
      */
-    _create_tracking_values(initialValue, newValue, fieldName, field, model) {
+    _create_tracking_values(initial_value, new_value, col_name, col_info, record) {
+        const kwargs = parseModelParams(
+            arguments,
+            "initial_value",
+            "new_value",
+            "col_name",
+            "col_info",
+            "record"
+        );
+        initial_value = kwargs.initial_value;
+        new_value = kwargs.new_value;
+        col_name = kwargs.col_name;
+        col_info = kwargs.col_info;
+        record = kwargs.record;
+
         /** @type {import("mock_models").IrModelFields} */
         const IrModelFields = this.env["ir.model.fields"];
 
         let isTracked = true;
         const irField = IrModelFields.find(
-            (field) => field.model === model._name && field.name === fieldName
+            (field) => field.model === record._name && field.name === col_name
         );
         if (!irField) {
             return;
@@ -49,36 +64,36 @@ export class MailTrackingValue extends models.ServerModel {
             case "float":
             case "integer":
             case "text":
-                values[`old_value_${irField.ttype}`] = initialValue;
-                values[`new_value_${irField.ttype}`] = newValue;
+                values[`old_value_${irField.ttype}`] = initial_value;
+                values[`new_value_${irField.ttype}`] = new_value;
                 break;
             case "date":
-                values["old_value_datetime"] = initialValue;
-                values["new_value_datetime"] = newValue;
+                values["old_value_datetime"] = initial_value;
+                values["new_value_datetime"] = new_value;
                 break;
             case "boolean":
-                values["old_value_integer"] = initialValue ? 1 : 0;
-                values["new_value_integer"] = newValue ? 1 : 0;
+                values["old_value_integer"] = initial_value ? 1 : 0;
+                values["new_value_integer"] = new_value ? 1 : 0;
                 break;
             case "monetary":
-                values["old_value_float"] = initialValue;
-                values["new_value_float"] = newValue;
+                values["old_value_float"] = initial_value;
+                values["new_value_float"] = new_value;
                 break;
             case "selection":
-                values["old_value_char"] = initialValue;
-                values["new_value_char"] = newValue;
+                values["old_value_char"] = initial_value;
+                values["new_value_char"] = new_value;
                 break;
             case "many2one":
-                initialValue = initialValue
-                    ? this.env[field.relation].search_read([["id", "=", initialValue]])[0]
-                    : initialValue;
-                newValue = newValue
-                    ? this.env[field.relation].search_read([["id", "=", newValue]])[0]
-                    : newValue;
-                values["old_value_integer"] = initialValue ? initialValue.id : 0;
-                values["new_value_integer"] = newValue ? newValue.id : 0;
-                values["old_value_char"] = initialValue ? initialValue.display_name : "";
-                values["new_value_char"] = newValue ? newValue.display_name : "";
+                initial_value = initial_value
+                    ? this.env[col_info.relation].search_read([["id", "=", initial_value]])[0]
+                    : initial_value;
+                new_value = new_value
+                    ? this.env[col_info.relation].search_read([["id", "=", new_value]])[0]
+                    : new_value;
+                values["old_value_integer"] = initial_value ? initial_value.id : 0;
+                values["new_value_integer"] = new_value ? new_value.id : 0;
+                values["old_value_char"] = initial_value ? initial_value.display_name : "";
+                values["new_value_char"] = new_value ? new_value.display_name : "";
                 break;
             default:
                 isTracked = false;
@@ -109,9 +124,13 @@ export class MailTrackingValue extends models.ServerModel {
 
     /**
      * @param {ModelRecord} record
-     * @param {"new" | "old"} type
+     * @param {"new" | "old"} field_type
      */
-    _format_display_value(record, type) {
+    _format_display_value(record, field_type) {
+        const kwargs = parseModelParams(arguments, "record", "field_type");
+        record = kwargs.record;
+        field_type = kwargs.field_type;
+
         /** @type {import("mock_models").IrModelFields} */
         const IrModelFields = this.env["ir.model.fields"];
 
@@ -120,26 +139,26 @@ export class MailTrackingValue extends models.ServerModel {
             case "float":
             case "integer":
             case "text":
-                return record[`${type}_value_${irField.ttype}`];
+                return record[`${field_type}_value_${irField.ttype}`];
             case "datetime":
-                if (record[`${type}_value_datetime`]) {
-                    const datetime = record[`${type}_value_datetime`];
+                if (record[`${field_type}_value_datetime`]) {
+                    const datetime = record[`${field_type}_value_datetime`];
                     return `${datetime}Z`;
                 } else {
-                    return record[`${type}_value_datetime`];
+                    return record[`${field_type}_value_datetime`];
                 }
             case "date":
-                if (record[`${type}_value_datetime`]) {
-                    return record[`${type}_value_datetime`];
+                if (record[`${field_type}_value_datetime`]) {
+                    return record[`${field_type}_value_datetime`];
                 } else {
-                    return record[`${type}_value_datetime`];
+                    return record[`${field_type}_value_datetime`];
                 }
             case "boolean":
-                return !!record[`${type}_value_integer`];
+                return !!record[`${field_type}_value_integer`];
             case "monetary":
-                return record[`${type}_value_float`];
+                return record[`${field_type}_value_float`];
             default:
-                return record[`${type}_value_char`];
+                return record[`${field_type}_value_char`];
         }
     }
 }

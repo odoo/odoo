@@ -1,6 +1,7 @@
 import { parseEmail } from "@mail/utils/common/format";
 import { fields, models } from "@web/../tests/web_test_helpers";
 import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
+import { Kwargs } from "@web/../tests/_framework/mock_server/mock_server_utils";
 
 export class ResFake extends models.Model {
     _name = "res.fake";
@@ -53,21 +54,31 @@ export class ResFake extends models.Model {
         for (const id of ids) {
             const record = records.find((record) => record.id === id);
             if (record.email_cc) {
-                MailThread._message_add_suggested_recipient.call(this, id, result, {
-                    name: record.email_cc,
-                    email: record.email_cc,
-                    partner: undefined,
-                    reason: "CC email",
-                });
+                MailThread._message_add_suggested_recipient.call(
+                    this,
+                    id,
+                    result,
+                    Kwargs({
+                        name: record.email_cc,
+                        email: record.email_cc,
+                        partner: undefined,
+                        reason: "CC email",
+                    })
+                );
             }
             const partners = ResPartner._filter([["id", "in", record.partner_ids]]);
             if (partners.length) {
                 for (const partner of partners) {
-                    MailThread._message_add_suggested_recipient.call(this, id, result, {
-                        email: partner.email,
-                        partner,
-                        reason: "Email partner",
-                    });
+                    MailThread._message_add_suggested_recipient.call(
+                        this,
+                        id,
+                        result,
+                        Kwargs({
+                            email: partner.email,
+                            partner,
+                            reason: "Email partner",
+                        })
+                    );
                 }
             }
         }

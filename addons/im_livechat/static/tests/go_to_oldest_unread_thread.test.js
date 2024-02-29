@@ -1,17 +1,20 @@
-/* @odoo-module */
+import {
+    contains,
+    focus,
+    insertText,
+    openDiscuss,
+    patchUiSize,
+    startClient,
+    startServer,
+    triggerHotkey,
+} from "@mail/../tests/mail_test_helpers";
+import { test } from "@odoo/hoot";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { defineLivechatModels } from "./livechat_test_helpers";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { insertText, contains, focus } from "@web/../tests/utils";
+defineLivechatModels();
 
-import { Command } from "@mail/../tests/helpers/command";
-import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-
-import { start } from "@mail/../tests/helpers/test_utils";
-
-QUnit.module("go to oldest unread livechat");
-
-QUnit.test("tab on discuss composer goes to oldest unread livechat", async () => {
+test("tab on discuss composer goes to oldest unread livechat", async () => {
     const pyEnv = await startServer();
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
@@ -20,39 +23,39 @@ QUnit.test("tab on discuss composer goes to oldest unread livechat", async () =>
         {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ guest_id: guestId_1 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 1",
         },
         {
             anonymous_name: "Visitor 12",
             channel_member_ids: [
                 Command.create({
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                     message_unread_counter: 1,
                     last_interest_dt: "2021-01-02 10:00:00",
                 }),
                 Command.create({ guest_id: guestId_2 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 2",
         },
         {
             anonymous_name: "Visitor 13",
             channel_member_ids: [
                 Command.create({
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                     message_unread_counter: 1,
                     last_interest_dt: "2021-01-01 10:00:00",
                 }),
                 Command.create({ guest_id: guestId_3 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 3",
         },
     ]);
@@ -70,10 +73,8 @@ QUnit.test("tab on discuss composer goes to oldest unread livechat", async () =>
             res_id: channelIds[2],
         },
     ]);
-
-    const { openDiscuss } = await start();
+    await startClient();
     await openDiscuss(channelIds[0]);
-
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 11" });
     await contains(".o-mail-Composer-footer", { text: "Tab to next livechat" });
     await focus(".o-mail-Composer-input");
@@ -86,7 +87,7 @@ QUnit.test("tab on discuss composer goes to oldest unread livechat", async () =>
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 12" });
 });
 
-QUnit.test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async () => {
+test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
@@ -95,20 +96,20 @@ QUnit.test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async (
             anonymous_name: "Visitor 11",
             channel_member_ids: [
                 Command.create({
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                     fold_state: "open",
                 }),
                 Command.create({ guest_id: guestId_1 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 1",
         },
         {
             anonymous_name: "Visitor 12",
             channel_member_ids: [
                 Command.create({
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                     fold_state: "folded",
                     message_unread_counter: 1,
                     last_interest_dt: "2021-01-02 10:00:00",
@@ -116,11 +117,11 @@ QUnit.test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async (
                 Command.create({ guest_id: guestId_2 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 2",
         },
     ]);
-    await start();
+    await startClient();
     await contains(".o-mail-ChatWindow.o-folded", { text: "Visitor 12" });
     await focus(".o-mail-Composer-input", {
         parent: [".o-mail-ChatWindow", { text: "Visitor 11" }],
@@ -132,7 +133,7 @@ QUnit.test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async (
     });
 });
 
-QUnit.test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async () => {
+test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
@@ -141,20 +142,20 @@ QUnit.test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async (
             anonymous_name: "Visitor 11",
             channel_member_ids: [
                 Command.create({
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                     fold_state: "open",
                 }),
                 Command.create({ guest_id: guestId_1 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 1",
         },
         {
             anonymous_name: "Visitor 12",
             channel_member_ids: [
                 Command.create({
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                     fold_state: "open",
                     message_unread_counter: 1,
                     last_interest_dt: "2021-01-02 10:00:00",
@@ -162,17 +163,17 @@ QUnit.test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async (
                 Command.create({ guest_id: guestId_2 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 2",
         },
         {
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId, fold_state: "open" }),
+                Command.create({ partner_id: serverState.partnerId, fold_state: "open" }),
             ],
         },
     ]);
     patchUiSize({ width: 900 }); // enough for 2 chat windows
-    await start();
+    await startClient();
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatWindow", { count: 0, text: "Visitor 12" });
     await focus(".o-mail-Composer-input", {
@@ -185,7 +186,7 @@ QUnit.test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async (
     });
 });
 
-QUnit.test("tab on composer doesn't switch thread if user is typing", async () => {
+test("tab on composer doesn't switch thread if user is typing", async () => {
     const pyEnv = await startServer();
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
@@ -193,37 +194,36 @@ QUnit.test("tab on composer doesn't switch thread if user is typing", async () =
         {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ guest_id: guestId_1 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 1",
         },
         {
             anonymous_name: "Visitor 12",
             channel_member_ids: [
                 Command.create({
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                     message_unread_counter: 1,
                     last_interest_dt: "2021-01-02 10:00:00",
                 }),
                 Command.create({ guest_id: guestId_2 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 2",
         },
     ]);
-
-    const { openDiscuss } = await start();
+    await startClient();
     await openDiscuss(channelIds[0]);
     await insertText(".o-mail-Composer-input", "Hello, ");
     triggerHotkey("Tab");
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 11" });
 });
 
-QUnit.test("tab on composer doesn't switch thread if no unread thread", async () => {
+test("tab on composer doesn't switch thread if no unread thread", async () => {
     const pyEnv = await startServer();
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
@@ -231,26 +231,25 @@ QUnit.test("tab on composer doesn't switch thread if no unread thread", async ()
         {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ guest_id: guestId_1 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 1",
         },
         {
             anonymous_name: "Visitor 12",
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ guest_id: guestId_2 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 2",
         },
     ]);
-
-    const { openDiscuss } = await start();
+    await startClient();
     await openDiscuss(channelIds[0]);
     await focus(".o-mail-Composer-input");
     triggerHotkey("Tab");

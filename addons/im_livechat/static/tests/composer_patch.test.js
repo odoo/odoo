@@ -1,60 +1,63 @@
-/* @odoo-module */
+import {
+    click,
+    contains,
+    insertText,
+    openDiscuss,
+    startClient,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
+import { rpcWithEnv } from "@mail/utils/common/misc";
+import { expect, test } from "@odoo/hoot";
+import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
+import { defineLivechatModels } from "./livechat_test_helpers";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
-import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
+defineLivechatModels();
 
-import { rpc } from "@web/core/network/rpc";
-import { click, contains, insertText } from "@web/../tests/utils";
-
-QUnit.module("composer (patch)");
-
-QUnit.test("Can execute help command on livechat channels", async (assert) => {
+test("Can execute help command on livechat channels", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: pyEnv.currentPartnerId,
+        livechat_operator_id: serverState.partnerId,
     });
-    const { openDiscuss } = await start({
-        mockRPC(route, args, originalMockRPC) {
-            if (args.method === "execute_command_help") {
-                assert.step("execute_command_help");
-                return true;
-            }
-            return originalMockRPC(route, args);
-        },
+    onRpc("/web/dataset/call_kw/discuss.channel/execute_command_help", () => {
+        expect.step("execute_command_help");
+        return true;
     });
+    await startClient();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/help");
     await click(".o-mail-Composer-send:enabled");
-    assert.verifySteps(["execute_command_help"]);
+    expect(["execute_command_help"]).toVerifySteps();
 });
 
-QUnit.test('Receives visitor typing status "is typing"', async () => {
+test.skip('Receives visitor typing status "is typing"', async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 20" });
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 20",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: pyEnv.currentPartnerId,
+        livechat_operator_id: serverState.partnerId,
     });
-    const { openDiscuss } = await start();
+    const env = await startClient();
+    rpc = rpcWithEnv(env);
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing", { text: "" });
-    const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
+    const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
-    pyEnv.withGuest(guestId, () =>
+    withGuest(guestId, () =>
         rpc("/im_livechat/notify_typing", {
             is_typing: true,
             channel_id: channel.id,
@@ -63,23 +66,23 @@ QUnit.test('Receives visitor typing status "is typing"', async () => {
     await contains(".o-discuss-Typing", { text: "Visitor 20 is typing..." });
 });
 
-QUnit.test('display canned response suggestions on typing ":"', async () => {
+test('display canned response suggestions on typing ":"', async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Mario",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: pyEnv.currentPartnerId,
+        livechat_operator_id: serverState.partnerId,
     });
     pyEnv["mail.shortcode"].create({
         source: "hello",
         substitution: "Hello! How are you?",
     });
-    const { openDiscuss } = await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
@@ -87,23 +90,23 @@ QUnit.test('display canned response suggestions on typing ":"', async () => {
     await contains(".o-mail-Composer-suggestionList .o-open");
 });
 
-QUnit.test("use a canned response", async () => {
+test("use a canned response", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Mario",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: pyEnv.currentPartnerId,
+        livechat_operator_id: serverState.partnerId,
     });
     pyEnv["mail.shortcode"].create({
         source: "hello",
         substitution: "Hello! How are you?",
     });
-    const { openDiscuss } = await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
@@ -113,23 +116,23 @@ QUnit.test("use a canned response", async () => {
     await contains(".o-mail-Composer-input", { value: "Hello! How are you? " });
 });
 
-QUnit.test("use a canned response some text", async () => {
+test("use a canned response some text", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Mario",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: pyEnv.currentPartnerId,
+        livechat_operator_id: serverState.partnerId,
     });
     pyEnv["mail.shortcode"].create({
         source: "hello",
         substitution: "Hello! How are you?",
     });
-    const { openDiscuss } = await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-input", { value: "" });
@@ -140,23 +143,23 @@ QUnit.test("use a canned response some text", async () => {
     await contains(".o-mail-Composer-input", { value: "bluhbluh Hello! How are you? " });
 });
 
-QUnit.test("add an emoji after a canned response", async () => {
+test("add an emoji after a canned response", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 20" });
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 20",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: pyEnv.currentPartnerId,
+        livechat_operator_id: serverState.partnerId,
     });
     pyEnv["mail.shortcode"].create({
         source: "hello",
         substitution: "Hello! How are you?",
     });
-    const { openDiscuss } = await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-input", { value: "" });

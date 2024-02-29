@@ -10,6 +10,7 @@ import { patchWithCleanup } from "../patch_test_helpers";
 import { DEFAULT_FIELD_VALUES, FIELD_SYMBOL } from "./mock_fields";
 import {
     FIELD_NOT_FOUND,
+    Kwargs,
     MockServerError,
     getRecordQualifier,
     safeSplit,
@@ -327,7 +328,7 @@ export class MockServer {
     callOrm(params) {
         const { method, model: modelName } = params;
         const args = params.args || [];
-        const kwargs = params.kwargs || {};
+        const kwargs = Kwargs(params.kwargs || {});
 
         // Try to find a model method
         if (modelName) {

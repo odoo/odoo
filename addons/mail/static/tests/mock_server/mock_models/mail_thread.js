@@ -1,6 +1,8 @@
 import { parseEmail } from "@mail/utils/common/format";
 import { Command, models } from "@web/../tests/web_test_helpers";
 import { serializeDateTime, today } from "@web/core/l10n/dates";
+import { parseModelParams } from "../mail_mock_server";
+import { Kwargs } from "@web/../tests/_framework/mock_server/mock_server_utils";
 
 /**
  * @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr
@@ -19,14 +21,19 @@ export class MailThread extends models.ServerModel {
      * @param {number[]} ids
      * @param {number} [after]
      * @param {number} [limit=100]
-     * @param {KwArgs<{ after: number[]; limit: number }>} [kwargs]
+     * @param {boolean} [filter_recipients]
      */
-    message_get_followers(ids, after, limit, kwargs = {}) {
+    message_get_followers(ids, after, limit = 100, filter_recipients) {
+        const kwargs = parseModelParams(arguments, "ids", "after", "limit");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        after = kwargs.after || 0;
+        limit = kwargs.limit || 100;
+        filter_recipients = kwargs.filter_recipients;
+
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
 
-        after = kwargs.after || after || 0;
-        limit = kwargs.limit || limit || 100;
         const domain = [
             ["res_id", "=", ids[0]],
             ["res_model", "=", this._name],
@@ -35,7 +42,7 @@ export class MailThread extends models.ServerModel {
         if (after) {
             domain.push(["id", ">", after]);
         }
-        if (kwargs.filter_recipients) {
+        if (filter_recipients) {
             domain.push(["partner_id", "!=", this.env.user.partner_id]);
         }
         const followers = MailFollowers._filter(domain).sort(
@@ -45,11 +52,12 @@ export class MailThread extends models.ServerModel {
         return MailFollowers._format_for_chatter(followers.map((follower) => follower.id));
     }
 
-    /**
-     * @param {number[]} ids
-     * @param {KwArgs<{ attachment_ids: number[]; partner_ids: number[] }>} [kwargs]
-     */
-    message_post(ids, kwargs = {}) {
+    /** @param {number[]} ids */
+    message_post(ids) {
+        const kwargs = parseModelParams(arguments, "ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+
         /** @type {import("mock_models").IrAttachment} */
         const IrAttachment = this.env["ir.attachment"];
         /** @type {import("mock_models").MailGuest} */
@@ -83,7 +91,7 @@ export class MailThread extends models.ServerModel {
         delete kwargs.partner_emails;
         delete kwargs.partner_additional_values;
         if (kwargs.context?.mail_post_autofollow && kwargs.partner_ids?.length) {
-            MailThread.message_subscribe.call(this, ids, kwargs.partner_ids, [], []);
+            MailThread.message_subscribe.call(this, ids, kwargs.partner_ids, []);
         }
         if (kwargs.attachment_ids) {
             const attachments = IrAttachment._filter([
@@ -139,24 +147,27 @@ export class MailThread extends models.ServerModel {
 
     /**
      * @param {number[]} ids
-     * @param {number[]} partnerIds
-     * @param {number[]} subTypeIds
-     * @param {KwArgs<{ partner_ids: number[]; subtype_ids: number[] }>} [kwargs]
+     * @param {number[]} partner_ids
+     * @param {number[]} subtype_ids
      */
-    message_subscribe(ids, partnerIds, subTypeIds, kwargs = {}) {
+    message_subscribe(ids, partner_ids, subtype_ids) {
+        const kwargs = parseModelParams(arguments, "ids", "partner_ids", "subtype_ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        partner_ids = kwargs.partner_ids || [];
+        subtype_ids = kwargs.subtype_ids || [];
+
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
         /** @type {import("mock_models").MailMessageSubtype} */
         const MailMessageSubtype = this.env["mail.message.subtype"];
 
-        partnerIds = kwargs.partner_ids || partnerIds || [];
-        subTypeIds = kwargs.subtype_ids || subTypeIds || [];
         for (const id of ids) {
-            for (const partner_id of partnerIds) {
+            for (const partner_id of partner_ids) {
                 let followerId = MailFollowers.search([["partner_id", "=", partner_id]])[0];
                 if (!followerId) {
-                    if (!subTypeIds?.length) {
-                        subTypeIds = MailMessageSubtype.search([
+                    if (!subtype_ids?.length) {
+                        subtype_ids = MailMessageSubtype.search([
                             ["default", "=", true],
                             "|",
                             ["res_model", "=", this._name],
@@ -168,7 +179,7 @@ export class MailThread extends models.ServerModel {
                         partner_id,
                         res_id: id,
                         res_model: this._name,
-                        subtype_ids: subTypeIds,
+                        subtype_ids: subtype_ids,
                     });
                 }
                 this.env[this._name].write(ids, {
@@ -180,21 +191,24 @@ export class MailThread extends models.ServerModel {
 
     /**
      * @param {number[]} ids
-     * @param {number[]} partnerIds
-     * @param {KwArgs<{ partner_ids: number[] }>} [kwargs]
+     * @param {number[]} partner_ids
      */
-    message_unsubscribe(ids, partnerIds, kwargs = {}) {
+    message_unsubscribe(ids, partner_ids) {
+        const kwargs = parseModelParams(arguments, "ids", "partner_ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        partner_ids = kwargs.partner_ids || [];
+
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
 
-        partnerIds = kwargs.partner_ids || partnerIds || [];
-        if (!partnerIds.length) {
+        if (!partner_ids.length) {
             return true;
         }
         const followers = MailFollowers._filter([
             ["res_model", "=", this._name],
             ["res_id", "in", ids],
-            ["partner_id", "in", partnerIds],
+            ["partner_id", "in", partner_ids],
         ]);
         MailFollowers.unlink(followers.map((follower) => follower.id));
     }
@@ -202,10 +216,12 @@ export class MailThread extends models.ServerModel {
     /**
      * Note that this method is overridden by snailmail module but not simulated here.
      *
-     * @param {string} notificationType
-     * @param {KwArgs<{ notification_type: string }>} [kwargs]
+     * @param {string} notification_type
      */
-    notify_cancel_by_type(notificationType, kwargs = {}) {
+    notify_cancel_by_type(notification_type) {
+        const kwargs = parseModelParams(arguments, "notification_type");
+        notification_type = kwargs.notification_type;
+
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").MailMessage} */
@@ -215,10 +231,9 @@ export class MailThread extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        notificationType = kwargs.notification_type || notificationType;
         // Query matching notifications
         const notifications = MailNotification._filter([
-            ["notification_type", "=", notificationType],
+            ["notification_type", "=", notification_type],
             ["notification_status", "in", ["bounce", "exception"]],
         ]).filter((notification) => {
             const message = MailMessage._filter([["id", "=", notification.mail_message_id]])[0];
@@ -241,9 +256,32 @@ export class MailThread extends models.ServerModel {
     /**
      * @param {number} id
      * @param {Object} result
-     * @param {{ email: string; name: string, partner: number; lang: string, reason: string }} [params]
+     * @param {number} partner
+     * @param {string} email
+     * @param {string} lang
+     * @param {string} reason
+     * @param {string} name
      */
-    _message_add_suggested_recipient(id, result, { email, name, partner, lang, reason = "" } = {}) {
+    _message_add_suggested_recipient(id, result, partner, email, lang, reason = "", name) {
+        const kwargs = parseModelParams(
+            arguments,
+            "id",
+            "result",
+            "partner",
+            "email",
+            "lang",
+            "reason",
+            "name"
+        );
+        id = kwargs.id;
+        delete kwargs.id;
+        result = kwargs.result;
+        partner = kwargs.partner;
+        email = kwargs.email;
+        lang = kwargs.lang;
+        reason = kwargs.reason;
+        name = kwargs.name;
+
         /** @type {import("mock_models").MailThread} */
         const MailThread = this.env["mail.thread"];
         /** @type {import("mock_models").ResPartner} */
@@ -280,39 +318,43 @@ export class MailThread extends models.ServerModel {
 
     /**
      * @param {number} [author_id]
-     * @param {string} [emailFrom]
+     * @param {string} [email_from]
      */
-    _message_compute_author(authorId, emailFrom) {
+    _message_compute_author(author_id, email_from) {
+        const kwargs = parseModelParams(arguments, "author_id", "email_from");
+        author_id = kwargs.author_id;
+        email_from = kwargs.email_from;
+
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        if (!authorId) {
+        if (!author_id) {
             // For simplicity partner is not guessed from email_from here, but
             // that would be the first step on the server.
             const author = ResPartner._filter([["id", "=", this.env.user.partner_id]], {
                 active_test: false,
             })[0];
-            authorId = author.id;
-            emailFrom = `${author.display_name} <${author.email}>`;
+            author_id = author.id;
+            email_from = `${author.display_name} <${author.email}>`;
         }
-        if (!emailFrom && authorId) {
-            const author = ResPartner._filter([["id", "=", authorId]], {
+        if (!email_from && author_id) {
+            const author = ResPartner._filter([["id", "=", author_id]], {
                 active_test: false,
             })[0];
-            emailFrom = `${author.display_name} <${author.email}>`;
+            email_from = `${author.display_name} <${author.email}>`;
         }
-        if (emailFrom === undefined) {
-            if (authorId) {
-                const author = ResPartner._filter([["id", "=", authorId]], {
+        if (email_from === undefined) {
+            if (author_id) {
+                const author = ResPartner._filter([["id", "=", author_id]], {
                     active_test: false,
                 })[0];
-                emailFrom = `${author.display_name} <${author.email}>`;
+                email_from = `${author.display_name} <${author.email}>`;
             }
         }
-        if (!emailFrom) {
+        if (!email_from) {
             throw Error("Unable to log message due to missing author email.");
         }
-        return [authorId, emailFrom];
+        return [author_id, email_from];
     }
 
     /** @param {number[]} ids */
@@ -343,11 +385,15 @@ export class MailThread extends models.ServerModel {
                 if (user.partner_id) {
                     const reason = model._fields["user_id"].string;
                     const partner = ResPartner._filter([["id", "=", user.partner_id]]);
-                    MailThread._message_add_suggested_recipient.call(this, result, {
-                        email: partner.email,
-                        partner: user.partner_id,
-                        reason,
-                    });
+                    MailThread._message_add_suggested_recipient.call(
+                        this,
+                        result,
+                        Kwargs({
+                            email: partner.email,
+                            partner: user.partner_id,
+                            reason,
+                        })
+                    );
                 }
             }
         }
@@ -358,10 +404,16 @@ export class MailThread extends models.ServerModel {
      * Simplified version that sends notification to author and channel.
      *
      * @param {number[]} ids
-     * @param {number} messageId
+     * @param {number} message_id
      * @param {number} [temporary_id]
      */
     _notify_thread(ids, message_id, temporary_id) {
+        const kwargs = parseModelParams(arguments, "ids", "message_id", "temporary_id");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        message_id = kwargs.message_id;
+        temporary_id = kwargs.temporary_id;
+
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").DiscussChannel} */
@@ -417,23 +469,27 @@ export class MailThread extends models.ServerModel {
     }
 
     /**
-     * @param {string[]} trackedFieldNames
-     * @param {Object} initialTrackedFieldValuesByRecordId
+     * @param {string[]} fields_iter
+     * @param {Object} initial_values_dict
      */
-    _message_track(trackedFieldNames, initialTrackedFieldValuesByRecordId) {
+    _message_track(fields_iter, initial_values_dict) {
+        const kwargs = parseModelParams(arguments, "fields_iter", "initial_values_dict");
+        fields_iter = kwargs.fields_iter;
+        initial_values_dict = kwargs.initial_values_dict;
+
         /** @type {import("mock_models").Base} */
         const Base = this.env["base"];
         /** @type {import("mock_models").MailThread} */
         const MailThread = this.env["mail.thread"];
 
-        const trackFieldNamesToField = this.env[this._name].fields_get(trackedFieldNames);
+        const trackFieldNamesToField = this.env[this._name].fields_get(fields_iter);
         const tracking = {};
         const model = this.env[this._name];
         for (const record of model) {
             tracking[record.id] = Base._mail_track.call(
                 this,
                 trackFieldNamesToField,
-                initialTrackedFieldValuesByRecordId[record.id],
+                initial_values_dict[record.id],
                 record
             );
         }
@@ -443,7 +499,7 @@ export class MailThread extends models.ServerModel {
                 continue;
             }
             const changedFieldsInitialValues = {};
-            const initialFieldValues = initialTrackedFieldValuesByRecordId[record.id];
+            const initialFieldValues = initial_values_dict[record.id];
             for (const fname in changedFieldNames) {
                 changedFieldsInitialValues[fname] = initialFieldValues[fname];
             }
@@ -456,18 +512,18 @@ export class MailThread extends models.ServerModel {
         return tracking;
     }
 
-    /**
-     * @param {string[]} trackedFieldNames
-     * @param {Object} initialTrackedFieldValuesByRecordId
-     */
-    _track_finalize(initialTrackedFieldValuesByRecordId) {
+    /** @param {Object} initial_values */
+    _track_finalize(initial_values) {
+        const kwargs = parseModelParams(arguments, "initial_values");
+        initial_values = kwargs.initial_values;
+
         /** @type {import("mock_models").MailThread} */
         const MailThread = this.env["mail.thread"];
 
         MailThread._message_track.call(
             this,
             MailThread._track_get_fields.call(this),
-            initialTrackedFieldValuesByRecordId
+            initial_values
         );
     }
 
@@ -499,12 +555,17 @@ export class MailThread extends models.ServerModel {
         return initialTrackedFieldValuesByRecordId;
     }
 
-    /** @param {Object} initialFieldValuesByRecordId */
-    _track_subtype(initialFieldValuesByRecordId) {
+    /** @param {Object} initial_values */
+    _track_subtype(initial_values) {
         return false;
     }
 
     _get_mail_thread_data(id, request_list) {
+        const kwargs = parseModelParams(arguments, "id", "request_list");
+        id = kwargs.id;
+        delete kwargs.id;
+        request_list = kwargs.request_list;
+
         /** @type {import("mock_models").IrAttachment} */
         const IrAttachment = this.env["ir.attachment"];
         /** @type {import("mock_models").MailActivity} */
@@ -561,9 +622,13 @@ export class MailThread extends models.ServerModel {
                 : false;
             res["followers"] = MailThread.message_get_followers.call(this, [id]);
             res["recipientsCount"] = (thread.message_follower_ids || []).length - 1;
-            res["recipients"] = MailThread.message_get_followers.call(this, [id], undefined, 100, {
-                filter_recipients: true,
-            });
+            res["recipients"] = MailThread.message_get_followers.call(
+                this,
+                [id],
+                undefined,
+                100,
+                Kwargs({ filter_recipients: true })
+            );
         }
         if (request_list.includes("suggestedRecipients")) {
             res["suggestedRecipients"] = MailThread._message_get_suggested_recipients.call(this, [

@@ -1,4 +1,5 @@
 import { models } from "@web/../tests/web_test_helpers";
+import { parseModelParams } from "../mail_mock_server";
 
 export class DiscussChannelRtcSession extends models.ServerModel {
     _name = "discuss.channel.rtc.session";
@@ -29,6 +30,11 @@ export class DiscussChannelRtcSession extends models.ServerModel {
      * @param {{ extra?; boolean }} options
      */
     _mail_rtc_session_format(id, { extra } = {}) {
+        const kwargs = parseModelParams(arguments, "id", "extra");
+        id = kwargs.id;
+        delete kwargs.id;
+        extra = kwargs.extra;
+
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
 
@@ -52,9 +58,14 @@ export class DiscussChannelRtcSession extends models.ServerModel {
 
     /**
      * @param {number[]} ids
-     * @param {{ extra?; boolean }} options
+     * @param {boolean} extra
      */
-    _mail_rtc_session_format_by_channel(ids, options) {
+    _mail_rtc_session_format_by_channel(ids, extra) {
+        const kwargs = parseModelParams(arguments, "ids", "extra");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        extra = kwargs.extra;
+
         /** @type {import("mock_models").DiscussChanneleMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
 
@@ -66,7 +77,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
             if (!data[member.channel_id[0]]) {
                 data[member.channel_id[0]] = [];
             }
-            data[member.channel_id[0]].push(this._mail_rtc_session_format(rtcSession.id, options));
+            data[member.channel_id[0]].push(this._mail_rtc_session_format(rtcSession.id, extra));
         }
         return data;
     }
@@ -76,6 +87,11 @@ export class DiscussChannelRtcSession extends models.ServerModel {
      * @param {object} values
      */
     _update_and_broadcast(id, values) {
+        const kwargs = parseModelParams(arguments, "id", "values");
+        id = kwargs.id;
+        delete kwargs.id;
+        values = kwargs.values;
+
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").DiscussChannel} */

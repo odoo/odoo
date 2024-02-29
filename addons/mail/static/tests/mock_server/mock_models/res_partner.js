@@ -1,5 +1,6 @@
 import { fields, webModels } from "@web/../tests/web_test_helpers";
 import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
+import { parseModelParams } from "../mail_mock_server";
 
 /**
  * @typedef {import("@web/../tests/web_test_helpers").ModelRecord} ModelRecord
@@ -32,15 +33,16 @@ export class ResPartner extends webModels.ResPartner {
     /**
      * @param {string} [search]
      * @param {number} [limit]
-     * @param {KwArgs<{ limit: number; search: string }>} [kwargs]
-     * @returns {ModelRecord[]}
      */
-    get_mention_suggestions(search, limit, kwargs = {}) {
+    get_mention_suggestions(search, limit = 8) {
+        const kwargs = parseModelParams(arguments, "search", "limit");
+        search = kwargs.search || "";
+        limit = kwargs.limit || 8;
+
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        search = (kwargs.search || search || "").toLowerCase();
-        limit = kwargs.limit || limit || 8;
+        search = search.toLowerCase();
         /**
          * Returns the given list of partners after filtering it according to
          * the logic of the Python method `get_mention_suggestions` for the
@@ -96,22 +98,22 @@ export class ResPartner extends webModels.ResPartner {
     }
 
     /**
+     * @param {number} [channel_id]
      * @param {string} [search]
      * @param {number} [limit]
-     * @param {number} [channelId]
-     * @param {KwArgs<{ channel_id: number; limit: number; search: string }>} [kwargs]
-     * @returns {ModelRecord[]}
      */
-    get_mention_suggestions_from_channel(search, limit, channelId, kwargs = {}) {
+    get_mention_suggestions_from_channel(channel_id, search, limit = 8) {
+        const kwargs = parseModelParams(arguments, "channel_id", "search", "limit");
+        channel_id = kwargs.channel_id;
+        search = kwargs.search || "";
+        limit = kwargs.limit || 8;
+
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        search = (kwargs.search || search || "").toLowerCase();
-        limit = kwargs.limit || limit || 8;
-        channelId = kwargs.channel_id || channelId;
-
+        search = search.toLowerCase();
         /**
          * Returns the given list of partners after filtering it according to
          * the logic of the Python method `get_mention_suggestions` for the
@@ -129,7 +131,7 @@ export class ResPartner extends webModels.ResPartner {
                     partners
                         .filter((partner) => {
                             const [member] = DiscussChannelMember._filter([
-                                ["channel_id", "=", channelId],
+                                ["channel_id", "=", channel_id],
                                 ["partner_id", "=", partner.id],
                             ]);
                             if (!member) {
@@ -152,7 +154,7 @@ export class ResPartner extends webModels.ResPartner {
                 )
             ).map((partnerFormat) => {
                 const [member] = DiscussChannelMember._filter([
-                    ["channel_id", "=", channelId],
+                    ["channel_id", "=", channel_id],
                     ["partner_id", "=", partnerFormat.id],
                 ]);
                 partnerFormat["channelMembers"] = [
@@ -184,17 +186,19 @@ export class ResPartner extends webModels.ResPartner {
 
     /**
      * @param {string} [name]
-     * @param {number} [limit]
-     * @param {number[]} [excludedIds]
-     * @param {KwArgs<{ excluded_ids: number[]; limit: number; name: string }>} [kwargs]
+     * @param {number} [limit = 20]
+     * @param {number[]} [excluded_ids]
      */
-    im_search(name, limit, excludedIds, kwargs = {}) {
+    im_search(name, limit = 20, excluded_ids) {
+        const kwargs = parseModelParams(arguments, "name", "limit", "excluded_ids");
+        name = kwargs.name || "";
+        limit = kwargs.limit || 20;
+        excluded_ids = kwargs.excluded_ids || [];
+
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        name = (kwargs.name || name || "").toLowerCase(); // simulates ILIKE
-        limit = kwargs.limit || limit || 20;
-        excludedIds = kwargs.excluded_ids || excludedIds || [];
+        name = name.toLowerCase(); // simulates ILIKE
         // simulates domain with relational parts (not supported by mock server)
         const matchingPartners = ResUsers._filter([])
             .filter((user) => {
@@ -226,7 +230,7 @@ export class ResPartner extends webModels.ResPartner {
             .sort((a, b) => (a.name === b.name ? a.id - b.id : a.name > b.name ? 1 : -1));
         matchingPartners.length = Math.min(matchingPartners.length, limit);
         const resultPartners = matchingPartners.filter(
-            (partner) => !excludedIds.includes(partner.id)
+            (partner) => !excluded_ids.includes(partner.id)
         );
         return Object.values(this.mail_partner_format(resultPartners.map((partner) => partner.id)));
     }
@@ -272,23 +276,24 @@ export class ResPartner extends webModels.ResPartner {
     }
 
     /**
-     * @param {string} [searchTerm]
-     * @param {number} [channelId]
+     * @param {string} [search_term]
+     * @param {number} [channel_id]
      * @param {number} [limit]
-     * @param {KwArgs<{ channelId: number; limit: number; search_term: string }>} [kwargs]
      */
-    search_for_channel_invite(searchTerm, channelId, limit, kwargs = {}) {
+    search_for_channel_invite(search_term, channel_id, limit = 30) {
+        const kwargs = parseModelParams(arguments, "search_term", "channel_id", "limit");
+        search_term = kwargs.search_term || "";
+        channel_id = kwargs.channel_id;
+        limit = kwargs.limit || 30;
+
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        searchTerm = (kwargs.search_term || searchTerm || "").toLowerCase(); // simulates ILIKE
-        channelId = kwargs.channel_id || channelId;
-        limit = kwargs.limit || limit || 30;
-
+        search_term = search_term.toLowerCase(); // simulates ILIKE
         const memberPartnerIds = new Set(
-            DiscussChannelMember._filter([["channel_id", "=", channelId]]).map(
+            DiscussChannelMember._filter([["channel_id", "=", channel_id]]).map(
                 (member) => member.partner_id
             )
         );
@@ -307,10 +312,10 @@ export class ResPartner extends webModels.ResPartner {
                             return false;
                         }
                         // no name is considered as return all
-                        if (!searchTerm) {
+                        if (!search_term) {
                             return true;
                         }
-                        if (partner.name && partner.name.toLowerCase().includes(searchTerm)) {
+                        if (partner.name && partner.name.toLowerCase().includes(search_term)) {
                             return true;
                         }
                         return false;
@@ -351,9 +356,9 @@ export class ResPartner extends webModels.ResPartner {
         /** @type {import("mock_models").MailNotification} */
         const MailNotification = this.env["mail.notification"];
 
-        const partner = this._filter([["id", "=", id]], {
+        const [partner] = this._filter([["id", "=", id]], {
             active_test: false,
-        })[0];
+        });
         const messages = MailMessage._filter([
             ["author_id", "=", partner.id],
             ["res_id", "!=", 0],

@@ -37,4 +37,8 @@ export class MailGuest extends models.ServerModel {
             })
         );
     }
+
+    _set_auth_cookie(guestId) {
+        this.env.cookie.set("dgid", guestId);
+    }
 }

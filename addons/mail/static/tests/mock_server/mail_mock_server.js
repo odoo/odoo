@@ -1,6 +1,7 @@
 import { serverState } from "@web/../tests/web_test_helpers";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
+import { Kwargs, isKwargs } from "@web/../tests/_framework/mock_server/mock_server_utils";
 
 export const DISCUSS_ACTION_ID = 104;
 
@@ -11,12 +12,38 @@ export const DISCUSS_ACTION_ID = 104;
 
 const { DateTime } = luxon;
 
-//-----------------------------------------------------------------------------
-// Internal
-//-----------------------------------------------------------------------------
+/**
+ * @param {Array} param arguments of method
+ * @param  {...string} argNames ordered names of positional arguments
+ * @returns {Object} kwargs normalized params
+ */
+export const parseModelParams = (params, ...argNames) => {
+    const params2 = [...params];
+    const last = params2[params2.length - 1];
+    let args;
+    let kwargs = Kwargs({});
+    // if (typeof last === "object" && !Array.isArray(last) && !(last instanceof models.Model)) {
+    if (isKwargs(last)) {
+        kwargs = last;
+        params2.pop();
+        args = [...params2];
+    } else {
+        args = [...params2];
+    }
+    if (args.length > argNames.length) {
+        throw "more positional args than there are defined arg names";
+    }
+    for (let i = 0; i < args.length; i++) {
+        if (argNames[i] in kwargs) {
+            continue;
+        }
+        kwargs[argNames[i]] = args[i];
+    }
+    return kwargs;
+};
 
 /** @param {Request} request */
-const parseRequestParams = async (request) => {
+export const parseRequestParams = async (request) => {
     const response = await request.json();
     return response.params;
 };
@@ -27,7 +54,7 @@ const onRpcBeforeGlobal = {
 // using a registry category to not expose for manual import
 // We should use `onRpcBefore` with 1st parameter being (route, args) callback function
 registry.category("mail.on_rpc_before_global").add(true, onRpcBeforeGlobal);
-function registerRoute(route, handler) {
+export function registerRoute(route, handler) {
     const beforeCallableHandler = async function (request) {
         let args;
         try {
@@ -474,12 +501,16 @@ export async function mail_message_post(request) {
             finalData[allowedField] = post_data[allowedField];
         }
     }
-    const kwargs = { ...finalData, context };
+    const kwargs = Kwargs({ ...finalData, context });
     if (thread_model === "discuss.channel") {
         return DiscussChannel.message_post(thread_id, kwargs);
     }
     const model = this.env[thread_model];
-    return MailThread.message_post.call(model, [thread_id], { ...kwargs, model: thread_model });
+    return MailThread.message_post.call(
+        model,
+        [thread_id],
+        Kwargs({ ...kwargs, model: thread_model })
+    );
 }
 
 registerRoute("/mail/message/reaction", mail_message_add_reaction);

@@ -1,6 +1,19 @@
 import { makeErrorFromResponse } from "@web/core/network/rpc";
 
 /**
+ * flag kwargs, so that they can model methods can be easily parsed to combine args/kwargs like in python
+ * @see parseModelParams
+ */
+const IS_KWARGS = Symbol("is_kwargs");
+export function isKwargs(kwargs) {
+    return kwargs?.[IS_KWARGS];
+}
+export function Kwargs(obj) {
+    obj[IS_KWARGS] = true;
+    return obj;
+}
+
+/**
  * @param {import("./mock_model").ModelRecord} record
  */
 export function getRecordQualifier(record) {

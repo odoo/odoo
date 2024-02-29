@@ -1,5 +1,6 @@
 import { models } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
+import { parseModelParams } from "../mail_mock_server";
 
 patch(models.ServerModel.prototype, {
     /**
@@ -26,6 +27,16 @@ export class Base extends models.ServerModel {
      * @param {Object} record
      */
     _mail_track(trackedFieldNamesToField, initialTrackedFieldValues, record) {
+        const kwargs = parseModelParams(
+            arguments,
+            "trackedFieldNamesToField",
+            "initialTrackedFieldValues",
+            "record"
+        );
+        trackedFieldNamesToField = kwargs.trackedFieldNamesToField;
+        initialTrackedFieldValues = kwargs.initialTrackedFieldValues;
+        record = kwargs.record;
+
         /** @type {import("mock_models").MailTrackingValue} */
         const MailTrackingValue = this.env["mail.tracking.value"];
 

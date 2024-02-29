@@ -4,6 +4,7 @@ import { deserializeDate, serializeDate, today } from "@web/core/l10n/dates";
 import { fields, models, serverState } from "@web/../tests/web_test_helpers";
 import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
 import { MailActivityType } from "./mail_activity_type";
+import { parseModelParams } from "../mail_mock_server";
 
 /**
  * @template T
@@ -105,14 +106,27 @@ export class MailActivity extends models.ServerModel {
     }
 
     /**
-     * @param {string} resModel
+     * @param {string} res_model
      * @param {string} domain
      * @param {number} limit
      * @param {number} offset
      * @param {boolean} fetch_done
-     * @param {KwArgs<>} [kwargs]
      */
-    get_activity_data(resModel, domain, limit = 0, offset = 0, fetch_done, kwargs = {}) {
+    get_activity_data(res_model, domain, limit = 0, offset = 0, fetch_done) {
+        const kwargs = parseModelParams(
+            arguments,
+            "res_model",
+            "domain",
+            "limit",
+            "offset",
+            "fetch_done"
+        );
+        res_model = kwargs.res_model;
+        domain = kwargs.domain;
+        limit = kwargs.limit || 0;
+        offset = kwargs.offset || 0;
+        fetch_done = kwargs.fetch_done ?? false;
+
         /** @type {import("mock_models").IrAttachment} */
         const IrAttachment = this.env["ir.attachment"];
         /** @type {import("mock_models").MailActivityType} */
@@ -120,34 +134,27 @@ export class MailActivity extends models.ServerModel {
         /** @type {import("mock_models").MailTemplate} */
         const MailTemplate = this.env["mail.template"];
 
-        resModel = kwargs.res_model || resModel;
-        domain = kwargs.domain || domain;
-        limit = kwargs.limit || limit || 0;
-        offset = kwargs.offset || offset || 0;
-        fetch_done = kwargs.fetch_done ?? fetch_done ?? false;
-
         // 1. Retrieve all ongoing and completed activities according to the parameters
         const activityTypes = MailActivityType._filter([
             "|",
-            ["res_model", "=", resModel],
+            ["res_model", "=", res_model],
             ["res_model", "=", false],
         ]);
         // Remove domain term used to filter record having "done" activities (not understood by the _filter mock)
         domain = Domain.removeDomainLeaves(new Domain(domain ?? []).toList(), [
             "activity_ids.active",
         ]).toList();
-        const allRecords = this.env[resModel]._filter(domain ?? []);
+        const allRecords = this.env[res_model]._filter(domain ?? []);
         const records = limit ? allRecords.slice(offset, offset + limit) : allRecords;
-        const activityDomain = [["res_model", "=", resModel]];
+        const activityDomain = [["res_model", "=", res_model]];
         const isFiltered = domain || limit || offset;
         const domainResIds = records.map((r) => r.id);
         if (isFiltered) {
             activityDomain.push(["res_id", "in", domainResIds]);
         }
-        const allActivities = this._filter(activityDomain, { active_test: !resModel });
+        const allActivities = this._filter(activityDomain, { active_test: !res_model });
         const allOngoing = allActivities.filter((a) => a.active);
         const allCompleted = allActivities.filter((a) => !a.active);
-
         // 2. Get attachment of completed activities
         let attachmentsById;
         if (allCompleted.length) {
@@ -160,11 +167,9 @@ export class MailActivity extends models.ServerModel {
         } else {
             attachmentsById = {};
         }
-
         // 3. Group activities per records and activity type
         const groupedCompleted = groupBy(allCompleted, (a) => [a.res_id, a.activity_type_id]);
         const groupedOngoing = groupBy(allOngoing, (a) => [a.res_id, a.activity_type_id]);
-
         // 4. Format data
         const resIdToDeadline = {};
         const resIdToDateDone = {};
@@ -240,7 +245,6 @@ export class MailActivity extends models.ServerModel {
                 ...attachmentsInfo,
             };
         }
-
         const ongoingResIds = sortBy(Object.keys(resIdToDeadline), (item) => resIdToDeadline[item]);
         const completedResIds = sortBy(
             Object.keys(resIdToDateDone).filter((resId) => !(resId in resIdToDeadline)),

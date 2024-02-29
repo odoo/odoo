@@ -1,15 +1,17 @@
-/* @odoo-module */
+import { test } from "@odoo/hoot";
+import {
+    click,
+    contains,
+    openDiscuss,
+    startClient,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { defineLivechatModels } from "./livechat_test_helpers";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+defineLivechatModels();
 
-import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.module("Thread model");
-
-QUnit.test("Thread name unchanged when inviting new users", async () => {
+test("Thread name unchanged when inviting new users", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "James" });
     pyEnv["res.partner"].create({
@@ -20,13 +22,13 @@ QUnit.test("Thread name unchanged when inviting new users", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor #20",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: pyEnv.currentPartnerId,
+        livechat_operator_id: serverState.partnerId,
     });
-    const { openDiscuss } = await start();
+    await startClient();
     await openDiscuss(channelId);
     await contains(".o-mail-Discuss-threadName[title='Visitor #20']");
     await click("button[title='Add Users']");

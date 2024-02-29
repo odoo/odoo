@@ -1,4 +1,5 @@
 import { Command, fields, models, serverState } from "@web/../tests/web_test_helpers";
+import { parseModelParams } from "../mail_mock_server";
 
 /**
  * @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr
@@ -25,11 +26,11 @@ export class MailMessage extends models.ServerModel {
     });
     pinned_at = fields.Generic({ default: false });
 
-    /**
-     * @param {DomainListRepr} [domain]
-     * @param {KwArgs<{ domain: DomainListRepr }>} [kwargs]
-     */
-    mark_all_as_read(domain, kwargs = {}) {
+    /** @param {DomainListRepr} [domain] */
+    mark_all_as_read(domain) {
+        const kwargs = parseModelParams(arguments, "domain");
+        domain = kwargs.domain || [];
+
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").MailNotification} */
@@ -37,7 +38,6 @@ export class MailMessage extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        domain = kwargs.domain || domain || [];
         const notifDomain = [
             ["res_partner_id", "=", this.env.user.partner_id],
             ["is_read", "=", false],
@@ -77,11 +77,8 @@ export class MailMessage extends models.ServerModel {
         return messageIds;
     }
 
-    /**
-     * @param {number[]} ids
-     * @param {KwArgs} [kwargs]
-     */
-    message_format(ids, kwargs = {}) {
+    /** @param {number[]} ids */
+    message_format(ids) {
         /** @type {import("mock_models").IrAttachment} */
         const IrAttachment = this.env["ir.attachment"];
         /** @type {import("mock_models").MailGuest} */
@@ -239,9 +236,8 @@ export class MailMessage extends models.ServerModel {
      * messages have been marked as read, so that UI is updated.
      *
      * @param {number[]} ids
-     * @param {KwArgs} [kwargs]
      */
-    set_message_done(ids, kwargs = {}) {
+    set_message_done(ids) {
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").MailNotification} */
@@ -280,11 +276,8 @@ export class MailMessage extends models.ServerModel {
         }
     }
 
-    /**
-     * @param {number[]} ids
-     * @param {KwArgs} [kwargs]
-     */
-    toggle_message_starred(ids, kwargs = {}) {
+    /** @param {number[]} ids */
+    toggle_message_starred(ids) {
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").ResPartner} */
@@ -308,8 +301,7 @@ export class MailMessage extends models.ServerModel {
         }
     }
 
-    /** @param {KwArgs} [kwargs] */
-    unstar_all(kwargs = {}) {
+    unstar_all() {
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").ResPartner} */
@@ -327,8 +319,8 @@ export class MailMessage extends models.ServerModel {
         });
     }
 
-    /** @param {number} messageId */
-    _bus_notification_target(messageId) {
+    /** @param {number} id */
+    _bus_notification_target(id) {
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").MailGuest} */
@@ -338,7 +330,7 @@ export class MailMessage extends models.ServerModel {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        const [message] = this.search_read([["id", "=", messageId]]);
+        const [message] = this.search_read([["id", "=", id]]);
         if (message.model === "discuss.channel") {
             return DiscussChannel.search_read([["id", "=", message.res_id]])[0];
         }
@@ -349,11 +341,17 @@ export class MailMessage extends models.ServerModel {
     }
 
     /**
-     * @param {number} messageId
+     * @param {number} id
      * @param {string} content
      * @param {string} action
      */
-    _message_reaction(messageId, content, action) {
+    _message_reaction(id, content, action) {
+        const kwargs = parseModelParams(arguments, "id", "content", "action");
+        id = kwargs.id;
+        delete kwargs.id;
+        content = kwargs.content;
+        action = kwargs.action;
+
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").MailGuest} */
@@ -365,13 +363,13 @@ export class MailMessage extends models.ServerModel {
 
         const [reaction] = MailMessageReaction.search_read([
             ["content", "=", content],
-            ["message_id", "=", messageId],
+            ["message_id", "=", id],
             ["partner_id", "=", this.env.user.partner_id],
         ]);
         if (action === "add" && !reaction) {
             MailMessageReaction.create({
                 content,
-                message_id: messageId,
+                message_id: id,
                 partner_id: this.env.user.partner_id,
             });
         }
@@ -379,20 +377,20 @@ export class MailMessage extends models.ServerModel {
             MailMessageReaction.unlink(reaction.id);
         }
         const reactions = MailMessageReaction.search([
-            ["message_id", "=", messageId],
+            ["message_id", "=", id],
             ["content", "=", content],
         ]);
         const guest = MailGuest._get_guest_from_context();
         const [partner] = ResPartner.read(this.env.user.partner_id);
         const result = {
-            id: messageId,
+            id,
             reactions: [
                 [
                     reactions.length > 0 ? "ADD" : "DELETE",
                     {
                         content,
                         count: reactions.length,
-                        message: { id: messageId },
+                        message: { id },
                         personas: [
                             [
                                 action === "add" ? "ADD" : "DELETE",
@@ -407,7 +405,7 @@ export class MailMessage extends models.ServerModel {
                 ],
             ],
         };
-        BusBus._sendone(this._bus_notification_target(messageId), "mail.record/insert", {
+        BusBus._sendone(this._bus_notification_target(id), "mail.record/insert", {
             Message: result,
         });
     }
@@ -419,7 +417,23 @@ export class MailMessage extends models.ServerModel {
      * @param {number} [limit=30]
      * @returns {Object[]}
      */
-    _message_fetch(domain, search_term, before, after, around, limit = 30) {
+    _message_fetch(domain, search_term, before, after, around, limit) {
+        const kwargs = parseModelParams(
+            arguments,
+            "domain",
+            "search_term",
+            "before",
+            "after",
+            "around",
+            "limit"
+        );
+        domain = kwargs.domain;
+        search_term = kwargs.search_term;
+        before = kwargs.before;
+        after = kwargs.after;
+        around = kwargs.around;
+        limit = kwargs.limit || 30;
+
         const res = {};
         if (search_term) {
             search_term = search_term.replace(" ", "%");

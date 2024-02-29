@@ -1,5 +1,6 @@
 import { fields, models } from "@web/../tests/web_test_helpers";
 import { serializeDateTime, today } from "@web/core/l10n/dates";
+import { parseModelParams } from "../mail_mock_server";
 
 export class DiscussChannelMember extends models.ServerModel {
     _name = "discuss.channel.member";
@@ -11,9 +12,14 @@ export class DiscussChannelMember extends models.ServerModel {
 
     /**
      * @param {number[]} ids
-     * @param {boolean} isTyping
+     * @param {boolean} is_typing
      */
-    notify_typing(ids, isTyping) {
+    notify_typing(ids, is_typing) {
+        const kwargs = parseModelParams(arguments, "ids", "is_typing");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        is_typing = kwargs.is_typing;
+
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").DiscussChannel} */
@@ -24,7 +30,7 @@ export class DiscussChannelMember extends models.ServerModel {
         for (const member of members) {
             const [channel] = DiscussChannel._filter([["id", "=", member.channel_id]]);
             const [data] = this._discuss_channel_member_format([member.id]);
-            Object.assign(data, { isTyping });
+            Object.assign(data, { isTyping: is_typing });
             notifications.push([channel, "discuss.channel.member/typing_status", data]);
             notifications.push([channel.uuid, "discuss.channel.member/typing_status", data]);
         }
@@ -35,9 +41,14 @@ export class DiscussChannelMember extends models.ServerModel {
      * @param {number} id
      * @param {string} [state]
      * @param {number} [state_count]
-     * @param {KwArgs} [kwargs]
      */
-    _channel_fold(id, state, state_count, kwargs = {}) {
+    _channel_fold(id, state, state_count) {
+        const kwargs = parseModelParams(arguments, "id", "state", "state_count");
+        id = kwargs.id;
+        delete kwargs.id;
+        state = kwargs.state;
+        state_count = kwargs.state_count;
+
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").MailGuest} */
@@ -66,6 +77,10 @@ export class DiscussChannelMember extends models.ServerModel {
 
     /** @param {number[]} ids */
     _discuss_channel_member_format(ids) {
+        const kwargs = parseModelParams(arguments, "ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+
         /** @type {import("mock_models").MailGuest} */
         const MailGuest = this.env["mail.guest"];
 
@@ -79,7 +94,7 @@ export class DiscussChannelMember extends models.ServerModel {
             }
             if (member.guest_id) {
                 const [guest] = MailGuest._filter([["id", "=", member.guest_id]]);
-                persona = MailGuest._guest_format([guest.id]).get(guest.id);
+                persona = MailGuest._guest_format([guest.id])[guest.id];
             }
             const data = {
                 create_date: member.create_date,
@@ -98,6 +113,10 @@ export class DiscussChannelMember extends models.ServerModel {
 
     /** @param {number[]} ids */
     _get_partner_data(ids) {
+        const kwargs = parseModelParams(arguments, "ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 

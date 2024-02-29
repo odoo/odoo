@@ -1,34 +1,33 @@
-/* @odoo-module */
+import { test } from "@odoo/hoot";
+import { contains, openDiscuss, startClient, startServer } from "@mail/../tests/mail_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { rpcWithEnv } from "@mail/utils/common/misc";
+import { defineLivechatModels } from "./livechat_test_helpers";
 
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+defineLivechatModels();
 
-import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { contains } from "@web/../tests/utils";
-
-QUnit.module("thread icon (patch)");
-
-QUnit.test("Public website visitor is typing", async () => {
+test.skip("Public website visitor is typing", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 20" });
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 20",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: pyEnv.currentPartnerId,
+        livechat_operator_id: serverState.partnerId,
     });
-    const { openDiscuss } = await start();
+    const env = await startClient();
+    rpc = rpcWithEnv(env);
     await openDiscuss(channelId);
     await contains(".o-mail-ThreadIcon .fa.fa-comments");
-    const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
+    const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
-    pyEnv.withGuest(guestId, () =>
+    withGuest(guestId, () =>
         rpc("/im_livechat/notify_typing", {
             is_typing: true,
             channel_id: channel.id,

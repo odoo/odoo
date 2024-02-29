@@ -25,7 +25,7 @@ export class IrWebSocket extends busModels.IrWebSocket {
 
     /**
      * @override
-     * @type {typeof busModels.WebSocket["prototype"]["_build_bus_channel_list"]}
+     * @type {typeof busModels.IrWebSocket["prototype"]["_build_bus_channel_list"]}
      */
     _build_bus_channel_list(channels) {
         /** @type {import("mock_models").DiscussChannel} */

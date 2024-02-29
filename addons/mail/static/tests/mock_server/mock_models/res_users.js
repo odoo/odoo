@@ -8,16 +8,6 @@ import { DISCUSS_ACTION_ID } from "../mail_mock_server";
  */
 
 export class ResUsers extends webModels.ResUsers {
-    constructor() {
-        super(...arguments);
-        // this._records.push({
-        //     id: serverState.odoobotId,
-        //     active: false,
-        //     login: "odoobot",
-        //     partner_id: serverState.odoobotId,
-        //     password: "odoobot",
-        // });
-    }
     /** Simulates `_init_store_data` on `res.users`. */
     _init_store_data() {
         /** @type {import("mock_models").ResPartner} */
@@ -64,8 +54,7 @@ export class ResUsers extends webModels.ResUsers {
         }
         return res;
     }
-    /** @param {KwArgs} [kwargs] */
-    systray_get_activities(kwargs = {}) {
+    systray_get_activities() {
         /** @type {import("mock_models").MailActivity} */
         const MailActivity = this.env["mail.activity"];
 
@@ -152,54 +141,6 @@ export class ResUsers extends webModels.ResUsers {
                     .length,
             },
         };
-        // const Channel = this.env["discuss.channel"];
-        // const Partner = this.env["res.partner"];
-        // const Settings = this.env["res.users.settings"];
-
-        // const [user] = this._filter([["id", "in", ids]]);
-        // const userSettings = Settings._find_or_create_for_user(user.id);
-        // const channels = Channel.get_channels_as_member();
-        // const members = this.env["discuss.channel.member"]._filter([
-        //     ["channel_id", "in", channels.map((channel) => channel.id)],
-        //     ["partner_id", "=", user.partner_id],
-        // ]);
-
-        // return {
-        //     CannedResponse: this.env["mail.shortcode"].search_read([], {
-        //         fields: ["source", "substitution"],
-        //     }),
-        //     Store: {
-        //         action_discuss_id: DISCUSS_ACTION_ID,
-        //         current_user_id: this.env.uid,
-        //         discuss: {
-        //             inbox: {
-        //                 counter: Partner._get_needaction_count(user.partner_id),
-        //                 id: "inbox",
-        //                 model: "mail.box",
-        //             },
-        //             starred: {
-        //                 counter: this.env["mail.message"]._filter([
-        //                     ["starred_partner_ids", "in", user.partner_id],
-        //                 ]).length,
-        //                 id: "starred",
-        //                 model: "mail.box",
-        //             },
-        //         },
-        //         hasGifPickerFeature: true,
-        //         hasLinkPreviewFeature: true,
-        //         hasMessageTranslationFeature: true,
-        //         initBusId: this.lastBusNotificationId,
-        //         initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
-        //             .length,
-        //         menu_id: false, // not useful in QUnit tests
-        //         odoobot: Partner.mail_partner_format(serverState.odoobotId)[serverState.odoobotId],
-        //         self: Partner.mail_partner_format(user.partner_id)[user.partner_id],
-        //         settings: Settings.res_users_settings_format(userSettings.id),
-        //     },
-        //     Thread: Channel.channel_info(
-        //         Channel._getInitChannels(user).map((channel) => channel.id)
-        //     ),
-        // };
     }
 
     _get_activity_groups() {
