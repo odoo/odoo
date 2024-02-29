@@ -46,7 +46,10 @@ export class DiscussApp extends Record {
     isActive = false;
     allCategories = Record.many("DiscussAppCategory", {
         inverse: "app",
-        sort: (c1, c2) => c1.sequence - c2.sequence,
+        sort: (c1, c2) =>
+            c1.sequence !== c2.sequence
+                ? c1.sequence - c2.sequence
+                : c1.name.localeCompare(c2.name),
     });
     thread = Record.one("Thread");
     channels = Record.one("DiscussAppCategory");
