@@ -243,11 +243,22 @@ export class SelfOrder extends Reactive {
     }
 
     get currentOrder() {
-        if (this.editedOrder && this.editedOrder.state === "draft") {
+        if (
+            this.editedOrder &&
+            (this.editedOrder.state === "draft" ||
+                (this.editedOrder.state === "paid" &&
+                    this.editedOrder.amount_total === 0 &&
+                    this.config.self_ordering_mode === "kiosk"))
+        ) {
             return this.editedOrder;
         }
-
-        const existingOrder = this.orders.find((o) => o.state === "draft");
+        const existingOrder = this.orders.find(
+            (o) =>
+                o.state === "draft" ||
+                (o.state === "paid" &&
+                    o.amount_total === 0 &&
+                    this.config.self_ordering_mode === "kiosk")
+        );
         if (!existingOrder) {
             const newOrder = new Order({
                 pos_config_id: this.pos_config_id,
