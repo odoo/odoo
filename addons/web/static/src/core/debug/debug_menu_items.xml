@@ -115,7 +115,7 @@
 
     <t t-name="web.DebugMenu.GetViewDialog">
         <Dialog title="title">
-            <pre t-esc="props.arch.outerHTML"/>
+            <pre t-esc="props.arch"/>
             <t t-set-slot="footer">
                 <button class="btn btn-primary o-default-button" t-on-click="() => props.close()">Close</button>
             </t>
