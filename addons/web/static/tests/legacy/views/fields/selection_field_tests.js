@@ -405,7 +405,7 @@ QUnit.module("Fields", (hooks) => {
             [...target.querySelectorAll(".o_field_widget[name='color'] option")].map(
                 (option) => option.value
             ),
-            ["false", "\"red\"", "\"black\""]
+            ["false", '"red"', '"black"']
         );
     });
 
@@ -440,13 +440,13 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "SelectionField don't open form view on click in kanban view",
         async function (assert) {
-        assert.expect(1);
+            assert.expect(1);
 
-        await makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch: `
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <kanban>
                     <templates>
                         <t t-name="kanban-box">
@@ -456,15 +456,16 @@ QUnit.module("Fields", (hooks) => {
                         </t>
                     </templates>
                 </kanban>`,
-            domain: [["id", "=", 1]],
-            selectRecord: () => {
-                assert.step("selectRecord");
-            },
-        });
+                domain: [["id", "=", 1]],
+                selectRecord: () => {
+                    assert.step("selectRecord");
+                },
+            });
 
-        await click(target, ".o_field_widget[name='color'] select");
-        assert.verifySteps([]);
-    });
+            await click(target, ".o_field_widget[name='color'] select");
+            assert.verifySteps([]);
+        }
+    );
 
     QUnit.test("SelectionField is disabled if field readonly", async function (assert) {
         assert.expect(1);
@@ -522,5 +523,34 @@ QUnit.module("Fields", (hooks) => {
             ".o_field_widget[name='color'] span",
             "field should be readonly"
         );
+    });
+
+    QUnit.test("SelectionField in kanban view with handle widget", async function (assert) {
+        // When records are draggable, most pointerdown events are default prevented. This test
+        // comes with a fix that blacklists "select" elements, i.e. pointerdown events on such
+        // elements aren't default prevented, because if they were, the select element can't be
+        // opened. The test is a bit artificial but there's no other way to test the scenario, as
+        // using editSelect simply triggers a "change" event, which obviously always works.
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <field name="int_field" widget="handle"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="color" widget="selection"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+
+        const ev = new PointerEvent("pointerdown", { bubbles: true, cancelable: true });
+        const select = target.querySelector(".o_kanban_record .o_field_widget[name=color] select");
+        select.dispatchEvent(ev);
+        assert.notOk(ev.defaultPrevented);
     });
 });
