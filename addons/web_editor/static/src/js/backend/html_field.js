@@ -49,6 +49,8 @@ export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
     }
 
     updateWidget(newProps) {
+        console.log('updateWidget', newProps);
+        debugger;
         const lastValue = String(this.props.widgetArgs[0].value || '');
         const lastRecordInfo = this.props.widgetArgs[0].recordInfo;
         const lastCollaborationChannel = this.props.widgetArgs[0].collaborationChannel;
@@ -292,6 +294,7 @@ export class HtmlField extends Component {
         }
     }
     async updateValue() {
+        console.log('updateValue')
         const value = this.getEditingValue();
         const lastValue = (this.props.value || "").toString();
         if (
@@ -385,6 +388,7 @@ export class HtmlField extends Component {
     }
     async commitChanges({ urgent } = {}) {
         if (this._isDirty() || urgent) {
+            console.log('commitChanges in side condition')
             let saveModifiedImagesPromise, toInlinePromise;
             if (this.wysiwyg && this.wysiwyg.odooEditor) {
                 this.wysiwyg.odooEditor.observerUnactive('commitChanges');
