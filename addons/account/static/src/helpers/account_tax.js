@@ -169,7 +169,7 @@ export function ascending_process_taxes_batch(batch) {
 */
 export function prepare_taxes_computation(
     tax_values_list,
-    {force_price_include=false, is_refund=false, include_caba_tags=false}={},
+    {force_price_include=null, is_refund=false, include_caba_tags=false}={},
 ) {
     // Flatten the taxes and order them.
     const sorted_tax_values_list = tax_values_list.sort(
@@ -191,7 +191,7 @@ export function prepare_taxes_computation(
     flatten_tax_values_list = flatten_tax_values_list.map(
         (tax_values, index) => Object.assign(
             {
-                price_include: tax_values.price_include || force_price_include,
+                price_include: force_price_include === null ? tax_values.price_include : force_price_include,
                 index: index,
                 eval_context: {},
             },
