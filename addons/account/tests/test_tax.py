@@ -32,6 +32,23 @@ class TestTax(TestTaxCommon):
             100.0,
         )
 
+    def test_forced_price_exclude_context_key(self):
+        """ Test the 'force_price_include' context key that force all taxes to act as price excluded taxes. """
+        taxes = (self.percent_tax(10.0, price_include=True) + self.percent_tax(10.0, price_include=True))\
+            .with_context({'force_price_include': False})
+        self._check_compute_all_results(
+            taxes,
+            {
+                'total_included': 120.0,
+                'total_excluded': 100.0,
+                'taxes': (
+                    (100.0, 10.0),
+                    (100.0, 10.0),
+                ),
+            },
+            100.0,
+        )
+
     def test_tax_repartition_lines_intracomm_tax(self):
         ''' Test usage of intracomm taxes having e.g.+100%, -100% as repartition lines.'''
         common_values = {
