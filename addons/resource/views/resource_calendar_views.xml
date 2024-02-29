@@ -20,8 +20,12 @@
             <form string="Working Time">
                 <field name="two_weeks_calendar" invisible="1"/>
                 <header>
-                    <button name="switch_calendar_type" invisible="two_weeks_calendar" string="Switch to 2 weeks calendar" type="object" confirm="Are you sure you want to switch this calendar to 2 weeks calendar? All entries will be lost"/>
-                    <button name="switch_calendar_type" invisible="not two_weeks_calendar" string="Switch to 1 week calendar" type="object" confirm="Are you sure you want to switch this calendar to 1 week calendar? All entries will be lost"/>
+                    <button name="switch_calendar_type" invisible="two_weeks_calendar" string="Switch to 2 weeks calendar" type="object"
+                        confirm="Are you sure you want to switch to a 2-week calendar? All work entries will be lost."
+                        confirm-label="Switch"/>
+                    <button name="switch_calendar_type" invisible="not two_weeks_calendar" string="Switch to 1 week calendar" type="object"
+                        confirm="Are you sure you want to switch to a 1-week calendar? All work entries will be lost."
+                        confirm-label="Switch"/>
                 </header>
                 <sheet string="Working Time">
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -43,9 +47,9 @@
                                 </div>
                         </button>
                     </div>
-                    <h1>
-                        <field name="name"/>
-                    </h1>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
                     <group name="resource_details">
                         <group>
                             <field name="active" invisible="1"/>
