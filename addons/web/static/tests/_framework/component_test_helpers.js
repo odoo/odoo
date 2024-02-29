@@ -1,4 +1,4 @@
-import { mountOnFixture } from "@odoo/hoot";
+import { getFixture, mountOnFixture } from "@odoo/hoot";
 import { App } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -57,6 +57,8 @@ export async function mountWithCleanup(ComponentClass, options) {
         props: options?.props || {},
         translateFn: _t,
     };
+
+    getFixture().classList.add("o_web_client");
 
     /** @type {InstanceType<C>} */
     const component = await mountOnFixture(ComponentClass, config, options?.target);
