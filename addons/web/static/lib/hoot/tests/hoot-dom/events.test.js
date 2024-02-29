@@ -1004,28 +1004,23 @@ describe(parseUrl(import.meta.url), () => {
             <div class="resizable" style="height: 200px; width: 200px; overflow: auto;"/>
         `);
 
-        monitorEvents(".resizable");
+        const { innerHeight } = window;
 
-        expect(".resizable").toHaveStyle({
-            height: "200px",
-            width: "200px",
-        });
+        window.addEventListener("resize", () => expect.step("window.resize"));
 
-        resize(".resizable", { height: 300 });
+        resize({ width: 300 });
 
-        expect(".resizable").toHaveStyle({
-            height: "300px",
-            width: "200px",
-        });
-        expect(["div.resize"]).toVerifySteps();
+        expect(window.innerWidth).toBe(300);
+        expect(window.innerHeight).toBe(innerHeight);
 
-        resize(".resizable", { width: 264 });
+        expect(["window.resize"]).toVerifySteps();
 
-        expect(".resizable").toHaveStyle({
-            height: "300px",
-            width: "264px",
-        });
-        expect(["div.resize"]).toVerifySteps();
+        resize({ height: 264 });
+
+        expect(window.innerWidth).toBe(300);
+        expect(window.innerHeight).toBe(264);
+
+        expect(["window.resize"]).toVerifySteps();
     });
 
     test("select", async () => {
