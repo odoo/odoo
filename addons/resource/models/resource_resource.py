@@ -3,6 +3,7 @@
 from copy import deepcopy
 from collections import defaultdict
 from datetime import datetime, timedelta, time
+from random import randint
 from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta, weekdays
@@ -27,6 +28,9 @@ class ResourceResource(models.Model):
             company = self.env['res.company'].browse(res['company_id'])
             res['calendar_id'] = company.resource_calendar_id.id
         return res
+
+    def _default_color(self):
+        return randint(1, 11)
 
     name = fields.Char(required=True)
     active = fields.Boolean(
@@ -56,6 +60,7 @@ class ResourceResource(models.Model):
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
         default=lambda self: self.env.context.get('tz') or self.env.user.tz or 'UTC')
+    color = fields.Integer(default=_default_color)
 
     @api.constrains('calendar_id', 'hours_per_week', 'hours_per_day')
     def _check_hours_per_week_day(self):
