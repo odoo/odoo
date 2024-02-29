@@ -651,6 +651,9 @@ class Field(MetaField('DummyField', (object,), {})):
             delegate_field = model._fields[self.related.split('.')[0]]
             self._modules = tuple({*self._modules, *delegate_field._modules, *field._modules})
 
+        self.check_warning_field_translated()
+
+    def check_warning_field_translated(self):
         if self.store and self.translate:
             _logger.warning("Translated stored related field (%s) will not be computed correctly in all languages", self)
 
