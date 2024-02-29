@@ -667,7 +667,7 @@ class BaseAutomation(models.Model):
             # all fields are implicit triggers
             return True
 
-        if not self._context.get('old_values'):
+        if self._context.get('old_values') is None:
             # this is a create: all fields are considered modified
             return True
 
