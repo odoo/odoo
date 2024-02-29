@@ -1243,6 +1243,13 @@ export class Model extends Array {
         this.definition._fields = value;
     }
 
+    static get _filters() {
+        return this.definition._filters;
+    }
+    static set _filters(value) {
+        this.definition._filters = value;
+    }
+
     static get _inherit() {
         return this.definition._inherit;
     }
@@ -1308,6 +1315,8 @@ export class Model extends Array {
      *  | "_views"> | null
      * } */
     _fields = {};
+    /** @type {Record<string, any>[]} */
+    _filters = [];
     /** @type {string | null} */
     _inherit = null;
     /** @type {string} */
@@ -1512,7 +1521,7 @@ export class Model extends Array {
         }
 
         if (kwargs.options.load_filters && "search" in views) {
-            views["search"].filters = this._filters || [];
+            views["search"].filters = this._filters;
         }
         return { models, views };
     }
