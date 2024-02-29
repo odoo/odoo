@@ -787,7 +787,7 @@ class AccountTax(models.Model):
     def _prepare_taxes_computation(
         self,
         tax_values_list,
-        force_price_include=False,
+        force_price_include=None,
         is_refund=False,
         include_caba_tags=False,
     ):
@@ -799,7 +799,7 @@ class AccountTax(models.Model):
         PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
 
         :param tax_values_list:     A list of dictionaries, each one corresponding to one tax.
-        :param force_price_include: Force all taxes to act as price_included.
+        :param force_price_include: If provided, forces all taxes to act as price_included=force_price_include.
         :param is_refund:           It comes from a refund document or not.
         :param include_caba_tags:   Include the tags for the cash basis or not.
         :return: A dict containing:
@@ -824,7 +824,7 @@ class AccountTax(models.Model):
         flatten_tax_values_list = [
             {
                 **tax_values,
-                'price_include': tax_values['price_include'] or force_price_include,
+                'price_include': tax_values['price_include'] if force_price_include is None else force_price_include,
                 'index': index,
                 'evaluation_context': {},
             }
