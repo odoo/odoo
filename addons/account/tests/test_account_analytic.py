@@ -210,3 +210,25 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
         invoice.invoice_line_ids.analytic_distribution = {self.analytic_account_b.id: 0.9}
         invoice.action_post()
         self.assertEqual(invoice.state, 'posted')
+
+    def test_mandatory_plan_validation_multicompany(self):
+        """
+        A mandatory applicability rule set for a Plan specified in Company A should not constraint Company B
+        """
+        self.default_plan.write({
+            'applicability_ids': [Command.create({
+                'business_domain': 'invoice',
+                'applicability': 'mandatory',
+                'company_id': self.env.company.id,
+            })]
+        })
+        invoice = self.env['account.move'].with_company(self.company_data_2['company']).create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_b.id,
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+            })]
+        })
+        invoice.with_context({'validate_analytic': True}).action_post()

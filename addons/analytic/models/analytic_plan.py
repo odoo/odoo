@@ -234,6 +234,8 @@ class AccountAnalyticPlan(models.Model):
             score = 0
             applicability = self.default_applicability
             for applicability_rule in self.applicability_ids:
+                if applicability_rule.company_id != self.env.company:
+                    continue
                 score_rule = applicability_rule._get_score(**kwargs)
                 if score_rule > score:
                     applicability = applicability_rule.applicability
