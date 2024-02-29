@@ -75,7 +75,13 @@ patch(MockServer.prototype, {
                     : args.kwargs.pin !== undefined
                     ? args.kwargs.pin
                     : undefined;
-            return this._mockDiscussChannelChannelGet(partners_to, pin);
+            const force_open =
+                args.args[2] !== undefined
+                    ? args.args[2]
+                    : args.kwargs.force_open !== undefined
+                    ? args.kwargs.force_open
+                    : undefined;
+            return this._mockDiscussChannelChannelGet(partners_to, pin, force_open);
         }
         if (route === "/discuss/channel/info") {
             const id = args.channel_id;
@@ -486,9 +492,10 @@ patch(MockServer.prototype, {
      * @private
      * @param {integer[]} [partners_to=[]]
      * @param {boolean} [pin=true]
+     * @param {boolean} [force_open=false]
      * @returns {Object}
      */
-    _mockDiscussChannelChannelGet(partners_to = [], pin = true) {
+    _mockDiscussChannelChannelGet(partners_to = [], pin = true, force_open = false) {
         if (partners_to.length === 0) {
             return false;
         }
