@@ -4,26 +4,21 @@ import { Record } from "@mail/core/common/record";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
-patch(DiscussApp, {
-    new(data) {
-        const res = super.new(data);
-        res.livechat = {
-            extraClass: "o-mail-DiscussSidebarCategory-livechat",
-            id: "livechat",
-            name: _t("Livechat"),
-            hideWhenEmpty: true,
-            canView: false,
-            canAdd: false,
-            serverStateKey: "is_discuss_sidebar_category_livechat_open",
-            sequence: 20,
-        };
-        return res;
-    },
-});
-
 patch(DiscussApp.prototype, {
     setup(env) {
         super.setup(env);
-        this.livechat = Record.one("DiscussAppCategory");
+        this.defaultLivechatCategory = Record.one("DiscussAppCategory", {
+            compute() {
+                return {
+                    extraClass: "o-mail-DiscussSidebarCategory-livechat",
+                    hideWhenEmpty: true,
+                    id: `im_livechat.category_default`,
+                    name: _t("Livechat"),
+                    open: true,
+                    sequence: 21,
+                };
+            },
+        });
+        this.livechats = Record.many("Thread", { inverse: "appAsLivechats" });
     },
 });

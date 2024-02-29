@@ -1,12 +1,23 @@
+import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, {
+    setup() {
+        super.setup(...arguments);
+        this.appAsLivechats = Record.one("DiscussApp", {
+            compute() {
+                return this.channel_type === "livechat" ? this._store.discuss : null;
+            },
+        });
+        this.livechatChannel = Record.one("LivechatChannel");
+    },
     _computeDiscussAppCategory() {
-        return this.channel_type === "livechat"
-            ? this._store.discuss.livechat
-            : super._computeDiscussAppCategory();
+        if (this.channel_type !== "livechat") {
+            return super._computeDiscussAppCategory();
+        }
+        return this.livechatChannel?.appCategory ?? this.appAsLivechats?.defaultLivechatCategory;
     },
     get hasMemberList() {
         return this.channel_type === "livechat" || super.hasMemberList;

@@ -139,21 +139,6 @@ export class DiscussSidebarCategories extends Component {
     stopEditing() {
         this.state.editing = false;
     }
-
-    async toggleCategory(category) {
-        this.store.settings[category.serverStateKey] =
-            !this.store.settings[category.serverStateKey];
-        await this.orm.call(
-            "res.users.settings",
-            "set_res_users_settings",
-            [[this.store.settings.id]],
-            {
-                new_settings: {
-                    [category.serverStateKey]: this.store.settings[category.serverStateKey],
-                },
-            }
-        );
-    }
 }
 
 discussSidebarItemsRegistry.add("channels", DiscussSidebarCategories, { sequence: 30 });

@@ -78,6 +78,8 @@ class DiscussChannel(models.Model):
             } if channel.country_id else False
             if channel.livechat_operator_id:
                 channel_infos_dict[channel.id]['operator'] = channel.livechat_operator_id.mail_partner_format(fields={'id': True, 'user_livechat_username': True, 'write_date': True})[channel.livechat_operator_id]
+            if channel.channel_type == "livechat" and channel.livechat_channel_id and self.env.user._is_internal():
+                channel_infos_dict[channel.id]['livechatChannel'] = {"id": channel.livechat_channel_id.id, "name": channel.livechat_channel_id.name}
         return list(channel_infos_dict.values())
 
     @api.autovacuum
