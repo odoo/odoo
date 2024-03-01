@@ -1465,12 +1465,19 @@ class PosGlobalState extends PosModel {
      */
     async _addProducts(ids, setAvailable=true){
         if(setAvailable){
-            await this.env.services.rpc({
-                model: 'product.product',
-                method: 'write',
-                args: [ids, {'available_in_pos': true}],
-                context: this.env.session.user_context,
-            });
+            try {
+                await this.env.services.rpc({
+                    model: 'product.product',
+                    method: 'write',
+                    args: [ids, {'available_in_pos': true}],
+                    context: this.env.session.user_context,
+                });
+            } catch (error) {
+                const ignoreError = this._isRPCError(error) && error.message.data && error.message.data.name === 'odoo.exceptions.AccessError';
+                if (!ignoreError) {
+                    throw error;
+                }
+            }
         }
         let product = await this.env.services.rpc({
             model: 'pos.session',
@@ -2720,7 +2727,7 @@ class Order extends PosModel {
                 logo:  this.pos.company_logo_base64,
             },
             currency: this.pos.currency,
-            pos_qr_code: this._get_qr_code_data(),
+            pos_qr_code: this.finalized && this._get_qr_code_data(),
         };
 
         if (is_html(this.pos.config.receipt_header)){

@@ -24,8 +24,8 @@ export class ReferenceField extends Component {
                 nextRelation !== this.state.resModel
             ) {
                 nextProps.update(false);
-                this.state.resModel = nextRelation;
             }
+            this.state.resModel = nextRelation;
         });
     }
 
