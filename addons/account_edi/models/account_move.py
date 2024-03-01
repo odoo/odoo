@@ -679,14 +679,15 @@ class AccountMoveLine(models.Model):
         # documents during the reconciliation.
         all_lines = self + self.matched_debit_ids.debit_move_id + self.matched_credit_ids.credit_move_id
         payments = all_lines.move_id.filtered(lambda move: move.payment_id or move.statement_line_id)
+        invoices_per_payment_before = {pay: pay._get_reconciled_invoices() for pay in payments}
         res = super().reconcile()
-        changed_payments = self.env['account.move']
+        invoices_per_payment_after = {pay: pay._get_reconciled_invoices() for pay in payments}
 
-        for payment in payments:
+        changed_payments = self.env['account.move']
+        for payment, invoice_after in invoices_per_payment_after.items():
             amls = payment.line_ids.filtered(lambda x: x.account_id.user_type_id.type == 'receivable')
             if all(amls.mapped('reconciled')):
-                matched_invoices = payment._get_reconciled_invoices()
-                if all(inv.edi_state == 'sent' for inv in matched_invoices):
+                if invoice_after and all(inv.edi_state == 'sent' for inv in invoice_after) and set(invoice_after) != set(invoices_per_payment_before[payment]):
                     changed_payments |= payment
         changed_payments._update_payments_edi_documents()
 
