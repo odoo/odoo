@@ -58,7 +58,6 @@ export class Store extends BaseStore {
 
     /** @type {number} */
     action_discuss_id;
-    knownChannelIds = new Set();
     /** This is the current logged partner / guest */
     self = Record.one("Persona");
     /**
@@ -300,43 +299,14 @@ export class Store extends BaseStore {
             this._fetchDataDebounced,
             Store.FETCH_DATA_DEBOUNCE_DELAY
         );
-        this.updateBusSubscription = debounce(this.updateBusSubscription, 0); // Wait for thread fully inserted.
+        this.updateBusSubscription = debounce(
+            () => this.env.services.bus_service.forceUpdateChannels(),
+            0
+        );
     }
 
     /** Provides an override point for when the store service has started. */
     onStarted() {}
-
-    updateBusSubscription() {
-        const allSelfChannelIds = new Set();
-        for (const thread of Object.values(this.Thread.records)) {
-            if (
-                thread.model === "discuss.channel" &&
-                thread.fetchChannelInfoState === "fetched" &&
-                thread.hasSelfAsMember
-            ) {
-                if (thread.selfMember.memberSince < this.env.services["bus_service"].startedAt) {
-                    this.knownChannelIds.add(thread.id);
-                }
-                allSelfChannelIds.add(thread.id);
-            }
-        }
-        let shouldUpdateChannels = false;
-        for (const id of allSelfChannelIds) {
-            if (!this.knownChannelIds.has(id)) {
-                shouldUpdateChannels = true;
-                this.knownChannelIds.add(id);
-            }
-        }
-        for (const id of this.knownChannelIds) {
-            if (!allSelfChannelIds.has(id)) {
-                shouldUpdateChannels = true;
-                this.knownChannelIds.delete(id);
-            }
-        }
-        if (shouldUpdateChannels) {
-            this.env.services["bus_service"].forceUpdateChannels();
-        }
-    }
 }
 Store.register();
 
@@ -363,7 +333,6 @@ export const storeService = {
             discussActionIds.push(store.action_discuss_id);
         }
         store.discuss.isActive ||= discussActionIds.includes(router.current.action);
-        Record.onChange(store.Thread, "records", () => store.updateBusSubscription());
         services.ui.bus.addEventListener("resize", () => {
             store.discuss.activeTab = "main";
             if (services.ui.isSmall && store.discuss.thread?.channel_type) {
