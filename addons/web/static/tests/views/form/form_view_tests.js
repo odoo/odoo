@@ -430,7 +430,7 @@ QUnit.module("Views", (hooks) => {
                 });
                 return {
                     bus: new EventBus(),
-                    size: 9,
+                    size: 6,
                     isSmall: false,
                 };
             },
@@ -8391,7 +8391,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("correct amount of buttons", async function (assert) {
-        let screenSize = 7;
+        let screenSize = 6;
         const uiService = {
             start(env) {
                 Object.defineProperty(env, "isSmall", {
@@ -8445,7 +8445,7 @@ QUnit.module("Views", (hooks) => {
         await assertFormContainsNButtonsWithSizeClass(0, 2);
         await assertFormContainsNButtonsWithSizeClass(1, 3);
         await assertFormContainsNButtonsWithSizeClass(2, 4);
-        await assertFormContainsNButtonsWithSizeClass(3, 6);
+        await assertFormContainsNButtonsWithSizeClass(3, 7);
         await assertFormContainsNButtonsWithSizeClass(4, 3);
         await assertFormContainsNButtonsWithSizeClass(5, 4);
         await assertFormContainsNButtonsWithSizeClass(6, 7);
