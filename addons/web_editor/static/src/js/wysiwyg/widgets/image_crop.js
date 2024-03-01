@@ -12,6 +12,7 @@ import {
     markup,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import dom from "@web/legacy/js/core/dom";
 
 export class ImageCrop extends Component {
     static template = 'web_editor.ImageCrop';
@@ -147,6 +148,7 @@ export class ImageCrop extends Component {
         }
         const $cropperWrapper = this.$('.o_we_cropper_wrapper');
 
+        await this._scrollToInvisibleImage();
         // Replacing the src with the original's so that the layout is correct.
         await loadImage(this.originalSrc, this.media);
         this.$cropperImage = this.$('.o_we_cropper_img');
@@ -220,6 +222,41 @@ export class ImageCrop extends Component {
     _resetCropBox() {
         this.$cropperImage.cropper('clear');
         this.$cropperImage.cropper('crop');
+    }
+    /**
+     * Make sure the targeted image is in the visible viewport before crop.
+     *
+     * @private
+     */
+    async _scrollToInvisibleImage() {
+        const rect = this.media.getBoundingClientRect();
+        const viewportTop = this.document.documentElement.scrollTop || 0;
+        const viewportBottom = viewportTop + window.innerHeight;
+        const closestScrollable = el => {
+            if (!el) {
+                return null;
+            }
+            if (el.scrollHeight > el.clientHeight) {
+                return $(el);
+            } else {
+                return closestScrollable(el.parentElement);
+            }
+        };
+        // Give priority to the closest scrollable element (e.g. for images in
+        // HTML fields, the element to scroll is different from the document's
+        // scrolling element).
+        const $scrollable = closestScrollable(this.media);
+
+        // The image must be in a position that allows access to it and its crop
+        // options buttons. Otherwise, the crop widget container can be scrolled
+        // to allow editing.
+        if (rect.top < viewportTop || viewportBottom - rect.bottom < 100) {
+            await dom.scrollTo(this.media, {
+                easing: "linear",
+                duration: 500,
+                ...($scrollable && { $scrollable }),
+            });
+        }
     }
 
     //--------------------------------------------------------------------------
