@@ -80,9 +80,6 @@ export class ListUIPlugin extends OdooUIPlugin {
                 this._setupListDataSource(cmd.newListId, 0);
                 break;
             }
-            case "REFRESH_ODOO_LIST":
-                this._refreshOdooList(cmd.listId);
-                break;
             case "REFRESH_ALL_DATA_SOURCES":
                 this._refreshOdooLists();
                 break;
