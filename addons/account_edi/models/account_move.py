@@ -686,7 +686,7 @@ class AccountMoveLine(models.Model):
             amls = payment.line_ids.filtered(lambda x: x.account_id.user_type_id.type == 'receivable')
             if all(amls.mapped('reconciled')):
                 matched_invoices = payment._get_reconciled_invoices()
-                if all(inv.edi_state == 'sent' for inv in matched_invoices):
+                if matched_invoices and all(inv.edi_state == 'sent' for inv in matched_invoices):
                     changed_payments |= payment
         changed_payments._update_payments_edi_documents()
 
