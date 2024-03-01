@@ -5,8 +5,8 @@ import { Base } from "./related_models";
 export class PosCategory extends Base {
     static pythonModel = "pos.category";
 
-    getAllChildren(category, curr = []) {
-        const children = [...curr];
+    getAllChildren(category) {
+        const children = [];
 
         if (!category) {
             category = this;
@@ -20,7 +20,7 @@ export class PosCategory extends Base {
             children.push(child.id);
 
             if (child.child_id.length > 0) {
-                children.concat(this.getAllChildren(child, children));
+                children.push(...this.getAllChildren(child));
             }
         }
 
@@ -36,7 +36,7 @@ export class PosCategory extends Base {
         }
 
         while (parent) {
-            parents.push(parent);
+            parents.unshift(parent);
             parent = parent.parent_id;
         }
 
