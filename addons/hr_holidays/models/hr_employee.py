@@ -502,7 +502,7 @@ class HrEmployee(models.Model):
                     leave_duration_field = 'number_of_days'
                     leave_unit = 'days'
                 else:
-                    leave_duration_field = 'number_of_hours_display'
+                    leave_duration_field = 'number_of_hours'
                     leave_unit = 'hours'
 
                 leave_type_data = allocations_leaves_consumed[employee][leave_type]
@@ -559,9 +559,9 @@ class HrEmployee(models.Model):
                             }
                     else:
                         if leave_unit == 'hour':
-                            allocated_time = leave.number_of_hours_display
+                            allocated_time = leave.number_of_hours
                         else:
-                            allocated_time = leave.number_of_days_display
+                            allocated_time = leave.number_of_days
                         leave_type_data[False]['virtual_leaves_taken'] += allocated_time
                         leave_type_data[False]['virtual_remaining_leaves'] = 0
                         leave_type_data[False]['remaining_leaves'] = 0

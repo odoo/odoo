@@ -40,7 +40,7 @@ class HRLeave(models.Model):
             if vals.get('state') in ['refuse']:
                 continue
             employee = leave.employee_id
-            duration = leave.number_of_hours_display
+            duration = leave.number_of_hours
             overtime_duration = leave.overtime_id.sudo().duration
             if overtime_duration != duration:
                 if duration > employee.total_overtime - overtime_duration:
@@ -54,7 +54,7 @@ class HRLeave(models.Model):
             if not leave.overtime_deductible:
                 continue
             employee = leave.employee_id.sudo()
-            duration = leave.number_of_hours_display
+            duration = leave.number_of_hours
             if duration > employee.total_overtime:
                 if employee.user_id == self.env.user:
                     raise ValidationError(_('You do not have enough extra hours to request this leave'))
@@ -69,7 +69,7 @@ class HRLeave(models.Model):
 
     def action_draft(self):
         overtime_leaves = self.filtered('overtime_deductible')
-        if any([l.employee_overtime < float_round(l.number_of_hours_display, 2) for l in overtime_leaves]):
+        if any([l.employee_overtime < float_round(l.number_of_hours, 2) for l in overtime_leaves]):
             if self.employee_id.user_id.id == self.env.user.id:
                 raise ValidationError(_('You do not have enough extra hours to request this leave'))
             raise ValidationError(_('The employee does not have enough extra hours to request this leave.'))
@@ -81,7 +81,7 @@ class HRLeave(models.Model):
                 'employee_id': leave.employee_id.id,
                 'date': leave.date_from,
                 'adjustment': True,
-                'duration': -1 * leave.number_of_hours_display
+                'duration': -leave.number_of_hours,
             })
             leave.sudo().overtime_id = overtime.id
         return res
