@@ -749,7 +749,7 @@ QUnit.module("Tour service", (hooks) => {
 },`;
         const expectedError = [
             "error: Tour tour1 failed at step content (trigger: .wrong_selector)",
-            `error: The error appears to be that one or more items in the following list cannot be found in DOM. : {"trigger":".wrong_selector"}`,
+            `error: The error appears to be that one or more elements in the following list cannot be found in DOM.\n {"trigger":".wrong_selector"}`,
         ];
         assert.verifySteps([expectedWarning, ...expectedError]);
     });
@@ -804,9 +804,64 @@ QUnit.module("Tour service", (hooks) => {
 
         const expectedError = [
             "error: Tour tour2 failed at step .button1",
-            "error: Triggers have been found. The error seems to be in run()",
+            "error: Element has been found. The error seems to be in run()",
             "error: Cannot read properties of null (reading 'click')",
             "error: tour not succeeded",
+        ];
+        assert.verifySteps(expectedError);
+    });
+
+    QUnit.test("a failing tour with disabled element", async function (assert) {
+        patchWithCleanup(browser.console, {
+            log: (s) => assert.step(`log: ${s}`),
+            warn: (s) => {},
+            error: (s) => assert.step(`error: ${s}`),
+        });
+        const env = await makeTestEnv({});
+
+        const { Component: OverlayContainer, props: overlayContainerProps } = registry
+            .category("main_components")
+            .get("OverlayContainer");
+
+        class Root extends Component {
+            static components = { OverlayContainer };
+            static template = xml/*html*/ `
+                <t>
+                    <button class="button0">Button 0</button>
+                    <button class="button1" disabled="">Button 1</button>
+                    <button class="button2">Button 2</button>
+                    <OverlayContainer t-props="props.overlayContainerProps" />
+                </t>
+            `;
+            static props = ["*"];
+        }
+
+        await mount(Root, target, { env, props: { overlayContainerProps } });
+        registry.category("web_tour.tours").add("tour3", {
+            test: true,
+            steps: () => [
+                {
+                    trigger: ".button0",
+                },
+                {
+                    trigger: ".button1",
+                },
+                {
+                    trigger: ".button2",
+                },
+            ],
+        });
+        env.services.tour_service.startTour("tour3", { mode: "auto" });
+        await mock.advanceTime(750);
+        assert.verifySteps(["log: Tour tour3 on step: '.button0'"]);
+        await mock.advanceTime(750);
+        assert.verifySteps(["log: Tour tour3 on step: '.button1'"]);
+        await mock.advanceTime(750);
+        await mock.advanceTime(10000);
+
+        const expectedError = [
+            "error: Tour tour3 failed at step .button1",
+            "error: Element has been found but is disabled. (Use step.isCheck if you just want to check if element is present in DOM)",
         ];
         assert.verifySteps(expectedError);
     });

@@ -39,11 +39,8 @@ const ALLOWED_KEYS = {
     // Open DevTools at tour initialization.
     debug: BOOLEAN,
 
-    // To check if triggers of the current step have been found.
-    triggersFound: BOOLEAN,
-
-    // To check if triggers of the current step have been found.
-    hasError: BOOLEAN,
+    // Errored || Succeeded
+    stepState: STRING,
 };
 
 function getPrefixedName(tourName, key) {

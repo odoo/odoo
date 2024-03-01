@@ -34,8 +34,8 @@
         run: "text 1.99",
         timeout: 30000,
     }, {
-        trigger: "iframe #wrap img.product_detail_img",
-        extra_trigger: "iframe .product_price .o_dirty .oe_currency_value:not(:containsExact(1.00))",
+        trigger: ":iframe #wrap img.product_detail_img",
+        extra_trigger: ":iframe .product_price .o_dirty .oe_currency_value:not(:contains(/^1.00$/))",
         content: _t("Double click here to set an image describing your product."),
         position: "top",
         run: function (actions) {

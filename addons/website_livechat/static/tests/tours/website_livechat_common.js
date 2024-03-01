@@ -122,20 +122,20 @@ export const close = [
 export const goodRating = [
     {
         content: "Choose Good Rating",
-        trigger: `img[src*=rating][alt=5]`,
+        trigger: `img[src*=rating][alt="5"]`,
     },
 ];
 
 export const okRating = [
     {
         content: "Choose ok Rating",
-        trigger: `img[src*=rating][alt=3]`,
+        trigger: `img[src*=rating][alt="3"]`,
     },
 ];
 
 export const sadRating = [
     {
         content: "Choose bad Rating",
-        trigger: `img[src*=rating][alt=1]`,
+        trigger: `img[src*=rating][alt="1"]`,
     },
 ];

@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add('test_website_page_manager', {
     trigger: "thead .o_list_record_selector",
 }, {
     content: "Check that there is only 2 records selected",
-    trigger: ".o_list_selection_box:contains('2 selected')",
+    trigger: ".o_list_selection_box:contains(2):contains(selected)",
     run: () => null, // it's a check
 }, {
     content: "Click on the 'Select all records' checkbox again to unselect all records and see the search bar",

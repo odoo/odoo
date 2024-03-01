@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox', {
     steps: () => [
     {
         content: "select Product",
-        trigger: '.oe_product_cart a:containsExact("Product Multi")',
+        trigger: ".oe_product_cart a:contains(/^Product Multi$/)",
     },
     {
         content: "check price",

@@ -64,7 +64,7 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     },
     {
         content: "Check that the last menu link was deleted",
-        trigger: 'iframe .s_mega_menu_odoo_menu .row > div:first-child .nav:not(:has(> :nth-child(6)))',
+        trigger: 'iframe .s_mega_menu_odoo_menu .row > div:first-child .nav:not(:has(:nth-child(6)))',
         run: () => null,
     },
     {
