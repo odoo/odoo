@@ -4,6 +4,7 @@ import { contains, fields, models } from "@web/../tests/web_test_helpers";
 export class Partner extends models.Model {
     foo = fields.Char();
     bar = fields.Boolean();
+    name = fields.Char({ string: "Partner Name" });
     product_id = fields.Many2one({ relation: "product" });
     int = fields.Integer();
     date = fields.Date();
@@ -18,9 +19,9 @@ export class Partner extends models.Model {
     });
 
     _records = [
-        { id: 1, foo: "yop", bar: true, product_id: 37 },
-        { id: 2, foo: "blip", bar: true, product_id: false },
-        { id: 4, foo: "abc", bar: false, product_id: 41 },
+        { id: 1, foo: "yop", bar: true, product_id: 37, name: "first record" },
+        { id: 2, foo: "blip", bar: true, product_id: false, name: "second record" },
+        { id: 4, foo: "abc", bar: false, product_id: 41, name: "aaa" },
     ];
 }
 
