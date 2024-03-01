@@ -78,7 +78,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
             tourUtils.goToCart({quantity: 3}),
         {
             content: "check reduction amount got recomputed and merged both discount lines into one only",
-            extra_trigger: '.oe_currency_value:contains("-﻿74.00"):not(#cart_total .oe_currency_value:contains("-﻿74.00"))',
+            extra_trigger: ".oe_currency_value:contains(/74.00/):not(#cart_total)",
             trigger: '.oe_website_sale .oe_cart',
             run: function () {}, // it's a check
         },

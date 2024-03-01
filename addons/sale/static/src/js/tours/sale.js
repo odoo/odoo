@@ -115,7 +115,7 @@ registry.category("web_tour.tours").add("sale_quote_tour", {
         trigger: "a:contains('DESK0001')",
         auto: true,
     }, {
-        trigger: ".o_field_text[name='name'] textarea:propValueContains(DESK0001)",
+        trigger: ".o_field_text[name='name'] textarea:value(DESK0001)",
         run: () => {},
         auto: true,
     }, {

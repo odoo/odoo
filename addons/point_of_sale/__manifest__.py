@@ -154,6 +154,7 @@
         ],
         'point_of_sale.base_tests': [
             "web/static/lib/jquery/jquery.js",
+            "web/static/lib/hoot-dom/**/*",
             "web_tour/static/src/tour_pointer/**/*.xml",
             "web_tour/static/src/tour_pointer/**/*.js",
             "web_tour/static/src/tour_service/**/*",

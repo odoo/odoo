@@ -22,7 +22,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     {
         content: 'Wait for the email to be loaded in the newsletter input',
         trigger: 'iframe .s_newsletter_block .js_subscribe_btn',
-        extra_trigger: 'iframe .s_newsletter_block input:propValue(admin@yourcompany.example.com)',
+        extra_trigger: 'iframe .s_newsletter_block input:value("admin@yourcompany.example.com")',
     },
     // Change the link style.
     ...wTourUtils.clickOnEditAndWaitEditMode(),

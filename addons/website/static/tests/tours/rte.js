@@ -53,7 +53,7 @@ wTourUtils.goToTheme(),
 }, {
     content: "create file",
     trigger: '.modal-dialog button.btn-primary',
-    extra_trigger: 'input[type="text"]:propValue(rte_translator.xml)',
+    extra_trigger: 'input[type="text"]:value(rte_translator.xml)',
 }, {
     content: "click on the 'page manager' button",
     trigger: 'button[name="website.action_website_pages_list"]',
@@ -77,7 +77,7 @@ wTourUtils.goToTheme(),
 }, {
     content: "create page",
     trigger: '.modal-dialog button.btn-primary',
-    extra_trigger: 'input[type="text"]:propValue(rte_translator)',
+    extra_trigger: 'input[type="text"]:value(rte_translator)',
 },
 wTourUtils.dragNDrop({
     id: "s_cover",
@@ -153,7 +153,7 @@ wTourUtils.dragNDrop({
 }, {
     content: "close modal",
     trigger: '.modal-footer .btn-primary',
-    extra_trigger: '.modal input:propValue(test Parseltongue placeholder)',
+    extra_trigger: '.modal input:value("test Parseltongue placeholder")',
 }, {
     content: "check: input marked as translated",
     trigger: 'iframe input[placeholder="test Parseltongue placeholder"].oe_translated',
@@ -186,7 +186,7 @@ wTourUtils.dragNDrop({
     trigger: 'iframe .js_language_selector a[data-url_code="en"]',
 }, {
     content: "Check body",
-    trigger: "iframe body:not(:has(#wrap p font:first:containsExact(paragraphs <b>describing</b>)))",
+    trigger: "iframe body:not(:has(#wrap p font:first:contains(/^paragraphs <b>describing</b>$/)))",
     run: function () {}, // it's a check
 },
 ...wTourUtils.clickOnEditAndWaitEditMode(),

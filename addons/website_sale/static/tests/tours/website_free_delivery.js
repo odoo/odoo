@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add('check_free_delivery', {
         tourUtils.goToCheckout(),
         {
             content: "Check Free Delivery value to be zero",
-            extra_trigger: '#delivery_carrier label:containsExact("Delivery Now Free Over 10")',
+            extra_trigger: "#delivery_carrier label:contains(/^Delivery Now Free Over 10$/)",
             trigger: "#delivery_carrier span:contains('0.0')"
         },
         // Part 2: check multiple delivery & price loaded asynchronously

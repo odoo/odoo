@@ -90,7 +90,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     wTourUtils.clickOnExtraMenuItem({extra_trigger: '#oe_snippets.o_loaded'}, true),
     {
         content: "Menu should have a new link item",
-        trigger: 'iframe #top_menu .nav-item a:contains("Random!")',
+        trigger: ':iframe #top_menu .nav-item a:contains("Random!")',
         // Don't click the new menu when the editor is still blocked.
         extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)",
     },
@@ -278,7 +278,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "Open nested menu item",
-        trigger: 'iframe #top_menu .nav-item:contains("Home"):nth(1) .dropdown-toggle',
+        trigger: ':iframe #top_menu .nav-item:contains("Home"):nth-child(2) .dropdown-toggle',
     },
     {
         // If this step fails, it means that a patch inside bootstrap was lost.

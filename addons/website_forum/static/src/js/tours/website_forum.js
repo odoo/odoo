@@ -15,21 +15,21 @@
         content: _t("Give your post title."),
     }, {
         trigger: ".note-editable p",
-        extra_trigger: "input[name=post_name]:not(:propValue(\"\"))",
+        extra_trigger: `input[name=post_name]:not(:empty)`,
         content: _t("Put your question here."),
         position: "bottom",
         run: "text",
     }, {
         trigger: ".select2-choices",
-        extra_trigger: ".note-editable p:not(:containsExact(\"<br>\"))",
+        extra_trigger: `.note-editable p:not(:contains(/^<br>$/))`,
         content: _t("Insert tags related to your question."),
         position: "top",
         run: function (actions) {
             actions.auto("input[id=s2id_autogen2]");
         },
     }, {
-        trigger: "button:contains(\"Post\")",
-        extra_trigger: "input[id=s2id_autogen2]:not(:propValue(\"Tags\"))",
+        trigger: "button:contains(/^Post/)",
+        extra_trigger: `input[id=s2id_autogen2]:not(:contains(Tags))`,
         content: _t("Click to post your question."),
         position: "bottom",
     }, {
@@ -49,7 +49,7 @@
         run: "text",
     }, {
         trigger: "button:contains(\"Post Answer\")",
-        extra_trigger: ".note-editable p:not(:containsExact(\"<br>\"))",
+        extra_trigger: `.note-editable p:not(:contains(/^<br>$/))`,
         content: _t("Click to post your answer."),
         position: "bottom",
     }, {

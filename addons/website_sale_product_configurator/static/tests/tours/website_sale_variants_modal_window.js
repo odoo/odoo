@@ -9,7 +9,7 @@
         steps: () => [
         {
             content: "Select the Short (TEST) product",
-            trigger: '.oe_product_cart a:containsExact("Short (TEST)")',
+            trigger: `.oe_product_cart a:contains(/^Short \\(TEST\\)$/)`,
         },
         {
             content: "Click on the always variant",

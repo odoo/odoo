@@ -20,7 +20,7 @@
     },
     {
         content: "Check b2b Tax-Excluded Prices",
-        trigger: '.product_price .oe_price .oe_currency_value:containsExact(79.00)',
+        trigger: ".product_price .oe_price .oe_currency_value:contains(/^79.00$/)",
         run: function () {}, // it's a check
     },
     {
@@ -30,7 +30,7 @@
         tourUtils.goToCart({quantity: 2}),
     {
         content: "Check for 2 products in cart and proceed to checkout",
-        extra_trigger: '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:propValue(2)',
+        extra_trigger: '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:value(2)',
         trigger: 'a[href*="/shop/checkout"]',
     },
     ...tourUtils.assertCartAmounts({
@@ -206,7 +206,7 @@
     },
     {
         content: "Check b2c Tax-Included Prices",
-        trigger: '.product_price .oe_price .oe_currency_value:containsExact(90.85)',
+        trigger: ".product_price .oe_price .oe_currency_value:contains(/^90.85$/)",
         run: function () {}, // it's a check
     },
     {
@@ -216,7 +216,7 @@
         tourUtils.goToCart({quantity: 2}),
     {
         content: "Check for 2 products in cart and proceed to checkout",
-        extra_trigger: '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:propValue(2)',
+        extra_trigger: '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:value(2)',
         trigger: 'a[href*="/shop/checkout"]',
     },
     ...tourUtils.assertCartAmounts({
@@ -226,7 +226,7 @@
     }),
     {
         content: "Click on Sign in Button",
-        trigger: '.oe_cart a:contains(" Sign in")',
+        trigger: `.oe_cart a:contains(Sign in)`,
     },
     {
         content: "Submit login",

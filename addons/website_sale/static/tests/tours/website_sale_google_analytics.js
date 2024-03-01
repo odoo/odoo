@@ -47,7 +47,7 @@ registry.category("web_tour.tours").add('google_analytics_view_item', {
     {
         content: 'wait until `_getCombinationInfo()` rpc is done (2)',
         // a new view event should have been generated, for another variant
-        trigger: `body[view-event-id][view-event-id!=${itemId}]`,
+        trigger: `body[view-event-id]:not([view-event-id="${itemId}"])`,
         timeout: 25000,
         run: () => {}, // it's a check
     },
@@ -61,7 +61,7 @@ registry.category("web_tour.tours").add('google_analytics_add_to_cart', {
     {
         content: 'check add to cart event',
         extra_trigger: 'body[cart-event-id]',
-        trigger: 'a:has(.my_cart_quantity:containsExact(1))',
+        trigger: "a:has(.my_cart_quantity:contains(/^1$/))",
         timeout: 25000,
         run: () => {}, // it's a check
     },

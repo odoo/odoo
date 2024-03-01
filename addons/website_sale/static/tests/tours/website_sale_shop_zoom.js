@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add('shop_zoom', {
     steps: () => [
     {
         content: "select " + imageName,
-        trigger: '.oe_product_cart a:containsExact("' + imageName + '")',
+        trigger: `.oe_product_cart a:contains(/^${imageName}$/)`,
     },
     {
         content: "click on the image",

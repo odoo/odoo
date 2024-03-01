@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: '.o_field_widget[name=price_subtotal]:contains(2,500.00)',
     run() {},
 }, {
-    trigger: 'div[name="name"] textarea:propValueContains(Service Product)',
+    trigger: 'div[name="name"] textarea:value(Service Product)',
     run: () => {}
 }, {
     trigger: 'button[name="action_confirm"]',

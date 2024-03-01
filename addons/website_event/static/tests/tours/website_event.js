@@ -32,7 +32,7 @@
         }
     }, {
         trigger: '.modal-footer button.btn-primary',
-        extra_trigger: '.modal-dialog input[type=text][value!=""]',
+        extra_trigger: `.modal-dialog input[type=text]:not(:value(""))`,
         content: markup(_t("Click <em>Continue</em> to create the event.")),
         position: "right",
     }, {
