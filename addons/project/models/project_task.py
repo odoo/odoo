@@ -953,7 +953,7 @@ class Task(models.Model):
             if vals.get('user_ids'):
                 vals['date_assign'] = fields.Datetime.now()
                 if not (vals.get('parent_id') or project_id or self._context.get('default_project_id')):
-                    user_ids = self._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self)
+                    user_ids = self._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self.env['project.task'])
                     if self.env.user.id not in list(user_ids) + [SUPERUSER_ID]:
                         vals['user_ids'] = [Command.set(list(user_ids) + [self.env.user.id])]
 
