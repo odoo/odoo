@@ -28,6 +28,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                     fields: {
                         display_name: { type: "char", string: "Display Name" },
                         trululu: { type: "many2one", string: "Trululu", relation: "partner" },
+                        boolean: { type: "boolean", string: "Bool" },
                     },
                     records: [
                         { id: 1, display_name: "first record", trululu: 4 },
@@ -478,5 +479,39 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
         fileInput.dispatchEvent(new Event("change"));
         await nextTick();
         assert.verifySteps(["post"]);
+    });
+
+    QUnit.test("button box with 3/4 buttons (close to threshold)", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <div name="button_box">
+                            <button>MyButton</button>
+                            <button>MyButton2</button>
+                            <button>MyButton3</button>
+                            <button invisible="not boolean">MyButton4</button>
+                        </div>
+                        <field name="boolean"/>
+                    </sheet>
+                </form>`,
+            resId: 2,
+        });
+
+        // 3 buttons to display -> no "More" dropdown
+        assert.containsNone(fixture, ".o_field_widget[name=boolean] input:checked");
+        assert.containsN(fixture, ".o-form-buttonbox > .oe_stat_button", 3);
+        assert.containsNone(fixture, ".o-form-buttonbox .o_button_more");
+
+        // 4 buttons to display -> 2 buttons visible + 2 inside the "More" dropdown
+        await click(fixture.querySelector(".o_field_widget[name=boolean] input"));
+        assert.containsN(fixture, ".o-form-buttonbox > .oe_stat_button", 3);
+        assert.containsOnce(fixture, ".o-form-buttonbox .oe_stat_button .o_button_more");
+
+        await click(fixture.querySelector(".o_button_more"));
+        assert.containsN(fixture, ".o_dropdown_more .oe_stat_button", 2);
     });
 });
