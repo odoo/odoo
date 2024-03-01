@@ -73,15 +73,15 @@
         <t t-set="title" t-value="docs._description"/>
         <t t-set="company" t-value="docs.company_id if len(docs) == 1 else docs.env.company"/>
         <t t-call="web.html_container">
-            <t t-call="web.internal_layout">
-                <div class="page">
-                    <t t-foreach="docs" t-as="doc">
-                        <t t-if="from_project" t-set="show_task"
-                            t-value="bool(doc.timesheet_ids.task_id)"/>
-                        <div class="oe_structure"/>
-                        <div class="row mt8">
-                            <div class="col-12">
-                                <t t-if="doc.allow_timesheets and doc.timesheet_ids">
+            <t t-foreach="docs" t-as="doc">
+                <t t-if="doc.allow_timesheets and doc.timesheet_ids">
+                    <t t-call="web.internal_layout">
+                        <div class="page">
+                            <t t-if="from_project" t-set="show_task"
+                                t-value="bool(doc.timesheet_ids.task_id)"/>
+                            <div class="oe_structure"/>
+                            <div class="row mt8">
+                                <div class="col-12">
                                     <h1 class="my-4">
                                         <t t-if="not show_record">
                                             <t t-out="title"/>: <span t-field="doc.name"/>
@@ -96,11 +96,11 @@
                                     </h2>
                                     <t t-set='lines' t-value='doc.timesheet_ids'/>
                                     <t t-call="hr_timesheet.timesheet_table"/>
-                                </t>
+                                </div>
                             </div>
                         </div>
                     </t>
-                </div>
+                </t>
             </t>
         </t>
     </template>

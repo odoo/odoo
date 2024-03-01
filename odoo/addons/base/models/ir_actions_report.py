@@ -729,7 +729,10 @@ class IrActionsReport(models.Model):
 
             bodies, html_ids, header, footer, specific_paperformat_args = self.with_context(**additional_context)._prepare_html(html, report_model=report_sudo.model)
 
-            if report_sudo.attachment and set(res_ids_wo_stream) != set(html_ids):
+            html_ids_wo_none = [x for x in html_ids if x]
+
+            # html_ids_wo_none should be a subset of res_ids_wo_stream
+            if report_sudo.attachment and set(res_ids_wo_stream) < set(html_ids_wo_none):
                 raise UserError(_(
                     "The report's template %r is wrong, please contact your administrator. \n\n"
                     "Can not separate file to save as attachment because the report's template does not contains the"
@@ -757,17 +760,23 @@ class IrActionsReport(models.Model):
                     }
                 }
 
+            # Check if any streams were reloaded from attachment
+            has_reloaded_streams = any([collected_stream['stream'] for collected_stream in collected_streams.values()])
             # Split the pdf for each record using the PDF outlines.
 
             # Only one record: append the whole PDF.
             if len(res_ids_wo_stream) == 1:
-                collected_streams[res_ids_wo_stream[0]]['stream'] = pdf_content_stream
+                # Check for cases where nothing was rendered
+                if res_ids_wo_stream == html_ids_wo_none:
+                    collected_streams[res_ids_wo_stream[0]]['stream'] = pdf_content_stream
+                elif not has_reloaded_streams:
+                    collected_streams[False] = {'stream': pdf_content_stream, 'attachment': None}
+
                 return collected_streams
 
             # In case of multiple docs, we need to split the pdf according the records.
             # In the simplest case of 1 res_id == 1 page, we use the PDFReader to print the
             # pages one by one.
-            html_ids_wo_none = [x for x in html_ids if x]
             reader = PdfFileReader(pdf_content_stream)
             if reader.numPages == len(res_ids_wo_stream):
                 for i in range(reader.numPages):
@@ -783,15 +792,15 @@ class IrActionsReport(models.Model):
             # An outline is a <h?> html tag found on the document. To retrieve this table,
             # we look on the pdf structure using pypdf to compute the outlines_pages from
             # the top level heading in /Outlines.
-            if len(res_ids_wo_stream) > 1 and set(res_ids_wo_stream) == set(html_ids_wo_none):
+            if len(res_ids_wo_stream) > 1 and set(res_ids_wo_stream) >= set(html_ids_wo_none):
                 root = reader.trailer['/Root']
                 has_valid_outlines = '/Outlines' in root and '/First' in root['/Outlines']
                 if not has_valid_outlines:
-                    return {False: {
-                        'report_action': self,
-                        'stream': pdf_content_stream,
-                        'attachment': None,
-                    }}
+                    # Check for cases where nothing was rendered
+                    if not has_reloaded_streams:
+                        collected_streams[False] = {'stream': pdf_content_stream, 'attachment': None}
+
+                    return collected_streams
 
                 outlines_pages = []
                 node = root['/Outlines']['/First']
@@ -802,13 +811,13 @@ class IrActionsReport(models.Model):
                     node = node['/Next']
                 outlines_pages = sorted(set(outlines_pages))
 
-                # The number of outlines must be equal to the number of records to be able to split the document.
-                has_same_number_of_outlines = len(outlines_pages) == len(res_ids)
+                # The number of outlines must be lesser than or equal to the number of records to be able to split the document.
+                has_lesser_number_of_outlines = len(outlines_pages) <= len(res_ids)
 
                 # There should be a top-level heading on first page
                 has_top_level_heading = outlines_pages[0] == 0
 
-                if has_same_number_of_outlines and has_top_level_heading:
+                if has_lesser_number_of_outlines and has_top_level_heading:
                     # Split the PDF according to outlines.
                     for i, num in enumerate(outlines_pages):
                         to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
@@ -817,7 +826,8 @@ class IrActionsReport(models.Model):
                             attachment_writer.addPage(reader.getPage(j))
                         stream = io.BytesIO()
                         attachment_writer.write(stream)
-                        collected_streams[res_ids[i]]['stream'] = stream
+                        # Assign streams to rendered res_ids
+                        collected_streams[html_ids_wo_none[i]]['stream'] = stream
 
                     return collected_streams
 
@@ -847,7 +857,7 @@ class IrActionsReport(models.Model):
             attachment_vals_list = []
             for res_id, stream_data in collected_streams.items():
                 # An attachment already exists.
-                if stream_data['attachment']:
+                if stream_data['attachment'] or not stream_data['stream']:
                     continue
 
                 # if res_id is false
