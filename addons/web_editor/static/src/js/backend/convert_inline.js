@@ -425,7 +425,7 @@ function classToStyle($editable, cssRules) {
         // Outlook doesn't support inline !important
         style = style.replace(/!important/g,'');
         for (const [key, value] of Object.entries(css)) {
-            if (!(new RegExp(`(^|;)\\s*${key}`).test(style))) {
+            if (!(new RegExp(`(^|;)\\s*${key}[ :]`).test(style))) {
                 style = `${key}:${value};${style}`;
             }
         };
