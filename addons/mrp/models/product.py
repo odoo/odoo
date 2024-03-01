@@ -30,18 +30,31 @@ class ProductTemplate(models.Model):
         compute='_compute_used_in_bom_count', compute_sudo=False)
     mrp_product_qty = fields.Float('Manufactured', digits='Product Unit of Measure',
         compute='_compute_mrp_product_qty', compute_sudo=False)
-    is_kits = fields.Boolean(compute='_compute_is_kits', compute_sudo=True)
+    is_kits = fields.Boolean(compute='_compute_is_kits', search='_search_is_kits')
 
     def _compute_bom_count(self):
         for product in self:
             product.bom_count = self.env['mrp.bom'].search_count(['|', ('product_tmpl_id', '=', product.id), ('byproduct_ids.product_id.product_tmpl_id', '=', product.id)])
 
     def _compute_is_kits(self):
-        domain = [('product_tmpl_id', 'in', self.ids), ('type', '=', 'phantom')]
-        bom_mapping = self.env['mrp.bom'].search_read(domain, ['product_tmpl_id'])
-        kits_ids = set(b['product_tmpl_id'][0] for b in bom_mapping)
+        domain = [('company_id', 'in', [False] + self.env.companies.ids),
+                  ('product_tmpl_id', 'in', self.ids),
+                  ('active', '=', True),
+                  ('type', '=', 'phantom')]
+        bom_mapping = self.env['mrp.bom'].sudo()._read_group(domain, ['product_tmpl_id'])
+        kits_ids = {b[0].id for b in bom_mapping}
         for template in self:
             template.is_kits = (template.id in kits_ids)
+
+    def _search_is_kits(self, operator, value):
+        assert operator in ('=', '!='), 'Unsupported operator'
+        bom_tmpl_query = self.env['mrp.bom'].sudo()._search(
+            [('company_id', 'in', [False] + self.env.companies.ids),
+             ('type', '=', 'phantom'), ('active', '=', True)])
+        neg = ''
+        if (operator == '=' and not value) or (operator == '!=' and value):
+            neg = 'not '
+        return [('id', neg + 'inselect', bom_tmpl_query.subselect('product_tmpl_id'))]
 
     def _compute_show_qty_status_button(self):
         super()._compute_show_qty_status_button()
@@ -109,27 +122,43 @@ class ProductProduct(models.Model):
         compute='_compute_used_in_bom_count', compute_sudo=False)
     mrp_product_qty = fields.Float('Manufactured', digits='Product Unit of Measure',
         compute='_compute_mrp_product_qty', compute_sudo=False)
-    is_kits = fields.Boolean(compute="_compute_is_kits", compute_sudo=True)
+    is_kits = fields.Boolean(compute="_compute_is_kits", search='_search_is_kits')
 
     def _compute_bom_count(self):
         for product in self:
             product.bom_count = self.env['mrp.bom'].search_count(['|', '|', ('byproduct_ids.product_id', '=', product.id), ('product_id', '=', product.id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product.product_tmpl_id.id)])
 
     def _compute_is_kits(self):
-        domain = ['&', ('type', '=', 'phantom'),
-                       '|', ('product_id', 'in', self.ids),
-                            '&', ('product_id', '=', False),
-                                 ('product_tmpl_id', 'in', self.product_tmpl_id.ids)]
-        bom_mapping = self.env['mrp.bom'].search_read(domain, ['product_tmpl_id', 'product_id'])
-        kits_template_ids = set([])
-        kits_product_ids = set([])
-        for bom_data in bom_mapping:
-            if bom_data['product_id']:
-                kits_product_ids.add(bom_data['product_id'][0])
-            else:
-                kits_template_ids.add(bom_data['product_tmpl_id'][0])
+        domain = [
+            '&', ('company_id', 'in', [False] + self.env.companies.ids),
+            '&', ('active', '=', True),
+            '&', ('type', '=', 'phantom'),
+            '|', ('product_id', 'in', self.ids),
+            '&', ('product_id', '=', False),
+            ('product_tmpl_id', 'in', self.product_tmpl_id.ids)]
+        tmpl_bom_mapping = self.env['mrp.bom'].sudo()._read_group(domain, ['product_tmpl_id'])
+        product_bom_mapping = self.env['mrp.bom'].sudo()._read_group(domain, ['product_id'])
+        kits_template_ids = {b[0].id for b in tmpl_bom_mapping}
+        kits_product_ids = {b[0].id for b in product_bom_mapping if b}
         for product in self:
             product.is_kits = (product.id in kits_product_ids or product.product_tmpl_id.id in kits_template_ids)
+
+    def _search_is_kits(self, operator, value):
+        assert operator in ('=', '!='), 'Unsupported operator'
+        bom_tmpl_query = self.env['mrp.bom'].sudo()._search(
+            [('company_id', 'in', [False] + self.env.companies.ids),
+             ('active', '=', True),
+             ('type', '=', 'phantom'), ('product_id', '=', False)])
+        bom_product_query = self.env['mrp.bom'].sudo()._search(
+            [('company_id', 'in', [False] + self.env.companies.ids),
+             ('type', '=', 'phantom'), ('product_id', '!=', False)])
+        neg = ''
+        op = '|'
+        if (operator == '=' and not value) or (operator == '!=' and value):
+            neg = 'not '
+            op = '&'
+        return [op, ('product_tmpl_id', neg + 'inselect', bom_tmpl_query.subselect('product_tmpl_id')),
+                ('id', neg + 'inselect', bom_product_query.subselect('product_id'))]
 
     def _compute_show_qty_status_button(self):
         super()._compute_show_qty_status_button()
