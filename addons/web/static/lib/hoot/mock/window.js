@@ -32,7 +32,7 @@ import {
 // Global
 //-----------------------------------------------------------------------------
 
-const { Object, document, innerWidth, innerHeight, outerWidth, outerHeight } = globalThis;
+const { console, document, innerHeight, innerWidth, Object, outerHeight, outerWidth } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -164,6 +164,7 @@ const mockCookie = new MockCookie();
 const mockHistory = new MockHistory(mockLocation);
 const mockLocalStorage = new MockStorage();
 const mockSessionStorage = new MockStorage();
+const originalConsole = { ...console };
 let mockTitle = "";
 
 // Mock descriptors
@@ -221,6 +222,9 @@ export function cleanupWindow() {
 
     // Title
     mockTitle = "";
+
+    // Console
+    Object.assign(console, originalConsole);
 
     // Listeners
     for (const [target, listeners] of listenerMap) {

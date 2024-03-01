@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { after, describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { TestRunner } from "../../core/runner";
 import { Suite } from "../../core/suite";
 import { parseUrl } from "../local_helpers";
@@ -61,9 +61,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("can register test tags", async () => {
-        const warn = console.warn;
         console.warn = (message) => expect.step(message);
-        after(() => (console.warn = warn));
 
         const runner = new TestRunner();
         runner.describe("suite", () => {
