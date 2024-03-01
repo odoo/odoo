@@ -81,7 +81,7 @@ class TestHolidaysMultiContract(TestHolidayContract):
         start = datetime.strptime('2015-11-23 07:00:00', '%Y-%m-%d %H:%M:%S')
         end = datetime.strptime('2015-11-24 18:00:00', '%Y-%m-%d %H:%M:%S')
         leave = self.create_leave(start, end, name="Doctor Appointment", employee_id=self.jules_emp.id)
-        self.assertEqual(leave.number_of_hours_display, 14, "It should count hours according to the future contract.")
+        self.assertEqual(leave.number_of_hours, 14, "It should count hours according to the future contract.")
 
     def test_leave_multi_contracts_same_schedule(self):
         # Allow leaves overlapping multiple contracts if same
@@ -215,19 +215,17 @@ class TestHolidaysMultiContract(TestHolidayContract):
                 'request_date_to': '2023-12-7',  # Thursday
             },
         ])
-        self.assertEqual(leave_during_full_time.number_of_days_display, 3)
-        self.assertEqual(leave_during_partial_time.number_of_days_display, 2)
-        self.assertEqual(leave_during_full_time.number_of_hours_display, 24)
-        self.assertEqual(leave_during_partial_time.number_of_hours_display, 16)
+        self.assertEqual(leave_during_full_time.number_of_days, 3)
+        self.assertEqual(leave_during_partial_time.number_of_days, 2)
+        self.assertEqual(leave_during_full_time.number_of_hours, 24)
+        self.assertEqual(leave_during_partial_time.number_of_hours, 16)
         # Simulate the unit change days/hours of the time off type
         (leave_during_full_time + leave_during_partial_time)._compute_duration()
-        self.assertEqual(leave_during_full_time.number_of_days_display, 3)
-        self.assertEqual(leave_during_partial_time.number_of_days_display, 2)
-        (leave_during_full_time + leave_during_partial_time)._compute_number_of_hours_display()
-        self.assertEqual(leave_during_full_time.number_of_hours_display, 24)
-        self.assertEqual(leave_during_partial_time.number_of_hours_display, 16)
+        self.assertEqual(leave_during_full_time.number_of_days, 3)
+        self.assertEqual(leave_during_partial_time.number_of_days, 2)
+        self.assertEqual(leave_during_full_time.number_of_hours, 24)
+        self.assertEqual(leave_during_partial_time.number_of_hours, 16)
         # Check after leave approval
         (leave_during_full_time + leave_during_partial_time).action_approve()
-        (leave_during_full_time + leave_during_partial_time)._compute_number_of_hours_display()
-        self.assertEqual(leave_during_full_time.number_of_hours_display, 24)
-        self.assertEqual(leave_during_partial_time.number_of_hours_display, 16)
+        self.assertEqual(leave_during_full_time.number_of_hours, 24)
+        self.assertEqual(leave_during_partial_time.number_of_hours, 16)
