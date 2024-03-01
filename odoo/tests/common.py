@@ -1236,6 +1236,9 @@ class ChromeBrowser:
                         else:
                             f.set_exception(ChromeBrowserException(res['error']['message']))
             except Exception:
+                msg = str(msg)
+                if msg and len(msg) > 500:
+                    msg = msg[:500] + '...'
                 _logger.exception("While processing message %s", msg)
 
     def _websocket_request(self, method, *, params=None, timeout=10.0):
@@ -1342,12 +1345,16 @@ class ChromeBrowser:
             return
         self._websocket_send('Page.screencastFrameAck', params={'sessionId': sessionId})
         outfile = os.path.join(self.screencasts_frames_dir, 'frame_%05d.b64' % len(self.screencast_frames))
-        with open(outfile, 'w') as f:
-            f.write(data)
-            self.screencast_frames.append({
-                'file_path': outfile,
-                'timestamp': metadata.get('timestamp')
-            })
+        try:
+            with open(outfile, 'w') as f:
+                f.write(data)
+                self.screencast_frames.append({
+                    'file_path': outfile,
+                    'timestamp': metadata.get('timestamp')
+                })
+        except FileNotFoundError:
+            self._logger.debug('Useless screencast frame skipped: %s', outfile)
+
 
     _TO_LEVEL = {
         'debug': logging.DEBUG,
@@ -1499,7 +1506,8 @@ class ChromeBrowser:
     def clear(self):
         self._websocket_send('Page.stopScreencast')
         if self.screencasts_dir and os.path.isdir(self.screencasts_frames_dir):
-            shutil.rmtree(self.screencasts_frames_dir)
+            self.screencasts_dir = self.screencasts_frames_dir = None
+            shutil.rmtree(self.screencasts_frames_dir, ignore_errors=True)
         self.screencast_frames = []
         self._websocket_request('Page.stopLoading')
         self._websocket_request('Runtime.evaluate', params={'expression': """
