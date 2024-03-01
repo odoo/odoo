@@ -13,4 +13,4 @@ Severin Zumbrunn severin.zumbrunn@abilium.com  https://github.com/szumbrunn
 List of contributors:
 
 Severin Zumbrunn sz@tune-x.ch https://github.com/szumbrunn
-Leyla Karahan leyla.karahan@abilium.com https://github.com/LeyKara
+Leyla Karahan leyla.karahan@wiss-edu.ch https://github.com/LeyKara
