@@ -321,7 +321,7 @@ class IrAttachment(models.Model):
         supported_subtype = ICP('base.image_autoresize_extensions', 'png,jpeg,bmp,tiff').split(',')
 
         mimetype = values['mimetype'] = self._compute_mimetype(values)
-        _type, _, _subtype = mimetype.partition('/')
+        _type, _match, _subtype = mimetype.partition('/')
         is_image_resizable = _type == 'image' and _subtype in supported_subtype
         if is_image_resizable and (values.get('datas') or values.get('raw')):
             is_raw = values.get('raw')
@@ -335,6 +335,10 @@ class IrAttachment(models.Model):
                         img = ImageProcess(values['raw'], verify_resolution=False)
                     else:  # datas
                         img = ImageProcess(base64.b64decode(values['datas']), verify_resolution=False)
+
+                    if not img.image:
+                        _logger.info('Post processing ignored : Empty source, SVG, or WEBP')
+                        return values
 
                     w, h = img.image.size
                     nw, nh = map(int, max_resolution.split('x'))
