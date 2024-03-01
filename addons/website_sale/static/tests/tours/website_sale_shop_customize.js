@@ -52,7 +52,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         },
         {
             content: "check price is 750",
-            trigger: "iframe .product_price .oe_price .oe_currency_value:containsExact(750.00)",
+            trigger: "iframe .product_price .oe_price .oe_currency_value:contains(/^750.00$/)",
             run: function () {},
         },
         {
@@ -61,7 +61,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         },
         {
             content: "verify that price has changed when changing variant",
-            trigger: "iframe .product_price .oe_price .oe_currency_value:containsExact(800.40)",
+            trigger: "iframe .product_price .oe_price .oe_currency_value:contains(/^800.40$/)",
             run: function () {},
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
@@ -86,7 +86,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         },
         {
             content: "check price is 750",
-            trigger: "iframe .product_price .oe_price .oe_currency_value:containsExact(750.00)",
+            trigger: "iframe .product_price .oe_price .oe_currency_value:contains(/^750.00$/)",
             run: function () {},
         },
         {
@@ -95,7 +95,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         },
         {
             content: "verify that price has changed when changing variant",
-            trigger: "iframe .product_price .oe_price .oe_currency_value:containsExact(800.40)",
+            trigger: "iframe .product_price .oe_price .oe_currency_value:contains(/^800.40$/)",
             run: function () {}, // it's a check
         },
         {
@@ -104,7 +104,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         },
         {
             content: "check price is 750",
-            trigger: "iframe .product_price .oe_price .oe_currency_value:containsExact(750.00)",
+            trigger: "iframe .product_price .oe_price .oe_currency_value:contains(/^750.00$/)",
             run: function () {},
         },
         {
@@ -113,7 +113,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         },
         {
             content: "check quantity",
-            trigger: 'iframe .my_cart_quantity:containsExact(1),.o_extra_menu_items .fa-plus',
+            trigger: "iframe .my_cart_quantity:contains(/^1$/),.o_extra_menu_items .fa-plus",
             run: function () {}, // it's a check
         },
         tourUtils.goToCart({backend: true}),

@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add('tour_shop_dynamic_variants', {
     steps: () => [
     {
         content: "select Dynamic Product",
-        trigger: '.oe_product_cart a:containsExact("Dynamic Product")',
+        trigger: ".oe_product_cart a:contains(/^Dynamic Product$/)",
     },
     {
         content: "click on the second variant",
@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add('tour_shop_dynamic_variants', {
     },
     {
         content: "click add to cart",
-        extra_trigger: 'body:has(input[type="hidden"][name="product_id"][value=0])',
+        extra_trigger: 'body:has(input[type="hidden"][name="product_id"][value="0"])',
         trigger: '#add_to_cart',
     },
         tourUtils.goToCart(),

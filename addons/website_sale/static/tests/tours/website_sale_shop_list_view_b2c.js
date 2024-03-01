@@ -50,7 +50,7 @@ wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
         },
         {
             content: "check price is 825",
-            trigger: 'iframe .product_price .oe_price .oe_currency_value:containsExact(825.00)',
+            trigger: "iframe .product_price .oe_price .oe_currency_value:contains(/^825.00$/)",
             run: () => {}, // It's a check.
         },
         {
@@ -59,7 +59,7 @@ wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
         },
         {
             content: "verify that price has changed when changing variant",
-            trigger: 'iframe .product_price .oe_price .oe_currency_value:containsExact(880.44)',
+            trigger: "iframe .product_price .oe_price .oe_currency_value:contains(/^880.44$/)",
             run: () => {}, // It's a check.
         },
         {
@@ -69,7 +69,7 @@ wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
         tourUtils.goToCart({backend: true}),
         {
             content: "check price on /cart",
-            trigger: 'iframe #cart_products .oe_currency_value:containsExact(880.44)',
+            trigger: "iframe #cart_products .oe_currency_value:contains(/^880.44$/)",
             run: () => {}, // It's a check.
         },
     ],

@@ -23,6 +23,6 @@ registry.category("web_tour.tours").add("blog_autocomplete_with_date", {
     trigger: '.o_searchbar_form button:has(i.oi-search)',
 }, {
     content: "Ensure both filters are applied",
-    trigger: '#o_wblog_posts_loop:has(span:has(i.fa-calendar-o):has(a[href="/blog?search=a"])):has(span:has(i.fa-search):has(a[href^="/blog?date_begin"]))',
+    trigger: `#o_wblog_posts_loop:has(span a[href="/blog?search=a"]):has(span i.fa-calendar-o):has(span a[href^="/blog?date_begin"]):has(span i.fa-search)`,
     run: () => {}, // This is a check.
 }]});
