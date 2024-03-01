@@ -65,13 +65,7 @@ test("CodeEditor shouldn't accepts markup values", async () => {
         }
     });
 
-    patchWithCleanup(window, {
-        console: Object.assign(Object.create(console), {
-            warn(msg) {
-                expect.step(msg);
-            },
-        }),
-    });
+    console.warn = (msg) => expect.step(msg);
 
     class Parent extends Component {
         static components = { CodeEditor };
