@@ -151,6 +151,34 @@ class TestMailTools(MailCommon):
         found = self.env['res.partner']._mail_find_partner_from_emails([self.env.user.partner_id.email_formatted])
         self.assertEqual(found, [self.env.user.partner_id])
 
+    def test_mail_find_partner_from_emails_multicompany(self):
+        """ Test _mail_find_partner_from_emails when dealing with records in
+        a multicompany environment, returning a partner record with matching
+        company_id. """
+        Partner = self.env['res.partner']
+        self.test_partner.company_id = self.company_2
+
+        test_partner_no_company = self.test_partner.copy({'company_id': False})
+        test_partner_company_2 = self.test_partner
+        test_partner_company_3 = test_partner_no_company.copy({'company_id': self.company_3.id})
+        records = [
+            None,
+            *Partner.create([
+                {'name': 'Company 2 contact', 'company_id': self.company_2.id},
+                {'name': 'Company 3 contact', 'company_id': self.company_3.id},
+                {'name': 'No restrictions', 'company_id': False},
+            ])
+        ]
+        expected_partners = [
+            (test_partner_no_company, "W/out reference record, prefer non-specific partner."),
+            (test_partner_company_2, "Prefer same company as reference record."),
+            (test_partner_company_3, "Prefer same company as reference record."),
+            (test_partner_no_company, "Prefer non-specific partner for non-specific records."),
+        ]
+        for record, (expected_partner, msg) in zip(records, expected_partners):
+            found = Partner._mail_find_partner_from_emails([self._test_email], records=record)
+            self.assertEqual(found, [expected_partner], msg)
+
 
 @tagged('mail_tools', 'mail_init')
 class TestMailUtils(MailCommon):
