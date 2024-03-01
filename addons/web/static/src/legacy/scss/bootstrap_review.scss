@@ -242,3 +242,10 @@ $o-navbar-nav-pills-link-border-radius: $nav-pills-border-radius !default;
         color: adjust-color-to-background($text-muted, $light, mute-color($yiq-text-light), mute-color($yiq-text-dark)) !important;
     }
 }
+
+// Dropdown
+.dropdown .dropdown-menu {
+    .text-muted {
+        color: adjust-color-to-background($text-muted, $dropdown-bg, mute-color($yiq-text-light), mute-color($yiq-text-dark)) !important;
+    }
+}
