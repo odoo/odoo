@@ -386,3 +386,14 @@ class TestProjectBase(TestProjectCommon):
         self.assertTrue(user_b.partner_id in task_2.message_partner_ids)
         self.assertTrue(user_c.partner_id in task_2.message_partner_ids)
         self.assertFalse(partner in task_2.message_partner_ids)
+
+    def test_create_private_task_in_batch(self):
+        """ This test ensures that copying private task in batch can be done correctly."""
+
+        task_0, task_1 = self.env['project.task'].create([{
+            'name': f'task {i}',
+            'user_ids': self.env.user.ids,
+            'project_id': False,
+        } for i in range(2)]).copy()
+        self.assertEqual(task_0.name, 'task 0 (copy)')
+        self.assertEqual(task_1.name, 'task 1 (copy)')
