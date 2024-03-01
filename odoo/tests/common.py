@@ -945,6 +945,7 @@ class ChromeBrowser:
         if hasattr(self, 'ws'):
             self._websocket_send('Page.stopScreencast')
             if self.screencasts_dir and os.path.isdir(self.screencasts_frames_dir):
+                self.screencasts_dir = None
                 shutil.rmtree(self.screencasts_frames_dir)
 
             self._websocket_request('Page.stopLoading')
@@ -1178,6 +1179,9 @@ class ChromeBrowser:
                         else:
                             f.set_exception(ChromeBrowserException(res['error']['message']))
             except Exception:
+                msg = str(msg)
+                if msg and len(msg) > 500:
+                    msg = msg[:500] + '...'
                 _logger.exception("While processing message %s", msg)
 
     def _websocket_request(self, method, *, params=None, timeout=10.0):
@@ -1329,6 +1333,8 @@ which leads to stray network requests and inconsistencies."""
 
     def _handle_screencast_frame(self, sessionId, data, metadata):
         self._websocket_send('Page.screencastFrameAck', params={'sessionId': sessionId})
+        if not self.screencasts_dir:
+            return
         outfile = os.path.join(self.screencasts_frames_dir, 'frame_%05d.b64' % len(self.screencast_frames))
         try:
             with open(outfile, 'w') as f:
