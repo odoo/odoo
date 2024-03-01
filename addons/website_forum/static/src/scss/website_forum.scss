@@ -35,6 +35,10 @@ $-forum-sidebar-width: map-get($container-max-widths, sm) / 2;
         }
     }
 
+    .o_wforum_latest_post {
+        --o-avatar-height: #{$font-size-base};
+    }
+
     .o_wforum_content_wrapper {
         @include media-breakpoint-up(xxl) {
             margin-left: -$-forum-sidebar-width;
