@@ -638,6 +638,26 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         for move in payments.move_id:
             self.assertRecordValues(move.line_ids, [{'move_name': move.name}] * len(move.line_ids))
 
+    def test_resequence_payment_and_non_payment_without_payment_sequence(self):
+        """Resequence wizard could be open for different move type if the payment sequence is set to False on the journal."""
+        journal = self.company_data['default_journal_bank'].copy({'payment_sequence': False})
+        bsl = self.env['account.bank.statement.line'].create({'name': 'test', 'amount': 100, 'journal_id': journal.id})
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'partner_id': self.partner_a.id,
+            'amount': 100,
+            'journal_id': journal.id,
+        })
+
+        payment.action_post()
+        wizard = Form(self.env['account.resequence.wizard'].with_context(
+            active_ids=(payment.move_id + bsl.move_id).ids,
+            active_model='account.move'),
+        )
+
+        wizard.save().resequence()
+        self.assertTrue(wizard)
+
 
 @tagged('post_install', '-at_install')
 class TestSequenceMixinDeletion(TestSequenceMixinCommon):
