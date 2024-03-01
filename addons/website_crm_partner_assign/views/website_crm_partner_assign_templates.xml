@@ -386,7 +386,7 @@
                             </div>
                         </main>
                         <footer class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
                             <button t-attf-class="btn btn-primary new_opp_confirm">Confirm</button>
                         </footer>
                     </form>
@@ -435,94 +435,99 @@
 
     <template id="portal_my_lead" name="My Lead">
         <t t-call="portal.portal_layout">
-            <div class="card border-0">
-                <div class="card-header bg-view">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h4>
-                            Lead - <span t-field="lead.name"/>
-                        </h4>
-                        <span title="Rating" role="img" t-attf-aria-label="Rating: #{lead.priority} on 3">
-                            <t t-foreach="range(1, 4)" t-as="i">
-                                <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(lead.priority) else '-o'}"/>
-                            </t>
-                        </span>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="row" t-if="lead.partner_name or lead.email_from or lead.partner_id">
-                                <label class="col-4 fw-bold">Customer</label>
-                                <address class="col-8">
-                                    <div>
-                                        <span t-if="lead.partner_name" itemprop="name" t-field="lead.partner_name" />
-                                        <span t-if="not lead.partner_name" itemprop="name" t-field="lead.contact_name"/>
-                                    </div>
-                                    <div t-if="lead.phone">
-                                        <span class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="lead.phone" />
-                                    </div>
-                                    <div t-if="lead.mobile">
-                                        <span class="fa fa-mobile" role="img" aria-label="Mobile" title="Mobile"/> <span itemprop="telephone" t-field="lead.mobile" />
-                                    </div>
-                                    <div t-if="lead.email_from">
-                                        <span class="fa fa-envelope" role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-field="lead.email_from" />
-                                    </div>
-                                </address>
-                            </div>
-                            <div class="row" t-if="lead.street or lead.street2 or lead.city or lead.state_id or lead.country_id">
-                                <label class="col-4 fw-bold">Address</label>
-                                <address class="col-8">
-                                    <div t-if="lead.street"><span t-field="lead.street"/></div>
-                                    <div t-if="lead.street2"><span t-field="lead.street2"/></div>
-                                    <div t-if="lead.city or lead.zip">
-                                        <span t-field="lead.city"/> <span t-field="lead.zip"/>
-                                    </div>
-                                    <div t-if="lead.state_id or country_id">
-                                        <span t-field="lead.state_id"/> <span t-field="lead.country_id"/>
-                                    </div>
-                                </address>
-                            </div>
-                            <div class="row" t-if="lead.user_id">
-                                <label class="col-4 fw-bold">Salesperson</label>
-                                <span class="col-8" t-field="lead.user_id" />
-                            </div>
-                            <div class="row" t-if="lead.team_id">
-                                <label class="col-4 fw-bold">Sales Team</label>
-                                <span class="col-8" t-field="lead.team_id" />
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="row" t-if="lead.date_deadline">
-                                <label class="col-4 fw-bold">Expected Closing</label>
-                                <span class="col-8" t-field="lead.date_deadline" />
-                            </div>
-                            <div class="row" groups="!base.group_portal" t-if="lead.tag_ids">
-                                <label class="col-4 fw-bold">Tags</label>
-                                <span class="col-8">
-                                    <t t-foreach="lead.tag_ids" t-as="tag">
-                                        <span class="badge text-bg-info" t-esc="tag.name" />
-                                    </t>
-                                </span>
-                            </div>
-                            <div class="row mt16" t-if="lead.partner_assigned_id">
-                                <label class="col-4 fw-bold">Assigned Partner</label>
-                                <address class="col-8" t-field="lead.partner_assigned_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"], "no_marker": True}'/>
-                            </div>
-                            <div class="row mt16" t-if="lead.campaign_id">
-                                <label class="col-4 fw-bold">Campaign</label>
-                                <span class="col-8" t-field="lead.campaign_id" />
-                            </div>
-                            <div class="row" t-if="lead.medium_id">
-                                <label class="col-4 fw-bold">Medium</label>
-                                <span class="col-8" t-field="lead.medium_id" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="d-flex align-items-center gap-2 mb-4">
+                <h4 class="mb-0">Lead -
+                    <span t-field="lead.name"/>
+                    <span title="Rating" role="img" t-attf-aria-label="Rating: #{lead.priority} on 3" class="fs-6">
+                        <t t-foreach="range(1, 4)" t-as="i">
+                            <span t-attf-class="fa fa-lg fa-star#{' text-warning' if i &lt;= int(lead.priority) else '-o'}"/>
+                        </t>
+                    </span>
+                </h4>
             </div>
-            <div class='d-flex justify-content-center gap-2'>
-                <a role="button" href="#" class="btn btn-primary btn" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_interested"><i class="fa fa-file-text-o"/> I'm interested</a>
-                <a role="button" href="#" class="btn btn-primary btn" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_desinterested"><i class="fa fa-fw fa-times"/> I'm not interested</a>
+            <table class="table table-borderless">
+                <tbody class="text-nowrap">
+                    <tr t-if="lead.partner_name or lead.email_from or lead.partner_id">
+                        <th class="ps-0 pb-0">Customer:</th>
+                        <td>
+                            <address>
+                                <div>
+                                    <span t-if="lead.partner_name" itemprop="name" t-field="lead.partner_name" />
+                                    <span t-if="not lead.partner_name" itemprop="name" t-field="lead.contact_name"/>
+                                </div>
+                                <div t-if="lead.phone">
+                                    <span class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="lead.phone" />
+                                </div>
+                                <div t-if="lead.mobile">
+                                    <span class="fa fa-mobile" role="img" aria-label="Mobile" title="Mobile"/> <span itemprop="telephone" t-field="lead.mobile" />
+                                </div>
+                                <div t-if="lead.email_from">
+                                    <span class="fa fa-envelope" role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-field="lead.email_from" />
+                                </div>
+                            </address>
+                        </td>
+                    </tr>
+                    <tr t-if="lead.street or lead.street2 or lead.city or lead.state_id or lead.country_id">
+                        <th class="ps-0 pb-0">Address:</th>
+                        <td class="w-100 pb-0 text-wrap">
+                            <address>
+                                <div t-if="lead.street"><span t-field="lead.street"/></div>
+                                <div t-if="lead.street2"><span t-field="lead.street2"/></div>
+                                <div t-if="lead.city or lead.zip">
+                                    <span t-field="lead.city"/> <span t-field="lead.zip"/>
+                                </div>
+                            </address>
+                        </td>
+                    </tr>
+                    <tr t-if="lead.user_id">
+                        <th class="ps-0 pb-0">Salesperson:</th>
+                        <td class="w-100 pb-0 text-wrap">
+                            <span t-field="lead.user_id"/>
+                        </td>
+                    </tr>
+                    <tr t-if="lead.team_id">
+                        <th class="ps-0 pb-0">Sales Team:</th>
+                        <td class="w-100 pb-0 text-wrap">
+                            <span t-field="lead.team_id"/>
+                        </td>
+                    </tr>
+                    <tr t-if="lead.date_deadline">
+                        <th class="ps-0 pb-0">Expected Closing:</th>
+                        <td class="w-100 pb-0 text-wrap">
+                            <span t-field="lead.date_deadline"/>
+                        </td>
+                    </tr>
+                    <tr groups="!base.group_portal" t-if="lead.tag_ids">
+                        <th class="ps-0 pb-0">Tags</th>
+                        <td class="w-100 pb-0 text-wrap">
+                             <t t-foreach="lead.tag_ids" t-as="tag">
+                                <span class="badge text-bg-info" t-esc="tag.name" />
+                            </t>
+                        </td>
+                    </tr>
+                    <tr t-if="lead.partner_assigned_id">
+                        <th class="ps-0 pb-0">Assigned Partner:</th>
+                        <td class="w-100 pb-0 text-wrap">
+                            <address t-field="lead.partner_assigned_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"], "no_marker": True}'/>
+                        </td>
+                    </tr>
+                    <tr t-if="lead.campaign_id">
+                        <th class="ps-0 pb-0">Campaign:</th>
+                        <td class="w-100 pb-0 text-wrap">
+                            <span t-field="lead.campaign_id"/>
+                        </td>
+                    </tr>
+                    <tr t-if="lead.medium_id">
+                        <th class="ps-0 pb-0">Medium:</th>
+                        <td class="w-100 pb-0 text-wrap">
+                            <span t-field="lead.medium_id"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class='d-flex justify-content-center gap-2 mt-3'>
+                <a role="button" title="I'm interested" href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_interested">I'm interested</a>
+                <a role="button" title="I'm not interested" href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_desinterested"> I'm not interested</a>
                 <div class="modal fade modal_partner_assign_interested" role="form">
                     <div class="modal-dialog">
                         <form method="POST" class="js_accept_json modal-content js_website_submit_form interested_partner_assign_form">
@@ -546,7 +551,7 @@
                                 </div>
                             </main>
                             <footer class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
                                 <button t-attf-class="btn btn-primary interested_partner_assign_confirm">Confirm</button>
                             </footer>
                         </form>
@@ -579,7 +584,7 @@
                                 </div>
                             </main>
                             <footer class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
                                 <button t-attf-class="btn btn-primary desinterested_partner_assign_confirm">Confirm</button>
                             </footer>
                         </form>
