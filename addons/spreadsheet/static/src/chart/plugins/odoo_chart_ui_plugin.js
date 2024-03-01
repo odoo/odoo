@@ -116,9 +116,6 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
                 }
                 break;
             }
-            case "REFRESH_ODOO_CHART":
-                this._refreshOdooChart(cmd.chartId);
-                break;
             case "REFRESH_ALL_DATA_SOURCES":
                 this._refreshOdooCharts();
                 break;
