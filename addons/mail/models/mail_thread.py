@@ -1763,6 +1763,14 @@ class MailThread(models.AbstractModel):
             followers = records.mapped('message_partner_ids')
         else:
             followers = self.env['res.partner']
+        if records and 'company_id' in records:
+            sort_key = lambda p: (
+                self.env.user.partner_id == p,      # prioritize user
+                p.company_id in records.company_id, # then partner associated w/ records
+                not p.company_id,                   # otherwise prefer partner w/out company_id
+            )
+        else:
+            sort_key = lambda p: (self.env.user.partner_id == p, not p.company_id)
         catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
 
         # first, build a normalized email list and remove those linked to aliases
@@ -1787,10 +1795,9 @@ class MailThread(models.AbstractModel):
 
         partners = self._mail_search_on_partner(remaining, extra_domain=extra_domain)
         done_partners += [partner for partner in partners]
-        remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
 
-        # prioritize current user if exists in list
-        done_partners.sort(key=lambda p: self.env.user.partner_id != p)
+        # prioritize current user if exists in list, and partners with matching company ids
+        done_partners.sort(key=sort_key, reverse=True) # reverse because False < True
 
         # iterate and keep ordering
         partners = []
