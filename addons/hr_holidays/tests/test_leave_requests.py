@@ -378,11 +378,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_to': fields.Date.from_string('2019-12-27'),
         })
 
-        self.assertEqual(leave1.number_of_hours_display, 38)
+        self.assertEqual(leave1.number_of_hours, 38)
         leave1.action_approve()
-        self.assertEqual(leave1.number_of_hours_display, 38)
+        self.assertEqual(leave1.number_of_hours, 38)
         leave1.action_validate()
-        self.assertEqual(leave1.number_of_hours_display, 38)
+        self.assertEqual(leave1.number_of_hours, 38)
 
         leave2 = self.env['hr.leave'].create({
             'name': 'Holiday 1 Day',
@@ -392,14 +392,14 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_to': fields.Datetime.from_string('2019-12-30'),
         })
 
-        self.assertEqual(leave2.number_of_hours_display, 4)
+        self.assertEqual(leave2.number_of_hours, 4)
         leave2.action_approve()
-        self.assertEqual(leave2.number_of_hours_display, 4)
+        self.assertEqual(leave2.number_of_hours, 4)
         leave2.action_validate()
-        self.assertEqual(leave2.number_of_hours_display, 4)
+        self.assertEqual(leave2.number_of_hours, 4)
 
     def test_number_of_hours_display_global_leave(self):
-        # Check that the field number_of_hours_display
+        # Check that the field number_of_hours
         # takes the global leaves into account, even
         # after validation
         calendar = self.env['resource.calendar'].create({
@@ -446,11 +446,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_from': fields.Date.from_string('2019-12-23'),
             'request_date_to': fields.Date.from_string('2019-12-27'),
         })
-        self.assertEqual(leave1.number_of_hours_display, 24)
+        self.assertEqual(leave1.number_of_hours, 24)
         leave1.action_approve()
-        self.assertEqual(leave1.number_of_hours_display, 24)
+        self.assertEqual(leave1.number_of_hours, 24)
         leave1.action_validate()
-        self.assertEqual(leave1.number_of_hours_display, 24)
+        self.assertEqual(leave1.number_of_hours, 24)
 
     def _test_leave_with_tz(self, tz, local_date_from, local_date_to, number_of_days):
         self.user_employee.tz = tz
@@ -574,7 +574,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         req1_form.request_date_from = fields.Date.to_date('2021-12-06')
         req1_form.request_date_to = fields.Date.to_date('2021-12-08')
 
-        self.assertEqual(req1_form.number_of_days_display, 3)
+        self.assertEqual(req1_form.number_of_days, 3)
         req1_form.save().action_approve()
 
         req2_form = Form(self.env['hr.leave'].sudo())
@@ -583,7 +583,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         req2_form.request_date_from = fields.Date.to_date('2021-12-06')
         req2_form.request_date_to = fields.Date.to_date('2021-12-08')
 
-        self.assertEqual(req2_form.number_of_days_display, 3)
+        self.assertEqual(req2_form.number_of_days, 3)
 
     def test_leave_with_public_holiday_other_company(self):
         other_company = self.env['res.company'].create({
@@ -677,11 +677,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
             self.assertEqual(
                 allocation_days[self.employee_emp][self.holidays_type_2][allocation_4days]['leaves_taken'],
-                leave_4days['number_of_%ss_display' % unit],
+                leave_4days['number_of_%ss' % unit],
                 'As 4 days were available in this allocation, they should have been taken')
             self.assertEqual(
                 allocation_days[self.employee_emp][self.holidays_type_2][allocation_1day]['leaves_taken'],
-                leave_1day['number_of_%ss_display' % unit],
+                leave_1day['number_of_%ss' % unit],
                 'As no days were available in previous allocation, they should have been taken in this one')
             leaves.action_refuse()
             allocations.action_refuse()

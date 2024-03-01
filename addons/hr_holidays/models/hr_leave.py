@@ -176,13 +176,6 @@ class HolidaysRequest(models.Model):
         'Duration (Hours)', compute='_compute_duration', store=True, tracking=True,
         help='Number of hours of the time off request. Used in the calculation.')
     last_several_days = fields.Boolean("All day", compute="_compute_last_several_days")
-    number_of_days_display = fields.Float(
-        'Duration in days', compute='_compute_number_of_days_display',
-        help='Number of days of the time off request according to your working schedule. Used for interface.')
-    number_of_hours_display = fields.Float(
-        'Duration in hours', compute='_compute_number_of_hours_display', readonly=True,
-        help='Number of hours of the time off request according to your working schedule. Used for interface.')
-    number_of_hours_text = fields.Char(compute='_compute_number_of_hours_text')
     duration_display = fields.Char('Requested (Days/Hours)', compute='_compute_duration_display', store=True,
         help="Field allowing to see the leave request duration in days or hours depending on the leave_type_request_unit")    # details
     # details
@@ -618,34 +611,15 @@ class HolidaysRequest(models.Model):
         for leave in self:
             leave.tz = leave.resource_calendar_id.tz or self.env.company.resource_calendar_id.tz or self.env.user.tz or 'UTC'
 
-    @api.depends('number_of_days')
-    def _compute_number_of_days_display(self):
-        for holiday in self:
-            holiday.number_of_days_display = holiday.number_of_days
-
-    @api.depends('number_of_hours')
-    def _compute_number_of_hours_display(self):
-        for leave in self:
-            leave.number_of_hours_display = leave.number_of_hours
-
-    @api.depends('number_of_hours_display', 'number_of_days_display')
+    @api.depends('number_of_hours', 'number_of_days', 'leave_type_request_unit')
     def _compute_duration_display(self):
         for leave in self:
-            leave.duration_display = '%g %s' % (
-                (float_round(leave.number_of_hours_display, precision_digits=2)
-                if leave.leave_type_request_unit == 'hour'
-                else float_round(leave.number_of_days_display, precision_digits=2)),
-                _('hours') if leave.leave_type_request_unit == 'hour' else _('days'))
-
-    @api.depends('number_of_hours_display')
-    def _compute_number_of_hours_text(self):
-        # YTI Note: All this because a readonly field takes all the width on edit mode...
-        for leave in self:
-            leave.number_of_hours_text = '%s%g %s%s' % (
-                '' if leave.request_unit_half or leave.request_unit_hours else '(',
-                float_round(leave.number_of_hours_display, precision_digits=2),
-                _('Hours'),
-                '' if leave.request_unit_half or leave.request_unit_hours else ')')
+            duration = leave.number_of_days
+            unit = _('days')
+            if leave.leave_type_request_unit == 'hour':
+                duration = leave.number_of_hours
+                unit = _('hours')
+            leave.duration_display = '%g %s' % (float_round(duration, precision_digits=2), unit)
 
     @api.depends('state', 'employee_id', 'department_id')
     def _compute_can_reset(self):
@@ -803,7 +777,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
     @api.depends(
         'tz', 'date_from', 'date_to', 'employee_id',
-        'holiday_status_id', 'number_of_hours_display',
+        'holiday_status_id', 'number_of_hours',
         'leave_type_request_unit', 'number_of_days', 'mode_company_id',
         'category_id', 'department_id',
     )
@@ -816,10 +790,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             time_off_type_display = leave.holiday_status_id.name
             if self.env.context.get('short_name'):
                 short_leave_name = leave.name or time_off_type_display or _('Time Off')
-                if leave.leave_type_request_unit == 'hour':
-                    leave.display_name = _("%s: %.2f hours", short_leave_name, leave.number_of_hours_display)
-                else:
-                    leave.display_name = _("%s: %.2f days", short_leave_name, leave.number_of_days)
+                leave.display_name = _("%(name)s: %(duration)s", name=short_leave_name, duration=leave.duration_display)
             else:
                 if leave.holiday_type == 'company':
                     target = leave.mode_company_id.name
@@ -832,48 +803,27 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 else:
                     target = ', '.join(leave.employee_ids.mapped('name'))
                 display_date = format_date(self.env, date_from_utc) or ""
-                if leave.leave_type_request_unit == 'hour':
-                    if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
-                        leave.display_name = _("%(leave_type)s: %(duration).2f hours on %(date)s",
-                            leave_type=time_off_type_display,
-                            duration=leave.number_of_hours_display,
-                            date=display_date,
-                        )
-                    elif not time_off_type_display:
-                        leave.display_name = _("%(person)s: %(duration).2f hours on %(date)s",
-                            person=target,
-                            duration=leave.number_of_hours_display,
-                            date=display_date,
-                        )
-                    else:
-                        leave.display_name = _("%(person)s on %(leave_type)s: %(duration).2f hours on %(date)s",
-                            person=target,
-                            leave_type=time_off_type_display,
-                            duration=leave.number_of_hours_display,
-                            date=display_date,
-                        )
+                if leave.number_of_days > 1 and date_from_utc and date_to_utc:
+                    display_date += ' / %s' % format_date(self.env, date_to_utc) or ""
+                if not target or self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
+                    leave.display_name = _("%(leave_type)s: %(duration)s (%(start)s)",
+                        leave_type=time_off_type_display,
+                        duration=leave.duration_display,
+                        start=display_date,
+                    )
+                elif not time_off_type_display:
+                    leave.display_name = _("%(person)s: %(duration)s (%(start)s)",
+                        person=target,
+                        duration=leave.duration_display,
+                        start=display_date,
+                    )
                 else:
-                    if leave.number_of_days > 1 and date_from_utc and date_to_utc:
-                        display_date += ' / %s' % format_date(self.env, date_to_utc) or ""
-                    if not target or self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
-                        leave.display_name = _("%(leave_type)s: %(duration).2f days (%(start)s)",
-                            leave_type=time_off_type_display,
-                            duration=leave.number_of_days,
-                            start=display_date,
-                        )
-                    elif not time_off_type_display:
-                        leave.display_name = _("%(person)s: %(duration).2f days (%(start)s)",
-                            person=target,
-                            duration=leave.number_of_days,
-                            start=display_date,
-                        )
-                    else:
-                        leave.display_name = _("%(person)s on %(leave_type)s: %(duration).2f days (%(start)s)",
-                            person=target,
-                            leave_type=time_off_type_display,
-                            duration=leave.number_of_days,
-                            start=display_date,
-                        )
+                    leave.display_name = _("%(person)s on %(leave_type)s: %(duration)s (%(start)s)",
+                        person=target,
+                        leave_type=time_off_type_display,
+                        duration=leave.duration_display,
+                        start=display_date,
+                    )
 
     def onchange(self, values, field_names, fields_spec):
         # Try to force the leave_type display_name when creating new records
@@ -1102,12 +1052,13 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         result = defaultdict(list)
         for holiday in self:
             user = holiday.user_id
+            meeting_name = _(
+                "%(employee)s on Time Off : %(duration)s",
+                employee=holiday.employee_id.name or holiday.category_id.name,
+                duration=holiday.duration_display)
+            allday_value = not holiday.request_unit_half
             if holiday.leave_type_request_unit == 'hour':
-                meeting_name = _("%s on Time Off : %.2f hour(s)") % (holiday.employee_id.name or holiday.category_id.name, holiday.number_of_hours_display)
                 allday_value = float_compare(holiday.number_of_days, 1.0, 1) >= 0
-            else:
-                meeting_name = _("%s on Time Off : %.2f day(s)") % (holiday.employee_id.name or holiday.category_id.name, holiday.number_of_days)
-                allday_value = not holiday.request_unit_half
             meeting_values = {
                 'name': meeting_name,
                 'duration': holiday.number_of_days * (holiday.resource_calendar_id.hours_per_day or HOURS_PER_DAY),
