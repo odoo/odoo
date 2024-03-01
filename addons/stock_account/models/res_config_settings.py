@@ -11,3 +11,5 @@ class ResConfigSettings(models.TransientModel):
         help="Affect landed costs on reception operations and split them among products to update their cost price.")
     group_lot_on_invoice = fields.Boolean("Display Lots & Serial Numbers on Invoices",
                                           implied_group='stock_account.group_lot_on_invoice')
+    
+    inventory_revaluation_distribution_method = fields.Selection(related='company_id.inventory_revaluation_distribution_method', string='Revaluation Distribution Method', readonly=False, required=True)

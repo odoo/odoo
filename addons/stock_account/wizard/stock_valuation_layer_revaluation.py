@@ -57,7 +57,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
 
         - Change the stardard price with the new valuation by product unit.
         - Create a manual stock valuation layer with the `added_value` of `self`.
-        - Distribute the `added_value` on the remaining_value of layers still in stock (with a remaining quantity)
+        - Distribute the `added_value` on the remaining_value of layers still in stock (with a remaining quantity) proportional to quantity or value
         - If the Inventory Valuation of the product category is automated, create
         related account move.
         """
@@ -91,27 +91,45 @@ class StockValuationLayerRevaluation(models.TransientModel):
             'value': self.added_value,
             'quantity': 0,
         }
-
+        
+        # Distribute the revaluation over existing values
+        distribution_method = self.company_id.inventory_revaluation_distribution_method
+        if distribution_method not in ['quantity', 'value']:
+            raise UserError(_("Invalid inventory revaluation distribution method."))
+        
         remaining_qty = sum(remaining_svls.mapped('remaining_qty'))
-        remaining_value = self.added_value
-        remaining_value_unit_cost = self.currency_id.round(remaining_value / remaining_qty)
+        mutation_unit_cost = self.added_value / remaining_qty
+        remaining_value = sum(remaining_svls.mapped('remaining_value'))
+        mutation_factor = self.added_value / remaining_value
+        remaining_added_value = self.added_value
+        
         for svl in remaining_svls:
+            if distribution_method == "quantity":
+                mutation_value = svl.remaining_qty * mutation_unit_cost
+            elif distribution_method == "value":
+                mutation_value = svl.remaining_value * mutation_factor
+            
             if float_is_zero(svl.remaining_qty - remaining_qty, precision_rounding=self.product_id.uom_id.rounding):
-                taken_remaining_value = remaining_value
+                taken_value = self.currency_id.round(remaining_added_value)
             else:
-                taken_remaining_value = remaining_value_unit_cost * svl.remaining_qty
-            if float_compare(svl.remaining_value + taken_remaining_value, 0, precision_rounding=self.product_id.uom_id.rounding) < 0:
+                taken_value = self.currency_id.round(mutation_value)
+            
+            if float_compare(svl.remaining_value + taken_value, 0, precision_rounding=self.product_id.uom_id.rounding) < 0:
                 raise UserError(_('The value of a stock valuation layer cannot be negative. Landed cost could be use to correct a specific transfer.'))
-
-            svl.remaining_value += taken_remaining_value
-            remaining_value -= taken_remaining_value
+            
+            svl.remaining_value += taken_value
+            remaining_added_value -= taken_value
             remaining_qty -= svl.remaining_qty
 
         revaluation_svl = self.env['stock.valuation.layer'].create(revaluation_svl_vals)
 
-        # Update the stardard price in case of AVCO
-        if product_id.categ_id.property_cost_method in ('average', 'fifo'):
+        # Update the standard price in case of AVCO and FIFO
+        cost_method = product_id.categ_id.property_cost_method
+        if cost_method == 'average' or (cost_method == 'fifo' and distribution_method == 'quantity'):
             product_id.with_context(disable_auto_svl=True).standard_price += self.added_value / self.current_quantity_svl
+        elif cost_method == 'fifo' and distribution_method == 'value':
+            standard_price_mutation = product_id.with_context(disable_auto_svl=True).standard_price * mutation_factor
+            product_id.with_context(disable_auto_svl=True).standard_price += standard_price_mutation
 
         # If the Inventory Valuation of the product category is automated, create related account move.
         if self.property_valuation != 'real_time':
