@@ -8,8 +8,10 @@ import {
     hover,
     keyDown,
     keyUp,
+    manuallyDispatchProgrammaticEvent,
     pointerDown,
     press,
+    queryOne,
     scroll,
     select,
     uncheck,
@@ -230,4 +232,17 @@ export function contains(target, options) {
             await animationFrame();
         },
     };
+}
+
+/**
+ * @param {string} value
+ */
+export async function editAce(value) {
+    // Ace editor traps focus on "mousedown" events, which are not triggered in
+    // mobile. To support both environments, a single "mouedown" event is triggered
+    // in this specific case. This should not be reproduced and is only accepted
+    // because the tested behaviour comes from a lib on which we have no control.
+    manuallyDispatchProgrammaticEvent(queryOne(".ace_editor .ace_content"), "mousedown");
+
+    await contains(".ace_editor textarea", { displayed: true, visible: false }).edit(value);
 }

@@ -1,9 +1,9 @@
-import { after, expect, onError, test } from "@odoo/hoot";
+import { expect, onError, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, markup, useState, xml } from "@odoo/owl";
 import {
-    contains,
+    editAce,
     mountWithCleanup,
     patchWithCleanup,
     preventResizeObserverError,
@@ -18,11 +18,6 @@ function getDomValue() {
     return queryAll(".ace_line")
         .map((line) => queryAllTexts(":scope > span", { root: line }).join(""))
         .join("\n");
-}
-
-async function editAce(value, options) {
-    await contains(".ace_editor .ace_content").focus();
-    return contains(".ace_editor textarea", { visible: false }).edit(value, options);
 }
 
 function getFakeAceEditor() {
@@ -56,7 +51,7 @@ function getFakeAceEditor() {
 test("Can be rendered", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor mode="'xml'" />`;
+        static template = xml`<CodeEditor maxLines="10" mode="'xml'" />`;
         static props = ["*"];
     }
     await mountWithCleanup(Parent);
@@ -70,19 +65,17 @@ test("CodeEditor shouldn't accepts markup values", async () => {
         }
     });
 
-    const _console = window.console;
-    window.console = Object.assign(Object.create(_console), {
-        warn(msg) {
-            expect.step(msg);
-        },
-    });
-    after(() => {
-        window.console = _console;
+    patchWithCleanup(window, {
+        console: Object.assign(Object.create(console), {
+            warn(msg) {
+                expect.step(msg);
+            },
+        }),
     });
 
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor value="props.value"/>`;
+        static template = xml`<CodeEditor value="props.value" />`;
         static props = ["*"];
     }
     class GrandParent extends Component {
@@ -99,6 +92,7 @@ test("CodeEditor shouldn't accepts markup values", async () => {
 
     codeEditor.state.value = textMarkup;
     await animationFrame();
+
     expect(["Invalid props for component 'CodeEditor': 'value' is not valid"]).toVerifyErrors();
     expect(["[Owl] Unhandled error. Destroying the root component"]).toVerifySteps();
 });
@@ -106,7 +100,7 @@ test("CodeEditor shouldn't accepts markup values", async () => {
 test("onChange props called when code is edited", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor onChange.bind="onChange" />`;
+        static template = xml`<CodeEditor maxLines="10" onChange.bind="onChange" />`;
         static props = ["*"];
         onChange(value) {
             expect.step(value);
@@ -131,7 +125,13 @@ test("onChange props called when code is edited", async () => {
 test("onChange props not called when value props is updated", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor value="state.value" onChange.bind="onChange" />`;
+        static template = xml`
+            <CodeEditor
+                value="state.value"
+                maxLines="10"
+                onChange.bind="onChange"
+            />
+        `;
         static props = ["*"];
         state = useState({ value: "initial value" });
         onChange(value) {
@@ -215,7 +215,7 @@ test("Mode props update imports the mode", async () => {
 
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor mode="state.mode" />`;
+        static template = xml`<CodeEditor maxLines="10" mode="state.mode" />`;
         static props = ["*"];
         setup() {
             this.state = useState({ mode: "xml" });
@@ -245,7 +245,7 @@ test("Theme props updates imports the theme", async () => {
 
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor theme="state.theme" />`;
+        static template = xml`<CodeEditor maxLines="10" theme="state.theme" />`;
         static props = ["*"];
         setup() {
             this.state = useState({ theme: "" });

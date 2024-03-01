@@ -8,6 +8,7 @@ import {
     clickSave,
     contains,
     defineModels,
+    editAce,
     fields,
     models,
     mountView,
@@ -72,7 +73,7 @@ test("AceEditorField on html fields works", async () => {
     Partner._fields.html_field = fields.Html();
     Partner._records.push({ id: 3, html_field: `<p>My little HTML Test</p>` });
 
-    onRpc("*", (_, { method }) => {
+    onRpc((_, { method }) => {
         expect.step(method);
     });
 
@@ -86,8 +87,7 @@ test("AceEditorField on html fields works", async () => {
     expect(["get_views", "web_read"]).toVerifySteps();
 
     // Modify foo and save
-    await contains(".ace_editor .ace_content").focus();
-    await contains(".ace_editor textarea", { visible: false }).edit("DEF");
+    await editAce("DEF");
     await clickSave();
     expect(["web_save"]).toVerifySteps();
 });
@@ -125,7 +125,7 @@ test("leaving an untouched record with an unset ace field should not write", asy
         record.foo = false;
     }
 
-    onRpc("*", (_, { args, method }) => {
+    onRpc((_, { args, method }) => {
         if (method) {
             expect.step(`${method}: ${JSON.stringify(args)}`);
         }
@@ -150,7 +150,7 @@ test("AceEditorField only trigger onchanges when blurred", async () => {
         record.foo = false;
     }
 
-    onRpc("*", (_, { args, method }) => {
+    onRpc((_, { args, method }) => {
         expect.step(`${method}: ${JSON.stringify(args)}`);
     });
 
@@ -163,8 +163,7 @@ test("AceEditorField only trigger onchanges when blurred", async () => {
     });
     expect(["get_views: []", "web_read: [[1]]"]).toVerifySteps();
 
-    await contains(".ace_editor .ace_content").focus();
-    await contains(".ace_editor textarea", { visible: false }).edit("a");
+    await editAce("a");
     await contains(getFixture()).focus(); // blur ace editor
     expect([`onchange: [[1],{"foo":"a"},["foo"],{"display_name":{},"foo":{}}]`]).toVerifySteps();
 
