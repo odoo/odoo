@@ -1245,7 +1245,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
 
     lang_obj = get_lang(env)
 
-    res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
+    res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping)
 
     if currency_obj and currency_obj.symbol:
         if currency_obj.position == 'after':
@@ -1440,7 +1440,7 @@ def format_amount(env, amount, currency, lang_code=False):
     fmt = "%.{0}f".format(currency.decimal_places)
     lang = get_lang(env, lang_code)
 
-    formatted_amount = lang.format(fmt, currency.round(amount), grouping=True, monetary=True)\
+    formatted_amount = lang.format(fmt, currency.round(amount), grouping=True)\
         .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
 
     pre = post = u''

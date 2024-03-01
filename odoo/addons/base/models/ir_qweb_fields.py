@@ -470,7 +470,7 @@ class MonetaryConverter(models.AbstractModel):
 
         lang = self.user_lang()
         formatted_amount = lang.format(fmt, display_currency.round(value),
-                                grouping=True, monetary=True).replace(r' ', '\N{NO-BREAK SPACE}').replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}')
+                                grouping=True).replace(r' ', '\N{NO-BREAK SPACE}').replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}')
 
         pre = post = ''
         if display_currency.position == 'before':
