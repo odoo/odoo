@@ -260,6 +260,13 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         self.Attachment._gc_file_store_unsafe()
         self.assertFalse(os.path.isfile(store_path), 'file removed')
 
+    def test_14_invalid_mimetype_with_correct_file_extension_no_post_processing(self):
+        # test with fake svg with png mimetype
+        unique_blob = b'<svg xmlns="http://www.w3.org/2000/svg"></svg>'
+        a1 = self.Attachment.create({'name': 'a1', 'raw': unique_blob, 'mimetype': 'image/png'})
+        self.assertEqual(a1.raw, unique_blob)
+        self.assertEqual(a1.mimetype, 'image/png')
+
 
 class TestPermissions(TransactionCaseWithUserDemo):
     def setUp(self):
