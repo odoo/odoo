@@ -269,13 +269,13 @@
              for="o_payment_radio"
         >
             <div class="form-check d-flex flex-grow-1 flex-wrap mb-0">
-                <div class="d-flex justify-content-between align-items-start gap-2 flex-wrap w-100">
+                <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap w-100">
                     <!-- === Radio button === -->
                     <input t-attf-id="o_payment_method_{{pm_sudo.id}}"
                            name="o_payment_radio"
                            type="radio"
                            t-att-checked="is_selected"
-                           class="form-check-input position-absolute"
+                           class="form-check-input position-absolute mt-0"
                            data-payment-option-type="payment_method"
                            t-att-data-payment-option-id="pm_sudo.id"
                            t-att-data-payment-method-code="pm_sudo.code"
