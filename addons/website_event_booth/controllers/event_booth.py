@@ -12,7 +12,7 @@ from odoo.addons.website_event.controllers.main import WebsiteEventController
 
 class WebsiteEventBoothController(WebsiteEventController):
 
-    @http.route('/event/<model("event.event"):event>/booth', type='http', auth='public', website=True, sitemap=True)
+    @http.route('/event/<model("event.event"):event>/booth', type='http', auth='public', website=True, sitemap=False)
     def event_booth_main(self, event, booth_category_id=False, booth_ids=False):
         try:
             event.check_access_rights('read')
