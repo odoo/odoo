@@ -305,6 +305,8 @@ class TestRepair(common.TransactionCase):
         self.assertEqual(repair.move_id.__len__(), 0)
         repair.action_repair_end()
 
+        self.assertFalse((repair.move_id | repair.move_ids).picking_id, "No picking for repair moves")
+
         self.assertEqual(repair.state, "done")
         done_moves = repair.move_ids - lineD
         #line a,b,c are 'done', line d is 'cancel'

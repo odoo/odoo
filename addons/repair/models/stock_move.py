@@ -175,8 +175,9 @@ class StockMove(models.Model):
                 m.location_id, m.location_dest_id = m._get_repair_locations(line_type)
 
     def _should_be_assigned(self):
-        res = super(StockMove, self)._should_be_assigned()
-        return bool(res and not (self.repair_id and self.repair_line_type))
+        if self.repair_id:
+            return False
+        return super()._should_be_assigned()
 
     def _create_extra_move(self):
         if self.repair_id:
