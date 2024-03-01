@@ -49,6 +49,7 @@ import { callWithUnloadCheck } from "./tour_utils";
  * @property {boolean} [mobile]
  * @property {string} [title]
  * @property {string|false|undefined} [shadow_dom]
+ * @property {object} [state]
  *
  * @typedef {"manual" | "auto"} TourMode
  */

@@ -21,28 +21,28 @@ function assertCartAmounts({taxes = false, untaxed = false, total = false, deliv
     if (taxes) {
         steps.push({
             content: 'Check if the tax is correct',
-            trigger: `tr#order_total_taxes .oe_currency_value:containsExact(${taxes})`,
+            trigger: `tr#order_total_taxes .oe_currency_value:contains(/^${taxes}$/)`,
             run: function () {},  // it's a check
         });
     }
     if (untaxed) {
         steps.push({
             content: 'Check if the tax is correct',
-            trigger: `tr#order_total_untaxed .oe_currency_value:containsExact(${untaxed})`,
+            trigger: `tr#order_total_untaxed .oe_currency_value:contains(/^${untaxed}$/)`,
             run: function () {},  // it's a check
         });
     }
     if (total) {
         steps.push({
             content: 'Check if the tax is correct',
-            trigger: `tr#order_total .oe_currency_value:containsExact(${total})`,
+            trigger: `tr#order_total .oe_currency_value:contains(/^${total}$/)`,
             run: function () {},  // it's a check
         });
     }
     if (delivery) {
         steps.push({
             content: 'Check if the tax is correct',
-            trigger: `tr#order_delivery .oe_currency_value:containsExact(${delivery})`,
+            trigger: `tr#order_delivery .oe_currency_value:contains(/^${delivery}$/)`,
             run: function () {},  // it's a check
         });
     }
@@ -105,7 +105,7 @@ function fillAdressForm(adressParams = {
 function goToCart({quantity = 1, position = "bottom", backend = false} = {}) {
     return {
         content: _t("Go to cart"),
-        trigger: `${backend ? "iframe" : ""} a sup.my_cart_quantity:containsExact(${quantity})`,
+        trigger: `${backend ? "iframe" : ""} a sup.my_cart_quantity:contains(/^${quantity}$/)`,
         position: position,
         run: "click",
     };

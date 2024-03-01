@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
     },
     {
         content: "Click on `Order Now` button",
-        extra_trigger: 'select:eq(0):has(option:contains(2):propSelected)',
+        extra_trigger: 'select:eq(0):has(option:contains(2):selected)',
         trigger: '.a-submit:contains("Register")',
     },
     {
@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
     {
         content: "Validate attendees details",
         extra_trigger: "input[name*='1-name'], input[name*='2-name']",
-        trigger: 'button[type=submit]',
+        trigger: "button[type=submit]:contains(Go to Payment)",
     },
     {
         content: "Fill address",

@@ -190,7 +190,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "Add product in wishlist",
-            extra_trigger: '#product_detail .o_add_wishlist_dyn:not(".disabled")',
+            extra_trigger: "#product_detail .o_add_wishlist_dyn:not(.disabled)",
             trigger: '#product_detail .o_add_wishlist_dyn',
         },
         {
@@ -199,7 +199,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "Add product in wishlist",
-            extra_trigger: '#product_detail .o_add_wishlist_dyn:not(".disabled")',
+            extra_trigger: "#product_detail .o_add_wishlist_dyn:not(.disabled)",
             trigger: '#product_detail .o_add_wishlist_dyn',
         },
         {

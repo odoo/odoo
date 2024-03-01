@@ -37,7 +37,7 @@ registry.category('web_tour.tours').add('course_reviews', {
     trigger: 'span:contains("Edit Review")',
     // If it fails here, it means the system is allowing you to add another review.
 }, {
-    trigger: 'div.o_portal_chatter_composer_body textarea:contains("Great course!")',
+    trigger: "div.o_portal_chatter_composer_body textarea:value(Great course!)",
     run: function() {},
 }
 ]});

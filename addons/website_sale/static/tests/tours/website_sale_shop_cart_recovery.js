@@ -41,7 +41,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
     },
     {
         content: "click Send a Cart Recovery Email",
-        trigger: 'span:containsExact("Send a Cart Recovery Email")',
+        trigger: "span:contains(/^Send a Cart Recovery Email$/)",
     },
     {
         content: "click Send email",
@@ -49,7 +49,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
     },
     {
         content: "check the mail is sent, grab the recovery link, and logout",
-        trigger: '.o-mail-Message-body a:containsExact("Resume order")',
+        trigger: ".o-mail-Message-body a:contains(/^Resume order$/)",
         run: function () {
             var link = $('.o-mail-Message-body a:containsExact("Resume order")').attr('href');
             browser.localStorage.setItem(recoveryLinkKey, link);

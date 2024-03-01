@@ -37,7 +37,7 @@ wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
         },
         {
             content: "Add red product in wishlist",
-            trigger: 'iframe #product_detail .o_add_wishlist_dyn:not(".disabled")',
+            trigger: "iframe #product_detail .o_add_wishlist_dyn:not(.disabled)",
         },
         {
             content: "Check that wishlist contains 1 items",
@@ -63,7 +63,7 @@ wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
         },
         {
             content: "Add black rock to wishlist",
-            trigger: 'iframe #product_detail .o_add_wishlist_dyn:not(".disabled")',
+            trigger: "iframe #product_detail .o_add_wishlist_dyn:not(.disabled)",
         },
         {
             content: "Check that black product was added",

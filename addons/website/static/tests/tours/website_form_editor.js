@@ -110,9 +110,6 @@
             let inputType = type === 'textarea' ? type : `input[type="${type}"]`;
             const nameAttribute = isCustom && label ? getQuotesEncodedName(label) : name;
             testText += `:has(${inputType}[name="${nameAttribute}"]${required ? "[required]" : ""})`;
-            // Because 'testText' will be used as selector to verify the content
-            // of the label, the `\` character needs to be escaped.
-            testText = testText.replaceAll("\\", "\\\\");
         }
         ret.push({
             content: "Check the resulting field",
@@ -429,11 +426,11 @@
         ...wTourUtils.clickOnSave(),
         {
             content: 'Verify value attribute and property',
-            trigger: 'iframe .s_website_form_field:eq(0) input[value="John Smith"]:propValue("Mitchell Admin")',
+            trigger: 'iframe .s_website_form_field:eq(0) input[value="John Smith"]:value("Mitchell Admin")',
         },
         {
             content: 'Verify that phone field is still auto-fillable',
-            trigger: 'iframe .s_website_form_field input[data-fill-with="phone"]:propValue("+1 555-555-5555")',
+            trigger: 'iframe .s_website_form_field input[data-fill-with="phone"]:value("+1 555-555-5555")',
         },
         // Check that the resulting form behavior is correct.
         {
@@ -612,7 +609,7 @@
             run: 'text_blur **',
         }, {
             content: "Check that the recipient email is correct",
-            trigger: 'we-input[data-field-name="email_to"] input:propValue("website_form_contactus_edition_no_email@mail.com")',
+            trigger: 'we-input[data-field-name="email_to"] input:value("website_form_contactus_edition_no_email@mail.com")',
             isCheck: true,
         },
     ]));

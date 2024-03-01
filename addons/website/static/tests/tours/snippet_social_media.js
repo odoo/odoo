@@ -52,7 +52,7 @@ const addNewSocialNetwork = function (optionIndex, linkIndex, url, replaceIcon =
     },
     {
         content: "Ensure new option is found",
-        trigger: `we-list table input:eq(${optionIndex})[data-list-position=${optionIndex}][data-dom-position=${linkIndex}][data-undeletable=false]`,
+        trigger: `we-list table input:eq(${optionIndex})[data-list-position="${optionIndex}"][data-dom-position="${linkIndex}"][data-undeletable=false]`,
         run: () => {}, // This is a check.
     },
     {

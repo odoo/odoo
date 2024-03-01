@@ -642,7 +642,7 @@ registry.category("web_tour.tours").add('base_automation.on_change_rule_creation
         trigger: ".o_field_widget[name=model_id] input",
         run: "text ir.ui.view",
     }, {
-        trigger: ".ui-menu-item > a:containsExact('View')",
+        trigger: ".ui-menu-item > a:contains(/^View$/)",
     }, {
         trigger: ".o_field_widget[name=trigger] select",
         run: 'text "on_change"',
@@ -650,7 +650,7 @@ registry.category("web_tour.tours").add('base_automation.on_change_rule_creation
         trigger: ".o_field_widget[name=on_change_field_ids] input",
         run: "text Active",
     }, {
-        trigger: ".ui-menu-item > a:containsExact('Active')",
+        trigger: ".ui-menu-item > a:contains(/^Active$/)",
     },
     ...stepUtils.saveForm(),
 ]});

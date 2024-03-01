@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import * as hoot from "@odoo/hoot-dom";
 import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { utils } from "@web/core/ui/ui_service";
@@ -71,6 +72,41 @@ export function getJQueryElementFromSelector(selector, $target) {
 }
 
 /**
+ * @param {NodeList|HTMLElement|string} selector
+ * @param {HTMLElement} target
+ * @returns {Node[]}
+ */
+export function getNodesFromSelector(selector, target = document) {
+    if (typeof selector === "string") {
+        const iframeRegex = /(?<iframe>.*\biframe[^ ]*)(?<selector>.*)/;
+        const iframeSplit = typeof selector === "string" && selector.match(iframeRegex);
+        if (iframeSplit?.groups?.selector && !iframeSplit?.groups?.iframe.includes(":iframe")) {
+            const iframeSelector = `${iframeSplit.groups?.iframe}:not(.o_ignore_in_tour)`;
+            const iframe = hoot.queryAll(iframeSelector, { root: target }).at(0);
+            if (iframe instanceof Node) {
+                if (iframe.matches(`[is-ready="false"]`)) {
+                    return [];
+                } else {
+                    return hoot.queryAll(iframeSplit.groups?.selector, {
+                        root: iframe.contentWindow.document,
+                    });
+                }
+            } else {
+                return [];
+            }
+        } else {
+            return hoot.queryAll(selector, { root: target });
+        }
+    } else if (selector instanceof HTMLElement) {
+        return [selector];
+    } else if (selector instanceof NodeList) {
+        return [...selector];
+    } else {
+        return [];
+    }
+}
+
+/**
  * @param {HTMLElement} [element]
  * @param {RunCommand} [runCommand]
  * @returns {string}
@@ -92,7 +128,9 @@ export function getConsumeEventType(element, runCommand) {
         tag === "textarea" ||
         (tag === "input" &&
             (!type ||
-                ["email", "number", "password", "search", "tel", "text", "url"].includes(type)))
+                ["email", "number", "password", "search", "tel", "text", "url", "date"].includes(
+                    type
+                )))
     ) {
         if (
             utils.isSmall() &&

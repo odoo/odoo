@@ -35,15 +35,11 @@ const getChartData = () => {
 };
 
 const nextScreen = () => {
-    const e = $.Event('keydown');
-    e.key = "ArrowRight";
-    $(document).trigger(e);
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
 };
 
 const previousScreen = () => {
-    const e = $.Event('keydown');
-    e.key = "ArrowLeft";
-    $(document).trigger(e);
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
 };
 
 const REGULAR_ANSWER_COLOR = '#212529';
@@ -273,7 +269,7 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     }
 }, {
     trigger: 'h1:contains("Timed Scored Multiple Choice")',
-    run: ()=> {
+    async run() {
         const chartData = getChartData();
         checkAnswersCount(chartData, 3);
         checkAnswersAllZeros(chartData);
@@ -281,22 +277,25 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
         // after 1 second, results are displayed automatically because question timer runs out
         // we add 1 extra second because of the way the timer works:
         // it only triggers the time_up event 1 second AFTER the delay is passed
-        setTimeout(() => {
-            checkAnswers(getChartData(), [
-                {value: 2, type: "regular"},
-                {value: 2, type: "regular"},
-                {value: 1, type: "regular"},
-            ]);
+        await new Promise((resolve) => {
+            setTimeout(() => {
+                checkAnswers(getChartData(), [
+                    {value: 2, type: "regular"},
+                    {value: 2, type: "regular"},
+                    {value: 1, type: "regular"},
+                ]);
 
-            nextScreen();
-            checkAnswers(getChartData(), [
-                {value: 2, type: "correct"},
-                {value: 2, type: "correct"},
-                {value: 1, type: "incorrect"},
-            ]);
+                nextScreen();
+                checkAnswers(getChartData(), [
+                    {value: 2, type: "correct"},
+                    {value: 2, type: "correct"},
+                    {value: 1, type: "incorrect"},
+                ]);
 
-            nextScreen();
-        }, 2100);
+                nextScreen();
+                resolve();
+            }, 2100);
+        });
     }
 }, {
     trigger: 'h1:contains("Final Leaderboard")',
@@ -331,7 +330,7 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     trigger: 'h1:contains("Final Leaderboard")',
     isCheck: true // Final Leaderboard is displayed
 }, {
-    trigger: '.o_survey_session_close:has("i.fa-close")'
+    trigger:".o_survey_session_close:has(i.fa-close)",
 }, {
     trigger: 'button[name="action_start_session"]',
     isCheck: true // check that we can start another session

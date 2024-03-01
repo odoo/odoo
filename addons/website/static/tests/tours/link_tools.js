@@ -40,7 +40,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Change content (editing the label input) to odoo website_2",
-        trigger: '#o_link_dialog_label_input:propValue(odoo.com)',
+        trigger: '#o_link_dialog_label_input:value(odoo.com)',
         run: 'text odoo website_2',
     },
     {
@@ -59,7 +59,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check that the label input contains the new content",
-        trigger: '#o_link_dialog_label_input:propValue(odoo website)',
+        trigger: '#o_link_dialog_label_input:value(odoo website)',
         isCheck: true,
     },
     {
@@ -359,7 +359,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Verify that the link label input does not contain ZWS",
-        trigger: "#o_link_dialog_label_input:propValue('Contact Us')",
+        trigger: "#o_link_dialog_label_input:value('Contact Us')",
         isCheck: true,
     },
     ...wTourUtils.clickOnSave(),
