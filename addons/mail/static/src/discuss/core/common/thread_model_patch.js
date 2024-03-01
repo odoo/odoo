@@ -1,4 +1,3 @@
-import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 
 import { rpc } from "@web/core/network/rpc";
@@ -12,14 +11,7 @@ const threadPatch = {
     setup() {
         super.setup();
         this.fetchChannelInfoDeferred = undefined;
-        this.fetchChannelInfoState = Record.attr("not_fetched", {
-            /** @this {import("models").Thread} */
-            onUpdate() {
-                if (this.fetchChannelInfoState === "fetched") {
-                    this._store.updateBusSubscription();
-                }
-            },
-        });
+        this.fetchChannelInfoState = "not_fetched";
     },
     get SETTINGS() {
         return [
