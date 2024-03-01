@@ -22,7 +22,7 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
     },
     {
         content: "Check that the highlight was applied",
-        trigger: "iframe .s_cover h1 span.o_text_highlight > .o_text_highlight_item > svg:has(.o_text_highlight_path_underline)",
+        trigger: "iframe .s_cover h1 span.o_text_highlight > .o_text_highlight_item > svg:has(.o_text_highlight_path_freehand_1)",
         isCheck: true,
     },
     {
@@ -60,7 +60,7 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
     },
     {
         content: "Check if the text was correctly updated",
-        trigger: "iframe .s_cover span.o_text_highlight:has(.o_text_highlight_item:has(.o_text_highlight_path_underline) + br + .o_text_highlight_item:has(.o_text_highlight_path_underline))",
+        trigger: "iframe .s_cover span.o_text_highlight:has(.o_text_highlight_item:has(.o_text_highlight_path_freehand_1) + br + .o_text_highlight_item:has(.o_text_highlight_path_freehand_1))",
         isCheck: true,
     },
     ...wTourUtils.selectElementInWeSelectWidget("text_highlight_opt", "Jagged"),
