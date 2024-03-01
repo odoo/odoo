@@ -91,32 +91,32 @@ class StockValuationLayerRevaluation(models.TransientModel):
             'value': self.added_value,
             'quantity': 0,
         }
-        
+
         # Distribute the revaluation over existing values
         distribution_method = self.company_id.inventory_revaluation_distribution_method
         if distribution_method not in ['quantity', 'value']:
             raise UserError(_("Invalid inventory revaluation distribution method."))
-        
+
         remaining_qty = sum(remaining_svls.mapped('remaining_qty'))
         mutation_unit_cost = self.added_value / remaining_qty
         remaining_value = sum(remaining_svls.mapped('remaining_value'))
         mutation_factor = self.added_value / remaining_value
         remaining_added_value = self.added_value
-        
+
         for svl in remaining_svls:
             if distribution_method == "quantity":
                 mutation_value = svl.remaining_qty * mutation_unit_cost
             elif distribution_method == "value":
                 mutation_value = svl.remaining_value * mutation_factor
-            
+
             if float_is_zero(svl.remaining_qty - remaining_qty, precision_rounding=self.product_id.uom_id.rounding):
                 taken_value = self.currency_id.round(remaining_added_value)
             else:
                 taken_value = self.currency_id.round(mutation_value)
-            
+
             if float_compare(svl.remaining_value + taken_value, 0, precision_rounding=self.product_id.uom_id.rounding) < 0:
                 raise UserError(_('The value of a stock valuation layer cannot be negative. Landed cost could be use to correct a specific transfer.'))
-            
+
             svl.remaining_value += taken_value
             remaining_added_value -= taken_value
             remaining_qty -= svl.remaining_qty
