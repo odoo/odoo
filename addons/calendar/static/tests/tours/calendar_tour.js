@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
             run: "click",
         },
         {
-            trigger: '.dropdown-toggle:contains("Week")',
+            trigger: '.scale_button_selection',
             content: "Click to change calendar view",
             run: "click",
         },
