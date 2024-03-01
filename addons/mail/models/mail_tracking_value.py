@@ -38,8 +38,10 @@ class MailTracking(models.Model):
     @api.depends('mail_message_id', 'field_id')
     def _compute_field_groups(self):
         for tracking in self:
-            model = self.env[tracking.field_id.model]
-            field = model._fields.get(tracking.field_id.name)
+            field = None
+            if tracking.field_id:
+                model = self.env[tracking.field_id.model]
+                field = model._fields.get(tracking.field_id.name)
             tracking.field_groups = field.groups if field else 'base.group_system'
 
     @api.model
@@ -117,22 +119,27 @@ class MailTracking(models.Model):
         """
         if not self:
             return []
-        field_models = self.field_id.mapped('model')
-        if len(set(field_models)) != 1:
+
+        field_models = set(self.field_id.mapped('model'))
+        if len(field_models) > 1:
             raise ValueError('All tracking value should belong to the same model.')
-        TrackedModel = self.env[field_models[0]]
-        tracked_fields = TrackedModel.fields_get(self.field_id.mapped('name'), attributes={'string', 'type'})
+        fields_sequence_map = {
+            tracking.field_info['name']: tracking.field_info.get('sequence', 100)
+            for tracking in self.filtered('field_info')
+        }
+        if field_models:
+            TrackedModel = self.env[field_models.pop()]
+            tracked_fields = TrackedModel.fields_get(self.field_id.mapped('name'), attributes={'string', 'type'})
+            fields_sequence_map.update(dict(TrackedModel._mail_track_order_fields(tracked_fields)))
+        else:
+            tracked_fields = {}
+
         fields_col_info = (
             tracked_fields.get(tracking.field_id.name) or {
                 'string': tracking.field_info['desc'],
                 'type': tracking.field_info['type'],
             }
             for tracking in self
-        )
-        fields_sequence_map = dict(
-            {tracking.field_info['name']: tracking.field_info.get('sequence', 100)
-             for tracking in self.filtered('field_info')},
-            **dict(TrackedModel._mail_track_order_fields(tracked_fields))
         )
 
         formatted = [
