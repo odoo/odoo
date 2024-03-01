@@ -102,5 +102,5 @@ class TestHttpModels(TestHttpBase):
         self.assertEqual(
             # capture_sql_db.ouput contains the full Stack info, we don't want it
             [rec.msg % rec.args for rec in capture_sql_db.records],
-            [Like('bad query: UPDATE "test_http_galaxy" ... ERROR: cannot execute UPDATE in a read-only transaction')],
+            [Like('bad query:...UPDATE "test_http_galaxy"...ERROR: cannot execute UPDATE in a read-only transaction')],
         )

@@ -234,8 +234,14 @@ class TestPerformance(SavepointCaseWithUserDemo):
         records = self.env['test_performance.base'].search([])
         self.assertEqual(len(records), 5)
 
-        with self.assertQueryCount(__system__=1, demo=1):
+        # all with the same value: O(1) queries
+        with self.assertQueryCount(1):
             records.write({'name': 'X'})
+
+        # all with different values: O(1) queries
+        with self.assertQueryCount(1):
+            for index, record in enumerate(records):
+                record.name = f"X {index}"
 
     @users('__system__', 'demo')
     @warmup
@@ -254,7 +260,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         """ Write on one2many field. """
         rec1 = self.env['test_performance.base'].create({'name': 'X'})
 
-        # create N lines on rec1: O(N) queries
+        # create N lines on rec1: O(1) queries
         with self.assertQueryCount(3):
             self.env.invalidate_all()
             rec1.write({'line_ids': [Command.create({'value': 0})]})
@@ -273,7 +279,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
             rec1.write({'line_ids': [Command.update(line.id, {'value': 42}) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines)
 
-        with self.assertQueryCount(25):
+        with self.assertQueryCount(15):
             self.env.invalidate_all()
             rec1.write({'line_ids': [Command.update(line.id, {'value': 42 + line.id}) for line in lines[1:]]})
         self.assertEqual(rec1.line_ids, lines)
@@ -310,13 +316,13 @@ class TestPerformance(SavepointCaseWithUserDemo):
         rec2 = self.env['test_performance.base'].create({'name': 'X'})
 
         # link N lines from rec1 to rec2: O(1) queries
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(6):
             self.env.invalidate_all()
             rec2.write({'line_ids': [Command.link(line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
         self.assertEqual(rec2.line_ids, lines[0])
 
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(6):
             self.env.invalidate_all()
             rec2.write({'line_ids': [Command.link(line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
@@ -347,13 +353,13 @@ class TestPerformance(SavepointCaseWithUserDemo):
         lines = rec1.line_ids
 
         # set N lines in rec2: O(1) queries
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(6):
             self.env.invalidate_all()
             rec2.write({'line_ids': [Command.set(lines[0].ids)]})
         self.assertEqual(rec1.line_ids, lines[1:])
         self.assertEqual(rec2.line_ids, lines[0])
 
-        with self.assertQueryCount(6):
+        with self.assertQueryCount(5):
             self.env.invalidate_all()
             rec2.write({'line_ids': [Command.set(lines.ids)]})
         self.assertFalse(rec1.line_ids)

@@ -4140,10 +4140,17 @@ def insert(model, *fnames, rowcount=1):
 
 def update(model, *fnames):
     """ Return the expected query string to UPDATE the given columns. """
-    columns = sorted(fnames + ('write_uid', 'write_date'))
-    return 'UPDATE "{}" SET {} WHERE id IN %s'.format(
-        model._table,
-        ", ".join('"{}" = %s'.format(column) for column in columns),
+    table = f'"{model._table}"'
+    fnames = sorted(fnames + ('write_uid', 'write_date'))
+    columns = ", ".join(f'"{column}"' for column in fnames)
+    assignments = ", ".join(
+        f'"{fname}" = "__tmp"."{fname}"::{model._fields[fname].column_type[1]}'
+        for fname in fnames
+    )
+    return (
+        f'UPDATE {table} SET {assignments} '
+        f'FROM (VALUES %s) AS "__tmp"("id", {columns}) '
+        f'WHERE {table}."id" = "__tmp"."id"'
     )
 
 

@@ -89,6 +89,7 @@ regex_read_group_spec = re.compile(r'(\w+)(\.(\w+))?(?::(\w+))?$')  # For _read_
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
 
 INSERT_BATCH_SIZE = 100
+UPDATE_BATCH_SIZE = 100
 SQL_DEFAULT = psycopg2.extensions.AsIs("DEFAULT")
 
 def parse_read_group_spec(spec: str) -> tuple:
@@ -4506,56 +4507,78 @@ class BaseModel(metaclass=MetaModel):
         return True
 
     def _write(self, vals):
-        """ Low-level implementation of write()
+        """ Low-level implementation of write() """
+        return self._write_multi([vals] * len(self))
 
-        The ids of self should be a database id and unique.
-        Ignore non-existent record.
-        """
+    def _write_multi(self, vals_list):
+        """ Low-level implementation of write() """
+        assert len(self) == len(vals_list)
+
         if not self:
             return
 
-        cr = self._cr
-
         # determine records that require updating parent_path
-        parent_records = self._parent_store_update_prepare(vals)
+        parent_records = self._parent_store_update_prepare(vals_list)
 
         if self._log_access:
             # set magic fields (already done by write(), but not for computed fields)
-            vals = dict(vals)
-            vals.setdefault('write_uid', self.env.uid)
-            vals.setdefault('write_date', self.env.cr.now())
+            log_vals = {'write_uid': self.env.uid, 'write_date': self.env.cr.now()}
+            vals_list = [(log_vals | vals) for vals in vals_list]
 
-        # determine SQL assignments
-        assignments = []
+        # determine SQL updates, grouped by set of updated fields:
+        # {(col1, col2, col3): [(id, val1, val2, val3)]}
+        updates = defaultdict(list)
+        for record, vals in zip(self, vals_list):
+            # sort vals.items() by key, then retrieve its keys and values
+            fnames, row = zip(*sorted(vals.items()))
+            updates[fnames].append(record._ids + row)
 
-        for name, val in sorted(vals.items()):
-            if self._log_access and name in LOG_ACCESS_COLUMNS and not val:
-                continue
-            field = self._fields[name]
-            assert field.store
-            assert field.column_type
-            if field.translate is True and val:
-                # The first param is for the fallback value {'en_US': 'first_written_value'}
-                # which fills the 'en_US' key of jsonb only when the old column value is NULL.
-                # The second param is for the real value {'fr_FR': 'French', 'nl_NL': 'Dutch'}
-                assignments.append(SQL(
-                    "%(field)s = %(fallback)s || COALESCE(%(field)s, '{}'::jsonb) || %(value)s",
-                    field=SQL.identifier(name),
-                    fallback=Json({} if 'en_US' in val.adapted else {'en_US': next(iter(val.adapted.values()))}),
-                    value=val,
-                ))
-            else:
-                assignments.append(SQL('%s = %s', SQL.identifier(name), val))
+        # perform updates (fnames, rows) in batches
+        updates_list = [
+            (fnames, sub_rows)
+            for fnames, rows in updates.items()
+            for sub_rows in split_every(UPDATE_BATCH_SIZE, rows)
+        ]
 
-        # update columns
-        if assignments:
-            for sub_ids in cr.split_for_in_conditions(self._ids):
-                cr.execute(SQL(
-                    "UPDATE %s SET %s WHERE id IN %s",
-                    SQL.identifier(self._table),
-                    SQL(", ").join(assignments),
-                    sub_ids,
-                ))
+        # update columns by group of updated fields
+        for fnames, rows in updates_list:
+            columns = []
+            assignments = []
+            for fname in fnames:
+                field = self._fields[fname]
+                assert field.store and field.column_type
+                column = SQL.identifier(fname)
+                # the type cast is necessary for some values, like NULLs
+                expr = SQL('"__tmp".%s::%s', column, SQL(field.column_type[1]))
+                if field.translate is True:
+                    # this is the SQL equivalent of:
+                    # None if expr is None else (
+                    #     (column or {'en_US': next(iter(expr.values()))}) | expr
+                    # )
+                    expr = SQL(
+                        """CASE WHEN %(expr)s IS NULL THEN NULL ELSE
+                            COALESCE(%(table)s.%(column)s, jsonb_build_object(
+                                'en_US', jsonb_path_query_first(%(expr)s, '$.*')
+                            )) || %(expr)s
+                        END""",
+                        table=SQL.identifier(self._table),
+                        column=column,
+                        expr=expr,
+                    )
+                columns.append(column)
+                assignments.append(SQL("%s = %s", column, expr))
+
+            self.env.execute_query(SQL(
+                """ UPDATE %(table)s
+                    SET %(assignments)s
+                    FROM (VALUES %(values)s) AS "__tmp"("id", %(columns)s)
+                    WHERE %(table)s."id" = "__tmp"."id"
+                """,
+                table=SQL.identifier(self._table),
+                assignments=SQL(", ").join(assignments),
+                values=SQL(", ").join(rows),
+                columns=SQL(", ").join(columns),
+            ))
 
         # update parent_path
         if parent_records:
@@ -4953,75 +4976,73 @@ class BaseModel(metaclass=MetaModel):
         records = self.browse(updated)
         self.env.cache.update(records, self._fields['parent_path'], updated.values())
 
-    def _parent_store_update_prepare(self, vals):
+    def _parent_store_update_prepare(self, vals_list):
         """ Return the records in ``self`` that must update their parent_path
             field. This must be called before updating the parent field.
         """
-        if not self._parent_store or self._parent_name not in vals:
+        if not self._parent_store:
             return self.browse()
 
-        # No need to recompute the values if the parent is the same.
-        parent_val = vals[self._parent_name]
-        if parent_val:
-            condition = SQL(
-                "(%(parent)s != %(value)s OR %(parent)s IS NULL)",
-                parent=SQL.identifier(self._parent_name),
-                value=parent_val,
-            )
-        else:
-            condition = SQL(
-                "%(parent)s IS NOT NULL",
-                parent=SQL.identifier(self._parent_name),
-            )
-        self._cr.execute(SQL(
-            "SELECT id FROM %s WHERE id IN %s AND %s",
+        # associate each new parent_id to its corresponding record ids
+        parent_to_ids = defaultdict(list)
+        for id_, vals in zip(self._ids, vals_list):
+            if self._parent_name in vals:
+                parent_to_ids[vals[self._parent_name]].append(id_)
+
+        if not parent_to_ids:
+            return self.browse()
+
+        self.flush_recordset([self._parent_name])
+
+        # return the records for which the parent field will change
+        sql_parent = SQL.identifier(self._parent_name)
+        conditions = []
+        for parent_id, ids in parent_to_ids.items():
+            if parent_id:
+                condition = SQL('(%s != %s OR %s IS NULL)', sql_parent, parent_id, sql_parent)
+            else:
+                condition = SQL('%s IS NOT NULL', sql_parent)
+            conditions.append(SQL('("id" IN %s AND %s)', tuple(ids), condition))
+
+        rows = self.env.execute_query(SQL(
+            "SELECT id FROM %s WHERE %s ORDER BY id",
             SQL.identifier(self._table),
-            tuple(self.ids),
-            condition,
+            SQL(" OR ").join(conditions),
         ))
-        return self.browse([row[0] for row in self._cr.fetchall()])
+        return self.browse(row[0] for row in rows)
 
     def _parent_store_update(self):
         """ Update the parent_path field of ``self``. """
-        cr = self.env.cr
+        for parent, records in self.grouped(self._parent_name).items():
+            # determine new prefix of parent_path of records
+            prefix = parent.parent_path or ""
 
-        # determine new prefix of parent_path
-        cr.execute(SQL(
-            """ SELECT parent.parent_path
-                FROM %(table)s node, %(table)s parent
-                WHERE node.id = %(id)s AND parent.id = node.%(parent)s """,
-            table=SQL.identifier(self._table),
-            parent=SQL.identifier(self._parent_name),
-            id=self.ids[0],
-        ))
-        prefix = cr.fetchone()[0] if cr.rowcount else ''
+            # check for recursion
+            if prefix:
+                parent_ids = {int(label) for label in prefix.split('/')[:-1]}
+                if not parent_ids.isdisjoint(records._ids):
+                    raise UserError(_("Recursion Detected."))
 
-        # check for recursion
-        if prefix:
-            parent_ids = {int(label) for label in prefix.split('/')[:-1]}
-            if not parent_ids.isdisjoint(self._ids):
-                raise UserError(_("Recursion Detected."))
+            # update parent_path of all records and their descendants
+            rows = self.env.execute_query(SQL(
+                """ UPDATE %(table)s child
+                    SET parent_path = concat(%(prefix)s, substr(child.parent_path,
+                            length(node.parent_path) - length(node.id || '/') + 1))
+                    FROM %(table)s node
+                    WHERE node.id IN %(ids)s
+                    AND child.parent_path LIKE concat(node.parent_path, %(wildcard)s)
+                    RETURNING child.id, child.parent_path """,
+                table=SQL.identifier(self._table),
+                prefix=prefix,
+                ids=tuple(records.ids),
+                wildcard='%',
+            ))
 
-        # update parent_path of all records and their descendants
-        cr.execute(SQL(
-            """ UPDATE %(table)s child
-                SET parent_path = concat(%(prefix)s, substr(child.parent_path,
-                        length(node.parent_path) - length(node.id || '/') + 1))
-                FROM %(table)s node
-                WHERE node.id IN %(ids)s
-                AND child.parent_path LIKE concat(node.parent_path, %(wildcard)s)
-                RETURNING child.id, child.parent_path """,
-            table=SQL.identifier(self._table),
-            prefix=prefix,
-            ids=tuple(self.ids),
-            wildcard='%',
-        ))
-
-        # update the cache of updated nodes, and determine what to recompute
-        updated = dict(cr.fetchall())
-        records = self.browse(updated)
-        self.env.cache.update(records, self._fields['parent_path'], updated.values())
-        records.modified(['parent_path'])
+            # update the cache of updated nodes, and determine what to recompute
+            updated = dict(rows)
+            records = self.browse(updated)
+            self.env.cache.update(records, self._fields['parent_path'], updated.values())
+            records.modified(['parent_path'])
 
     def _load_records_write(self, values):
         self.write(values)
@@ -6340,13 +6361,8 @@ class BaseModel(metaclass=MetaModel):
                     value = field._convert_from_cache_to_column(value)
                 id_vals[record.id][field.name] = value
 
-        # group record ids by vals, to update in batch when possible
-        updates = defaultdict(list)
-        for id_, vals in id_vals.items():
-            updates[frozendict(vals)].append(id_)
-
-        for vals, ids in updates.items():
-            model.browse(ids)._write(vals)
+        # update all records
+        model.browse(id_vals)._write_multi(id_vals.values())
 
     #
     # New records - represent records that do not exist in the database yet;
