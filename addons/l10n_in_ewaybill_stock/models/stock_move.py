@@ -66,11 +66,10 @@ class StockMove(models.Model):
 
     def _get_fiscal_position(self, tax):
         fiscal_position = self.env['account.chart.template'].ref('fiscal_position_in_inter_state', raise_if_not_found=False)
-        for line in self:
-            if fiscal_position and line.ewaybill_id.transaction_type == "inter_state":
-                return fiscal_position.map_tax(tax)
-            else:
-                return tax
+        if fiscal_position and self.ewaybill_id.transaction_type == "inter_state":
+            return fiscal_position.map_tax(tax)
+        else:
+            return tax
 
     def _convert_to_tax_base_line_dict(self, **kwargs):
         """ Convert the current record to a dictionary in order to use the generic taxes computation method

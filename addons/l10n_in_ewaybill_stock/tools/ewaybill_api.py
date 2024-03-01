@@ -7,6 +7,7 @@ from datetime import timedelta
 from odoo.addons.iap import jsonrpc
 from odoo.exceptions import AccessError
 from odoo.addons.l10n_in_edi.models.account_edi_format import DEFAULT_IAP_ENDPOINT, DEFAULT_IAP_TEST_ENDPOINT
+from odoo.addons.l10n_in_edi_ewaybill.models.error_codes import ERROR_CODES
 
 
 _logger = logging.getLogger(__name__)
@@ -18,6 +19,16 @@ class EWayBillApi:
         company.ensure_one()
         self.company = company
         self.env = self.company.env
+
+    def _l10n_in_ewaybill_get_error_message(self, code):
+        error_message = ERROR_CODES.get(code)
+        return error_message or _("We don't know the error message for this error code. Please contact support.")
+
+    def _l10n_in_set_missing_error_message(self, response):
+        for error in response.get('error', []):
+            if error.get('code') and not error.get('message'):
+                error['message'] = self._l10n_in_edi_ewaybill_get_error_message(error.get('code'))
+        return response
 
     def _ewaybill_connect_to_server(self, url_path, params):
         user_token = self.env["iap.account"].get("l10n_in_edi")
@@ -34,7 +45,8 @@ class EWayBillApi:
         endpoint = self.env["ir.config_parameter"].sudo().get_param("l10n_in_edi_ewaybill.endpoint", default_endpoint)
         url = "%s%s" % (endpoint, url_path)
         try:
-            return jsonrpc(url, params=params, timeout=70)
+            response = jsonrpc(url, params=params, timeout=70)
+            return self._l10n_in_set_missing_error_message(response)
         except AccessError as e:
             _logger.warning("Connection error: %s", e.args[0])
             return {

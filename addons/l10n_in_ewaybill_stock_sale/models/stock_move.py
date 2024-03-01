@@ -8,12 +8,10 @@ class StockMove(models.Model):
 
     def _compute_ewaybill_price_unit(self):
         super()._compute_ewaybill_price_unit()
-        for line in self:
-            if line.sale_line_id:
-                line.ewaybill_price_unit = line.sale_line_id.price_unit
+        for line in self.filtered(lambda l: l.sale_line_id):
+            line.ewaybill_price_unit = line.sale_line_id.price_unit
 
     def _compute_tax_ids(self):
         super()._compute_tax_ids()
-        for line in self:
-            if line.sale_line_id:
-                line.ewaybill_tax_ids = line.sale_line_id.tax_id
+        for line in self.filtered(lambda l: l.sale_line_id):
+            line.ewaybill_tax_ids = line.sale_line_id.tax_id

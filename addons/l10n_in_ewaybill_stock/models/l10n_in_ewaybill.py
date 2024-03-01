@@ -6,15 +6,13 @@ import base64
 import pytz
 from datetime import datetime
 from collections import defaultdict
+from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import html_escape
 
 from odoo.addons.l10n_in_ewaybill_stock.tools.ewaybill_api import EWayBillApi
-from odoo.addons.l10n_in_edi_ewaybill.models.error_codes import ERROR_CODES
-
-from markupsafe import Markup
 
 
 class Ewaybill(models.Model):
@@ -142,16 +140,13 @@ class Ewaybill(models.Model):
 
     def _compute_supply_type(self):
         for ewaybill in self:
-            if ewaybill.picking_type_code == 'incoming':
-                ewaybill.supply_type = 'I'
-            else:
-                ewaybill.supply_type = 'O'
+            ewaybill.supply_type = 'I' if ewaybill.picking_type_code == 'incoming' else 'O'
 
     @api.depends('move_ids')
     def _compute_tax_totals(self):
         for ewaybill in self:
             ewaybill.tax_totals = self.env['account.tax']._prepare_tax_totals(
-                [x._convert_to_tax_base_line_dict() for x in ewaybill.move_ids],
+                [move._convert_to_tax_base_line_dict() for move in ewaybill.move_ids],
                 ewaybill.currency_id or ewaybill.company_id.currency_id,
             )
 
@@ -245,24 +240,20 @@ class Ewaybill(models.Model):
             self._ewaybill_cancel()
 
     def _check_ewaybill_configuration(self):
-        self.ensure_one()
         error_message = []
+        methods_to_check = [self._check_ewaybill_partners, self._check_ewaybill_document_number, self._check_lines, self._check_gst_customer_treatment]
         if self.mode == '0':
             error_message += self._check_ewaybill_transporter()
-        error_message += self._check_ewaybill_partners()
-        error_message += self._check_ewaybill_document_number()
-        error_message += self._check_lines()
-        error_message += self._check_gst_customer_treatment()
+        for get_error_message in methods_to_check:
+            error_message.extend(get_error_message())
         return error_message
 
     def _check_ewaybill_transporter(self):
-        self.ensure_one()
         if self.transporter_id and not self.transporter_id.vat:
             return [_("- Transporter %s does not have GST Number", self.transporter_id.name)]
         return []
 
     def _check_ewaybill_partners(self):
-        self.ensure_one()
         error_message = []
         partners = {self.partner_bill_to_id, self.partner_bill_from_id, self.partner_ship_to_id, self.partner_ship_from_id}
         for partner in partners:
@@ -273,10 +264,8 @@ class Ewaybill(models.Model):
     def _l10n_in_validate_partner(self, partner, is_company=False):
         message = []
         if partner.country_id.code == "IN":
-            if not partner.commercial_partner_id.vat:
-                message.append(_("- GSTIN required"))
-            if not re.match("^.{3,50}$", partner.state_id.name or ""):
-                message.append(_("- State required min 3 and max 50 characters"))
+            if not partner.state_id.l10n_in_tin:
+                message.append(_("- State with TIN number is required"))
             if not partner.zip or not re.match("^[0-9]{6}$", partner.zip):
                 message.append(_("- Zip code required and should be 6 digits"))
         if message:
@@ -284,7 +273,6 @@ class Ewaybill(models.Model):
         return message
 
     def _check_ewaybill_document_number(self):
-        self.ensure_one()
         if not re.match("^.{1,16}$", self.document_number):
             return [_("Document number should be set and not more than 16 characters")]
         return []
@@ -314,14 +302,12 @@ class Ewaybill(models.Model):
         return gst_treatment
 
     def _write_error(self, error_message, blocking_level='error'):
-        self.ensure_one()
         self.write({
             'error_message': error_message,
             'blocking_level': blocking_level,
         })
 
     def _write_successfully_response(self, response_vals):
-        self.ensure_one()
         response_vals.update({
             'error_message': False,
             'blocking_level': False,
@@ -329,7 +315,6 @@ class Ewaybill(models.Model):
         self.write(response_vals)
 
     def _ewaybill_cancel(self):
-        self.ensure_one()
         cancel_json = {
             "ewbNo": int(self.name),
             "cancelRsnCode": int(self.cancel_reason),
@@ -354,8 +339,7 @@ class Ewaybill(models.Model):
                 # E-waybill is already canceled
                 # this happens when timeout from the Government portal but IRN is generated
                 error_message = Markup("<br/>").join([Markup("[%s] %s") % (
-                e.get("code"), e.get("message") or self._l10n_in_ewaybill_get_error_message(e.get('code'))) for e in
-                                                      error])
+                e.get("code"), e.get("message")) for e in error])
                 error = []
                 response = {"data": ""}
                 odoobot = self.env.ref("base.partner_root")
@@ -370,8 +354,7 @@ class Ewaybill(models.Model):
                 self._write_error(error_message)
             elif error:
                 error_message = Markup("<br/>").join([Markup("[%s] %s") % (
-                e.get("code"), e.get("message") or self._l10n_in_ewaybill_get_error_message(e.get('code'))) for e in
-                                                      error])
+                e.get("code"), e.get("message")) for e in error])
                 blocking_level = "error"
                 if "404" in error_codes:
                     blocking_level = "warning"
@@ -380,7 +363,6 @@ class Ewaybill(models.Model):
             self._write_successfully_response({'state': 'cancel'})
 
     def _generate_ewaybill_direct(self):
-        self.ensure_one()
         ewb_api = EWayBillApi(self.company_id)
         generate_json = self._ewaybill_generate_direct_json()
         response = ewb_api._ewaybill_generate(generate_json)
@@ -411,9 +393,12 @@ class Ewaybill(models.Model):
                 error_message = self._l10n_in_edi_get_iap_buy_credits_message(self.company_id)
                 self._write_error(error_message)
             elif error:
-                error_message = "<br/>".join(["[%s] %s" % (
-                e.get("code"), html_escape(e.get("message") or self._l10n_in_ewaybill_get_error_message(e.get('code'))))
-                                              for e in error])
+                error_message = "<br/>".join([
+                    "[%s] %s" % (
+                        e.get("code"),
+                        html_escape(e.get("message"))
+                    )
+                for e in error])
                 blocking_level = "error"
                 if "404" in error_codes:
                     blocking_level = "warning"
@@ -441,11 +426,6 @@ class Ewaybill(models.Model):
         )
 
     @api.model
-    def _l10n_in_ewaybill_get_error_message(self, code):
-        error_message = ERROR_CODES.get(code)
-        return error_message or _("We don't know the error message for this error code. Please contact support.")
-
-    @api.model
     def _indian_timezone_to_odoo_utc(self, str_date, time_format="%Y-%m-%d %H:%M:%S"):
         """
             This method is used to convert date from Indian timezone to UTC
@@ -456,24 +436,15 @@ class Ewaybill(models.Model):
 
     @api.model
     def _get_partner_state_code(self, partner):
-        state_code = 99
-        if partner.country_id.code == "IN":
-            state_code = int(partner.state_id.l10n_in_tin)
-        return state_code
+        return int(partner.state_id.l10n_in_tin) if partner.country_id.code == "IN" else 99
 
     @api.model
     def _get_partner_zip(self, partner):
-        state_code = 999999
-        if partner.country_id.code == "IN":
-            state_code = int(partner.zip)
-        return state_code
+        return int(partner.zip) if partner.country_id.code == "IN" else 999999
 
     @api.model
     def _get_partner_gst_number(self, partner):
-        state_code = "URP"
-        if partner.country_id.code == "IN":
-            state_code = partner.commercial_partner_id.vat
-        return state_code
+        return partner.commercial_partner_id.vat or "URP"
 
     @api.model
     def _get_partner_ship_address(self, partner):
@@ -535,11 +506,10 @@ class Ewaybill(models.Model):
 
     def _get_l10n_in_ewaybill_line_details(self, line):
         round_value = self._l10n_in_round_value
-        extract_digits = self._l10n_in_edi_extract_digits
         tax_details_by_line = self._l10n_in_tax_details_by_line(line)
         line_details = {
             "productName": line.product_id.name,
-            "hsnCode": extract_digits(line.product_id.l10n_in_hsn_code),
+            "hsnCode": self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code),
             "productDesc": line.product_id.name,
             "quantity": line.quantity,
             "qtyUnit": line.product_id.uom_id.l10n_in_code and line.product_id.uom_id.l10n_in_code.split("-")[
