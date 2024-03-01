@@ -399,7 +399,7 @@ class PropertiesCase(TestPropertiesMixin):
             }])
             self.env.invalidate_all()
 
-        with self.assertQueryCount(8):
+        with self.assertQueryCount(7):
             messages = self.env['test_new_api.message'].create([{
                 'name': 'Test Message',
                 'discussion': self.discussion_1.id,
@@ -1307,7 +1307,14 @@ class PropertiesCase(TestPropertiesMixin):
         with self.assertQueryCount(0, msg='Must read value from cache'):
             self.message_1.attributes
 
-        expected = ['UPDATE "test_new_api_message" SET "attributes" = %s, "write_date" = %s, "write_uid" = %s WHERE id IN %s']
+        expected = ["""
+            UPDATE "test_new_api_message"
+            SET "attributes" = "__tmp"."attributes"::jsonb,
+                "write_date" = "__tmp"."write_date"::timestamp,
+                "write_uid" = "__tmp"."write_uid"::int4
+            FROM (VALUES %s) AS "__tmp"("id", "attributes", "write_date", "write_uid")
+            WHERE "test_new_api_message"."id" = "__tmp"."id"
+        """]
         with self.assertQueryCount(1), self.assertQueries(expected):
             self.message_1.attributes = [
                 {
