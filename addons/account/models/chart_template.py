@@ -265,7 +265,11 @@ class AccountChartTemplate(models.AbstractModel):
             return (
                 tax.amount_type != template.get('amount_type', 'percent')
                 or tax.amount != template.get('amount', 0)
-                or len(tax.repartition_line_ids) != len(template.get('repartition_line_ids', []))
+                or (
+                    len(tax.repartition_line_ids) != len(template.get('repartition_line_ids', []))
+                    # Taxes that don't have repartition lines in their templates get theirs created by default
+                    and len(template.get('repartition_line_ids', [])) != 0
+                )
             )
 
         obsolete_xmlid = set()
