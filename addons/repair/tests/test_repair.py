@@ -311,6 +311,7 @@ class TestRepair(common.TransactionCase):
             .with_context(**end_action['context'])
             ).save()
         warn_uncomplete_wizard.action_validate()
+        self.assertFalse((repair.move_id | repair.move_ids).picking_id, "No picking for repair moves")
         self.assertEqual(repair.state, "done")
         done_moves = repair.move_ids - lineD
         #line a,b,c are 'done', line d is 'cancel'
