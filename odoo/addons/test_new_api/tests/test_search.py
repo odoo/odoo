@@ -796,8 +796,11 @@ class TestFlushSearch(TransactionCase):
     def test_flush_fields_in_domain(self):
         with self.assertQueries(['''
             UPDATE "test_new_api_city"
-            SET "name" = %s, "write_date" = %s, "write_uid" = %s
-            WHERE id IN %s
+            SET "name" = "__tmp"."name"::VARCHAR,
+                "write_date" = "__tmp"."write_date"::timestamp,
+                "write_uid" = "__tmp"."write_uid"::int4
+            FROM (VALUES %s) AS "__tmp"("id", "name", "write_date", "write_uid")
+            WHERE "test_new_api_city"."id" = "__tmp"."id"
         ''', '''
             SELECT "test_new_api_city"."id"
             FROM "test_new_api_city"
@@ -810,8 +813,11 @@ class TestFlushSearch(TransactionCase):
     def test_flush_fields_in_subdomain(self):
         with self.assertQueries(['''
             UPDATE "test_new_api_city"
-            SET "country_id" = %s, "write_date" = %s, "write_uid" = %s
-            WHERE id IN %s
+            SET "country_id" = "__tmp"."country_id"::int4,
+                "write_date" = "__tmp"."write_date"::timestamp,
+                "write_uid" = "__tmp"."write_uid"::int4
+            FROM (VALUES %s) AS "__tmp"("id", "country_id", "write_date", "write_uid")
+            WHERE "test_new_api_city"."id" = "__tmp"."id"
         ''', '''
             SELECT "test_new_api_city"."id"
             FROM "test_new_api_city"
@@ -827,8 +833,11 @@ class TestFlushSearch(TransactionCase):
 
         with self.assertQueries(['''
             UPDATE "test_new_api_country"
-            SET "name" = %s, "write_date" = %s, "write_uid" = %s
-            WHERE id IN %s
+            SET "name" = "__tmp"."name"::VARCHAR,
+                "write_date" = "__tmp"."write_date"::timestamp,
+                "write_uid" = "__tmp"."write_uid"::int4
+            FROM (VALUES %s) AS "__tmp"("id", "name", "write_date", "write_uid")
+            WHERE "test_new_api_country"."id" = "__tmp"."id"
         ''', '''
             SELECT "test_new_api_city"."id"
             FROM "test_new_api_city"
@@ -847,8 +856,11 @@ class TestFlushSearch(TransactionCase):
 
         with self.assertQueries(['''
             UPDATE "test_new_api_city"
-            SET "country_id" = %s, "write_date" = %s, "write_uid" = %s
-            WHERE id IN %s
+            SET "country_id" = "__tmp"."country_id"::int4,
+                "write_date" = "__tmp"."write_date"::timestamp,
+                "write_uid" = "__tmp"."write_uid"::int4
+            FROM (VALUES %s) AS "__tmp"("id", "country_id", "write_date", "write_uid")
+            WHERE "test_new_api_city"."id" = "__tmp"."id"
         ''', '''
             SELECT "test_new_api_city"."id"
             FROM "test_new_api_city"
@@ -866,8 +878,11 @@ class TestFlushSearch(TransactionCase):
 
         with self.assertQueries(['''
             UPDATE "test_new_api_payment"
-            SET "move_id" = %s, "write_date" = %s, "write_uid" = %s
-            WHERE id IN %s
+            SET "move_id" = "__tmp"."move_id"::int4,
+                "write_date" = "__tmp"."write_date"::timestamp,
+                "write_uid" = "__tmp"."write_uid"::int4
+            FROM (VALUES %s) AS "__tmp"("id", "move_id", "write_date", "write_uid")
+            WHERE "test_new_api_payment"."id" = "__tmp"."id"
         ''', '''
             SELECT "test_new_api_payment"."id"
             FROM "test_new_api_payment"
@@ -881,8 +896,11 @@ class TestFlushSearch(TransactionCase):
 
         with self.assertQueries(['''
             UPDATE "test_new_api_move"
-            SET "tag_repeat" = %s, "write_date" = %s, "write_uid" = %s
-            WHERE id IN %s
+            SET "tag_repeat" = "__tmp"."tag_repeat"::int4,
+                "write_date" = "__tmp"."write_date"::timestamp,
+                "write_uid" = "__tmp"."write_uid"::int4
+            FROM (VALUES %s) AS "__tmp"("id", "tag_repeat", "write_date", "write_uid")
+            WHERE "test_new_api_move"."id" = "__tmp"."id"
         ''', '''
             SELECT "test_new_api_payment"."id"
             FROM "test_new_api_payment"
@@ -905,8 +923,11 @@ class TestFlushSearch(TransactionCase):
 
         with self.assertQueries(['''
             UPDATE "test_new_api_city"
-            SET "name" = %s, "write_date" = %s, "write_uid" = %s
-            WHERE id IN %s
+            SET "name" = "__tmp"."name"::VARCHAR,
+                "write_date" = "__tmp"."write_date"::timestamp,
+                "write_uid" = "__tmp"."write_uid"::int4
+            FROM (VALUES %s) AS "__tmp"("id", "name", "write_date", "write_uid")
+            WHERE "test_new_api_city"."id" = "__tmp"."id"
         ''', '''
             SELECT "test_new_api_city"."id"
             FROM "test_new_api_city"
@@ -919,8 +940,11 @@ class TestFlushSearch(TransactionCase):
     def test_flush_fields_in_order(self):
         with self.assertQueries(['''
             UPDATE "test_new_api_city"
-            SET "name" = %s, "write_date" = %s, "write_uid" = %s
-            WHERE id IN %s
+            SET "name" = "__tmp"."name"::VARCHAR,
+                "write_date" = "__tmp"."write_date"::timestamp,
+                "write_uid" = "__tmp"."write_uid"::int4
+            FROM (VALUES %s) AS "__tmp"("id", "name", "write_date", "write_uid")
+            WHERE "test_new_api_city"."id" = "__tmp"."id"
         ''', '''
             SELECT "test_new_api_city"."id"
             FROM "test_new_api_city"
@@ -933,8 +957,11 @@ class TestFlushSearch(TransactionCase):
         # test indirect fields, when ordering by many2one field
         with self.assertQueries(['''
             UPDATE "test_new_api_country"
-            SET "name" = %s, "write_date" = %s, "write_uid" = %s
-            WHERE id IN %s
+            SET "name" = "__tmp"."name"::VARCHAR,
+                "write_date" = "__tmp"."write_date"::timestamp,
+                "write_uid" = "__tmp"."write_uid"::int4
+            FROM (VALUES %s) AS "__tmp"("id", "name", "write_date", "write_uid")
+            WHERE "test_new_api_country"."id" = "__tmp"."id"
         ''', '''
             SELECT "test_new_api_city"."id"
             FROM "test_new_api_city"
@@ -950,8 +977,11 @@ class TestFlushSearch(TransactionCase):
 
         with self.assertQueries(['''
             UPDATE "test_new_api_city"
-            SET "country_id" = %s, "write_date" = %s, "write_uid" = %s
-            WHERE id IN %s
+            SET "country_id" = "__tmp"."country_id"::int4,
+                "write_date" = "__tmp"."write_date"::timestamp,
+                "write_uid" = "__tmp"."write_uid"::int4
+            FROM (VALUES %s) AS "__tmp"("id", "country_id", "write_date", "write_uid")
+            WHERE "test_new_api_city"."id" = "__tmp"."id"
         ''', '''
             SELECT "test_new_api_city"."id"
             FROM "test_new_api_city"
@@ -978,8 +1008,11 @@ class TestFlushSearch(TransactionCase):
         # except when the field appears in another clause
         with self.assertQueries(['''
             UPDATE "test_new_api_city"
-            SET "name" = %s, "write_date" = %s, "write_uid" = %s
-            WHERE id IN %s
+            SET "name" = "__tmp"."name"::VARCHAR,
+                "write_date" = "__tmp"."write_date"::timestamp,
+                "write_uid" = "__tmp"."write_uid"::int4
+            FROM (VALUES %s) AS "__tmp"("id", "name", "write_date", "write_uid")
+            WHERE "test_new_api_city"."id" = "__tmp"."id"
         ''', '''
             SELECT "test_new_api_city"."id", "test_new_api_city"."name"
             FROM "test_new_api_city"
@@ -991,8 +1024,11 @@ class TestFlushSearch(TransactionCase):
 
         with self.assertQueries(['''
             UPDATE "test_new_api_city"
-            SET "name" = %s, "write_date" = %s, "write_uid" = %s
-            WHERE id IN %s
+            SET "name" = "__tmp"."name"::VARCHAR,
+                "write_date" = "__tmp"."write_date"::timestamp,
+                "write_uid" = "__tmp"."write_uid"::int4
+            FROM (VALUES %s) AS "__tmp"("id", "name", "write_date", "write_uid")
+            WHERE "test_new_api_city"."id" = "__tmp"."id"
         ''', '''
             SELECT "test_new_api_city"."id", "test_new_api_city"."name"
             FROM "test_new_api_city"
