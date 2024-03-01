@@ -1,4 +1,4 @@
-Switzerland, 2024-02-27
+Switzerland, 2024-03-01
 
 Abilium GmbH agrees to the terms of the Odoo Corporate Contributor License
 Agreement v1.0.
