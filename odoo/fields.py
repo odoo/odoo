@@ -4540,7 +4540,8 @@ class One2many(_RelationalMulti):
                             to_create.append(dict(command[2], **{inverse: record.id}))
                         allow_full_delete = False
                     elif command[0] == Command.UPDATE:
-                        comodel.browse(command[1]).write(command[2])
+                        prefetch_ids = recs[self.name]._prefetch_ids
+                        comodel.browse(command[1]).with_prefetch(prefetch_ids).write(command[2])
                     elif command[0] == Command.DELETE:
                         to_delete.append(command[1])
                     elif command[0] == Command.UNLINK:
@@ -4924,7 +4925,8 @@ class Many2many(_RelationalMulti):
                 if command[0] == Command.CREATE:
                     to_create.append((recs._ids, command[2]))
                 elif command[0] == Command.UPDATE:
-                    comodel.browse(command[1]).write(command[2])
+                    prefetch_ids = recs[self.name]._prefetch_ids
+                    comodel.browse(command[1]).with_prefetch(prefetch_ids).write(command[2])
                 elif command[0] == Command.DELETE:
                     to_delete.append(command[1])
                 elif command[0] == Command.UNLINK:
