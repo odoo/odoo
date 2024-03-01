@@ -383,7 +383,7 @@ export class ResPartner extends webModels.ResPartner {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        if (ResUsers._is_public(this.env.user?.is_public)) {
+        if (ResUsers._is_public(this.env.uid)) {
             return [null, MailGuest._get_guest_from_context()];
         }
         return [this._filter([["id", "=", this.env.user.partner_id]])[0], null];

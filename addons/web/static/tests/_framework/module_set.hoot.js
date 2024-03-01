@@ -34,21 +34,16 @@ const fetchDependencies = async (moduleNames) => {
     // Fetch missing dependencies
     const addonsToFetch = [...addons].filter((addon) => !dependencyCache[addon]);
     if (addonsToFetch.length) {
-        const { records } = await orm("ir.module.module.dependency", "web_search_read", [], {
-            domain: [["module_id.name", "in", addonsToFetch]],
-            specification: {
-                module_id: {
-                    fields: { name: {} },
-                },
-                name: {},
-            },
+        const allDependencies = await orm("ir.module.module.dependency", "all_dependencies", [], {
+            module_names: addonsToFetch,
         });
-        for (const dependency of records) {
-            const { name } = dependency.module_id;
-            if (!dependencyCache[name]) {
-                dependencyCache[name] = [];
+        for (const [moduleName, dependencyNames] of Object.entries(allDependencies)) {
+            if (!dependencyCache[moduleName]) {
+                dependencyCache[moduleName] = [];
             }
-            dependencyCache[name].push(dependency.name);
+            for (const dependencyName of dependencyNames) {
+                dependencyCache[moduleName].push(dependencyName);
+            }
         }
     }
 

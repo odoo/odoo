@@ -10,6 +10,7 @@ import { rpcWithEnv } from "@mail/utils/common/misc";
 import { expect, test } from "@odoo/hoot";
 import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { defineLivechatModels } from "./livechat_test_helpers";
+import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 
 /** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
 let rpc;
@@ -39,7 +40,7 @@ test("Can execute help command on livechat channels", async () => {
     expect(["execute_command_help"]).toVerifySteps();
 });
 
-test.skip('Receives visitor typing status "is typing"', async () => {
+test('Receives visitor typing status "is typing"', async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 20" });
     const channelId = pyEnv["discuss.channel"].create({

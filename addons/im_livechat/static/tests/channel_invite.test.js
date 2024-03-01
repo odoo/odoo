@@ -73,7 +73,7 @@ test("Available operators come first", async () => {
     await contains(":nth-child(2 of .o-discuss-ChannelInvitation-selectable)", { text: "Harry" });
 });
 
-test.skip("Partners invited most frequently by the current user come first", async () => {
+test("Partners invited most frequently by the current user come first", async () => {
     const pyEnv = await startServer();
     pyEnv["res.partner"].create({
         name: "John",

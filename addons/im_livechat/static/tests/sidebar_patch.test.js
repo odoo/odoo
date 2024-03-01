@@ -13,13 +13,14 @@ import { tick } from "@odoo/hoot-mock";
 import { url } from "@web/core/utils/urls";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { defineLivechatModels } from "./livechat_test_helpers";
+import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 
 /** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
 let rpc;
 
 defineLivechatModels();
 
-test.skip("Unknown visitor", async () => {
+test("Unknown visitor", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
@@ -37,7 +38,7 @@ test.skip("Unknown visitor", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { text: "Visitor 11" });
 });
 
-test.skip("Known user with country", async () => {
+test("Known user with country", async () => {
     const pyEnv = await startServer();
     const countryId = pyEnv["res.country"].create({
         code: "be",
@@ -60,7 +61,7 @@ test.skip("Known user with country", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { text: "Jean (Belgium)" });
 });
 
-test.skip("Do not show channel when visitor is typing", async () => {
+test("Do not show channel when visitor is typing", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write([serverState.userId], { im_status: "online" });
     const livechatChannelId = pyEnv["im_livechat.channel"].create({
@@ -97,7 +98,7 @@ test.skip("Do not show channel when visitor is typing", async () => {
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
 });
 
-test.skip("Smiley face avatar for livechat item linked to a guest", async () => {
+test("Smiley face avatar for livechat item linked to a guest", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
@@ -121,7 +122,7 @@ test.skip("Smiley face avatar for livechat item linked to a guest", async () => 
     );
 });
 
-test.skip("Partner profile picture for livechat item linked to a partner", async () => {
+test("Partner profile picture for livechat item linked to a partner", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jean" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -144,7 +145,7 @@ test.skip("Partner profile picture for livechat item linked to a partner", async
     );
 });
 
-test.skip("No counter if the category is unfolded and with unread messages", async () => {
+test("No counter if the category is unfolded and with unread messages", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
@@ -167,7 +168,7 @@ test.skip("No counter if the category is unfolded and with unread messages", asy
     });
 });
 
-test.skip("No counter if category is folded and without unread messages", async () => {
+test("No counter if category is folded and without unread messages", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
@@ -186,7 +187,7 @@ test.skip("No counter if category is folded and without unread messages", async 
     await contains(".o-mail-DiscussSidebarCategory-livechat .o-discuss-badge", { count: 0 });
 });
 
-test.skip("Counter should have correct value of unread threads if category is folded and with unread messages", async () => {
+test("Counter should have correct value of unread threads if category is folded and with unread messages", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
@@ -203,10 +204,12 @@ test.skip("Counter should have correct value of unread threads if category is fo
     });
     await startClient();
     await openDiscuss();
+    // first, close the live chat category
+    await click(".o-mail-DiscussSidebarCategory-livechat .btn");
     await contains(".o-mail-DiscussSidebarCategory-livechat .o-discuss-badge", { text: "1" });
 });
 
-test.skip("Close manually by clicking the title", async () => {
+test("Close manually by clicking the title", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
@@ -220,15 +223,13 @@ test.skip("Close manually by clicking the title", async () => {
     });
     await startClient();
     await openDiscuss();
-    // first, close the live chat category
-    await click(".o-mail-DiscussSidebarCategory-livechat .btn");
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
     // fold the livechat category
     await click(".o-mail-DiscussSidebarCategory-livechat .btn");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
 });
 
-test.skip("Open manually by clicking the title", async () => {
+test("Open manually by clicking the title", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
@@ -253,7 +254,7 @@ test.skip("Open manually by clicking the title", async () => {
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
 });
 
-test.skip("Category item should be invisible if the category is closed", async () => {
+test("Category item should be invisible if the category is closed", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
@@ -274,7 +275,7 @@ test.skip("Category item should be invisible if the category is closed", async (
     });
 });
 
-test.skip("Active category item should be visible even if the category is closed", async () => {
+test("Active category item should be visible even if the category is closed", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
@@ -297,7 +298,7 @@ test.skip("Active category item should be visible even if the category is closed
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
 });
 
-test.skip("Clicking on unpin button unpins the channel", async () => {
+test("Clicking on unpin button unpins the channel", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
@@ -314,7 +315,7 @@ test.skip("Clicking on unpin button unpins the channel", async () => {
     await contains(".o_notification", { text: "You unpinned your conversation with Visitor 11" });
 });
 
-test.skip("Message unread counter", async () => {
+test("Message unread counter", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -343,7 +344,7 @@ test.skip("Message unread counter", async () => {
     await contains(".o-mail-DiscussSidebarChannel .badge", { text: "1" });
 });
 
-test.skip("unknown livechat can be displayed and interacted with", async () => {
+test("unknown livechat can be displayed and interacted with", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
     const channelId = pyEnv["discuss.channel"].create({

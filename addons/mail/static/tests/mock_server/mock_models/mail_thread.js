@@ -118,6 +118,7 @@ export class MailThread extends models.ServerModel {
                 kwargs.email_from
             );
         }
+        email_from ||= false;
         const values = {
             ...kwargs,
             author_id,
@@ -460,7 +461,7 @@ export class MailThread extends models.ServerModel {
                         message: Object.assign(messageFormat, { temporary_id }),
                     },
                 ]);
-                if (message.author_id === this.env.user.partner_id) {
+                if (message.author_id === this.env.user?.partner_id) {
                     DiscussChannel._channel_seen(ids, message.id);
                 }
             }

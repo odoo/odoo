@@ -1,13 +1,5 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
-
-/**
- * @typedef {import("@web/../tests/web_test_helpers").ModelRecord} ModelRecord
- */
-
-/**
- * @template T
- * @typedef {import("@web/../tests/web_test_helpers").KwArgs<T>} KwArgs
- */
+import { Kwargs } from "@web/../tests/_framework/mock_server/mock_server_utils";
 
 export class DiscussChannel extends mailModels.DiscussChannel {
     /**
@@ -16,7 +8,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
      */
     channel_info(ids) {
         /** @type {import("mock_models").LivechatChannel} */
-        const LivechatChannel = this.env["livechat.channel"];
+        const LivechatChannel = this.env["im_livechat.channel"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
@@ -55,11 +47,14 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         if (channel.message_ids.length === 0) {
             return;
         }
-        this.message_post(channel.id, {
-            body: this._get_visitor_leave_message(),
-            message_type: "comment",
-            subtype_xmlid: "mail.mt_comment",
-        });
+        this.message_post(
+            channel.id,
+            Kwargs({
+                body: this._get_visitor_leave_message(),
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            })
+        );
     }
     _get_visitor_leave_message() {
         return "Visitor left the conversation.";

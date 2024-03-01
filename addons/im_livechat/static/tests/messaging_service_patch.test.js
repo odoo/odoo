@@ -11,13 +11,14 @@ import { Command, mockService, serverState } from "@web/../tests/web_test_helper
 import { rpcWithEnv } from "@mail/utils/common/misc";
 import { presenceService } from "@bus/services/presence_service";
 import { defineLivechatModels } from "./livechat_test_helpers";
+import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 
 /** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
 let rpc;
 
 defineLivechatModels();
 
-test.skip("Notify message received out of focus", async () => {
+test("Notify message received out of focus", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
     const channelId = pyEnv["discuss.channel"].create({

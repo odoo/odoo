@@ -66,11 +66,14 @@ export class DiscussChannel extends models.ServerModel {
         this.write([channel.id], {
             channel_member_ids: [Command.delete(channelMember.id)],
         });
-        this.message_post(channel.id, {
-            author_id: serverState.partnerId,
-            body: '<div class="o_mail_notification">left the channel</div>',
-            subtype_xmlid: "mail.mt_comment",
-        });
+        this.message_post(
+            channel.id,
+            Kwargs({
+                author_id: serverState.partnerId,
+                body: '<div class="o_mail_notification">left the channel</div>',
+                subtype_xmlid: "mail.mt_comment",
+            })
+        );
         const [partner] = ResPartner.read(this.env.user.partner_id);
         BusBus._sendone(partner, "discuss.channel/leave", { id: channel.id });
         BusBus._sendone(channel, "mail.record/insert", {
@@ -791,7 +794,7 @@ export class DiscussChannel extends models.ServerModel {
             is_pinned: true,
         });
         const messageData = MailThread.message_post.call(this, [id], kwargs);
-        if (kwargs.author_id === this.env.user.partner_id) {
+        if (kwargs.author_id === this.env.user?.partner_id) {
             this._set_last_seen_message([channel.id], messageData.id);
         }
         // simulate compute of message_unread_counter

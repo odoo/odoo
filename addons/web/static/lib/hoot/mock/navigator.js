@@ -133,6 +133,7 @@ export const mockNavigator = createMock(navigator, {
     clipboard: { value: mockClipboard },
     permissions: { value: mockPermissions },
     userAgent: { get: () => currentUserAgent },
+    serviceWorker: { get: () => undefined },
 });
 
 /** @type {Record<PermissionName, { name: string; state: PermissionState }>} */

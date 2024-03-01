@@ -1,7 +1,12 @@
-import { serverState } from "@web/../tests/web_test_helpers";
+import { MockServer, serverState } from "@web/../tests/web_test_helpers";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
-import { Kwargs, isKwargs } from "@web/../tests/_framework/mock_server/mock_server_utils";
+import {
+    Kwargs,
+    MockServerError,
+    isKwargs,
+} from "@web/../tests/_framework/mock_server/mock_server_utils";
+import { authenticate, logout } from "@web/../tests/_framework/mock_server/mock_server";
 
 export const DISCUSS_ACTION_ID = 104;
 
@@ -41,6 +46,47 @@ export const parseModelParams = (params, ...argNames) => {
     }
     return kwargs;
 };
+
+/** @param {import("./mock_model").MailGuest} guest */
+const authenticateGuest = (guest) => {
+    const { env } = MockServer;
+    /** @type {import("mock_models").ResUsers} */
+    const ResUsers = env["res.users"];
+    if (!guest?.id) {
+        throw new MockServerError("Unauthorized");
+    }
+    const [publicUser] = ResUsers.read(serverState.publicUserId);
+    env.cookie.set("dgid", guest.id);
+    authenticate(publicUser.login, publicUser.password);
+    env.uid = serverState.publicUserId;
+};
+
+/**
+ * Executes the given callback as the given guest, then restores the previous user.
+ *
+ * @param {number} guestId
+ * @param {() => any} fn
+ */
+export async function withGuest(guestId, fn) {
+    const { env } = MockServer;
+    /** @type {import("mock_models").MailGuest} */
+    const MailGuest = env["mail.guest"];
+    const currentUser = env.user;
+    const [targetGuest] = MailGuest._filter([["id", "=", guestId]], { active_test: false });
+    authenticateGuest(targetGuest);
+    let result;
+    try {
+        result = await fn();
+    } finally {
+        if (currentUser) {
+            authenticate(currentUser.login, currentUser.password);
+        } else {
+            logout();
+            env.cookie.delete("dgid");
+        }
+    }
+    return result;
+}
 
 /** @param {Request} request */
 export const parseRequestParams = async (request) => {
@@ -730,7 +776,7 @@ async function processRequest(request) {
             Thread: DiscussChannel.channel_info(DiscussChannel.search(channelsDomain)),
         });
     }
-    if (args.failures && this.env.user.partner_id) {
+    if (args.failures && this.env.user?.partner_id) {
         const partner = ResPartner._filter([["id", "=", this.env.user.partner_id]], {
             active_test: false,
         })[0];
@@ -756,7 +802,7 @@ async function processRequest(request) {
             ),
         });
     }
-    if (args.systray_get_activities && this.env.user.partner_id) {
+    if (args.systray_get_activities && this.env.user?.partner_id) {
         const groups = ResUsers._get_activity_groups();
         addToRes(res, {
             Store: {

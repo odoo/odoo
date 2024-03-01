@@ -10,13 +10,15 @@ import { rpcWithEnv } from "@mail/utils/common/misc";
 import { test } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { defineLivechatModels } from "./livechat_test_helpers";
+import { mockDate } from "@odoo/hoot-mock";
+import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 
 /** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
 let rpc;
 
 defineLivechatModels();
 
-test.skip("add livechat in the sidebar on visitor sending first message", async () => {
+test("add livechat in the sidebar on visitor sending first message", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write([serverState.userId], { im_status: "online" });
     const countryId = pyEnv["res.country"].create({ code: "be", name: "Belgium" });
@@ -74,7 +76,8 @@ test("invite button should be present on livechat", async () => {
     await contains(".o-mail-Discuss button[title='Add Users']");
 });
 
-test.skip("livechats are sorted by last activity time in the sidebar: most recent at the top", async () => {
+test("livechats are sorted by last activity time in the sidebar: most recent at the top", async () => {
+    mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });

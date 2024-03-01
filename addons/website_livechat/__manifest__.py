@@ -35,6 +35,11 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'website_livechat/static/src/**/*',
             ('remove', 'website_livechat/static/src/scss/**/*'),
         ],
+        'web.assets_unit_tests': [
+            'website_livechat/static/tests/**/*',
+            ('remove', 'website_livechat/static/tests/embed/**/*'),
+            ('remove', 'website_livechat/static/tests/tours/**/*'),
+        ],
         'web.assets_tests': [
             'website_livechat/static/tests/tours/**/*',
         ],

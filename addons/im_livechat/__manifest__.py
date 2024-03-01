@@ -80,7 +80,6 @@ Help your customers with this chat, and analyse their feedback.
         'web.assets_unit_tests': [
             'im_livechat/static/tests/**/*',
             ('remove', 'im_livechat/static/tests/embed/**/*'),
-            ('remove', 'im_livechat/static/tests/legacy/**/*'), # to remove when all legacy tests are ported
             ('remove', 'im_livechat/static/tests/tours/**/*'),
         ],
         'im_livechat.qunit_embed_suite': [
