@@ -3570,6 +3570,17 @@ export class OdooEditor extends EventTarget {
                 node.before(fontNode);
                 node.replaceChildren(...fontNode.childNodes);
                 fontNode.appendChild(node);
+            } else if (node.nodeName === 'IMG' && node.getAttribute('aria-roledescription') === 'checkbox') {
+                const checklist = node.closest('ul');
+                const closestLi = node.closest('li');
+                if (checklist) {
+                    checklist.classList.add('o_checklist');
+                    if (node.getAttribute('alt') === 'checked') {
+                        closestLi.classList.add('o_checked');
+                    }
+                    node.remove();
+                    node = checklist;
+                }
             }
             // Remove all illegal attributes and classes from the node, then
             // clean its children.
