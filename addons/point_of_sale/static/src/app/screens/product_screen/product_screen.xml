@@ -28,9 +28,9 @@
                         </div>
                         <div t-foreach="getCategories()" t-as="category" t-key="category.id" class="d-flex align-items-center">
                             <i t-if="category.getAllChildren().includes(this.pos.selectedCategoryId) || this.pos.selectedCategoryId === category.id" t-attf-class="pe-2 fa fa-caret-right" aria-hidden="true" />
-                            <button t-on-click="() =>  this.pos.setSelectedCategoryId(category.id)" class="category-button btn btn-light d-flex flex-column align-items-center justify-content-center p-1 h-100" style="width: 3rem;">
+                            <button t-on-click="() =>  this.pos.setSelectedCategoryId(category.id)" class="category-button btn btn-light d-flex flex-column align-items-center justify-content-center p-1 h-100" style="max-width: 100px;">
                                 <img t-if="category.has_image and pos.show_category_images" t-att-src="computeImageUrl(category)" style="height: 3rem;" alt="Category" />
-                                <span t-if="category.name" class="text-center fs-5" t-esc="category.name" />
+                                <span t-if="category.name" class="text-center fs-5 text-truncate w-100" t-esc="category.name" />
                             </button>
                         </div>
                     </div>
