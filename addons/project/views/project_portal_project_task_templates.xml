@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="portal_my_tasks_priority_widget_template" name="Priority Widget Template">
-        <span t-attf-class="o_priority_star fa fa-star#{'' if task.priority == '1' else '-o'} #{classes if classes else ''}" t-attf-title="Priority: {{'Important' if task.priority == '1' else 'Normal'}}"/>
+        <span t-attf-class="o_priority_star d-inline-block fa fa-star#{' text-warning' if task.priority == '1' else '-o opacity-75'} #{classes if classes else ''}" t-attf-title="Priority: {{'Important' if task.priority == '1' else 'Normal'}}"/>
     </template>
 
     <template id="portal_my_tasks_state_widget_template" name="Status Widget Template">
@@ -80,9 +80,9 @@
                                 <td>
                                     <t t-set="assignees" t-value="task.sudo().user_ids"/>
                                     <div t-if="assignees" class="flex-nowrap ps-3">
-                                        <img class="rounded-circle o_portal_contact_img me-2" t-attf-src="#{image_data_uri(assignees[:1].avatar_1024)}" alt="User" style="width: 20px; height: 20px;"/>
+                                        <img class="rounded o_portal_contact_img me-2" t-attf-src="#{image_data_uri(assignees[:1].avatar_1024)}" alt="User" style="width: 20px; height: 20px;"/>
                                         <span t-att-title="'\n'.join(assignees.mapped('name'))">
-                                            <span t-field="assignees[:1].name"/><span t-if="len(assignees) &gt; 1"> + <span t-out="len(assignees) - 1"/> others</span>
+                                            <span t-field="assignees[:1].name"/><span t-if="len(assignees) &gt; 1" class="badge ms-1 rounded-pill text-bg-light"> +<span t-out="len(assignees) - 1"/></span>
                                         </span>
                                     </div>
                                 </td>
@@ -100,7 +100,7 @@
                                     </t>
                                 </td>
                                 <td t-if="groupby != 'stage_id'" class="text-end lh-1">
-                                    <span t-attf-class="badge #{'text-bg-success' if task.stage_id.fold else 'text-bg-primary'} fw-normal o_text_overflow" t-attf-title="#{task.stage_id.name}" t-esc="task.stage_id.name"/>
+                                    <span t-attf-class="badge rounded-pill #{'text-bg-success' if task.stage_id.fold else 'text-bg-primary'} fw-normal o_text_overflow" t-attf-title="#{task.stage_id.name}" t-esc="task.stage_id.name"/>
                                 </td>
                             </tr>
                         </t>
@@ -159,7 +159,7 @@
 
             <div class="row o_project_portal_sidebar">
                 <t t-call="portal.portal_record_sidebar">
-                    <t t-set="classes" t-value="'col-lg-3 col-xl-4 d-print-none'"/>
+                    <t t-set="classes" t-value="'col-lg-4 col-xxl-3 d-print-none'"/>
 
                     <t t-set="entries">
                         <div class="d-flex flex-wrap flex-column gap-4">
@@ -189,12 +189,12 @@
                                 </ul>
                             </div>
 
-                            <div t-if="task.user_ids or task.partner_id" class="d-flex flex-column gap-4">
-                                <div class="col-12" t-if="task.user_ids">
+                            <div t-if="task.user_ids or task.partner_id" class="d-flex flex-column gap-4 mt-3">
+                                <div t-if="task.user_ids">
                                     <h6 class="flex-basis-100"><small class="text-muted">Assignees</small></h6>
                                     <t t-foreach="task.user_ids" t-as="user">
                                         <div t-attf-class="o_portal_contact_details d-flex flex-column gap-2 {{ 'mb-3' if len(task.user_ids) > 1 else '' }}">
-                                            <div class="d-flex justify-content-start align-items-center gap-2">
+                                            <div class="d-flex justify-content-start gap-2">
                                                 <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(user.avatar_128)"/>
                                                 <h6 class="mb-0" t-field="user.name"></h6>
                                             </div>
@@ -206,7 +206,7 @@
                                     <h6><small class="text-muted">Customer</small></h6>
                                     <t t-if="task.partner_id">
                                         <div class="o_portal_contact_details d-flex flex-column gap-2">
-                                            <div class="d-flex justify-content-start align-items-center gap-2">
+                                            <div class="d-flex justify-content-start gap-2">
                                                 <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(task.partner_id.avatar_512)"/>
                                                 <h6 class="mb-0" t-out="task.partner_id.name"></h6>
                                             </div>
@@ -218,17 +218,17 @@
                         </div>
                     </t>
                 </t>
-                <div id="task_content" class="o_portal_content col-12 col-lg-9 col-xl-8">
+                <div id="task_content" class="o_portal_content col-12 col-lg-8 col-xxl-9">
                     <div id="card">
                         <div id="card_header" data-anchor="true">
-                            <div class="row justify-content-between align-items-end mb-3">
+                            <div class="row justify-content-between mb-3">
                                 <div class="col-12 col-md-9">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <t t-call="project.portal_my_tasks_priority_widget_template">
-                                            <t t-set="classes" t-translation="off">fs-4</t>
-                                        </t>
-                                        <h3 t-field="task.name" class="text-truncate my-0"/>
-                                        <small class="text-muted d-none d-md-inline align-self-end">(#<span t-field="task.id"/>)</small>
+                                    <div class="d-flex gap-2">
+                                        <h3 class="my-0">
+                                            <t t-call="project.portal_my_tasks_priority_widget_template"/>
+                                            <span t-field="task.name"/>
+                                            <small class="text-muted d-none d-md-inline">(#<span t-field="task.id"/>)</small>
+                                        </h3>
                                     </div>
                                 </div>
                                 <div class="col-auto">
@@ -259,22 +259,22 @@
 
                             <div class="row" t-if="task.description or task.attachment_ids">
                                 <div t-if="not is_html_empty(task.description)" t-attf-class="col-12 mb-4 mb-md-0 {{'col-lg-6' if task.attachment_ids else 'col-lg-12'}}">
-                                    <hr class="mb-1"/>
-                                    <div class="d-flex my-2">
-                                        <h5>Description</h5>
-                                    </div>
+                                    <h5 class="mb-1">Description</h5>
+                                    <hr class="mt-1 mb-2"/>
                                     <div class="py-1 px-2 bg-100 small overflow-auto table-responsive" t-field="task.description"/>
                                 </div>
                                 <div t-if="task.attachment_ids" t-attf-class="col-12 o_project_portal_attachments {{'col-lg-6' if task.description else 'col-lg-12'}}">
-                                    <hr class="mb-1 d-none d-lg-block"/>
-                                    <strong class="d-block mb-2">Attachments</strong>
+                                    <h5 class="mb-1">Attachments</h5>
+                                    <hr class="mt-1 mb-2"/>
                                     <div class="row">
                                         <div t-attf-class="col {{'col-lg-6' if not task.description else 'col-lg-12'}}">
-                                            <ul class="list-group">
-                                                <a class="list-group-item list-group-item-action d-flex align-items-center oe_attachments py-1 px-2" t-foreach='task.attachment_ids' t-as='attachment' t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank" data-no-post-process="">
-                                                    <div class='oe_attachment_embedded o_image o_image_small me-2 me-lg-3' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/50x40?access_token=#{attachment.access_token}"/>
-                                                    <div class='oe_attachment_name text-truncate'><t t-esc='attachment.name'/></div>
-                                                </a>
+                                            <ul class="list-unstyled d-flex flex-column gap-2">
+                                                <li class="oe_attachments" t-foreach='task.attachment_ids' t-as='attachment'>
+                                                    <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank" data-no-post-process="" class="d-flex align-items-center rounded bg-light p-2">
+                                                        <div class='oe_attachment_embedded o_image o_image_small me-2 me-lg-3' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/50x40?access_token=#{attachment.access_token}"/>
+                                                        <div class='oe_attachment_name text-truncate'><t t-esc='attachment.name'/></div>
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>

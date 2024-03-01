@@ -19,9 +19,12 @@
     <template id="portal_my_home_menu_production" name="Portal layout : production menu entries" inherit_id="portal.portal_breadcrumbs" priority="25">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <t t-if="title">
-                <li t-if="page_name == 'production' or production" t-attf-class="breadcrumb-item #{'active' if breadcrumbs_url else ''}">
+                <li t-if="page_name == 'production' or picking" t-attf-class="breadcrumb-item #{'active' if breadcrumbs_url else ''}">
                     <a t-if="breadcrumbs_url" t-attf-href="/my/productions{{ keep_query() }}">Productions</a>
                     <t t-else="" t-esc="title"></t>
+                </li>
+                <li t-if="picking" class="breadcrumb-item active">
+                    <t t-out="picking.name"/>
                 </li>
             </t>
         </xpath>
@@ -65,17 +68,13 @@
     <template id="subcontracting_portal" name="Subcontracting View in Portal">
         <t t-call="portal.frontend_layout">
             <div class="o_portal container mt-3">
-                <div class="row align-items-center bg-white g-0 border rounded">
-                    <div class="col-10">
-                        <t t-call="mrp_subcontracting.portal_my_home_menu_production">
-                            <t t-set="title" t-value="picking.name"/>
-                            <t t-set="breadcrumbs_url">/my/productions</t>
-                        </t>
-                    </div>
-                </div>
+                <t t-call="mrp_subcontracting.portal_my_home_menu_production">
+                    <t t-set="title" t-value="picking.name"/>
+                    <t t-set="breadcrumbs_url">/my/productions</t>
+                </t>
             </div>
             <div class="o_portal container mt-3 o_subcontracting_portal">
-                <div class="row align-items-center bg-white g-0 border rounded o_subcontracting_portal">
+                <div class="o_subcontracting_portal">
                     <t t-set="no_footer" t-value="true"/>
                     <t t-call="mrp_subcontracting.subcontracting"/>
                 </div>
@@ -84,7 +83,7 @@
     </template>
 
     <template id="subcontracting" name="Subcontracting Portal View">
-        <iframe width="100%" height="100%" frameborder="0" t-attf-src="/my/productions/{{ picking.id }}/subcontracting_portal"/>
+        <iframe width="100%" height="100%" frameborder="0" t-attf-src="/my/productions/{{ picking.id }}/subcontracting_portal" class="border rounded"/>
     </template>
 
     <template id="subcontracting_portal_embed" name="Subcontracting Portal">
