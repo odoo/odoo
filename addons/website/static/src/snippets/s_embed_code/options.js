@@ -14,6 +14,7 @@ class CodeEditorDialog extends Component {
     static components = { Dialog, CodeEditor };
     static props = {
         title: String,
+        value: String,
         mode: String,
         confirm: Function,
         close: Function,
