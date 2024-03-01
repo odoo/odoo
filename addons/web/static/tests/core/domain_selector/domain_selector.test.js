@@ -29,7 +29,6 @@ import {
     selectOperator,
     selectValue,
     toggleArchive,
-    SELECTORS as treeEditorSELECTORS,
 } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
     contains,
@@ -41,14 +40,9 @@ import {
     onRpc,
     patchDate,
 } from "@web/../tests/web_test_helpers";
+import { SELECTORS } from "./domain_selector_helpers";
 
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
-
-export const SELECTORS = {
-    ...treeEditorSELECTORS,
-    debugArea: ".o_domain_selector_debug_container textarea",
-    resetButton: ".o_domain_selector_row > button",
-};
 
 function addProductIds() {
     Partner._fields.product_ids = fields.Many2many({
