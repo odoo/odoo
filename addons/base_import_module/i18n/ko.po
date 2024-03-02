@@ -4,7 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Daye Jeong, 2023
+# Daye Jeong, 2024
+# Sarah Park, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +30,9 @@ msgid ""
 "You may need the Enterprise version to install the data module. Please visit https://www.odoo.com/pricing-plan for more information.\n"
 "If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
 msgstr ""
+"\n"
+"데이터 모듈을 설치하려면 엔터프라이즈 버전이 필요할 수 있습니다. 자세한 내용은 https://www.odoo.com/pricing-plan 을 참조하세요.\n"
+"웹사이트 테마가 필요한 경우 https://github.com/odoo/design-themes 에서 다운로드할 수 있습니다.\n"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
@@ -83,6 +87,13 @@ msgstr "작성자"
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_date
 msgid "Created on"
 msgstr "작성일자"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid ""
+"Demo data should only be used on test databases. Once they are loaded, they "
+"cannot be entirely removed!"
+msgstr "데모 데이터는 테스트 데이터베이스에서만 사용해야 합니다. 일단 로드되면 완전히 제거할 수 없습니다!"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
@@ -151,6 +162,13 @@ msgid "Install"
 msgstr "설치"
 
 #. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Install an Industry"
+msgstr "산업 설치"
+
+#. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Install the application"
 msgstr "앱 설치"
@@ -212,7 +230,7 @@ msgstr "공식 앱"
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Only administrators can install data modules."
-msgstr ""
+msgstr "관리자만 데이터 모듈을 설치할 수 있습니다"
 
 #. module: base_import_module
 #. odoo-python
@@ -252,7 +270,7 @@ msgstr "Studio 사용자 정의를 위해서는 Odoo Studio 앱이 설치되어 
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "The following modules will also be installed:\n"
-msgstr ""
+msgstr "다음 모듈도 설치됩니다:\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -261,7 +279,7 @@ msgstr ""
 msgid ""
 "The installation of the data module would fail as the following dependencies"
 " can't be found in the addons-path:\n"
-msgstr ""
+msgstr "추가 기능 경로에서 다음 종속성을 찾을 수 없으므로 데이터 모듈 설치에 실패합니다:\n"
 
 #. module: base_import_module
 #. odoo-python

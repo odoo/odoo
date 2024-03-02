@@ -10,8 +10,8 @@
 # Wil Odoo, 2024
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
-# Jakub Smolka, 2024
 # Petr Vojta <petvoj@gmail.com>, 2024
+# Jakub Smolka, 2024
 # Katerina Horylova, 2024
 # 
 msgid ""
@@ -684,7 +684,7 @@ msgstr "<strong>Doručeno</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery address</strong>"
-msgstr ""
+msgstr "<strong>Dodací adresa</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -1279,7 +1279,7 @@ msgstr "Automaticky"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_delivery_slip
 msgid "Auto Print Delivery Slip"
-msgstr ""
+msgstr "Automatický tisk dodacího listu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_lot_labels
@@ -3437,12 +3437,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
 msgid "Free To Use Quantity "
-msgstr "Zdarma k použití množství "
+msgstr "Množství k dispozici"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Free to Use"
-msgstr "Zdarma k použití"
+msgstr "K dispozici"
 
 #. module: stock
 #. odoo-javascript
@@ -3834,6 +3834,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the delivery slip "
 "of a picking when it is validated."
 msgstr ""
+"Pokud je toto políčko zaškrtnuto, Odoo automaticky vytiskne dodací list "
+"vyskladnění po jeho potvrzení."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_lot_labels
@@ -4895,7 +4897,7 @@ msgstr "Produktová a seriová čísla"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Lots & Serial numbers will appear on the delivery slip"
-msgstr ""
+msgstr "Na dodacím listu budou uvedeny šarže a sériová čísla."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lots_visible
@@ -5397,7 +5399,7 @@ msgstr "Nebyla nalezena žádná alokace."
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_outgoing
 msgid "No delivery found. Let's create one!"
-msgstr ""
+msgstr "Nebyla nalezena žádná dodávka. Pojďme ji vytvořit!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_internal
@@ -7696,6 +7698,14 @@ msgstr ""
 "kategoriích výrobků"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
 msgid "Rule Message"
 msgstr "Zpráva pravidla"
@@ -7840,7 +7850,7 @@ msgstr "Vyřazovací objednávky"
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
 #, python-format
 msgid "Scrap Products"
-msgstr ""
+msgstr "Výrobky ve zmetkové podobě"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrap_id
@@ -9456,7 +9466,7 @@ msgstr "Celkem předpokládané"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Total Free to Use"
-msgstr "Celkem zdarma k použití"
+msgstr "Celkem k dispozici"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree

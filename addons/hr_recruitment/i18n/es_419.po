@@ -43,7 +43,7 @@ msgstr "<b>Haga clic para ver</b> la postulación."
 #, python-format
 msgid "<b>Did you apply by sending an email?</b> Check incoming applications."
 msgstr ""
-"<b>¿Se postuló enviando un correo electrónico?</b> Verifique las "
+"<b>¿Se postuló mediante un correo electrónico?</b> Verifique las "
 "postulaciones entrantes."
 
 #. module: hr_recruitment
@@ -143,7 +143,7 @@ msgstr ""
 "                                <span class=\"fa fa-exclamation-triangle text-danger ps-3\">\n"
 "                                </span>\n"
 "                                <span class=\"text-danger\">\n"
-"                                    Todas las aplicaciones perderán la fecha de contratación y el estado de contratación.\n"
+"                                    Todas las postulaciones perderán su fecha y estado de contratación.\n"
 "                                </span>\n"
 "                            </span>"
 
@@ -276,7 +276,7 @@ msgstr ""
 "\n"
 "                <h3 style=\"color:#9A6C8E;\"><strong>¿Cuál es el siguiente paso?</strong></h3>\n"
 "                Con frecuencia <strong>respondemos las postulaciones en unos días.</strong><br><br>\n"
-"                Siéntase libre de <strong>contactarnos si desea una retroalimentación\n"
+"                Siéntase libre de <strong>contactarnos si desea que le proporcionemos una retroalimentación\n"
 "                más rápido</strong> o si no recibe noticias nuestras\n"
 "                tan pronto como espera (solo responda a este correo electrónico).\n"
 "\n"
@@ -594,16 +594,16 @@ msgstr ""
 "                <b><t t-out=\"object.company_id.name or ''\">SuEmpresa</t></b>.  Queremos\n"
 "                informarle que, aunque su currículum es\n"
 "                competitivo, nuestro equipo de contratación revisó su postulación\n"
-"                y <b>no la seleccionó para mayor consideración</b>.\n"
+"                y <b>no la seleccionó para continuar</b>.\n"
 "                <br><br>\n"
 "                Tome en cuenta que reclutar es difícil y podemos cometer\n"
-"                errores. No dude en contestar este correo electrónico si\n"
+"                errores. No dude en responder a este correo electrónico si\n"
 "                piensa que hemos cometido un error o si quiere más información\n"
 "                sobre nuestra decisión.\n"
 "                <br><br>\n"
-"                Sin embargo, mantendremos su currículum en el registro y le\n"
-"                contactaremos si hay oportunidades futuras que puedan ser\n"
-"                más adecuadas para sus habilidades y experiencia.\n"
+"                Sin embargo, mantendremos su currículum en nuestros registros y le\n"
+"                contactaremos más adelante hay oportunidades que puedan ser\n"
+"                adecuadas para sus habilidades y experiencia.\n"
 "                <br><br>\n"
 "                Le deseamos lo mejor en su búsqueda de empleo y esperamos\n"
 "                tener la oportunidad de considerarle para otro puesto\n"
@@ -783,55 +783,55 @@ msgstr "Postulante"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
 msgid "Applicant Degree"
-msgstr "Título de candidato"
+msgstr "Título del postulante"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_emails
 msgid "Applicant Emails"
-msgstr "Correos electrónicos de los aplicantes"
+msgstr "Correos electrónicos de los postulantes"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_hired
 msgid "Applicant Hired"
-msgstr "Candidato contratado"
+msgstr "Postulante contratado"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_properties_definition
 msgid "Applicant Properties"
-msgstr "Propiedades de los aplicantes"
+msgstr "Propiedades del postulante"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
 msgid "Applicant Stage Changed"
-msgstr "Etapa del candidato cambiada"
+msgstr "Etapa del postulante cambiada"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_new
 msgid "Applicant created"
-msgstr "Candidato creado"
+msgstr "Postulante creado"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_name
 msgid "Applicant's Name"
-msgstr "Nombre del candidato"
+msgstr "Nombre del postulante"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_without_email
 msgid "Applicant(s) not having email"
-msgstr "Candidatos sin correo electrónico"
+msgstr "Postulantes sin correo electrónico"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_calendar_view
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_activity
 msgid "Applicants"
-msgstr "Candidatos"
+msgstr "Postulantes"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_hired
 msgid "Applicants Hired"
-msgstr "Candidatos contratados"
+msgstr "Postulantes contratados"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -841,9 +841,9 @@ msgid ""
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
-"Los candidatos y su CV adjunto se crean de forma automática cuando se envía un correo electrónico.\n"
-"                Si instala los módulos de gestión de documentos, todos los currículums se indexarán automáticamente\n"
-"                de modo que puede buscar con facilidad a través de su contenido."
+"Los postulantes y su CV adjunto se crean en automático cuando envían un correo electrónico. \n"
+"Si instala los módulos de gestión de documentos, todos los currículums se indexarán en automático. \n"
+"Esto le permitirá buscar con facilidad a través de su contenido."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -852,12 +852,12 @@ msgid ""
 "application automatically"
 msgstr ""
 "Los candidatos pueden enviar su currículum a esta dirección de correo "
-"electrónico, <br/> creará una postulación automáticamente"
+"electrónico, <br/> creará una postulación en automático"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Application"
-msgstr "Aplicación"
+msgstr "Postulación"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_count
@@ -960,12 +960,12 @@ msgstr "Lista de exclusión"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr "El teléfono en la lista negra es un celular"
+msgstr "El teléfono en la lista de exclusión es un celular"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr "El teléfono en la lista negra es un teléfono fijo"
+msgstr "El teléfono en la lista de exclusión es un teléfono fijo"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1005,10 +1005,10 @@ msgid ""
 "statistics according to the source of the application: LinkedIn, Monster, "
 "Indeed, etc."
 msgstr ""
-"Al establecer un seudónimo en un puesto de trabajo, los correos electrónicos"
-" enviados a esta dirección crearán postulaciones de forma automática. "
-"Incluso puede utilizar varios rastreadores para obtener estadísticas según "
-"el origen de la postulación: LinkedIn, Monster, Indeed, etc."
+"Si establece un seudónimo en un puesto de trabajo, los correos electrónicos "
+"que lleguen a esa dirección crearán postulaciones en automático. Incluso "
+"puede utilizar varios rastreadores para obtener estadísticas según el origen"
+" de la postulación: LinkedIn, Monster, Indeed, etc."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -1049,7 +1049,7 @@ msgstr "Casos por etapa y estimaciones"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_category
 msgid "Category of applicant"
-msgstr "Categoría del candidato"
+msgstr "Categoría del postulante"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1063,7 +1063,7 @@ msgstr "Elija un correo electrónico de postulación."
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__color
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__color
 msgid "Color Index"
-msgstr "Índice de colores"
+msgstr "Índice de color"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__company_id
@@ -1136,8 +1136,8 @@ msgstr "Contrato firmado"
 #, python-format
 msgid "Copy this email address, to paste it in your email composer, to apply."
 msgstr ""
-"Copie esta dirección de correo electrónico, para pegarla en su redactor de "
-"correo electrónico, para postularse."
+"Para postularse copie esta dirección de correo y péguela en su redactor de "
+"correo electrónico."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_bounce
@@ -1232,8 +1232,8 @@ msgid ""
 "empty, the default email address will be used which is in human resources "
 "settings"
 msgstr ""
-"Defina una dirección de contacto específica para este puesto. Si la deja en "
-"blanco, la dirección predeterminada a utilizar es la que se definió en los "
+"Defina una dirección de contacto específica para este puesto. Si la deja "
+"vacía, la dirección de correo predeterminada será la que se usa en los "
 "ajustes de recursos humanos."
 
 #. module: hr_recruitment

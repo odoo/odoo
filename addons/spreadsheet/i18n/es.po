@@ -86,7 +86,7 @@ msgstr "%s filas debajo"
 #: code:addons/spreadsheet/static/src/assets_backend/spreadsheet_action_loader.js:0
 #, python-format
 msgid "%s couldn't be loaded"
-msgstr "%sno se pudo cargar "
+msgstr "No se pudo cargar %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -107,8 +107,9 @@ msgid ""
 "(0) Exact match. (-1) Return next smaller item if no match. (1) Return next "
 "greater item if no match."
 msgstr ""
-"(0) Coincidencia exacta. (-1) Devuelve el siguiente artículo más pequeño si "
-"no coincide. (1) Devuelve el siguiente elemento mayor si no coincide."
+"(0) Coincidencia exacta. (-1) Devolver el siguiente elemento más pequeño si "
+"no hay coincidencia. (1) Devolver el siguiente elemento más grande si no hay"
+" coincidencia."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -185,8 +186,8 @@ msgid ""
 "A boolean indicating whether to use A1 style notation (TRUE) or R1C1 style "
 "notation (FALSE)."
 msgstr ""
-"Un booleano que indica si debe usar la notación de estilo A1 (TRUE) o la "
-"notación de estilo R1C1 (FALSE)."
+"Un campo booleano que indica si debe usar la notación de estilo A1 (TRUE) o "
+"la notación de estilo R1C1 (FALSE)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -196,7 +197,7 @@ msgid ""
 "A boolean; if TRUE, empty cells selected in the text arguments won't be "
 "included in the result."
 msgstr ""
-"un booleano; si es VERDADERO, las celdas vacías seleccionadas en los "
+"Un campo booleano. Si es TRUE, las celdas vacías seleccionadas en los "
 "argumentos de texto no se incluirán en el resultado."
 
 #. module: spreadsheet
@@ -215,7 +216,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A conditional count across a range."
-msgstr "Un conteo condicional sobre el rango"
+msgstr "Un recuento condicional sobre un rango."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -485,7 +486,7 @@ msgid ""
 "Access to the clipboard denied by the browser. Please enable clipboard "
 "permission for this page in your browser settings."
 msgstr ""
-"Acceso al portapapeles denegado por el navegador, habilite el permiso para "
+"Accese al portapapeles denegado por el navegador, habilite el permiso para "
 "el portapapeles en esta página en los ajustes de su navegador."
 
 #. module: spreadsheet
@@ -606,7 +607,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional ranges to add to range1."
-msgstr "Rangos adicionales para agregar al rango1."
+msgstr "Rangos adicionales a agregar al rango1."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1028,42 +1029,42 @@ msgstr "Anónimo"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic cosecant of."
-msgstr "Cualquier valor real para calcular el cosecante hiperbólico."
+msgstr "Cualquier valor real cuyo cosecante hiperbólico debe calcularse."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic cosine of."
-msgstr "Cualquier valor real para calcular el coseno hiperbólico."
+msgstr "Cualquier valor real cuyo coseno hiperbólico debe calcularse."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic cotangent of."
-msgstr "Cualquier valor real para calcular la cotangente hiperbólica."
+msgstr "Cualquier valor real cuya cotangente hiperbólica debe calcularse."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic secant of."
-msgstr "Cualquier valor real para calcular la secante hiperbólica."
+msgstr "Cualquier valor real cuya secante hiperbólica debe calcularse."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic sine of."
-msgstr "Cualquier valor real para calcular el seno hiperbólico."
+msgstr "Cualquier valor real cuyo seno hiperbólico debe calcularse."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic tangent of."
-msgstr "Cualquier valor real para calcular la tangente hiperbólica."
+msgstr "Cualquier valor real cuya tangente hiperbólica debe calcularse."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1072,7 +1073,7 @@ msgstr "Cualquier valor real para calcular la tangente hiperbólica."
 msgid ""
 "Any text item. This could be a string, or an array of strings in a range."
 msgstr ""
-"Cualquier elemento de texto. Esto podría ser una cadena o una matriz de "
+"Cualquier elemento de texto. Esto podría ser una cadena o un arreglo de "
 "cadenas en un rango."
 
 #. module: spreadsheet
@@ -1150,7 +1151,7 @@ msgstr "El argumento a ignorar debe ser un número entre 0 y 3"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Argument must be a reference to a cell or range."
-msgstr "El argumento debe ser una referencia a una celda o rango."
+msgstr "El argumento debe ser una referencia a una celda o un rango."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1943,7 +1944,7 @@ msgstr "Convierte una fracción decimal a un valor decimal."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Convert a decimal value to decimal fraction."
-msgstr "Convierte un valor decimal a una fracción decimal."
+msgstr "Convierta un valor decimal en una fracción decimal."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1957,21 +1958,21 @@ msgstr "Convierte una cadena de fecha en un valor de fecha."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Converts a number to text according to a specified format."
-msgstr "Convierte un número a texto según un formato específico."
+msgstr "Convierte un número en texto según un formato específico."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Converts a specified string to lowercase."
-msgstr "Convierte una cadena específica a minúsculas."
+msgstr "Convierte una cadena específica en minúsculas."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Converts a specified string to uppercase."
-msgstr "Convierte una cadena específica a mayúsculas."
+msgstr "Convierte una cadena específica en mayúsculas."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1993,7 +1994,7 @@ msgstr "Convierte un valor angular en radianes a grados."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Converts from another base to decimal."
-msgstr "Convierte de otra base a decimal."
+msgstr "Convierte de otra base en decimal."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3987,7 +3988,7 @@ msgstr "Fórmula Minpoint no válida"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Invalid expression"
-msgstr "Expresión invalida"
+msgstr "Expresión no válida"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4214,7 +4215,7 @@ msgstr "Es inferior o igual a"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is not between"
-msgstr "no esta entre"
+msgstr "No está entre"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4493,21 +4494,21 @@ msgstr "Lógico"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Logical `and` operator."
-msgstr "Operador lógico `y`."
+msgstr "Operador lógico `and`."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Logical `or` operator."
-msgstr "Operador lógico `o`."
+msgstr "Operador lógico `or`."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Logical `xor` operator."
-msgstr "Lógico `xor` operador."
+msgstr "Operador lógico `xor`."
 
 #. module: spreadsheet
 #. odoo-javascript

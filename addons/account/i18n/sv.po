@@ -19,7 +19,6 @@
 # Daniel Osser <danielosser@gmail.com>, 2023
 # Robin Calvin, 2023
 # Daniel Löfgren, 2023
-# Martin Wilderoth <martin.wilderoth@linserv.se>, 2023
 # Peter Wickenberg <peter@wickenberg.nu>, 2023
 # Patrik Lermon <patrik.lermon@gmail.com>, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
@@ -36,6 +35,7 @@
 # Frida E, 2024
 # sesn-odoo, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -43,7 +43,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
+"Last-Translator: Martin Wilderoth <martin.wilderoth@linserv.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9742,6 +9742,13 @@ msgid "Never"
 msgstr "Aldrig"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "New"
+msgstr "Ny"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "New Journal Name"
 msgstr "Nytt journalnamn"
@@ -11920,6 +11927,14 @@ msgstr ""
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
 msgstr "Gör om sekvensen för journalanteckningar."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Removed"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.1_expense_rent
@@ -15456,7 +15471,7 @@ msgstr "Total skuld"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__total_payments_amount
 msgid "Total Payments Amount"
-msgstr ""
+msgstr "Totala betalningar Belopp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__credit
