@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { queryOne } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 var optionVariantImage;
 
@@ -22,14 +23,18 @@ registry.category("web_tour.tours").add("a_shop_custom_attribute_value", {
 }, {
     trigger: '.oe_advanced_configurator_modal .js_product:eq(1) div:contains("Conference Chair (TEST) (Steel)")',
     run: function () {
-        optionVariantImage = $('.oe_advanced_configurator_modal .js_product:eq(1) img.variant_image').attr('src');
+        optionVariantImage = queryOne(
+            ".oe_advanced_configurator_modal .js_product:eq(1) img.variant_image"
+        ).getAttribute("src");
     }
 }, {
     trigger: '.oe_advanced_configurator_modal .js_product:eq(1) input[data-value_name="Aluminium"]',
 }, {
     trigger: '.oe_advanced_configurator_modal .js_product:eq(1) div:contains("Conference Chair (TEST) (Aluminium)")',
     run: function () {
-        var newVariantImage = $('.oe_advanced_configurator_modal .js_product:eq(1) img.variant_image').attr('src');
+        var newVariantImage = queryOne(
+            ".oe_advanced_configurator_modal .js_product:eq(1) img.variant_image"
+        ).getAttribute("src");
         if (newVariantImage !== optionVariantImage) {
             $('<p>').text('image variant option src changed').insertAfter('.oe_advanced_configurator_modal .js_product:eq(1) .product-name');
         }

@@ -68,7 +68,7 @@
         content: "select 2nd variant(Black Color)",
         trigger: '.variant_attribute[data-attribute_name="Color"] input[data-value_name="Black"]',
         run: function (actions) {
-          $('img[class*="product_detail_img"]').attr('data-image-to-change', 1);
+          document.querySelector('img[class*="product_detail_img"]').setAttribute('data-image-to-change', 1);
           actions.click();
         },
     },

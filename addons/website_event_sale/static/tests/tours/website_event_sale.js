@@ -36,15 +36,15 @@ registry.category("web_tour.tours").add('event_buy_tickets', {
             content: "Fill attendees details",
             trigger: 'form[id="attendee_registration"] .btn[type=submit]',
             run: function () {
-                $("input[name*='1-name']").val("Att1");
-                $("input[name*='1-phone']").val("111 111");
-                $("input[name*='1-email']").val("att1@example.com");
-                $("input[name*='2-name']").val("Att2");
-                $("input[name*='2-phone']").val("222 222");
-                $("input[name*='2-email']").val("att2@example.com");
-                $("input[name*='3-name']").val("Att3");
-                $("input[name*='3-phone']").val("333 333");
-                $("input[name*='3-email']").val("att3@example.com");
+                document.querySelector("input[name*='1-email']").value = "att1@example.com";
+                document.querySelector("input[name*='1-phone']").value = "111 111";
+                document.querySelector("input[name*='2-name']").value = "Att2";
+                document.querySelector("input[name*='2-phone']").value = "222 222";
+                document.querySelector("input[name*='2-email']").value = "att2@example.com";
+                document.querySelector("input[name*='1-name']").value = "Att1";
+                document.querySelector("input[name*='3-name']").value = "Att3";
+                document.querySelector("input[name*='3-phone']").value = "333 333";
+                document.querySelector("input[name*='3-email']").value = "att3@example.com";
             },
         },
         {

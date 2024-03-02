@@ -180,7 +180,9 @@ registry.category("web_tour.tours").add("website_form_editor_tour_results", {
             });
             var success = function(model, count) {
                 if (count > 0) {
-                    $('body').append('<div id="website_form_editor_success_test_tour_'+model+'"></div>');
+                    const div = document.createElement("div");
+                    div.id = `website_form_editor_success_test_tour_${model}`;
+                    document.body.append(div);
                 }
             };
             mailDef.then(success.bind(this, 'mail_mail'));

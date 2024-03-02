@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { queryOne } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import wsTourUtils from '@website_sale/js/tours/tour_utils';
 
@@ -22,22 +23,29 @@ var registerSteps = [{
     content: "Fill attendees details",
     trigger: 'form[id="attendee_registration"] .btn[type=submit]',
     run: function () {
-        $("input[name*='1-name']").val("Raoulette Poiluchette");
-        $("input[name*='1-phone']").val("0456112233");
-        $("input[name*='1-email']").val("raoulette@example.com");
-        $("div[name*='Question1'] select[name*='1-simple_choice']").val($("select[name*='1-simple_choice'] option:contains('Q1-Answer2')").val());
-        $("div[name*='Question2'] select[name*='1-simple_choice']").val($("select[name*='1-simple_choice'] option:contains('Q2-Answer1')").val());
-        $("input[name*='2-name']").val("Michel Tractopelle");
-        $("input[name*='2-phone']").val("0456332211");
-        $("input[name*='2-email']").val("michel@example.com");
-        $("div[name*='Question1'] select[name*='2-simple_choice']").val($("select[name*='2-simple_choice'] option:contains('Q1-Answer1')").val());
-        $("div[name*='Question2'] select[name*='2-simple_choice']").val($("select[name*='2-simple_choice'] option:contains('Q2-Answer2')").val());
-        $("input[name*='3-name']").val("Hubert Boitaclous");
-        $("input[name*='3-phone']").val("0456995511");
-        $("input[name*='3-email']").val("hubert@example.com");
-        $("div[name*='Question1'] select[name*='3-simple_choice']").val($("select[name*='3-simple_choice'] option:contains('Q1-Answer2')").val());
-        $("div[name*='Question2'] select[name*='3-simple_choice']").val($("select[name*='3-simple_choice'] option:contains('Q2-Answer2')").val());
-        $("textarea[name*='question_answer']").text("Random answer from random guy");
+            document.querySelector("input[name*='1-name']").value = "Raoulette Poiluchette";
+            document.querySelector("input[name*='1-phone']").value = "0456112233";
+            document.querySelector("input[name*='1-email']").value = "raoulette@example.com";
+            document.querySelector("div[name*='Question1'] select[name*='1-simple_choice']").value =
+                queryOne("select[name*='1-simple_choice'] option:contains('Q1-Answer2')").value;
+            document.querySelector("div[name*='Question2'] select[name*='1-simple_choice']").value =
+                queryOne("select[name*='1-simple_choice'] option:contains('Q2-Answer1')").value;
+            document.querySelector("input[name*='2-name']").value = "Michel Tractopelle";
+            document.querySelector("input[name*='2-phone']").value = "0456332211";
+            document.querySelector("input[name*='2-email']").value = "michel@example.com";
+            document.querySelector("div[name*='Question1'] select[name*='2-simple_choice']").value =
+                queryOne("select[name*='2-simple_choice'] option:contains('Q1-Answer1')").value;
+            document.querySelector("div[name*='Question2'] select[name*='2-simple_choice']").value =
+                queryOne("select[name*='2-simple_choice'] option:contains('Q2-Answer2')").value;
+            document.querySelector("input[name*='3-name']").value = "Hubert Boitaclous";
+            document.querySelector("input[name*='3-phone']").value = "0456995511";
+            document.querySelector("input[name*='3-email']").value = "hubert@example.com";
+            document.querySelector("div[name*='Question1'] select[name*='3-simple_choice']").value =
+                queryOne("select[name*='3-simple_choice'] option:contains('Q1-Answer2')").value;
+            document.querySelector("div[name*='Question2'] select[name*='3-simple_choice']").value =
+                queryOne("select[name*='3-simple_choice'] option:contains('Q2-Answer2')").value;
+            document.querySelector("textarea[name*='question_answer']").textContent =
+                "Random answer from random guy";
     },
 }, {
     content: "Validate attendees details",

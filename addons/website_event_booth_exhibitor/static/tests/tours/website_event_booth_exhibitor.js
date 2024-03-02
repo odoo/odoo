@@ -31,11 +31,11 @@
         content: "Fill booth details",
         trigger: 'form[id="o_wbooth_contact_details_form"]',
         run: function () {
-            $("input[name='sponsor_name']").val("Patrick Sponsor");
-            $("input[name='sponsor_email']").val("patrick.sponssor@test.example.com");
-            $("input[name='sponsor_phone']").val("+32456001122");
-            $("input[name='sponsor_slogan']").val("Patrick is Your Sponsor");
-            $("textarea[name='sponsor_description']").text("Really eager to meet you !");
+            document.querySelector("input[name='sponsor_name']").value = "Patrick Sponsor";
+            document.querySelector("input[name='sponsor_email']").value = "patrick.sponssor@test.example.com";
+            document.querySelector("input[name='sponsor_phone']").value = "+32456001122";
+            document.querySelector("input[name='sponsor_slogan']").value = "Patrick is Your Sponsor";
+            document.querySelector("textarea[name='sponsor_description']").textContent = "Really eager to meet you !";
         },
     }, {
         content: "Validate booth details",
