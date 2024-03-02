@@ -7,6 +7,7 @@
 # Iran Villalobos López, 2023
 # Lucia Pacheco, 2024
 # Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,7 +101,7 @@ msgstr "66 por ciento"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "<b class=\"w-100\">Order summary</b>"
-msgstr "<b class=\"w-100\">Resuen de la orden</b>"
+msgstr "<b class=\"w-100\">Resumen de la orden</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -244,7 +245,7 @@ msgstr "<option value=\"\">País...</option>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<option value=\"\">State / Province...</option>"
-msgstr "<option value=\"\">Estado / Provincia...</option>"
+msgstr "<option value=\"\">Estado o provincia...</option>"
 
 #. module: website_sale
 #. odoo-python
@@ -257,8 +258,8 @@ msgid ""
 "                    "
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Aquí puede encontrar todos los carritos abandonados, es decir, los carritos que generaron los visitantes a un sitio web hace más de una hora y todavía no se han confirmado.</p>\n"
-"                        <p>¿Por qué no anima a sus clientes con un correo electrónico?</p>\n"
+"                        Aquí puede encontrar todos los carritos abandonados, es decir, los carritos que crearon los visitantes a un sitio web hace más de una hora y todavía no se han confirmado.</p>\n"
+"                        <p>Envíe un correo electrónico a sus clientes para animarles a confirmar la compra. </p>\n"
 "                    "
 
 #. module: website_sale
@@ -273,9 +274,10 @@ msgid ""
 " not allowed once document(s) have been issued for your account. Please "
 "contact us directly for this operation.</small>"
 msgstr ""
-"<small class=\"form-text text-muted\">No se permite cambiar el nombre de la "
-"empresa o el RFC una vez que se emitieron documentos para su cuenta. "
-"Contáctenos directamente para esta operación.</small>"
+"<small class=\"form-text text-muted\">No es posible cambiar el nombre de la "
+"empresa o el RFC, CUIT, RUT, NIT, RUC, RIF, etc. si ya se emitieron "
+"documentos para su cuenta. Póngase en contacto con nosotros para realizar "
+"esta operación.</small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
@@ -381,8 +383,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based"
 " on variants</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= "
-"1\">Basado en las variantes</span>"
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Según"
+" variantes</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -405,8 +407,8 @@ msgid ""
 "<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
 "                        Please contact the responsible of the shop for more information.</span>"
 msgstr ""
-"<span>Desafortunadamente no podemos confirmar su orden ya que la cantidad pagada no es la misma que la cantidad en su carrito.\n"
-"                        Pónganse en contacto con el responsable de la tienda para más información.</span>"
+"<span>No podemos confirmar su orden ya que el monto pagado es diferente al total del carrito.\n"
+"                        Póngase en contacto con la tienda para obtener más información.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -437,7 +439,7 @@ msgstr "<strong>Total</strong>"
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "<strong>Warning!</strong>"
-msgstr "<strong>¡Aviso!</strong>"
+msgstr "<strong>¡Advertencia!</strong>"
 
 #. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
@@ -515,7 +517,7 @@ msgstr ""
 "                    </t>\n"
 "                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                            Reanudar orden\n"
+"                            Continuar con la orden\n"
 "                        </a>\n"
 "                    </div>\n"
 "                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"></t>\n"
@@ -545,8 +547,8 @@ msgid ""
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
-"La descripción del producto que le quiera dar a sus clientes. Esta "
-"descripción se copiará a cada pedido de venta, albarán y factura de cliente."
+"La descripción del producto que sus clientes verán y que  se copiará a cada "
+"pedido de venta, albarán y factura de cliente."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -689,8 +691,8 @@ msgid ""
 "Add a reference price per UoM on products (i.e $/kg), in addition to the "
 "sale price"
 msgstr ""
-"Agregar un precio de referencia por UdM en productos (es decir, $/kg) además"
-" del precio de venta."
+"Agregar un precio de referencia por unidad de medida en productos (es decir,"
+" $/kg) además del precio de venta."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -752,31 +754,29 @@ msgstr "Todas las listas de precios"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow customers to pay in person at your stores"
-msgstr "Permita que los clientes realicen pagos presenciales en su tienda"
+msgstr "Los clientes podrán pagar directamente en la tienda"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow shoppers to compare products based on their attributes"
-msgstr ""
-"Permitir a los compradores comparar productos en función de sus atributos"
+msgstr "Los clientes podrán comprar productos según los atributos"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow signed-in users to save product in a wishlist"
 msgstr ""
-"Permita que los usuarios que hayan iniciado sesión guarden productos en su "
-"lista de deseos"
+"Los usuarios que hayan iniciado sesión podrán guardar productos en una lista"
+" de deseos"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
 msgid "Allow the end user to choose this price list"
-msgstr "Permitir que el usuario escoja esta lista de precios"
+msgstr "El usuario final podrá seleccionar la lista de precios"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow your customer to add products from previous order in their cart."
-msgstr ""
-"Permita que el cliente agregue productos de una orden previa a su carrito."
+msgstr "El cliente podrá agregar productos de una orden previa a su carrito."
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_alternative_products
@@ -797,7 +797,7 @@ msgstr "Cantidad de carritos abandonados"
 #: code:addons/website_sale/controllers/delivery.py:0
 #, python-format
 msgid "Anonymous express checkout partner for order %s"
-msgstr "Pago rápido anónimo para la orden del partner %s"
+msgstr "Pago rápido anónimo para la orden %s del contacto"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -877,18 +877,18 @@ msgstr "Texto de insignia"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_count
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_count
 msgid "Base Unit Count"
-msgstr "Número base de unidades"
+msgstr "Número de unidades base"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_name
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_name
 msgid "Base Unit Name"
-msgstr "Nombre base de unidades"
+msgstr "Nombre de unidades base"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_show_uom_price
 msgid "Base Unit Price"
-msgstr "Precio base de unidades"
+msgstr "Precio unitario base"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.base_unit_action
@@ -1132,8 +1132,9 @@ msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"No se permite cambiar el RFC una vez que se han emitido los documentos de su"
-" cuenta. Póngase en contacto con nosotros directamente para esta operación."
+"No se permite cambiar el RFC, RIF, RUT, NIT, etc. una vez que se han emitido"
+" los documentos de su cuenta. Póngase en contacto con nosotros para realizar"
+" esta operación."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -1142,8 +1143,8 @@ msgid ""
 "your account. Please contact us directly for this operation."
 msgstr ""
 "No se permite cambiar el nombre de la empresa una vez que se han emitido los"
-" documentos para su cuenta. Póngase en contacto con nosotros directamente "
-"para esta operación."
+" documentos para su cuenta. Póngase en contacto con nosotros para realizar "
+"esta operación."
 
 #. module: website_sale
 #. odoo-python
@@ -1292,7 +1293,7 @@ msgstr "Componentes"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping cost and ship with Easypost"
-msgstr "Calcular el gasto de envío y enviar con Easypost"
+msgstr "Calcular costos de envío y enviar con Easypost"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1322,7 +1323,7 @@ msgstr "Calcular costos de envío y enviar con bpost"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
-msgstr "Calcular los gastos de envío en órdenes"
+msgstr "Calcular los costos de envío en órdenes"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_config_settings
@@ -1332,7 +1333,7 @@ msgstr "Ajustes de configuración"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Configure Form"
-msgstr "Configure el formulario"
+msgstr "Configurar el formulario"
 
 #. module: website_sale
 #. odoo-python
@@ -1387,7 +1388,7 @@ msgstr "Contenido"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 #, python-format
 msgid "Continue checkout"
-msgstr "Continuar finalización de la compra"
+msgstr "Continuar al pago"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -1503,19 +1504,18 @@ msgid ""
 "\n"
 "- If all the products in the checkout are free, and the customer does not visit the shipping page to add a shipping fee or the shipping fee is also free, then the email won't be sent."
 msgstr ""
-"El cliente tiene que haber iniciado sesión, de lo contrario no se sabrá la dirección del correo.     \n"
+"El cliente debe iniciar sesión para poder obtener su correo electrónico. El correo no se enviará si:     \n"
 "\n"
-"- Si un cliente potencial crea uno o más pagos abandonados y después completa una venta antes de que se envíe el correo de recuperación, entonces no se enviará el correo.     \n"
+"- El cliente potencial abandona el proceso de pago una o más veces y después finalizan la compra antes de que se envíe el correo de recuperación.     \n"
 "\n"
-"- Si se le envió un correo de recuperación a un usuario de manera manual, entonces el correo no se enviará por segunda vez     \n"
+"- El usuario envió un correo de recuperación de manera manual.     \n"
 "\n"
-"- Si ocurrió un pago al procesar el pago cuando el cliente intentó completarlo, entonces no se enviará el correo.     \n"
+"- Ocurrió un error al procesar el pago cuando un cliente intentó completar la compra.     \n"
 "\n"
-"- Si su tienda no envía a la dirección del cliente, entonces no se enviará el correo.     \n"
+"- Su tienda no hace envíos a la dirección de su cliente.     \n"
 "\n"
-"- Si ninguno de los productos en el pago está disponible para compra (por ejemplo, no hay existencias), no se enviará el correo.     \n"
-"\n"
-"- Si todos los productos del pago son gratis y el cliente no visita la página de envíos para agregar una tarifa de envío o si esta también es gratis, entonces no se enviará el correo."
+"- Ninguno de los productos están disponibles para compra (si no hay existencias, por ejemplo).     \n"
+"- Todos los productos que se comprarán son gratis y el cliente no agrega una cuota de envío o el envío es gratis."
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
@@ -1722,8 +1722,8 @@ msgid ""
 "Displays the custom unit for the products if defined or the selected unit of"
 " measure otherwise."
 msgstr ""
-"Muestra la unidad personalizada para los productos si está definida o, en "
-"caso contrario, la unidad de medida seleccionada."
+"Muestra la unidad personalizada para los productos si está definida o, de no"
+" ser así, la unidad de medida seleccionada."
 
 #. module: website_sale
 #. odoo-python
@@ -1837,7 +1837,7 @@ msgstr "Editar"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Edit the price of this product by clicking on the amount."
-msgstr "Edite el precio de este producto haciendo clic en el importe."
+msgstr "Haga clic en el importe para editar el precio del producto."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
@@ -2060,7 +2060,7 @@ msgstr "Horas."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
 msgid "Huge file size. The image should be optimized/reduced."
-msgstr "Tamaño de archivo enorme. Debe optimizar/reducir la imagen."
+msgstr "El archivo es muy grande. Debe optimizar o reducir la imagen."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accept_terms_and_conditions
@@ -2080,8 +2080,7 @@ msgstr "ID"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_tag_form_view_inherit_website_sale
 msgid "If an image is set, the color will not be used on eCommerce."
 msgstr ""
-"Si está establecida un imagen, el color no se usará en el comercio "
-"electrónico."
+"Si se establece una image, el color no se usará en Comercio electrónico."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__message_needaction
@@ -2605,7 +2604,7 @@ msgstr "Sin resultados"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No results for \""
-msgstr "Sin resultados para \""
+msgstr "No hay resultados para \""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -2903,7 +2902,7 @@ msgstr "Píldoras"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Please enter a valid Video URL."
-msgstr "Por favor introduzca un URL de video válido."
+msgstr "Introduzca una URL de video válida."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -3245,7 +3244,7 @@ msgstr "Código promocional"
 msgid ""
 "Provided video URL for '%s' is not valid. Please enter a valid video URL."
 msgstr ""
-"URL de video proporcionado para '%s' no es válido. Introduzca uno válido."
+"La URL de video proporcionada para '%s' no es válida. Introduzca una nueva."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
@@ -4700,6 +4699,11 @@ msgstr "Ventas del comercio electrónico"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Shop"
 msgstr "Tienda de comercio electrónico"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
+msgid "eCommerce cart"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server

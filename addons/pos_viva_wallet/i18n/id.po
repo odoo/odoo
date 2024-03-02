@@ -84,7 +84,7 @@ msgstr "Pesan dari Viva Wallet: %s"
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 #, python-format
 msgid "Not receive Bearer Token"
-msgstr ""
+msgstr "Belum terima Bearer Token"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -93,6 +93,7 @@ msgstr ""
 #, python-format
 msgid "Only 'group_pos_user' are allowed to fetch token from Viva Wallet"
 msgstr ""
+"Hanya 'group_pos_user' yang diizinkan untuk mengambil token dari Viva Wallet"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -100,6 +101,8 @@ msgstr ""
 #, python-format
 msgid "Only 'group_pos_user' are allowed to get latest transaction status"
 msgstr ""
+"Hanya 'group_pos_user' yang diizinkan untuk mengambil status transaksi "
+"terkini"
 
 #. module: pos_viva_wallet
 #: model:ir.model,name:pos_viva_wallet.model_pos_payment_method
@@ -133,6 +136,8 @@ msgstr "Mode testing"
 #, python-format
 msgid "There are some issues between us and Viva Wallet, try again later. %s"
 msgstr ""
+"Terdapat beberapa masalah di antara kami dan Viva Wallet, silakan coba lagi "
+"nanti. %s"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -140,6 +145,8 @@ msgstr ""
 #, python-format
 msgid "There are some issues between us and Viva Wallet, try again later.%s)"
 msgstr ""
+"Terdapat beberapa masalah di antara kami dan Viva Wallet, coba lagi "
+"nanti.%s)"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key
@@ -149,6 +156,9 @@ msgid ""
 "https://developer.vivawallet.com/getting-started/find-your-account-"
 "credentials/merchant-id-and-api-key/"
 msgstr ""
+"Digunakan saat mencoba menghubungi Viva Wallet: "
+"https://developer.vivawallet.com/getting-started/find-your-account-"
+"credentials/merchant-id-and-api-key/"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_client_id
@@ -157,49 +167,52 @@ msgid ""
 "https://developer.vivawallet.com/getting-started/find-your-account-"
 "credentials/pos-apis-credentials/#find-your-pos-apis-credentials"
 msgstr ""
+"Digunakan saat mencoba menghubungi Viva Wallet: "
+"https://developer.vivawallet.com/getting-started/find-your-account-"
+"credentials/pos-apis-credentials/#find-your-pos-apis-credentials"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_bearer_token
 msgid "Viva Wallet Bearer Token"
-msgstr ""
+msgstr "Viva Wallet Bearer Token"
 
 #. module: pos_viva_wallet
 #. odoo-javascript
 #: code:addons/pos_viva_wallet/static/src/app/payment_viva_wallet.js:0
 #, python-format
 msgid "Viva Wallet Error"
-msgstr ""
+msgstr "Viva Wallet Error"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_latest_response
 msgid "Viva Wallet Latest Response"
-msgstr ""
+msgstr "Viva Wallet Tanggapan Terakhir"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_webhook_endpoint
 msgid "Viva Wallet Webhook Endpoint"
-msgstr ""
+msgstr "Viva Wallet Webhook Endpoint"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_webhook_verification_key
 msgid "Viva Wallet Webhook Verification Key"
-msgstr ""
+msgstr "Viva Wallet Kunci Verifikasi Webhook"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_terminal_id
 msgid "[Terminal ID of the Viva Wallet terminal], for example: 16002169"
-msgstr ""
+msgstr "[ID Terminal Viva Wallet terminal], contohnya: 16002169"
 
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/controllers/main.py:0
 #, python-format
 msgid "received a message for a pos payment provider not registered."
-msgstr ""
+msgstr "menerima pesan untuk penyedia pembayaran pos belum terdaftar."
 
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/controllers/main.py:0
 #, python-format
 msgid "received a message for a terminal not registered in Odoo: %s"
-msgstr ""
+msgstr "menerima pesan untuk terminal belum terdaftar di Odoo: %s"

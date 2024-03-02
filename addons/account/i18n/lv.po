@@ -10,9 +10,9 @@
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
-# ievaputnina <ievai.putninai@gmail.com>, 2024
 # Arnis Putniņš <arnis@allegro.lv>, 2024
 # Will Sensors, 2024
+# ievaputnina <ievai.putninai@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Will Sensors, 2024\n"
+"Last-Translator: ievaputnina <ievai.putninai@gmail.com>, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -255,7 +255,7 @@ msgstr "(object._get_report_base_filename())"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid ").<br/>"
-msgstr "<strong>Klienta kods:</strong>"
+msgstr ").<br/>"
 
 #. module: account
 #. odoo-python
@@ -1309,7 +1309,7 @@ msgstr "<strong>Aizvēršanas bilance</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Incoterm:</strong><br/>"
-msgstr "<strong>Incoterm:</strong><br/>"
+msgstr "<strong>Piegādes veids:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -5436,7 +5436,7 @@ msgstr "Nodokļi Pēc Noklusējuma"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__use_invoice_terms
 msgid "Default Terms & Conditions"
-msgstr "Default Terms & Conditions"
+msgstr "Nosacījumi pēc noklusējuma"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_terms
@@ -5933,7 +5933,7 @@ msgstr "Lejupielādēt"
 #: code:addons/account/static/src/components/settings_form_view/res_config_dev_tool.xml:0
 #, python-format
 msgid "Download XSD files (XML validation)"
-msgstr "Lejupielādēt XDS failus"
+msgstr "Lejupielādēt XDS failus (XML validācija)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_is_download
@@ -6855,7 +6855,7 @@ msgstr "Fonts awesome ikona, piem. fa-tasks"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value_amount
 msgid "For percent enter a ratio between 0-100."
-msgstr "Procentiem ievadiet koeficientu no 0 līdz 100."
+msgstr "Procentiem ievadiet koeficientu no 0-100."
 
 #. module: account
 #. odoo-python
@@ -8307,7 +8307,7 @@ msgstr "Rēķini, kas jums ir parādā"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices sent"
-msgstr ""
+msgstr "Rēķini nosūtīti"
 
 #. module: account
 #. odoo-python
@@ -9719,6 +9719,13 @@ msgstr "Neto"
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__never
 msgid "Never"
 msgstr "Nekad"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "New"
+msgstr "Jauns"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
@@ -11903,6 +11910,14 @@ msgstr ""
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
 msgstr "Pārveidojiet žurnāla ierakstu secību."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Removed"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.1_expense_rent
@@ -14728,8 +14743,8 @@ msgid ""
 "The sequence regex should at least contain the seq grouping keys. For instance:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 msgstr ""
-"Sekvences regeksā jāietver vismaz seq grupēšanas atslēgas. Piemēram:\n"
-"^(?P1.*?)(?P2\\d*)(?P3\\D*?)$"
+"The sequence regex should at least contain the seq grouping keys. For instance:\n"
+"^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 
 #. module: account
 #. odoo-python
@@ -15297,7 +15312,7 @@ msgstr "Šis atkārtotais ieraksts ir no %s"
 msgid "This recurring move will be posted up to and including this date."
 msgstr ""
 "Šis atkārtotais pārcelšanās pasākums tiks publicēts līdz šim datumam "
-"(ieskaitot šo datumu)."
+"ieskaitot."
 
 #. module: account
 #. odoo-python
@@ -15985,11 +16000,10 @@ msgid ""
 "printed in the right country, put in an envelop and sent by snail mail. Use "
 "this feature from the list view to post hundreds of invoices in bulk."
 msgstr ""
-"Izmantojiet opciju \"<i>Sūtīt pa pastu</i>\", lai automātiski nosūtītu "
-"rēķinus. Par vietējās pastmarkas cenu mēs veiksim visu manuālo darbu: jūsu "
-"rēķins tiks izdrukāts pareizajā valstī, ievietots aploksnē un nosūtīts pa "
-"pastu. Izmantojiet šo funkciju saraksta skatā, lai nosūtītu simtiem rēķinu "
-"lielā daudzumā."
+"Use the “<i>Send by Post</i>” option to post invoices automatically. For the"
+" cost of a local stamp, we do all the manual work: your invoice will be "
+"printed in the right country, put in an envelop and sent by snail mail. Use "
+"this feature from the list view to post hundreds of invoices in bulk."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__quick_edit_total_amount
@@ -16430,9 +16444,7 @@ msgstr "Ar nodokļiem"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Write a customer name to <b>create one</b> or <b>see suggestions</b>."
-msgstr ""
-"Lai <b>izveidotu</b> klienta vārdu, ierakstiet <b>to</b> vai <b>skatiet "
-"ieteikumus</b>."
+msgstr "Write a customer name to <b>create one</b> or <b>see suggestions</b>."
 
 #. module: account
 #. odoo-javascript
@@ -17316,7 +17328,7 @@ msgstr "[FURN_8999] Trīsvietīgs dīvāns"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"
-msgstr "Noteikt nodokļus"
+msgstr "[Not set]"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17361,7 +17373,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "cancelling {percent}%% of {amount}"
-msgstr "{percent}%% {amount} atcelšana {percent}%%"
+msgstr "cancelling {percent}%% of {amount}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -17781,7 +17793,7 @@ msgstr "{label}: {new_date} koriģējošais ieraksts"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent}% recognized on {new_date}"
-msgstr "{percent}% r {new_date} atzīts {new_date}"
+msgstr "{percent}% recognized on {new_date}"
 
 #. module: account
 #. odoo-python
@@ -17800,8 +17812,7 @@ msgstr ""
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-"{{ object.company_id.name }} Rēķins (Atsauce {{ object.name vai 'n/a' }})"
+msgstr "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt

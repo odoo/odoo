@@ -7263,14 +7263,14 @@ msgstr "Receber mercadorias diretamente (1 etapa)"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__two_steps
 msgid "Receive goods in input and then stock (2 steps)"
-msgstr "Receber mercadorias na entrada e, em seguida, estoque (2 etapas)"
+msgstr "Receber mercadorias na entrada e depois estocar (2 etapas)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__three_steps
 msgid "Receive goods in input, then quality and then stock (3 steps)"
 msgstr ""
-"Receber mercadorias na entrada, depois qualidade e, em seguida, estoque (3 "
-"passos)"
+"Receber mercadorias na entrada, depois verificar qualidade e então estocar "
+"(3 passos)"
 
 #. module: stock
 #. odoo-python
@@ -7789,6 +7789,14 @@ msgstr ""
 "selecioná-las nos produtos e nas categorias de produtos"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr "A regra %s pertence a %s enquanto a rota pertence a %s."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
 msgid "Rule Message"
 msgstr "Mensagem de regra"
@@ -8025,7 +8033,7 @@ msgstr "Enviar e-mail"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
 msgid "Send goods in output and then deliver (2 steps)"
-msgstr "Enviar mercadorias na saída e entregar (2 etapas)"
+msgstr "Enviar mercadorias na saída e depois entregar (2 etapas)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
