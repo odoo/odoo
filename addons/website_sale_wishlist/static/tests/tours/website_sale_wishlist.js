@@ -38,10 +38,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "submit login",
             trigger: ".oe_login_form",
             run: function (){
-                $('.oe_login_form input[name="login"]').val("admin");
-                $('.oe_login_form input[name="password"]').val("admin");
-                $('.oe_login_form input[name="redirect"]').val("/shop?search=Customizable Desk");
-                $('.oe_login_form').submit();
+                document.querySelector('.oe_login_form input[name="login"]').value = "admin";
+                document.querySelector('.oe_login_form input[name="password"]').value = "admin";
+                document.querySelector('.oe_login_form input[name="redirect"]').value = "/shop?search=Customizable Desk";
+                document.querySelector(".oe_login_form").submit();
             },
         },
         {
@@ -230,10 +230,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Submit login as admin",
             trigger: '.oe_login_form',
             run: function () {
-                $('.oe_login_form input[name="login"]').val("admin");
-                $('.oe_login_form input[name="password"]').val("admin");
-                $('.oe_login_form input[name="redirect"]').val("/");
-                $('.oe_login_form').submit();
+                document.querySelector('.oe_login_form input[name="login"]').value = "admin";
+                document.querySelector('.oe_login_form input[name="password"]').value = "admin";
+                document.querySelector('.oe_login_form input[name="redirect"]').value = "/";
+                document.querySelector(".oe_login_form").submit();
             },
         },
         // Test one impossible combination while other combinations are possible
@@ -298,10 +298,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Submit login",
             trigger: '.oe_login_form',
             run: function () {
-                $('.oe_login_form input[name="login"]').val("admin");
-                $('.oe_login_form input[name="password"]').val("admin");
-                $('.oe_login_form input[name="redirect"]').val("/");
-                $('.oe_login_form').submit();
+                document.querySelector('.oe_login_form input[name="login"]').value = "admin";
+                document.querySelector('.oe_login_form input[name="password"]').value = "admin";
+                document.querySelector('.oe_login_form input[name="redirect"]').value = "/";
+                document.querySelector(".oe_login_form").submit();
             },
         },
         // test when all combinations are impossible
@@ -372,8 +372,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Search the product Customizable Desk'",
             trigger: 'form.o_wsale_products_searchbar_form input',
             run: function () {
-                $('form.o_wsale_products_searchbar_form input[name="search"]').val("Customizable Desk");
-                $('form.o_wsale_products_searchbar_form button').click();
+                document.querySelector(
+                    'form.o_wsale_products_searchbar_form input[name="search"]'
+                ).value = "Customizable Desk";
+                document.querySelector("form.o_wsale_products_searchbar_form button").click();
             },
         },
         {
@@ -397,8 +399,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Search the product Customizable Desk'",
             trigger: 'form.o_wsale_products_searchbar_form input',
             run: function () {
-                $('form.o_wsale_products_searchbar_form input[name="search"]').val("Customizable Desk");
-                $('form.o_wsale_products_searchbar_form button').click();
+                document.querySelector(
+                    'form.o_wsale_products_searchbar_form input[name="search"]'
+                ).value = "Customizable Desk";
+                document.querySelector("form.o_wsale_products_searchbar_form button").click();
             },
         },
         {

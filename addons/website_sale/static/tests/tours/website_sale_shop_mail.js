@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add('shop_mail', {
         content: "check product is in cart, get cart id, go to backend",
         trigger: 'div:has(a>h6:contains("Acoustic Bloc Screens"))',
         run: function () {
-            var orderId = $('.my_cart_quantity').data('order-id');
+            const orderId = document.querySelector(".my_cart_quantity").dataset["orderId"];
             window.location.href = "/web#action=sale.action_orders&view_type=form&id=" + orderId;
         },
     },

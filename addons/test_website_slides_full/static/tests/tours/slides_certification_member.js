@@ -27,8 +27,14 @@ var initTourSteps = [{
     trigger: '.o_wslides_course_main',
     run: function () {
         // check that user doesn't have access to course content
-        if ($('.o_wslides_slides_list_slide .o_wslides_js_slides_list_slide_link').length === 0) {
-            $('.o_wslides_course_main').addClass('empty-content-success');
+        if (
+            document.querySelectorAll(
+                ".o_wslides_slides_list_slide .o_wslides_js_slides_list_slide_link"
+            ).length === 0
+        ) {
+            document
+                .querySelector(".o_wslides_course_main")
+                .classList.add("empty-content-success");
         }
     }
 }, {

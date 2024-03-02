@@ -1,8 +1,8 @@
 /* @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { contains } from "@web/../tests/utils";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import { waitFor } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour", {
     test: true,
@@ -29,12 +29,13 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
                 this.anchor.dispatchEvent(
                     new KeyboardEvent("keydown", { bubbles: true, key: "#" })
                 );
-                await contains("div[name='subject'] input[type='text']", {
-                    value: "no_model_id #",
+                await waitFor(`div[name='subject'] input[type='text']:value(no_model_id #)`, {
+                    timeout: 5000,
                 });
-                await contains(".o_notification", {
-                    text: "You need to select a model before opening the dynamic placeholder selector.",
-                });
+                await waitFor(
+                    `.o_notification:contains(You need to select a model before opening the dynamic placeholder selector.)`,
+                    { timeout: 5000 }
+                );
             },
         },
         {

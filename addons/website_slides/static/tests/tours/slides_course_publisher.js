@@ -84,7 +84,9 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
     trigger: 'iframe span:contains("Dschinghis Khan - Dschinghis Khan (1979)")',  // wait for slide to appear
     // trigger: 'span.o_wslides_js_slide_toggle_is_preview:first',
     run: function () {
-        $('.o_website_preview iframe').contents().find('span.o_wslides_js_slide_toggle_is_preview:first')[0].click();
+        document.querySelector(
+            ".o_website_preview :iframe span.o_wslides_js_slide_toggle_is_preview"
+        ).click();
     }
 }]
 //     [

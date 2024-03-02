@@ -3,6 +3,7 @@
 import { registry } from "@web/core/registry";
 import { stepUtils, TourError } from "@web_tour/tour_service/tour_utils";
 import configuratorTourUtils from "@test_sale_product_configurators/js/tour_utils";
+import { queryFirst } from "@odoo/hoot-dom";
 
 let optionVariantImage;
 
@@ -37,14 +38,20 @@ registry.category("web_tour.tours").add('sale_product_configurator_advanced_tour
 {
     trigger: 'table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Steel)"))',
     run: function () {
-        optionVariantImage = $('table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Aluminium)")) td[name="o_sale_product_configurator_img"]>img').attr('src');
+        const el = queryFirst(
+            'table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Aluminium)")) td[name="o_sale_product_configurator_img"]>img'
+        );
+        optionVariantImage = el?.getAttribute("src");
     }
 },
     configuratorTourUtils.selectAttribute("Conference Chair", "Legs", "Aluminium"),
 {
     trigger: 'table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Aluminium)"))',
     run: function () {
-        let newVariantImage = $('table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Aluminium)")) td[name="o_sale_product_configurator_img"]>img').attr('src');
+        const el = queryFirst(
+            'table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Aluminium)")) td[name="o_sale_product_configurator_img"]>img'
+        );
+        let newVariantImage = el?.getAttribute("src");
         if (newVariantImage !== optionVariantImage) {
             throw new TourError('image variant option src changed');
         }

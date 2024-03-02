@@ -3,6 +3,7 @@
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 import configuratorTourUtils from "@test_sale_product_configurators/js/tour_utils";
+import { queryAll, queryOne } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add('sale_product_configurator_edition_tour', {
     url: '/web',
@@ -98,8 +99,11 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     trigger: 'div[name="product_template_id"]',
     run: function () {
         // used to check that the description does not contain a custom value anymore
-        if ($('td.o_data_cell:contains("Custom: another nice custom value")').length === 0){
-            $('td.o_data_cell:contains("Customizable Desk (TEST) (Steel, Black)")').html('tour success');
+        if (queryAll(`td.o_data_cell:contains("Custom: another nice custom value")`).length === 0){
+            const el = queryOne(
+                'td.o_data_cell:contains("Customizable Desk (TEST) (Steel, Black)")'
+            )
+            el.textContent = "tour success";
         }
     }
 }, {

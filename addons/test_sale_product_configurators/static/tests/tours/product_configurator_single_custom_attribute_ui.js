@@ -3,6 +3,7 @@
 import { registry } from "@web/core/registry";
 import { stepUtils, TourError } from "@web_tour/tour_service/tour_utils";
 import configuratorTourUtils from "@test_sale_product_configurators/js/tour_utils";
+import { queryOne } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add('sale_product_configurator_single_custom_attribute_tour', {
     url: '/web',
@@ -35,7 +36,11 @@ registry.category("web_tour.tours").add('sale_product_configurator_single_custom
     trigger: 'table.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk (TEST)")) td>div[name="ptal"]:has(div>label:contains("product attribute")) input[type="text"]',
     run: function () {
         // check custom value initialized
-        if ($('table.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk (TEST)")) td>div[name="ptal"]:has(div>label:contains("product attribute")) input[type="text"]').val() !== "great single custom value") {
+        if (
+            queryOne(
+                'table.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk (TEST)")) td>div[name="ptal"]:has(div>label:contains("product attribute")) input[type="text"]'
+            ).value !== "great single custom value"
+        ) {
             throw new TourError("The value of custom product attribute should be 'great single custom value'.");
         }
     }

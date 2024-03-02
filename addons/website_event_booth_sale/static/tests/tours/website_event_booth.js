@@ -17,8 +17,9 @@ registry.category("web_tour.tours").add('website_event_booth_tour', {
 }, {
     content: 'Select the first two booths',
     trigger: '.o_wbooth_booths input[name="event_booth_ids"]',
-    run: function () {
-        $('.o_wbooth_booths input[name="event_booth_ids"]:lt(2)').click();
+    run() {
+        document.querySelectorAll('.o_wbooth_booths input[name="event_booth_ids"]')[0].click();
+        document.querySelectorAll('.o_wbooth_booths input[name="event_booth_ids"]')[1].click();
     },
 }, {
     content: 'Confirm the booths by clicking the submit button',
@@ -26,9 +27,9 @@ registry.category("web_tour.tours").add('website_event_booth_tour', {
 }, {
     content: 'Fill in your contact information',
     trigger: 'input[name="contact_name"]',
-    run: function () {
-        $('input[name="contact_name"]').val('John Doe');
-        $('input[name="contact_email"]').val('jdoe@example.com');
+    run() {
+        this.anchor.value = 'John Doe';
+        document.querySelector('input[name="contact_email"]').value = 'jdoe@example.com';
     },
 }, {
     content: 'Submit your informations',

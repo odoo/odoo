@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { queryAll } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import { TourError } from "@web_tour/tour_service/tour_utils";
 
@@ -82,7 +83,7 @@ registry.category("web_tour.tours").add('test_survey_chained_conditional_questio
 ]});
 
 export function expectHiddenQuestion (questionTitle, msg){
-    if ($(`div.js_question-wrapper.d-none:contains('${questionTitle}')`).length !== 1) {
+    if (queryAll(`div.js_question-wrapper.d-none:contains('${questionTitle}')`).length !== 1) {
         throw new TourError(msg);
     }
 }
