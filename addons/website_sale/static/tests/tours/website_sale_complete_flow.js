@@ -42,13 +42,13 @@
         content: "Fulfill billing address form",
         trigger: 'select[name="country_id"]',
         run: function () {
-            $('input[name="name"]').val('abc');
-            $('input[name="phone"]').val('99999999');
-            $('input[name="email"]').val('abc@odoo.com');
-            $('input[name="street"]').val('SO1 Billing Street, 33');
-            $('input[name="city"]').val('SO1BillingCity');
-            $('input[name="zip"]').val('10000');
-            $('#country_id option:eq(1)').attr('selected', true);
+            document.querySelector('input[name="name"]').value = 'abc';
+            document.querySelector('input[name="phone"]').value = '99999999';
+            document.querySelector('input[name="email"]').value = 'abc@odoo.com';
+            document.querySelector('input[name="street"]').value = 'SO1 Billing Street, 33';
+            document.querySelector('input[name="city"]').value = 'SO1BillingCity';
+            document.querySelector('input[name="zip"]').value = '10000';
+            document.querySelectorAll("#country_id option")[1].selected = true;
         },
     },
     {
@@ -64,12 +64,12 @@
         trigger: 'select[name="country_id"]',
         extra_trigger: 'h3:contains("Shipping address")',
         run: function () {
-            $('input[name="name"]').val('def');
-            $('input[name="phone"]').val('8888888888');
-            $('input[name="street"]').val('17, SO1 Shipping Road');
-            $('input[name="city"]').val('SO1ShippingCity');
-            $('input[name="zip"]').val('10000');
-            $('#country_id option:eq(1)').attr('selected', true);
+            document.querySelector('input[name="name"]').value = 'def';
+            document.querySelector('input[name="phone"]').value = '8888888888';
+            document.querySelector('input[name="street"]').value = '17, SO1 Shipping Road';
+            document.querySelector('input[name="city"]').value = 'SO1ShippingCity';
+            document.querySelector('input[name="zip"]').value = '10000';
+            document.querySelectorAll("#country_id option")[1].selected = true;
         },
     },
     {
@@ -99,10 +99,10 @@
         trigger: 'select[name="country_id"]',
         extra_trigger: 'h3:contains("Billing address")',
         run: function () {
-            $('input[name="name"]').val('abcd');
-            $('input[name="phone"]').val('11111111');
-            $('input[name="street"]').val('SO1 Billing Street Edited, 33');
-            $('input[name="city"]').val('SO1BillingCityEdited');
+            document.querySelector('input[name="name"]').value = 'abcd';
+            document.querySelector('input[name="phone"]').value = '11111111';
+            document.querySelector('input[name="street"]').value = 'SO1 Billing Street Edited, 33';
+            document.querySelector('input[name="city"]').value = 'SO1BillingCityEdited';
         },
     },
     {
@@ -135,9 +135,9 @@
         content: "Submit login",
         trigger: '.oe_signup_form',
         run: function () {
-            $('.oe_signup_form input[name="password"]').val("1admin@admin");
-            $('.oe_signup_form input[name="confirm_password"]').val("1admin@admin");
-            $('.oe_signup_form').submit();
+            document.querySelector('.oe_signup_form input[name="password"]').value = "1admin@admin";
+            document.querySelector('.oe_signup_form input[name="confirm_password"]').value = "1admin@admin";
+            document.querySelector('.oe_signup_form').submit();
         },
     },
     {
@@ -162,10 +162,10 @@
         content: "Submit login",
         trigger: '.oe_login_form',
         run: function () {
-            $('.oe_login_form input[name="login"]').val("admin");
-            $('.oe_login_form input[name="password"]').val("admin");
-            $('.oe_login_form input[name="redirect"]').val("/");
-            $('.oe_login_form').submit();
+            document.querySelector('.oe_login_form input[name="login"]').value = "admin";
+            document.querySelector('.oe_login_form input[name="password"]').value = "admin";
+            document.querySelector('.oe_login_form input[name="redirect"]').value = "/";
+            document.querySelector('.oe_login_form').submit();
         },
     },
     {
@@ -232,9 +232,9 @@
         content: "Submit login",
         trigger: '.oe_login_form',
         run: function () {
-            $('.oe_login_form input[name="login"]').val("abc@odoo.com");
-            $('.oe_login_form input[name="password"]').val("1admin@admin");
-            $('.oe_login_form').submit();
+            document.querySelector('.oe_login_form input[name="login"]').value = "abc@odoo.com";
+            document.querySelector('.oe_login_form input[name="password"]').value = "1admin@admin";
+            document.querySelector('.oe_login_form').submit();
         },
     },
     {
@@ -245,12 +245,12 @@
         content: "Fulfill shipping address form",
         trigger: 'select[name="country_id"]',
         run: function () {
-            $('input[name="name"]').val('ghi');
-            $('input[name="phone"]').val('7777777777');
-            $('input[name="street"]').val('SO2New Shipping Street, 5');
-            $('input[name="city"]').val('SO2NewShipping');
-            $('input[name="zip"]').val('1200');
-            $('#country_id option:eq(1)').attr('selected', true);
+            document.querySelector('input[name="name"]').value = 'ghi';
+            document.querySelector('input[name="phone"]').value = '7777777777';
+            document.querySelector('input[name="street"]').value = 'SO2New Shipping Street, 5';
+            document.querySelector('input[name="city"]').value = 'SO2NewShipping';
+            document.querySelector('input[name="zip"]').value = '1200';
+            document.querySelectorAll("#country_id option")[1].selected = true;
         },
     },
     {
@@ -295,10 +295,10 @@
         content: "Submit login",
         trigger: '.oe_login_form',
         run: function () {
-            $('.oe_login_form input[name="login"]').val("admin");
-            $('.oe_login_form input[name="password"]').val("admin");
-            $('.oe_login_form input[name="redirect"]').val("/shop/cart");
-            $('.oe_login_form').submit();
+            document.querySelector('.oe_login_form input[name="login"]').value  = "admin";
+            document.querySelector('.oe_login_form input[name="password"]').value  = "admin";
+            document.querySelector('.oe_login_form input[name="redirect"]').value  = "/shop/cart";
+            document.querySelector('.oe_login_form').submit();
         },
     }]});
 
@@ -323,10 +323,10 @@
         content: "Submit login",
         trigger: '.oe_login_form',
         run: function () {
-            $('.oe_login_form input[name="login"]').val("abc@odoo.com");
-            $('.oe_login_form input[name="password"]').val("1admin@admin");
-            $('.oe_login_form input[name="redirect"]').val("/shop?search=Storage Box Test");
-            $('.oe_login_form').submit();
+            document.querySelector('.oe_login_form input[name="login"]').value = "abc@odoo.com";
+            document.querySelector('.oe_login_form input[name="password"]').value = "1admin@admin";
+            document.querySelector('.oe_login_form input[name="redirect"]').value = "/shop?search=Storage Box Test";
+            document.querySelector('.oe_login_form').submit();
         },
     },
     {

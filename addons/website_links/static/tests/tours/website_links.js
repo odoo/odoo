@@ -18,17 +18,27 @@ registry.category("web_tour.tours").add('website_links_tour', {
             trigger: '#o_website_links_link_tracker_form input#url',
             run: function () {
                 var url = window.location.host + '/contactus';
-                $('#o_website_links_link_tracker_form input#url').val(url);
-                const campaignId = Object.entries($('#s2id_campaign-select')[0]).find(([key, value]) => value.select2)[1].select2.opts.data.find(d => d.text === "Sale").id
-                $('.o_website_links_utm_forms input#campaign-select').val(campaignId).change();
-                const channelId = Object.entries($('#s2id_channel-select')[0]).find(([key, value]) => value.select2)[1].select2.opts.data.find(d => d.text === "Website").id
-                $('.o_website_links_utm_forms input#channel-select').val(channelId).change();
-                const sourceId = Object.entries($('#s2id_source-select')[0]).find(([key, value]) => value.select2)[1].select2.opts.data.find(d => d.text === "Search engine").id
-                $('.o_website_links_utm_forms input#source-select').val(sourceId).change();
+                document.querySelector("#o_website_links_link_tracker_form input#url").value = url;
+                const campaignId = Object.entries(document.querySelector("#s2id_campaign-select"))
+                    .find(([key, value]) => value.select2)[1]
+                    .select2.opts.data.find((d) => d.text === "Sale").id;
+                document.querySelector(".o_website_links_utm_forms input#campaign-select").value = campaignId;
+                const channelId = Object.entries(document.querySelector("#s2id_channel-select"))
+                    .find(([key, value]) => value.select2)[1]
+                    .select2.opts.data.find((d) => d.text === "Website").id;
+                document.querySelector(".o_website_links_utm_forms input#channel-select").value =
+                    channelId;
+                const sourceId = Object.entries(document.querySelector("#s2id_source-select"))
+                    .find(([key, value]) => value.select2)[1]
+                    .select2.opts.data.find((d) => d.text === "Search engine").id;
+                document.querySelector(".o_website_links_utm_forms input#source-select").value =
+                    sourceId;
                 // Patch and ignore write on clipboard in tour as we don't have permissions
                 const oldWriteText = browser.navigator.clipboard.writeText;
-                browser.navigator.clipboard.writeText = () => { console.info('Copy in clipboard ignored!') };
-                $('#btn_shorten_url').click();
+                browser.navigator.clipboard.writeText = () => {
+                    console.info("Copy in clipboard ignored!");
+                };
+                document.querySelector("#btn_shorten_url").click();
                 browser.navigator.clipboard.writeText = oldWriteText;
             },
         },
@@ -75,7 +85,9 @@ registry.category("web_tour.tours").add('website_links_tour', {
             content: "ensure tab is correctly resized",
             trigger: '#last_month_charts #last_month_clicks_chart',
             run: function () {
-                var width = $('#last_month_charts #last_month_clicks_chart').width();
+                var width = document
+                    .querySelector("#last_month_charts #last_month_clicks_chart")
+                    .getBoundingClientRect().width;
                 if (width < 50) {
                     console.error("The graphs are probably not resized on tab change.");
                 }

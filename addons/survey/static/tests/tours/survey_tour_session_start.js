@@ -36,9 +36,7 @@ registry.category("web_tour.tours").add('test_survey_session_start_tour', {
 }, {
     trigger: 'h1',
     run: function () {
-        var e = $.Event('keydown');
-        e.key = "ArrowRight";
-        $(document).trigger(e); // start session
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
     }
 }, {
     trigger: 'h1:contains("Nickname")',

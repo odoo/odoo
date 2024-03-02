@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { queryFirst } from '@odoo/hoot-dom';
 import wTourUtils from '@website/js/tours/tour_utils';
 import wSaleTourUtils from '@website_sale/js/tours/tour_utils';
 
@@ -71,12 +72,11 @@ wTourUtils.registerWebsitePreviewTour('website_sale.products_snippet_recently_vi
     ...wTourUtils.clickOnSave(),
     {
         content: 'make delete icon appear',
-        trigger: 'iframe .s_dynamic_snippet_products .o_carousel_product_card',
+        trigger: ':iframe .s_dynamic_snippet_products .o_carousel_product_card',
         run: function () {
-            const $iframe = $('.o_iframe').contents();
-            const $productCard = $iframe.find('.o_carousel_product_card:has(a img[alt="Storage Box"])');
-            console.log($productCard);
-            $productCard.find('.js_remove').attr('style', 'display: block;');
+            queryFirst(
+                `:iframe .o_carousel_product_card:has(a img[alt="Storage Box"]) .js_remove`,
+            ).style.display = "block";
         }
     },
     {

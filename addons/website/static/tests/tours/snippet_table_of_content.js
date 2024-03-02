@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { isVisible } from '@odoo/hoot-dom';
 import wTourUtils from '@website/js/tours/tour_utils';
 
 const scrollToHeading = function (position) {
@@ -62,8 +63,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
         content: "Check that we have the good TOC on desktop",
         trigger: 'iframe .s_table_of_content.o_snippet_mobile_invisible',
         run: () => {
-            if ($(document.querySelector('iframe .s_table_of_content.o_snippet_desktop_invisible'))
-                    .is(':visible')) {
+            if (isVisible(':iframe .s_table_of_content.o_snippet_desktop_invisible')) {
                 console.error('The mobile TOC should not be visible on desktop');
             }
         },
@@ -76,8 +76,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
         content: "Check that we have the good TOC on mobile",
         trigger: 'iframe .s_table_of_content.o_snippet_desktop_invisible',
         run: () => {
-            if ($(document.querySelector('iframe .s_table_of_content.o_snippet_mobile_invisible'))
-                    .is(':visible')) {
+            if (isVisible(':iframe .s_table_of_content.o_snippet_mobile_invisible')) {
                 console.error('The desktop TOC should not be visible on mobile');
             }
         },

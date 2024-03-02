@@ -73,7 +73,9 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
         content: "make hover button appear",
         trigger: '.o_theme_preview',
         run: () => {
-            $('.o_theme_preview .o_button_area').attr('style', 'visibility: visible; opacity: 1;');
+            const el = document.querySelector(".o_theme_preview .o_button_area");
+            el.style.visibility = "visible";
+            el.style.opacity = 1;
         },
     },
     {

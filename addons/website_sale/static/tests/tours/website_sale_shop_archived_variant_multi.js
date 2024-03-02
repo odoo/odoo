@@ -65,7 +65,7 @@ registry.category("web_tour.tours").add('test_09_pills_variant', {
         content: "check there are two radio boxes, both hidden",
         trigger: '.js_main_product',
         run: function() {
-            var buttons = $('input.js_variant_change');
+            var buttons = [...document.querySelectorAll('input.js_variant_change')];
 
             function isVisuallyHidden(elem) {
                 const style = window.getComputedStyle(elem);
@@ -89,7 +89,7 @@ registry.category("web_tour.tours").add('test_09_pills_variant', {
         content: 'check second variant is selected',
         trigger: 'li.o_variant_pills.active:contains("Small")',
         run: function () {
-            var button = $('input.js_variant_change[data-attribute_name="Size"][data-value_name="Small"]');
+            var button = [...document.querySelectorAll('input.js_variant_change[data-attribute_name="Size"][data-value_name="Small"]')];
             assert(button.length, 1, "there should be one radio input")
             assert(button[0].checked, true, "the radio input should be checked")
         }

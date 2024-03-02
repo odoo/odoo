@@ -21,10 +21,10 @@ registry.category("web_tour.tours").add(
                 content: "Submit login",
                 trigger: '.oe_login_form',
                 run: function () {
-                    $('.oe_login_form input[name="login"]').val("toto");
-                    $('.oe_login_form input[name="password"]').val("long_enough_password");
-                    $('.oe_login_form input[name="redirect"]').val("/shop");
-                    $('.oe_login_form').submit();
+                    document.querySelector('.oe_login_form input[name="login"]').value = "toto";
+                    document.querySelector('.oe_login_form input[name="password"]').value = "long_enough_password";
+                    document.querySelector('.oe_login_form input[name="redirect"]').value = "/shop";
+                    document.querySelector('.oe_login_form').submit();
                 }
             },
             {

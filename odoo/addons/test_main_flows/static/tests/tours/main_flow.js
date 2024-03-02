@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 import { markup } from "@odoo/owl";
+import { queryFirst } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add('main_flow_tour', {
     test: true,
@@ -65,9 +66,9 @@ stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Quotations')"),
     content: _t("Focus on customer taxes field."),
     run: function (actions) {
         actions.click();
-        const $e = $('.ui-menu-item:not(.o_m2o_dropdown_option) > a.ui-state-active');
-        if ($e.length) {
-            actions.click($e);
+        const e = queryFirst(".ui-menu-item:not(.o_m2o_dropdown_option) > a.ui-state-active");
+        if (e) {
+            actions.click(e);
         } else {
             actions.click(); // close dropdown
         }
@@ -368,9 +369,11 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     content: _t("Focus on customer taxes field."),
     run: function (actions) {
         actions.click();
-        const $e = $('.o_field_widget[name=taxes_id] .o-autocomplete--dropdown-item:not(.o_m2o_dropdown_option) > a');
-        if ($e.length) {
-            actions.click($e);
+        const e = queryFirst(
+            ".o_field_widget[name=taxes_id] .o-autocomplete--dropdown-item:not(.o_m2o_dropdown_option) > a"
+        );
+        if (e) {
+            actions.click(e);
         } else {
             actions.click(); // close dropdown
         }

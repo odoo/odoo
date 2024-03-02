@@ -67,10 +67,10 @@ registry.category("web_tour.tours").add('account_tax_group', {
     {
         content: "Modify the input value",
         trigger: '.o_tax_group_edit_input input',
-        run: function (actions) {
-            $('.o_tax_group_edit_input input').val(200);
-            $('.o_tax_group_edit_input input').select();
-            $('.o_tax_group_edit_input input').blur();
+        run() {
+            this.anchor.value = 200;
+            this.anchor.select();
+            this.anchor.blur();
         },
     },
     // Check new value for total (with modified tax_group_amount).

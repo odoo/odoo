@@ -9,10 +9,10 @@ odoo.loader.bus.addEventListener("module-started", (e) => {
         e.detail.module[Symbol.for("default")].include({
             // Purposely don't call super to avoid call to third party (GA) during tests
             _onViewItem(event, data) {
-                $('body').attr('view-event-id', data.item_id);
+                document.body.setAttribute("view-event-id", data.item_id);
             },
             _onAddToCart(event, data) {
-                $('body').attr('cart-event-id', data.item_id);
+                document.body.setAttribute("cart-event-id", data.item_id);
             },
         });
     }
@@ -34,9 +34,8 @@ registry.category("web_tour.tours").add('google_analytics_view_item', {
         trigger: 'body[view-event-id]',
         timeout: 25000,
         run: () => {
-            const $body = $('body');
-            itemId = $body.attr('view-event-id');
-            $body.removeAttr('view-event-id');
+            itemId = document.body.getAttribute("view-event-id");
+            document.body.removeAttribute("view-event-id");
         }
     },
     {

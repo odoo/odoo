@@ -104,11 +104,15 @@ registry.category("web_tour.tours").add("sale_quote_tour", {
         run: function (actions) {
             const input = this.anchor.querySelector("input");
             actions.text("DESK0001", input || this.anchor);
-            var $descriptionElement = $(".o_form_editable textarea[name='name']");
+            const descriptionElement = document.querySelector(
+                ".o_form_editable textarea[name='name']"
+            );
             // when description changes, we know the product has been created
-            $descriptionElement.change(function () {
-                $descriptionElement.addClass("product_creation_success");
-            });
+            if (descriptionElement) {
+                descriptionElement.addEventListener("change", () => {
+                    descriptionElement.classList.add("product_creation_success");
+                });
+            }
         },
         id: "product_selection_step"
     }, {
