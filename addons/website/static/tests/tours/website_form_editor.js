@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+    import { queryOne } from "@odoo/hoot-dom";
     import wTourUtils from "@website/js/tours/tour_utils";
 
     // Visibility possible values:
@@ -387,12 +388,12 @@
             content: "Change button's style",
             trigger: '.dropdown:has([name="link_style_color"]) > button',
             run: () => {
-                $('.dropdown:has([name="link_style_color"]) > button').click();
-                $('[data-value="secondary"]').click();
-                $('.dropdown:has([name="link_style_shape"]) > button').click();
-                $('[data-value="rounded-circle"]').click();
-                $('.dropdown:has([name="link_style_size"]) > button').click();
-                $('[data-value="sm"]').click();
+                queryOne('.dropdown:has([name="link_style_color"]) > button').click();
+                queryOne('[data-value="secondary"]').click();
+                queryOne('.dropdown:has([name="link_style_shape"]) > button').click();
+                queryOne('[data-value="rounded-circle"]').click();
+                queryOne('.dropdown:has([name="link_style_size"]) > button').click();
+                queryOne('[data-value="sm"]').click();
             },
         }, {
             content: "Check the resulting button",

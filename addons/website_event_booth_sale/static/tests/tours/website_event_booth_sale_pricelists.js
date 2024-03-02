@@ -28,9 +28,9 @@ registry.category("web_tour.tours").add('event_booth_sale_pricelists_different_c
     {
         content: 'Fill in your contact information',
         trigger: 'input[name="contact_name"]',
-        run: function () {
-            $('input[name="contact_name"]').val('John Doe');
-            $('input[name="contact_email"]').val('jdoe@example.com');
+        run() {
+            this.anchor.value = 'John Doe';
+            document.querySelector('input[name="contact_email"]').value = 'jdoe@example.com';
         },
     },
     {

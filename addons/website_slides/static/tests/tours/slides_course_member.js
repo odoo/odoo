@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { queryAll } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 /**
@@ -50,31 +51,38 @@ registry.category("web_tour.tours").add('course_member', {
     trigger: '.o_wslides_fs_sidebar_header',
     run: function () {
         // check navigation with arrow keys
-        var event = jQuery.Event("keydown");
-        event.key = "ArrowLeft";
         // go back once
-        $(document).trigger(event);
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
         // check that it selected the previous tab
-        if ($('.o_wslides_fs_sidebar_list_item.active:contains("Gardening: The Know-How")').length === 0) {
+        if (
+            queryAll(
+                '.o_wslides_fs_sidebar_list_item.active:contains("Gardening: The Know-How")'
+            ).length === 0
+        ) {
             return;
         }
         // getting here means that navigation worked
-        $('.o_wslides_fs_sidebar_header').addClass('navigation-success-1');
+        document
+            .querySelector(".o_wslides_fs_sidebar_header")
+            .classList.add("navigation-success-1");
     }
 }, {
     trigger: '.o_wslides_fs_sidebar_header.navigation-success-1',
     extra_trigger: '.o_wslides_progress_percentage:contains("40")',
     run: function () {
         // check navigation with arrow keys
-        var event = jQuery.Event("keydown");
-        event.key = "ArrowRight";
-        $(document).trigger(event);
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
         // check that it selected the next/next tab
-        if ($('.o_wslides_fs_sidebar_list_item.active:contains("Home Gardening")').length === 0) {
+        if (
+            queryAll('.o_wslides_fs_sidebar_list_item.active:contains("Home Gardening")')
+                .length === 0
+        ) {
             return;
         }
         // getting here means that navigation worked
-        $('.o_wslides_fs_sidebar_header').addClass('navigation-success-2');
+        document
+            .querySelector(".o_wslides_fs_sidebar_header")
+            .classList.add("navigation-success-2");
     }
 }, {
     trigger: '.o_wslides_progress_percentage:contains("40")',
@@ -84,16 +92,20 @@ registry.category("web_tour.tours").add('course_member', {
     extra_trigger: '.o_wslides_progress_percentage:contains("40")',
     run: function () {
         // check navigation with arrow keys
-        var event = jQuery.Event("keydown");
-        event.key = "ArrowRight";
         setTimeout(function () {
-            $(document).trigger(event);
+            document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
             // check that it selected the next/next tab
-            if ($('.o_wslides_fs_sidebar_list_item.active:contains("Mighty Carrots")').length === 0) {
+            if (
+                queryAll(
+                    '.o_wslides_fs_sidebar_list_item.active:contains("Mighty Carrots")'
+                ).length === 0
+            ) {
                 return;
             }
             // getting here means that navigation worked
-            $('.o_wslides_fs_sidebar_header').addClass('navigation-success-3');
+            document
+                .querySelector(".o_wslides_fs_sidebar_header")
+                .classList.add("navigation-success-3");
         }, 300);
     }
 }, {

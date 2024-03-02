@@ -26,9 +26,13 @@
         trigger: '.modal-dialog div[name=date_begin]',
         content: _t("Open date range picker. Pick a Start date for your event"),
         run: function () {
-            $('input[data-field="date_begin"]').val('09/30/2020 08:00:00').change();
-            $('input[data-field="date_end"]').val('10/02/2020 23:00:00').change();
-            $('input[data-field="date_begin"]').click();
+            const el1 = document.querySelector('input[data-field="date_begin"]');
+            el1.value = '09/30/2020 08:00:00';
+            el1.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
+            const el2 = document.querySelector('input[data-field="date_end"]');
+            el2.value = '10/02/2020 23:00:00';
+            el2.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
+            el1.click();
         }
     }, {
         trigger: '.modal-footer button.btn-primary',
