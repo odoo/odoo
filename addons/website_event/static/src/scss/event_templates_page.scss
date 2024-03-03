@@ -10,13 +10,17 @@
     }
 
     // Ensure menu labels are not split
-    #o_wevent_event_submenu {
-        li.nav-item {
-            white-space: nowrap;
-            
-            > a {
+    #o_wevent_submenu_desktop {
+        .nav {
+            column-gap: map-get($spacers, 3);
+
+            .nav-link {
                 padding: 0;
-                padding-right: 1rem;
+
+                &.active {
+                    color: rgba($body-color, .7);
+                    cursor: default;
+                }
             }
         }
     }
