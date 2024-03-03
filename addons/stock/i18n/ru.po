@@ -2347,9 +2347,9 @@ msgid ""
 "Define a minimum stock rule so that Odoo automatically creates requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
-"Определите правило минимального запаса, чтобы система автоматически создала "
-"запросы на коммерческие предложения или черновики заявок на производство для"
-" восполнения запасов."
+"Задайте правило минимального запаса, чтобы система создавала запросы на "
+"коммерческие предложения или подтвержденные заказы на производство для "
+"пополнения ваших запасов."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -3593,7 +3593,7 @@ msgid ""
 "operations with the corresponding products, locations and lot/serial "
 "numbers."
 msgstr ""
-"Если этот флажок установлен, Odoo автоматически предварительно заполнит "
+"Если этот флажок установлен, система автоматически предварительно заполнит "
 "подробные операции с соответствующими продуктами, местоположениями и "
 "номерами партий / серийными номерами."
 
@@ -3621,9 +3621,9 @@ msgid ""
 " operations. If not, the picking lines will represent an aggregate of "
 "detailed stock operations."
 msgstr ""
-"Если это будет обозначено, строки комплектования будут представлять "
-"детальные складские операции. Если нет, то строка комплектования "
-"представлять совокупность детальных складских операций."
+"Если этот флажок установлен, строки комплектации будут отображать подробные "
+"складские операции. Если нет, строки комплектации будут отображать "
+"совокупность подробных складских операций."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_create_lots
@@ -4096,8 +4096,20 @@ msgstr "Невозможно заказать больше товаров %s ч�
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
-msgstr "Невозможно восстановить больше товаров %s чем у вас на складе."
+"It is not possible to reserve more products of %s than you have in stock.\n"
+"\n"
+"You can fix the discrepancies by clicking on the button below.\n"
+"The correction will remove the reservation of the impacted operations on all companies.\n"
+"If the error persists, or you see this message appear often, please submit a Support Ticket at https://www.odoo.com/help"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"It is not possible to unreserve more products of %s than you have in stock.\n"
+"Please contact your system administrator to rectify this issue."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
