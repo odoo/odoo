@@ -3,10 +3,10 @@
 # 	* auth_ldap
 # 
 # Translators:
-# Junko Augias, 2023
 # Andy Yiu, 2023
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Martin Trigaux, 2023
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2023-07-13 13:34+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +38,18 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"   LDAPデータベース内のユーザアカウントを検索するために使用されるフィルタ。これは文字列表現の任意のLDAPフィルタです。任意の `%s` プレースホルダはユーザによって提供されたログイン (識別子) に置き換えられます。\n"
+"\n"
+"    フィルタの結果は正確に1つでなければならず、そうでなければログインは無効とみなされます。\n"
+"\n"
+"    例(実際の属性はLDAPサーバとセットアップに依存):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    または\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -59,7 +71,7 @@ msgstr "会社"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "Company LDAP configuration"
-msgstr ""
+msgstr "会社LDAP設定"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
@@ -86,7 +98,7 @@ msgstr "作成日"
 msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
-msgstr ""
+msgstr "ユーザ検索スコープのDN：このベースの全ての子孫がユーザ用に検索されます。"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
@@ -113,7 +125,7 @@ msgstr "LDAPパラメータ"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
-msgstr ""
+msgstr "LDAPサーバ"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
@@ -169,7 +181,7 @@ msgstr "ログイン情報"
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 #, python-format
 msgid "No local user found for LDAP login and not configured to create one"
-msgstr ""
+msgstr "LDAPログイン用のローカルユーザが見つからず、作成するように設定されていません。"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
