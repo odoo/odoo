@@ -5,14 +5,15 @@
 # Translators:
 # Wil Odoo, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-25 11:22+0000\n"
+"POT-Creation-Date: 2024-02-29 16:30+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -742,6 +743,13 @@ msgid "The full URL to access the document through the website."
 msgstr "رابطURL الكامل للوصول إلى المستند من خلال الموقع الإلكتروني. "
 
 #. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
+#, python-format
+msgid "The job offer has been closed."
+msgstr "لقد تم إغلاق هذه الوظيفة. "
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid ""
 "There are currently no open job opportunities,<br class=\"mb-2\"/>\n"
@@ -856,13 +864,6 @@ msgstr ""
 "الأساسية. "
 
 #. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-#, python-format
-msgid "The job offer has been closed."
-msgstr "لقد تم إغلاق هذه الوظيفة. "
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "Your <b>contact</b> information is:"
 msgstr "<b>معلومات التواصل</b> الخاصة بك هي: "
@@ -904,6 +905,11 @@ msgstr "مثال: https://www.linkedin.com/in/fpodoo/ "
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid "info@yourcompany.example.com"
 msgstr "info@yourcompany.example.com"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid "open positions"
+msgstr "الوظائف الشاغرة"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_recruitment_source_kanban_inherit_website

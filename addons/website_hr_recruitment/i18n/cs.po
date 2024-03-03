@@ -7,14 +7,15 @@
 # Wil Odoo, 2023
 # Jakub Smolka, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Jiří Podhorecký, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-25 11:22+0000\n"
+"POT-Creation-Date: 2024-02-29 16:30+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Last-Translator: Jiří Podhorecký, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -708,6 +709,13 @@ msgid "The full URL to access the document through the website."
 msgstr "Celá adresa URL pro přístup k dokumentu prostřednictvím webstránky."
 
 #. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
+#, python-format
+msgid "The job offer has been closed."
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid ""
 "There are currently no open job opportunities,<br class=\"mb-2\"/>\n"
@@ -815,13 +823,6 @@ msgid ""
 msgstr ""
 
 #. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-#, python-format
-msgid "The job offer has been closed."
-msgstr ""
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "Your <b>contact</b> information is:"
 msgstr ""
@@ -861,6 +862,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid "info@yourcompany.example.com"
 msgstr "info@yourcompany.example.com"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid "open positions"
+msgstr "otevřené pozice"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_recruitment_source_kanban_inherit_website
