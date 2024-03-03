@@ -11,14 +11,14 @@
 # Mikael Holm <mikael.holm@vertel.se>, 2021
 # 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2021
 # Martin Trigaux, 2021
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # Simon S, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # Victor Ekström, 2022
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Robin Calvin, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
-# Lasse Larsson, 2023
+# Lasse L, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Lasse Larsson, 2023\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -157,7 +157,7 @@ msgstr "Antal Bilagor"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
 msgid "Blacklisted"
-msgstr ""
+msgstr "Svartlistad"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__mobile_blacklisted
@@ -346,7 +346,7 @@ msgstr "Dynamisk Platshållargenerator"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Edit Partners"
-msgstr ""
+msgstr "Edit Partners"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
@@ -367,7 +367,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_mail_notification__failure_type
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__failure_type
 msgid "Failure type"
-msgstr ""
+msgstr "Typ av fel"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_object_field
@@ -436,7 +436,7 @@ msgstr ""
 #: model:ir.model.fields,help:sms.field_mail_mail__has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_message__has_sms_error
 msgid "Has error"
-msgstr ""
+msgstr "Du har gjort ett misstag"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__help_message
@@ -517,7 +517,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Ignore all"
-msgstr ""
+msgstr "Ignorera alla"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__outgoing
@@ -659,7 +659,7 @@ msgstr "Fel vid leverans av meddelande"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_notification
 msgid "Message Notifications"
-msgstr ""
+msgstr "Meddelanden om meddelanden"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_mail_mail__message_type
@@ -700,7 +700,7 @@ msgstr "Namn"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__no_record
 msgid "No Record"
-msgstr ""
+msgstr "I protokollet"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
@@ -710,7 +710,7 @@ msgstr "Avisering"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__notification_type
 msgid "Notification Type"
-msgstr ""
+msgstr "Typ av anmälan"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
@@ -763,7 +763,7 @@ msgstr "Antal olästa meddelanden"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
 msgid "Opted Out"
-msgstr ""
+msgstr "Uteslutet"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__lang
@@ -816,7 +816,7 @@ msgstr "Platshållaruttryck"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
 msgid "Post on a document"
-msgstr ""
+msgstr "Posta på ett dokument"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -1103,7 +1103,7 @@ msgstr ""
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_resend_action
 msgid "Sending Failures"
-msgstr ""
+msgstr "Misslyckade sändningar"
 
 #. module: sms
 #: code:addons/sms/models/ir_actions.py:0
@@ -1190,7 +1190,7 @@ msgstr "Förhandsgranska mall"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__lang
 msgid "Template Preview Language"
-msgstr ""
+msgstr "Språk för förhandsgranskning av mall"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_action
@@ -1390,7 +1390,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. Contact"
-msgstr ""
+msgstr "t.ex. Kontakt"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form

@@ -4,12 +4,12 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2021
 # Anto Nilsson <anton.nilsson@vertel.se>, 2021
 # Simon S, 2021
 # Lasse L, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Lasse L, 2023\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -374,7 +374,7 @@ msgstr ""
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr ""
+msgstr "En annan användare är redan registrerad med den här e-postadressen."
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
@@ -400,7 +400,7 @@ msgstr ""
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "Autentiseringen misslyckades."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
@@ -411,7 +411,7 @@ msgstr "Tillbaka till inloggningsrutan"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "Kan inte skicka e-post: användaren %s har ingen e-postadress."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -447,7 +447,7 @@ msgstr "Kontakt"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Could not create a new account."
-msgstr ""
+msgstr "Kunde inte skapa ett nytt konto."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -498,6 +498,12 @@ msgid "Let your customers log in to see their documents"
 msgstr "Låt dina kunder logga in för att se sina dokument"
 
 #. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "Multiple accounts found for this email"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Never Connected"
 msgstr "Aldrig inloggad"
@@ -506,7 +512,7 @@ msgstr "Aldrig inloggad"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "No login provided."
-msgstr ""
+msgstr "Ingen inloggning tillhandahålls."
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2b
@@ -532,12 +538,12 @@ msgstr "Lösenordsåterställning"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Passwords do not match; please retype them."
-msgstr ""
+msgstr "Lösenorden stämmer inte överens, skriv om dem."
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
 msgid "Reminder for unregistered users"
-msgstr ""
+msgstr "Påminnelse för oregistrerade användare"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
@@ -600,37 +606,37 @@ msgstr "Registrerings URL"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr ""
+msgstr "Anmälan är inte tillåten för oinbjudna användare"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is no longer valid"
-msgstr ""
+msgstr "Signup token '%s' är inte längre giltig"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr ""
+msgstr "Signup token '%s' är inte giltig"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: invalid template user"
-msgstr ""
+msgstr "Registrering: ogiltig mallanvändare"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no login given for new user"
-msgstr ""
+msgstr "Registrering: ingen inloggning ges för ny användare"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no name or partner given for new user"
-msgstr ""
+msgstr "Registrering: inget namn eller partner anges för ny användare"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
@@ -646,13 +652,13 @@ msgstr "Mallanvändare för användare som skapas via registering"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "The form was not properly filled in."
-msgstr ""
+msgstr "Formuläret var inte korrekt ifyllt."
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "This is their first connection. Wish them luck."
-msgstr ""
+msgstr "Detta är deras första anslutning. Önska dem lycka till."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -675,18 +681,18 @@ msgstr "Användare"
 #: model:ir.cron,cron_name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder
 #: model:ir.cron,name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder
 msgid "Users: Notify About Unregistered Users"
-msgstr ""
+msgstr "Användare: Meddela om oregistrerade användare"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to {{ object.company_id.name }}!"
-msgstr ""
+msgstr "Välkommen till {{ object.company_id.name }}!"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "You cannot perform this action on an archived user."
-msgstr ""
+msgstr "Du kan inte utföra denna åtgärd på en arkiverad användare."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -710,3 +716,5 @@ msgid ""
 "{{ object.create_uid.name }} from {{ object.company_id.name }} invites you "
 "to connect to Odoo"
 msgstr ""
+"{{ object.create_uid.name }} från {{ object.company_id.name }} inbjuder dig "
+"att ansluta till Odoo"
