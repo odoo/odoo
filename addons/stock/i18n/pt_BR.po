@@ -2376,28 +2376,28 @@ msgstr "Atrasos em %s"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__ship_only
 msgid "Deliver goods directly (1 step)"
-msgstr "Entregar mercadorias diretamente (1 passo)"
+msgstr "Entregar mercadorias diretamente (1 etapa)"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Deliver in 1 step (ship)"
-msgstr "Entregar em 1 passo (ship)"
+msgstr "Entregar em 1 etapa (enviar)"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Deliver in 2 steps (pick + ship)"
-msgstr "Entregar em 2 etapas (pick + ship)"
+msgstr "Entregar em 2 etapas (separar + enviar)"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Deliver in 3 steps (pick + pack + ship)"
-msgstr "Entregar em 3 etapas (pick + pack + ship)"
+msgstr "Entregar em 3 etapas (separar + embalar + enviar)"
 
 #. module: stock
 #. odoo-python
@@ -4061,10 +4061,20 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
+"It is not possible to reserve more products of %s than you have in stock.\n"
+"\n"
+"You can fix the discrepancies by clicking on the button below.\n"
+"The correction will remove the reservation of the impacted operations on all companies.\n"
+"If the error persists, or you see this message appear often, please submit a Support Ticket at https://www.odoo.com/help"
 msgstr ""
-"Não é possível cancelar a reserva de mais produtos do %sque você possui em "
-"estoque."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"It is not possible to unreserve more products of %s than you have in stock.\n"
+"Please contact your system administrator to rectify this issue."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -6699,19 +6709,19 @@ msgstr "Receber De"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__one_step
 msgid "Receive goods directly (1 step)"
-msgstr "Receba mercadorias diretamente (1 etapa)"
+msgstr "Receber mercadorias diretamente (1 etapa)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__two_steps
 msgid "Receive goods in input and then stock (2 steps)"
-msgstr "Receba mercadorias na entrada e, em seguida, estoque (2 etapas)"
+msgstr "Receber mercadorias na entrada e depois estocar (2 etapas)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__three_steps
 msgid "Receive goods in input, then quality and then stock (3 steps)"
 msgstr ""
-"Receber mercadorias em entrada, depois qualidade e, em seguida, estoque (3 "
-"passos)"
+"Receber mercadorias na entrada, depois verificar qualidade e então estocar "
+"(3 passos)"
 
 #. module: stock
 #. odoo-python
@@ -7185,7 +7195,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Rule %s belongs to %s while the route belongs to %s."
-msgstr ""
+msgstr "A regra %s pertence a %s enquanto a rota pertence a %s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -7409,7 +7419,7 @@ msgstr "Enviar e-mail"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
 msgid "Send goods in output and then deliver (2 steps)"
-msgstr "Envie mercadorias na saída e entregue (2 etapas)"
+msgstr "Enviar mercadorias na saída e depois entregar (2 etapas)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud

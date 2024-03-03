@@ -4073,10 +4073,27 @@ msgstr "Impossibile prenotare più prodotti %s di quelli a magazzino."
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
+"It is not possible to reserve more products of %s than you have in stock.\n"
+"\n"
+"You can fix the discrepancies by clicking on the button below.\n"
+"The correction will remove the reservation of the impacted operations on all companies.\n"
+"If the error persists, or you see this message appear often, please submit a Support Ticket at https://www.odoo.com/help"
 msgstr ""
-"Impossibile annullare la prenotazione di più prodotti %s di quelli a "
-"magazzino."
+"Non è possibile prenotare più prodotti %s rispetto a quelli in giacenza.\n"
+"\n"
+"Puoi correggere le discrepanze facendo clic sul pulsante in basso.\n"
+"A seguito della correzione, tutte le prenotazioni relative alle operazioni coinvolte verranno eliminate per tutte le aziende.\n"
+"Se l'errore persiste o se vedi questo messaggio, invia un ticket di supporto tramite la pagina https://www.odoo.com/help"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"It is not possible to unreserve more products of %s than you have in stock.\n"
+"Please contact your system administrator to rectify this issue."
+msgstr ""
+"Non è possibile annullare la prenotazione di più prodotti %s di quelli in giacenza.\n"
+"Contatta l'amministratore di sistema per rettificare il problema."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
