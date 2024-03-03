@@ -79,7 +79,7 @@ var discoverRoomSteps = function (roomName) {
 
 var registerSteps = [{
     content: 'Go on Register',
-    trigger: 'a.btn-primary:contains("Register")',
+    trigger: 'a.btn-primary[href$="/register"]',
 }, {
     content: 'Open ticket modal',
     trigger: 'button.btn-primary:contains("Register")',
@@ -150,6 +150,15 @@ var browseTalksSteps = [{
     run: function () {} // check
 }];
 
+var browseBackSteps = [{
+    content: 'Browse Back',
+    trigger: 'a:contains("All Talks")',
+}, {
+    content: 'Check we are back on the talk list page',
+    trigger: 'h5:contains("Book your talks")',
+    run: function () {} // check
+}];
+
 var browseMeetSteps = [{
     content: 'Browse Meet',
     trigger: 'a:contains("Community")',
@@ -171,6 +180,7 @@ registry.category("web_tour.tours").add('wevent_register', {
         discoverTalkSteps('Live Testimonial', false, false, false),
         browseTalksSteps,
         discoverTalkSteps('Our Last Day Together!', true, false, true),
+        browseBackSteps,
         browseMeetSteps,
         discoverRoomSteps('Best wood for furniture'),
         registerSteps,
