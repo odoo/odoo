@@ -3,8 +3,9 @@
 # 	* hr_holidays
 # 
 # Translators:
-# Sarah Park, 2024
 # Wil Odoo, 2024
+# Daye Jeong, 2024
+# Sarah Park, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-07 10:22+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Sarah Park, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -617,7 +618,7 @@ msgstr "<span class=\"o_stat_text\">휴가</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"text-muted\"> to </span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> 종료 </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -2740,7 +2741,7 @@ msgstr "누구에게도 알림이 전송되지 않습니다"
 msgid ""
 "Non-visible allocations can still be selected when taking a leave, but will "
 "simply not be displayed on the leave dashboard."
-msgstr ""
+msgstr "휴가를 신청할 때 보이지 않는 할당은 여전히 선택할 수 있지만 휴가 대시보드에는 표시되지 않습니다."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3268,7 +3269,7 @@ msgstr "매월 2일 표시"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Second approval request for %(leave_type)s"
-msgstr ""
+msgstr "%(leave_type)s 관련 2차 승인 요청"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4272,13 +4273,15 @@ msgid ""
 "to zero), All accrued time carried over to the next period; or Carryover "
 "with a maximum)."
 msgstr ""
+"이월 시간 한도에 도달하면 계획 구성에 따라 사용하지 않은 휴가를 처리하는 옵션을 선택합니다: 없음(시간이 0으로 초기화됨), 발생한 "
+"모든 시간이 다음 기간으로 이월됨, 또는 최대 한도로 이월됨 중에서 선택합니다.)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time
 msgid ""
 "When the field is checked the accrued time will be capped at the specified "
 "amount of time."
-msgstr ""
+msgstr "이 필드를 선택하면 누적된 시간이 지정된 시간으로 제한됩니다."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__other

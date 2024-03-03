@@ -3,8 +3,9 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2024
 # Sarah Park, 2024
+# Daye Jeong, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-07 10:22+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Sarah Park, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9379,6 +9380,13 @@ msgid "Never"
 msgstr "하지 않음"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "New"
+msgstr "신규"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "New Journal Name"
 msgstr "새로운 전표 이름"
@@ -11469,6 +11477,14 @@ msgid "Remake the sequence of Journal Entries."
 msgstr "전표입력 순서를 다시 조정합니다."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Removed"
+msgstr "삭제됨"
+
+#. module: account
 #: model:account.account,name:account.1_expense_rent
 msgid "Rent"
 msgstr "임차료"
@@ -13493,6 +13509,8 @@ msgid ""
 "The amount for %(partner_name)s appears unusual. Based your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
+"%(partner_name)s의 금액이 비정상적으로 보입니다. 기록 데이터에 따르면 예상 금액은 %(mean)s (± %(wiggle)s)입니다.\n"
+"이 금액이 정확한지 확인해 주세요."
 
 #. module: account
 #. odoo-python
@@ -13527,6 +13545,8 @@ msgid ""
 "The billing frequency for %(partner_name)s appears unusual. Based on your historical data, the expected next invoice date is not before %(expected_date)s (every %(mean)s (± %(wiggle)s) days).\n"
 "Please verify if this date is accurate."
 msgstr ""
+"%(partner_name)s에 대한 청구 빈도가 비정상적으로 보입니다. 기록 데이터에 따르면 다음 청구 예상 날짜는%(expected_date)s일 (매 %(mean)s (± %(wiggle)s) 일) 이전이 아니어야 합니다.\n"
+"이 날짜가 올바른지 확인해 주세요."
 
 #. module: account
 #. odoo-javascript
