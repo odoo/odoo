@@ -15,7 +15,6 @@
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2021
 # 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2021
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # Simon S, 2022
 # Martin Trigaux, 2022
@@ -23,6 +22,7 @@
 # Claes-Johan Dahlin, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Lasse L, 2024
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-08-06 08:36+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Lasse L, 2024\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,6 +82,8 @@ msgstr "%(pos_name)s (används inte)"
 msgid ""
 "%s has a total amount of %s, are you sure you want to delete this order ?"
 msgstr ""
+"%s har ett totalt belopp på %s, är du säker på att du vill ta bort denna "
+"order?"
 
 #. module: point_of_sale
 #: model:ir.actions.report,print_report_name:point_of_sale.pos_invoice_report
@@ -708,7 +710,7 @@ msgstr "Tillbaka till listan"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/NumpadWidget.xml:0
 #, python-format
 msgid "Backspace"
-msgstr ""
+msgstr "Backspace"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -941,6 +943,8 @@ msgid ""
 "Categories are used to browse your products through the\n"
 "                touchscreen interface."
 msgstr ""
+"Kategorier används för att bläddra bland dina produkter via\n"
+"                pekskärmsgränssnittet."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1021,11 +1025,13 @@ msgstr "Kontrollera om du vill att den här produkten ska visas i kassan."
 msgid ""
 "Check if you want to group products of this category in point of sale orders"
 msgstr ""
+"Kontrollera om du vill gruppera produkter i denna kategori i "
+"försäljningsorder"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
 msgid "Check the amount of the cashbox at opening and closing."
-msgstr ""
+msgstr "Kontrollera kassans belopp vid öppning och stängning."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1035,6 +1041,8 @@ msgid ""
 "Check the internet connection then try to sync again by clicking on the red "
 "wifi button (upper right of the screen)."
 msgstr ""
+"Kontrollera internetanslutningen och försök sedan synkronisera igen genom "
+"att klicka på den röda wifi-knappen (uppe till höger på skärmen)."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__child_id
@@ -1047,6 +1055,8 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
+"Välj en specifik skatteposition vid beställningen beroende på typ av kund "
+"(skattebefriad, på plats vs. takeaway, etc.)."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1105,7 +1115,7 @@ msgstr "Stäng"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Close Session & Post Entries"
-msgstr ""
+msgstr "Avsluta sessionen och publicera poster"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closed
@@ -1170,7 +1180,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
 msgid "Configure at least one Point of Sale."
-msgstr ""
+msgstr "Konfigurera minst ett försäljningsställe."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.closing_balance_confirm
@@ -1192,12 +1202,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
 msgid "Connect devices to your PoS without an IoT Box."
-msgstr ""
+msgstr "Anslut enheter till din PoS utan en IoT-box."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices using an IoT Box"
-msgstr ""
+msgstr "Anslut enheter med en IoT-box"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1209,7 +1219,7 @@ msgstr "Anslutna enheter"
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/ClientScreenButton.js:0
 #, python-format
 msgid "Connected, Not Owned"
-msgstr ""
+msgstr "Ansluten, Ej ägd"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1217,7 +1227,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/ProxyStatus.xml:0
 #, python-format
 msgid "Connecting to Proxy"
-msgstr ""
+msgstr "Anslutning till proxy"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1231,7 +1241,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Connection error"
-msgstr ""
+msgstr "Fel i anslutningen"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1239,7 +1249,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Connection to IoT Box failed"
-msgstr ""
+msgstr "Anslutningen till IoT Box misslyckades"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1272,7 +1282,7 @@ msgstr "Växel Kurs"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__currency_rate
 msgid "Conversion rate from company currency to order currency."
-msgstr ""
+msgstr "Omräkningskurs från företagets valuta till orderns valuta."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1293,12 +1303,12 @@ msgstr "Skapa"
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all_filtered
 msgid "Create a new POS order"
-msgstr ""
+msgstr "Skapa en ny POS-order"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
 msgid "Create a new PoS"
-msgstr ""
+msgstr "Skapa en ny PoS"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -1362,12 +1372,12 @@ msgstr "Nuvarande session"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_user_id
 msgid "Current Session Responsible"
-msgstr ""
+msgstr "Aktuell session Ansvarig"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_session_state
 msgid "Current Session State"
-msgstr ""
+msgstr "Aktuell session Status"
 
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.fabric_attribute_custom
@@ -1401,7 +1411,7 @@ msgstr "Kundskärm"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_customer_facing_display
 msgid "Customer Facing Display"
-msgstr ""
+msgstr "Display riktad mot kund"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -1441,7 +1451,7 @@ msgstr "Datum"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Debug Window"
-msgstr ""
+msgstr "Fönster för felsökning"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__account_id
@@ -1456,7 +1466,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_fiscal_position_id
 msgid "Default Fiscal Position"
-msgstr ""
+msgstr "Förvald finanspolitisk position"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pricelist_id
@@ -1561,13 +1571,13 @@ msgstr "Avmarkera Kund"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "Desk Organizer"
-msgstr ""
+msgstr "Organisering av skrivbord"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.desk_pad
 #: model:product.template,name:point_of_sale.desk_pad_product_template
 msgid "Desk Pad"
-msgstr ""
+msgstr "Skrivbordsunderlägg"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_desks
@@ -1583,7 +1593,7 @@ msgstr "Skillnad"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Difference at closing PoS session"
-msgstr ""
+msgstr "Skillnad vid avslutande PoS-session"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_difference
@@ -1591,6 +1601,8 @@ msgid ""
 "Difference between the theoretical closing balance and the real closing "
 "balance."
 msgstr ""
+"Skillnad mellan den teoretiska utgående balansen och den verkliga utgående "
+"balansen."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_digest_digest
@@ -1741,7 +1753,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
 #, python-format
 msgid "Do you want to print using the web printer?"
-msgstr ""
+msgstr "Vill du skriva ut med hjälp av webbskrivaren?"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1767,14 +1779,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Download Paid Orders"
-msgstr ""
+msgstr "Ladda ner betalda order"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Download Unpaid Orders"
-msgstr ""
+msgstr "Ladda ner obetalda order"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1782,7 +1794,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Popups/ErrorTracebackPopup.xml:0
 #, python-format
 msgid "Download error traceback"
-msgstr ""
+msgstr "Ladda ner spårning av fel"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1843,6 +1855,9 @@ msgid ""
 "These credentials are configurable in the *HR Settings* tab of the employee "
 "form."
 msgstr ""
+"Anställda kan skanna sin bricka eller ange en PIN-kod för att logga in på en"
+" PoS-session. Dessa uppgifter kan konfigureras på fliken *HR-inställningar* "
+"i medarbetarformuläret."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1857,11 +1872,13 @@ msgid ""
 "Enable barcode scanning with a remotely connected barcode scanner and card "
 "swiping with a Vantiv card reader."
 msgstr ""
+"Aktivera streckkodsläsning med en fjärransluten streckkodsläsare och "
+"kortdragning med en kortläsare från Vantiv."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_electronic_scale
 msgid "Enables Electronic Scale integration."
-msgstr ""
+msgstr "Möjliggör integrering av elektronisk våg."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_account
@@ -1874,7 +1891,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientDetailsEdit.js:0
 #, python-format
 msgid "Encountered error when loading image. Please try again."
-msgstr ""
+msgstr "Ett fel uppstod när bilden laddades. Vänligen försök igen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__end_date
@@ -1909,7 +1926,7 @@ msgstr "Fel! Du kan inte skapa rekursiva kategorier"
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid "Existing orderlines"
-msgstr ""
+msgstr "Befintliga orderrader"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_expected
@@ -1938,13 +1955,13 @@ msgstr "Tilläggsinformation"
 #. module: point_of_sale
 #: model:product.attribute,name:point_of_sale.fabric_attribute
 msgid "Fabric"
-msgstr ""
+msgstr "Tyg"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__failed_pickings
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__failed_pickings
 msgid "Failed Pickings"
-msgstr ""
+msgstr "Misslyckade plockningar"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1976,7 +1993,7 @@ msgstr "Skatteområde"
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Fiscal data module error"
-msgstr ""
+msgstr "Fel i fiskal datamodul"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_follower_ids
@@ -2006,7 +2023,7 @@ msgstr "Sidfot"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_big_scrollbars
 msgid "For imprecise industrial touchscreens."
-msgstr ""
+msgstr "För oprecisa industriella pekskärmar."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2025,7 +2042,7 @@ msgstr "Tvinga färdig"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__full_product_name
 msgid "Full Product Name"
-msgstr ""
+msgstr "Fullständigt produktnamn"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2067,26 +2084,26 @@ msgstr "Grupera produkter i PoS"
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "HTTPS connection to IoT Box failed"
-msgstr ""
+msgstr "HTTPS-anslutning till IoT Box misslyckades"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Hardware Events"
-msgstr ""
+msgstr "Händelser inom hårdvara"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Hardware Status"
-msgstr ""
+msgstr "Status för hårdvara"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__has_active_session
 msgid "Has Active Session"
-msgstr ""
+msgstr "Har aktiv session"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_control
@@ -2106,7 +2123,7 @@ msgstr "Sidhuvud & Sidfot"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_use_payment_terminal
 msgid "Hide Use Payment Terminal"
-msgstr ""
+msgstr "Hide Använd Betalningsterminal"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2168,7 +2185,7 @@ msgstr "ID"
 #: code:addons/point_of_sale/static/src/js/Popups/ErrorTracebackPopup.js:0
 #, python-format
 msgid "IMPORTANT: Bug Report From Odoo Point Of Sale"
-msgstr ""
+msgstr "VIKTIGT: Felrapport från Odoo Point of Sale"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__proxy_ip
@@ -2220,7 +2237,7 @@ msgstr "Importera Ordrar"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Improve navigation for imprecise industrial touchscreens"
-msgstr ""
+msgstr "Förbättra navigeringen för oprecisa industriella pekskärmar"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__opened
@@ -2244,12 +2261,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Incorrect rounding"
-msgstr ""
+msgstr "Felaktig avrundning"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_start_categ_id
 msgid "Initial Category"
-msgstr ""
+msgstr "Ursprunglig kategori"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_method_form
@@ -2258,16 +2275,19 @@ msgid ""
 "                Invocing/Accounting app will create Bank and Cash payment\n"
 "                methods automatically."
 msgstr ""
+"Installera kontoplan från de allmänna inställningarna i\n"
+"                appen Fakturering/Redovisning skapas betalningsmetoderna Bank och\n"
+"                automatiskt."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_mercury
 msgid "Integrated Card Payments"
-msgstr ""
+msgstr "Integrerade kortbetalningar"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__receivable_account_id
 msgid "Intermediary Account"
-msgstr ""
+msgstr "Konto för mellanhänder"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_category_action
@@ -2299,7 +2319,7 @@ msgstr "Ogiltig e-post."
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "Invalid product lot"
-msgstr ""
+msgstr "Ogiltigt produktparti"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2371,7 +2391,7 @@ msgstr "Är Fakturerad"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__is_in_company_currency
 msgid "Is Using Company Currency"
-msgstr ""
+msgstr "Använder företagets valuta"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_restaurant
@@ -2381,17 +2401,17 @@ msgstr "Är en bar/restaurang"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_installed_account_accountant
 msgid "Is the Full Accounting Installed"
-msgstr ""
+msgstr "Är den fullständiga redovisningen installerad"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_tipped
 msgid "Is this already tipped?"
-msgstr ""
+msgstr "Är den redan tippad?"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__is_change
 msgid "Is this payment change?"
-msgstr ""
+msgstr "Är detta en förändring av betalningen?"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_tax.py:0
@@ -2400,6 +2420,8 @@ msgid ""
 "It is forbidden to modify a tax used in a POS order not posted. You must "
 "close the POS sessions before modifying the tax."
 msgstr ""
+"Det är förbjudet att ändra en skatt som används i en POS-order som inte "
+"bokförts. Du måste stänga POS-sessionerna innan du ändrar skatten."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2435,7 +2457,7 @@ msgstr "Journalrader"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
 msgid "Kpi Pos Total Value"
-msgstr ""
+msgstr "Kpi Pos Totalt värde"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.led_lamp
@@ -2458,7 +2480,7 @@ msgstr "Språk"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_big_scrollbars
 msgid "Large Scrollbars"
-msgstr ""
+msgstr "Stora rullningslister"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement____last_update
@@ -2503,7 +2525,7 @@ msgstr "Senast redigerad"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_cash
 msgid "Last Session Closing Cash"
-msgstr ""
+msgstr "Sista sessionen Avslutande kassa"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_cashbox
@@ -2513,7 +2535,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_date
 msgid "Last Session Closing Date"
-msgstr ""
+msgstr "Sista sessionen Slutdatum"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__write_uid
@@ -2548,7 +2570,7 @@ msgstr "Senast uppdaterad"
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.fabric_attribute_leather
 msgid "Leather"
-msgstr ""
+msgstr "Läder"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -2560,7 +2582,7 @@ msgstr "LED Lampa"
 #: model:product.product,name:point_of_sale.letter_tray
 #: model:product.template,name:point_of_sale.letter_tray_product_template
 msgid "Letter Tray"
-msgstr ""
+msgstr "Fack för brev"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__name
@@ -2585,12 +2607,12 @@ msgstr "Laddar"
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientDetailsEdit.js:0
 #, python-format
 msgid "Loading Image Error"
-msgstr ""
+msgstr "Fel vid laddning av bild"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__login_number
 msgid "Login Sequence Number"
-msgstr ""
+msgstr "Sekvensnummer för inloggning"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2633,7 +2655,7 @@ msgstr ""
 #: model:product.product,name:point_of_sale.magnetic_board
 #: model:product.template,name:point_of_sale.magnetic_board_product_template
 msgid "Magnetic Board"
-msgstr ""
+msgstr "Magnetisk tavla"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_main_attachment_id
@@ -2653,6 +2675,10 @@ msgid ""
 "be valid, this pricelist must be listed here as an available pricelist. "
 "Otherwise the default pricelist will apply."
 msgstr ""
+"Gör flera prislistor tillgängliga i Point of Sale. Du kan också tillämpa en "
+"prislista på specifika kunder från deras kontaktformulär (på fliken "
+"Försäljning). För att vara giltig måste denna prislista vara listad här som "
+"en tillgänglig prislista. I annat fall kommer standardprislistan att gälla."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2662,6 +2688,8 @@ msgid ""
 "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
 "the certificate of your IoT Box."
 msgstr ""
+"Kontrollera att du använder IoT Box v18.12 eller senare. Navigera till %s "
+"för att acceptera certifikatet för din IoT Box."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__manage_orders
@@ -2691,7 +2719,7 @@ msgstr "Diverse"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 msgid "Module Pos Hr"
-msgstr ""
+msgstr "Modul Pos Hr"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.monitor_stand
@@ -2699,7 +2727,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "Monitor Stand"
-msgstr ""
+msgstr "Stativ för bildskärm"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
@@ -2753,7 +2781,7 @@ msgstr "Ny session"
 #: model:product.product,name:point_of_sale.newspaper_rack
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
-msgstr ""
+msgstr "Tidningsställ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -2809,13 +2837,13 @@ msgstr "Ingen data ännu!"
 #: code:addons/point_of_sale/report/pos_invoice.py:0
 #, python-format
 msgid "No link to an invoice for %s."
-msgstr ""
+msgstr "Ingen länk till en faktura för %s."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
 msgid "No orders found"
-msgstr ""
+msgstr "Inga beställningar hittades"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2833,7 +2861,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
 msgid "No sessions found"
-msgstr ""
+msgstr "Inga sessioner hittades"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2910,7 +2938,7 @@ msgstr "Offline"
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
 msgid "Offline Orders"
-msgstr ""
+msgstr "Offlinebeställningar"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2930,6 +2958,12 @@ msgid "Ongoing"
 msgstr "Pågående"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Only administrators can edit receipt headers and footers"
+msgstr "Endast administratörer kan redigera kvittohuvud och sidfot"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
 msgid "Only apply rounding on cash"
 msgstr "Gör avrundning endast på kontanter"
@@ -2937,7 +2971,7 @@ msgstr "Gör avrundning endast på kontanter"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Only on cash methods"
-msgstr ""
+msgstr "Endast med kontantmetoder"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__restrict_price_control
@@ -2953,7 +2987,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientDetailsEdit.js:0
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported."
-msgstr ""
+msgstr "Endast webbkompatibla bildformat som .png eller .jpeg stöds."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2978,7 +3012,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Open PoS sessions that are using this payment method."
-msgstr ""
+msgstr "Öppna PoS-sessioner som använder denna betalningsmetod."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2990,12 +3024,12 @@ msgstr "Öppna session"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__user_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Opened By"
-msgstr ""
+msgstr "Öppnad av"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Opened by"
-msgstr ""
+msgstr "Öppnad av"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__opening_control
@@ -3038,7 +3072,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Operation types show up in the Inventory dashboard."
-msgstr ""
+msgstr "Operationstyper visas i instrumentpanelen för inventering."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3063,7 +3097,7 @@ msgstr "Order %s"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Order %s is not fully paid."
-msgstr ""
+msgstr "Order %s är inte helt betald."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__order_count
@@ -3080,12 +3114,12 @@ msgstr "Orderdatum"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__sequence_id
 msgid "Order IDs Sequence"
-msgstr ""
+msgstr "Order-ID Sekvens"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__sequence_line_id
 msgid "Order Line IDs Sequence"
-msgstr ""
+msgstr "ID för orderrad Sekvens"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__lines
@@ -3117,7 +3151,7 @@ msgstr "Order Sekvensnummer"
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderDetails.xml:0
 #, python-format
 msgid "Order is empty"
-msgstr ""
+msgstr "Ordern är tom"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -3146,7 +3180,7 @@ msgstr "Ordrar"
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all_filtered
 msgid "Orders Analysis"
-msgstr ""
+msgstr "Analys av order"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__other_devices
@@ -3200,7 +3234,7 @@ msgstr "PoS Försäljning"
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "POS order line %s"
-msgstr ""
+msgstr "POS orderrad %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_statement_id
@@ -3280,7 +3314,7 @@ msgstr "Betalningsmetoder"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__ticket
 msgid "Payment Receipt Info"
-msgstr ""
+msgstr "Information om betalningskvitton"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_name
@@ -3319,7 +3353,7 @@ msgstr "Betalningsmetoder tillgängliga"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Payment request pending"
-msgstr ""
+msgstr "Betalningsförfrågan väntar"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3355,7 +3389,7 @@ msgstr "Betalningsmetoder"
 #: code:addons/point_of_sale/static/src/xml/SaleDetailsReport.xml:0
 #, python-format
 msgid "Payments:"
-msgstr ""
+msgstr "Betalningar:"
 
 #. module: point_of_sale
 #: model:ir.filters,name:point_of_sale.filter_orders_per_session
@@ -3382,7 +3416,7 @@ msgstr "Telefon"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Pick which product categories are available"
-msgstr ""
+msgstr "Välj vilka produktkategorier som är tillgängliga"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_ids
@@ -3394,13 +3428,13 @@ msgstr "Plockning"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_count
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__picking_count
 msgid "Picking Count"
-msgstr ""
+msgstr "Plockning av räkning"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 #, python-format
 msgid "Picking POS"
-msgstr ""
+msgstr "Plockning av POS"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -3422,7 +3456,7 @@ msgstr "Bild"
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.fabric_attribute_plastic
 msgid "Plastic"
-msgstr ""
+msgstr "Plast"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3437,7 +3471,7 @@ msgstr "Vänligen Verifiera Stor Mängd"
 #: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Please check if the IoT Box is still connected."
-msgstr ""
+msgstr "Kontrollera om IoT Box fortfarande är ansluten."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3454,13 +3488,15 @@ msgid ""
 "Please close all the point of sale sessions in this period before closing "
 "it. Open sessions are: %s "
 msgstr ""
+"Stäng alla sessioner för försäljningsställen i denna period innan du stänger"
+" den. Öppna sessioner är: %s "
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Please configure a payment method in your POS."
-msgstr ""
+msgstr "Vänligen konfigurera en betalningsmetod i din POS."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -3473,7 +3509,7 @@ msgstr "Vänligen ange intäktskonto för denna produkt: \"%s\" (id:%d)."
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Please print the invoice from the backend"
-msgstr ""
+msgstr "Skriv ut fakturan från backend"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -3503,7 +3539,7 @@ msgstr "PoS Kategori"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PoS Interface"
-msgstr ""
+msgstr "PoS-gränssnitt"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
@@ -3588,27 +3624,27 @@ msgstr "Kassa Detaljer"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details_wizard
 msgid "Point of Sale Details Report"
-msgstr ""
+msgstr "Detaljrapport om försäljningsställen"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_invoice
 msgid "Point of Sale Invoice Report"
-msgstr ""
+msgstr "Fakturarapport för försäljningsställe"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Make Payment Wizard"
-msgstr ""
+msgstr "Point of Sale Guiden för betalning"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_manager_id
 msgid "Point of Sale Manager Group"
-msgstr ""
+msgstr "Grupp av chefer för försäljningsställen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__pos_type_id
 msgid "Point of Sale Operation Type"
-msgstr ""
+msgstr "Typ av drift av försäljningsställe"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
@@ -3649,7 +3685,7 @@ msgstr "Kassa Session"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.qunit_suite
 msgid "Point of Sale Tests"
-msgstr ""
+msgstr "Test av försäljningsställen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_user_id
@@ -3723,7 +3759,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_posbox
 msgid "PosBox"
-msgstr ""
+msgstr "PosBox"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3821,6 +3857,7 @@ msgstr "Skriv ut kvitto"
 #, python-format
 msgid "Print a report with all the sales of the current PoS Session"
 msgstr ""
+"Skriv ut en rapport med all försäljning för den aktuella PoS-sessionen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3830,12 +3867,12 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Print receipts automatically once the payment is registered"
-msgstr ""
+msgstr "Skriv ut kvitton automatiskt när betalningen har registrerats"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_via_proxy
 msgid "Print via Proxy"
-msgstr ""
+msgstr "Skriv ut via fullmakt"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3849,7 +3886,7 @@ msgstr "Skrivare"
 #: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
 #, python-format
 msgid "Printing is not supported on some browsers"
-msgstr ""
+msgstr "Utskrift stöds inte av vissa webbläsare"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3860,6 +3897,9 @@ msgid ""
 "protocol is available. It is possible to print your tickets by making use of"
 " an IoT Box."
 msgstr ""
+"Utskrift stöds inte i vissa webbläsare på grund av att inget "
+"standardprotokoll för utskrift finns tillgängligt. Det är möjligt att skriva"
+" ut dina biljetter med hjälp av en IoT Box."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_procurement_group
@@ -3937,7 +3977,7 @@ msgstr "Produktpris på kvitto"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tipproduct
 msgid "Product tips"
-msgstr ""
+msgstr "Tips om produkter"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_template_action_pos_product
@@ -3955,7 +3995,7 @@ msgstr "Produkter"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/ProxyStatus.xml:0
 #, python-format
 msgid "Proxy Connected"
-msgstr ""
+msgstr "Ansluten fullmakt"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3963,7 +4003,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/ProxyStatus.xml:0
 #, python-format
 msgid "Proxy Disconnected"
-msgstr ""
+msgstr "Proxy bortkopplad"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3971,7 +4011,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/ProxyStatus.xml:0
 #, python-format
 msgid "Proxy Warning"
-msgstr ""
+msgstr "Varning för proxy"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4001,7 +4041,7 @@ msgstr "Läs Vågen"
 #: code:addons/point_of_sale/static/src/js/tours/point_of_sale.js:0
 #, python-format
 msgid "Ready to launch your <b>point of sale</b>?"
-msgstr ""
+msgstr "Redo att lansera din <b>försäljningsställe</b>?"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4014,7 +4054,7 @@ msgstr "Kvitto"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Receipt %s"
-msgstr ""
+msgstr "Kvitto %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_footer
@@ -4043,7 +4083,7 @@ msgstr "Kvitto Skrivare"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__use_payment_terminal
 msgid "Record payments with a terminal on this journal."
-msgstr ""
+msgstr "Registrera betalningar med en terminal på denna journal."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4053,7 +4093,7 @@ msgstr "Registrera transaktioner i utländska valutor"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rescue
 msgid "Recovery Session"
-msgstr ""
+msgstr "Session för återhämtning"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4074,7 +4114,7 @@ msgstr "Återstående"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Remaining unsynced orders"
-msgstr ""
+msgstr "Återstående osynkade order"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4121,7 +4161,7 @@ msgstr "Ansvarig användare"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__restrict_price_control
 msgid "Restrict Price Modifications to Managers"
-msgstr ""
+msgstr "Begränsa prisändringar till chefer"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limit_categories
@@ -4157,7 +4197,7 @@ msgstr "Returnerad"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
-msgstr ""
+msgstr "Begäran om återgång skickad till terminal"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4198,14 +4238,14 @@ msgstr "Avrundningsmetod"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Rounding error in payment lines"
-msgstr ""
+msgstr "Avrundningsfel i betalningsrader"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/debug_manager.xml:0
 #, python-format
 msgid "Run Point of Sale JS Tests"
-msgstr ""
+msgstr "Kör JS-test för försäljningsställen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_sms_error
@@ -4218,12 +4258,12 @@ msgstr "SMS leveransfel"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "SN"
-msgstr ""
+msgstr "SN"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
 msgid "Sale Line Count"
-msgstr ""
+msgstr "Försäljning Antal linjer"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
@@ -4268,7 +4308,7 @@ msgstr "Våg"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Scan"
-msgstr ""
+msgstr "Scanning"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4280,14 +4320,14 @@ msgstr "Läs EAN-13"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_scan_via_proxy
 msgid "Scan via Proxy"
-msgstr ""
+msgstr "Skanna via proxy"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/ProxyStatus.js:0
 #, python-format
 msgid "Scanner"
-msgstr ""
+msgstr "Skanner"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4301,7 +4341,7 @@ msgstr "Sök kunder"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidgetControlPanel.xml:0
 #, python-format
 msgid "Search Products..."
-msgstr ""
+msgstr "Sök produkter..."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
@@ -4327,14 +4367,14 @@ msgstr "Välj"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetFiscalPositionButton.js:0
 #, python-format
 msgid "Select Fiscal Position"
-msgstr ""
+msgstr "Välj finanspolitisk position"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderDetails.xml:0
 #, python-format
 msgid "Select an order"
-msgstr ""
+msgstr "Välj en order"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4353,7 +4393,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetPricelistButton.js:0
 #, python-format
 msgid "Select the pricelist"
-msgstr ""
+msgstr "Välj prislista"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__selectable_categ_ids
@@ -4389,7 +4429,7 @@ msgstr "Skicka via epost"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Sending email failed. Please try again."
-msgstr ""
+msgstr "Sändning av e-post misslyckades. Vänligen försök igen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
@@ -4443,7 +4483,7 @@ msgstr "Sessions ID"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_move_id
 msgid "Session Journal Entry"
-msgstr ""
+msgstr "Journalanteckning från sessionen"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4495,7 +4535,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Set Weight"
-msgstr ""
+msgstr "Inställd vikt"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4510,7 +4550,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/SetFiscalPositionButton.xml:0
 #, python-format
 msgid "Set fiscal position"
-msgstr ""
+msgstr "Fastställa finanspolitisk ställning"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4527,7 +4567,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Set the new quantity"
-msgstr ""
+msgstr "Ange ny kvantitet"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_configuration
@@ -4556,22 +4596,22 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display
 msgid "Show checkout to customers with a remotely-connected screen."
-msgstr ""
+msgstr "Visa kassan för kunder med en fjärransluten skärm."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
 msgid "Show employee login screen"
-msgstr ""
+msgstr "Visa inloggningsskärm för anställda"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Six"
-msgstr ""
+msgstr "Sex"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_six
 msgid "Six Payment Terminal"
-msgstr ""
+msgstr "Sex betalningsterminaler"
 
 #. module: point_of_sale
 #: model:product.attribute,name:point_of_sale.size_attribute
@@ -4588,7 +4628,7 @@ msgstr "Hoppa över"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_skip_screen
 msgid "Skip Preview Screen"
-msgstr ""
+msgstr "Hoppa över förhandsgranskning"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4601,7 +4641,7 @@ msgstr "Slash"
 #: model:product.product,name:point_of_sale.small_shelf
 #: model:product.template,name:point_of_sale.small_shelf_product_template
 msgid "Small Shelf"
-msgstr ""
+msgstr "Liten hylla"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -4616,7 +4656,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Some Serial/Lot Numbers are missing"
-msgstr ""
+msgstr "Vissa serie-/lotnummer saknas"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4627,6 +4667,9 @@ msgid ""
 "errors. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"Vissa beställningar kunde inte skickas till servern på grund av "
+"konfigurationsfel. Du kan avsluta Point of Sale, men stäng inte sessionen "
+"förrän problemet har lösts."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4637,11 +4680,14 @@ msgid ""
 "issues. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"Vissa beställningar kunde inte skickas till servern på grund av problem med "
+"internetanslutningen. Du kan lämna kassan, men stäng inte sessionen förrän "
+"problemet har lösts."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
-msgstr ""
+msgstr "Ange produktparti/serienummer i pos orderrad"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
@@ -4651,7 +4697,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__start_category
 msgid "Start Category"
-msgstr ""
+msgstr "Startkategori"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__start_date
@@ -4661,7 +4707,7 @@ msgstr "Startdatum"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Start selling from a default product category"
-msgstr ""
+msgstr "Börja sälja från en standardproduktkategori"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
@@ -4703,7 +4749,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
-msgstr ""
+msgstr "Lager bör uppdateras vid stängning"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4737,7 +4783,7 @@ msgstr "Delsumma utan rabatt"
 #: code:addons/point_of_sale/static/src/xml/Popups/OrderImportPopup.xml:0
 #, python-format
 msgid "Successfully imported"
-msgstr ""
+msgstr "Framgångsrikt importerad"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_end
@@ -4755,7 +4801,7 @@ msgstr "Summering av delsummor"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/SyncNotification.xml:0
 #, python-format
 msgid "Synchronisation Connected"
-msgstr ""
+msgstr "Synkronisering Ansluten"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4763,7 +4809,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/SyncNotification.xml:0
 #, python-format
 msgid "Synchronisation Connecting"
-msgstr ""
+msgstr "Synkronisering Anslutning"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4771,7 +4817,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/SyncNotification.xml:0
 #, python-format
 msgid "Synchronisation Disconnected"
-msgstr ""
+msgstr "Synkronisering Bortkopplad"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4779,14 +4825,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/SyncNotification.xml:0
 #, python-format
 msgid "Synchronisation Error"
-msgstr ""
+msgstr "Synkroniseringsfel"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "TOTAL"
-msgstr ""
+msgstr "TOTALT"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_out
@@ -4827,7 +4873,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime_selection
 msgid "Tax Regime Selection value"
-msgstr ""
+msgstr "Skattesystem Urvalsvärde"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__iface_tax_included__subtotal
@@ -4883,6 +4929,8 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
+"Point of Sale stöder endast avrundningsstrategin \"lägg till en "
+"avrundningslinje\"."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4892,12 +4940,14 @@ msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
 msgstr ""
+"Beloppet på dina betalningsrader måste avrundas för att validera "
+"transaktionen."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "The default pricelist must be included in the available pricelists."
-msgstr ""
+msgstr "Standardprislistan måste ingå i de tillgängliga prislistorna."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -4906,6 +4956,8 @@ msgid ""
 "The default pricelist must belong to no company or the company of the point "
 "of sale."
 msgstr ""
+"Standardprislistan får inte tillhöra något företag eller företaget för "
+"försäljningsstället."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4913,7 +4965,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The fiscal data module encountered an error while receiving your order."
-msgstr ""
+msgstr "Det uppstod ett fel vid mottagandet av din beställning."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -4921,6 +4973,8 @@ msgid ""
 "The hostname or ip address of the hardware proxy, Will be autodetected if "
 "left empty."
 msgstr ""
+"Värdnamn eller IP-adress för hårdvaruproxyn, kommer att identifieras "
+"automatiskt om den lämnas tom."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -4936,17 +4990,19 @@ msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr ""
+"Fakturadagboken måste vara i samma valuta som försäljningsdagboken eller i "
+"företagets valuta om detta inte är angivet."
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
 msgid "The name of this POS Session must be unique !"
-msgstr ""
+msgstr "Namnet på denna POS-session måste vara unikt!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__pos_order_count
 #: model:ir.model.fields,help:point_of_sale.field_res_users__pos_order_count
 msgid "The number of point of sales orders related to this customer"
-msgstr ""
+msgstr "Antalet försäljningsorder relaterade till denna kund"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4954,6 +5010,7 @@ msgstr ""
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
 msgstr ""
+"Beställningen kunde inte skickas till servern på grund av ett okänt fel"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4963,6 +5020,8 @@ msgid ""
 "The order has been synchronized earlier. Please make the invoice from the "
 "backend for the order: "
 msgstr ""
+"Ordern har synkroniserats tidigare. Vänligen skapa fakturan från backend för"
+" ordern: "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__cash_journal_id
@@ -4977,6 +5036,8 @@ msgstr ""
 msgid ""
 "The payment method selected is not allowed in the config of the POS session."
 msgstr ""
+"Den valda betalningsmetoden är inte tillåten i konfigurationen för POS-"
+"sessionen."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -4997,6 +5058,8 @@ msgid ""
 "The point of sale will display this product category by default. If no "
 "category is specified, all available products will be shown."
 msgstr ""
+"Försäljningsstället kommer att visa denna produktkategori som standard. Om "
+"ingen kategori anges kommer alla tillgängliga produkter att visas."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_available_categ_ids
@@ -5005,6 +5068,9 @@ msgid ""
 "selected category trees. If no category is specified, all available products"
 " will be shown"
 msgstr ""
+"Försäljningsstället kommer endast att visa produkter som ingår i ett av de "
+"valda kategoriträden. Om ingen kategori anges visas alla tillgängliga "
+"produkter"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__pricelist_id
@@ -5012,6 +5078,8 @@ msgid ""
 "The pricelist used if no customer is selected or if the customer has no Sale"
 " Pricelist configured."
 msgstr ""
+"Prislistan som används om ingen kund är vald eller om kunden inte har någon "
+"prislista för försäljning konfigurerad."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_display_categ_images
@@ -5030,12 +5098,12 @@ msgstr "Valutakurser beräknas till datum för order"
 msgid ""
 "The receipt screen will be skipped if the receipt can be printed "
 "automatically."
-msgstr ""
+msgstr "Kvittoskärmen hoppas över om kvittot kan skrivas ut automatiskt."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
-msgstr ""
+msgstr "Kvittot skrivs automatiskt ut i slutet av varje beställning."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -5051,6 +5119,8 @@ msgid ""
 "The selected pricelists must belong to no company or the company of the "
 "point of sale."
 msgstr ""
+"De valda prislistorna får inte tillhöra något företag eller företaget för "
+"försäljningsstället."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5058,7 +5128,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "The server encountered an error while receiving your order."
-msgstr ""
+msgstr "Ett fel uppstod när servern tog emot din beställning."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -5066,6 +5136,8 @@ msgid ""
 "The session has been opened for an unusually long period. Please consider "
 "closing."
 msgstr ""
+"Sessionen har varit öppen under en ovanligt lång period. Vänligen överväg "
+"att stänga."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_adyen
@@ -5074,6 +5146,8 @@ msgid ""
 "The transactions are processed by Adyen. Set your Adyen credentials on the "
 "related payment method."
 msgstr ""
+"Transaktionerna behandlas av Adyen. Ange dina Adyen-uppgifter för den "
+"relaterade betalningsmetoden."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_six
@@ -5082,6 +5156,8 @@ msgid ""
 "The transactions are processed by Six. Set the IP address of the terminal on"
 " the related payment method."
 msgstr ""
+"Transaktionerna behandlas av Six. Ange IP-adressen för terminalen på den "
+"relaterade betalningsmetoden."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_mercury
@@ -5090,18 +5166,20 @@ msgid ""
 "The transactions are processed by Vantiv. Set your Vantiv credentials on the"
 " related payment method."
 msgstr ""
+"Transaktionerna behandlas av Vantiv. Ange dina Vantiv-referenser på den "
+"relaterade betalningsmetoden."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
 msgid "Theoretical Closing Balance"
-msgstr ""
+msgstr "Teoretisk utgående balans"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductList.xml:0
 #, python-format
 msgid "There are no products in this category."
-msgstr ""
+msgstr "Det finns inga produkter i denna kategori."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -5110,6 +5188,8 @@ msgid ""
 "There are still orders in draft state in the session. Pay or cancel the following orders to validate the session:\n"
 "%s"
 msgstr ""
+"Det finns fortfarande order i utkaststatus i sessionen. Betala eller annullera följande order för att validera sessionen:\n"
+"%s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5117,13 +5197,14 @@ msgstr ""
 #, python-format
 msgid "There are unsynced orders. Do you want to sync these orders?"
 msgstr ""
+"Det finns osynkade beställningar. Vill du synkronisera dessa beställningar?"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "There is already an electronic payment in progress."
-msgstr ""
+msgstr "Det pågår redan en elektronisk betalning."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5131,6 +5212,8 @@ msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
 "invoicing settings to install a Chart of Accounts."
 msgstr ""
+"Det finns ingen kontoplan konfigurerad på företaget. Gå till "
+"faktureringsinställningarna för att installera en kontoplan."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5141,6 +5224,9 @@ msgid ""
 "\n"
 " Please pay the exact amount or add a cash payment method in the point of sale configuration"
 msgstr ""
+"Det finns ingen kontantbetalningsmetod tillgänglig i detta försäljningsställe för att hantera förändringen.\n"
+"\n"
+" Betala det exakta beloppet eller lägg till en kontant betalningsmetod i kassakonfigurationen"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box.py:0
@@ -5169,6 +5255,10 @@ msgid ""
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
 msgstr ""
+"Detta fält visar den maximala tillåtna skillnaden mellan slutsaldot och den "
+"teoretiska kassan när en session stängs, för icke-POS-chefer. Om den "
+"maximala skillnaden uppnås kommer användaren att få ett felmeddelande vid "
+"avslutandet av sessionen om att han/hon måste kontakta sin chef."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_manager_id
@@ -5176,6 +5266,8 @@ msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client."
 msgstr ""
+"Detta fält är till för att överföra id för pos manager-gruppen till "
+"försäljningspunktens klient."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_user_id
@@ -5183,6 +5275,8 @@ msgid ""
 "This field is there to pass the id of the pos user group to the point of "
 "sale client."
 msgstr ""
+"Detta fält är till för att skicka id:t för pos-användargruppen till POS-"
+"klienten."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -5203,6 +5297,8 @@ msgid ""
 "This is useful for restaurants with onsite and take-away services that imply"
 " specific tax rates."
 msgstr ""
+"Detta är användbart för restauranger med service på plats och take-away som "
+"innebär specifika skattesatser."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5213,6 +5309,9 @@ msgid ""
 "all the unsaved data and exit the point of sale. This operation cannot be "
 "undone."
 msgstr ""
+"Denna åtgärd kommer att förstöra alla obetalda order i webbläsaren. Du "
+"kommer att förlora alla osparade data och lämna försäljningsstället. Denna "
+"åtgärd kan inte ångras."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5222,13 +5321,16 @@ msgid ""
 "This operation will permanently destroy all paid orders from the local "
 "storage. You will lose all the data. This operation cannot be undone."
 msgstr ""
+"Denna åtgärd kommer att permanent förstöra alla betalda order från det "
+"lokala lagret. Du kommer att förlora alla data. Denna åtgärd kan inte "
+"ångras."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/OrderWidget.xml:0
 #, python-format
 msgid "This order is empty"
-msgstr ""
+msgstr "Denna order är tom"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5238,6 +5340,8 @@ msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
 msgstr ""
+"Denna order har ännu inte synkroniserats med servern. Kontrollera att den "
+"har synkroniserats och försök igen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
@@ -5251,6 +5355,8 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders lines."
 msgstr ""
+"Denna sekvens skapas automatiskt av Odoo men du kan ändra den för att "
+"anpassa referensnumren för dina orderrader."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__sequence_id
@@ -5258,6 +5364,8 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders."
 msgstr ""
+"Denna sekvens skapas automatiskt av Odoo men du kan ändra den för att "
+"anpassa referensnumren för dina order."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -5269,7 +5377,7 @@ msgstr "Denna session är redan avslutad."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "This tax is applied to any new product created in the catalog."
-msgstr ""
+msgstr "Denna skatt tillämpas på alla nya produkter som skapas i katalogen."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_closing_balance_confirm_wizard
@@ -5289,7 +5397,7 @@ msgstr "Dricks"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__tip_amount
 msgid "Tip Amount"
-msgstr ""
+msgstr "Tips Belopp"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tip_product_id
@@ -5320,7 +5428,7 @@ msgstr "Att betala"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__to_weight
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__to_weight
 msgid "To Weigh With Scale"
-msgstr ""
+msgstr "Att väga med våg"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -5331,13 +5439,14 @@ msgstr "Att Fakturera"
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
 msgid "To record new orders, start a new session."
-msgstr ""
+msgstr "För att registrera nya order, starta en ny session."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "To return product(s), you need to open a session in the POS %s"
 msgstr ""
+"För att returnera produkten/produkterna måste du öppna en session i POS %s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5374,7 +5483,7 @@ msgstr "Betalat Totalt (avrundat)"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__total_payments_amount
 msgid "Total Payments Amount"
-msgstr ""
+msgstr "Totala betalningar Belopp"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__price_total
@@ -5391,7 +5500,7 @@ msgstr "Skatter Totalt"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__amount
 msgid "Total amount of the payment."
-msgstr ""
+msgstr "Totalt belopp för betalningen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_total_entry_encoding
@@ -5462,13 +5571,16 @@ msgid ""
 "Please set corresponding tax account in each repartition line of the following taxes: \n"
 "%s"
 msgstr ""
+"Det går inte att stänga och validera sessionen.\n"
+"Ange motsvarande skattekonto i varje fördelningsrad för följande skatter:\n"
+"%s"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/OrderManagementScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Unable to download invoice."
-msgstr ""
+msgstr "Kan inte ladda ner fakturan."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5482,7 +5594,7 @@ msgstr "Kan inte hämta order om inte ansluten."
 #: code:addons/point_of_sale/static/src/js/Screens/OrderManagementScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Unable to invoice order."
-msgstr ""
+msgstr "Kan inte fakturera ordern."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -5491,20 +5603,22 @@ msgid ""
 "Unable to modify this PoS Configuration because you can't modify %s while a "
 "session is open."
 msgstr ""
+"Det går inte att ändra denna PoS-konfiguration eftersom du inte kan ändra %s"
+" när en session är öppen."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
 #, python-format
 msgid "Unable to save changes."
-msgstr ""
+msgstr "Det går inte att spara ändringarna."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Unable to sync order"
-msgstr ""
+msgstr "Kan inte synkronisera ordern"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_unit
@@ -5546,14 +5660,14 @@ msgstr "Enheter"
 #: code:addons/point_of_sale/static/src/xml/Popups/ErrorBarcodePopup.xml:0
 #, python-format
 msgid "Unknown Barcode"
-msgstr ""
+msgstr "Okänd streckkod"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Unknown Error"
-msgstr ""
+msgstr "Okänt fel"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_unread
@@ -5577,7 +5691,7 @@ msgstr "Inget Stöd För filformatet"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Unsynced order"
-msgstr ""
+msgstr "Osynkroniserad order"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -5589,7 +5703,7 @@ msgstr "Måttenhet"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__update_stock_quantities
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Update quantities in stock"
-msgstr ""
+msgstr "Uppdatera kvantiteter i lager"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__use_payment_terminal
@@ -5609,7 +5723,7 @@ msgstr "Använd en prislista."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Use barcodes to scan products, customer cards, etc."
-msgstr ""
+msgstr "Använd streckkoder för att skanna produkter, kundkort etc."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5629,12 +5743,12 @@ msgstr "Användare"
 #. module: point_of_sale
 #: model:ir.actions.report,name:point_of_sale.report_user_label
 msgid "User Labels"
-msgstr ""
+msgstr "Etiketter för användare"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__uuid
 msgid "Uuid"
-msgstr ""
+msgstr "Uuid"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5642,7 +5756,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "Valid product lot"
-msgstr ""
+msgstr "Giltigt produktparti"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5655,12 +5769,12 @@ msgstr "Bekräfta"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Vantiv (US & Canada)"
-msgstr ""
+msgstr "Vantiv (USA och Kanada)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_mercury
 msgid "Vantiv Payment Terminal"
-msgstr ""
+msgstr "Vantiv betalningsterminal"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_vkeyboard
@@ -5678,7 +5792,7 @@ msgstr "Väntar på kort"
 #: model:product.product,name:point_of_sale.wall_shelf
 #: model:product.template,name:point_of_sale.wall_shelf_product_template
 msgid "Wall Shelf Unit"
-msgstr ""
+msgstr "Vägghylla"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_warehouse
@@ -5714,6 +5828,8 @@ msgid ""
 "accounting journal for all the orders not invoiced. Invoices are recorded in"
 " accounting separately."
 msgstr ""
+"När du avslutar en session genereras en post i följande bokföringsjournal "
+"för alla order som inte fakturerats. Fakturor bokförs separat i bokföringen."
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.whiteboard
@@ -5727,14 +5843,14 @@ msgstr "Whiteboard"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "Whiteboard Pen"
-msgstr ""
+msgstr "Penna för whiteboardtavla"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "With a"
-msgstr ""
+msgstr "Med en"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5773,7 +5889,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "You are not allowed to change this quantity"
-msgstr ""
+msgstr "Du får inte ändra denna kvantitet"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5783,6 +5899,8 @@ msgid ""
 "You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
 "Would you like to proceed anyway?"
 msgstr ""
+"Du försöker sälja produkter med serie-/lotnummer, men vissa av dem är inte inställda.\n"
+"Vill du fortsätta ändå?"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -5800,6 +5918,9 @@ msgid ""
 "pricelist, or create a pos.order in a python test with Form tool, or edit "
 "the form view in studio if no PoS order exist"
 msgstr ""
+"Du kan inte: skapa en pos-order från backend-gränssnittet, eller ta bort "
+"prislistan, eller skapa en pos.order i ett python-test med Form-verktyget, "
+"eller redigera formulärvyn i studio om ingen PoS-order finns"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -5808,18 +5929,20 @@ msgid ""
 "You cannot close the POS when invoices are not posted.\n"
 "Invoices: %s"
 msgstr ""
+"Du kan inte stänga kassan när fakturorna inte är bokförda.\n"
+"Fakturor: %s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
-msgstr ""
+msgstr "Du kan inte stänga kassan när order fortfarande är i utkast"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot create a session before the accounting lock date."
-msgstr ""
+msgstr "Du kan inte skapa en session före bokföringens låsdatum."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -5833,6 +5956,8 @@ msgstr ""
 msgid ""
 "You cannot delete a point of sale category while a session is still opened."
 msgstr ""
+"Du kan inte ta bort en försäljningskategori medan en session fortfarande är "
+"öppen."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/product.py:0
@@ -5842,6 +5967,8 @@ msgid ""
 "You cannot delete a product saleable in point of sale while a session is "
 "still opened."
 msgstr ""
+"Du kan inte ta bort en produkt som kan säljas i försäljningsstället medan en"
+" session fortfarande är öppen."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/res_partner.py:0
@@ -5850,6 +5977,8 @@ msgid ""
 "You cannot delete contacts while there are active PoS sessions. Close the "
 "session(s) %s first."
 msgstr ""
+"Du kan inte radera kontakter så länge det finns aktiva PoS-sessioner. Stäng "
+"sessionen/sessionerna %s först."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5875,7 +6004,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "You have to round your payments lines. is not rounded."
-msgstr ""
+msgstr "Du måste avrunda dina betalningsrader. är inte avrundad."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -5891,7 +6020,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "You have to select a pricelist in the sale form."
-msgstr ""
+msgstr "Du måste välja en prislista i försäljningsformuläret."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -5906,6 +6035,8 @@ msgid ""
 "You must define a product for everything you sell through\n"
 "                the point of sale interface."
 msgstr ""
+"Du måste definiera en produkt för allt du säljer via\n"
+"                gränssnittet för försäljningsstället."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -5913,12 +6044,13 @@ msgstr ""
 msgid ""
 "You must have at least one payment method configured to launch a session."
 msgstr ""
+"Du måste ha minst en betalningsmetod konfigurerad för att starta en session."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "You need a loss and profit account on your cash journal."
-msgstr ""
+msgstr "Du behöver ett förlust- och vinstkonto i din kassabok."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5931,7 +6063,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You should assign a Point of Sale to your session."
-msgstr ""
+msgstr "Du bör tilldela en Point of Sale till din session."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -5940,6 +6072,8 @@ msgid ""
 "Your PoS Session is open since %(date)s, we advise you to close it and to "
 "create a new one."
 msgstr ""
+"Din PoS-session är öppen sedan %(date)s, vi råder dig att stänga den och "
+"skapa en ny."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -5982,49 +6116,49 @@ msgstr "rabatt"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "e.g. Company Address, Website"
-msgstr ""
+msgstr "t.ex. företagsadress, webbplats"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "e.g. Return Policy, Thanks for shopping with us!"
-msgstr ""
+msgstr "t.ex. Returpolicy, Tack för att du handlar hos oss!"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "e.g. Soft Drinks"
-msgstr ""
+msgstr "t.ex. läskedrycker"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "for an order of"
-msgstr ""
+msgstr "för en beställning av"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Misc/MobileOrderWidget.xml:0
 #, python-format
 msgid "items"
-msgstr ""
+msgstr "artiklar"
 
 #. module: point_of_sale
 #: model:mail.activity.type,summary:point_of_sale.mail_activity_old_session
 msgid "note"
-msgstr ""
+msgstr "notera"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/OrderImportPopup.xml:0
 #, python-format
 msgid "paid orders"
-msgstr ""
+msgstr "betalda beställningar"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "return"
-msgstr ""
+msgstr "återvända"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6045,4 +6179,4 @@ msgstr "obetalda ordrar kunde inte importeras"
 #: code:addons/point_of_sale/static/src/xml/Popups/OrderImportPopup.xml:0
 #, python-format
 msgid "were duplicates of existing orders"
-msgstr ""
+msgstr "var dubbletter av befintliga order"
