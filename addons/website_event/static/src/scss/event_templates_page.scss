@@ -25,6 +25,18 @@
         }
     }
 
+    // Custom utility classes to be applied on day numbers and to
+    // be used in conjunction with `small` side-content.
+    .o_wevent_day_header_number {
+        font-size: 2em + ($line-height-base - 1);
+    }
+
+    #o_wevent_event_main_sidebar {
+        @include media-breakpoint-up(lg) {
+            max-width: 19rem;
+        }
+    }
+
     .o_wevent_event_title {
 
         .o_wevent_event_name {
@@ -70,6 +82,10 @@
 
         .o_record_cover_component {
             z-index: -1;
+        }
+
+        &.o_wevent_event_main_cover {
+            min-height: 12rem;
         }
     }
 }
