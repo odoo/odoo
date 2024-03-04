@@ -142,6 +142,8 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             })
         if partner.country_id.code == "LU" and 'l10n_lu_peppol_identifier' in partner._fields and partner.l10n_lu_peppol_identifier:
             vals['endpoint_id'] = partner.l10n_lu_peppol_identifier
+        if partner.country_id.code == "SE" and partner.vat:
+            vals['endpoint_id'] = partner.vat.replace("SE", "")[:-2]
 
         return vals
 
