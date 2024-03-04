@@ -488,7 +488,7 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     trigger: ".o_kanban_group:first .o_kanban_record span:contains('the_flow.opportunity')",
     content: markup(_t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle.")),
     position: "right",
-    run: "drag_and_drop_native .o_opportunity_kanban .o_kanban_group:eq(2) ",
+    run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
     mobile: false,
     trigger: ".o_kanban_group:eq(2) > .o_kanban_record span:contains('the_flow.opportunity')",

@@ -5,7 +5,7 @@
 
     import { markup } from "@odoo/owl";
 
-    wTourUtils.registerWebsitePreviewTour("shop", {
+    wTourUtils.registerWebsitePreviewTour("shop_tour", {
         url: '/shop',
         sequence: 130,
     }, () => [{
@@ -38,9 +38,7 @@
         extra_trigger: ":iframe .product_price .o_dirty .oe_currency_value:not(:contains(/^1.00$/))",
         content: _t("Double click here to set an image describing your product."),
         position: "top",
-        run: function (actions) {
-            actions.dblclick();
-        },
+        run: "dblclick",
     }, {
         trigger: ".o_select_media_dialog .o_upload_media_button",
         content: _t("Upload a file from your local library."),
@@ -56,7 +54,7 @@
         extra_trigger: "body:not(.modal-open)",
         content: _t("Drag this website block and drop it in your page."),
         position: "bottom",
-        run: "drag_and_drop_native iframe #wrapwrap > main",
+        run: "drag_and_drop iframe #wrapwrap > main",
     }, {
         trigger: "button[data-action=save]",
         content: markup(_t("Once you click on <b>Save</b>, your product is updated.")),

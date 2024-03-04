@@ -77,7 +77,7 @@ registry.category("web_tour.tours").add('project_tour', {
     extra_trigger: '.o_kanban_project_tasks',
     content: markup(_t("<b>Drag &amp; drop</b> the card to change your task from stage.")),
     position: "bottom",
-    run: "drag_and_drop_native .o_kanban_group:eq(1) ",
+    run: "drag_and_drop .o_kanban_group:eq(1) ",
 }, {
     trigger: ".o_kanban_record:first",
     extra_trigger: '.o_kanban_project_tasks',

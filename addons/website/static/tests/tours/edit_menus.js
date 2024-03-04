@@ -176,12 +176,12 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Drag item into parent",
         trigger: '.oe_menu_editor li:contains("Contact us") .fa-bars',
-        run: "drag_and_drop_native .oe_menu_editor li:contains('Shop') .fa-bars",
+        run: "drag_and_drop .oe_menu_editor li:contains('Shop') .fa-bars",
     },
     {
         content: "Drag item into parent",
         trigger: '.oe_menu_editor li:contains("Contact us") .fa-bars',
-        run: 'drag_and_drop_native .oe_menu_editor li:contains("Contact us") .form-control',
+        run: 'drag_and_drop .oe_menu_editor li:contains("Contact us") .form-control',
     },
     {
         content: "Wait for drop",
@@ -192,7 +192,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Drag Mega at the top",
         trigger: '.oe_menu_editor li:contains("Megaaaaa!") .fa-bars',
-        run: "drag_and_drop_native .oe_menu_editor li:contains('Home') .fa-bars",
+        run: "drag_and_drop .oe_menu_editor li:contains('Home') .fa-bars",
     },
     {
         content: "Wait for drop",

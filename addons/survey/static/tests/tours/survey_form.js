@@ -80,7 +80,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     }, {
         content: "Move Question 3 above its trigger (Question 2)",
         trigger: "tr.o_data_row:nth-child(3) td[name=sequence]",
-        run: "drag_and_drop_native div[name=question_and_page_ids] table tbody tr:nth-child(2)",
+        run: "drag_and_drop div[name=question_and_page_ids] table tbody tr:nth-child(2)",
     }, {
         content: "Check that Question 3 has 'warning' trigger icon",
         trigger: "tr:contains('Question 3') button i.fa-exclamation-triangle",
@@ -123,7 +123,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     }, {
         content: "Move Question 3 back below Question 2",
         trigger: "tr.o_data_row:nth-child(2) td[name=sequence]",
-        run: "drag_and_drop_native div[name=question_and_page_ids] table tbody tr:nth-child(3)",
+        run: "drag_and_drop div[name=question_and_page_ids] table tbody tr:nth-child(3)",
     }, {
         content: "Open that question again",
         trigger: "tr.o_data_row td:contains('Question 3')",
@@ -145,7 +145,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     {
         content: "Move Question 1 back below Question 3",
         trigger: "tr.o_data_row:nth-child(1) td[name=sequence]",
-        run: "drag_and_drop_native div[name=question_and_page_ids] table tbody tr:nth-child(3)",
+        run: "drag_and_drop div[name=question_and_page_ids] table tbody tr:nth-child(3)",
     }, {
         content: "Check that Question 3 has 'warning' trigger icon",
         trigger: "tr:contains('Question 3') button i.fa-exclamation-triangle",
@@ -179,7 +179,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     }, {
         content: "Move Question 1 back above Question 2",
         trigger: "tr.o_data_row:nth-child(3) td[name=sequence]",
-        run: "drag_and_drop_native div[name=question_and_page_ids] table tbody tr:nth-child(1)",
+        run: "drag_and_drop div[name=question_and_page_ids] table tbody tr:nth-child(1)",
     },
     // Deleting trigger answers or whole question gracefully remove the trigger automatically
     {

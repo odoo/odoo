@@ -47,8 +47,10 @@ registry.category("web_tour.tours").add('website_links_tour', {
             content: "check that link was created and visit it",
             extra_trigger: '#o_website_links_recent_links .truncate_text:first():contains("Contact Us")',
             trigger: '#o_website_links_link_tracker_form #generated_tracked_link:contains("/r/")',
-            run: function () {
-                window.location.href = $('#generated_tracked_link').text();
+            run(helpers) {
+                const el = document.createElement("a");
+                el.href = this.anchor.textContent;
+                helpers.click(el);
             },
         },
         {

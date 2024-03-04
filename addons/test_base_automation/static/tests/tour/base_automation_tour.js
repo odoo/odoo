@@ -403,7 +403,7 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
         {
             trigger:
                 ".o_form_renderer .o_field_widget[name='action_server_ids'] .o_kanban_record:nth-child(3)",
-            run: "drag_and_drop_native (.o_form_renderer .o_field_widget[name='action_server_ids'] .o_kanban_record:nth-child(1))",
+            run: "drag_and_drop (.o_form_renderer .o_field_widget[name='action_server_ids'] .o_kanban_record:nth-child(1))",
         },
         ...stepUtils.saveForm(),
         {
@@ -539,7 +539,7 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         },
         {
             trigger:
-                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin)",
+                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin))",
             run() {
                 assertEqual(this.anchor.innerText, "test stage\nSearch More...");
             },
@@ -553,7 +553,7 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         },
         {
             trigger:
-                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin)",
+                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin))",
             run() {
                 assertEqual(this.anchor.innerText, "test tag\nSearch More...");
             },

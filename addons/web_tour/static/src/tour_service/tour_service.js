@@ -14,7 +14,7 @@ import { tourState } from "./tour_state";
 import { callWithUnloadCheck } from "./tour_utils";
 
 /**
- * @typedef {string} JQuerySelector
+ * @typedef {string} HootSelector
  * @typedef {import("./tour_utils").RunCommand} RunCommand
  *
  * @typedef Tour
@@ -32,10 +32,10 @@ import { callWithUnloadCheck } from "./tour_utils";
  *
  * @typedef TourStep
  * @property {string} [id]
- * @property {JQuerySelector} trigger
- * @property {JQuerySelector} [extra_trigger]
- * @property {JQuerySelector} [alt_trigger]
- * @property {JQuerySelector} [skip_trigger]
+ * @property {HootSelector} trigger
+ * @property {HootSelector} [extra_trigger]
+ * @property {HootSelector} [alt_trigger]
+ * @property {HootSelector} [skip_trigger]
  * @property {string} [content]
  * @property {"top" | "botton" | "left" | "right"} [position]
  * @property {"community" | "enterprise"} [edition]

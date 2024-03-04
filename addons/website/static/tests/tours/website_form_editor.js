@@ -135,7 +135,7 @@
         {
             content: "Drop the form snippet",
             trigger: '#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail',
-            run: 'drag_and_drop_native iframe #wrap',
+            run: 'drag_and_drop iframe #wrap',
         }, {
             content: "Select form by clicking on an input field",
             extra_trigger: 'iframe .s_website_form_field',
@@ -607,7 +607,7 @@
         {
             content: "Change a random option",
             trigger: '[data-set-mark] input',
-            run: 'text_blur **',
+            run: 'text **',
         }, {
             content: "Check that the recipient email is correct",
             trigger: 'we-input[data-field-name="email_to"] input:value("website_form_contactus_edition_no_email@mail.com")',
@@ -627,7 +627,7 @@
         {
             content: "Add the form snippet",
             trigger: '#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail',
-            run: 'drag_and_drop_native iframe #wrap',
+            run: 'drag_and_drop iframe #wrap',
         }, {
             content: "Select the form by clicking on an input field",
             extra_trigger: 'iframe .s_website_form_field',
@@ -739,7 +739,7 @@
         {
             content: "Change a random option",
             trigger: '[data-set-mark] input',
-            run: 'text_blur **',
+            run: 'text **',
         },
     ]));
 
