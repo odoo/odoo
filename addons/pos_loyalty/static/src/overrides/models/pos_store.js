@@ -215,6 +215,15 @@ patch(PosStore.prototype, {
         for (const reward of this.models["loyalty.reward"].getAll()) {
             this.compute_discount_product_ids(reward, this.models["product.product"].getAll());
         }
+
+        for (const program of this.models["loyalty.program"].getAll()) {
+            if (program.date_to) {
+                program.date_to = new Date(program.date_to);
+            }
+            if (program.date_from) {
+                program.date_from = new Date(program.date_from);
+            }
+        }
     },
 
     compute_discount_product_ids(reward, products) {
