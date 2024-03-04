@@ -83,7 +83,7 @@
                         <div class="mb-3 row" t-if="!state.isButton and !props.forceNewWindow">
                             <div class="offset-md-3 col-md-9">
                                 <label class="o_switch">
-                                    <input type="checkbox" name="is_new_window" t-att-checked="this.initialIsNewWindow ? 'checked' : undefined"/>
+                                    <input type="checkbox" name="is_new_window" t-att-checked="this.initialNewWindow ? 'checked' : undefined"/>
                                     <span/>
                                     Open in new window
                                 </label>
@@ -289,10 +289,10 @@
                 </we-select>
             </we-row>
             <we-row  t-if="!state.isButton and !props.forceNewWindow">
-                <we-button t-attf-class="o_we_user_value_widget o_we_checkbox_wrapper o_we_sublevel_1 #{this.initialIsNewWindow ? 'active' : ''}">
+                <we-button t-attf-class="o_we_user_value_widget o_we_checkbox_wrapper o_we_sublevel_1 #{this.initialNewWindow ? 'active' : ''}">
                     <we-title class="o_long_title">Open in new window</we-title>
                         <div class="o_switch">
-                            <we-checkbox name="is_new_window" t-att-checked="this.initialIsNewWindow ? 'checked' : undefined"/>
+                            <we-checkbox name="is_new_window" t-att-checked="this.initialNewWindow ? 'checked' : undefined"/>
                         </div>
                 </we-button>
             </we-row>
