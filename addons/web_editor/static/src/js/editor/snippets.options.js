@@ -6441,6 +6441,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             img.classList.add('o_modified_image_to_save');
             const loadedImg = await loadImage(dataURL, img);
             this._applyImage(loadedImg);
+            // Also apply to carousel thumbnail if applicable.
+            weUtils.forwardToThumbnail(img);
             return loadedImg;
         }
         return img;
@@ -6781,6 +6783,8 @@ registry.ImageTools = ImageHandlerOption.extend({
                 img.dataset.mimetype = img.dataset.originalMimetype;
                 delete img.dataset.originalMimetype;
             }
+            // Also apply to carousel thumbnail if applicable.
+            weUtils.forwardToThumbnail(img);
         }
         img.classList.add('o_modified_image_to_save');
     },
@@ -7037,6 +7041,8 @@ registry.ImageTools = ImageHandlerOption.extend({
         if (save) {
             img.dataset.shapeColors = newColors.join(';');
         }
+        // Also apply to carousel thumbnail if applicable.
+        weUtils.forwardToThumbnail(img);
     },
     /**
      * Replace animation durations in SVG and CSS with modified values.
