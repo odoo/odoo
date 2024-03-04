@@ -719,7 +719,7 @@ export class Matchers {
      * @param {ArgumentType} type
      * @param {ExpectOptions} [options]
      * @example
-     *  expect("foo").toBeOfType("");
+     *  expect("foo").toBeOfType("string");
      * @example
      *  expect({ foo: 1 }).toBeOfType("object");
      */
@@ -1454,7 +1454,7 @@ export class Matchers {
     /**
      * Expects the received {@link Target} to have the given class name(s).
      *
-     * @param {string | Record<string, string, RegExp>} style
+     * @param {string | Record<string, string | RegExp>} style
      * @param {ExpectOptions} [options]
      * @example
      *  expect("button").toHaveStyle({ color: "red" });
