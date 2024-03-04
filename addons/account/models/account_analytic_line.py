@@ -10,6 +10,9 @@ class AccountAnalyticAccount(models.Model):
     invoice_count = fields.Integer("Invoice Count", compute='_compute_invoice_count')
     vendor_bill_count = fields.Integer("Vendor Bill Count", compute='_compute_vendor_bill_count')
 
+    debit = fields.Monetary(groups='account.group_account_readonly')
+    credit = fields.Monetary(groups='account.group_account_readonly')
+
     @api.constrains('company_id')
     def _check_company_consistency(self):
         analytic_accounts = self.filtered('company_id')
