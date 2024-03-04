@@ -338,8 +338,12 @@ export function prepare_taxes_computation(
  * [!] Mirror of the same method in account_tax.py.
  * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
 */
-export function eval_taxes_computation_product_fields(){
-    return new Set(["volume", "weight"]);
+export function eval_taxes_computation_prepare_product_values(default_product_values, product){
+    const product_values = {};
+    for(const [field_name, field_info] of Object.entries(default_product_values)){
+        product_values[field_name] = product ? product[field_name] || field_info.default_value : field_info.default_value;
+    }
+    return product_values;
 }
 
 /**
@@ -349,13 +353,9 @@ export function eval_taxes_computation_product_fields(){
 export function eval_taxes_computation_prepare_context(
     price_unit,
     quantity,
-    {product={}, rounding_method="round_per_line", precision_rounding=0.01, reverse=false}={},
+    product_values,
+    {rounding_method="round_per_line", precision_rounding=0.01, reverse=false}={},
 ) {
-    const product_values = {};
-    for(const field_name of eval_taxes_computation_product_fields()){
-        product_values.field_name = product[field_name];
-    }
-
     return {
         product: product_values,
         price_unit: price_unit,
@@ -515,7 +515,7 @@ export function eval_taxes_computation(taxes_computation, eval_context) {
 // EVAL TAXES COMPUTATION
 // -------------------------------------------------------------------------
 
-export function adapt_price_unit_to_another_taxes(price_unit, original_tax_values_list, new_tax_values_list) {
+export function adapt_price_unit_to_another_taxes(price_unit, product_values, original_tax_values_list, new_tax_values_list) {
     const original_tax_ids = new Set(original_tax_values_list.map(x => x.id));
     const new_tax_ids = new Set(new_tax_values_list.map(x => x.id));
     if (
@@ -529,17 +529,25 @@ export function adapt_price_unit_to_another_taxes(price_unit, original_tax_value
     }
 
     let taxes_computation = prepare_taxes_computation(original_tax_values_list);
-    let evaluation_context = eval_taxes_computation_prepare_context(price_unit, 1.0, {
-        rounding_method: "round_globally",
-    });
+    let evaluation_context = eval_taxes_computation_prepare_context(
+        price_unit,
+        1.0,
+        product_values,
+        {rounding_method: "round_globally"},
+    );
     taxes_computation = eval_taxes_computation(taxes_computation, evaluation_context);
     price_unit = taxes_computation.total_excluded;
 
     taxes_computation = prepare_taxes_computation(new_tax_values_list);
-    evaluation_context = eval_taxes_computation_prepare_context(price_unit, 1.0, {
-        rounding_method: "round_globally",
-        reverse: true,
-    });
+    evaluation_context = eval_taxes_computation_prepare_context(
+        price_unit,
+        1.0,
+        product_values,
+        {
+            rounding_method: "round_globally",
+            reverse: true,
+        }
+    );
     taxes_computation = eval_taxes_computation(taxes_computation, evaluation_context);
     let delta = 0.0;
     for(const tax_values of taxes_computation.tax_values_list){
@@ -556,12 +564,12 @@ export function adapt_price_unit_to_another_taxes(price_unit, original_tax_value
 
 export function computeSingleLineTaxes(
     tax_values_list,
-    eval_context,
+    evaluation_context,
     {force_price_include=false, is_refund=false, include_caba_tags=false}={},
 ) {
     const taxes_computation = prepare_taxes_computation(
         tax_values_list,
         {force_price_include: force_price_include, is_refund: is_refund, include_caba_tags: include_caba_tags},
     );
-    return eval_taxes_computation(taxes_computation, eval_context);
+    return eval_taxes_computation(taxes_computation, evaluation_context);
 }

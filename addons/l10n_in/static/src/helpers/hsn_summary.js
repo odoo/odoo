@@ -26,14 +26,20 @@ export function l10n_in_get_hsn_summary_table(base_lines, display_uom){
 
         const price_unit = base_line.price_unit;
         const quantity = base_line.quantity;
+        const product_values = base_line.product_values;
         let uom = base_line.uom || {};
         const tax_values_list = base_line.tax_values_list;
 
         // Compute the taxes.
-        const eval_context = eval_taxes_computation_prepare_context(price_unit, quantity, {
-            rounding_method: "round_per_line",
-            precision_rounding: 0.01,
-        });
+        const eval_context = eval_taxes_computation_prepare_context(
+            price_unit,
+            quantity,
+            product_values,
+            {
+                rounding_method: "round_per_line",
+                precision_rounding: 0.01,
+            },
+        );
         const taxes_computation = eval_taxes_computation(
             prepare_taxes_computation(tax_values_list, eval_context),
             eval_context,

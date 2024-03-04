@@ -32,6 +32,7 @@ import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import {
     computeSingleLineTaxes,
     eval_taxes_computation_prepare_context,
+    eval_taxes_computation_prepare_product,
     adapt_price_unit_to_another_taxes,
 } from "@account/helpers/account_tax";
 
@@ -390,12 +391,17 @@ export class PosStore extends Reactive {
         // Fiscal position.
         const order = this.get_order();
         if (order && order.fiscal_position) {
-            price = this.getPriceUnitAfterFiscalPosition(taxes, price, order.fiscal_position);
+            price = this.getPriceUnitAfterFiscalPosition(
+                taxes,
+                price,
+                product,
+                order.fiscal_position
+            );
             taxes = this.getTaxesAfterFiscalPosition(taxes, order.fiscal_position);
         }
 
         // Taxes computation.
-        const taxesData = this.getTaxesValues(taxes, price, 1);
+        const taxesData = this.getTaxesValues(taxes, price, 1, product);
 
         if (this.config.iface_tax_included === "total") {
             return taxesData.total_included;
@@ -1342,7 +1348,7 @@ export class PosStore extends Reactive {
         return this.data["account.tax"].filter((tax) => newTaxIds.includes(tax.id));
     }
 
-    getPriceUnitAfterFiscalPosition(taxes, priceUnit, fiscalPosition) {
+    getPriceUnitAfterFiscalPosition(taxes, priceUnit, product, fiscalPosition) {
         if (!fiscalPosition) {
             return priceUnit;
         }
@@ -1350,17 +1356,28 @@ export class PosStore extends Reactive {
         const newTaxes = this.getTaxesAfterFiscalPosition(taxes, fiscalPosition);
         return adapt_price_unit_to_another_taxes(
             priceUnit,
+            eval_taxes_computation_prepare_product_values(
+                this.data.custom.product_default_values,
+                product
+            ),
             this.mapTaxValues(taxes),
             this.mapTaxValues(newTaxes)
         );
     }
 
     getTaxesValues(taxes, priceUnit, quantity, product) {
-        const evalContext = eval_taxes_computation_prepare_context(priceUnit, quantity, {
-            product: product,
-            rounding_method: this.company.tax_calculation_rounding_method,
-            precision_rounding: this.currency.rounding,
-        });
+        const evalContext = eval_taxes_computation_prepare_context(
+            priceUnit,
+            quantity,
+            eval_taxes_computation_prepare_product_values(
+                this.data.custom.product_default_values,
+                product
+            ),
+            {
+                rounding_method: this.company.tax_calculation_rounding_method,
+                precision_rounding: this.currency.rounding,
+            }
+        );
         return computeSingleLineTaxes(this.mapTaxValues(taxes), evalContext);
     }
 

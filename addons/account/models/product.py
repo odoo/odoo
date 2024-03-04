@@ -188,10 +188,17 @@ class ProductProduct(models.Model):
         # Apply fiscal position.
         if product_taxes and fiscal_position:
             product_taxes_after_fp = fiscal_position.map_tax(product_taxes)
-            product_price_unit = self.env['account.tax']._adapt_price_unit_to_another_taxes(
-                product_price_unit,
-                product_taxes._convert_to_dict_for_taxes_computation(),
-                product_taxes_after_fp._convert_to_dict_for_taxes_computation(),
+            original_tax_values_list = product_taxes._convert_to_dict_for_taxes_computation()
+            new_tax_values_list = product_taxes_after_fp._convert_to_dict_for_taxes_computation()
+            product_values = product_taxes._eval_taxes_computation_turn_to_product_values(
+                original_tax_values_list + new_tax_values_list,
+                product=product,
+            ),
+            product_price_unit = product_taxes._adapt_price_unit_to_another_taxes(
+                price_unit=product_price_unit,
+                product_values=product_values,
+                original_tax_values_list=original_tax_values_list,
+                new_tax_values_list=new_tax_values_list,
             )
 
         # Apply currency rate.
