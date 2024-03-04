@@ -1,4 +1,3 @@
-import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { patch } from "@web/core/utils/patch";
@@ -6,40 +5,14 @@ import { append, createElement, setAttributes } from "@web/core/utils/xml";
 import { FormCompiler } from "@web/views/form/form_compiler";
 
 function compileChatter(node, params) {
-    let hasFollowers = false;
-    let hasMessageList = false;
-    let hasParentReloadOnAttachmentsChanged;
-    let hasParentReloadOnFollowersUpdate = false;
-    let hasParentReloadOnMessagePosted = false;
-    let isAttachmentBoxVisibleInitially = false;
-    for (const childNode of node.children) {
-        const options = evaluateExpr(childNode.getAttribute("options") || "{}");
-        switch (childNode.getAttribute("name")) {
-            case "message_follower_ids":
-                hasFollowers = true;
-                hasParentReloadOnFollowersUpdate = Boolean(options["post_refresh"]);
-                isAttachmentBoxVisibleInitially =
-                    isAttachmentBoxVisibleInitially || Boolean(options["open_attachments"]);
-                break;
-            case "message_ids":
-                hasMessageList = true;
-                hasParentReloadOnAttachmentsChanged = options["post_refresh"] === "always";
-                hasParentReloadOnMessagePosted = Boolean(options["post_refresh"]);
-                isAttachmentBoxVisibleInitially =
-                    isAttachmentBoxVisibleInitially || Boolean(options["open_attachments"]);
-                break;
-        }
-    }
     const chatterContainerXml = createElement("t");
     setAttributes(chatterContainerXml, {
         "t-component": "__comp__.mailComponents.Chatter",
         has_activities: "__comp__.props.archInfo.has_activities",
-        hasFollowers,
-        hasMessageList,
-        hasParentReloadOnAttachmentsChanged,
-        hasParentReloadOnFollowersUpdate,
-        hasParentReloadOnMessagePosted,
-        isAttachmentBoxVisibleInitially,
+        hasParentReloadOnAttachmentsChanged: Boolean(node.getAttribute("reload_on_attachment")),
+        hasParentReloadOnFollowersUpdate: Boolean(node.getAttribute("reload_on_follower")),
+        hasParentReloadOnMessagePosted: Boolean(node.getAttribute("reload_on_post")),
+        isAttachmentBoxVisibleInitially: Boolean(node.getAttribute("open_attachments")),
         threadId: "__comp__.props.record.resId or undefined",
         threadModel: "__comp__.props.record.resModel",
         webRecord: "__comp__.props.record",
@@ -65,7 +38,7 @@ function compileAttachmentPreview(node, params) {
 }
 
 registry.category("form_compilers").add("chatter_compiler", {
-    selector: "div.oe_chatter",
+    selector: "chatter",
     fn: compileChatter,
 });
 

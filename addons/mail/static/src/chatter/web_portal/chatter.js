@@ -58,8 +58,6 @@ export class Chatter extends Component {
         "compactHeight?",
         "displayName?",
         "has_activities?",
-        "hasFollowers?",
-        "hasMessageList?",
         "isChatterAside?",
         "hasParentReloadOnAttachmentsChanged?",
         "hasParentReloadOnFollowersUpdate?",
@@ -74,8 +72,6 @@ export class Chatter extends Component {
     static defaultProps = {
         compactHeight: false,
         has_activities: true,
-        hasFollowers: true,
-        hasMessageList: true,
         isChatterAside: false,
         hasParentReloadOnAttachmentsChanged: false,
         hasParentReloadOnFollowersUpdate: false,

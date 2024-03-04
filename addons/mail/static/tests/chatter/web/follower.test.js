@@ -162,10 +162,7 @@ test("remove a follower in a dirty form view", async () => {
             <form>
                 <field name="name"/>
                 <field name="channel_ids" widget="many2many_tags"/>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                    <field name="message_follower_ids"/>
-                </div>
+                <chatter/>
             </form>`,
     });
     await click(".o_field_many2many_tags[name='channel_ids'] input");

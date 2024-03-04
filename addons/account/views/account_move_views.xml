@@ -1378,10 +1378,7 @@
                     <div class="o_attachment_preview"
                          invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund') or state != 'draft'" />
                     <!-- Chatter -->
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" groups="base.group_user"/>
-                        <field name="message_ids"/>
-                    </div>
+                    <chatter/>
                 </form>
             </field>
         </record>

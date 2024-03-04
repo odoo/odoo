@@ -61,9 +61,7 @@ test("activity can upload a document", async () => {
         arch: `
             <form string="Fake">
                 <sheet></sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>`,
     });
     await contains(".o-mail-Activity .btn", { text: "Upload Document" });
@@ -545,9 +543,7 @@ test("chatter 'activities' button open the activity schedule wizard", async () =
         arch: `
             <form string="Fake">
                 <sheet></sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>`,
     });
     await click("button", { text: "Activities" });

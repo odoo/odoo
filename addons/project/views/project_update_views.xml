@@ -53,10 +53,7 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter d-print-none">
-                    <field name="message_follower_ids" options="{'post_refresh':True}" groups="base.group_user"/>
-                    <field name="message_ids"/>
-                </div>
+                <chatter class="d-print-none" reload_on_follower="True"/>
             </form>
         </field>
     </record>

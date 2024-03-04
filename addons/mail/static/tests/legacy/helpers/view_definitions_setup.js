@@ -9,9 +9,6 @@ registry
         "res.fake",
         `<form>
             <sheet/>
-            <div class="oe_chatter">
-                <field name="message_ids"/>
-                <field name="message_follower_ids"/>
-            </div>
+            <chatter/>
         </form>`
     );

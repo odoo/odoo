@@ -134,10 +134,7 @@
                     </group>
                     <field name="notes" nolabel="1" placeholder="Add a reason..." readonly="state not in ['confirm']"/>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>
         </field>
     </record>
@@ -239,7 +236,7 @@
             <label for="date_from" position="attributes">
                 <attribute name="invisible">1</attribute>
             </label>
-            <div class="oe_chatter" position="replace"/>
+            <chatter position="replace"/>
         </field>
     </record>
 

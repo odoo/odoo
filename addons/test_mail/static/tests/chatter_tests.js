@@ -15,9 +15,7 @@ test("Send message button activation (access rights dependent)", async function 
             <sheet>
                 <field name="name"/>
             </sheet>
-            <div class="oe_chatter">
-                <field name="message_ids"/>
-            </div>
+            <chatter/>
         </form>`;
     let userAccess = {};
     await start({
@@ -104,10 +102,7 @@ test("basic chatter rendering with a model without activities", async () => {
                 <sheet>
                     <field name="name"/>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>`,
     };
     await start({ serverData: { views } });

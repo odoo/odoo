@@ -45,9 +45,7 @@ test.skip("Form view not scrolled when switching record", async () => {
                     <field name="name"/>
                     <field name="description"/>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>`,
         resIds: [partnerId_1, partnerId_2],
     });
@@ -91,9 +89,7 @@ test("Attachments that have been unlinked from server should be visually unlinke
                 <sheet>
                     <field name="name"/>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>`,
         resId: partnerId_1,
         resIds: [partnerId_1, partnerId_2],
@@ -136,9 +132,7 @@ test("read more/less links are not duplicated when switching from read to edit m
                 <sheet>
                     <field name="name"/>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>`,
     });
     await contains(".o-mail-Chatter");
@@ -175,9 +169,7 @@ test("read more links becomes read less after being clicked", async () => {
                 <sheet>
                     <field name="name"/>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>`,
     });
     await contains(".o-mail-Chatter");
@@ -222,9 +214,7 @@ test("[TECHNICAL] unfolded read more/less links should not fold on message click
                 <sheet>
                     <field name="name"/>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>`,
     });
     await contains(".o-mail-read-more-less", { text: "Read More" });
@@ -262,9 +252,7 @@ test("read more/less links on message of type notification", async () => {
                 <sheet>
                     <field name="name"/>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>`,
     });
     await contains(".o-mail-Message a", { text: "Read More" });
