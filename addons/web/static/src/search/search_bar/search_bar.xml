@@ -59,6 +59,7 @@
             role="searchbox"
             t-ref="autofocus"
             t-on-keydown="onSearchKeydown"
+            t-on-click="onSearchClick"
             t-on-input="onSearchInput"
         />
     </t>
@@ -95,11 +96,16 @@
         <div class="o_cp_searchview d-flex input-group" role="search" t-ref="root">
             <div class="o_searchview form-control d-print-contents d-flex align-items-center py-1 border-end-0"
                  role="search" aria-autocomplete="list">
-                <i class="o_searchview_icon d-print-none oi oi-search me-2"
-                    role="img"
+                <button class="d-print-none btn border-0 p-0"
+                    role="button"
                     aria-label="Search..."
                     title="Search..."
-                />
+                    t-on-click="this.onClickSearchIcon"
+                >
+                    <i class="o_searchview_icon oi oi-search me-2"
+                        role="img"
+                    />
+                </button>
                 <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1">
                     <t t-call="web.SearchBar.Facets"/>
                     <t t-call="web.SearchBar.Input"/>
@@ -108,7 +114,7 @@
                     </t>
                 </div>
             </div>
-            <SearchBarMenu>
+            <SearchBarMenu dropdownState="searchBarDropdownState">
                 <t t-slot="search-bar-additional-menu"/>
             </SearchBarMenu>
         </div>
