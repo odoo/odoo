@@ -25,6 +25,42 @@ function isSyncStatusConnected() {
         },
     ];
 }
+function checkLastOrderPreparationChange(expected_changes) {
+    return [
+        {
+            content: `Check last order preparation changes with expected changes ${JSON.stringify(
+                expected_changes
+            )}`,
+            trigger: ".pos", // dummy trigger
+            run: function () {
+                const currentOrder = window.posmodel.get_order();
+                const lastOrderPrepaChange = currentOrder.lastOrderPrepaChange;
+                const lastOrderPrepaChangesObj = Object.values(lastOrderPrepaChange);
+                // Quick check for lenght
+                if (expected_changes.length !== lastOrderPrepaChangesObj.length) {
+                    console.error(
+                        `Was expecting ${expected_changes.length} order changes, got ${lastOrderPrepaChangesObj.length}`
+                    );
+                }
+                for (let i = 0; i < expected_changes.length; i++) {
+                    const expected_change = expected_changes[i];
+                    const lastOrderPrepaChange = lastOrderPrepaChangesObj[i];
+                    if (expected_change.name !== lastOrderPrepaChange.name) {
+                        console.error(
+                            `Was expecting ${expected_change.name} as name, got ${lastOrderPrepaChange.name}`
+                        );
+                    }
+                    if (expected_change.quantity !== lastOrderPrepaChange.quantity) {
+                        console.error(
+                            `Was expecting ${expected_change.quantity} as quantity, got ${lastOrderPrepaChange.quantity}`
+                        );
+                    }
+                }
+            },
+        },
+    ];
+}
+
 registry.category("web_tour.tours").add("pos_restaurant_sync", {
     test: true,
     url: "/pos/ui",
@@ -42,6 +78,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.selectedOrderlineHas("Water"),
             ProductScreen.orderlineIsToOrder("Water"),
             ProductScreen.orderlineIsToSkip("Coca-Cola"),
+            checkLastOrderPreparationChange([]), // No preparation changes for now
             ProductScreen.clickOrderButton(),
             {
                 ...Dialog.confirm(),
@@ -49,6 +86,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
             ProductScreen.orderlinesHaveNoChange(),
+            checkLastOrderPreparationChange([{ name: "Water", quantity: 1 }]),
             ProductScreen.totalAmountIs("4.40"),
 
             // Create 2nd order (paid)
@@ -63,11 +101,40 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
+            // When reaching the receipt screen, the order is sent for printing.
             {
                 ...Dialog.confirm(),
                 content:
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
+            checkLastOrderPreparationChange([
+                { name: "Coca-Cola", quantity: 1 },
+                { name: "Minute Maid", quantity: 1 },
+            ]),
+            ReceiptScreen.clickNextOrder(),
+
+            // order on another table with a product variant
+            FloorScreen.orderCountSyncedInTableIs("5", "1"),
+            FloorScreen.clickTable("4"),
+            ProductScreen.orderBtnIsPresent(),
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            {
+                ...Dialog.confirm(),
+                content: "validate the variant dialog (with default values)",
+            },
+            ProductScreen.selectedOrderlineHas("Desk Organizer"),
+            ProductScreen.clickOrderButton(),
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
+            ProductScreen.orderlinesHaveNoChange(),
+            checkLastOrderPreparationChange([{ name: "Desk Organizer (S, Leather)", quantity: 1 }]),
+            ProductScreen.totalAmountIs("5.87"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
             ReceiptScreen.clickNextOrder(),
 
             // After clicking next order, floor screen is shown.
@@ -102,7 +169,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
             isSyncStatusConnected(),
-            TicketScreen.selectOrder("-0003"),
+            TicketScreen.selectOrder("-0004"),
             TicketScreen.loadSelectedOrder(),
             FloorScreen.backToFloor(),
 
