@@ -2109,14 +2109,16 @@ export class Order extends PosModel {
         const taxDetails = {};
         for (const line of this.orderlines) {
             const taxValuesList = line.get_all_prices().taxValuesList;
-            for (const [i, taxValues] of taxValuesList.entries()) {
+            for (const taxValues of taxValuesList) {
                 const taxId = taxValues.id;
                 if (!taxDetails[taxId]) {
-                    taxDetails[taxId] = Object.assign({}, taxValues, { amount: 0.0, base: 0.0 });
+                    taxDetails[taxId] = Object.assign({}, taxValues, {
+                        amount: 0.0,
+                        base: 0.0,
+                        tax_percentage: taxValues.amount,
+                    });
                 }
-                if (i === 0) {
-                    taxDetails[taxId].base += taxValues.display_base;
-                }
+                taxDetails[taxId].base += taxValues.display_base;
                 taxDetails[taxId].amount += taxValues.tax_amount_factorized;
             }
         }
