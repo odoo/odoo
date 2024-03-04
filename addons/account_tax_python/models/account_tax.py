@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
+import re
 
 from odoo import api, fields, models, _
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError
+
+
+REGEX_FORMULA_OBJECT = re.compile(r'((?:product\[\')(?P<field>\w+)(?:\'\]))+')
 
 
 class AccountTaxPython(models.Model):
@@ -53,6 +57,24 @@ class AccountTaxPython(models.Model):
 
         if not batch['price_include'] and batch['amount_type'] == 'code':
             batch['computed'] = True
+
+    @api.model
+    def _eval_taxes_computation_prepare_product_fields(self, tax_values_list):
+        # EXTENDS 'account'
+        field_names = super()._eval_taxes_computation_prepare_product_fields(tax_values_list)
+        Product = self.env['product.product']
+        for tax_values in tax_values_list:
+            if tax_values['amount_type'] == 'code':
+                tax = self.browse(tax_values['id'])
+                for formula in ((tax.python_applicable or '').strip(), (tax.python_compute or '').strip()):
+                    groups = REGEX_FORMULA_OBJECT.findall(formula)
+                    if groups:
+                        for group in groups:
+                            field_name = group[1]
+                            if field_name in Product:
+                                field_names.add(field_name)
+
+        return field_names
 
     @api.model
     def _eval_tax_amount(self, tax_values, evaluation_context):

@@ -44,6 +44,7 @@ class AccountTax(models.Model):
 
             price_unit = base_line['price_unit']
             quantity = base_line['quantity']
+            product_values = base_line['product_values']
             uom = base_line['uom'] or {}
             tax_values_list = base_line['tax_values_list']
 
@@ -51,6 +52,7 @@ class AccountTax(models.Model):
             evaluation_context = self.env['account.tax']._eval_taxes_computation_prepare_context(
                 price_unit,
                 quantity,
+                product_values,
                 rounding_method='round_per_line',
                 precision_rounding=0.01,
             )

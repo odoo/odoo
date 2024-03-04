@@ -722,29 +722,41 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
     def _prepare_taxes_computation_test(self, taxes, price_unit, expected_values, evaluation_context_kwargs=None, compute_kwargs=None):
         evaluation_context_kwargs = evaluation_context_kwargs or {}
         quantity = evaluation_context_kwargs.pop('quantity', 1)
+        product = evaluation_context_kwargs.pop('product', None)
         compute_kwargs = compute_kwargs or {}
         is_round_globally = evaluation_context_kwargs.get('rounding_method') == 'round_globally'
+
+        tax_values_list = taxes._convert_to_dict_for_taxes_computation()
+        product_values = taxes._eval_taxes_computation_turn_to_product_values(tax_values_list, product=product)
         return {
             'expected_values': expected_values,
             'params': {
                 'test': 'taxes_computation',
-                'tax_values_list': taxes._convert_to_dict_for_taxes_computation(),
+                'tax_values_list': tax_values_list,
                 'price_unit': price_unit,
                 'quantity': quantity,
+                'product_values': product_values,
                 'evaluation_context_kwargs': evaluation_context_kwargs,
                 'compute_kwargs': compute_kwargs,
                 'is_round_globally': is_round_globally,
             },
         }
 
-    def _prepare_adapt_price_unit_to_another_taxes_test(self, price_unit, original_taxes, new_taxes, expected_price_unit):
+    def _prepare_adapt_price_unit_to_another_taxes_test(self, price_unit, original_taxes, new_taxes, expected_price_unit, product=None):
+        original_tax_values_list = original_taxes._convert_to_dict_for_taxes_computation()
+        new_tax_values_list = new_taxes._convert_to_dict_for_taxes_computation()
+        product_values = new_taxes._eval_taxes_computation_turn_to_product_values(
+            original_tax_values_list + new_tax_values_list,
+            product=product,
+        )
         return {
             'expected_price_unit': expected_price_unit,
             'params': {
                 'test': 'adapt_price_unit_to_another_taxes',
-                'original_tax_values_list': original_taxes._convert_to_dict_for_taxes_computation(),
-                'new_tax_values_list': new_taxes._convert_to_dict_for_taxes_computation(),
+                'original_tax_values_list': original_tax_values_list,
+                'new_tax_values_list': new_tax_values_list,
                 'price_unit': price_unit,
+                'product_values': product_values,
             },
         }
 
@@ -754,6 +766,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             evaluation_context = self.env['account.tax']._eval_taxes_computation_prepare_context(
                 params['price_unit'],
                 params['quantity'],
+                params['product_values'],
                 **params['evaluation_context_kwargs'],
             )
             taxes_computation = self.env['account.tax']._prepare_taxes_computation(params['tax_values_list'], **params['compute_kwargs'])
@@ -765,6 +778,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
                 evaluation_context = self.env['account.tax']._eval_taxes_computation_prepare_context(
                     test['py_results']['results']['total_excluded'] / params['quantity'],
                     params['quantity'],
+                    params['product_values'],
                     **params['evaluation_context_kwargs'],
                     reverse=True,
                 )
@@ -772,6 +786,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         elif params['test'] == 'adapt_price_unit_to_another_taxes':
             test['py_results'] = self.env['account.tax']._adapt_price_unit_to_another_taxes(
                 params['price_unit'],
+                params['product_values'],
                 params['original_tax_values_list'],
                 params['new_tax_values_list'],
             )

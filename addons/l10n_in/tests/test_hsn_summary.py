@@ -57,13 +57,22 @@ class TestHSNsummary(TestTaxCommon):
         else:
             super()._assert_sub_test(test, results)
 
-    def create_base_line_dict(self, l10n_in_hsn_code, quantity, price_unit, uom, taxes=None):
+    def create_base_line_dict(self, l10n_in_hsn_code, quantity, price_unit, uom, taxes=None, product=None):
+        AccountTax = self.env['account.tax']
+        tax_values_list = (taxes or AccountTax)._convert_to_dict_for_taxes_computation()
+        product_fields = AccountTax._eval_taxes_computation_prepare_product_fields(tax_values_list)
+        default_product_values = AccountTax._eval_taxes_computation_prepare_product_default_values(product_fields)
+        product_values = AccountTax._eval_taxes_computation_prepare_product_values(
+            default_product_values=default_product_values,
+            product=product,
+        )
         return {
             'l10n_in_hsn_code': l10n_in_hsn_code,
             'quantity': quantity,
             'price_unit': price_unit,
+            'product_values': product_values,
             'uom': {'id': uom.id, 'name': uom.name},
-            'tax_values_list': (taxes or self.env['account.tax'])._convert_to_dict_for_taxes_computation(),
+            'tax_values_list': tax_values_list,
         }
 
     def _prepare_l10n_in_hsn_summary_test(self, base_lines, display_uom, expected_values):

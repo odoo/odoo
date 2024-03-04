@@ -1242,6 +1242,8 @@ export class PosStore extends Reactive {
             price = getPriceUnitAfterFiscalPosition(
                 taxes,
                 price,
+                product,
+                this.company._product_default_values,
                 order.fiscal_position_id,
                 this.models
             );
@@ -1249,7 +1251,15 @@ export class PosStore extends Reactive {
         }
 
         // Taxes computation.
-        const taxesData = getTaxesValues(taxes, price, 1, product, this.company, this.currency);
+        const taxesData = getTaxesValues(
+            taxes,
+            price,
+            1,
+            product,
+            this.company._product_default_values,
+            this.company,
+            this.currency
+        );
 
         if (this.config.iface_tax_included === "total") {
             return taxesData.total_included;

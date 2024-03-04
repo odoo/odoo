@@ -30,6 +30,7 @@ export class TestsSharedJsPython extends Component {
             let evaluationContext = eval_taxes_computation_prepare_context(
                 params.price_unit,
                 params.quantity,
+                params.product_values,
                 params.evaluation_context_kwargs,
             );
             let taxesComputation = prepare_taxes_computation(params.tax_values_list, params.compute_kwargs);
@@ -39,6 +40,7 @@ export class TestsSharedJsPython extends Component {
                 evaluationContext = eval_taxes_computation_prepare_context(
                     jsResults.results.total_excluded / params.quantity,
                     params.quantity,
+                    params.product_values,
                     {...params.evaluation_context_kwargs, reverse: true},
                 );
                 jsResults.reverse_results = eval_taxes_computation(taxesComputation, evaluationContext);
@@ -48,6 +50,7 @@ export class TestsSharedJsPython extends Component {
         if(params.test === "adapt_price_unit_to_another_taxes"){
             return adapt_price_unit_to_another_taxes(
                 params.price_unit,
+                params.product_values,
                 params.original_tax_values_list,
                 params.new_tax_values_list,
             )
