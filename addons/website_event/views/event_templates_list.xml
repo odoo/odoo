@@ -129,7 +129,7 @@
 <template id="searched_tags" name="Searched tags">
     <div class="d-flex align-items-center flex-wrap gap-2 mt-2">
         <t t-foreach="search_tags" t-as="tag">
-            <span t-attf-class="d-inline-flex align-items-baseline rounded border ps-2 #{'o_tag_color_%s' % tag.color if tag.color else ''}">
+            <span t-attf-class="d-inline-flex align-items-baseline rounded border ps-2 #{'o_badge_color_%s' % tag.color if tag.color else ''}">
                 <t t-out="tag.display_name"/>
                 <a t-att-href="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids))" class="btn border-0 py-1 px-2 text-reset opacity-75-hover">
                     <i class="oi oi-close" role="img"/>
@@ -335,7 +335,7 @@
                             <div class="d-flex flex-wrap gap-1 small">
                                 <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.website_id == website or not tag.category_id.website_id)" t-as="tag">
                                     <span t-if="tag.color"
-                                        t-attf-class="badge rounded-pill px-2 p-1 #{'o_tag_color_%s' % tag.color if tag.color else 'text-bg-light'}">
+                                        t-attf-class="badge rounded-pill px-2 p-1 #{'o_badge_color_%s' % tag.color if tag.color else 'text-bg-light'}">
                                         <t t-out="tag.name"/>
                                     </span>
                                 </t>
