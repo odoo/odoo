@@ -8,6 +8,7 @@ from odoo.exceptions import ValidationError
 class SaleOrderTemplate(models.Model):
     _name = "sale.order.template"
     _description = "Quotation Template"
+    _order = 'sequence, id'
 
     active = fields.Boolean(
         default=True,
@@ -16,6 +17,7 @@ class SaleOrderTemplate(models.Model):
 
     name = fields.Char(string="Quotation Template", required=True)
     note = fields.Html(string="Terms and conditions", translate=True)
+    sequence = fields.Integer(default=10)
 
     mail_template_id = fields.Many2one(
         comodel_name='mail.template',
