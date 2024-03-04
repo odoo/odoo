@@ -962,7 +962,7 @@ export function getParentFrame(node) {
 }
 
 /**
- * Returns the previous focusable element after the current active element if it is
+ * Returns the previous focusable element before the current active element if it is
  * contained in the given parent.
  *
  * @see {@link getFocusableElements}
@@ -1379,7 +1379,7 @@ export function parsePosition(position) {
  * - a string representing a *custom selector* (which will be queried in the `root` option);
  *
  * This function allows all string selectors supported by the native {@link Element.querySelector}
- * along with some additional custom pseudo-classes[1]:
+ * along with some additional custom pseudo-classes:
  *
  * - `:contains(text)`: matches nodes whose *content* matches the given *text*;
  *      * given *text* supports regular expression syntax (e.g. `:contains(/^foo.+/)`)
@@ -1403,7 +1403,7 @@ export function parsePosition(position) {
  * - `:scrollable`: matches nodes that are scrollable (see {@link isScrollable});
  * - `:visible`: matches nodes that are "visible" (see {@link isVisible});
  *
- * An `options` object can be specified to filter[2] the results:
+ * An `options` object can be specified to filter[1] the results:
  * - `displayed`: whether the nodes must be "displayed" (see {@link isDisplayed});
  * - `exact`: the exact number of nodes to match (throws an error if the number of
  *  nodes doesn't match);
@@ -1412,10 +1412,7 @@ export function parsePosition(position) {
  * - `visible`: whether the nodes must be "visible" (see {@link isVisible}).
  *      * This option implies `displayed`
  *
- * [1] combinations of nested standard pseudo-classes with custom pseudo-classes
- *  are not supported (e.g. `:not(:empty)`, `:has(:contains(foo))`, etc.).
- *
- * [2] these filters (except for `exact` and `root`) achieve the same result as
+ * [1] these filters (except for `exact` and `root`) achieve the same result as
  *  using their homonym pseudo-classes on the final group of the given selector
  *  string (e.g. ```queryAll`ul > li:visible`;``` = ```queryAll("ul > li", { visible: true })```).
  *
@@ -1681,8 +1678,6 @@ export function toSelector(node, options) {
     }
     return options?.object ? parts : Object.values(parts).join("");
 }
-
-export function useFixture() {}
 
 /**
  * Combination of {@link queryAll} and {@link waitUntil}: waits for a given target
