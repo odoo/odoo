@@ -74,17 +74,14 @@ class AccountAnalyticAccount(models.Model):
     balance = fields.Monetary(
         compute='_compute_debit_credit_balance',
         string='Balance',
-        groups='account.group_account_readonly',
     )
     debit = fields.Monetary(
         compute='_compute_debit_credit_balance',
         string='Debit',
-        groups='account.group_account_readonly',
     )
     credit = fields.Monetary(
         compute='_compute_debit_credit_balance',
         string='Credit',
-        groups='account.group_account_readonly',
     )
 
     currency_id = fields.Many2one(
