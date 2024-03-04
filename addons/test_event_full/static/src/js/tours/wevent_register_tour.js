@@ -126,7 +126,7 @@ var registerSteps = [{
     trigger: 'a:contains("register to your favorites talks now")',
     run: 'click',
 },  {
-    trigger: 'h4:contains("Book your talks")',
+    trigger: 'h5:contains("Book your talks")',
     run: function() {},
 }];
 
@@ -146,7 +146,7 @@ var browseTalksSteps = [{
     trigger: 'a:contains("Talks")',
 }, {
     content: 'Check we are on the talk list page',
-    trigger: 'h4:contains("Book your talks")',
+    trigger: 'h5:contains("Book your talks")',
     run: function () {} // check
 }];
 
