@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import datetime
+from itertools import chain, starmap
 
 from odoo import api, fields, models
 
@@ -120,50 +122,51 @@ class MailTracking(models.Model):
         if not self:
             return []
 
-        field_models = set(self.field_id.mapped('model'))
-        if len(field_models) > 1:
-            raise ValueError('All tracking value should belong to the same model.')
-        fields_sequence_map = {
-            tracking.field_info['name']: tracking.field_info.get('sequence', 100)
-            for tracking in self.filtered('field_info')
-        }
-        if field_models:
-            TrackedModel = self.env[field_models.pop()]
-            tracked_fields = TrackedModel.fields_get(self.field_id.mapped('name'), attributes={'string', 'type'})
-            fields_sequence_map.update(dict(TrackedModel._mail_track_order_fields(tracked_fields)))
-        else:
-            tracked_fields = {}
-
-        fields_col_info = (
-            tracked_fields.get(tracking.field_id.name) or {
-                'string': tracking.field_info['desc'],
-                'type': tracking.field_info['type'],
+        def info_per_model(model_name, trackings):
+            fields_sequence_map = {
+                tracking.field_info['name']: tracking.field_info.get('sequence', 100)
+                for tracking in trackings if tracking.field_info
             }
-            for tracking in self
-        )
+            if model_name:
+                TrackedModel = self.env[model_name]
+                tracked_fields = TrackedModel.fields_get([t.field_id.name for t in trackings], attributes={'string', 'type'})
+                fields_sequence_map.update(dict(TrackedModel._mail_track_order_fields(tracked_fields)))
+            else:
+                tracked_fields = {}
 
-        formatted = [
-            {
-                'changedField': col_info['string'],
-                'id': tracking.id,
-                'fieldName': tracking.field_id.name or tracking.field_info['name'],
-                'fieldType': col_info['type'],
-                'newValue': {
-                    'currencyId': tracking.currency_id.id,
-                    'value': tracking._format_display_value(col_info['type'], new=True)[0],
-                },
-                'oldValue': {
-                    'currencyId': tracking.currency_id.id,
-                    'value': tracking._format_display_value(col_info['type'], new=False)[0],
-                },
-            }
-            for tracking, col_info in zip(self, fields_col_info)
-        ]
-        formatted.sort(
-            key=lambda info: (fields_sequence_map[info['fieldName']], info['fieldName']),
-            reverse=False,
-        )
-        return formatted
+            fields_col_info = (
+                tracked_fields.get(tracking.field_id.name) or {
+                    'string': tracking.field_info['desc'],
+                    'type': tracking.field_info['type'],
+                }
+                for tracking in trackings
+            )
+
+            formatted = [
+                {
+                    'changedField': col_info['string'],
+                    'id': tracking.id,
+                    'fieldName': tracking.field_id.name or tracking.field_info['name'],
+                    'fieldType': col_info['type'],
+                    'newValue': {
+                        'currencyId': tracking.currency_id.id,
+                        'value': tracking._format_display_value(col_info['type'], new=True)[0],
+                    },
+                    'oldValue': {
+                        'currencyId': tracking.currency_id.id,
+                        'value': tracking._format_display_value(col_info['type'], new=False)[0],
+                    },
+                }
+                for tracking, col_info in zip(trackings, fields_col_info)
+            ]
+            return [(model_name, fields_sequence_map[info['fieldName']], info['fieldName'], info) for info in formatted]
+
+        model_trackings = defaultdict(list)
+        for tracking in self:
+            model_trackings[tracking.field_id.model or tracking.mail_message_id.model].append(tracking)
+        info = chain.from_iterable(starmap(info_per_model, model_trackings.items()))
+
+        return [r[-1] for r in sorted(info, key=lambda r: r[:-1])]
 
     def _format_display_value(self, field_type, new=True):
         """ Format value of 'mail.tracking.value', according to the field type.
