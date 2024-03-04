@@ -27,7 +27,7 @@ class PosSelfKiosk(http.Controller):
 
         company = pos_config_sudo.company_id
         user = pos_config_sudo.current_session_id.user_id or pos_config_sudo.self_ordering_default_user_id
-        pos_config = pos_config_sudo.sudo(False).with_company(company).with_user(user)
+        pos_config = pos_config_sudo.sudo(False).with_company(company).with_user(user).with_context(allowed_company_ids=company.ids)
 
         if not pos_config:
             raise werkzeug.exceptions.NotFound()

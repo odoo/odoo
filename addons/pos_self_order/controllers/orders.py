@@ -323,7 +323,7 @@ class PosSelfOrderController(http.Controller):
             raise Unauthorized("Invalid access token")
         company = pos_config_sudo.company_id
         user = pos_config_sudo.current_session_id.user_id or pos_config_sudo.self_ordering_default_user_id
-        return pos_config_sudo.sudo(False).with_company(company).with_user(user)
+        return pos_config_sudo.sudo(False).with_company(company).with_user(user).with_context(allowed_company_ids=company.ids)
 
     def _verify_authorization(self, access_token, table_identifier, take_away):
         """
@@ -338,5 +338,5 @@ class PosSelfOrderController(http.Controller):
 
         company = pos_config.company_id
         user = pos_config.current_session_id.user_id or pos_config.self_ordering_default_user_id
-        table = table_sudo.sudo(False).with_company(company).with_user(user)
+        table = table_sudo.sudo(False).with_company(company).with_user(user).with_context(allowed_company_ids=company.ids)
         return pos_config, table
