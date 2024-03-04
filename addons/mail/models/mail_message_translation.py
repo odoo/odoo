@@ -28,5 +28,7 @@ class MessageTranslation(models.Model):
 
     @api.autovacuum
     def _gc_translations(self):
-        treshold = fields.Datetime().now() - relativedelta(weeks=2)
-        self.search([("create_date", "<", treshold)]).unlink()
+        threshold = fields.Datetime().now() - relativedelta(weeks=2)
+        to_unlink = self.search([("create_date", "<", threshold)])
+        if to_unlink:
+            to_unlink.unlink()

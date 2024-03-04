@@ -183,8 +183,9 @@ class EventLeadRule(models.Model):
                             })
                     elif group_registrations:
                         lead_vals_list.append(group_registrations._get_lead_values(rule))
-
-        return self.env['crm.lead'].create(lead_vals_list)
+        if lead_vals_list:
+            return self.env['crm.lead'].create(lead_vals_list)
+        return self.env['crm.lead'].browse()
 
     def _filter_registrations(self, registrations):
         """ Keep registrations matching rule conditions. Those are

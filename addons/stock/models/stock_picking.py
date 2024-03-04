@@ -658,7 +658,8 @@ class Picking(models.Model):
         for picking in self:
             if picking.state in ('done', 'cancel'):
                 raise UserError(_("You cannot change the Scheduled Date on a done or cancelled transfer."))
-            picking.move_ids.write({'date': picking.scheduled_date})
+            if picking.move_ids:
+                picking.move_ids.write({'date': picking.scheduled_date})
 
     def _has_scrap_move(self):
         for picking in self:
@@ -894,7 +895,9 @@ class Picking(models.Model):
         self._check_company()
         self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
         # call `_action_confirm` on every draft move
-        self.move_ids.filtered(lambda move: move.state == 'draft')._action_confirm()
+        draft_moves = self.move_ids.filtered(lambda move: move.state == 'draft')
+        if draft_moves:
+            draft_moves._action_confirm()
 
         # run scheduler for moves forecasted to not have enough in stock
         self.move_ids.filtered(lambda move: move.state not in ('draft', 'cancel', 'done'))._trigger_scheduler()
@@ -907,7 +910,9 @@ class Picking(models.Model):
         @return: True
         """
         self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
-        self.filtered(lambda picking: picking.state == 'draft').action_confirm()
+        draft_moves = self.filtered(lambda picking: picking.state == 'draft')
+        if draft_moves:
+            draft_moves.action_confirm()
         moves = self.move_ids.filtered(lambda move: move.state not in ('draft', 'cancel', 'done')).sorted(
             key=lambda move: (-int(move.priority), not bool(move.date_deadline), move.date_deadline, move.date, move.id)
         )
@@ -916,9 +921,11 @@ class Picking(models.Model):
         # If a package level is done when confirmed its location can be different than where it will be reserved.
         # So we remove the move lines created when confirmed to set quantity done to the new reserved ones.
         package_level_done = self.mapped('package_level_ids').filtered(lambda pl: pl.is_done and pl.state == 'confirmed')
-        package_level_done.write({'is_done': False})
+        if package_level_done:
+            package_level_done.write({'is_done': False})
         moves._action_assign()
-        package_level_done.write({'is_done': True})
+        if package_level_done:
+            package_level_done.write({'is_done': True})
 
         return True
 
@@ -959,11 +966,13 @@ class Picking(models.Model):
         """
         self._check_company()
 
-        todo_moves = self.move_ids.filtered(lambda self: self.state in ['draft', 'waiting', 'partially_available', 'assigned', 'confirmed'])
+        todo_moves = self.move_ids.filtered(lambda m: m.state in ['draft', 'waiting', 'partially_available', 'assigned', 'confirmed'])
         for picking in self:
             if picking.owner_id:
-                picking.move_ids.write({'restrict_partner_id': picking.owner_id.id})
-                picking.move_line_ids.write({'owner_id': picking.owner_id.id})
+                if picking.move_ids:
+                    picking.move_ids.write({'restrict_partner_id': picking.owner_id.id})
+                if picking.move_line_ids:
+                    picking.move_line_ids.write({'owner_id': picking.owner_id.id})
         todo_moves._action_done(cancel_backorder=self.env.context.get('cancel_backorder'))
         self.write({'date_done': fields.Datetime.now(), 'priority': '0'})
 
@@ -1132,8 +1141,10 @@ class Picking(models.Model):
                 lambda p: p.picking_type_id.create_backorder != 'always'
             )
         pickings_to_backorder = self - pickings_not_to_backorder
-        pickings_not_to_backorder.with_context(cancel_backorder=True)._action_done()
-        pickings_to_backorder.with_context(cancel_backorder=False)._action_done()
+        if pickings_not_to_backorder:
+            pickings_not_to_backorder.with_context(cancel_backorder=True)._action_done()
+        if pickings_to_backorder:
+            pickings_to_backorder.with_context(cancel_backorder=False)._action_done()
         report_actions = self._get_autoprint_report_actions()
         another_action = False
         if self.user_has_groups('stock.group_reception_report'):
@@ -1246,7 +1257,8 @@ class Picking(models.Model):
             if any(move.additional for move in picking.move_ids):
                 picking.action_confirm()
         to_confirm = self.move_ids.filtered(lambda m: m.state == 'draft' and m.quantity)
-        to_confirm._action_confirm()
+        if to_confirm:
+            to_confirm._action_confirm()
 
     def _create_backorder(self):
         """ This method is called when the user chose to create a backorder. It will create a new

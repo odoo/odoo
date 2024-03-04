@@ -100,7 +100,8 @@ class PaymentTransaction(models.Model):
         """
         processed_txs = super()._set_canceled(state_message, **kwargs)
         # Cancel the existing payments
-        processed_txs.payment_id.action_cancel()
+        if processed_txs.payment_id:
+            processed_txs.payment_id.action_cancel()
         return processed_txs
 
     #=== BUSINESS METHODS - POST-PROCESSING ===#

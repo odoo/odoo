@@ -229,10 +229,12 @@ class HrEmployeeBase(models.AbstractModel):
         # 'no_leave_resource_calendar_update'
         if 'resource_calendar_id' in values and not self.env.context.get('no_leave_resource_calendar_update'):
             try:
-                self.env['hr.leave'].search([
+                to_write = self.env['hr.leave'].search([
                     ('employee_id', 'in', self.ids),
                     ('resource_calendar_id', '!=', int(values['resource_calendar_id'])),
-                    ('date_from', '>', fields.Datetime.now())]).write({'resource_calendar_id': values['resource_calendar_id']})
+                    ('date_from', '>', fields.Datetime.now())])
+                if to_write:
+                    to_write.write({'resource_calendar_id': values['resource_calendar_id']})
             except ValidationError:
                 raise ValidationError(_("Changing this working schedule results in the affected employee(s) not having enough "
                                         "leaves allocated to accomodate for their leaves already taken in the future. Please "

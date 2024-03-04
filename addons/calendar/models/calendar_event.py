@@ -564,14 +564,16 @@ class Meeting(models.Model):
 
         for vals in recurring_vals:
             vals['follow_recurrence'] = True
-        recurring_events = super().create(recurring_vals)
-        events += recurring_events
+        if recurring_vals:
+            recurring_events = super().create(recurring_vals)
+            events += recurring_events
 
-        for event, vals in zip(recurring_events, recurring_vals):
-            recurrence_values = {field: vals.pop(field) for field in recurrence_fields if field in vals}
-            if vals.get('recurrency'):
-                detached_events = event._apply_recurrence_values(recurrence_values)
-                detached_events.active = False
+            for event, vals in zip(recurring_events, recurring_vals):
+                recurrence_values = {field: vals.pop(field) for field in recurrence_fields if field in vals}
+                if vals.get('recurrency'):
+                    detached_events = event._apply_recurrence_values(recurrence_values)
+                    if detached_events:
+                        detached_events.active = False
 
         events.filtered(lambda event: event.start > fields.Datetime.now()).attendee_ids._send_invitation_emails()
 
@@ -1057,7 +1059,8 @@ class Meeting(models.Model):
             elif future:
                 to_update |= event.recurrence_id._split_from(event, values)
         self.write({'recurrency': True, 'follow_recurrence': True})
-        to_update |= self.env['calendar.recurrence'].create(recurrence_vals)
+        if recurrence_vals:
+            to_update |= self.env['calendar.recurrence'].create(recurrence_vals)
         return to_update._apply_recurrence()
 
     def _get_recurrence_params(self):

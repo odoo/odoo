@@ -268,7 +268,8 @@ class Forum(models.Model):
         if 'privacy' in vals:
             if not vals['privacy']:
                 # The forum is neither public, neither private, remove menu to avoid conflict
-                self.menu_id.unlink()
+                if self.menu_id:
+                    self.menu_id.unlink()
             elif vals['privacy'] == 'public':
                 # The forum is public, the menu must be also public
                 vals['authorized_group_id'] = False

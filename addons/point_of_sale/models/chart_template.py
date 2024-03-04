@@ -14,11 +14,15 @@ class AccountChartTemplate(models.AbstractModel):
         """
         reload_template = template_code == company.chart_template
         if not reload_template:
-            self.env['pos.payment.method'].with_context(active_test=False).search(self.env['pos.payment.method']._check_company_domain(company)).unlink()
-            self.env["pos.config"].with_context(active_test=False).search(self.env['pos.config']._check_company_domain(company)).write({
-                'journal_id': False,
-                'invoice_journal_id': False,
-            })
+            to_unlink = self.env['pos.payment.method'].with_context(active_test=False).search(self.env['pos.payment.method']._check_company_domain(company))
+            if to_unlink:
+                to_unlink.unlink()
+            to_write = self.env["pos.config"].with_context(active_test=False).search(self.env['pos.config']._check_company_domain(company))
+            if to_write:
+                to_write.write({
+                    'journal_id': False,
+                    'invoice_journal_id': False,
+                })
         result = super()._load(template_code, company, install_demo)
         self.env['pos.config'].post_install_pos_localisation(companies=company)
         return result

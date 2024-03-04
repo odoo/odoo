@@ -466,7 +466,8 @@ class Warehouse(models.Model):
                 route = self[route_field]
                 if 'route_update_values' in route_data:
                     route.write(route_data['route_update_values'])
-                route.rule_ids.write({'active': False})
+                if route.rule_ids:
+                    route.rule_ids.write({'active': False})
             # Create the route
             else:
                 if 'route_update_values' in route_data:
@@ -860,9 +861,10 @@ class Warehouse(models.Model):
         Rule = self.env["stock.rule"]
         routes = self.env['stock.route'].search([('supplier_wh_id', '=', self.id)])
         rules = Rule.search(['&', '&', ('route_id', 'in', routes.ids), ('action', '!=', 'push'), ('location_dest_id.usage', '=', 'transit')])
-        rules.write({
-            'location_src_id': new_location.id,
-            'procure_method': change_to_multiple and "make_to_order" or "make_to_stock"})
+        if rules:
+            rules.write({
+                'location_src_id': new_location.id,
+                'procure_method': change_to_multiple and "make_to_order" or "make_to_stock"})
         if not change_to_multiple:
             # If single delivery we should create the necessary MTO rules for the resupply
             routings = [self.Routing(self.lot_stock_id, location, self.out_type_id, 'pull') for location in rules.location_dest_id]
@@ -874,23 +876,27 @@ class Warehouse(models.Model):
                 Rule.create(mto_rule_val)
         else:
             # We need to delete all the MTO stock rules, otherwise they risk to be used in the system
-            Rule.search([
+            to_deactivate = Rule.search([
                 '&', ('route_id', '=', self._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)')).id),
                 ('location_dest_id.usage', '=', 'transit'),
                 ('action', '!=', 'push'),
-                ('location_src_id', '=', self.lot_stock_id.id)]).write({'active': False})
+                ('location_src_id', '=', self.lot_stock_id.id)])
+            if to_deactivate:
+                to_deactivate.write({'active': False})
 
     def _check_reception_resupply(self, new_location):
         """ Check routes being delivered by the warehouses (resupply routes) and
         change their rule coming from the transit location """
         routes = self.env['stock.route'].search([('supplied_wh_id', 'in', self.ids)])
-        self.env['stock.rule'].search([
+        to_write = self.env['stock.rule'].search([
             '&',
                 ('route_id', 'in', routes.ids),
                 '&',
                     ('action', '!=', 'push'),
                     ('location_src_id.usage', '=', 'transit')
-        ]).write({'location_dest_id': new_location.id})
+        ])
+        if to_write:
+            to_write.write({'location_dest_id': new_location.id})
 
     def _update_name_and_code(self, new_name=False, new_code=False):
         if new_code:

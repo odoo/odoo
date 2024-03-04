@@ -326,8 +326,9 @@ class Channel(models.Model):
                 for channel_id in new_members
                 for partner_id in new_members[channel_id]
             ]
-            # sudo: discuss.channel.member - adding member of other users based on channel auto-subscribe
-            self.env['discuss.channel.member'].sudo().create(to_create)
+            if to_create:
+                # sudo: discuss.channel.member - adding member of other users based on channel auto-subscribe
+                self.env['discuss.channel.member'].sudo().create(to_create)
         notifications = []
         for channel in self:
             for group in channel.group_ids:

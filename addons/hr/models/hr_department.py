@@ -106,12 +106,14 @@ class Department(models.Model):
     def _update_employee_manager(self, manager_id):
         employees = self.env['hr.employee']
         for department in self:
-            employees = employees | self.env['hr.employee'].search([
-                ('id', '!=', manager_id),
-                ('department_id', '=', department.id),
-                ('parent_id', '=', department.manager_id.id)
-            ])
-        employees.write({'parent_id': manager_id})
+            if department.manager_id.id != manager_id:
+                employees = employees | self.env['hr.employee'].search([
+                    ('id', '!=', manager_id),
+                    ('department_id', '=', department.id),
+                    ('parent_id', '=', department.manager_id.id)
+                ])
+        if employees:
+            employees.write({'parent_id': manager_id})
 
     def get_formview_action(self, access_uid=None):
         res = super().get_formview_action(access_uid=access_uid)

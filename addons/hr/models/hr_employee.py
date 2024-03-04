@@ -304,7 +304,8 @@ class HrEmployeePrivate(models.Model):
                         employee=employee.name,
                         date=formated_date),
                     user_id=responsible_user_id)
-        employees_scheduled.write({'work_permit_scheduled_activity': True})
+        if employees_scheduled:
+            employees_scheduled.write({'work_permit_scheduled_activity': True})
 
     @api.model
     def get_view(self, view_id=None, view_type='form', **options):

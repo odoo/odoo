@@ -37,7 +37,8 @@ class ResPartner(models.Model):
             'iap_enrich_info': vals.get('iap_enrich_info'),
             'iap_search_domain': vals.get('iap_search_domain'),
         } for partner, vals in zip(partners, vals_list) if vals.get('iap_enrich_info') or vals.get('iap_search_domain')]
-        self.env['res.partner.iap'].sudo().create(partner_iap_vals_list)
+        if partner_iap_vals_list:
+            self.env['res.partner.iap'].sudo().create(partner_iap_vals_list)
         return partners
 
     def write(self, vals):

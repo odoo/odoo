@@ -140,7 +140,8 @@ class AccountPayment(models.Model):
         payments_tx_not_done = payments_need_tx.filtered(
             lambda p: p.payment_transaction_id.state != 'done'
         )
-        payments_tx_not_done.action_cancel()
+        if payments_tx_not_done:
+            payments_tx_not_done.action_cancel()
 
         return res
 

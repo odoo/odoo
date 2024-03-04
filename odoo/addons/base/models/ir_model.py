@@ -1705,7 +1705,9 @@ class IrModelSelection(models.Model):
             elif ondelete.startswith('set '):
                 safe_write(selection._get_records(), field.name, ondelete[4:])
             elif ondelete == 'cascade':
-                selection._get_records().unlink()
+                to_unlink = selection._get_records()
+                if to_unlink:
+                    to_unlink.unlink()
             else:
                 # this shouldn't happen... simply a sanity check
                 raise ValueError(_(

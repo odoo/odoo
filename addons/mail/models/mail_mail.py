@@ -258,11 +258,13 @@ class MailMail(models.Model):
                 failed = self.env['mail.notification']
                 if failure_type:
                     failed = notifications.filtered(lambda notif: notif.res_partner_id not in success_pids)
-                (notifications - failed).sudo().write({
-                    'notification_status': 'sent',
-                    'failure_type': '',
-                    'failure_reason': '',
-                })
+                to_write = notifications - failed
+                if to_write:
+                    to_write.sudo().write({
+                        'notification_status': 'sent',
+                        'failure_type': '',
+                        'failure_reason': '',
+                    })
                 if failed:
                     failed.sudo().write({
                         'notification_status': 'exception',
@@ -273,7 +275,9 @@ class MailMail(models.Model):
                     # TDE TODO: could be great to notify message-based, not notifications-based, to lessen number of notifs
                     messages._notify_message_notification_update()  # notify user that we have a failure
         if not failure_type or failure_type in ['mail_email_invalid', 'mail_email_missing']:  # if we have another error, we want to keep the mail.
-            self.sudo().filtered(lambda mail: mail.auto_delete).unlink()
+            to_unlink = self.sudo().filtered(lambda mail: mail.auto_delete)
+            if to_unlink:
+                to_unlink.unlink()
 
         return True
 

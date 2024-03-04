@@ -46,7 +46,10 @@ class IrProfile(models.Model):
     def _gc_profile(self):
         # remove profiles older than 30 days
         domain = [('create_date', '<', fields.Datetime.now() - datetime.timedelta(days=30))]
-        return self.sudo().search(domain).unlink()
+        to_unlink = self.sudo().search(domain)
+        if to_unlink:
+            return to_unlink.unlink()
+        return True
 
     def _compute_speedscope(self):
         for execution in self:

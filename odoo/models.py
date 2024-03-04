@@ -5628,6 +5628,8 @@ class BaseModel(metaclass=MetaModel):
 
         """
         vals_list = self.with_context(active_test=False).copy_data(default)
+        if not vals_list:
+            return self.browse()
         new_records = self.create(vals_list)
         for old_record, new_record in zip(self, new_records):
             old_record.copy_translations(new_record, excluded=default or ())
@@ -7168,7 +7170,9 @@ class TransientModel(Model):
             SQL("(now() AT TIME ZONE 'UTC') - interval %s", f"{seconds} seconds"),
         ))
         ids = [x[0] for x in self._cr.fetchall()]
-        self.sudo().browse(ids).unlink()
+        to_unlink = self.sudo().browse(ids)
+        if to_unlink:
+            to_unlink.unlink()
 
 
 def itemgetter_tuple(items):

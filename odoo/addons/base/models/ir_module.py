@@ -498,7 +498,8 @@ class Module(models.Model):
         """
         domain = expression.OR([[('key', '=like', m.name + '.%')] for m in self])
         orphans = self.env['ir.ui.view'].with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search(domain)
-        orphans.unlink()
+        if orphans:
+            orphans.unlink()
 
     @api.returns('self')
     def downstream_dependencies(self, known_deps=None,

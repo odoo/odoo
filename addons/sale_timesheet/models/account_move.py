@@ -127,5 +127,6 @@ class AccountMoveLine(models.Model):
             if so_line.id in sale_line_ids_per_move[timesheet_invoice.id].ids:
                 timesheet_ids += ids
 
-        self.sudo().env['account.analytic.line'].browse(timesheet_ids).write({'timesheet_invoice_id': False})
+        if timesheet_ids:
+            self.sudo().env['account.analytic.line'].browse(timesheet_ids).write({'timesheet_invoice_id': False})
         return super().unlink()

@@ -380,13 +380,16 @@ class HrAttendance(models.Model):
                         affected_employees |= overtime.employee_id
                 elif overtime:
                     overtime_to_unlink |= overtime
-        created_overtimes = self.env['hr.attendance.overtime'].sudo().create(overtime_vals_list)
-        employees_worked_hours_to_compute = (affected_employees.ids +
-                                             created_overtimes.employee_id.ids +
-                                             overtime_to_unlink.employee_id.ids)
-        overtime_to_unlink.sudo().unlink()
-        self.env.add_to_compute(self._fields['overtime_hours'],
-                                self.search([('employee_id', 'in', employees_worked_hours_to_compute)]))
+        if overtime_vals_list:
+            created_overtimes = self.env['hr.attendance.overtime'].sudo().create(overtime_vals_list)
+            employees_worked_hours_to_compute = (affected_employees.ids +
+                                                 created_overtimes.employee_id.ids +
+                                                 overtime_to_unlink.employee_id.ids)
+        if overtime_to_unlink:
+            overtime_to_unlink.sudo().unlink()
+        if overtime_vals_list:
+            self.env.add_to_compute(self._fields['overtime_hours'],
+                                    self.search([('employee_id', 'in', employees_worked_hours_to_compute)]))
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -58,6 +58,8 @@ class SaleOrderLine(models.Model):
 
         Returns self
         """
+        if not self:
+            return self
         vals = {
             'points_cost': 0,
             'price_unit': 0,

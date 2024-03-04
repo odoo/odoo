@@ -420,9 +420,12 @@ class ProductProduct(models.Model):
             self = self.sudo()
             to_unlink = self._filter_to_unlink()
             to_archive = self - to_unlink
-            to_archive.write({'active': False})
+            if to_archive:
+                to_archive.write({'active': False})
             self = to_unlink
 
+        if not self:
+            return
         try:
             with self.env.cr.savepoint(), tools.mute_logger('odoo.sql_db'):
                 self.unlink()

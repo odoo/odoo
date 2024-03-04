@@ -43,7 +43,9 @@ class AccountMove(models.Model):
             return super()._post(soft)
 
         # Create additional COGS lines for customer invoices.
-        self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_out_lines_vals())
+        vals_list = self._stock_account_prepare_anglo_saxon_out_lines_vals()
+        if vals_list:
+            self.env['account.move.line'].create(vals_list)
 
         # Post entries.
         posted = super()._post(soft)
@@ -57,7 +59,9 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).button_draft()
 
         # Unlink the COGS lines generated during the 'post' method.
-        self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs').unlink()
+        to_unlink = self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs')
+        if to_unlink:
+            to_unlink.unlink()
         return res
 
     def button_cancel(self):
@@ -67,7 +71,9 @@ class AccountMove(models.Model):
         # Unlink the COGS lines generated during the 'post' method.
         # In most cases it shouldn't be necessary since they should be unlinked with 'button_draft'.
         # However, since it can be called in RPC, better be safe.
-        self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs').unlink()
+        to_unlink = self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs')
+        if to_unlink:
+            to_unlink.unlink()
         return res
 
     # -------------------------------------------------------------------------

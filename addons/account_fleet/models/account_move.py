@@ -21,9 +21,10 @@ class AccountMove(models.Model):
             log = _('Service Vendor Bill: %s', line.move_id._get_html_link())
             val_list.append(val)
             log_list.append(log)
-        log_service_ids = self.env['fleet.vehicle.log.services'].create(val_list)
-        for log_service_id, log in zip(log_service_ids, log_list):
-            log_service_id.message_post(body=log)
+        if val_list:
+            log_service_ids = self.env['fleet.vehicle.log.services'].create(val_list)
+            for log_service_id, log in zip(log_service_ids, log_list):
+                log_service_id.message_post(body=log)
         return posted
 
 

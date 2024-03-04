@@ -146,7 +146,8 @@ class MailingTrace(models.Model):
 
     def set_sent(self, domain=None):
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
-        traces.write({'trace_status': 'sent', 'sent_datetime': fields.Datetime.now(), 'failure_type': False})
+        if traces:
+            traces.write({'trace_status': 'sent', 'sent_datetime': fields.Datetime.now(), 'failure_type': False})
         return traces
 
     def set_opened(self, domain=None):
@@ -154,7 +155,9 @@ class MailingTrace(models.Model):
         open, click implies open. Let us avoid status override by skipping traces
         that are not already opened or replied. """
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
-        traces.filtered(lambda t: t.trace_status not in ('open', 'reply')).write({'trace_status': 'open', 'open_datetime': fields.Datetime.now()})
+        to_open = traces.filtered(lambda t: t.trace_status not in ('open', 'reply'))
+        if to_open:
+            to_open.write({'trace_status': 'open', 'open_datetime': fields.Datetime.now()})
         return traces
 
     def set_clicked(self, domain=None):

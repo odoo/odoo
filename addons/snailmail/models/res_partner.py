@@ -21,7 +21,8 @@ class ResPartner(models.Model):
                 ('state', 'not in', ['sent', 'canceled']),
                 ('partner_id', 'in', self.ids),
             ])
-            letters.write(letter_address_vals)
+            if letters:
+                letters.write(letter_address_vals)
 
         return super(ResPartner, self).write(vals)
 

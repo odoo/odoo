@@ -327,7 +327,8 @@ class AccountBankStatement(models.Model):
         yield
 
         for stmt, attachments in zip(container['records'], attachments_to_fix_list):
-            attachments.write({'res_id': stmt.id, 'res_model': stmt._name})
+            if attachments:
+                attachments.write({'res_id': stmt.id, 'res_model': stmt._name})
 
     @api.model_create_multi
     def create(self, vals_list):

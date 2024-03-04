@@ -261,8 +261,8 @@ class AccountMove(models.Model):
                             'move_id': move.id,
                             'state': 'to_send',
                         })
-
-        self.env['account.edi.document'].create(edi_document_vals_list)
+        if edi_document_vals_list:
+            self.env['account.edi.document'].create(edi_document_vals_list)
         posted.edi_document_ids._process_documents_no_web_services()
         self.env.ref('account_edi.ir_cron_edi_network')._trigger()
         return posted

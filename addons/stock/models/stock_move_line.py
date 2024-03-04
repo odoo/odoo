@@ -436,7 +436,7 @@ class StockMoveLine(models.Model):
         if updates or 'quantity' in vals:
             next_moves = self.env['stock.move']
             mls = self.filtered(lambda ml: ml.move_id.state == 'done' and ml.product_id.type == 'product')
-            if not updates:  # we can skip those where quantity is already good up to UoM rounding
+            if not updates and mls:  # we can skip those where quantity is already good up to UoM rounding
                 mls = mls.filtered(lambda ml: not float_is_zero(ml.quantity - vals['quantity'], precision_rounding=ml.product_uom_id.rounding))
             for ml in mls:
                 # undo the original move line
@@ -464,7 +464,7 @@ class StockMoveLine(models.Model):
         # As stock_account values according to a move's `product_uom_qty`, we consider that any
         # done stock move should have its `quantity_done` equals to its `product_uom_qty`, and
         # this is what move's `action_done` will do. So, we replicate the behavior here.
-        if updates or 'quantity' in vals:
+        if (updates or 'quantity' in vals) and next_moves:
             next_moves._do_unreserve()
             next_moves._action_assign()
 
@@ -573,10 +573,12 @@ class StockMoveLine(models.Model):
         ml_to_create_lot._create_and_assign_production_lot()
 
         mls_to_delete = self.env['stock.move.line'].browse(ml_ids_to_delete)
-        mls_to_delete.unlink()
+        if mls_to_delete:
+            mls_to_delete.unlink()
 
         mls_todo = (self - mls_to_delete)
-        mls_todo._check_company()
+        if mls_todo:
+            mls_todo._check_company()
 
         # Now, we can actually move the quant.
         ml_ids_to_ignore = OrderedSet()
@@ -593,9 +595,10 @@ class StockMoveLine(models.Model):
                     owner_id=ml.owner_id, ml_ids_to_ignore=ml_ids_to_ignore)
             ml_ids_to_ignore.add(ml.id)
         # Reset the reserved quantity as we just moved it to the destination location.
-        mls_todo.write({
-            'date': fields.Datetime.now(),
-        })
+        if mls_todo:
+            mls_todo.write({
+                'date': fields.Datetime.now(),
+            })
 
     def _synchronize_quant(self, quantity, location, action="available", in_date=False, **quants_value):
         """ quantity should be express in product's UoM"""
@@ -648,11 +651,11 @@ class StockMoveLine(models.Model):
             if ml.tracking != 'lot' or key not in key_to_index:
                 key_to_index[key] = len(lot_vals)
                 lot_vals.append(ml._prepare_new_lot_vals())
-
-        lots = self.env['stock.lot'].create(lot_vals)
-        for key, mls in key_to_mls.items():
-            lot = lots[key_to_index[key]].with_prefetch(lots._ids)   # With prefetch to reconstruct the ones broke by accessing by index
-            mls.write({'lot_id': lot.id})
+        if lot_vals:
+            lots = self.env['stock.lot'].create(lot_vals)
+            for key, mls in key_to_mls.items():
+                lot = lots[key_to_index[key]].with_prefetch(lots._ids)   # With prefetch to reconstruct the ones broke by accessing by index
+                mls.write({'lot_id': lot.id})
 
     def _reservation_is_updatable(self, quantity, reserved_quant):
         self.ensure_one()
@@ -740,8 +743,8 @@ class StockMoveLine(models.Model):
             else:
                 candidate.quantity -= candidate.product_id.uom_id._compute_quantity(quantity, candidate.product_uom_id, rounding_method='HALF-UP')
                 break
-
-        self.env['stock.move.line'].browse(to_unlink_candidate_ids).unlink()
+        if to_unlink_candidate_ids:
+            self.env['stock.move.line'].browse(to_unlink_candidate_ids).unlink()
         move_to_reassign._action_assign()
 
     def _get_aggregated_product_quantities(self, **kwargs):

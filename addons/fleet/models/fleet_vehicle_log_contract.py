@@ -143,13 +143,16 @@ class FleetVehicleLogContract(models.Model):
                 user_id=contract.user_id.id)
 
         expired_contracts = self.search([('state', 'not in', ['expired', 'closed']), ('expiration_date', '<',fields.Date.today() )])
-        expired_contracts.write({'state': 'expired'})
+        if expired_contracts:
+            expired_contracts.write({'state': 'expired'})
 
         futur_contracts = self.search([('state', 'not in', ['futur', 'closed']), ('start_date', '>', fields.Date.today())])
-        futur_contracts.write({'state': 'futur'})
+        if futur_contracts:
+            futur_contracts.write({'state': 'futur'})
 
         now_running_contracts = self.search([('state', '=', 'futur'), ('start_date', '<=', fields.Date.today())])
-        now_running_contracts.write({'state': 'open'})
+        if now_running_contracts:
+            now_running_contracts.write({'state': 'open'})
 
     def run_scheduler(self):
         self.scheduler_manage_contract_expiration()

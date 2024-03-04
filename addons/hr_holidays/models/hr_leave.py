@@ -1070,18 +1070,24 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         """ This method will create entry in resource calendar time off object at the time of holidays validated
         :returns: created `resource.calendar.leaves`
         """
+        if not self:
+            return self.env['resource.calendar.leaves'].sudo().browse()
         vals_list = [leave._prepare_resource_leave_vals() for leave in self]
         return self.env['resource.calendar.leaves'].sudo().create(vals_list)
 
     def _remove_resource_leave(self):
         """ This method will create entry in resource calendar time off object at the time of holidays cancel/removed """
-        return self.env['resource.calendar.leaves'].search([('holiday_id', 'in', self.ids)]).unlink()
+        to_unlink = self.env['resource.calendar.leaves'].search([('holiday_id', 'in', self.ids)])
+        if to_unlink:
+            return to_unlink.unlink()
+        return True
 
     def _validate_leave_request(self):
         """ Validate time off requests (holiday_type='employee')
         by creating a calendar event and a resource time off. """
         holidays = self.filtered(lambda request: request.holiday_type == 'employee' and request.employee_id)
-        holidays._create_resource_leave()
+        if holidays:
+            holidays._create_resource_leave()
         meeting_holidays = holidays.filtered(lambda l: l.holiday_status_id.create_calendar_meeting)
         meetings = self.env['calendar.event']
         if meeting_holidays:
@@ -1216,7 +1222,9 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 ),
                 partner_ids=notify_partner_ids)
 
-        self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()
+        to_validate = self.filtered(lambda hol: not hol.validation_type == 'both')
+        if to_validate:
+            to_validate.action_validate()
         if not self.env.context.get('leave_fast_create'):
             self.activity_update()
         return True
@@ -1375,8 +1383,10 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
                 leaves._validate_leave_request()
 
-        leaves_second_approver.write({'second_approver_id': current_employee.id})
-        leaves_first_approver.write({'first_approver_id': current_employee.id})
+        if leaves_second_approver:
+            leaves_second_approver.write({'second_approver_id': current_employee.id})
+        if leaves_first_approver:
+            leaves_first_approver.write({'first_approver_id': current_employee.id})
 
         employee_requests = self.filtered(lambda hol: hol.holiday_type == 'employee')
         employee_requests._validate_leave_request()
@@ -1633,7 +1643,8 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             to_do_confirm_activity.activity_feedback(['hr_holidays.mail_act_leave_approval'])
         if to_do:
             to_do.activity_feedback(['hr_holidays.mail_act_leave_approval', 'hr_holidays.mail_act_leave_second_approval'])
-        self.env['mail.activity'].create(activity_vals)
+        if activity_vals:
+            self.env['mail.activity'].create(activity_vals)
 
     ####################################################
     # Messaging methods

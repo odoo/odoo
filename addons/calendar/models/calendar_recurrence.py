@@ -277,7 +277,8 @@ class RecurrenceRule(models.Model):
             **clean_context(self.env.context),
             **{'no_mail_to_attendees': True, 'mail_create_nolog': True},
         }
-        self.env['calendar.event'].with_context(context).create(event_vals)
+        if event_vals:
+            self.env['calendar.event'].with_context(context).create(event_vals)
         return detached_events
 
     def _setup_alarms(self, recurrence_update=False):

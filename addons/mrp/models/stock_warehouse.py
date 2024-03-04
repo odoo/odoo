@@ -295,8 +295,10 @@ class StockWarehouse(models.Model):
         return routes
 
     def _update_location_manufacture(self, new_manufacture_step):
-        self.mapped('pbm_loc_id').write({'active': new_manufacture_step != 'mrp_one_step'})
-        self.mapped('sam_loc_id').write({'active': new_manufacture_step == 'pbm_sam'})
+        if self.pbm_loc_id:
+            self.pbm_loc_id.write({'active': new_manufacture_step != 'mrp_one_step'})
+        if self.sam_loc_id:
+            self.sam_loc_id.write({'active': new_manufacture_step == 'pbm_sam'})
 
     def _update_name_and_code(self, name=False, code=False):
         res = super(StockWarehouse, self)._update_name_and_code(name, code)

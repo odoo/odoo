@@ -226,10 +226,12 @@ class AccountPaymentTerm(models.Model):
             raise UserError(_('You can not delete payment terms as other records still reference it. However, you can archive it.'))
 
     def unlink(self):
-        for terms in self:
-            self.env['ir.property'].sudo().search(
-                [('value_reference', 'in', ['account.payment.term,%s'%payment_term.id for payment_term in terms])]
-            ).unlink()
+        if self:
+            to_unlink = self.env['ir.property'].sudo().search(
+                [('value_reference', 'in', ['account.payment.term,%s' % payment_term.id for payment_term in self])]
+            )
+            if to_unlink:
+                to_unlink.unlink()
         return super(AccountPaymentTerm, self).unlink()
 
     def _get_last_discount_date(self, date_ref):

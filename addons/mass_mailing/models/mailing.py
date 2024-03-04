@@ -555,11 +555,14 @@ class MassMailing(models.Model):
             mailing._get_default_ab_testing_campaign_values()
             for mailing in self.filtered(lambda mailing: mailing.ab_testing_enabled and not mailing.campaign_id)
         ]
-        return self.env['utm.campaign'].create(campaign_vals)
+        if campaign_vals:
+            return self.env['utm.campaign'].create(campaign_vals)
+        return self.env['utm.campaign'].browse()
 
     def _fix_attachment_ownership(self):
         for record in self:
-            record.attachment_ids.write({'res_model': record._name, 'res_id': record.id})
+            if record.attachment_ids:
+                record.attachment_ids.write({'res_model': record._name, 'res_id': record.id})
         return self
 
     def copy_data(self, default=None):

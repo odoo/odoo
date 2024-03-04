@@ -149,7 +149,8 @@ class MailTemplate(models.Model):
 
     def _fix_attachment_ownership(self):
         for record in self:
-            record.attachment_ids.write({'res_model': record._name, 'res_id': record.id})
+            if record.attachment_ids:
+                record.attachment_ids.write({'res_model': record._name, 'res_id': record.id})
         return self
 
     def _check_abstract_models(self, vals_list):

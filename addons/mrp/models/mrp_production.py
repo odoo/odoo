@@ -2000,10 +2000,12 @@ class MrpProduction(models.Model):
         # Moves without quantity done are not posted => set them as done instead of canceling. In
         # case the user edits the MO later on and sets some consumed quantity on those, we do not
         # want the move lines to be canceled.
-        (productions_not_to_backorder.move_raw_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel')).write({
-            'state': 'done',
-            'product_uom_qty': 0.0,
-        })
+        to_write = (productions_not_to_backorder.move_raw_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel'))
+        if to_write:
+            to_write.write({
+                'state': 'done',
+                'product_uom_qty': 0.0,
+            })
         for production in self:
             production.write({
                 'date_finished': fields.Datetime.now(),

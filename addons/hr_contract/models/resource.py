@@ -24,9 +24,11 @@ class ResourceCalendar(models.Model):
         ]
         domain = AND([domain, [('resource_id', 'in', resources.ids)]]) if resources else domain
 
-        self.env['resource.calendar.leaves'].search(domain).write({
-            'calendar_id': other_calendar.id,
-        })
+        to_write = self.env['resource.calendar.leaves'].search(domain)
+        if to_write:
+            to_write.write({
+                'calendar_id': other_calendar.id,
+            })
 
     def _compute_contracts_count(self):
         count_data = self.env['hr.contract']._read_group(

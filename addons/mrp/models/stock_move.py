@@ -396,8 +396,9 @@ class StockMove(models.Model):
             moves_ids_to_return |= phantom_moves.action_explode().ids
         move_to_unlink = self.env['stock.move'].browse(moves_ids_to_unlink).sudo()
         move_to_unlink.quantity = 0
-        move_to_unlink._action_cancel()
-        move_to_unlink.unlink()
+        if move_to_unlink:
+            move_to_unlink._action_cancel()
+            move_to_unlink.unlink()
         return self.env['stock.move'].browse(moves_ids_to_return)
 
     def action_show_details(self):

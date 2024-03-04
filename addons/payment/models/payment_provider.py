@@ -398,7 +398,9 @@ class PaymentProvider(models.Model):
 
         :return: None
         """
-        self.env['payment.token'].search([('provider_id', 'in', self.ids)]).write({'active': False})
+        to_archive = self.env['payment.token'].search([('provider_id', 'in', self.ids)])
+        if to_archive:
+            to_archive.write({'active': False})
 
     def _deactivate_unsupported_payment_methods(self):
         """ Deactivate payment methods linked to only disabled providers.
@@ -408,7 +410,9 @@ class PaymentProvider(models.Model):
         unsupported_pms = self.payment_method_ids.filtered(
             lambda pm: all(p.state == 'disabled' for p in pm.provider_ids)
         )
-        (unsupported_pms + unsupported_pms.brand_ids).active = False
+        to_archive = unsupported_pms + unsupported_pms.brand_ids
+        if to_archive:
+            to_archive.active = False
 
     def _activate_default_pms(self):
         """ Activate the default payment methods of the provider.
@@ -418,7 +422,9 @@ class PaymentProvider(models.Model):
         for provider in self:
             pm_codes = provider._get_default_payment_method_codes()
             pms = provider.with_context(active_test=False).payment_method_ids
-            (pms + pms.brand_ids).filtered(lambda pm: pm.code in pm_codes).active = True
+            to_active = (pms + pms.brand_ids).filtered(lambda pm: pm.code in pm_codes and not pm.active)
+            if to_active:
+                to_active.active = True
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_data(self):

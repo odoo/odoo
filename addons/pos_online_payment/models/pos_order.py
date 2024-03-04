@@ -22,7 +22,8 @@ class PosOrder(models.Model):
     def _clean_payment_lines(self):
         self.ensure_one()
         order_payments = self.env['pos.payment'].search(['&', ('pos_order_id', '=', self.id), ('online_account_payment_id', '=', False)])
-        order_payments.unlink()
+        if order_payments:
+            order_payments.unlink()
 
     def get_and_set_online_payments_data(self, next_online_payment_amount=False):
         """ Allows to update the amount to pay for the next online payment and

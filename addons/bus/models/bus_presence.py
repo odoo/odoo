@@ -69,4 +69,6 @@ class BusPresence(models.Model):
 
     @api.autovacuum
     def _gc_bus_presence(self):
-        self.search([('user_id.active', '=', False)]).unlink()
+        to_unlink = self.search([('user_id.active', '=', False)])
+        if to_unlink:
+            to_unlink.unlink()
