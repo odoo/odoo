@@ -376,7 +376,10 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
                 mockRPC(route, args) {
                     if (args.method === "web_save") {
-                        assert.deepEqual(args.args[1], { datetime: "2017-02-08 06:00:00" });
+                        assert.deepEqual(args.args[1], {
+                            datetime: "2017-02-08 06:00:00",
+                            datetime_end: "2017-03-13 00:00:00",
+                        });
                     }
                 },
             });
@@ -1217,6 +1220,24 @@ QUnit.module("Fields", (hooks) => {
             assert.hasAttrValue(getInputs()[1], "data-field", "datetime_end");
             assert.strictEqual(getInputs()[1].value, "07/07/2023 13:00:00");
             assert.containsNone(target, ".o_add_date");
+        }
+    );
+
+    QUnit.test(
+        "there is no arrow between the dates with option always_range if nothing is set and it is readonly",
+        async (assert) => {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: /* xml */ `
+                <form>
+                    <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end', 'always_range': 'true'}" />
+                    <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end', 'always_range': 'true'}" readonly="true" />
+                </form>`,
+            });
+
+            assert.containsOnce(target, ".fa-long-arrow-right");
         }
     );
 });

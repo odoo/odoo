@@ -159,6 +159,11 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
     }
     async closeSession() {
         this.customerDisplay?.update({ closeUI: true });
+        // If there are orders in the db left unsynced, we try to sync.
+        const syncSuccess = await this.pos.push_orders_with_closing_popup();
+        if (!syncSuccess) {
+            return;
+        }
         if (this.pos.config.cash_control) {
             const response = await this.orm.call(
                 "pos.session",

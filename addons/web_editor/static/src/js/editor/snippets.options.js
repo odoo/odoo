@@ -5670,6 +5670,34 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         $overlayArea.prepend($buttons[1]);
         $overlayArea.prepend($buttons[0]);
 
+        // Needed for compatibility (with already dropped snippets).
+        const parentEl = this.$target[0].parentElement;
+        if (parentEl.classList.contains("row")) {
+            const columnEls = [...parentEl.children];
+            let orderedColumnEls = columnEls.filter(el => el.style.order);
+
+            // TODO: remove in master once handled by a migration script.
+            // If there is no inline order, make sure that any existing order
+            // class is replaced with inline CSS.
+            if (!orderedColumnEls.length) {
+                for (const el of columnEls) {
+                    const orderClass = el.className.match(/(^|\s+)(?<cls>order-(?<ord>[0-9]+))(?!\S)/);
+                    if (orderClass) {
+                        el.classList.remove(orderClass.groups.cls);
+                        el.style.order = orderClass.groups.ord;
+                        orderedColumnEls.push(el);
+                    }
+                }
+            }
+
+            // If the target is a column, check if all the columns are either
+            // mobile ordered or not. If they are not consistent, then we remove
+            // the mobile order classes from all of them, to avoid issues.
+            if (orderedColumnEls.length && orderedColumnEls.length !== columnEls.length) {
+                this._removeMobileOrders(orderedColumnEls);
+            }
+        }
+
         return this._super(...arguments);
     },
     /**
@@ -5677,20 +5705,19 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
      */
     onClone(options) {
         this._super.apply(this, arguments);
-        const mobileOrder = this._getItemMobileOrder(this.$target[0]);
+        const mobileOrder = this.$target[0].style.order;
         // If the order has been adapted on mobile, it must be different
         // for each clone.
         if (options.isCurrent && mobileOrder) {
             const siblingEls = this.$target[0].parentElement.children;
-            const cloneEls = [...siblingEls].filter(el => el.classList.contains(mobileOrder[0]));
+            const cloneEls = [...siblingEls].filter(el => el.style.order === mobileOrder);
             // For cases in which multiple clones are made at the same time, we
             // change the order for all clones at once. (e.g.: it happens when
             // increasing the columns count.) This makes sure the clones get a
             // mobile order in line with their DOM order.
             cloneEls.forEach((el, i) => {
                 if (i > 0) {
-                    const newMobileOrder = siblingEls.length - cloneEls.length + i;
-                    el.classList.replace(mobileOrder[0], `order-${newMobileOrder}`);
+                    el.style.order = siblingEls.length - cloneEls.length + i;
                 }
             });
         }
@@ -5698,20 +5725,22 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
     /**
      * @override
      */
+    onMove() {
+        this._super.apply(this, arguments);
+        // Remove all the mobile order classes after a drag and drop.
+        this._removeMobileOrders(this.$target[0].parentElement.children);
+    },
+    /**
+     * @override
+     */
     onRemove() {
         this._super.apply(this, arguments);
-        const targetMobileOrder = this._getItemMobileOrder(this.$target[0]);
+        const targetMobileOrder = this.$target[0].style.order;
         // If the order has been adapted on mobile, the gap created by the
         // removed snippet must be filled in.
         if (targetMobileOrder) {
-            const targetOrder = parseInt(targetMobileOrder[1]);
-
-            [...this.$target[0].parentElement.children].forEach(el => {
-                const elOrder = parseInt(this._getItemMobileOrder(el)[1]);
-                if (elOrder > targetOrder) {
-                    el.classList.replace(`order-${elOrder}`, `order-${elOrder - 1}`);
-                }
-            });
+            const targetOrder = parseInt(targetMobileOrder);
+            this._fillRemovedItemGap(this.$target[0].parentElement, targetOrder);
         }
     },
 
@@ -5733,7 +5762,7 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         let siblingEls, mobileOrder;
         if (moveLeftOrRight) {
             siblingEls = this.$target[0].parentElement.children;
-            mobileOrder = !!this._getItemMobileOrder(this.$target[0]);
+            mobileOrder = !!this.$target[0].style.order;
         }
         if (moveLeftOrRight && isMobile && !isNavItem) {
             if (!mobileOrder) {
@@ -5768,9 +5797,7 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
                 }
             }
             if (mobileOrder) {
-                for (const el of siblingEls) {
-                    el.className = el.className.replace(/\border(-lg)?-[0-9]+\b/g, "");
-                }
+                this._removeMobileOrders(siblingEls);
             }
         }
         if (!this.$target.is(this.data.noScroll)
@@ -5820,15 +5847,15 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             // On mobile, items' reordering is independent from desktop inside
             // a snippet (left or right), not at a higher level (up or down).
             if (moveLeftOrRight && isMobileView) {
-                const targetMobileOrder = this._getItemMobileOrder(this.$target[0]);
+                const targetMobileOrder = this.$target[0].style.order;
                 if (targetMobileOrder) {
                     const siblingEls = this.$target[0].parentElement.children;
                     const orderModifier = widgetName === "move_left_opt" ? -1 : 1;
                     let delta = 0;
                     while (true) {
                         delta += orderModifier;
-                        const nextOrderClass = `order-${parseInt(targetMobileOrder[1]) + delta}`;
-                        const siblingEl = [...siblingEls].find(el => el.classList.contains(nextOrderClass));
+                        const nextOrder = parseInt(targetMobileOrder) + delta;
+                        const siblingEl = [...siblingEls].find(el => el.style.order === nextOrder.toString());
                         if (!siblingEl) {
                             break;
                         }
@@ -5857,13 +5884,13 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
      * @param {HTMLCollection} siblingEls
      */
     _swapMobileOrders(widgetValue, siblingEls) {
-        const targetMobileOrder = this._getItemMobileOrder(this.$target[0]);
+        const targetMobileOrder = this.$target[0].style.order;
         const orderModifier = widgetValue === "prev" ? -1 : 1;
         let delta = 0;
         while (true) {
             delta += orderModifier;
-            const newOrderClass = `order-${parseInt(targetMobileOrder[1]) + delta}`;
-            const comparedEl = [...siblingEls].find(el => el.classList.contains(newOrderClass));
+            const newOrder = parseInt(targetMobileOrder) + delta;
+            const comparedEl = [...siblingEls].find(el => el.style.order === newOrder.toString());
             // TODO In master: remove break.
             if (!comparedEl) {
                 break;
@@ -5871,8 +5898,8 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             if (window.getComputedStyle(comparedEl).display === "none") {
                 continue;
             }
-            this.$target[0].classList.replace(targetMobileOrder[0], newOrderClass);
-            comparedEl.classList.replace(newOrderClass, targetMobileOrder[0]);
+            this.$target[0].style.order = newOrder;
+            comparedEl.style.order = targetMobileOrder;
             break;
         }
     },
@@ -6593,8 +6620,8 @@ registry.ImageTools = ImageHandlerOption.extend({
             // When a shape is removed and there is a hover effect on the
             // image, we then place the "Square" shape as the default because a
             // shape is required for the hover effects to work.
-            const shapeImgShapeWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
-            widgetValue = shapeImgShapeWidget.getActiveValue("setImgShape");
+            const shapeImgSquareWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
+            widgetValue = shapeImgSquareWidget.getActiveValue("setImgShape");
         }
         if (widgetValue) {
             await this._loadShape(widgetValue);
@@ -6617,7 +6644,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                         delete img.dataset.shapeFlip;
                         delete img.dataset.shapeRotate;
                     }
-                    if (params.animated || this._isDeviceShape()) {
+                    if (!this._canHaveHoverEffect()) {
                         delete img.dataset.hoverEffect;
                         delete img.dataset.hoverEffectColor;
                         delete img.dataset.hoverEffectStrokeWidth;
@@ -6695,21 +6722,45 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async setImgShapeHoverEffect(previewMode, widgetValue, params) {
         const imgEl = this._getImg();
+        if (previewMode !== "reset") {
+            this.prevHoverEffectColor = imgEl.dataset.hoverEffectColor;
+            this.prevHoverEffectIntensity = imgEl.dataset.hoverEffectIntensity;
+            this.prevHoverEffectStrokeWidth = imgEl.dataset.hoverEffectStrokeWidth;
+        }
         delete imgEl.dataset.hoverEffectColor;
         delete imgEl.dataset.hoverEffectIntensity;
         delete imgEl.dataset.hoverEffectStrokeWidth;
-        if (params.name === "hover_effect_overlay_opt") {
-            imgEl.dataset.hoverEffectColor = this._getCSSColorValue("black-25");
-        } else if (params.name === "hover_effect_outline_opt") {
-            imgEl.dataset.hoverEffectColor = this._getCSSColorValue("primary");
-            imgEl.dataset.hoverEffectStrokeWidth = 10;
+        if (previewMode === true) {
+            if (params.name === "hover_effect_overlay_opt") {
+                imgEl.dataset.hoverEffectColor = this._getCSSColorValue("black-25");
+            } else if (params.name === "hover_effect_outline_opt") {
+                imgEl.dataset.hoverEffectColor = this._getCSSColorValue("primary");
+                imgEl.dataset.hoverEffectStrokeWidth = 10;
+            } else {
+                imgEl.dataset.hoverEffectIntensity = 20;
+                if (params.name !== "hover_effect_mirror_blur_opt") {
+                    imgEl.dataset.hoverEffectColor = "rgba(0, 0, 0, 0)";
+                }
+            }
         } else {
-            imgEl.dataset.hoverEffectIntensity = 20;
-            if (params.name !== "hover_effect_mirror_blur_opt") {
-                imgEl.dataset.hoverEffectColor = "rgba(0, 0, 0, 0)";
+            if (this.prevHoverEffectColor) {
+                imgEl.dataset.hoverEffectColor = this.prevHoverEffectColor;
+            }
+            if (this.prevHoverEffectIntensity) {
+                imgEl.dataset.hoverEffectIntensity = this.prevHoverEffectIntensity;
+            }
+            if (this.prevHoverEffectStrokeWidth) {
+                imgEl.dataset.hoverEffectStrokeWidth = this.prevHoverEffectStrokeWidth;
             }
         }
-        await this._applyOptions();
+        await this._reapplyCurrentShape();
+        // When the hover effects are first activated from the "animationMode"
+        // function of the "WebsiteAnimate" class, the history was paused to
+        // avoid recording intermediate steps. That's why we unpause it here.
+        if (this.firstHoverEffect) {
+            this.options.wysiwyg.odooEditor.historyUnpauseSteps();
+            delete this.firstHoverEffect;
+        }
     },
     /**
      * @see this.selectClass for parameters
@@ -6717,7 +6768,7 @@ registry.ImageTools = ImageHandlerOption.extend({
     async selectDataAttribute(previewMode, widgetValue, params) {
         await this._super(...arguments);
         if (["hoverEffectIntensity", "hoverEffectStrokeWidth"].includes(params.attributeName)) {
-            await this._applyOptions();
+            await this._reapplyCurrentShape();
         }
     },
     /**
@@ -6734,7 +6785,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             defaultColor = "primary";
         }
         img.dataset.hoverEffectColor = this._getCSSColorValue(widgetValue || defaultColor);
-        await this._applyOptions();
+        await this._reapplyCurrentShape();
     },
 
     //--------------------------------------------------------------------------
@@ -6747,10 +6798,6 @@ registry.ImageTools = ImageHandlerOption.extend({
     notify(name) {
         if (name === "enable_hover_effect") {
             this.trigger_up("snippet_edition_request", {exec: () => {
-                // Add the "Overlay" hover effect to the shape.
-                const hoverEffectOverlayWidget = this._requestUserValueWidgets("hover_effect_overlay_opt")[0];
-                hoverEffectOverlayWidget.enable();
-                hoverEffectOverlayWidget.getParent().close(); // FIXME remove this ugly hack asap
                 // Add the "square" shape to the image if it has no shape
                 // because the "hover effects" need a shape to work.
                 const imgEl = this._getImg();
@@ -6760,6 +6807,11 @@ registry.ImageTools = ImageHandlerOption.extend({
                     shapeImgSquareWidget.enable();
                     shapeImgSquareWidget.getParent().close(); // FIXME remove this ugly hack asap
                 }
+                // Add the "Overlay" hover effect to the shape.
+                this.firstHoverEffect = true;
+                const hoverEffectOverlayWidget = this._requestUserValueWidgets("hover_effect_overlay_opt")[0];
+                hoverEffectOverlayWidget.enable();
+                hoverEffectOverlayWidget.getParent().close(); // FIXME remove this ugly hack asap
             }});
         } else if (name === "disable_hover_effect") {
             this._disableHoverEffect();
@@ -6881,6 +6933,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         const img = this._getImg();
         const initialImageWidth = img.naturalWidth;
         let needToRefreshPublicWidgets = false;
+        let hasHoverEffect = false;
 
         const svg = new DOMParser().parseFromString(svgText, 'image/svg+xml').documentElement;
 
@@ -6904,11 +6957,12 @@ registry.ImageTools = ImageHandlerOption.extend({
         }
 
         // Add shape animations on hover.
-        if (img.dataset.hoverEffect && !this._isDeviceShape() && !this._isAnimatedShape()) {
+        if (img.dataset.hoverEffect && this._canHaveHoverEffect()) {
             this._addImageShapeHoverEffect(svg, img);
             // The "ImageShapeHoverEffet" public widget needs to restart
             // (e.g. image replacement).
             needToRefreshPublicWidgets = true;
+            hasHoverEffect = true;
         }
 
         const svgAspectRatio = parseInt(svg.getAttribute('width')) / parseInt(svg.getAttribute('height'));
@@ -6929,7 +6983,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         // Force natural width & height (note: loading the original image is
         // needed for Safari where natural width & height of SVG does not return
         // the correct values).
-        const originalImage = await loadImage(imgDataURL, img);
+        const originalImage = await loadImage(imgDataURL);
         // If the svg forces the size of the shape we still want to have the resized
         // width
         if (!svg.dataset.forcedSize) {
@@ -6948,9 +7002,28 @@ registry.ImageTools = ImageHandlerOption.extend({
         const dataURL = await createDataURL(blob);
         const imgFilename = (img.dataset.originalSrc.split('/').pop()).split('.')[0];
         img.dataset.fileName = `${imgFilename}.svg`;
+        let clonedImgEl = null;
+        if (hasHoverEffect) {
+            // This is useful during hover effects previews. Without this, in
+            // Chrome, the 'mouse out' animation is triggered very briefly when
+            // previewMode === 'reset' (when transitioning from one hover effect
+            // to another), causing a visual glitch. To avoid this, we hide the
+            // image with its clone when the source is set.
+            clonedImgEl = img.cloneNode(true);
+            this.options.wysiwyg.odooEditor.observerUnactive("addClonedImgForHoverEffectPreview");
+            img.classList.add("d-none");
+            img.insertAdjacentElement("afterend", clonedImgEl);
+            this.options.wysiwyg.odooEditor.observerActive("addClonedImgForHoverEffectPreview");
+        }
         const loadedImg = await loadImage(dataURL, img);
+        if (hasHoverEffect) {
+            this.options.wysiwyg.odooEditor.observerUnactive("removeClonedImgForHoverEffectPreview");
+            clonedImgEl.remove();
+            img.classList.remove("d-none");
+            this.options.wysiwyg.odooEditor.observerActive("removeClonedImgForHoverEffectPreview");
+        }
         if (needToRefreshPublicWidgets) {
-            this._refreshPublicWidgets();
+            await this._refreshPublicWidgets();
         }
         return loadedImg;
     },
@@ -7038,12 +7111,11 @@ registry.ImageTools = ImageHandlerOption.extend({
         }
         if (params.optionsPossibleValues.setImgShapeHoverEffect) {
             const imgEl = this._getImg();
-            return imgEl.classList.contains("o_animate_on_hover") && !this._isDeviceShape() && !this._isAnimatedShape();
+            return imgEl.classList.contains("o_animate_on_hover") && this._canHaveHoverEffect();
         }
         // If "Description" or "Tooltip" options.
         if (["alt", "title"].includes(params.attributeName)) {
-            const imgEl = this._getImg();
-            return !imgEl.matches("[data-oe-type='image'] > img, [data-oe-xpath]");
+            return isImageSupportedForStyle(this._getImg());
         }
         // The "Square" shape is only used for hover effects. It is
         // automatically set when there is an hover effect and no shape is
@@ -7055,8 +7127,8 @@ registry.ImageTools = ImageHandlerOption.extend({
             // Do not show the "remove shape" button when the "square" shape is
             // enable. The "square" shape is only enable when there is a hover
             // effect and it is always hidden in the shape select.
-            const shapeImgShareWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
-            return !shapeImgShareWidget.isActive();
+            const shapeImgSquareWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
+            return !shapeImgSquareWidget.isActive();
         }
         return this._super(...arguments);
     },
@@ -7325,7 +7397,16 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     _isAnimatedShape() {
         const shapeImgWidget = this._requestUserValueWidgets("shape_img_opt")[0];
-        return shapeImgWidget && shapeImgWidget.getMethodsParams().animated;
+        return shapeImgWidget?.getMethodsParams().animated;
+    },
+    /**
+     * Checks if the shape can have a hover effect.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _canHaveHoverEffect() {
+        return !this._isDeviceShape() && !this._isAnimatedShape();
     },
     /**
      * Adds hover effect to the SVG.
@@ -7439,7 +7520,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                 const parser = new DOMParser();
                 const xmlDoc = parser.parseFromString(text, "text/xml");
                 return xmlDoc.getElementsByTagName("svg")[0];
-        });
+            });
     },
     /**
      * Disables the hover effect on the image.
@@ -7458,6 +7539,31 @@ registry.ImageTools = ImageHandlerOption.extend({
         // without hover effect.
         if (shapeName === "geo_square") {
             this._requestUserValueWidgets("remove_img_shape_opt")[0].enable();
+        }
+    },
+    /**
+     * @override
+     */
+    async _select(previewMode, widget) {
+        await this._super(...arguments);
+        // This is a special case where we need to override the "_select"
+        // function in order to trigger mouse events for hover effects on the
+        // images when previewing the options. This is done here because if it
+        // was done in one of the widget methods, the animation would be
+        // canceled when "_refreshPublicWidgets" is executed in the "_super"
+        if (widget.$el[0].closest("#o_hover_effects_options")) {
+            const hasSetImgShapeHoverEffectMethod = widget.getMethodsNames().includes("setImgShapeHoverEffect");
+            // We trigger the animation when preview mode is "false", except for
+            // the "setImgShapeHoverEffect" option, where we trigger it when
+            // preview mode is "true".
+            if (previewMode === hasSetImgShapeHoverEffectMethod) {
+                this.$target[0].dispatchEvent(new Event("mouseover"));
+                this.hoverTimeoutId = setTimeout(() => {
+                    this.$target[0].dispatchEvent(new Event("mouseout"));
+                }, 700);
+            } else if (previewMode === "reset") {
+                clearTimeout(this.hoverTimeoutId);
+            }
         }
     },
 
@@ -8982,6 +9088,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                                 ? _t("Custom %s", this.data.snippetName)
                                 : _t("Custom Button");
                             const targetCopyEl = this.$target[0].cloneNode(true);
+                            targetCopyEl.classList.add('s_custom_snippet');
                             delete targetCopyEl.dataset.name;
                             if (isButton) {
                                 targetCopyEl.classList.remove("mb-2");
@@ -8991,6 +9098,18 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                             // current widget has been destroyed and is orphaned, so this._rpc
                             // will not work as it can't trigger_up. For this reason, we need
                             // to bypass the service provider and use the global RPC directly
+
+                            // Get editable parent TODO find proper method to get it directly
+                            let editableParentEl;
+                            for (const parentEl of this.options.getContentEditableAreas()) {
+                                if (parentEl.contains(this.$target[0])) {
+                                    editableParentEl = parentEl;
+                                    break;
+                                }
+                            }
+                            context['model'] = editableParentEl.dataset.oeModel;
+                            context['field'] = editableParentEl.dataset.oeField;
+                            context['resId'] = editableParentEl.dataset.oeId;
                             await jsonrpc(`/web/dataset/call_kw/ir.ui.view/save_snippet`, {
                                 model: "ir.ui.view",
                                 method: "save_snippet",

@@ -89,7 +89,7 @@ class TestPaymentTransaction(RazorpayCommon):
             'token': {
                 "expire_at": token_expiry_timeslamp,
                 "frequency": "as_presented",
-                'max_amount': 50000000,
+                'max_amount': 100000000,
             },
             'amount': converted_amount,
             'currency': tx.currency_id.name,

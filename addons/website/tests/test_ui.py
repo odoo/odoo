@@ -305,6 +305,7 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour('/web', 'conditional_visibility_2', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_3', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_4', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_5', login='admin')
 
     def test_11_website_snippet_background_edition(self):
         self.env['ir.attachment'].create({
@@ -449,6 +450,9 @@ class TestUi(odoo.tests.HttpCase):
     def test_30_website_text_animations(self):
         self.start_tour("/", 'text_animations', login='admin')
 
+    def test_31_website_edit_megamenu_big_icons_subtitles(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_megamenu_big_icons_subtitles', login='admin')
+
     def test_website_media_dialog_image_shape(self):
         self.start_tour("/", 'website_media_dialog_image_shape', login='admin')
 
@@ -503,3 +507,48 @@ class TestUi(odoo.tests.HttpCase):
         website.menu_id.child_id[1:].unlink()
 
         self.start_tour('/', 'website_no_dirty_page', login='admin')
+
+    def test_widget_lifecycle(self):
+        self.env['ir.asset'].create({
+            'name': 'wysiwyg_patch_start_and_destroy',
+            'bundle': 'website.assets_wysiwyg',
+            'path': 'website/static/tests/tour_utils/widget_lifecycle_patch_wysiwyg.js',
+        })
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'widget_lifecycle', login='admin')
+
+    def test_drop_404_ir_attachment_url(self):
+        website_snippets = self.env.ref('website.snippets')
+        self.env['ir.ui.view'].create([{
+            'name': '404 Snippet',
+            'type': 'qweb',
+            'key': 'website.s_404_snippet',
+            'arch': """
+                <section class="s_404_snippet">
+                    <div class="container">
+                        <img class="img-responsive img-thumbnail" src="/web/image/website.404_ir_attachment"/>
+                    </div>
+                </section>
+            """,
+        }, {
+            'type': 'qweb',
+            'inherit_id': website_snippets.id,
+            'arch': """
+                <xpath expr="//t[@t-snippet='website.s_parallax']" position="after">
+                    <t t-snippet="website.s_404_snippet"
+                       t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg"/>
+                </xpath>
+            """,
+        }])
+        attachment = self.env['ir.attachment'].create({
+            'name': '404_ir_attachment',
+            'type': 'url',
+            'url': '/web/static/__some__typo__.png',
+            'mimetype': 'image/png',
+        })
+        self.env['ir.model.data'].create({
+            'name': '404_ir_attachment',
+            'module': 'website',
+            'model': 'ir.attachment',
+            'res_id': attachment.id,
+        })
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'drop_404_ir_attachment_url', login='admin')

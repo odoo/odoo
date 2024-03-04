@@ -3,9 +3,11 @@
 # 	* website_sale
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Wil Odoo, 2024
 # Jolien De Paepe, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Paul Stroobant, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -350,7 +352,7 @@ msgid ""
 "label=\"Next\" title=\"Next\"/>"
 msgstr ""
 "<span class=\"oi oi-chevron-right fa-2x oe_unmovable\" role=\"img\" aria-"
-"label=\"Next\" title=\"Volgende\"/>"
+"label=\"Next\" title=\"Next\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -1160,7 +1162,7 @@ msgstr ""
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Checkout"
-msgstr "Verificatie"
+msgstr "Afrekenen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2261,6 +2263,13 @@ msgid ""
 msgstr ""
 "Het lijkt erop dat er al een transactie voor je bestelling is, daarom kun je"
 " de bezorgmethode niet meer wijzigen"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
+#, python-format
+msgid "Item(s) added to your cart"
+msgstr "Item(s) toegevoegd aan je winkelmandje"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
@@ -4355,10 +4364,13 @@ msgid "Visitor Product Views History"
 msgstr "Bezoeker productweergavehistorie"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__shop_warning
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__shop_warning
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
+#, python-format
 msgid "Warning"
 msgstr "Waarschuwing"
 
@@ -4683,6 +4695,11 @@ msgstr "E-commerce verkopen"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Shop"
 msgstr "e-commerce winkel"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
+msgid "eCommerce cart"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server

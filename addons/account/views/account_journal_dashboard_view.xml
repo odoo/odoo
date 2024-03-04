@@ -41,7 +41,7 @@
                             <div class="o_kanban_card_header_title">
                                 <div class="o_primary">
                                     <a type="object" name="open_action"><field name="name"/></a>
-                                    <t t-if="dashboard.company_count > 1">
+                                    <t t-if="dashboard.show_company">
                                         <span groups="base.group_multi_company" class="small">- <field name="company_id"/></span>
                                     </t>
                                 </div>
@@ -304,9 +304,11 @@
                         <div class="col-12 col-sm-7 o_kanban_primary_right">
                             <div class="row" t-if="dashboard.number_draft">
                                 <div class="col overflow-hidden text-start">
-                                    <a type="object" name="open_action" context="{'search_default_draft': '1'}">
-                                        <span t-if="journal_type == 'sale'" title="Invoices to Validate"><t t-out="dashboard.number_draft"/> Invoices to Validate</span>
-                                        <span t-if="journal_type == 'purchase'" title="Bills to Validate" id="account_dashboard_purchase_draft"><t t-out="dashboard.number_draft"/> Bills to Validate</span>
+                                    <a t-if="journal_type == 'sale'" type="object" name="open_action" context="{'search_default_draft': '1'}">
+                                        <span title="Invoices to Validate"><t t-out="dashboard.number_draft"/> Invoices to Validate</span>
+                                    </a>
+                                    <a t-if="journal_type == 'purchase'" type="object" name="open_action" context="{'search_default_draft': '1'}">
+                                        <span title="Bills to Validate" id="account_dashboard_purchase_draft"><t t-out="dashboard.number_draft"/> Bills to Validate</span>
                                     </a>
                                 </div>
                                 <div class="col-auto text-end">

@@ -4,6 +4,7 @@
 from markupsafe import Markup
 
 from odoo import Command
+from odoo.exceptions import AccessError
 from odoo.tests.common import users, tagged, HttpCase
 
 
@@ -24,6 +25,19 @@ class TestImLivechatMessage(HttpCase):
             },
             {'name': 'test1', 'login': 'test1', 'password': self.password, 'email': 'test1@example.com', 'livechat_username': 'chuck'},
         ])
+
+    def test_update_username(self):
+        user = self.env['res.users'].create({
+            'name': 'User',
+            'login': 'User',
+            'password': self.password,
+            'email': 'user@example.com',
+            'livechat_username': 'edit me'
+        })
+        with self.assertRaises(AccessError):
+            self.env['res.users'].with_user(user).check_access_rights('write')
+        user.with_user(user).livechat_username = 'New username'
+        self.assertEqual(user.livechat_username, 'New username')
 
     @users('emp')
     def test_message_format(self):

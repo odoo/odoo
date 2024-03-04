@@ -6,17 +6,14 @@
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2023
 # Андрей Гусев <gaussgss@gmail.com>, 2023
 # Vasiliy Korobatov <korobatov@gmail.com>, 2023
-# Irina Fedulova <istartlin@gmail.com>, 2023
-# Ekaterina <nawsikaya@bk.ru>, 2023
-# alenafairy, 2023
+# ILMIR <karamov@it-projects.info>, 2023
+# Максим Дронь <dronmax@gmail.com>, 2023
 # Alena Vlasova, 2023
 # Collex100, 2023
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
-# Артур Чеботарь <artcha.chebotar@gmail.com>, 2023
 # Martin Trigaux, 2023
-# ILMIR <karamov@it-projects.info>, 2023
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
-# Максим Дронь <dronmax@gmail.com>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -24,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Максим Дронь <dronmax@gmail.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,17 +33,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">Архивировано</span>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "<span>New</span>"
-msgstr "<span>Новое</span>"
+msgstr "<span>Новый</span>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
@@ -56,35 +53,37 @@ msgstr "<span>Отчетность</span>"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "<span>View</span>"
-msgstr "<span>Вид</span>"
+msgstr "<span>Посмотреть</span>"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction
 msgid "Action Needed"
-msgstr "Требует внимания"
+msgstr "Требуются действия"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__active
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__active
 msgid "Active"
-msgstr "Активно"
+msgstr "Активный"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.mail_activity_type_action_config_sales
 msgid "Activity Types"
-msgstr "Виды задач"
+msgstr "Типы Активности"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Add a Team Member"
-msgstr ""
+msgstr "Добавление сотрудника штата"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
 msgid ""
 "Add members to automatically assign their documents to this sales team."
 msgstr ""
+"Добавьте участников, чтобы автоматически назначить их документы в этот отдел"
+" продаж."
 
 #. module: sales_team
 #. odoo-python
@@ -94,6 +93,8 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current team"
 " %(team_name)s."
 msgstr ""
+"Добавив %(user_name)s в эту команду, вы удалите его из текущей команды "
+"%(team_name)s."
 
 #. module: sales_team
 #. odoo-python
@@ -103,6 +104,8 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current "
 "teams %(team_names)s."
 msgstr ""
+"Добавив %(user_name)s в эту команду, вы удалите его из текущей команды "
+"%(team_names)s."
 
 #. module: sales_team
 #. odoo-python
@@ -112,6 +115,8 @@ msgid ""
 "Adding %(user_names)s in this team would remove them from their current "
 "teams (%(team_names)s)."
 msgstr ""
+"Добавив %(user_names)s в эту команду, вы удалите их из их текущих команд "
+"(%(team_names)s)."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -148,14 +153,14 @@ msgstr "Большая красивая кнопка :)"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_tag
 msgid "CRM Tag"
-msgstr ""
+msgstr "Метка CRM"
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Cannot delete default team \"%s\""
-msgstr ""
+msgstr "Невозможно удалить команду по умолчанию \"%s\"."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__color
@@ -165,7 +170,7 @@ msgstr "Цвет"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__color
 msgid "Color Index"
-msgstr "Цветовая палитра"
+msgstr "Цветовой индекс"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__company_id
@@ -177,32 +182,32 @@ msgstr "Компания"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "Configuration"
-msgstr "Настройки"
+msgstr "Конфигурация"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor7
 msgid "Consulting"
-msgstr "Консалтинг"
+msgstr "Consulting"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
 msgid "Contact"
-msgstr "Контакт"
+msgstr "Контакты"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
 msgid "Create CRM Tags"
-msgstr ""
+msgstr "Создание тегов CRM"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid "Create a Sales Team"
-msgstr ""
+msgstr "Создайте команду по продажам"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 msgid "Create an Activity Type"
-msgstr ""
+msgstr "Создайте тип деятельности"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
@@ -216,7 +221,7 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__create_date
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__create_date
 msgid "Created on"
-msgstr "Дата создания"
+msgstr "Создано"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__currency_id
@@ -237,19 +242,19 @@ msgstr "Данные графика информационной панели"
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid "Define a new sales team"
-msgstr ""
+msgstr "Определите новую команду по продажам"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor5
 msgid "Design"
-msgstr "Проектирование"
+msgstr "Дизайн"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__display_name
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__display_name
 msgid "Display Name"
-msgstr "Показывать название"
+msgstr "Отображаемое имя"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__email
@@ -259,15 +264,15 @@ msgstr "Email"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
 msgid "Favorite Members"
-msgstr "лучшие члены"
+msgstr "Лучшие Участники"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
 msgid ""
 "Favorite teams to display them in the dashboard and access them easily."
 msgstr ""
-"Любимые команды показывают их на информационной панели и имеют легкий доступ"
-" к ним."
+"Избранные команды для отображения их в панели управления и получения "
+"быстрого к ним доступа."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -275,8 +280,8 @@ msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
 msgstr ""
-"Подпишитесь на эту команду по продажам, чтобы автоматически отслеживать "
-"события, связанные с пользователями этой команды."
+"Следите за этой командой продавцов, чтобы автоматически отслеживать события,"
+" связанные с пользователями этой команды."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
@@ -288,17 +293,17 @@ msgstr "Подписчики"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_partner_ids
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Подписчики (Партнеры)"
+msgstr "Подписчики"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 msgid "Group By"
-msgstr "Группировка"
+msgstr "Группировать по"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Group By..."
-msgstr "Группировать по…"
+msgstr "Группировать По…"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__has_message
@@ -311,7 +316,7 @@ msgstr "Есть сообщение"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__id
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__id
 msgid "ID"
-msgstr "Идентификатор"
+msgstr "ID"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_membership_multi
@@ -320,19 +325,21 @@ msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
 msgstr ""
+"Если значение True, пользователи могут принадлежать к нескольким отделам "
+"продаж. В противном случае членство ограничивается одним отделом продаж."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr ""
-"Если флажок установлен, новые сообщения будут требовать вашего внимания."
+"Если флажок установлен, значит, новые сообщения требуют вашего внимания."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Если флажок установлен, некоторые сообщения имеют ошибку доставки."
+msgstr "Если отмечено, некоторые сообщения имеют ошибку доставки."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
@@ -341,6 +348,8 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
 msgstr ""
+"Если установлено, этот отдел продаж будет использоваться для продаж и "
+"назначений, связанных с этим партнером"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
@@ -348,8 +357,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
-"Если для активного поля установлено значение ошибочно, это позволит вам "
-"скрыть команду продаж, не удаляя ее."
+"Если для активного поля установлено значение \"ложно\", это позволит вам "
+"скрыть команду продаж, не удаляя её."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -359,7 +368,7 @@ msgstr "Изображение"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
 msgid "Image (128)"
-msgstr ""
+msgstr "Изображение (128)"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor4
@@ -370,14 +379,14 @@ msgstr "Информация"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_is_follower
 msgid "Is Follower"
-msgstr "Подписчик"
+msgstr "Является подписчиком"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__write_uid
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__write_uid
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновил"
+msgstr "Последнее обновление"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__write_date
@@ -392,16 +401,18 @@ msgid ""
 "Main user sales team. Used notably for pipeline, or to set sales team in "
 "invoicing or subscription."
 msgstr ""
+"Основной пользователь отдела продаж. Используется в основном для конвейера, "
+"а также для настройки отдела продаж при выставлении счетов или подписке."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
 msgid "Member Company"
-msgstr ""
+msgstr "Компания-участник"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__member_warning
 msgid "Member Warning"
-msgstr ""
+msgstr "Предупреждение члена"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -411,7 +422,7 @@ msgstr "Участники"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_warning
 msgid "Membership Issue Warning"
-msgstr ""
+msgstr "Предупреждение о выдаче членства"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
@@ -434,36 +445,36 @@ msgstr "Мобильный"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__is_membership_multi
 msgid "Multiple Memberships Allowed"
-msgstr ""
+msgstr "Разрешено несколько членств"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__name
 msgid "Name"
-msgstr "Название"
+msgstr "Имя"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Кол-во действий"
+msgstr "Число действий"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_has_error_counter
 msgid "Number of errors"
-msgstr "Количество ошибок"
+msgstr "Число ошибок"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "Количество сообщений, требующих действия"
+msgstr "Количество сообщений, требующих принятия мер"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error_counter
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Количество сообщений с ошибкой доставки"
+msgstr "Количество недоставленных сообщений"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor8
@@ -478,17 +489,17 @@ msgstr "Телефон"
 #. module: sales_team
 #: model:crm.team,name:sales_team.pos_sales_team
 msgid "Point of Sale"
-msgstr "Касса"
+msgstr "Торговая точка"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
 msgid "Pre-Sales"
-msgstr ""
+msgstr "Предпродажная подготовка"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor1
 msgid "Product"
-msgstr "Продукт"
+msgstr "Товар"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__rating_ids
@@ -510,7 +521,7 @@ msgstr "Продавец"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 msgid "Sales Person"
-msgstr ""
+msgstr "Сотрудник отдела продаж"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -527,18 +538,18 @@ msgstr "Команда продаж"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team_member
 msgid "Sales Team Member"
-msgstr ""
+msgstr "Сотрудник отдела продаж"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_ids
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_member_ids
 msgid "Sales Team Members"
-msgstr ""
+msgstr "Сотрудники отдела продаж"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_all_ids
 msgid "Sales Team Members (incl. inactive)"
-msgstr ""
+msgstr "Сотрудники отдела продаж (в том числе неактивные)"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
@@ -555,19 +566,19 @@ msgstr "Продавец"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
 msgid "Salespersons"
-msgstr ""
+msgstr "Продавцы"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Salesteams Search"
-msgstr "Поиск команды продаж"
+msgstr "Поиск продавцов"
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Sample data"
-msgstr "Пример данных"
+msgstr "Демо-данные"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__sequence
@@ -597,7 +608,7 @@ msgstr "Название тега"
 #. module: sales_team
 #: model:ir.model.constraint,message:sales_team.constraint_crm_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr "Такая метка уже существует!"
+msgstr "Название тега уже существует!"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
@@ -609,13 +620,13 @@ msgstr "Теги"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Details"
-msgstr "Детали команды"
+msgstr "Сведения о команде"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Team Leader"
-msgstr "Лидер команды"
+msgstr "Руководитель группы"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_member_action
@@ -626,6 +637,7 @@ msgstr "Члены команды"
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Team Members are salespersons assigned to specific teams."
 msgstr ""
+"Члены команды - это продавцы, закрепленные за определенными командами."
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_pipeline
@@ -635,12 +647,12 @@ msgstr "Команды"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__color
 msgid "The color of the channel"
-msgstr "цвет канала"
+msgstr "Цвет канала"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__company_id
 msgid "The default company for this user."
-msgstr ""
+msgstr "Компания по умолчанию для этого пользователя."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
@@ -648,6 +660,8 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Prepare meeting\")."
 msgstr ""
+"Они представляют собой различные категории действий, которые вам предстоит "
+"выполнить (например, \"Позвонить\" или \"Подготовить встречу\")."
 
 #. module: sales_team
 #. odoo-python
@@ -657,23 +671,27 @@ msgid ""
 "To add a Salesperson into multiple Teams, activate the Multi-Team option in "
 "settings."
 msgstr ""
+"Чтобы добавить продавца в несколько команд, активируйте опцию Multi-Team в "
+"настройках."
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
 msgid "Training"
-msgstr "Обучение"
+msgstr "Тренинг"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_in_teams_ids
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
+"UX: Дайте пользователям возможность не добавлять в текущую выбранную "
+"команду, чтобы избежать дублирования"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
-msgstr ""
+msgstr "UX: Ограничить компанию командой или всеми, если компании нет"
 
 #. module: sales_team
 #. odoo-python
@@ -681,13 +699,15 @@ msgstr ""
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
-msgstr "Неопределенная модель графы для команды продаж:%s "
+msgstr "Неопределенная модель графа для команды продаж: %s"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid ""
 "Use Sales Teams to organize your sales departments and draw up reports."
 msgstr ""
+"Используйте Sales Teams для организации отделов продаж и составления "
+"отчетов."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -696,6 +716,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
+"Используйте команды продаж для организации отделов продаж.\n"
+"                Каждая команда будет работать с отдельным трубопроводом."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
@@ -703,6 +725,8 @@ msgid ""
 "Use Tags to manage and track your Opportunities (product structure, sales "
 "type, ...)"
 msgstr ""
+"Используйте теги для управления и отслеживания ваших возможностей (структура"
+" продукта, тип продаж, ...)"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -712,37 +736,37 @@ msgstr "Пользователь"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
 msgid "User Company"
-msgstr ""
+msgstr "Компания-пользователь"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_in_teams_ids
 msgid "User In Teams"
-msgstr ""
+msgstr "Пользователь в команде"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
 msgid "User Sales Team"
-msgstr ""
+msgstr "Отдел продаж для пользователей"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
 msgid "User: All Documents"
-msgstr "Пользователь: все документы"
+msgstr "Пользователь: Все документы"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman
 msgid "User: Own Documents Only"
-msgstr "Пользователь: только свои документы"
+msgstr "Пользователь: Только собственные документы"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
 msgid "Users assigned to this team."
-msgstr ""
+msgstr "Пользователи, назначенные в эту команду."
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
 msgid "Website"
-msgstr "Вебсайт"
+msgstr "Сайт"
 
 #. module: sales_team
 #. odoo-python
@@ -752,16 +776,18 @@ msgid ""
 "You are trying to create duplicate membership(s). We found that "
 "%(duplicates)s already exist(s)."
 msgstr ""
+"Вы пытаетесь создать дубликат(ы) членства. Мы обнаружили, что %(duplicates)s"
+" уже существует (существуют)."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "e.g. North America"
-msgstr ""
+msgstr "например, Северная Америка"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 msgid "e.g. Services"
-msgstr ""
+msgstr "например, услуги"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team
@@ -773,12 +799,15 @@ msgstr "eBay"
 msgid ""
 "the user will have access to all records of everyone in the sales "
 "application."
-msgstr "пользователь будет иметь доступ ко любым записям в модуле продаж."
+msgstr ""
+"пользователь будет иметь доступ ко всем записям каждого в приложении продаж."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
-msgstr "пользователь будет иметь доступ к своим данным в модуле продаж."
+msgstr ""
+"пользователь будет иметь доступ к своим собственным данным в приложении для "
+"продаж."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
@@ -786,5 +815,5 @@ msgid ""
 "the user will have an access to the sales configuration as well as statistic"
 " reports."
 msgstr ""
-"пользователь будет иметь доступ к настройке продаж, а также к статистическим"
-" отчётам."
+"пользователь получает доступ к конфигурации продаж, а также к статистическим"
+" отчетам."

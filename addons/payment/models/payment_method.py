@@ -100,24 +100,28 @@ class PaymentMethod(models.Model):
 
     #=== ONCHANGE METHODS ===#
 
-    @api.onchange('provider_ids')
-    def _onchange_provider_ids_warn_before_disabling_tokens(self):
-        """ Display a warning about the consequences of detaching a payment method from a provider.
+    @api.onchange('active', 'provider_ids', 'support_tokenization')
+    def _onchange_warn_before_disabling_tokens(self):
+        """ Display a warning about the consequences of archiving the payment method, detaching it
+        from a provider, or removing its support for tokenization.
 
-        Let the user know that tokens related to a provider get archived if it is detached from the
-        payment methods associated with those tokens.
+        Let the user know that the related tokens will be archived.
 
         :return: A client action with the warning message, if any.
         :rtype: dict
         """
+        disabling = self._origin.active and not self.active
         detached_providers = self._origin.provider_ids.filtered(
             lambda p: p.id not in self.provider_ids.ids
         )  # Cannot use recordset difference operation because self.provider_ids is a set of NewIds.
-        if detached_providers:
-            related_tokens = self.env['payment.token'].with_context(active_test=True).search([
-                ('payment_method_id', 'in', (self._origin + self._origin.brand_ids).ids),
-                ('provider_id', 'in', detached_providers.ids),
-            ])  # Fix `active_test` in the context forwarded by the view.
+        blocking_tokenization = self._origin.support_tokenization and not self.support_tokenization
+        if disabling or detached_providers or blocking_tokenization:
+            related_tokens = self.env['payment.token'].with_context(active_test=True).search(
+                expression.AND([
+                    [('payment_method_id', 'in', (self._origin + self._origin.brand_ids).ids)],
+                    [('provider_id', 'in', detached_providers.ids)] if detached_providers else [],
+                ])
+            )  # Fix `active_test` in the context forwarded by the view.
             if related_tokens:
                 return {
                     'warning': {
@@ -154,17 +158,20 @@ class PaymentMethod(models.Model):
     #=== CRUD METHODS ===#
 
     def write(self, values):
-        # Handle payment methods being detached from providers.
-        if 'provider_ids' in values:
-            detached_provider_ids = [
-                vals[0] for command, *vals in values['provider_ids'] if command == Command.UNLINK
-            ]
-            if detached_provider_ids:
-                linked_tokens = self.env['payment.token'].with_context(active_test=True).search([
-                    ('provider_id', 'in', detached_provider_ids),
-                    ('payment_method_id', 'in', (self + self.brand_ids).ids),
-                ])  # Fix `active_test` in the context forwarded by the view.
-                linked_tokens.active = False
+        # Handle payment methods being archived, detached from providers, or blocking tokenization.
+        archiving = values.get('active') is False
+        detached_provider_ids = [
+            vals[0] for command, *vals in values['provider_ids'] if command == Command.UNLINK
+        ] if 'provider_ids' in values else []
+        blocking_tokenization = values.get('support_tokenization') is False
+        if archiving or detached_provider_ids or blocking_tokenization:
+            linked_tokens = self.env['payment.token'].with_context(active_test=True).search(
+                expression.AND([
+                    [('payment_method_id', 'in', (self + self.brand_ids).ids)],
+                    [('provider_id', 'in', detached_provider_ids)] if detached_provider_ids else [],
+                ])
+            )  # Fix `active_test` in the context forwarded by the view.
+            linked_tokens.active = False
 
         # Prevent enabling a payment method if it is not linked to an enabled provider.
         if values.get('active'):
@@ -185,7 +192,7 @@ class PaymentMethod(models.Model):
 
     def _get_compatible_payment_methods(
         self, provider_ids, partner_id, currency_id=None, force_tokenization=False,
-        is_express_checkout=False
+        is_express_checkout=False, **kwargs
     ):
         """ Search and return the payment methods matching the compatibility criteria.
 
@@ -201,6 +208,7 @@ class PaymentMethod(models.Model):
         :param bool force_tokenization: Whether only payment methods supporting tokenization can be
                                         matched.
         :param bool is_express_checkout: Whether the payment is made through express checkout.
+        :param dict kwargs: Optional data. This parameter is not used here.
         :return: The compatible payment methods.
         :rtype: payment.method
         """

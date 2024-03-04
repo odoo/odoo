@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# ILMIR <karamov@it-projects.info>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: ILMIR <karamov@it-projects.info>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,8 +28,8 @@ msgid ""
 "Any new All Users Lock Date must be posterior (or equal) to the previous "
 "one."
 msgstr ""
-"Любая новая дата блокировки для всех пользователей должна быть "
-"предшествующей (или равной) предыдущей."
+"Любая новая дата блокировки всех пользователей должна быть позже (или равна)"
+" предыдущей."
 
 #. module: account_lock
 #: model:ir.model,name:account_lock.model_res_company
@@ -41,7 +41,7 @@ msgstr "Компании"
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The lock date for accountants is irreversible and can't be removed."
-msgstr ""
+msgstr "Дата блокировки для бухгалтеров необратима и не может быть снята."
 
 #. module: account_lock
 #. odoo-python
@@ -50,14 +50,14 @@ msgstr ""
 msgid "The new tax lock date must be set after the previous lock date."
 msgstr ""
 "Новая дата блокировки для налога должна быть установлена после даты "
-"предыдущей блокировки"
+"предыдущей блокировки."
 
 #. module: account_lock
 #. odoo-python
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The tax lock date is irreversible and can't be removed."
-msgstr "Дата налоговой блокировки необратима и не может быть удалена."
+msgstr "Дата блокировки налогов необратима и не может быть удалена."
 
 #. module: account_lock
 #. odoo-python
@@ -67,9 +67,9 @@ msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the All Users "
 "Lock Date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
-"Вы не можете заблокировать период, который еще не закончился. Следовательно,"
-" дата блокировки для всех пользователей должна быть предшествующей (или "
-"равной) последнему дню предыдущего месяца."
+"Нельзя заблокировать период, который еще не закончился. Поэтому дата "
+"блокировки для всех пользователей должна быть раньше (или равна) последнего "
+"дня предыдущего месяца."
 
 #. module: account_lock
 #. odoo-python
@@ -79,9 +79,9 @@ msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the tax lock "
 "date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
-"Вы не можете заблокировать период, который еще не закончился. Следовательно,"
-" дата налоговой блокировки должна предшествовать (или равняться) последнему "
-"дню предыдущего месяца."
+"Вы не можете заблокировать период, который еще не закончился. Поэтому дата "
+"блокировки налога должна быть предшествующей (или равной) последнему дню "
+"предыдущего месяца."
 
 #. module: account_lock
 #. odoo-python
@@ -92,3 +92,6 @@ msgid ""
 "Therefore, the All Users Lock Date must be anterior (or equal) to the "
 "Invoice/Bills Lock Date."
 msgstr ""
+"Для бухгалтеров нельзя устанавливать более строгие ограничения, чем для "
+"пользователей. Поэтому дата блокировки всех пользователей должна быть раньше"
+" (или равна) даты блокировки счетов/фактур."

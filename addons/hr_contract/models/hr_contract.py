@@ -24,7 +24,7 @@ class Contract(models.Model):
     name = fields.Char('Contract Reference', required=True)
     active = fields.Boolean(default=True)
     structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type", compute="_compute_structure_type_id", readonly=False, store=True)
-    employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
     department_id = fields.Many2one('hr.department', compute='_compute_employee_contract', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string="Department")
     job_id = fields.Many2one('hr.job', compute='_compute_employee_contract', store=True, readonly=False,
@@ -295,7 +295,7 @@ class Contract(models.Model):
                     ('state', '=', 'open'),
                 ]).filtered(lambda c: c.date_start <= today and (not c.date_end or c.date_end >= today))
                 if running_contract:
-                    contract.employee_id.contract_id = running_contract[0]
+                    contract.employee_id.sudo().contract_id = running_contract[0]
         if vals.get('state') == 'close':
             for contract in self.filtered(lambda c: not c.date_end):
                 contract.date_end = max(date.today(), contract.date_start)

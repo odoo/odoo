@@ -53,17 +53,4 @@ export class CurrencyDataSource {
         }
         return result;
     }
-
-    /**
-     * Get all currencies from the server
-     * @param {string} currencyName
-     * @returns {Currency}
-     */
-    getCurrency(currencyName) {
-        return this.serverData.batch.get(
-            "res.currency",
-            "get_currencies_for_spreadsheet",
-            currencyName
-        );
-    }
 }

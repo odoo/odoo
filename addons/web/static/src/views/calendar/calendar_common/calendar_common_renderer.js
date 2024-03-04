@@ -9,6 +9,7 @@ import { getColor } from "../colors";
 import { useCalendarPopover, useClickHandler, useFullCalendar } from "../hooks";
 import { CalendarCommonPopover } from "./calendar_common_popover";
 import { browser } from "@web/core/browser/browser";
+import { getWeekNumber } from "../utils";
 
 import { Component, onMounted, useEffect } from "@odoo/owl";
 
@@ -112,7 +113,7 @@ export class CalendarCommonRenderer extends Component {
             unselectAuto: false,
             weekLabel: this.props.model.scale === "month" && this.env.isSmall ? "" : _t("Week"),
             weekends: this.props.isWeekendVisible,
-            weekNumberCalculation: "ISO",
+            weekNumberCalculation: (date) => getWeekNumber(date, this.props.model.firstDayOfWeek),
             weekNumbers: true,
             weekNumbersWithinDays: !this.env.isSmall,
             windowResize: this.onWindowResizeDebounced,
@@ -194,11 +195,7 @@ export class CalendarCommonRenderer extends Component {
         this.highlightEvent(info.event, "o_cw_custom_highlight");
     }
     onDateClick(info) {
-        if (this.env.isSmall && this.props.model.scale === "month") {
-            this.props.model.load({
-                date: luxon.DateTime.fromISO(info.dateStr),
-                scale: "day",
-            });
+        if (info.jsEvent.defaultPrevented) {
             return;
         }
         this.props.createRecord(this.fcEventToRecord(info));
@@ -268,6 +265,7 @@ export class CalendarCommonRenderer extends Component {
         }
     }
     async onSelect(info) {
+        info.jsEvent.preventDefault();
         this.popover.close();
         await this.props.createRecord(this.fcEventToRecord(info));
         this.fc.api.unselect();

@@ -10,8 +10,8 @@ from odoo.exceptions import UserError
 class Message(models.Model):
     _inherit = 'mail.message'
 
-    l10n_in_audit_log_preview = fields.Html(string="Description", compute="_compute_l10n_in_audit_log_preview")
-    l10n_in_audit_log_account_move_id = fields.Many2one('account.move', string="Journal Entry", compute="_compute_l10n_in_audit_log_document_name", search="_search_l10n_in_audit_log_document_name")
+    l10n_in_audit_log_preview = fields.Html(string="Audit Preview", compute="_compute_l10n_in_audit_log_preview")
+    l10n_in_audit_log_account_move_id = fields.Many2one('account.move', string="Accounting Entry", compute="_compute_l10n_in_audit_log_document_name", search="_search_l10n_in_audit_log_document_name")
 
     @api.depends('body', 'subject', 'tracking_value_ids', 'subtype_id')
     def _compute_l10n_in_audit_log_preview(self):

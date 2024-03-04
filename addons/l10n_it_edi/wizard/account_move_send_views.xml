@@ -10,15 +10,18 @@
                     <field name="l10n_it_edi_enable_xml_export" invisible="1"/>
                     <field name="l10n_it_edi_readonly_send" invisible="1"/>
                     <field name="l10n_it_edi_enable_send" invisible="1"/>
-                    <div class="alert alert-warning mb-8" role="alert" invisible="not l10n_it_edi_warning_message">
-                        <field name="l10n_it_edi_warning_message"/>
-                    </div>
+                    <field name="l10n_it_edi_actionable_errors" class="o_field_html" widget="actionable_errors"/>
                 </xpath>
                 <xpath expr="//div[@name='option_send_mail']" position='after'>
                     <div name="option_l10n_it_edi">
                         <div name="option_l10n_it_edi_xml_export" invisible="not l10n_it_edi_enable_xml_export">
                             <field name="l10n_it_edi_checkbox_xml_export" readonly="l10n_it_edi_readonly_xml_export"/>
                             <b><label for="l10n_it_edi_checkbox_xml_export"/></b>
+                            <i class="fa fa-question-circle ml4"
+                                role="img"
+                                aria-label="Warning"
+                                invisible="not l10n_it_edi_readonly_xml_export"
+                                title="Create the e-invoice XML ready to be sent to the Italian Tax Agency. It is set as readonly if a report has already been created, to avoid inconsistencies. To re-enable it, delete the PDF attachment."/>
                         </div>
                         <div name="option_l10n_it_edi_send" invisible="not l10n_it_edi_enable_send">
                             <field name="l10n_it_edi_checkbox_send" readonly="l10n_it_edi_readonly_send"/>

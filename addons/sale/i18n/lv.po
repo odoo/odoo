@@ -11,16 +11,17 @@
 # Martin Trigaux, 2023
 # ievaputnina <ievai.putninai@gmail.com>, 2023
 # Anzelika Adejanova, 2023
-# Will Sensors, 2023
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
+# Will Sensors, 2024
+# Lancelot Semal, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024\n"
+"Last-Translator: Lancelot Semal, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,28 +54,28 @@ msgstr "# Pārdošanas pasūtījumi"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(attribute)s: %(values)s"
-msgstr ""
+msgstr "%(attribute)s: %(values)s"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Canceled)"
-msgstr ""
+msgstr "%(line_description)s (Atcelts)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Draft)"
-msgstr ""
+msgstr "%(line_description)s (Projekts)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (ref: %(reference)s on %(date)s)"
-msgstr ""
+msgstr "%(line_description)s (atsauce: %(reference)s uz %(date)s)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -82,13 +83,15 @@ msgid ""
 "%)\n"
 "                                            for this proposal, I agree to the following terms:"
 msgstr ""
+"%)\n"
+"                                            attiecībā uz šo priekšlikumu es piekrītu šādiem noteikumiem:"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "%s has been created"
-msgstr ""
+msgstr "%s ir izveidots"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -106,21 +109,23 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in (\"draft\", \"sent\") and \"Piedāvājumu - %s\" % "
+"(object.name)) or \"Pasūtījumu - %s\" % (object.name)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "2023-12-31"
-msgstr ""
+msgstr "2023-12-31"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "27.00"
-msgstr ""
+msgstr "27.00"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "31.05"
-msgstr ""
+msgstr "31.05"
 
 #. module: sale
 #. odoo-javascript
@@ -130,6 +135,8 @@ msgid ""
 "<b>Congratulations</b>, your first quotation is sent!<br>Check your email to"
 " validate the quote."
 msgstr ""
+"<b>Apsveicam,</b> jūsu pirmais piedāvājums ir nosūtīts!<br>Pārbaudiet savu "
+"e-pastu, lai apstiprinātu piedāvājumu."
 
 #. module: sale
 #. odoo-javascript
@@ -137,7 +144,7 @@ msgstr ""
 #, python-format
 msgid ""
 "<b>Send the quote</b> to yourself and check what the customer will receive."
-msgstr ""
+msgstr "<b>Nosūtiet piedāvājumu</b> sev un pārbaudiet, ko saņems klients."
 
 #. module: sale
 #. odoo-javascript
@@ -193,6 +200,49 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+"       <t t-set=\"transaction_sudo\" t-value=\"object.get_portal_last_transaction()\"></t>\n"
+"        Sveiki,\n"
+"       <br><br>\n"
+"        Maksājums ar atsauci\n"
+"       <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference or ''\">SOOO49</span>\n"
+"        summa\n"
+"       <span style=\"font-weight:bold;\" t-out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"        par jūsu pasūtījumu\n"
+"       <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span>\n"
+"       <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">\n"
+"            tiek gaidīts.\n"
+"           <br>\n"
+"           <t t-if=\"object.currency_id.compare_amounts(object.amount_paid + transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in ('draft', 'sent')\">\n"
+"                Jūsu pasūtījums tiks apstiprināts, tiklīdz būs apstiprināts maksājums.\n"
+"           </t>\n"
+"           <t t-else=\"\">\n"
+"                Pēc apstiprināšanas,\n"
+"               <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid - transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"                vēl būs jāsamaksā.\n"
+"           </t>\n"
+"       </t>\n"
+"       <t t-else=\"\">\n"
+"            ir apstiprināts.\n"
+"           <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, object.amount_total) &lt; 0\">\n"
+"               <br>\n"
+"               <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid, object.currency_id) or ''\">$ 10.00</span>\n"
+"                vēl ir jāsamaksā.\n"
+"           </t>\n"
+"       </t>\n"
+"       <br><br>\n"
+"        Paldies par uzticēšanos!\n"
+"       <br>\n"
+"        Ja jums ir kādi jautājumi, sazinieties ar mums.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell admin</t>\n"
+"        </t>\n"
+"       <br><br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -381,6 +431,189 @@ msgid ""
 "</t>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+"        Labdien,\n"
+"        <br><br>\n"
+"        <t t-set=\"tx_sudo\" t-value=\"object.get_portal_last_transaction()\"></t>\n"
+"        Jūsu pasūtījums <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> par summu <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+"        <t t-if=\"object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))\">\n"
+"            ir apstiprināts.<br>\n"
+"            Paldies par pasūtījumu!\n"
+"        </t>\n"
+"        <t t-elif=\"tx_sudo and tx_sudo.state == 'pending'\">\n"
+"           tiek gatavots. Tiks apstiprināts, kad saņemsim maksājumu.\n"
+"            <t t-if=\"object.reference\">\n"
+"                Atsauce maksājumam ir <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"></span>.\n"
+"            </t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Dodiet ziņu, ja ir nepieciešamas izmaiņas vai konsultācija.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"    </p>\n"
+"<t t-if=\"hasattr(object, 'website_id') and object.website_id\">\n"
+"    <div style=\"margin: 0px; padding: 0px;\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
+"            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
+"                <td style=\"width: 150px;\"><span style=\"font-weight:bold;\">Produkti</span></td>\n"
+"                <td></td>\n"
+"                <td width=\"15%\" align=\"center\"><span style=\"font-weight:bold;\">Daudzums</span></td>\n"
+"                <td width=\"20%\" align=\"right\">\n"
+"                    <span style=\"font-weight:bold;\">\n"
+"                        <t t-if=\"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
+"                            bez PVN\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            Ar PVN.\n"
+"                        </t>\n"
+"                    </span>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"        <t t-foreach=\"object.order_line\" t-as=\"line\">\n"
+"            <t t-if=\"(not hasattr(line, 'is_delivery') or not line.is_delivery) and line.display_type in ['line_section', 'line_note']\">\n"
+"                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
+"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"></t>\n"
+"                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
+"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"></t>\n"
+"                        <td colspan=\"4\">\n"
+"                            <t t-if=\"line.display_type == 'line_section'\">\n"
+"                                <span style=\"font-weight:bold;\" t-out=\"line.name or ''\">Zaļais kurss</span>\n"
+"                            </t>\n"
+"                            <t t-elif=\"line.display_type == 'line_note'\">\n"
+"                                <i t-out=\"line.name or ''\">Zaļais kurss</i>\n"
+"                            </t>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </t>\n"
+"            <t t-elif=\"(not hasattr(line, 'is_delivery') or not line.is_delivery)\">\n"
+"                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
+"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"></t>\n"
+"                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
+"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"></t>\n"
+"                        <td style=\"width: 150px;\">\n"
+"                            <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Product image\">\n"
+"                        </td>\n"
+"                        <td align=\"left\" t-out=\"line.product_id.name or ''\">\tZaļais kurss</td>\n"
+"                        <td width=\"15%\" align=\"center\" t-out=\"line.product_uom_qty or ''\">1</td>\n"
+"                        <td width=\"20%\" align=\"right\"><span style=\"font-weight:bold;\">\n"
+"                        <t t-if=\"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
+"                            <t t-out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">$ 10.00</t>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <t t-out=\"format_amount(line.price_reduce_taxinc, object.currency_id) or ''\">$ 10.00</t>\n"
+"                        </t>\n"
+"                        </span></td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </t>\n"
+"        </t>\n"
+"    </div>\n"
+"    <div style=\"margin: 0px; padding: 0px;\" t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
+"            <tr>\n"
+"                <td style=\"width: 60%\"></td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Piegāde:</span></td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">$ 0.00</td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <td style=\"width: 60%\"></td>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><span style=\"font-weight:bold;\">Starpsumma:</span></td>\n"
+"                <td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <div style=\"margin: 0px; padding: 0px;\" t-else=\"\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
+"            <tr>\n"
+"                <td style=\"width: 60%\"></td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Starpsumma:</span></td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <div style=\"margin: 0px; padding: 0px;\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
+"            <tr>\n"
+"                <td style=\"width: 60%\"></td>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><span style=\"font-weight:bold;\">PVN:</span></td>\n"
+"                <td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_tax, object.currency_id) or ''\">$ 0.00</td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <td style=\"width: 60%\"></td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Kopā:</span></td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <div t-if=\"object.partner_invoice_id\" style=\"margin: 0px; padding: 0px;\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
+"            <tr>\n"
+"                <td style=\"padding-top: 10px;\">\n"
+"                    <span style=\"font-weight:bold;\">Kam:</span>\n"
+"                    <t t-out=\"object.partner_invoice_id.street or ''\">1201 S Figueroa St</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.city or ''\">Los Angeles</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.state_id.name or ''\">California</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.zip or ''\">90015</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.country_id.name or ''\">United States</t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <span style=\"font-weight:bold;\">Maksājuma veids:</span>\n"
+"                    <t t-if=\"tx_sudo.token_id\">\n"
+"                        <t t-out=\"tx_sudo.token_id.display_name or ''\"></t>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"></t>\n"
+"                    </t>\n"
+"                    (<t t-out=\"format_amount(tx_sudo.amount, object.currency_id) or ''\">$ 10.00</t>)\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <div t-if=\"object.partner_shipping_id and not object.only_services\" style=\"margin: 0px; padding: 0px;\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <br>\n"
+"                    <span style=\"font-weight:bold;\">Nosūtīt uz:</span>\n"
+"                    <t t-out=\"object.partner_shipping_id.street or ''\">1201 S Figueroa St</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.city or ''\">Los Angeles</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.state_id.name or ''\">California</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.zip or ''\">90015</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.country_id.name or ''\">United States</t>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"        <table t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\" width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <span style=\"font-weight:bold;\">Piegādes veids:</span>\n"
+"                    <t t-out=\"object.carrier_id.name or ''\"></t>\n"
+"                    <t t-if=\"object.amount_delivery == 0.0\">\n"
+"                        (Free)\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        (<t t-out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">$ 10.00</t>)\n"
+"                    </t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.carrier_id.carrier_description\">\n"
+"                <td>\n"
+"                    <strong>Piegādes apraksts:</strong>\n"
+"                    <t t-out=\"object.carrier_id.carrier_description\"></t>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"</t>\n"
+"</div>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
@@ -416,6 +649,36 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"       <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"></t>\n"
+"        Sveiki,\n"
+"       <br><br>\n"
+"        Jūsu\n"
+"       <t t-if=\"ctx.get('proforma')\">\n"
+"            Proforma rēķins <t t-out=\"doc_name or ''\">piedāvājumam</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"           <t t-if=\"object.origin\">\n"
+"                (ar atsauci: <t t-out=\"object.origin or ''\"></t> )\n"
+"           </t>\n"
+"            ir pieejams rēķins <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\"> 10,00 $</span> apmērā.\n"
+"       </t>\n"
+"       <t t-else=\"\">\n"
+"           <t t-out=\"doc_name or ''\">piedāvājums</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
+"           <t t-if=\"object.origin\">\n"
+"                (ar atsauci: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"           </t>\n"
+"            summa <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\"> 10,00 $</span> ir gatava izskatīšanai.\n"
+"       </t>\n"
+"       <br><br>\n"
+"        Ja jums ir kādi jautājumi, sazinieties ar mums.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell admin</t>\n"
+"        </t>\n"
+"       <br><br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_cancellation
@@ -477,18 +740,13 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-check\"/> <b>Authorized</b>"
-msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Autorizēts</b>"
+msgid "<i class=\"fa fa-fw fa-check\"/> Authorized"
+msgstr "<i class=\"fa fa-fw fa-check\"/> Autorizēts"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
-msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Apmaksāts</b>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Gaida maksājumu</b>"
+msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
+msgstr "<i class=\"fa fa-fw fa-check\"/> Apmaksāts"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -496,9 +754,14 @@ msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Termiņš iztecējis"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> Waiting Payment"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Maksājuma gaidīšana"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -511,6 +774,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
 "title=\"Sales orders\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
+"title=\"Sales orders\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -518,11 +783,13 @@ msgid ""
 "<i class=\"fa fa-lock\"/>\n"
 "                    Locked"
 msgstr ""
+"<i class=\"fa fa-lock\"/>\n"
+"                    Bloķēts"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-print\"/> View Details"
-msgstr ""
+msgstr "<i class=\"fa fa-print\"/> Skatīt informāciju"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -532,17 +799,12 @@ msgstr "<i class=\"fa fa-times\"/> Atcelt"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small class=\"text-muted\">Your contact</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Jūsu kontaktinformācija</small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
 msgstr "<small><b class=\"text-muted\">Jūsu ieguvums</b></small>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "<small><b>This offer expires on</b></small>"
-msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -561,7 +823,7 @@ msgstr "<span class=\"flex-grow-1\">/ Mēnesis</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span class=\"mx-3\" invisible=\"not require_payment\">of</span>"
-msgstr ""
+msgstr "<span class=\"mx-3\" invisible=\"not require_payment\">no</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -577,6 +839,10 @@ msgid ""
 "                            <i class=\"fa fa-warning\"/>\n"
 "                        </span>"
 msgstr ""
+"<span invisible=\"advance_payment_method != 'percentage'\" class=\"oe_inline\">% </span>\n"
+"                        <span invisible=\"not display_invoice_amount_warning\" class=\"oe_inline text-danger\" title=\"The Down Payment is greater than the amount remaining to be invoiced.\">\n"
+"                            <i class=\"fa fa-warning\"/>\n"
+"                        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -597,6 +863,10 @@ msgid ""
 "                            Draft invoices for this order will be cancelled. <br/>\n"
 "                        </span>"
 msgstr ""
+"<span>Vai esat pārliecināts, ka vēlaties atcelt šo pasūtījumu? <br/></span>\n"
+"                        <span id=\"display_invoice_alert\" invisible=\"not display_invoice_alert\">\n"
+"                            Šī pasūtījuma rēķinu projekti tiks anulēti. <br/>\n"
+"                        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -622,8 +892,8 @@ msgstr "<span>Nodokļi</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_document_kanban
-msgid "<span>Visible at</span>"
-msgstr ""
+msgid "<span>Visibility</span>"
+msgstr "<span>Redzamība</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -639,7 +909,7 @@ msgstr "<strong class=\"mr16\">Starpsumma</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration:</strong><br/>"
-msgstr ""
+msgstr "<strong>Derīguma termiņš beidzas:</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -658,7 +928,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong><br/>"
-msgstr ""
+msgstr "<strong>Pārdevējs:</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -673,12 +943,12 @@ msgstr "<strong>Paraksts</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<strong>Tax excl.: </strong>"
-msgstr ""
+msgstr "<strong>Bez PVN.: </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<strong>Tax incl.: </strong>"
-msgstr ""
+msgstr "<strong>Iesk. PVN: </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -698,7 +968,7 @@ msgstr "<strong>Piedāvājums ir atcelts.</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong><br/>"
-msgstr ""
+msgstr "<strong>Jūsu atsauce:</strong><br/>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
@@ -709,11 +979,13 @@ msgstr "Apstiprinātam pasūtījumam nepieciešams apstiprināšanas datums."
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "A note, whose content usually applies to the section or product above."
 msgstr ""
+"Piezīme, kuras saturs parasti attiecas uz iepriekš minēto sadaļu vai "
+"produktu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "A section title"
-msgstr ""
+msgstr "Sadaļas nosaukums"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -722,6 +994,9 @@ msgid ""
 "invoicing,according to their invoicing policy (based on ordered or delivered"
 " quantity)."
 msgstr ""
+"Standarta rēķins tiek izrakstīts ar visām rēķina izrakstīšanai sagatavotajām"
+" pasūtījuma rindiņām saskaņā ar rēķinu izrakstīšanas politiku (pamatojoties "
+"uz pasūtīto vai piegādāto daudzumu)."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
@@ -737,7 +1012,7 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr "A warning can be set on a product or a customer (Sale)"
+msgstr "Var tikt iestatīts brīdinājums klientam vai produktam (Tirdzneicība)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -765,7 +1040,7 @@ msgstr "Apstipriniet un parakstiet piedāvājumu"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Pay"
-msgstr ""
+msgstr "Pieņemt & amp; Maksāt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -786,6 +1061,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Atbilstoši produkta konfigurācijai piegādājamo daudzumu var automātiski aprēķināt ar mehānisma palīdzību:\n"
+"  - Manuāli: daudzums tiek iestatīts manuāli uz līnijas\n"
+"  - Analītisks No izdevumiem: daudzums ir iegrāmatoto izdevumu daudzuma summa\n"
+"  - Laika grafiks: daudzums ir to stundu summa, kas reģistrētas uzdevumos, kuri saistīti ar šo pārdošanas pozīciju\n"
+"  - Krājumu pārvietošana: daudzums tiek iegūts no apstiprinātās komplektācijas\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__acc_number
@@ -800,7 +1080,7 @@ msgstr "Account used for deposits"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
 msgid "Accrued Revenue Entry"
-msgstr ""
+msgstr "Uzkrāto ieņēmumu ieraksts"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
@@ -820,7 +1100,7 @@ msgstr "Aktivitātes izņēmuma noformējums"
 #. module: sale
 #: model:ir.ui.menu,name:sale.sale_menu_config_activity_plan
 msgid "Activity Plans"
-msgstr ""
+msgstr "Aktivitāšu plāni"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
@@ -861,22 +1141,22 @@ msgstr "Pievienot sadaļu"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
-msgstr ""
+msgstr "Vairāku variantu pievienošana pasūtījumam no režģa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__allowed_so_line_ids
 msgid "Allowed So Line"
-msgstr ""
+msgstr "Atļauts Tātad līnija"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "Allows you to send Pro-Forma Invoice to your customers"
+msgstr "Atļauj nosūtīt Avansa rēķinu klientiem"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "Allows you to send pro-forma invoice."
+msgstr "Atļauj nosūtīt Avansa rēķinu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_document__attached_on
@@ -889,22 +1169,29 @@ msgid ""
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
 "Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
 msgstr ""
+"Ļauj kopīgot dokumentu ar klientiem pārdošanas laikā.\n"
+"Atstājiet to tukšu, ja nevēlaties kopīgot šo dokumentu ar pārdošanas klientu.\n"
+"Piedāvājums: dokuments tiks nosūtīts klientiem un būs pieejams tiem jebkurā laikā.\n"
+"piemēram, šī opcija var būt noderīga, lai kopīgotu produkta apraksta failus.\n"
+"Apstiprināts pasūtījums: dokuments tiks nosūtīts klientiem un būs tiem pieejams.\n"
+"piemēram, šī opcija var būt noderīga, lai kopīgotu lietotāja rokasgrāmatu vai digitālo saturu, kas iegādāts e-komercijā.\n"
+"Citāti iekšpusē: Dokuments tiks iekļauts piedāvājuma pdf formātā starp galvenajām lapām un piedāvājuma tabulu. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
 msgid "Already Paid"
-msgstr ""
+msgstr "Jau samaksāts"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_invoiced
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_invoiced
 msgid "Already invoiced"
-msgstr ""
+msgstr "Jau izrakstīts rēķins"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
 msgid "Amazon Sync"
-msgstr ""
+msgstr "Amazon Sync"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_amount
@@ -924,13 +1211,13 @@ msgstr "Samaksātā summa"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr "Amount of quotations to invoice"
+msgstr "Piedāvājumu summa izrakstīšanai"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_to_invoice
 msgid "Amount to invoice"
-msgstr ""
+msgstr "Rēķinā norādāmā summa"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -938,6 +1225,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"Pasūtījuma pieprādrošana ir palielināt pārdošanas apjomu, ja piegādātie daudzumi pārsniedz sākotnēji norādītos\n"
+"            pasūtītajiem daudzumiem, un rēķinu izrakstīšanas politika ir balstīta uz pasūtītajiem daudzumiem."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
@@ -953,22 +1242,22 @@ msgstr "Analītiskais Sadalījums"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr ""
+msgstr "Analītiskā izplatīšanas meklēšana"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Analītiskā no izdevumiem"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analytic Line"
+msgstr "Analītiskā rinda"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "Analītiskā plāna piemērojamība"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_precision
@@ -991,16 +1280,19 @@ msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
+"Piemērot manuālas atlaides pārdošanas pasūtījuma pozīcijām vai parādīt "
+"atlaides, kas aprēķinātas no cenrāžiem (iespēja aktivizējama cenrāža "
+"konfigurācijā)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the"
-msgstr ""
+msgstr "Vai esat pārliecināts, ka vēlaties atcelt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the selected quotation?"
-msgstr ""
+msgstr "Vai esat pārliecināts, ka vēlaties atcelt izvēlēto piedāvājumu?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1008,6 +1300,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Vai esat pārliecināts, ka vēlaties anulēt autorizēto darījumu? Šo darbību "
+"nevar atsaukt."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -1015,6 +1309,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"Piemēram, ja pārdodat iepriekš apmaksātas pakalpojumu stundas, Odoo iesaka\n"
+"            pārdot papildu stundas, kad visas pasūtītās stundas ir izlietotas."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1065,12 +1361,12 @@ msgstr "Bankas nosaukums"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__partner
 msgid "Based on Customer ID"
-msgstr ""
+msgstr "Pamatojoties uz klienta ID"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__so_name
 msgid "Based on Document Reference"
-msgstr ""
+msgstr "Pamatojoties uz dokumenta atsauci"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__block
@@ -1081,7 +1377,7 @@ msgstr "Bloķēšanas ziņa"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "Ķermeņa saturs ir tāds pats kā veidnē"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1091,16 +1387,20 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"Palieliniet pārdošanas apjomu, izmantojot vairāku veidu programmas: Kuponi, "
+"akcijas, dāvanu kartes, lojalitātes programmas. Var iestatīt īpašus "
+"nosacījumus (produkti, klienti, minimālā pirkuma summa, periods). Atlīdzības"
+" var būt atlaides (% or summa) vai bezmaksas produkti."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying this <u>down payment</u> of"
-msgstr ""
+msgstr "Veicot šo <u>pirmo iemaksu</u>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying this proposal, I agree to the following terms:"
-msgstr ""
+msgstr "Apmaksājot šo priekšlikumu, es piekrītu šādiem noteikumiem:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1134,18 +1434,18 @@ msgstr "Atcelt"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Cancel %s"
-msgstr ""
+msgstr "Atcelt %s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_mass_cancel_orders
 msgid "Cancel multiple quotations"
-msgstr ""
+msgstr "Atcelt vairākus piedāvājumus"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_mass_cancel_orders
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Cancel quotations"
-msgstr ""
+msgstr "Atcelt piedāvājumus"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -1168,16 +1468,25 @@ msgid ""
 "   • For consumable or storable products, open the product, go to the 'General Information' tab and change the 'Invoicing Policy' from 'Delivered Quantities' to 'Ordered Quantities'.\n"
 "   • For services (and other products), change the 'Invoicing Policy' to 'Prepaid/Fixed Price'.\n"
 msgstr ""
+"Nevar izveidot rēķinu. Rēķina izrakstīšanai nav pieejami nekādi priekšmeti.\n"
+"\n"
+"Lai atrisinātu šo problēmu, lūdzu, pārliecinieties, ka:\n"
+"   - Pirms mēģinājuma izrakstīt rēķinu, produkti ir piegādāti.\n"
+"   - produkta rēķinu izrakstīšanas politika ir konfigurēta pareizi.\n"
+"\n"
+"Ja vēlaties rēķinu izrakstīt, pamatojoties uz pasūtītajiem daudzumiem:\n"
+"   - Attiecībā uz patērējamiem vai uzglabājamiem produktiem atveriet produktu, atveriet cilni \"Vispārīga informācija\" un mainiet \"Rēķinu izrakstīšanas politiku\" no \"Piegādātie daudzumi\" uz \"Pasūtītie daudzumi\".\n"
+"   - Pakalpojumiem (un citiem produktiem) mainiet \"Rēķinu izrakstīšanas politiku\" uz \"Priekšapmaksa/fiksēta cena\".\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Capture Transaction"
-msgstr ""
+msgstr "Saistīt darījumus"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Catalog"
-msgstr ""
+msgstr "Katalogs"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_category_id
@@ -1193,18 +1502,20 @@ msgid ""
 "adjustments in the details of the lines. You might consider updating the "
 "prices."
 msgstr ""
+"Lai mainītu esošā piedāvājuma uzņēmumu, var būt nepieciešami daži manuāli "
+"pielāgojumi līniju detaļās. Jūs varētu apsvērt iespēju atjaunināt cenas."
 
 #. module: sale
 #: model:onboarding.onboarding.step,description:sale.onboarding_onboarding_step_sale_order_confirmation
 msgid "Choose between electronic signatures or online payments."
-msgstr ""
+msgstr "Izvēlieties elektronisko parakstu vai tiešsaistes maksājumus."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/onboarding_onboarding_step.py:0
 #, python-format
 msgid "Choose how to confirm quotations"
-msgstr ""
+msgstr "Izvēlieties, kā apstiprināt citātus"
 
 #. module: sale
 #. odoo-javascript
@@ -1212,13 +1523,15 @@ msgstr ""
 #, python-format
 msgid "Click here to add some products or services to your quotation."
 msgstr ""
+"Noklikšķiniet šeit, lai pievienotu dažus produktus vai pakalpojumus savam "
+"piedāvājumam."
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
 #, python-format
 msgid "Click to define an invoicing target"
-msgstr ""
+msgstr "Noklikšķiniet, lai definētu rēķina izrakstīšanas mērķi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1233,7 +1546,7 @@ msgstr "Saziņa"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Communication history"
-msgstr ""
+msgstr "Komunikācijas vēsture"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
@@ -1256,52 +1569,52 @@ msgstr "Uzņēmums"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Complete your company's data"
-msgstr ""
+msgstr "Aizpildiet sava uzņēmuma datus"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr "Compute shipping costs and ship with DHL"
+msgstr "Aprēķināt sūtīšanas izmaksas un nosūtīt ar DHL"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr ""
+msgstr "Aprēķiniet nosūtīšanas izmaksas un nosūtiet ar Easypost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr "Compute shipping costs and ship with FedEx"
+msgstr "Aprēķināt sūtīšanas izmaksas un nosūtīt ar FedEx"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Sendcloud"
-msgstr ""
+msgstr "Aprēķiniet nosūtīšanas izmaksas un nosūtiet sūtījumu ar Sendcloud"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Shiprocket"
-msgstr ""
+msgstr "Aprēķiniet piegādes izmaksas un nosūtiet ar Shiprocket"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr "Compute shipping costs and ship with UPS"
+msgstr "Aprēķināt sūtīšanas izmaksas un nosūtīt ar UPS"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr "Compute shipping costs and ship with USPS"
+msgstr "Aprēķināt sūtīšanas izmaksas un nosūtīt ar USPS"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr "Compute shipping costs and ship with bpost"
+msgstr "Aprēķināt sūtīšanas izmaksas un nosūtīt ar bpost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
-msgstr "Compute shipping costs on orders"
+msgstr "Aprēķināt sūtīšanas izmaksas pasūtījumiem"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
@@ -1321,22 +1634,22 @@ msgstr "Apstiprināt"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__confirmation_message
 msgid "Confirmation Message"
-msgstr ""
+msgstr "Apstiprinājuma ziņojums"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on__sale_order
 msgid "Confirmed order"
-msgstr ""
+msgstr "Apstiprināts pasūtījums"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connectors"
-msgstr ""
+msgstr "Savienotāji"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__consolidated_billing
 msgid "Consolidated Billing"
-msgstr ""
+msgstr "Konsolidēti rēķini"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
@@ -1355,6 +1668,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"Mērvienību konvertēšana starp mērvienībām var notikt tikai tad, ja tās "
+"pieder vienai un tai pašai kategorijai. Pārrēķins tiks veikts, pamatojoties "
+"uz attiecībām."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__country_code
@@ -1364,7 +1680,7 @@ msgstr "Valsts kods"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_loyalty
 msgid "Coupons & Loyalty"
-msgstr ""
+msgstr "Kuponi un lojalitāte"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -1374,7 +1690,7 @@ msgstr "Izveidošanas datums"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Draft Invoice"
-msgstr ""
+msgstr "Rēķina projekta izveide"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -1385,7 +1701,7 @@ msgstr "Izveidot rēķinu"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Create Invoices"
-msgstr ""
+msgstr "Rēķinu izveide"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -1406,6 +1722,8 @@ msgstr "Izveidot jaunu produktu"
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Create a new quotation, the first step of a new sale!"
 msgstr ""
+"Izveidojiet jaunu cenu piedāvājumu, kas ir pirmais solis, lai veiktu jaunu "
+"pārdošanu!"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
@@ -1427,6 +1745,8 @@ msgid ""
 "Create one invoice for all orders related to same customer and same "
 "invoicing address"
 msgstr ""
+"Izveidot vienu rēķinu visiem pasūtījumiem, kas saistīti ar vienu un to pašu "
+"klientu un vienu un to pašu rēķina izrakstīšanas adresi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -1461,11 +1781,13 @@ msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
+"Projekta/nosūtīto rīkojumu izveides datums,\n"
+"Apstiprināto rīkojumu apstiprināšanas datums."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
 msgid "Credit & Debit card (via Stripe)"
-msgstr ""
+msgstr "Kredītkarte un debetkarte (izmantojot Stripe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1490,12 +1812,12 @@ msgstr "Pielāgots"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
 msgid "Custom Values"
-msgstr ""
+msgstr "Pielāgotās vērtības"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__manual
 msgid "Custom payment instructions"
-msgstr ""
+msgstr "Pielāgotie maksājuma norādījumi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_id
@@ -1515,7 +1837,7 @@ msgstr "Klienta valsts"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__commercial_partner_id
 msgid "Customer Entity"
-msgstr ""
+msgstr "Klientu vienība"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
@@ -1541,7 +1863,7 @@ msgstr "Klienta paraksts"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__state_id
 msgid "Customer State"
-msgstr ""
+msgstr "Klienta valsts"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_taxes_id
@@ -1551,14 +1873,14 @@ msgstr "Klienta Nodokļi"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_zip
 msgid "Customer ZIP"
-msgstr ""
+msgstr "Klienta ZIP"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 #, python-format
 msgid "Customer needs to pay at least %(amount)s to confirm the order."
-msgstr ""
+msgstr "Lai apstiprinātu pasūtījumu, klientam ir jāveic vismaz %(amount)s."
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_customer
@@ -1571,12 +1893,12 @@ msgstr "Klienti"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Customize your quotes and orders."
-msgstr ""
+msgstr "Pielāgojiet savus piedāvājumus un pasūtījumus."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Express savienotājs"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1596,33 +1918,35 @@ msgid ""
 "Days between quotation proposal and expiration. 0 days means automatic "
 "expiration is disabled"
 msgstr ""
+"Dienas starp kotācijas priekšlikumu un termiņa beigām. 0 dienas nozīmē, ka "
+"automātiskā termiņa beigas ir atspējotas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr ""
+msgstr "Atskaitiet priekšapmaksu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__quotation_validity_days
 msgid "Default Quotation Validity"
-msgstr ""
+msgstr "Noklusējuma kotācijas derīguma termiņš"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
 msgid "Default product used for discounts"
-msgstr ""
+msgstr "Noklusējuma produkts, ko izmanto atlaidēm"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_down_payment_product_id
 #: model:ir.model.fields,help:sale.field_res_config_settings__deposit_default_product_id
 msgid "Default product used for down payments"
-msgstr ""
+msgstr "Produkts pēc noklusējuma, ko izmanto priekšapmaksājumiem"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Default values"
-msgstr ""
+msgstr "Noklusējuma vērtības"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1630,11 +1954,13 @@ msgid ""
 "Default values used when creating new quotations. Those can still be changed"
 " on each quotation."
 msgstr ""
+"Noklusējuma vērtības, ko izmanto, veidojot jaunas kotācijas. Tās joprojām "
+"var mainīt katrā citātā."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Deliver Content by Email"
-msgstr ""
+msgstr "Satura piegāde pa e-pastu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1646,7 +1972,7 @@ msgstr "Piegādāts"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Delivered Quantity: %s"
-msgstr ""
+msgstr "Piegādātais daudzums: %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
@@ -1672,7 +1998,7 @@ msgstr "Piegādes metodes"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "Piegāde Daudzums"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -1682,6 +2008,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"Piegādes termiņš, ko varat apsolīt klientam, rēķinot no minimālā pasūtījuma "
+"līniju izpildes termiņa, ja runa ir par servisa produktiem. Piegādes "
+"gadījumā tiks ņemta vērā pasūtījuma piegādes politika, lai izmantotu "
+"minimālo vai maksimālo pasūtījuma rindu izpildes termiņu."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -1746,12 +2076,12 @@ msgstr "Atlaides prece"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_type
 msgid "Discount Type"
-msgstr ""
+msgstr "Atlaides veids"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_discount
 msgid "Discount Wizard"
-msgstr ""
+msgstr "Atlaižu vednis"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1763,7 +2093,7 @@ msgstr "Atlaide:"
 #: code:addons/sale/wizard/sale_order_discount.py:0
 #, python-format
 msgid "Discount: %(percent)s%%"
-msgstr ""
+msgstr "Atlaide: %(percent)s%%"
 
 #. module: sale
 #. odoo-python
@@ -1771,22 +2101,22 @@ msgstr ""
 #, python-format
 msgid ""
 "Discount: %(percent)s%%- On products with the following taxes %(taxes)s"
-msgstr ""
+msgstr "Atlaide: %(percent)s%%- Produktiem ar šādiem nodokļiem %(taxes)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
-msgstr ""
+msgstr "Atlaides, lojalitātes un dāvanu kartes"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_draft_invoice_warning
 msgid "Display Draft Invoice Warning"
-msgstr ""
+msgstr "Rādīt rēķina projekta brīdinājumu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_invoice_amount_warning
 msgid "Display Invoice Amount Warning"
-msgstr ""
+msgstr "Rādīt rēķina summas brīdinājumu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_name
@@ -1847,7 +2177,7 @@ msgstr "Avansa maksājuma prece"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %(date)s (Draft)"
-msgstr ""
+msgstr "Pirmā iemaksa: %(date)s (projekts)"
 
 #. module: sale
 #. odoo-python
@@ -1878,7 +2208,14 @@ msgstr "Avansa maksājums (procentuāli)"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Down payment <br/>"
-msgstr ""
+msgstr "Pirmā iemaksa <br/>"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment invoice"
+msgstr "Priekšapmaksas rēķins"
 
 #. module: sale
 #. odoo-python
@@ -1907,19 +2244,19 @@ msgstr "Neapstiprināti Rēķini"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr ""
+msgstr "Easypost savienotājs"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Edit Configuration"
-msgstr ""
+msgstr "Konfigurācijas rediģēšana"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__digital_signature
 msgid "Electronic signature"
-msgstr ""
+msgstr "Elektroniskais paraksts"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__paypal_email_account
@@ -1929,7 +2266,7 @@ msgstr "E-pasts"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
-msgstr ""
+msgstr "Klientam tiek nosūtīts e-pasta vēstule, tiklīdz rēķins ir pieejams."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -1939,7 +2276,7 @@ msgstr "Paredzamais Datums"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Expected:"
-msgstr "Paredzamais"
+msgstr "Paredzamais:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
@@ -1949,7 +2286,7 @@ msgstr "Derīguma beigas"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Expiration Date:"
-msgstr ""
+msgstr "Derīguma termiņš:"
 
 #. module: sale
 #. odoo-python
@@ -1978,7 +2315,7 @@ msgstr "Papildus rinda ar %s"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
 msgid "FedEx Connector"
-msgstr ""
+msgstr "FedEx savienotājs"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
@@ -1992,6 +2329,9 @@ msgid ""
 "customers or sales orders/invoices.The default value comes from the "
 "customer."
 msgstr ""
+"Fiskālās pozīcijas tiek izmantotas, lai pielāgotu nodokļus un kontus "
+"konkrētiem klientiem vai pārdošanas pasūtījumiem/rēķiniem.Noklusējuma "
+"vērtība tiek iegūta no klienta."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
@@ -2001,7 +2341,7 @@ msgstr "Fiksēta Summa"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Follow, view or pay your orders"
-msgstr ""
+msgstr "Sekojiet, skatiet vai apmaksājiet savus pasūtījumus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -2021,7 +2361,7 @@ msgstr "Fonts awesome ikona, piem. fa-tasks"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
-msgstr ""
+msgstr "Aizliegtās vērtības neaprēķināmā pārdošanas rīkojuma rindā"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -2037,7 +2377,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Full amount <br/>"
-msgstr ""
+msgstr "Pilna summa <br/>"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -2055,18 +2395,19 @@ msgstr "Nākotnes aktivitātes"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Izveidot pārdošanas maksājumu saiti"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
 msgid "Generate a Payment Link"
-msgstr ""
+msgstr "Maksājuma saites izveide"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
 msgstr ""
+"Automātiska rēķina ģenerēšana, kad ir apstiprināts tiešsaistes maksājums"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2076,19 +2417,19 @@ msgstr "Get warnings in orders for products or customers"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__so_discount
 msgid "Global Discount"
-msgstr ""
+msgstr "Globālā atlaide"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Good job, let's continue."
-msgstr ""
+msgstr "Labs darbs, turpināsim."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Grant discounts on sales order lines"
-msgstr ""
+msgstr "Piešķirt atlaides pārdošanas pasūtījumu līnijām"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__weight
@@ -2105,17 +2446,17 @@ msgstr "Grupēt pēc"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_active_pricelist
 msgid "Has Active Pricelist"
-msgstr ""
+msgstr "Ir aktīvs cenrādis"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
 msgid "Has Confirmed Order"
-msgstr ""
+msgstr "Ir apstiprināts pasūtījums"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr ""
+msgstr "Vai ir mainījusies fiskālā pozīcija"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2125,7 +2466,7 @@ msgstr "Ir ziņojums"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
 msgid "Has Pricelist Changed"
-msgstr ""
+msgstr "Vai cenrādis ir mainījies"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
@@ -2171,6 +2512,8 @@ msgid ""
 "If set, the SO will invoice in this journal; otherwise the sales journal "
 "with the lowest sequence is used."
 msgstr ""
+"Ja iestatīts, SO izrakstīs rēķinu šajā žurnālā; pretējā gadījumā tiek "
+"izmantots pārdošanas žurnāls ar zemāko kārtas numuru."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2178,23 +2521,23 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
-"If the sale is locked, you can not modify it anymore. However, you will "
-"still be able to invoice or deliver."
+"Ja pārdošana ir slēgta, to nevar izmainīt. Bet var izrakstīt rēķinu un "
+"piegādāt."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_packaging__sales
 msgid "If true, the packaging can be used for sales orders"
-msgstr ""
+msgstr "Ja ir patiess, iepakojumu var izmantot pārdošanas pasūtījumiem"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
-msgstr ""
+msgstr "Ja mainīsiet cenrādi, tas ietekmēs tikai no jauna pievienotās rindas."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Import Amazon orders and sync deliveries"
-msgstr ""
+msgstr "Importēt Amazon pasūtījumus un sinhronizēt piegādes"
 
 #. module: sale
 #. odoo-python
@@ -2206,7 +2549,7 @@ msgstr "Importēt veidni produktiem"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
 msgid "In the Order"
-msgstr ""
+msgstr "Iepirkšanas Pasūtījums"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2223,7 +2566,7 @@ msgstr "Ieņēmumu Konts"
 #: code:addons/sale/wizard/sale_order_discount.py:0
 #, python-format
 msgid "Invalid discount amount"
-msgstr ""
+msgstr "Nederīga atlaides summa"
 
 #. module: sale
 #. odoo-python
@@ -2307,9 +2650,9 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
-"Invoice revenue for the current month. This is the amount the sales channel "
-"has invoiced this month. It is used to compute the progression ratio of the "
-"current and target revenue on the kanban view."
+"Rēķinu apgrozījums par tekošo mēnesi. Šis ir pārdošanas kanāla apjoms šajā "
+"mēnesī. Tas tiek izmantots, lai aprēķinātu progresa koeficientu tekošam un "
+"plānotajam apgrozījumam kanban skatā."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
@@ -2347,7 +2690,6 @@ msgstr "Izrakstīts šajā mēnesī"
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_ids
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
 msgstr "Rēķini"
@@ -2382,7 +2724,7 @@ msgstr "Saņēmēja adrese"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
 msgid "Invoicing Journal"
-msgstr ""
+msgstr "Rēķinu izrakstīšanas žurnāls"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
@@ -2399,7 +2741,7 @@ msgstr "Rēķina mērķis"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing and Shipping Address"
-msgstr ""
+msgstr "Rēķina izrakstīšanas un piegādes adrese"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2441,6 +2783,8 @@ msgstr "Ir izmaksa"
 msgid ""
 "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
+"Ir patiess, ja pārdošanas rīkojuma rinda nāk no izmaksas vai piegādātāja "
+"rēķiniem"
 
 #. module: sale
 #. odoo-python
@@ -2450,6 +2794,8 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"Aizliegts mainīt šādus laukus bloķētā secībā:\n"
+"%s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
@@ -2465,6 +2811,11 @@ msgstr "Kontējums"
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__lang
 msgid "Language"
 msgstr "Valoda"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Last Invoices"
+msgstr "Pēdējie rēķini"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_uid
@@ -2501,7 +2852,7 @@ msgstr "Piegādes laiks"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr "Let your customers log in to see their documents"
+msgstr "Atļaut klientu pieeju, lai redzētu viņu dokumentus"
 
 #. module: sale
 #. odoo-javascript
@@ -2515,7 +2866,7 @@ msgstr "Nosūtīt piedāvājumu"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Lets keep electronic signature for now."
-msgstr ""
+msgstr "Pagaidām atļaut elektronisko parakstu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2536,7 +2887,7 @@ msgstr "Slēgts"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__locked
 msgid "Locked orders cannot be modified."
-msgstr ""
+msgstr "Bloķētos rīkojumus nevar mainīt."
 
 #. module: sale
 #. odoo-javascript
@@ -2556,11 +2907,14 @@ msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
 "footer pages to your quote."
 msgstr ""
+"Padariet savu piedāvājumu pievilcīgu, pievienojot tam galvenes lapas, "
+"produktu aprakstus un pēdējās lapas."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards & eWallet"
 msgstr ""
+"Akciju, kuponu, lojalitātes karšu, dāvanu karšu un e-portfeļa pārvaldība"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -2649,17 +3003,48 @@ msgstr "Metode"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Piegādātā daudzuma atjaunināšanas metode"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
 msgid "Missing required fields on accountable sale order line."
-msgstr ""
+msgstr "Trūkst obligāto lauku uzskaites pārdošanas rīkojuma rindā."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Mitchell Admin"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Cien.\n"
+"       <t t-if=\"object.partner_id.parent_id\">\n"
+"           <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"       </t>\n"
+"       <t t-else=\"\">\n"
+"           <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"       </t>\n"
+"       <br><br>\n"
+"        Šeit ir jūsu\n"
+"       <t t-if=\"object.name\">\n"
+"            kredīta atzīme <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"       </t>\n"
+"       <t t-else=\"\">\n"
+"            kredītrēķins\n"
+"       </t>\n"
+"       <t t-if=\"object.invoice_origin\">\n"
+"            (ar atsauci: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"       </t>\n"
+"       <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143 750,00</span>apmērā\n"
+"        no <t t-out=\"object.company_id.name or ''\">Jūsu uzņēmuma</t>.\n"
+"       <br><br>\n"
+"        Ja jums ir kādi jautājumi, sazinieties ar mums.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
@@ -2730,7 +3115,7 @@ msgstr "Nav ziņu"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "No further requirements for this payment"
-msgstr ""
+msgstr "Šim maksājumam nav papildu prasību"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2745,7 +3130,7 @@ msgstr "Nav pasūtījumu, kas gaida rēķina izveidi"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found."
-msgstr ""
+msgstr "Nav atrasti pasūtījumi, lai palielinātu pārdošanas apjomu."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_note
@@ -2765,7 +3150,7 @@ msgstr "Nav ko izrakstīt"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Now, we'll create a sample quote."
-msgstr ""
+msgstr "Tagad izveidosim piedāvājuma paraugu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -2794,7 +3179,7 @@ msgstr "Kļūdu skaits"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "To ziņojumu skaits, kuros nepieciešama rīcība"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error_counter
@@ -2814,27 +3199,27 @@ msgstr "Pārdošanas apjoms, kas jāizraksta"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
 msgid "On All Order Lines"
-msgstr ""
+msgstr "Visās pasūtījuma līnijās"
 
 #. module: sale
 #: model:ir.model,name:sale.model_onboarding_onboarding
 msgid "Onboarding"
-msgstr ""
+msgstr "Uzņemšana"
 
 #. module: sale
 #: model:onboarding.onboarding.step,step_image_alt:sale.onboarding_onboarding_step_sale_order_confirmation
 msgid "Onboarding Order Confirmation"
-msgstr ""
+msgstr "Uzņemšanas pasūtījuma apstiprinājums"
 
 #. module: sale
 #: model:onboarding.onboarding.step,step_image_alt:sale.onboarding_onboarding_step_sample_quotation
 msgid "Onboarding Sample Quotation"
-msgstr ""
+msgstr "Uzņemšanas piedāvājuma paraugs"
 
 #. module: sale
 #: model:ir.model,name:sale.model_onboarding_onboarding_step
 msgid "Onboarding Step"
-msgstr ""
+msgstr "Uzņemšanas posms"
 
 #. module: sale
 #. odoo-python
@@ -2844,6 +3229,8 @@ msgid ""
 "Once a sales order is confirmed, you can't remove one of its lines (we need to track if something gets invoiced or delivered).\n"
 "                Set the quantity to 0 instead."
 msgstr ""
+"Kad pārdošanas pasūtījums ir apstiprināts, jūs nevarat noņemt kādu no tā rindiņām (mums ir nepieciešams izsekot, vai par kādu preci tiek izrakstīts rēķins vai tā tiek piegādāta).\n"
+"                Tā vietā iestatiet daudzumu uz 0."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2855,6 +3242,8 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales "
 "order.<br> You will be able to create an invoice and collect the payment."
 msgstr ""
+"Kad klients ir apstiprinājis cenu piedāvājumu, tas kļūst par pārdošanas "
+"pasūtījumu.<br> Jūs varēsiet izveidot rēķinu un iekasēt maksājumu."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -2862,6 +3251,8 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
+"Kad piedāvājums ir apstiprināts, tas kļūst par pārdošanas pasūtījumu.<br> "
+"Jūs varēsiet izveidot rēķinu un iekasēt maksājumu."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -2872,7 +3263,7 @@ msgstr "Maksājums tiešsaistē."
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_menu
 msgid "Online Payments"
-msgstr ""
+msgstr "Tiešsaistes maksājumi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_sign
@@ -2883,17 +3274,17 @@ msgstr "Parakstīšanās tiešsaistē"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_payment
 msgid "Online payment"
-msgstr ""
+msgstr "Tiešsaistes maksājums"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_signature
 msgid "Online signature"
-msgstr ""
+msgstr "Tiešsaistes paraksts"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_invoiced
 msgid "Only confirmed down payments are considered."
-msgstr ""
+msgstr "Tiek ņemti vērā tikai apstiprināti avansa maksājumi."
 
 #. module: sale
 #. odoo-python
@@ -2907,6 +3298,8 @@ msgstr "Tikai iesāktie pasūtījumi var tikt atzīmēti kā nosūtīti pa tieš
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 msgstr ""
+"Vienā pārdošanas pasūtījuma rindā ir atļauta tikai viena Pielāgotā vērtība "
+"katram atribūtam."
 
 #. module: sale
 #. odoo-javascript
@@ -2915,6 +3308,8 @@ msgstr ""
 #, python-format
 msgid "Open Sales app to send your first quotation in a few clicks."
 msgstr ""
+"Atveriet Pārdošanas lietotni, lai ar dažiem klikšķiem nosūtītu savu pirmo "
+"piedāvājumu."
 
 #. module: sale
 #. odoo-python
@@ -2983,11 +3378,6 @@ msgid "Order Date: Last 365 Days"
 msgstr "Pasūtījuma datums: pēdējās 365 dienas"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Order Detail"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Order Lines"
@@ -3008,7 +3398,7 @@ msgstr "Pasūtījuma statuss"
 #. module: sale
 #: model:mail.activity.type,name:sale.mail_act_sale_upsell
 msgid "Order Upsell"
-msgstr ""
+msgstr "Pasūtīt piepārdošanu"
 
 #. module: sale
 #. odoo-python
@@ -3036,6 +3426,8 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
+"Pasūtītais daudzums: Rēķinā norādītais daudzums, ko pasūtījis klients.\n"
+"Piegādātais daudzums: Rēķinā norādītais klientam piegādātais daudzums."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
@@ -3059,12 +3451,12 @@ msgstr "Pasūtījumi izrakstīšanai"
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr "Orders to Upsell"
+msgstr "Pasūtījumi piepārdošanai"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Oscar Morgan"
-msgstr ""
+msgstr "Oskars Morgans"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3074,18 +3466,18 @@ msgstr "Cita informācija"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
 msgid "PDF Quote"
-msgstr ""
+msgstr "PDF citāts"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "PDF Quote builder"
-msgstr ""
+msgstr "PDF citātu veidotājs"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr ""
+msgstr "PDT identitātes žetons"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
@@ -3126,7 +3518,7 @@ msgstr "Maksāt ar citu maksājuma veidu"
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__paypal
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__manual_post_msg
@@ -3167,7 +3559,7 @@ msgstr "Maksājuma nosacījumi"
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_token_menu
 msgid "Payment Tokens"
-msgstr ""
+msgstr "Maksājumu žetoni"
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_transaction
@@ -3197,14 +3589,14 @@ msgstr "Portāla pieejas URL"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Prepayment amount"
-msgstr ""
+msgstr "Priekšapmaksas summa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_sale_order__prepayment_percent
 msgid "Prepayment percentage"
-msgstr ""
+msgstr "Priekšapmaksas procentuālā daļa"
 
 #. module: sale
 #. odoo-python
@@ -3213,6 +3605,7 @@ msgstr ""
 #, python-format
 msgid "Prepayment percentage must be a valid percentage."
 msgstr ""
+"Priekšapmaksas procentuālajai daļai jābūt derīgai procentuālajai daļai."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3222,7 +3615,7 @@ msgstr "Priekšskatīt"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr "Cenas samazinājums bez nodokļiem"
+msgstr "Cenas samazinājums bez PVN"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
@@ -3296,7 +3689,7 @@ msgstr "Produktu katalogs"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__product_catalog_product_is_in_sale_order
 msgid "Product Catalog Product Is In Sale Order"
-msgstr ""
+msgstr "Produktu katalogs Produkts ir pārdošanas kārtībā"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_categories
@@ -3312,7 +3705,7 @@ msgstr "Produkta Kategorija"
 #. module: sale
 #: model:ir.model,name:sale.model_product_document
 msgid "Product Document"
-msgstr ""
+msgstr "Produkta dokuments"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_packaging
@@ -3332,7 +3725,7 @@ msgstr "Produkta Tips"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
 msgid "Product Uom Readonly"
-msgstr ""
+msgstr "Produkts Uom Tikai nolasāms"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -3351,21 +3744,21 @@ msgstr "Produktu Varianti"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product prices have been recomputed according to pricelist %s."
-msgstr ""
+msgstr "Produktu cenas ir pārrēķinātas saskaņā ar cenrādi %s."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product prices have been recomputed."
-msgstr ""
+msgstr "Produktu cenas ir pārrēķinātas."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr ""
+msgstr "Produktu nodokļi ir pārrēķināti saskaņā ar fiskālo pozīciju %s."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3465,7 +3858,6 @@ msgstr "Piedāvājuma datums"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Quotation Date:"
 msgstr "Piedāvājuma datums:"
 
@@ -3481,6 +3873,7 @@ msgstr "Piedāvājums nosūtīts"
 #, python-format
 msgid "Quotation Validity is required and must be greater or equal to 0."
 msgstr ""
+"Piedāvājuma derīgums ir obligāts, un tam jābūt lielākam vai vienādam ar 0."
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -3520,7 +3913,7 @@ msgstr "Piedāvājumi"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations & Orders"
-msgstr ""
+msgstr "Piedāvājumi un pasūtījumi"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -3535,12 +3928,12 @@ msgstr "Piedāvājumi un realizācija"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
-msgstr ""
+msgstr "Piedāvājumi, kas jāpārskata"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Reitingi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -3552,7 +3945,7 @@ msgstr "Papildus izrakstīšanas izmaksas"
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_expense_policy
 msgid "Re-Invoice Policy visible"
-msgstr ""
+msgstr "Redzama atkārtotu rēķinu izrakstīšanas politika"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__recipient_ids
@@ -3562,12 +3955,12 @@ msgstr "Saņēmēji"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
-msgstr ""
+msgstr "Pārrēķināt visas cenas, pamatojoties uz šo cenrādi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
-msgstr ""
+msgstr "Pārrēķināt visus nodokļus, pamatojoties uz šo fiskālo stāvokli"
 
 #. module: sale
 #. odoo-python
@@ -3580,6 +3973,7 @@ msgstr "Atsauce"
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
 msgstr ""
+"Atsauce uz dokumentu, kas radīja šo pārdošanas pasūtījuma pieprasījumu"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
@@ -3599,7 +3993,7 @@ msgstr "Atsaukt šo piedāvājumu"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__order_reference
 msgid "Related Order"
-msgstr ""
+msgstr "Saistīts pasūtījums"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__render_model
@@ -3615,11 +4009,14 @@ msgstr "Atskaites"
 #: model:ir.model.fields,help:sale.field_sale_order__require_payment
 msgid "Request a online payment from the customer to confirm the order."
 msgstr ""
+"Pieprasiet klientam veikt tiešsaistes maksājumu, lai apstiprinātu "
+"pasūtījumu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_signature
 msgid "Request a online signature from the customer to confirm the order."
 msgstr ""
+"Pieprasiet no klienta parakstu tiešsaistē, lai apstiprinātu pasūtījumu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3627,18 +4024,21 @@ msgid ""
 "Request an online prepayment from your customers to confirm orders. You can "
 "ask them to fully pay the order or partially with a downpayment"
 msgstr ""
+"Pieprasiet klientiem veikt priekšapmaksu tiešsaistē, lai apstiprinātu "
+"pasūtījumus. Jūs varat lūgt viņiem pilnībā vai daļēji apmaksāt pasūtījumu, "
+"veicot priekšapmaksu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online signature to confirm orders"
-msgstr ""
+msgstr "Pieprasīt tiešsaistes parakstu, lai apstiprinātu pasūtījumus"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Requested date is too soon."
-msgstr ""
+msgstr "Pieprasītais datums ir pārāk agrs."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_user_id
@@ -3672,12 +4072,12 @@ msgstr "SMS piegādes kļūda"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "SO0000"
-msgstr ""
+msgstr "SO0000"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Sale Information"
-msgstr ""
+msgstr "Pārdošanas informācija"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -3699,7 +4099,7 @@ msgstr "Pārdošanas pasūtījuma skaits"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
 msgid "Sale Order Plans"
-msgstr ""
+msgstr "Pārdošanas pasūtījuma plāni"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
@@ -3714,32 +4114,32 @@ msgstr "Pārdošanas pasūtījumi "
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_orders_count
 msgid "Sale Orders Count"
-msgstr ""
+msgstr "Pārdošanas pasūtījumu skaits"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
 msgid "Sale Payment provider onboarding wizard"
-msgstr ""
+msgstr "Pārdošana Maksājumu pakalpojumu sniedzēja iekāpšanas vednis"
 
 #. module: sale
 #: model:onboarding.onboarding,name:sale.onboarding_onboarding_sale_quotation
 msgid "Sale Quotation Onboarding"
-msgstr ""
+msgstr "Pārdošanas piedāvājuma izcenojumu izvietošana uz klāja"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sale Warnings"
-msgstr ""
+msgstr "Pārdošanas brīdinājumi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr ""
+msgstr "Pārdošanas izvēlētā maksājuma metode"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_order_ids
 msgid "Sale orders to cancel"
-msgstr ""
+msgstr "Pārdošanas rīkojumu atcelšana"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_packaging__sales
@@ -3775,17 +4175,17 @@ msgstr "Pārdošanas analīze"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_customers
 msgid "Sales Analysis By Customers"
-msgstr ""
+msgstr "Pārdošanas analīze pa klientiem"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
-msgstr ""
+msgstr "Pārdošanas analīze, ko veic pārdevēji"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
 msgid "Sales Analysis Products"
-msgstr ""
+msgstr "Pārdošanas analīzes produkti"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -3911,6 +4311,9 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
+"Pārdošanas pasūtījuma vienība, kurai tiks pievienots pavadītais laiks, lai "
+"par to klientam varētu izrakstīt rēķinu. Noņemiet pārdošanas pasūtījuma "
+"pozīciju, lai par laika uzskaites ierakstu nevarētu izrakstīt rēķinu."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -3930,7 +4333,7 @@ msgstr "Pārdošana: Pasūtījums apstiprināts"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_payment_executed
 msgid "Sales: Payment Done"
-msgstr ""
+msgstr "Pārdošana: Maksājums veikts"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
@@ -3957,7 +4360,7 @@ msgstr "Pārdevējs"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_salespeople
 msgid "Salespersons"
-msgstr ""
+msgstr "Pārdevēji"
 
 #. module: sale
 #. odoo-python
@@ -4073,7 +4476,7 @@ msgstr "Sūtīt paraugu"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
-msgstr ""
+msgstr "Sendcloud savienotājs"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4082,6 +4485,10 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Accounting tab)."
 msgstr ""
+"E-pasta sūtīšana ir noderīga, ja nepieciešams kopīgot konkrētu informāciju "
+"vai saturu par produktu (instrukcijas, noteikumus, saites, multivides u. "
+"c.). Izveidojiet un iestatiet e-pasta veidni produkta detalizācijas veidlapā"
+" (cilnē Grāmatvedība)."
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_cancellation
@@ -4099,6 +4506,8 @@ msgid ""
 "Sent to customers when a payment is received but doesn't immediately confirm"
 " their order"
 msgstr ""
+"Nosūtīts klientiem, kad ir saņemts maksājums, bet pasūtījums netiek "
+"apstiprināts uzreiz"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -4140,12 +4549,12 @@ msgstr "Piegāde"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Shipping Address"
-msgstr ""
+msgstr "Piegādes adrese"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_shiprocket
 msgid "Shiprocket Connector"
-msgstr ""
+msgstr "Shiprocket savienotājs"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4216,6 +4625,8 @@ msgid ""
 "Some confirmed sale orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
+"Ir atlasīti daži apstiprināti pārdošanas pasūtījumi. Ar tiem saistītie dokumenti var būt šādi\n"
+"                        atcelšana var ietekmēt."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__source_id
@@ -4311,7 +4722,7 @@ msgstr "Birkas"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Tax 15%"
-msgstr ""
+msgstr "15%"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_calculation_rounding_method
@@ -4327,7 +4738,7 @@ msgstr "Nodokļa valsts"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Tax ID"
-msgstr "Tax ID"
+msgstr "PVN ID"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -4342,17 +4753,17 @@ msgstr "Nodokļi kopā"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_calculation_rounding_method
 msgid "Tax calculation rounding method"
-msgstr ""
+msgstr "Nodokļu aprēķina noapaļošanas metode"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tax excl."
-msgstr ""
+msgstr "Bez PVN"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tax incl."
-msgstr ""
+msgstr "Ar PVN."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -4374,6 +4785,8 @@ msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "canceling them or archiving the team instead."
 msgstr ""
+"Komandai %(team_name)s ir %(sale_order_count)s aktīvu pārdošanas pasūtījumu."
+" Apsveriet iespēju tos atcelt vai arhivēt komandu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4381,6 +4794,8 @@ msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
+"Pastāstiet mums, kāpēc atsakāties no šī piedāvājuma, jo tas palīdzēs mums "
+"uzlabot mūsu pakalpojumus."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
@@ -4420,8 +4835,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"The ISO country code in two chars. \n"
-"You can use this field for quick search."
+"ISO valstu kods sastāv no diviem burtiem. \n"
+"Izmanto meklēšanas lauku."
 
 #. module: sale
 #. odoo-python
@@ -4431,6 +4846,8 @@ msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s is "
 "cancelled. You cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"Ar analītisko kontu %(account)s saistītais pārdošanas rīkojums %(order)s "
+"tiek atcelts. Anulētam pārdošanas rīkojumam nevar reģistrēt izdevumus."
 
 #. module: sale
 #. odoo-python
@@ -4441,6 +4858,9 @@ msgid ""
 "currently locked. You cannot register an expense on a locked Sales Order. "
 "Please create a new SO linked to this Analytic Account."
 msgstr ""
+"Pārdošanas rīkojums %(order)s, kas saistīts ar analītisko kontu %(account)s,"
+" pašlaik ir bloķēts. Nevar reģistrēt izdevumus bloķētam pārdošanas "
+"rīkojumam. Lūdzu, izveidojiet jaunu SO, kas saistīts ar šo analītisko kontu."
 
 #. module: sale
 #. odoo-python
@@ -4450,6 +4870,8 @@ msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s must be"
 " validated before registering expenses."
 msgstr ""
+"Pirms izdevumu reģistrēšanas jāapstiprina ar analītisko kontu %(account)s "
+"saistītais pārdošanas rīkojums %(order)s."
 
 #. module: sale
 #. odoo-python
@@ -4462,6 +4884,8 @@ msgstr "Pieejas žetons nav derīgs"
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_to_invoice
 msgid "The amount to invoice = Sale Order Total - Confirmed Down Payments."
 msgstr ""
+"Rēķinā norādāmā summa = Pārdošanas rīkojuma kopsumma - apstiprinātais "
+"priekšapmaksa."
 
 #. module: sale
 #. odoo-python
@@ -4471,18 +4895,20 @@ msgid ""
 "The delivery date is sooner than the expected date. You may be unable to "
 "honor the delivery date."
 msgstr ""
+"Piegādes datums ir agrāks par gaidīto. Iespējams, ka piegādes datumu "
+"nevarēsiet ievērot."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance."
-msgstr ""
+msgstr "Fiksētā summa, par kuru rēķins jāizsniedz avansā."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "The following orders are not in a state requiring confirmation: %s"
-msgstr ""
+msgstr "Turpmāk norādītie rīkojumi nav apstiprināšanas stadijā: %s"
 
 #. module: sale
 #. odoo-python
@@ -4493,6 +4919,9 @@ msgid ""
 "%s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"Šādus produktus nevar ierobežot attiecībā uz uzņēmumu %s, jo tie jau ir izmantoti citos citos piedāvājumos vai pārdošanas pasūtījumos citā uzņēmumā:\n"
+"%s\n"
+"Varat arhivēt šos produktus un no jauna izveidot tos ar sava uzņēmuma ierobežojumu vai atstāt tos kā koplietošanas produktus."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -4501,6 +4930,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment provider.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"Rēķins tiek ģenerēts automātiski un ir pieejams klientu portālā, kad maksājumu pakalpojumu sniedzējs ir apstiprinājis darījumu.\n"
+"Rēķins tiek atzīmēts kā apmaksāts, un maksājums tiek reģistrēts maksājumu pakalpojumu sniedzēja konfigurācijā noteiktajā maksājumu žurnālā.\n"
+"Šo režīmu ieteicams izmantot, ja galīgo rēķinu izsniedzat pie pasūtījuma, nevis pēc piegādes."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4508,47 +4940,49 @@ msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
 msgstr ""
-"The margin is computed as the sum of product sales prices minus the cost set"
-" in their detail form."
+"Uzcenojums tiek aprēķināts no produkta pārdošanas vērtības mīnus izmaksa."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "The new invoice will deduct draft invoices linked to this sale order."
 msgstr ""
+"Jaunajā rēķinā tiks atskaitīti rēķinu projekti, kas saistīti ar šo "
+"pārdošanas pasūtījumu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "The order is not in a state requiring customer payment."
 msgstr ""
+"Pasūtījums nav tādā stāvoklī, lai klients par to varētu veikt maksājumu."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
-msgstr ""
+msgstr "Pasūtījumā nav nepieciešams klienta paraksts."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "Pasūtītais daudzums ir atjaunināts."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
-msgstr ""
+msgstr "Šī pārdošanas rīkojuma maksājuma paziņojums."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "The payment should also be transmitted with love"
-msgstr ""
+msgstr "Maksājums jāveic rūpīgi"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance."
-msgstr ""
+msgstr "Procentuālā daļa no summas, par kuru jāizsniedz rēķins avansā."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__prepayment_percent
@@ -4556,11 +4990,23 @@ msgid ""
 "The percentage of the amount needed that must be paid by the customer to "
 "confirm the order."
 msgstr ""
+"Nepieciešamās summas procentuālā daļa, kas klientam jāsamaksā, lai "
+"apstiprinātu pasūtījumu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
+msgstr ""
+"Procentuālā daļa no summas, kas jāsamaksā, lai apstiprinātu cenu "
+"piedāvājumus."
+
+#. module: sale
+#. odoo-python
+#. odoo-python
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid "The product (%s) has incompatible values: %s"
 msgstr ""
 
 #. module: sale
@@ -4571,8 +5017,8 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
-"The product used to invoice a down payment should be of type 'Service'. "
-"Please use another product or update this product."
+"Ja produkts tiek izmantots kā avansa maksājums, tam jābūt 'Pakalpojums'. "
+"Lūdzu, izmanto citu produktu vai atjauno šo produktu."
 
 #. module: sale
 #. odoo-python
@@ -4583,6 +5029,9 @@ msgid ""
 "to \"Ordered quantities\". Please update your deposit product to be able to "
 "create a deposit invoice."
 msgstr ""
+"Produktam, kas tiek izmantots priekšapmaksas rēķina izrakstīšanai, ir jābūt "
+"rēķina politikai, kas iestatīta uz \"Pasūtītie daudzumi\". Lūdzu, "
+"atjauniniet savu avansa produktu, lai varētu izveidot avansa rēķinu."
 
 #. module: sale
 #. odoo-python
@@ -4590,7 +5039,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "Sniegtie parametri ir nederīgi."
 
 #. module: sale
 #. odoo-python
@@ -4613,12 +5062,12 @@ msgstr "There are currently no quotations for your account."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no sales orders for your account."
-msgstr ""
+msgstr "Pašlaik jūsu kontā nav pārdošanas pasūtījumu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
-msgstr ""
+msgstr "Ir esošās"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4626,8 +5075,8 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
-"This default value is applied to any new product created. This can be "
-"changed in the product detail form."
+"Kad tiek izveidots jauns produkts, tam tiek piemēroti noklusējuma parametri."
+" Tos var izmainīt produkta kartiņā."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__campaign_id
@@ -4638,6 +5087,8 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"Šis nosaukus palīdz jums sekot līdzi dažādiem kampaņas pasākumiem, piemēram,"
+" Fall_Drive, Christmas_Special"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__commitment_date
@@ -4645,6 +5096,9 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
+"Tas ir klientam solītais piegādes datums. Ja tas ir iestatīts, piegādes "
+"pasūtījums tiks ieplānots, pamatojoties uz šo datumu, nevis uz produkta "
+"piegādes laiku."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -4653,6 +5107,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
+"Tas ir piegādes veids, piemēram, pastkarte, e-pasta vēstule vai baneru "
+"reklāma"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__source_id
@@ -4663,13 +5119,15 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
+"Tas ir saites avots, piemēram, meklētājprogramma, cits domēns vai e-pasta "
+"saraksta nosaukums"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 #, python-format
 msgid "This payment will confirm the quotation."
-msgstr ""
+msgstr "Ar šo maksājumu tiks apstiprināts piedāvājums."
 
 #. module: sale
 #. odoo-python
@@ -4679,6 +5137,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
 "%(quantity).2f %(unit)s."
 msgstr ""
+"Šo produktu iesaiņo %(pack_size).2f %(pack_name)s. Jums vajadzētu pārdot "
+"%(quantity).2f %(unit)s."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -4692,11 +5152,12 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"This report performs analysis on your quotations and sales orders. Analysis "
-"check your sales revenues and sort it by different group criteria (salesman,"
-" partner, product, etc.) Use this report to perform analysis on sales not "
-"having invoiced yet. If you want to analyse your turnover, you should use "
-"the Invoice Analysis report in the Accounting application."
+"Šajā pārskatā tiek veikta jūsu piedāvājumu un pārdošanas pasūtījumu analīze."
+" Analizējiet pārdošanas ieņēmumus un sakārtojiet tos pēc dažādiem grupas "
+"kritērijiem (pārdevējs, partneris, produkts utt.) Izmantojiet šo pārskatu, "
+"lai veiktu analīzi par pārdošanu, par kuru vēl nav izrakstīti rēķini. Ja "
+"vēlaties analizēt savu apgrozījumu, lietotnē Grāmatvedība jāizmanto rēķinu "
+"analīzes atskaite."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -4707,11 +5168,11 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"This report performs analysis on your quotations. Analysis check your sales "
-"revenues and sort it by different group criteria (salesman, partner, "
-"product, etc.) Use this report to perform analysis on sales not having "
-"invoiced yet. If you want to analyse your turnover, you should use the "
-"Invoice Analysis report in the Accounting application."
+"Šajā pārskatā tiek veikta jūsu piedāvājumu analīze. Analizējiet pārdošanas "
+"ieņēmumus un sakārtojiet tos pēc dažādiem grupas kritērijiem (pārdevējs, "
+"partneris, produkts utt.) Izmantojiet šo pārskatu, lai veiktu analīzi par "
+"pārdošanu, par kuru vēl nav izrakstīti rēķini. Ja vēlaties analizēt savu "
+"apgrozījumu, lietotnē Grāmatvedība jāizmanto rēķinu analīzes atskaite."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -4722,23 +5183,28 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"This report performs analysis on your sales orders. Analysis check your "
-"sales revenues and sort it by different group criteria (salesman, partner, "
-"product, etc.) Use this report to perform analysis on sales not having "
-"invoiced yet. If you want to analyse your turnover, you should use the "
-"Invoice Analysis report in the Accounting application."
+"Šajā pārskatā tiek veikta jūsu pārdošanas pasūtījumu analīze. Analizējiet "
+"pārdošanas ieņēmumus un sakārtojiet tos pēc dažādiem grupas kritērijiem "
+"(pārdevējs, partneris, produkts utt.) Izmantojiet šo pārskatu, lai veiktu "
+"analīzi par pārdošanu, par kuru vēl nav izrakstīti rēķini. Ja vēlaties "
+"analizēt savu apgrozījumu, lietotnē Grāmatvedība jāizmanto rēķinu analīzes "
+"atskaite."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
 msgstr ""
+"Tādējādi visi nodokļi tiks atjaunināti, pamatojoties uz pašlaik izvēlēto "
+"fiskālo pozīciju."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr ""
+"Tādējādi tiks atjaunināta visu produktu vienības cena, pamatojoties uz jauno"
+" cenrādi."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -4754,7 +5220,7 @@ msgstr "Piestādīt rēķinu"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr ""
+msgstr "Piepārdošana"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4763,6 +5229,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"Lai nosūtītu ielūgumus B2B režīmā, atveriet kontaktu vai atlasiet vairākus "
+"kontaktus saraksta skatā un nolaižamajā izvēlnē *Akcija* noklikšķiniet uz "
+"opcijas \"Portāla piekļuves pārvaldība\"."
 
 #. module: sale
 #. odoo-javascript
@@ -4772,6 +5241,8 @@ msgid ""
 "To speed up order confirmation, we can activate electronic signatures or "
 "payments."
 msgstr ""
+"Lai paātrinātu pasūtījuma apstiprināšanu, mēs varam aktivizēt elektronisko "
+"parakstu vai maksājumus."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4796,7 +5267,7 @@ msgstr "Nodokļi kopā"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Total Tax Excluded"
-msgstr "Kopā bez nodokļa"
+msgstr "Kopā bez PVN"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -4839,27 +5310,27 @@ msgstr "Reģistrētās izņēmuma aktivitātes veids."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a customer..."
-msgstr ""
+msgstr "Ierakstiet, lai atrastu klientu..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a product..."
-msgstr ""
+msgstr "Ierakstiet, lai atrastu produktu..."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
 msgid "UPS Connector"
-msgstr ""
+msgstr "UPS savienotājs"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps
 msgid "USPS Connector"
-msgstr ""
+msgstr "USPS savienotājs"
 
 #. module: sale
 #: model:ir.model,name:sale.model_utm_campaign
 msgid "UTM Campaign"
-msgstr ""
+msgstr "UTM kampaņa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_unit
@@ -4926,7 +5397,7 @@ msgstr "Kopā bez nodokļiem"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "UoM"
-msgstr ""
+msgstr "Mērv"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4943,7 +5414,7 @@ msgstr "Atjaunot nodokļus"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
-msgstr ""
+msgstr "Upsell %(order)s klientam %(customer)s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
@@ -4956,6 +5427,8 @@ msgstr "Piepārdošanas iespēja"
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
 msgstr ""
+"Izmanto pārdevēji, nosūtot potenciālajiem klientiem cenu piedāvājumus vai "
+"proformas"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -4974,6 +5447,8 @@ msgid ""
 "Validated expenses and vendor bills can be re-invoiced to a customer at its "
 "cost or sales price."
 msgstr ""
+"Apstiprinātos izdevumus un pārdevēju rēķinus var pārrēķināt klientam pēc to "
+"pašizmaksas vai pārdošanas cenas."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4983,7 +5458,7 @@ msgstr "Izvēle varianta režģim"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "View Details"
-msgstr ""
+msgstr "Skatīt vairāk"
 
 #. module: sale
 #. odoo-python
@@ -5004,12 +5479,12 @@ msgstr "Skatīt piedāvājumu"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_document__attached_on
 msgid "Visible at"
-msgstr ""
+msgstr "Redzams pie"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Void Transaction"
-msgstr ""
+msgstr "Darījuma anulēšana"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__volume
@@ -5042,7 +5517,7 @@ msgstr "Brīdinājums par %s"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Warning for the change of your quotation's company"
-msgstr ""
+msgstr "Brīdinājums par jūsu piedāvājuma uzņēmuma maiņu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
@@ -5071,11 +5546,12 @@ msgstr "Tīmekļa vietnes saziņas vēsture"
 #, python-format
 msgid "Write a company name to create one, or see suggestions."
 msgstr ""
+"Uzrakstiet uzņēmuma nosaukumu, lai to izveidotu, vai skatiet ieteikumus."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "You can invoice them before they are delivered."
-msgstr ""
+msgstr "Jūs varat izrakstīt rēķinu, pirms tie ir piegādāti."
 
 #. module: sale
 #. odoo-python
@@ -5085,6 +5561,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"Nosūtītu cenu piedāvājumu vai apstiprinātu pārdošanas pasūtījumu nevar "
+"dzēst. Vispirms tas ir jāatceļ."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -5092,6 +5570,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"Varat atlasīt visus pasūtījumus un izrakstīt tiem rēķinus partijās,<br>\n"
+"            vai atzīmēt katru pasūtījumu un izrakstīt rēķinu pa vienam."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type
@@ -5100,13 +5580,16 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
+"Šeit varat iestatīt saziņas veidu, kas tiks parādīts pārdošanas "
+"pasūtījumos.Saziņa tiks sniegta klientam, kad viņš izvēlēsies maksājuma "
+"veidu."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "You cannot cancel a locked order. Please unlock it first."
-msgstr ""
+msgstr "Bloķētu pasūtījumu nevar atcelt. Lūdzu, vispirms to atbloķējiet."
 
 #. module: sale
 #. odoo-python
@@ -5117,6 +5600,8 @@ msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
 msgstr ""
+"Jūs nevarat mainīt produkta veidu, jo tas jau tiek izmantots pārdošanas "
+"pasūtījumos."
 
 #. module: sale
 #. odoo-python
@@ -5126,6 +5611,8 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"Pārdošanas rīkojuma rindas veidu mainīt nevar. Tā vietā ir jāizdzēš "
+"pašreizējā rinda un jāizveido jauna atbilstoša tipa rinda."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
@@ -5133,6 +5620,8 @@ msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
 "empty (or 0) to disable the automatic expiration of quotations."
 msgstr ""
+"Noklusējuma piedāvājuma derīguma vērtībai nevar iestatīt negatīvu skaitli. "
+"Atstājiet tukšu (vai 0), lai atspējotu automātisko derīguma termiņu."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -5140,16 +5629,18 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"Visam pārdotajam vai iegādātajam produktam ir jādefinē produkts,\n"
+"                neatkarīgi no tā, vai tas ir uzglabājams produkts, patēriņa prece vai pakalpojums."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
-msgstr ""
+msgstr "Jūsu pasūtījumi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Your Reference:"
-msgstr ""
+msgstr "Jūsu atsauce:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5186,6 +5677,8 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
+"Jūsu piedāvājumā ir uzņēmuma %(product_company)s produkti, bet jūsu piedāvājums pieder uzņēmumam %(quote_company)s.\n"
+" Lūdzu, mainiet sava piedāvājuma uzņēmumu vai izņemiet produktus no citiem uzņēmumiem (%(bad_products)s)."
 
 #. module: sale
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
@@ -5195,7 +5688,7 @@ msgstr "automātiksa rēķina izrakstīšana: nosūtīt gatavu rēķinu"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr ""
+msgstr "bpost savienotājs"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5211,7 +5704,7 @@ msgstr "dienas"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "for this Sale Order."
-msgstr ""
+msgstr "šim pārdošanas pasūtījumam."
 
 #. module: sale
 #. odoo-python
@@ -5226,11 +5719,13 @@ msgid ""
 "selected\n"
 "                    quotations?"
 msgstr ""
+"atlasīts\n"
+"                    piedāvājumi?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
-msgstr ""
+msgstr "vienības"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation
@@ -5240,6 +5735,9 @@ msgid ""
 "== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
 " }})"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
+" }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -5248,6 +5746,9 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
+"object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation
@@ -5255,3 +5756,5 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.type_name }} Atcelts (Ref {{ "
+"object.name or 'n/a' }})"

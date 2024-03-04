@@ -81,12 +81,12 @@ registry.category("web_tour.tours").add('configurator_flow', {
         run: function () {
             const $iframe = this.$anchor.find('iframe.o_iframe:not(.o_ignore_in_tour)');
             for (const menu of ['Home', 'Events', 'Courses', 'Pricing', 'News', 'Success Stories', 'Contact us']) {
-                if (!$iframe.contents().find(`#top_menu a:contains(${menu})`).length) {
+                if (!$iframe.contents().find(`.top_menu a:contains(${menu})`).length) {
                     console.error(`Missing ${menu} menu. It should have been created by the configurator.`);
                 }
             }
             for (const url of ['/', '/event', '/slides', '/pricing', '/blog/', '/blog/', '/contactus']) {
-                if (!$iframe.contents().find(`#top_menu a[href^='${url}']`).length) {
+                if (!$iframe.contents().find(`.top_menu a[href^='${url}']`).length) {
                     console.error(`Missing ${url} menu URL. It should have been created by the configurator.`);
                 }
             }

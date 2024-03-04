@@ -105,51 +105,213 @@ class TestMailTemplate(TestMailTemplateCommon):
         self.assertFalse(mail.scheduled_date)
         self.assertEqual(mail.state, 'outgoing')
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_template_send_mail_body(self):
+        """ Test that the body and body_html is set correctly in 'mail.mail'
+        when sending an email from mail.template """
+        mail_id = self.test_template.send_mail(self.test_record.id)
+        mail = self.env['mail.mail'].sudo().browse(mail_id)
+        body_result = '<p>EnglishBody for %s</p>' % self.test_record.name
 
-@tagged('mail_template', 'multi_lang')
+        self.assertEqual(mail.body_html, body_result)
+        self.assertEqual(mail.body, body_result)
+
+
+@tagged('mail_template', 'multi_lang', 'post_install', '-at_install')
 class TestMailTemplateLanguages(TestMailTemplateCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        """ Create lang-based records and templates, to test batch and performances
+        with language involved. """
+        super().setUpClass()
+
+        # use test notification layout
+        cls.test_template.write({
+            'email_layout_xmlid': 'mail.test_layout',
+        })
+
+        # double record, one in each lang
+        cls.test_records = cls.test_record + cls.env['mail.test.lang'].create({
+            'email_from': 'ignasse.es@example.com',
+            'lang': 'es_ES',
+            'name': 'Test Record 2',
+        })
+
+        # pure batch, 100 records
+        cls.test_records_batch, test_partners = cls._create_records_for_batch(
+            'mail.test.lang', 100,
+        )
+        test_partners[:50].lang = 'es_ES'
+
+        # have a template with dynamic templates to check impact
+        cls.test_template_wreports = cls.test_template.copy({
+            'email_layout_xmlid': 'mail.test_layout',
+        })
+        cls.test_reports = cls.env['ir.actions.report'].create([
+            {
+                'name': f'Test Report on {cls.test_record._name}',
+                'model': cls.test_record._name,
+                'print_report_name': "f'TestReport for {object.name}'",
+                'report_type': 'qweb-pdf',
+                'report_name': 'test_mail.mail_test_ticket_test_template',
+            }, {
+                'name': f'Test Report 2 on {cls.test_record._name}',
+                'model': cls.test_record._name,
+                'print_report_name': "f'TestReport2 for {object.name}'",
+                'report_type': 'qweb-pdf',
+                'report_name': 'test_mail.mail_test_ticket_test_template_2',
+            }
+        ])
+        cls.test_template_wreports.report_template_ids = cls.test_reports
+
+        cls.env.flush_all()
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_template_send_email(self):
-        mail_id = self.test_template.send_mail(self.test_record.id)
-        mail = self.env['mail.mail'].sudo().browse(mail_id)
+        """ Test 'send_email' on template on a given record, used notably as
+        contextual action. """
+        self.env.invalidate_all()
+        with self.with_user(self.user_employee.login), self.assertQueryCount(28):  # test_mail: 28
+            mail_id = self.test_template.with_env(self.env).send_mail(self.test_record.id)
+            mail = self.env['mail.mail'].sudo().browse(mail_id)
+
+        self.assertEqual(sorted(mail.attachment_ids.mapped('name')), ['first.txt', 'second.txt'])
+        self.assertEqual(mail.body_html,
+                         f'<body><p>EnglishBody for {self.test_record.name}</p> English Layout for Lang Chatter Model</body>')
         self.assertEqual(mail.email_cc, self.test_template.email_cc)
         self.assertEqual(mail.email_to, self.test_template.email_to)
         self.assertEqual(mail.recipient_ids, self.partner_2 | self.user_admin.partner_id)
-        self.assertEqual(mail.subject, 'EnglishSubject for %s' % self.test_record.name)
+        self.assertEqual(mail.subject, f'EnglishSubject for {self.test_record.name}')
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_template_send_email_nolayout(self):
+        """ Test without layout, just to check impact """
+        self.test_template.email_layout_xmlid = False
+        self.env.invalidate_all()
+        with self.with_user(self.user_employee.login), self.assertQueryCount(21):  # test_mail: 21
+            mail_id = self.test_template.with_env(self.env).send_mail(self.test_record.id)
+            mail = self.env['mail.mail'].sudo().browse(mail_id)
+
+        self.assertEqual(sorted(mail.attachment_ids.mapped('name')), ['first.txt', 'second.txt'])
+        self.assertEqual(mail.body_html,
+                         f'<p>EnglishBody for {self.test_record.name}</p>')
+        self.assertEqual(mail.email_cc, self.test_template.email_cc)
+        self.assertEqual(mail.email_to, self.test_template.email_to)
+        self.assertEqual(mail.recipient_ids, self.partner_2 | self.user_admin.partner_id)
+        self.assertEqual(mail.subject, f'EnglishSubject for {self.test_record.name}')
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_template_send_email_batch(self):
+        """ Test 'send_email' on template in batch """
+        self.env.invalidate_all()
+        mails = self.env['mail.mail'].sudo()
+        with self.with_user(self.user_employee.login), self.assertQueryCount(934):  # test_mail: 934
+            template = self.test_template.with_env(self.env)
+            for record in self.test_records_batch:
+                mails += mails.browse(template.send_mail(record.id))
+
+        self.assertEqual(len(mails), 100)
+        for idx, (mail, record) in enumerate(zip(mails, self.test_records_batch)):
+            self.assertEqual(sorted(mail.attachment_ids.mapped('name')), ['first.txt', 'second.txt'])
+            self.assertEqual(mail.email_cc, self.test_template.email_cc)
+            self.assertEqual(mail.email_to, self.test_template.email_to)
+            self.assertEqual(mail.recipient_ids, self.partner_2 | self.user_admin.partner_id)
+            if idx >= 50:
+                self.assertEqual(mail.subject, f'EnglishSubject for {record.name}')
+            else:
+                self.assertEqual(mail.subject, f'SpanishSubject for {record.name}')
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_template_send_email_wreport(self):
+        """ Test 'send_email' on template on a given record, used notably as
+        contextual action, with dynamic reports involved """
+        self.env.invalidate_all()
+        with self.with_user(self.user_employee.login), self.assertQueryCount(107):  # test_mail: 106
+            mail_id = self.test_template_wreports.with_env(self.env).send_mail(self.test_record.id)
+            mail = self.env['mail.mail'].sudo().browse(mail_id)
+
+        self.assertEqual(
+            sorted(mail.attachment_ids.mapped('name')),
+            [f'TestReport for {self.test_record.name}.html', f'TestReport2 for {self.test_record.name}.html', 'first.txt', 'second.txt']
+        )
+        self.assertEqual(mail.recipient_ids, self.partner_2 | self.user_admin.partner_id)
+        self.assertEqual(mail.subject, f'EnglishSubject for {self.test_record.name}')
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_template_send_email_wreport_batch(self):
+        """ Test 'send_email' on template in batch with dynamic reports """
+        self.env.invalidate_all()
+        mails = self.env['mail.mail'].sudo()
+        with self.with_user(self.user_employee.login), self.assertQueryCount(1645):  # test_mail: 1645
+            template = self.test_template_wreports.with_env(self.env)
+            for record in self.test_records_batch:
+                mails += mails.browse(template.send_mail(record.id))
+
+        self.assertEqual(len(mails), 100)
+        for idx, (mail, record) in enumerate(zip(mails, self.test_records_batch)):
+            self.assertEqual(
+                sorted(mail.attachment_ids.mapped('name')),
+                [f'TestReport for {record.name}.html', f'TestReport2 for {record.name}.html', 'first.txt', 'second.txt']
+            )
+            self.assertEqual(mail.email_cc, self.test_template.email_cc)
+            self.assertEqual(mail.email_to, self.test_template.email_to)
+            self.assertEqual(mail.recipient_ids, self.partner_2 | self.user_admin.partner_id)
+            if idx >= 50:
+                self.assertEqual(mail.subject, f'EnglishSubject for {record.name}')
+                self.assertEqual(mail.body_html,
+                         f'<body><p>EnglishBody for {record.name}</p> English Layout for Lang Chatter Model</body>')
+            else:
+                self.assertEqual(mail.subject, f'SpanishSubject for {record.name}')
+                self.assertEqual(mail.body_html,
+                         f'<body><p>SpanishBody for {record.name}</p> Spanish Layout para Spanish Model Description</body>')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_template_translation_lang(self):
+        """ Test template rendering using lang defined directly on the record """
         test_record = self.test_record.with_env(self.env)
         test_record.write({
             'lang': 'es_ES',
         })
         test_template = self.test_template.with_env(self.env)
-        test_template.write({
-            'email_layout_xmlid': 'mail.test_layout',
-        })
 
         mail_id = test_template.send_mail(test_record.id)
         mail = self.env['mail.mail'].sudo().browse(mail_id)
         self.assertEqual(mail.body_html,
-                         '<body><p>SpanishBody for %s</p> Spanish Layout para Spanish Model Description</body>' % self.test_record.name)
-        self.assertEqual(mail.subject, 'SpanishSubject for %s' % self.test_record.name)
+                         f'<body><p>SpanishBody for {self.test_record.name}</p> Spanish Layout para Spanish Model Description</body>')
+        self.assertEqual(mail.subject, f'SpanishSubject for {self.test_record.name}')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_template_translation_partner_lang(self):
-        test_record = self.env['mail.test.lang'].browse(self.test_record.ids)
-        customer = self.env['res.partner'].create({
-            'email': 'robert.carlos@test.example.com',
-            'lang': 'es_ES',
-            'name': 'Roberto Carlos',
-            })
-        test_record.write({
-            'customer_id': customer.id,
-        })
-        test_template = self.env['mail.template'].browse(self.test_template.ids)
+        """ Test template rendering using lang defined on a sub-record aka
+        'partner_id.lang' """
+        test_records = self.env['mail.test.lang'].browse(self.test_records.ids)
+        customers = self.env['res.partner'].create([
+            {
+                'email': 'roberto.carlos@test.example.com',
+                'lang': 'es_ES',
+                'name': 'Roberto Carlos',
+            }, {
+                'email': 'rob.charly@test.example.com',
+                'lang': 'en_US',
+                'name': 'Rob Charly',
+            }
+        ])
+        test_records[0].write({'customer_id': customers[0].id})
+        test_records[1].write({'customer_id': customers[1].id})
 
-        mail_id = test_template.send_mail(test_record.id, email_layout_xmlid='mail.test_layout')
-        mail = self.env['mail.mail'].sudo().browse(mail_id)
-        self.assertEqual(mail.body_html,
-                         '<body><p>SpanishBody for %s</p> Spanish Layout para Spanish Model Description</body>' % self.test_record.name)
-        self.assertEqual(mail.subject, 'SpanishSubject for %s' % self.test_record.name)
+        self.env.invalidate_all()
+        mails = self.env['mail.mail'].sudo()
+        with self.with_user(self.user_employee.login), self.assertQueryCount(52):
+            template = self.test_template.with_env(self.env)
+            for record in self.test_records:
+                mails += mails.browse(
+                    template.send_mail(record.id, email_layout_xmlid='mail.test_layout')
+                )
+
+        self.assertEqual(mails[0].body_html,
+                         f'<body><p>SpanishBody for {test_records[0].name}</p> Spanish Layout para Spanish Model Description</body>')
+        self.assertEqual(mails[0].subject, f'SpanishSubject for {test_records[0].name}')
+        self.assertEqual(mails[1].body_html,
+                         f'<body><p>EnglishBody for {test_records[1].name}</p> English Layout for Lang Chatter Model</body>')
+        self.assertEqual(mails[1].subject, f'EnglishSubject for {test_records[1].name}')

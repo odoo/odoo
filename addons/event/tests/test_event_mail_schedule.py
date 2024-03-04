@@ -8,63 +8,82 @@ from freezegun import freeze_time
 from odoo import Command
 from odoo.addons.event.tests.common import EventCase
 from odoo.addons.mail.tests.common import MockEmail
+from odoo.tests import tagged, users
 from odoo.tools import formataddr, mute_logger
 
 
+@tagged('event_mail', 'post_install', '-at_install')
 class TestMailSchedule(EventCase, MockEmail):
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
-    def test_event_mail_schedule(self):
-        """ Test mail scheduling for events """
-        self.env.company.write({
-            'name': 'YourCompany',
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.env.company.write({
             'email': 'info@yourcompany.example.com',
+            'name': 'YourCompany',
         })
-        event_cron_id = self.env.ref('event.event_mail_scheduler')
+        cls.event_cron_id = cls.env.ref('event.event_mail_scheduler')
 
         # deactivate other schedulers to avoid messing with crons
-        self.env['event.mail'].search([]).unlink()
+        cls.env['event.mail'].search([]).unlink()
 
         # freeze some datetimes, and ensure more than 1D+1H before event starts
         # to ease time-based scheduler check
         # Since `now` is used to set the `create_date` of an event and create_date
         # has often microseconds, we set it to ensure that the scheduler we still be
         # launched if scheduled_date == create_date - microseconds
-        now = datetime(2021, 3, 20, 14, 30, 15, 123456)
-        event_date_begin = datetime(2021, 3, 22, 8, 0, 0)
-        event_date_end = datetime(2021, 3, 24, 18, 0, 0)
+        cls.reference_now = datetime(2021, 3, 20, 14, 30, 15, 123456)
+        cls.event_date_begin = datetime(2021, 3, 22, 8, 0, 0)
+        cls.event_date_end = datetime(2021, 3, 24, 18, 0, 0)
 
-        with freeze_time(now):
+        cls.template_subscription_id = cls.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')
+        cls.template_reminder_id = cls.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')
+
+        with cls.mock_datetime_and_now(cls, cls.reference_now):
             # create with admin to force create_date
-            test_event = self.env['event.event'].create({
+            cls.test_event = cls.env['event.event'].create({
                 'name': 'TestEventMail',
-                'create_date': now,
-                'user_id': self.user_eventmanager.id,
-                'date_begin': event_date_begin,
-                'date_end': event_date_end,
+                'user_id': cls.user_eventmanager.id,
+                'date_begin': cls.event_date_begin,
+                'date_end': cls.event_date_end,
                 'event_mail_ids': [
                     (0, 0, {  # right at subscription
                         'interval_unit': 'now',
                         'interval_type': 'after_sub',
-                        'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')}),
+                        'notification_type': 'mail',
+                        'template_ref': f'mail.template,{cls.template_subscription_id}',
+                    }),
                     (0, 0, {  # one hour after subscription
                         'interval_nbr': 1,
                         'interval_unit': 'hours',
                         'interval_type': 'after_sub',
-                        'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')}),
+                        'notification_type': 'mail',
+                        'template_ref': f'mail.template,{cls.template_subscription_id}',
+                    }),
                     (0, 0, {  # 1 days before event
                         'interval_nbr': 1,
                         'interval_unit': 'days',
                         'interval_type': 'before_event',
-                        'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')}),
+                        'notification_type': 'mail',
+                        'template_ref': f'mail.template,{cls.template_reminder_id}',
+                    }),
                     (0, 0, {  # immediately after event
                         'interval_nbr': 1,
                         'interval_unit': 'hours',
                         'interval_type': 'after_event',
-                        'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')}),
+                        'notification_type': 'mail',
+                        'template_ref': f'mail.template,{cls.template_reminder_id}',
+                    }),
                 ]
             })
-            self.assertEqual(test_event.create_date, now)
+
+    def test_assert_initial_values(self):
+        """ Ensure base values for tests """
+        test_event = self.test_event
+
+        # event data
+        self.assertEqual(test_event.create_date, self.reference_now)
 
         # check subscription scheduler
         after_sub_scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'after_sub'), ('interval_unit', '=', 'now')])
@@ -82,28 +101,38 @@ class TestMailSchedule(EventCase, MockEmail):
         # check before event scheduler
         event_prev_scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'before_event')])
         self.assertEqual(len(event_prev_scheduler), 1, 'event: wrong scheduler creation')
-        self.assertEqual(event_prev_scheduler.scheduled_date, event_date_begin + relativedelta(days=-1))
+        self.assertEqual(event_prev_scheduler.scheduled_date, self.event_date_begin + relativedelta(days=-1))
         self.assertFalse(event_prev_scheduler.mail_done)
         self.assertEqual(event_prev_scheduler.mail_state, 'scheduled')
         self.assertEqual(event_prev_scheduler.mail_count_done, 0)
         # check after event scheduler
         event_next_scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'after_event')])
         self.assertEqual(len(event_next_scheduler), 1, 'event: wrong scheduler creation')
-        self.assertEqual(event_next_scheduler.scheduled_date, event_date_end + relativedelta(hours=1))
+        self.assertEqual(event_next_scheduler.scheduled_date, self.event_date_end + relativedelta(hours=1))
         self.assertFalse(event_next_scheduler.mail_done)
         self.assertEqual(event_next_scheduler.mail_state, 'scheduled')
         self.assertEqual(event_next_scheduler.mail_count_done, 0)
 
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @users('user_eventmanager')
+    def test_event_mail_schedule(self):
+        """ Test mail scheduling for events """
         # create some registrations
-        with freeze_time(now), self.mock_mail_gateway():
+        test_event = self.test_event.with_env(self.env)
+        now = self.reference_now
+        schedulers = self.env['event.mail'].search([('event_id', '=', test_event.id)])
+        after_sub_scheduler = schedulers.filtered(lambda s: s.interval_type == 'after_sub' and s.interval_unit == 'now')
+        after_sub_scheduler_2 = schedulers.filtered(lambda s: s.interval_type == 'after_sub' and s.interval_unit == 'hours')
+        event_prev_scheduler = schedulers.filtered(lambda s: s.interval_type == 'before_event')
+        event_next_scheduler = schedulers.filtered(lambda s: s.interval_type == 'after_event')
+
+        with self.mock_datetime_and_now(now), self.mock_mail_gateway():
             reg1 = self.env['event.registration'].create({
-                'create_date': now,
                 'event_id': test_event.id,
                 'name': 'Reg1',
                 'email': 'reg1@example.com',
             })
             reg2 = self.env['event.registration'].create({
-                'create_date': now,
                 'event_id': test_event.id,
                 'name': 'Reg2',
                 'email': 'reg2@example.com',
@@ -180,9 +209,9 @@ class TestMailSchedule(EventCase, MockEmail):
         self.assertEqual(event_prev_scheduler.mail_state, 'scheduled')
 
         # simulate cron running before scheduled date -> should not do anything
-        now_start = event_date_begin + relativedelta(hours=-25, microsecond=654321)
+        now_start = self.event_date_begin + relativedelta(hours=-25, microsecond=654321)
         with freeze_time(now_start), self.mock_mail_gateway():
-            event_cron_id.method_direct_trigger()
+            self.event_cron_id.method_direct_trigger()
 
         self.assertFalse(event_prev_scheduler.mail_done)
         self.assertEqual(event_prev_scheduler.mail_state, 'scheduled')
@@ -190,9 +219,9 @@ class TestMailSchedule(EventCase, MockEmail):
         self.assertEqual(len(self._new_mails), 0)
 
         # execute cron to run schedulers after scheduled date
-        now_start = event_date_begin + relativedelta(hours=-23, microsecond=654321)
+        now_start = self.event_date_begin + relativedelta(hours=-23, microsecond=654321)
         with freeze_time(now_start), self.mock_mail_gateway():
-            event_cron_id.method_direct_trigger()
+            self.event_cron_id.method_direct_trigger()
 
         # check that scheduler is finished
         self.assertTrue(event_prev_scheduler.mail_done, 'event: reminder scheduler should have run')
@@ -211,9 +240,8 @@ class TestMailSchedule(EventCase, MockEmail):
         # NEW REGISTRATION EFFECT ON SCHEDULERS
         # --------------------------------------------------
 
-        with freeze_time(now_start), self.mock_mail_gateway():
+        with self.mock_datetime_and_now(now_start), self.mock_mail_gateway():
             reg3 = self.env['event.registration'].create({
-                'create_date': now_start,
                 'event_id': test_event.id,
                 'name': 'Reg3',
                 'email': 'reg3@example.com',
@@ -232,7 +260,7 @@ class TestMailSchedule(EventCase, MockEmail):
         # confirm registration -> should trigger registration schedulers
         # NOTE: currently all schedulers are based on create_date
         # meaning several communications may be sent in the time time
-        with freeze_time(now_start + relativedelta(hours=1)), self.mock_mail_gateway():
+        with self.mock_datetime_and_now(now_start + relativedelta(hours=1)), self.mock_mail_gateway():
             reg3.action_confirm()
 
         # verify that subscription scheduler was auto-executed after new registration confirmed
@@ -265,9 +293,9 @@ class TestMailSchedule(EventCase, MockEmail):
         self.assertFalse(event_next_scheduler.mail_done)
 
         # execute event reminder scheduler explicitly after its schedule date
-        new_end = event_date_end + relativedelta(hours=2)
-        with freeze_time(new_end), self.mock_mail_gateway():
-            event_cron_id.method_direct_trigger()
+        new_end = self.event_date_end + relativedelta(hours=2)
+        with self.mock_datetime_and_now(new_end), self.mock_mail_gateway():
+            self.event_cron_id.method_direct_trigger()
 
         # check that scheduler is finished
         self.assertTrue(event_next_scheduler.mail_done, 'event: reminder scheduler should should have run')
@@ -283,6 +311,63 @@ class TestMailSchedule(EventCase, MockEmail):
             fields_values={'subject': '%s: today' % test_event.name,
                            'email_from': self.user_eventmanager.company_id.email_formatted,
                           })
+
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @users('user_eventmanager')
+    def test_event_mail_schedule_on_subscription(self):
+        """ Test emails sent on subscription, notably to avoid bottlenecks """
+        test_event = self.test_event.with_env(self.env)
+        reference_now = self.reference_now
+
+        # remove on subscription, to create hanging registrations
+        schedulers = self.env['event.mail'].search([('event_id', '=', test_event.id)])
+        _sub_scheduler = schedulers.filtered(lambda s: s.interval_type == 'after_sub' and s.interval_unit == 'now')
+        _sub_scheduler.unlink()
+
+        # consider having hanging registrations, still not processed (e.g. adding
+        # a new scheduler after)
+        self.env.invalidate_all()
+        # com 58, event 36
+        with self.assertQueryCount(61), self.mock_datetime_and_now(reference_now), \
+             self.mock_mail_gateway():
+            _existing = self.env['event.registration'].create([
+                {
+                    'email': f'existing.attendee.{idx}@test.example.com',
+                    'event_id': test_event.id,
+                    'name': f'Attendee {idx}',
+                } for idx in range(5)
+            ])
+        self.assertEqual(len(self._new_mails), 0)
+        self.assertEqual(self.mail_mail_create_mocked.call_count, 0)
+
+        # add on subscription scheduler, then new registrations ! yay ! check what
+        # happens with old ones
+        test_event.write({'event_mail_ids': [
+            (0, 0, {  # right at subscription
+                'interval_unit': 'now',
+                'interval_type': 'after_sub',
+                'notification_type': 'mail',
+                'template_ref': f'mail.template,{self.template_subscription_id}',
+            }),
+        ]})
+        self.env.invalidate_all()
+        # com 148, event 134
+        with self.assertQueryCount(153), \
+             self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
+             self.mock_mail_gateway():
+            _new = self.env['event.registration'].create([
+                {
+                    'email': f'new.attendee.{idx}@test.example.com',
+                    'event_id': test_event.id,
+                    'name': f'New Attendee {idx}',
+                } for idx in range(2)
+            ])
+        # self.assertEqual(len(self._new_mails), 2)
+        # self.assertEqual(self.mail_mail_create_mocked.call_count, 2)
+        self.assertEqual(len(self._new_mails), 7,
+                         'EventMail: TODO: should be limited to new registrations')
+        self.assertEqual(self.mail_mail_create_mocked.call_count, 7,
+                         'EventMail: TODO: should create one mail / new registration')
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_unique_event_mail_ids(self):
@@ -353,7 +438,7 @@ class TestMailSchedule(EventCase, MockEmail):
         event_date_begin = datetime(2023, 7, 26, 8, 0, 0)
         event_date_end = datetime(2023, 7, 28, 18, 0, 0)
 
-        with freeze_time(now):
+        with self.mock_datetime_and_now(now):
             test_event = self.env['event.event'].with_user(self.user_eventmanager).create({
                 'name': 'TestEventMail',
                 'date_begin': event_date_begin,
@@ -377,15 +462,13 @@ class TestMailSchedule(EventCase, MockEmail):
 
         event_prev_scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'before_event')])
 
-        with freeze_time(now), self.mock_mail_gateway():
+        with self.mock_datetime_and_now(now), self.mock_mail_gateway():
             self.env['event.registration'].create({
-                'create_date': now,
                 'event_id': test_event.id,
                 'name': 'Reg1',
                 'email': 'reg1@example.com',
             })
             self.env['event.registration'].create({
-                'create_date': now,
                 'event_id': test_event.id,
                 'name': 'Reg2',
                 'email': 'reg2@example.com',

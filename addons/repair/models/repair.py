@@ -436,7 +436,7 @@ class Repair(models.Model):
             if move_id:
                 repair.move_id = move_id
         all_moves = self.move_ids + product_moves
-        all_moves._action_done()
+        all_moves._action_done(cancel_backorder=True)
 
         for sale_line in self.move_ids.sale_line_id:
             price_unit = sale_line.price_unit
@@ -451,7 +451,14 @@ class Repair(models.Model):
         """
         if self.filtered(lambda repair: repair.state != 'under_repair'):
             raise UserError(_("Repair must be under repair in order to end reparation."))
-        if any(float_compare(move.quantity, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0 for move in self.move_ids):
+        partial_moves = set()
+        picked_moves = set()
+        for move in self.move_ids:
+            if float_compare(move.quantity, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0:
+                partial_moves.add(move.id)
+            if move.picked:
+                picked_moves.add(move.id)
+        if partial_moves or picked_moves and len(picked_moves) < len(self.move_ids):
             ctx = dict(self.env.context or {})
             ctx['default_repair_ids'] = self.ids
             return {
@@ -483,8 +490,18 @@ class Repair(models.Model):
         if not self.product_id or self.product_id.type == 'consu':
             return self._action_repair_confirm()
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        available_qty_owner = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, owner_id=self.partner_id, strict=True)
-        available_qty_noown = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, strict=True)
+        available_qty_owner = sum(self.env['stock.quant'].search([
+            ('product_id', '=', self.product_id.id),
+            ('location_id', '=', self.location_id.id),
+            ('lot_id', '=', self.lot_id.id),
+            ('owner_id', '=', self.partner_id.id),
+        ]).mapped('quantity'))
+        available_qty_noown = sum(self.env['stock.quant'].search([
+            ('product_id', '=', self.product_id.id),
+            ('location_id', '=', self.location_id.id),
+            ('lot_id', '=', self.lot_id.id),
+            ('owner_id', '=', False),
+        ]).mapped('quantity'))
         repair_qty = self.product_uom._compute_quantity(self.product_qty, self.product_id.uom_id)
         for available_qty in [available_qty_owner, available_qty_noown]:
             if float_compare(available_qty, repair_qty, precision_digits=precision) >= 0:

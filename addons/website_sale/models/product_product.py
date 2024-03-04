@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -109,9 +108,23 @@ class Product(models.Model):
     def _get_contextual_price_tax_selection(self):
         self.ensure_one()
         price = self._get_contextual_price()
-        website = self.env['website'].get_current_website()
-        line_tax_type = website.show_line_subtotals_tax_selection
-        company_taxes = self.taxes_id.filtered(lambda tax: tax.company_id == self.env.company)
-        if line_tax_type == "tax_included" and company_taxes:
-            price = company_taxes.compute_all(price, product=self, partner=self.env['res.partner'])['total_included']
+        product_taxes = self.sudo().taxes_id.filtered(lambda x: x.company_id in self.env.company.parent_ids)
+        if product_taxes:
+            website = self.env['website'].get_current_website()
+            fiscal_position = website.sudo().fiscal_position_id
+
+            price = self._get_tax_included_unit_price(
+                website.company_id,
+                website.currency_id,
+                fields.Date.context_today(self),
+                'sale',
+                fiscal_position=fiscal_position,
+                product_price_unit=price,
+                product_currency=website.currency_id,
+            )
+            line_tax_type = website.show_line_subtotals_tax_selection
+            tax_display = "total_included" if line_tax_type == "tax_included" else "total_excluded"
+
+            taxes = fiscal_position.map_tax(product_taxes)
+            price = taxes.compute_all(price, product=self, partner=self.env['res.partner'])[tax_display]
         return price

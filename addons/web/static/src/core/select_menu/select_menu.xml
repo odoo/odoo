@@ -4,12 +4,12 @@
     <t t-name="web.SelectMenu">
         <Dropdown
             class="`o_select_menu border w-auto rounded-2 overflow-hidden ${props.class || ''}`"
-            togglerClass="`o_select_menu_toggler btn btn-secondary w-100 bg-light ${props.togglerClass || ''} ${canDeselect ? 'o_can_deselect' : ''}`"
-            menuClass="`o_select_menu_menu${props.searchable ? ' py-0' : ''}${props.multiSelect ? ' o_select_menu_multi_select' : ''}`"
+            togglerClass="`o_select_menu_toggler btn w-100 bg-light ${props.togglerClass || ''} ${canDeselect ? 'o_can_deselect' : ''}`"
+            menuClass="`o_select_menu_menu${props.searchable ? ' py-0' : ''}${props.multiSelect ? ' o_select_menu_multi_select' : ''} border`"
             position="'bottom-fit'"
-            beforeOpen.bind="filterOptions"
-            onOpened.bind="onOpened"
+            beforeOpen.bind="onBeforeOpen"
             onScroll.bind="onScroll"
+            onStateChanged.bind="onStateChanged"
         >
             <t t-set-slot="toggler">
                 <t t-if="props.multiSelect">
@@ -55,9 +55,9 @@
     </t>
 
     <t t-name="web.SelectMenu.ChoiceItem">
-        <div t-if="choice.isGroup" class="o_select_menu_group sticky-top bg-white px-3 mt-2 fst-italic fw-bolder">
+        <div t-if="choice.isGroup" class="o_select_menu_group sticky-top bg-light px-3 mt-2 fst-italic fw-bolder user-select-none">
             <span t-esc="choice.label" />
-            <hr class="bg-primary mt-2 mb-1" />
+            <hr class="mt-2 mb-1" />
         </div>
         <DropdownItem
             t-if="!choice.isGroup"

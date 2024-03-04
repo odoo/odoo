@@ -77,6 +77,9 @@ class AccountEdiFormat(models.Model):
         result = "".join(matches)
         return result
 
+    def _l10n_in_is_global_discount(self, line):
+        return not line.tax_ids and line.price_subtotal < 0 or False
+
     def _check_move_configuration(self, move):
         if self.code != "in_einvoice_1_03":
             return super()._check_move_configuration(move)
@@ -86,7 +89,7 @@ class AccountEdiFormat(models.Model):
         if not re.match("^.{1,16}$", move.name):
             error_message.append(_("Invoice number should not be more than 16 characters"))
         all_base_tags = self._get_l10n_in_base_tags()
-        for line in move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding')):
+        for line in move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding') and not self._l10n_in_is_global_discount(line)):
             if line.price_subtotal < 0:
                 # Line having a negative amount is not allowed.
                 if not move._l10n_in_edi_is_managing_invoice_negative_lines_allowed():
@@ -199,6 +202,7 @@ class AccountEdiFormat(models.Model):
                         error_codes = [e.get("code") for e in error]
             if "9999" in error_codes:
                 response = {}
+                error = []
                 odoobot = self.env.ref("base.partner_root")
                 invoice.message_post(author_id=odoobot.id, body=Markup(_(
                     "Somehow this invoice had been cancelled to government before." \
@@ -212,7 +216,7 @@ class AccountEdiFormat(models.Model):
                     "error": self._l10n_in_edi_get_iap_buy_credits_message(invoice.company_id),
                     "blocking_level": "error",
                 }}
-            else:
+            if error:
                 error_message = "<br/>".join(["[%s] %s" % (e.get("code"), html_escape(e.get("message"))) for e in error])
                 return {invoice: {
                     "success": False,
@@ -222,13 +226,15 @@ class AccountEdiFormat(models.Model):
         if not response.get("error"):
             json_dump = json.dumps(response.get("data", {}))
             json_name = "%s_cancel_einvoice.json" % (invoice.name.replace("/", "_"))
-            attachment = self.env["ir.attachment"].create({
-                "name": json_name,
-                "raw": json_dump.encode(),
-                "res_model": "account.move",
-                "res_id": invoice.id,
-                "mimetype": "application/json",
-            })
+            attachment = False
+            if json_dump:
+                attachment = self.env["ir.attachment"].create({
+                    "name": json_name,
+                    "raw": json_dump.encode(),
+                    "res_model": "account.move",
+                    "res_id": invoice.id,
+                    "mimetype": "application/json",
+                })
             return {invoice: {"success": True, "attachment": attachment}}
 
     def _l10n_in_validate_partner(self, partner, is_company=False):
@@ -240,7 +246,7 @@ class AccountEdiFormat(models.Model):
             message.append(_("- Street2 should be min 3 and max 100 characters"))
         if not re.match("^.{3,100}$", partner.city or ""):
             message.append(_("- City required min 3 and max 100 characters"))
-        if not re.match("^.{3,50}$", partner.state_id.name or ""):
+        if partner.country_id.code == "IN" and not re.match("^.{3,50}$", partner.state_id.name or ""):
             message.append(_("- State required min 3 and max 50 characters"))
         if partner.country_id.code == "IN" and not re.match("^[0-9]{6,}$", partner.zip or ""):
             message.append(_("- Zip code required 6 digits"))
@@ -473,9 +479,12 @@ class AccountEdiFormat(models.Model):
         is_intra_state = invoice.l10n_in_state_id == invoice.company_id.state_id
         is_overseas = invoice.l10n_in_gst_treatment == "overseas"
         lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding'))
+        global_discount_line = lines.filtered(self._l10n_in_is_global_discount)
+        lines -= global_discount_line
         tax_details_per_record = tax_details.get("tax_details_per_record")
         sign = invoice.is_inbound() and -1 or 1
         rounding_amount = sum(line.balance for line in invoice.line_ids if line.display_type == 'rounding') * sign
+        global_discount_amount = sum(line.balance for line in global_discount_line) * sign * -1
         json_payload = {
             "Version": "1.1",
             "TranDtls": {
@@ -495,7 +504,7 @@ class AccountEdiFormat(models.Model):
                 for index, line in enumerate(lines, start=1)
             ],
             "ValDtls": {
-                "AssVal": self._l10n_in_round_value(tax_details.get("base_amount")),
+                "AssVal": self._l10n_in_round_value(tax_details.get("base_amount") + global_discount_amount),
                 "CgstVal": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
                 "SgstVal": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
                 "IgstVal": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
@@ -507,6 +516,7 @@ class AccountEdiFormat(models.Model):
                     tax_details_by_code.get("state_cess_amount", 0.00)
                     + tax_details_by_code.get("state_cess_non_advol_amount", 0.00)),
                 ),
+                "Discount": self._l10n_in_round_value(global_discount_amount),
                 "RndOffAmt": self._l10n_in_round_value(
                     rounding_amount),
                 "TotInvVal": self._l10n_in_round_value(

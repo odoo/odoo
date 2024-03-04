@@ -5,16 +5,16 @@
 # Translators:
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
 # Wil Odoo, 2024
-# Junko Augias, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1100,7 +1100,7 @@ msgstr "ブラウザの印刷をバイパスし、ハードウェアプロキシ
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 #, python-format
 msgid "CANCELLED"
-msgstr "キャンセル済"
+msgstr "取消済"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1139,14 +1139,14 @@ msgstr "顧客を変更できません"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 #, python-format
 msgid "Cancel"
-msgstr "キャンセル"
+msgstr "取消"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 #, python-format
 msgid "Cancel Payment Request"
-msgstr "支払い要求のキャンセル"
+msgstr "支払い要求の取消"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__cancel
@@ -2978,7 +2978,7 @@ msgstr "進行中"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
-msgstr "販売を削除するために、それは新規またはキャンセルする必要があります。"
+msgstr "販売を削除するためには、新規または取消済である必要があります。"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__real
@@ -3530,7 +3530,7 @@ msgstr "Marc Demo"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__margin
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__margin
 msgid "Margin"
-msgstr "粗利益"
+msgstr "マージン"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__margin_percent
@@ -3735,6 +3735,11 @@ msgstr "新規金額"
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
 msgstr "新聞ラック"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "次の活動カレンダーイベント"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -3962,6 +3967,13 @@ msgid "OK"
 msgstr "OK"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#, python-format
+msgid "Odoo Point of Sale"
+msgstr "Odoo POS"
+
+#. module: point_of_sale
 #: model:product.template,name:point_of_sale.office_combo_product_template
 msgid "Office combo"
 msgstr "オフィスコンボ"
@@ -4001,6 +4013,12 @@ msgid ""
 "Only a negative quantity is allowed for this refund line. Click on +/- to "
 "modify the quantity to be refunded."
 msgstr "この払戻し行には、マイナスの数量しか入力できません。返金数量を変更するには+/-をクリックして下さい。"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Only administrators can edit receipt headers and footers"
+msgstr "管理者のみが領収書のヘッダとフッタを編集できます。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -5121,7 +5139,6 @@ msgstr "Powered by"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
-#: model:ir.ui.menu,name:point_of_sale.menu_pos_preparation_display
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation Display"
 msgstr "準備画面"
@@ -5333,7 +5350,7 @@ msgstr "プロダクト"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr "製品属性カスタム値"
+msgstr "プロダクト属性カスタム値"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_categ_id
@@ -5493,13 +5510,6 @@ msgstr "プロキシが切断されました"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__proxy_ip
 msgid "Proxy IP Address"
 msgstr "プロキシIPアドレス"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_printer.py:0
-#, python-format
-msgid "Proxy IP cannot be empty."
-msgstr "プロキシIPは空にはできません。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5916,7 +5926,7 @@ msgstr "販売済:"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
 msgid "Sale Line Count"
-msgstr "販売ライン数"
+msgstr "販売明細行数"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
@@ -6450,7 +6460,7 @@ msgstr "指定のルート"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
-msgstr "POSオーダラインで製品ロット/シリアル番号を指定します"
+msgstr "POSオーダラインでプロダクトロット/シリアル番号を指定"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__route_id
@@ -6468,6 +6478,13 @@ msgstr "開始カテゴリ"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__start_date
 msgid "Start Date"
 msgstr "開始日"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/generic_components/order_widget/order_widget.js:0
+#, python-format
+msgid "Start adding products"
+msgstr "プロダクトを追加開始"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6892,6 +6909,8 @@ msgid ""
 "The maximum difference allowed is %s.\n"
 "Please contact your manager to accept the closing difference."
 msgstr ""
+"最大許容差は %sです。\n"
+"差額を許可する場合は、マネージャーに連絡して下さい。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7136,7 +7155,7 @@ msgstr "このカテゴリの製品はありません。"
 msgid ""
 "There are still orders in draft state in the session. Pay or cancel the following orders to validate the session:\n"
 "%s"
-msgstr "セッションにはまだドラフト状態の注文があります。セッションを検証するには、次の注文を支払うかキャンセルします:%s"
+msgstr "セッションにはまだドラフト状態のオーダがあります。セッションを検証するには、次のオーダを支払うか取消します:%s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7549,7 +7568,7 @@ msgstr "取引明細書"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 #, python-format
 msgid "Transaction cancelled"
-msgstr "取引がキャンセルされました"
+msgstr "取引が取消されました"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_picking

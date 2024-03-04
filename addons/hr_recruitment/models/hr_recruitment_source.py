@@ -17,7 +17,11 @@ class RecruitmentSource(models.Model):
 
     def _compute_has_domain(self):
         for source in self:
-            source.has_domain = bool(source.alias_id.alias_domain)
+            if source.alias_id:
+                source.has_domain = bool(source.alias_id.alias_domain_id)
+            else:
+                source.has_domain = bool(source.job_id.company_id.alias_domain_id
+                                         or self.env.company.alias_domain_id)
 
     def create_alias(self):
         campaign = self.env.ref('hr_recruitment.utm_campaign_job')
@@ -36,7 +40,11 @@ class RecruitmentSource(models.Model):
                 'alias_parent_thread_id': source.job_id.id,
                 'alias_parent_model_id': self.env['ir.model']._get_id('hr.job'),
             }
-            source.alias_id = self.env['mail.alias'].create(vals)
+
+            # check that you can create source before to call mail.alias in sudo with known/controlled vals
+            source.check_access_rights('create')
+            source.check_access_rule('create')
+            source.alias_id = self.env['mail.alias'].sudo().create(vals)
 
     def unlink(self):
         """ Cascade delete aliases to avoid useless / badly configured aliases. """

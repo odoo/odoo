@@ -7,7 +7,7 @@
         <field name="name">hr.attendance.tree</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <tree string="Employee attendances" decoration-success="color == 10" decoration-danger="color == 1" sample="1">
+            <tree string="Employee attendances" decoration-success="color == 10" decoration-danger="color == 1" sample="1" duplicate="false">
                 <field name="employee_id" widget="many2one_avatar_user"/>
                 <field name="check_in"/>
                 <field name="check_out" options="{}"/>
@@ -62,14 +62,14 @@
         <field name="name">hr.attendance.form</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <form string="Employee attendances">
+            <form string="Employee attendances" duplicate="false">
                 <sheet>
                     <group>
                         <group colspan="2">
                             <group col="1">
                                 <field name="employee_id" widget="many2one_avatar_user"/>
-                                <field name="check_in" options="{'rounding': 1}"/>
-                                <field name="check_out" options="{'rounding': 1}"/>
+                                <field name="check_in" options="{'rounding': 0}"/>
+                                <field name="check_out" options="{'rounding': 0}"/>
                             </group>
                             <group col="2">
                                 <field name="worked_hours" widget="float_time"/>

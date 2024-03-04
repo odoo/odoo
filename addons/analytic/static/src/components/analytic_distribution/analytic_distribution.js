@@ -101,9 +101,9 @@ export class AnalyticDistribution extends Component {
     async willStart() {
         if (this.editingRecord) {
             // for performance in list views, plans are not retrieved until they are required.
-            await this.fetchAllPlans();
+            await this.fetchAllPlans(this.props);
         }
-        await this.jsonToData();
+        await this.jsonToData(this.props.record.data[this.props.name]);
     }
 
     async willUpdateRecord(record) {
@@ -120,11 +120,11 @@ export class AnalyticDistribution extends Component {
         const productChanged = !shallowEqual(this.lastProduct, currentProduct);
         if (valueChanged || accountChanged || productChanged) {
             if (!this.props.force_applicability) {
-                await this.fetchAllPlans();
+                await this.fetchAllPlans({ record });
             }
             this.lastAccount = accountChanged && currentAccount || this.lastAccount;
             this.lastProduct = productChanged && currentProduct || this.lastProduct;
-            await this.jsonToData();
+            await this.jsonToData(record.data[this.props.name]);
         }
         this.currentValue = record.data[this.props.name];
     }
@@ -217,8 +217,7 @@ export class AnalyticDistribution extends Component {
         }));
     }
 
-    async jsonToData() {
-        const jsonFieldValue = this.props.record.data[this.props.name];
+    async jsonToData(jsonFieldValue) {
         const analyticAccountIds = jsonFieldValue ? Object.keys(jsonFieldValue).map((key) => key.split(',')).flat().map((id) => parseInt(id)) : [];
         const analyticAccountDict = analyticAccountIds.length ? await this.fetchAnalyticAccounts([["id", "in", analyticAccountIds]]) : [];
 
@@ -323,8 +322,7 @@ export class AnalyticDistribution extends Component {
     }
 
     // ORM
-    fetchPlansArgs() {
-        const { record, name } = this.props;
+    fetchPlansArgs({ record }) {
         let args = {};
         if (this.props.business_domain_compute) {
             args['business_domain'] = evaluateExpr(this.props.business_domain_compute, record.evalContext);
@@ -341,7 +339,7 @@ export class AnalyticDistribution extends Component {
         if (this.props.force_applicability) {
             args['applicability'] = this.props.force_applicability;
         }
-        const existing_account_ids = Object.keys(record.data[name]).map((k) => k.split(",")).flat().map((i) => parseInt(i));
+        const existing_account_ids = Object.keys(record.data[this.props.name]).map((k) => k.split(",")).flat().map((i) => parseInt(i));
         if (existing_account_ids.length) {
             args['existing_account_ids'] = existing_account_ids;
         }
@@ -351,8 +349,8 @@ export class AnalyticDistribution extends Component {
         return args;
     }
 
-    async fetchAllPlans() {
-        const argsPlan = this.fetchPlansArgs();
+    async fetchAllPlans(props) {
+        const argsPlan = this.fetchPlansArgs(props);
         this.allPlans = await this.orm.call("account.analytic.plan", "get_relevant_plans", [], argsPlan);
     }
 
@@ -460,8 +458,12 @@ export class AnalyticDistribution extends Component {
 
     onSaveNew() {
         this.closeAnalyticEditor();
+        const { record, product_field, account_field } = this.props;
         this.openTemplate({ resId: false, context: {
             'default_analytic_distribution': this.dataToJson(),
+            'default_partner_id': record.data['partner_id'] ? record.data['partner_id'][0] : undefined,
+            'default_product_id': product_field ? record.data[product_field][0] : undefined,
+            'default_account_prefix': account_field ? record.data[account_field][1].substr(0, 3) : undefined,
         }});
     }
 
@@ -480,8 +482,8 @@ export class AnalyticDistribution extends Component {
 
     async openAnalyticEditor() {
         if (!this.allPlans.length) {
-            await this.fetchAllPlans();
-            await this.jsonToData();
+            await this.fetchAllPlans(this.props);
+            await this.jsonToData(this.props.record.data[this.props.name]);
         }
         if (!this.state.formattedData.length) {
             await this.addLine();

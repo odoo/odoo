@@ -6,8 +6,8 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Wil Odoo, 2024
 # Martin Trigaux, 2024
-# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Junko Augias, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,7 +83,7 @@ msgstr ""
 "(a)配送ポリシーは'できるだけ早く'です。少なくとも1つの製品が予約されています。 \n"
 "(b)配送ポリシーは'すべての製品の準備ができたら'です。すべての製品が予約されています。 \n"
 "*完了:転送は処理されました。 \n"
-"*キャンセル済み:転送はキャンセルされました。"
+"*取消済:転送は取消されました。"
 
 #. module: stock
 #. odoo-python
@@ -641,7 +641,7 @@ msgstr "<span>パッケージが割り当てられていないプロダクト</s
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<span>Remaining quantities not yet delivered:</span>"
-msgstr "<span>まだ配送されていない残数：</span>"
+msgstr "<span>未納品数：</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -1513,7 +1513,7 @@ msgstr "一般的なルート%sが見つかりません。"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
 msgid "Cancel"
-msgstr "キャンセル"
+msgstr "取消"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_cancel
@@ -2551,7 +2551,7 @@ msgstr "配送数量"
 #: model:ir.ui.menu,name:stock.out_picking
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Deliveries"
-msgstr "デリバリー"
+msgstr "配送"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_outgoing
@@ -2565,7 +2565,7 @@ msgstr "配送では在庫から取引先にプロダクトを送ることがで
 #: model:ir.ui.menu,name:stock.menu_delivery
 #, python-format
 msgid "Delivery"
-msgstr "デリバリー"
+msgstr "配送"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7423,7 +7423,7 @@ msgstr "補充ルート"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return"
-msgstr "返却"
+msgstr "返品"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__location_id
@@ -7562,6 +7562,14 @@ msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
 msgstr "これらの補給倉庫にルートが作成され、プロダクトおよびプロダクトカテゴリで選択することができるようになります。"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8484,7 +8492,7 @@ msgstr "在庫可能品"
 msgid ""
 "Storable products are physical items for which you manage the inventory "
 "level."
-msgstr "在庫レベルを管理する実際の品目である在庫可能製品。"
+msgstr "在庫レベルを管理する実際の品目である在庫可能プロダクト。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -9383,7 +9391,7 @@ msgstr "転送%s:移動するアイテムをいくつか追加してください
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Transfers allow you to move products from one location to another."
-msgstr "転送を使用すると、製品をある場所から別の場所に移動できます。"
+msgstr "転送を使用すると、プロダクトをある場所から別の場所に移動できます。"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
@@ -10094,7 +10102,7 @@ msgstr "チェックを入れると、運送会社が展開されます。"
 msgid ""
 "When ticked, if the move created by this rule is cancelled, the next move "
 "will be cancelled too."
-msgstr "チェックを入れると、このルールで作成された移動がキャンセルされると、次の移動もキャンセルされます。"
+msgstr "チェックを入れると、このルールで作成された移動が取消されると、次の移動も取消されます。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__create_backorder
@@ -10107,7 +10115,7 @@ msgstr ""
 "転送を検証するとき：\n"
 "* 確認：ユーザは残りのプロダクトについてバックオーダーを作成するかどうか選択するよう求められます。\n"
 "* 常時：残りのプロダクトに対してバックオーダーが自動的に作成されます。\n"
-"* 絶対しない: 残っているプロダクトはキャンセルされます。"
+"* 絶対しない: 残っているプロダクトは取消されます。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__owner_id
@@ -10331,21 +10339,21 @@ msgstr "倉庫%sで使用されているため、場所%sをアーカイブす�
 msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
-msgstr "完了'に設定されている在庫移動はキャンセルできません。行われた動きを逆にするためにリターンを作成します。"
+msgstr "’完了'に設定されている在庫移動は取消できません。行われた動きを逆にするためにリターンを作成します。"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot change a cancelled stock move, create a new line instead."
-msgstr "キャンセルされた在庫移動を変更することはできません。新しく作成して下さい。"
+msgstr "取消された在庫移動を変更することはできません。新しく作成して下さい。"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
-msgstr "転送が完了またはキャンセルされた場合、スケジュール日を変更することはできません。"
+msgstr "転送が完了または取消された場合、スケジュール日を変更することはできません。"
 
 #. module: stock
 #. odoo-python
@@ -10447,7 +10455,7 @@ msgstr "ドラフトの移動を分割することはできません。 最初�
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
-msgstr "'完了'または'キャンセル'に設定されている在庫移動を分割することはできません。"
+msgstr "'完了'または'取消'に設定されている在庫移動を分割することはできません。"
 
 #. module: stock
 #. odoo-python

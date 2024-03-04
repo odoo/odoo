@@ -616,6 +616,13 @@ class BaseModel(metaclass=MetaModel):
     as attribute.
     """
 
+    _allow_sudo_commands = True
+    """Allow One2many and Many2many Commands targeting this model in an environment using `sudo()` or `with_user()`.
+    By disabling this flag, security-sensitive models protect themselves
+    against malicious manipulation of One2many or Many2many fields
+    through an environment using `sudo` or a more priviledged user.
+    """
+
     _depends = frozendict()
     """dependencies of models backed up by SQL views
     ``{model_name: field_names}``, where ``field_names`` is an iterable.
@@ -2450,13 +2457,13 @@ class BaseModel(metaclass=MetaModel):
             for row in rows_dict:
                 value = row[group]
 
-                if field.type in ('many2one', 'many2many') and isinstance(value, BaseModel):
+                if isinstance(value, BaseModel):
                     row[group] = (value.id, value.sudo().display_name) if value else False
                     value = value.id
 
                 if not value and field.type == 'many2many':
                     other_values = [other_row[group][0] if isinstance(other_row[group], tuple)
-                                    else other_row[group].id if isinstance(value, BaseModel)
+                                    else other_row[group].id if isinstance(other_row[group], BaseModel)
                                     else other_row[group] for other_row in rows_dict if other_row[group]]
                     additional_domain = [(field_name, 'not in', other_values)]
                 else:
@@ -3993,6 +4000,8 @@ class BaseModel(metaclass=MetaModel):
         :param companies: the allowed companies for the related record
         :type companies: BaseModel or list or tuple or int or unquote
         """
+        if not companies:
+            return [('company_id', '=', False)]
         return ['|', ('company_id', '=', False), ('company_id', 'in', to_company_ids(companies))]
 
     def _check_company(self, fnames=None):
@@ -5589,6 +5598,7 @@ class BaseModel(metaclass=MetaModel):
         self.flush_model([parent])
         for id in self.ids:
             current_id = id
+            seen_ids = {current_id}
             while current_id:
                 cr.execute(SQL(
                     "SELECT %s FROM %s WHERE id = %s",
@@ -5596,8 +5606,9 @@ class BaseModel(metaclass=MetaModel):
                 ))
                 result = cr.fetchone()
                 current_id = result[0] if result else None
-                if current_id == id:
+                if current_id in seen_ids:
                     return False
+                seen_ids.add(current_id)
         return True
 
     def _check_m2m_recursion(self, field_name):
@@ -5867,6 +5878,8 @@ class BaseModel(metaclass=MetaModel):
 
         """
         assert isinstance(flag, bool)
+        if flag == self.env.su:
+            return self
         return self.with_env(self.env(su=flag))
 
     def with_user(self, user):

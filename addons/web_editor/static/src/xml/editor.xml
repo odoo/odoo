@@ -50,7 +50,7 @@
                         <a class="dropdown-item" href="#" id="light" data-call="setTag" data-arg1="p,lead" data-extended-text-style="">Light</a>
                     </li>
                     <li id="small-dropdown-item">
-                        <a class="dropdown-item" href="#" id="small" data-call="setTag" data-arg1="p,small" data-extended-text-style="">Small</a>
+                        <a class="dropdown-item" href="#" id="small" data-call="setTag" data-arg1="p,o_small" data-extended-text-style="">Small</a>
                     </li>
                     <li id="pre-dropdown-item">
                         <a class="dropdown-item" href="#" id="pre" data-call="setTag" data-arg1="pre">Code</a>
@@ -91,12 +91,12 @@
             </div>
 
             <t t-if="!this.isMobile()">
-                <div t-if="props.showFontSize" id="font-size" t-attf-class="btn-group {{ props.dropDirection }}">
+                <div t-if="props.useFontSizeInput or props.showFontSize" id="font-size" t-attf-class="btn-group {{ props.dropDirection }}">
                     <button type="button" class="btn dropdown-toggle"
                         data-bs-toggle="dropdown" tabindex="-1"
                         data-bs-original-title="Font Size" aria-expanded="false">
                         <div id="font-size-input-container">
-                            <input type="text" id="fontSizeCurrentValue" title="Font size" value="13"></input>
+                            <input type="text" id="fontSizeCurrentValue" title="Font size" value="13" t-att-readonly= "props.showFontSize" t-att-class="props.showFontSize ? 'cursor-pointer' : ''"></input>
                         </div>
                     </button>
                     <ul class="dropdown-menu">
@@ -112,7 +112,7 @@
                         <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="h5-font-size" data-apply-class="h5-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Heading 5</span></a></li>
                         <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="h6-font-size" data-apply-class="h6-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Heading 6</span></a></li>
                         <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="font-size-base" data-apply-class="base-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Normal</span></a></li>
-                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="small-font-size" data-apply-class="small" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Small</span></a></li>
+                        <li><a class="dropdown-item d-flex justify-content-between align-items-center" data-dynamic-value="small-font-size" data-apply-class="o_small-fs" href="#">? <span class="d-none o_we_font_size_badge badge rounded-pill text-bg-dark ms-4">Small</span></a></li>
                     </ul>
                 </div>
             </t>

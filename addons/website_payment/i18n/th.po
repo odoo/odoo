@@ -99,7 +99,7 @@ msgstr "ปีแห่งการตื่นตัวทางวัฒนธ
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Payments"
-msgstr ""
+msgstr "เปิดใช้งานการชำระเงิน"
 
 #. module: website_payment
 #: model:ir.actions.server,name:website_payment.action_activate_stripe
@@ -161,7 +161,7 @@ msgstr "ตั้งค่าการกำหนดค่า"
 #: code:addons/website_payment/models/res_config_settings.py:0
 #, python-format
 msgid "Configure %s"
-msgstr ""
+msgstr "การกำหนดค่า %s"
 
 #. module: website_payment
 #. odoo-javascript
@@ -177,6 +177,8 @@ msgid ""
 "Country\n"
 "                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"ประเทศ\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-python
@@ -220,7 +222,7 @@ msgstr "ตัวเลือกการแสดง"
 #: code:addons/website_payment/controllers/portal.py:0
 #, python-format
 msgid "Donate"
-msgstr ""
+msgstr "บริจาค"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
@@ -271,6 +273,8 @@ msgid ""
 "Email\n"
 "                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"อีเมล\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-javascript
@@ -296,7 +300,7 @@ msgstr "ช่อง '%s' เป็นช่องบังคับ"
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__first_provider_label
 msgid "First Provider Label"
-msgstr ""
+msgstr "ป้ายกำกับผู้ให้บริการรายแรก"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -312,7 +316,7 @@ msgstr "บริจาค"
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__is_stripe_supported_country
 #: model:ir.model.fields,field_description:website_payment.field_res_country__is_stripe_supported_country
 msgid "Is Stripe Supported Country"
-msgstr ""
+msgstr "เป็นประเทศที่รองรับ Stripe"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_transaction__is_donation
@@ -347,6 +351,8 @@ msgid ""
 "Name\n"
 "                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"ชื่อ\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-python
@@ -374,7 +380,7 @@ msgstr "หนึ่งปีในโรงเรียนมัธยม"
 #. module: website_payment
 #: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__other_than_paypal
 msgid "Other than Paypal"
-msgstr ""
+msgstr "นอกเหนือจาก Paypal"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
@@ -413,7 +419,7 @@ msgstr "การชำระเงิน"
 #. module: website_payment
 #: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__paypal_only
 msgid "Paypal Only"
-msgstr ""
+msgstr "Paypal เท่านั้น"
 
 #. module: website_payment
 #. odoo-javascript
@@ -430,7 +436,7 @@ msgstr "ตัวเลือกที่กรอกล่วงหน้า"
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__providers_state
 msgid "Providers State"
-msgstr ""
+msgstr "ผู้ให้บริการของรัฐ"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -440,7 +446,7 @@ msgstr "อีเมลผู้รับ"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Shop - Payment"
-msgstr ""
+msgstr "ร้านค้า - ชำระเงิน"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -479,6 +485,8 @@ msgid ""
 "Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple "
 "Pay, etc. as well as recurring charges."
 msgstr ""
+"รองรับวิธีการชำระเงินส่วนใหญ่ Visa, Mastercard, Maestro, Google Pay, Apple "
+"Pay ฯลฯ รวมถึงการเรียกเก็บเงินที่เกิดขึ้นประจำ"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -500,12 +508,12 @@ msgstr "ไม่มีอะไรต้องชำระ"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "View Alternatives"
-msgstr ""
+msgstr "ดูทางเลือก"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "View other providers"
-msgstr ""
+msgstr "ดูผู้ให้บริการรายอื่น"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_provider__website_id
@@ -515,7 +523,7 @@ msgstr "เว็บไซต์"
 #. module: website_payment
 #: model:mail.template,name:website_payment.mail_template_donation
 msgid "Website: Donation"
-msgstr ""
+msgstr "เว็บไซต์: บริจาค"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information

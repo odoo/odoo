@@ -49,13 +49,7 @@
                                 <tr t-foreach="o.expense_line_ids" t-as="line">
                                     <td class="text-start"><span t-field="line.date"></span></td>
                                     <td t-att-class="'text-start' + (' o_overflow' if len(line.name) > 30 else '')">
-                                        <span t-field="line.name">Flight Ticket</span><br/>
-                                        <span>
-                                            <span t-foreach="line.analytic_distribution" t-as="distribution">
-                                                <span t-out="line.env['account.analytic.account'].browse(int(distribution))[0].name">Analytic Account Name</span>:
-                                                <span t-out="line.analytic_distribution.get(distribution)">50%</span>
-                                            </span>
-                                        </span>
+                                        <span t-field="line.name">Flight Ticket</span>
                                     </td>
                                     <td class="text-end"><span t-field="line.price_unit">$100.00</span></td>
                                     <td class="text-end"><span t-field="line.quantity">1</span></td>

@@ -31,11 +31,11 @@
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2023
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
 # Martin Trigaux, 2023
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Marko Happonen <marko.happonen@sprintit.fi>, 2023
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -43,7 +43,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +79,7 @@ msgstr " <br/><br/> Komponentit tullaan ottamaan <b>%ssta</b>."
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
 msgid " When all components are available"
-msgstr "Kun kaikki komponentit ovat saatavilla"
+msgstr " Kun kaikki komponentit ovat saatavilla"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_count
@@ -113,7 +113,7 @@ msgstr "# osaluetteloa missä käytetään"
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #, python-format
 msgid "%(producible_qty)s Ready"
-msgstr ""
+msgstr "%(producible_qty)s Valmis"
 
 #. module: mrp
 #. odoo-python
@@ -163,7 +163,7 @@ msgstr "\"Valmiit tuotteet - %s\" % object.name"
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_mrp_mo_overview
 msgid "'MO Overview - %s' % object.display_name"
-msgstr ""
+msgstr "'Valmistuksen yleiskatsaus - %s' % object.display_name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
@@ -182,7 +182,7 @@ msgstr "'Työmääräys - %s' % object.name"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "(in"
-msgstr ""
+msgstr "(yksikössä"
 
 #. module: mrp
 #. odoo-python
@@ -196,7 +196,7 @@ msgstr "+ %d päivä(ä)"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "- Overview"
-msgstr ""
+msgstr "- Yleiskatsaus"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -226,7 +226,7 @@ msgstr "18″ x 2½″ Neliskulmainen jalka"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "2023-09-15"
-msgstr ""
+msgstr "2023-09-15"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -236,27 +236,27 @@ msgstr "25"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "50"
-msgstr ""
+msgstr "50"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "58"
-msgstr ""
+msgstr "58"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "60"
-msgstr ""
+msgstr "60"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "8 GB RAM"
-msgstr ""
+msgstr "8 Gt RAM-MUISTIA"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "987654321098"
-msgstr ""
+msgstr "987654321098"
 
 #. module: mrp
 #. odoo-python
@@ -300,12 +300,12 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"fw-bold\">To Produce</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold\">Tuotetaan</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"ms-2\">Generate BOM</span>"
-msgstr ""
+msgstr "<span class=\"ms-2\">Luo osaluettelo (BOM)</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -315,7 +315,7 @@ msgstr "<span class=\"o_stat_text\">Jälkitoimitukset</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">BoM Overview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Osaluettelon (BoM) yleiskatsaus</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -356,7 +356,7 @@ msgstr "<span class=\"o_stat_text\">Toiminta<br/>Suorituskyky</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Overview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Yleiskatsaus</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -397,6 +397,8 @@ msgid ""
 "modify the quantities of components to consume for this manufacturing "
 "order.</span>"
 msgstr ""
+"<span class=\"text-muted\">Tuotettavan määrän muuttaminen muuttaa myös "
+"kyseistä valmistustilausta varten tarvittavien komponenttien määriä.</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -467,7 +469,7 @@ msgstr "<strong>Todellinen kesto (minuuttia)</strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Barcode</strong>"
-msgstr ""
+msgstr "<strong>Viivakoodi</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -580,6 +582,8 @@ msgid ""
 "A BoM of type Kit is not produced with a manufacturing order.<br/>\n"
 "                                Instead, it is used to decompose a BoM into its components when:"
 msgstr ""
+"Kit-tyyppistä osaluetteloa (BoM) ei tuoteta valmistustilauksen yhteydessä.<br/>\n"
+"                                Sen sijaan sitä käytetään osaluettelon purkamiseen sen osiin, kun:"
 
 #. module: mrp
 #. odoo-python
@@ -702,6 +706,9 @@ msgid ""
 "Lines with 0 quantities can be used as optional lines. \n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs!"
 msgstr ""
+"Kaikkien tuotemäärien on oltava vähintään 0.\n"
+"Rivejä, joiden määrä on 0, voidaan käyttää valinnaisina riveinä.\n"
+"Sinun on asennettava mrp_byproduct-moduuli, jos haluat hallinnoida ylimääräisiä tuotteita osaluetteloissa!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -711,12 +718,12 @@ msgstr "Varaus"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Allocation Report"
-msgstr ""
+msgstr "Jakautumisraportti"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Allocation Report Labels"
-msgstr ""
+msgstr "Jakautumisraportin tarrat"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_reception_report
@@ -875,32 +882,32 @@ msgstr "Attribuuttien arvot"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_mrp_reception_report
 msgid "Auto Print Allocation Report"
-msgstr ""
+msgstr "Tulosta jakautumisen raportti automaattisesti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_mrp_reception_report_labels
 msgid "Auto Print Allocation Report Labels"
-msgstr ""
+msgstr "Tulosta automaattisesti jakautumisraportin etiketit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_done_production_order
 msgid "Auto Print Done Production Order"
-msgstr ""
+msgstr "Tulosta automaattisesti valmis tuotantotilaus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_generated_mrp_lot
 msgid "Auto Print Generated Lot/SN Label"
-msgstr ""
+msgstr "Tulosta automaattisesti luodut erä- tai sarjanumeroetiketit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_done_mrp_lot
 msgid "Auto Print Produced Lot Label"
-msgstr ""
+msgstr "Tulosta automaattisesti tuotetun erän eränumeroetiketti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
 msgid "Auto Print Produced Product Labels"
-msgstr ""
+msgstr "Tulosta automaattisesti tuote-etiketit"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_generated_mrp_lot
@@ -908,6 +915,8 @@ msgid ""
 "Automatically print the lot/SN label when the \"Create a new serial/lot "
 "number\" button is used."
 msgstr ""
+"Tulosta automaattisesti tuote-erän tai sarjanumeron etiketti, kun käytetään "
+"painiketta \"Luo uusi sarja- tai eränumero\"."
 
 #. module: mrp
 #. odoo-javascript
@@ -973,7 +982,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Avg Cost of Components per Unit"
-msgstr ""
+msgstr "Komponenttien keskimääräiset kustannukset yksikköä kohti"
 
 #. module: mrp
 #. odoo-javascript
@@ -981,7 +990,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Avg Cost of Operations per Unit"
-msgstr ""
+msgstr "Toiminnan keskimääräiset kustannukset yksikköä kohti"
 
 #. module: mrp
 #. odoo-javascript
@@ -989,12 +998,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Avg Total Cost per Unit"
-msgstr ""
+msgstr "Keskimääräiset kokonaiskustannukset yksikköä kohti"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Awaiting Components"
-msgstr ""
+msgstr "Odottavat komponentit"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
@@ -1119,6 +1128,8 @@ msgid ""
 "Bills of Materials, also called recipes, are used to autocomplete components"
 " and work order instructions."
 msgstr ""
+"Materiaaliluetteloita, joita kutsutaan myös resepteiksi, käytetään "
+"komponenttien ja työmääräysohjeiden automaattiseen täydentämiseen."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1128,7 +1139,7 @@ msgid ""
 "                order or a pack of products."
 msgstr ""
 "Osaluetteloiden avulla voit määritellä tuotteen valmistamiseksi tarvittavat "
-"tuotteet (raaka-aineet) tai tuotesettiin kuuluvat tuotteet. "
+"tuotteet (raaka-aineet) tai tuotesettiin kuuluvat tuotteet."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
@@ -1343,7 +1354,7 @@ msgstr "Kategoria"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Center A"
-msgstr ""
+msgstr "Keskus A"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -1500,6 +1511,11 @@ msgid ""
 "                                                       Also note that "
 "purchase security lead times will be added when appropriate."
 msgstr ""
+"Laske päivät, jotka tarvitaan kaikkien komponenttien toimittamiseen "
+"osaluettelosta joko ostamalla tai valmistamalla komponentteja ja/tai "
+"osakokoonpanoja.                                                       "
+"Huomaa myös, että ostojen toimituksen aikamarginaalin läpimenoaika lisätään "
+"tarvittaessa."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1620,13 +1636,15 @@ msgstr "Kustannusosuus (%)"
 #, python-format
 msgid "Cost based on related replenishments. Otherwise cost from product form"
 msgstr ""
+"Kustannukset perustuvat asiaan liittyviin täydennyksiin. Muussa tapauksessa "
+"kustannukset tuotemuodosta"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #, python-format
 msgid "Cost from product form"
-msgstr ""
+msgstr "Hinta tuoteteen lomakkeelta"
 
 #. module: mrp
 #. odoo-javascript
@@ -1634,7 +1652,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Cost of Components per unit"
-msgstr ""
+msgstr "Komponenttien kustannukset yksikköä kohti"
 
 #. module: mrp
 #. odoo-javascript
@@ -1642,7 +1660,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Cost of Operations per unit"
-msgstr ""
+msgstr "Toimintojen kustannukset yksikköä kohti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__costs_hour
@@ -1836,7 +1854,7 @@ msgstr ""
 "Yhdessä Stock Location -tilassa tämä sisältää tavaroita, jotka on varastoitu tähän paikkaan tai mihin tahansa sen alapaikkoihin.\n"
 "Yhdessä Warehouse-ympäristössä tämä sisältää tavaroita, jotka on varastoitu tämän varaston varastopaikalle tai sen alapaikkoihin.\n"
 "tallennetaan tämän myymälän varastokohtaan tai sen lapsiin.\n"
-"Muussa tapauksessa tämä koskee tavaroita, jotka on tallennettu mihin tahansa Stock-paikkaan, jossa on sisäinen tyyppi. "
+"Muussa tapauksessa tämä koskee tavaroita, jotka on tallennettu mihin tahansa Stock-paikkaan, jossa on sisäinen tyyppi."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_producing
@@ -1863,13 +1881,15 @@ msgstr "Päivämäärä"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Date by Month"
-msgstr ""
+msgstr "Päivämäärä kuukausittain"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_finished
 msgid ""
 "Date you expect to finish production or actual date you finished production."
 msgstr ""
+"Päivämäärä, jolloin odotat saavasi tuotannon valmiiksi, tai todellinen "
+"päivämäärä, jolloin olet saanut tuotannon valmiiksi."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
@@ -1877,11 +1897,13 @@ msgstr ""
 msgid ""
 "Date you plan to start production or date you actually started production."
 msgstr ""
+"Päivämäärä, jolloin aiot aloittaa tuotannon tai päivämäärä, jolloin olet "
+"tosiasiallisesti aloittanut tuotannon."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Date: Last 365 Days"
-msgstr ""
+msgstr "Päivämäärä: Viimeiset 365 päivää"
 
 #. module: mrp
 #. odoo-javascript
@@ -1973,7 +1995,7 @@ msgstr "Viivästyksen hälytyspäivä"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Delays"
-msgstr ""
+msgstr "Viivästykset"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
@@ -2072,7 +2094,7 @@ msgstr "Näyttää kulutetut erä-/sarjanumerot."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Displays the produced Lot/Serial Numbers."
-msgstr ""
+msgstr "Näyttää tuotetut erä-/sarjanumerot."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
@@ -2208,7 +2230,7 @@ msgstr "Varmista varastoitavan tuotteen jäljitettävyys varastossasi."
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason1
 msgid "Equipment Failure"
-msgstr ""
+msgstr "Laitevika"
 
 #. module: mrp
 #. odoo-python
@@ -2402,7 +2424,7 @@ msgstr ""
 "Ennusteen määrä (laskettu määränä käsin - lähtevä + saapuva)\n"
 "Yhdessä Stock Location -tilassa tämä sisältää tavaroita, jotka on varastoitu tähän paikkaan tai johonkin sen alapaikoista.\n"
 "Yhdessä Warehouse-ympäristössä tämä sisältää tavaroita, jotka on varastoitu tämän varaston varastopaikalle tai sen alapaikoille.\n"
-"Muussa tapauksessa tämä koskee tavaroita, jotka on tallennettu mihin tahansa Stock-paikkaan, jossa on sisäinen tyyppi. \""
+"Muussa tapauksessa tämä koskee tavaroita, jotka on tallennettu mihin tahansa Stock-paikkaan, jossa on sisäinen tyyppi."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -2435,7 +2457,7 @@ msgstr "Vapaasti käytettävissä / varastossa"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Free to use / On Hand"
-msgstr ""
+msgstr "Vapaasti käytettävissä / varastossa"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2450,7 +2472,7 @@ msgstr "Täysin tuottava"
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason7
 msgid "Fully Productive Time"
-msgstr ""
+msgstr "Täysin tuottava aika"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -2471,12 +2493,12 @@ msgstr "Luo sarjanumeroita"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Generate a new BoM from this Manufacturing Order"
-msgstr ""
+msgstr "Luo uusi osaluettelo tästä valmistustilauksesta"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__generated_mrp_lot_label_to_print
 msgid "Generated Lot/SN Label to Print"
-msgstr ""
+msgstr "Luotu erä- tai sarjanumeron etiketti tulostettavaksi"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
@@ -2562,7 +2584,7 @@ msgstr "Sisältää viestin"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__has_routing_lines
 msgid "Has Routing Lines"
-msgstr ""
+msgstr "Sisältää reititysrivejä"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_document__priority__2
@@ -2677,6 +2699,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report labels of a MO when it is done."
 msgstr ""
+"Jos valittu, Odoo tulostaa automaattisesti MO:n jakoraportin etiketit, kun "
+"se on valmis."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_mrp_reception_report
@@ -2684,6 +2708,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report of a MO when it is done and has assigned moves."
 msgstr ""
+"Jos valittu, Odoo tulostaa automaattisesti MO:n jakautumisraportin, kun se "
+"on valmis ja kun siirtoja on osoitettu."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_lot
@@ -2691,6 +2717,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN label "
 "of a MO when it is done."
 msgstr ""
+"Jos valittu, Odoo tulostaa automaattisesti MO:n erä- tai sarjanumeron "
+"etiketin, kun se on valmis."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
@@ -2698,6 +2726,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels"
 " of a MO when it is done."
 msgstr ""
+"Jos valittu, Odoo tulostaa automaattisesti MO:n tuotteiden etiketit, kun se "
+"on valmis."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_production_order
@@ -2705,6 +2735,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the production "
 "order of a MO when it is done."
 msgstr ""
+"Jos valittu, Odoo tulostaa automaattisesti MO:n tuotantotilauksen, kun se on"
+" valmis."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_height
@@ -2729,7 +2761,7 @@ msgstr "Kuva on linkki"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "Impacted Transfer(s):"
-msgstr "Vaikutetut siirrot"
+msgstr "Vaikuttaa siirtoihin:"
 
 #. module: mrp
 #. odoo-python
@@ -2765,7 +2797,7 @@ msgstr "Käynnissä"
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #, python-format
 msgid "In Transit"
-msgstr ""
+msgstr "Kuljetettavana"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__index_content
@@ -2889,17 +2921,17 @@ msgstr "Kannettava tietokone"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Laptop Model X"
-msgstr ""
+msgstr "Kannettavan tietokoneen malli X"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
 msgid "Laptop model X"
-msgstr ""
+msgstr "Kannettavan tietokoneen malli X"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Laptop with 16GB RAM"
-msgstr ""
+msgstr "Kannettava tietokone, jossa on 16 Gt RAM-muistia"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__write_uid
@@ -2978,7 +3010,7 @@ msgstr "Myöhässä olevat toimenpiteet"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Late Components"
-msgstr ""
+msgstr "Myöhässä olevat komponentit"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -3077,12 +3109,12 @@ msgstr "Hävikin syy"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Lot/SN Label"
-msgstr ""
+msgstr "Erä- tai sarjanumeron etiketti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__done_mrp_lot_label_to_print
 msgid "Lot/SN Label to Print"
-msgstr ""
+msgstr "Tulostettavat erä- tai sarjannumeron etiketit"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -3128,14 +3160,14 @@ msgstr "Tuotantotilauksen jälkitoimitus"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "MO Cost"
-msgstr ""
+msgstr "Tuotantotilauksen kustannus"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 #, python-format
 msgid "MO Costs"
-msgstr ""
+msgstr "Tuotantotilausten kustannukset"
 
 #. module: mrp
 #. odoo-python
@@ -3148,12 +3180,12 @@ msgstr "Tuotantotilauksen loi %s"
 #: model:ir.actions.client,name:mrp.action_report_mo_overview
 #: model:ir.actions.report,name:mrp.action_report_mrp_mo_overview
 msgid "MO Overview"
-msgstr ""
+msgstr "Tuotantotilausten yleiskatsaus"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr ""
+msgstr "Tuotantotilauksen yleiskatsausraportti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reservation_state
@@ -3163,12 +3195,12 @@ msgstr "Tuotantotilauksen valmius"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "MO Ready"
-msgstr ""
+msgstr "Tuotantotilaus on valmis"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "MO Reference"
-msgstr ""
+msgstr "Tuotantotilauksen viite"
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.mrp_reception_action
@@ -3188,7 +3220,7 @@ msgstr "Valmistuksen työtilausten tuottavuuden menetykset"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "MRP-001"
-msgstr ""
+msgstr "MRP-001"
 
 #. module: mrp
 #. odoo-python
@@ -3362,7 +3394,7 @@ msgstr "Valmistustilaukset"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are in confirmed state."
-msgstr "Vahvistetut valmistustilaukset"
+msgstr "Vahvistetut valmistustilaukset."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__ready_to_produce
@@ -3416,7 +3448,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action_picking_tree_mrp_operation
 #: model:ir.ui.menu,name:mrp.mrp_operation_picking
 msgid "Manufacturings"
-msgstr ""
+msgstr "Valmistukset"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
@@ -3508,7 +3540,7 @@ msgstr "Valmistuksen kulutuksen varoitusrivi"
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_mrp_display
 msgid "Mrp Display"
-msgstr ""
+msgstr "Valmistuksen (MRP) näyttö"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_ids
@@ -3556,7 +3588,7 @@ msgstr "Uusi"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "New BoM from %(mo_name)s"
-msgstr ""
+msgstr "Uusi osaluettelo (BoM) alkaen %(mo_name)s"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -3672,12 +3704,12 @@ msgstr "Ei saatavilla"
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #, python-format
 msgid "Not Ready"
-msgstr ""
+msgstr "Ei valmis"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Note that another version of this BOM is available."
-msgstr ""
+msgstr "Huomaa, että tästä osaluettelosta on saatavilla toinen versio."
 
 #. module: mrp
 #. odoo-python
@@ -3790,6 +3822,9 @@ msgid ""
 "                                install the IoT App on a computer that is on the same local network as the\n"
 "                                barcode operator and configure the routing of the reports."
 msgstr ""
+"Odoo avaa oletusarvoisesti PDF-esikatselun. Jos haluat tulostaa heti,\n"
+"                                asenna IoT-sovellus tietokoneeseen, joka on samassa paikallisverkossa kuin\n"
+"                                viivakoodioperaattorin kanssa ja määritä raporttien reititys."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee
@@ -3928,7 +3963,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Operator not supported without a value."
-msgstr ""
+msgstr "Operaattoria ei tueta ilman arvoa."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__orderpoint_id
@@ -3953,7 +3988,7 @@ msgstr "Alkuperäinen tuotantotavoite (määrä)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_outdated_bom
 msgid "Outdated BoM"
-msgstr ""
+msgstr "Vanhentunut osaluettelo"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee_target
@@ -3990,7 +4025,7 @@ msgstr "PDF"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Package barcode"
-msgstr ""
+msgstr "Paketin viivakoodi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
@@ -4105,7 +4140,7 @@ msgstr "Poiminta ennen valmistuspaikkaa"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "Pieces"
-msgstr ""
+msgstr "Kappaletta"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4121,7 +4156,7 @@ msgstr "Suunnittele tilaukset"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_plan_with_components_availability
 msgid "Plan based on Components Availability"
-msgstr ""
+msgstr "Komponenttien saatavuuteen perustuva suunnitelma"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4157,21 +4192,21 @@ msgstr "Muovilaminaatti"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Please set the first Serial Number or a default sequence"
-msgstr ""
+msgstr "Aseta ensimmäinen sarjanumero tai oletussekvenssi"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Please unblock the work center to start the work order."
-msgstr ""
+msgstr "Poista työkeskuksen esto, jotta voit aloittaa työtilauksen."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Please unblock the work center to validate the work order"
-msgstr ""
+msgstr "Poista työkeskuksen esto, jotta voit vahvistaa työtilauksen"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_wood_ply_product_template
@@ -4233,17 +4268,17 @@ msgstr "Tulosta tarrat"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Print labels as:"
-msgstr ""
+msgstr "Tulosta etiketit seuraavasti:"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Print when \"Create new Lot/SN\""
-msgstr ""
+msgstr "Tulosta, kun valitaan \"Luo uusi erä- tai sarjanumero\""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Print when done"
-msgstr ""
+msgstr "Tulosta kun valmis"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__priority
@@ -4254,12 +4289,12 @@ msgstr "Prioriteetti"
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason5
 msgid "Process Defect"
-msgstr ""
+msgstr "Prosessin vika"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Process manufacturing orders from the barcode application"
-msgstr ""
+msgstr "Käsittele valmistustilaukset viivakoodisovelluksesta"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4281,12 +4316,12 @@ msgstr "Hankintaryhmä"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Produce"
-msgstr ""
+msgstr "Tuote"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Produce All"
-msgstr ""
+msgstr "Tuota kaikki"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
@@ -4296,7 +4331,7 @@ msgstr "Jäännöstuotteiden tuottaminen"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Produce residual products (A + B -> C + D)"
-msgstr ""
+msgstr "Tuotetaan jäännöstuotteita (A + B -> C + D)"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse__manufacture_steps
@@ -4304,6 +4339,8 @@ msgid ""
 "Produce: Move the components to the production location        directly and start the manufacturing process.\n"
 "Pick / Produce: Unload        the components from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
+"Tuotanto: Siirrä komponentit suoraan tuotantopaikkaan ja aloita valmistusprosessi.\n"
+"Poimi/tuota: Purkaa komponentit ensin varastosta syöttöpaikalle ja siirrä ne sitten tuotantopaikalle."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4376,7 +4413,7 @@ msgstr "Tuotteen ennustettu määrä"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__mrp_product_label_to_print
 msgid "Product Label to Print"
-msgstr ""
+msgstr "Tulostettava tuote-etiketti"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -4447,7 +4484,7 @@ msgstr "Tuotekapasiteetin tulisi olla yksilöllinen jokaisessa työpisteessä."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Product to build..."
-msgstr ""
+msgstr "Rakennettava tuote..."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_picking_label_type__production_ids
@@ -4652,7 +4689,7 @@ msgstr "Määrä, joka voidaan tuottaa nykyisellä komponenttivarastolla"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
 msgid "RAM"
-msgstr ""
+msgstr "RAM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__rating_ids
@@ -4691,14 +4728,14 @@ msgstr "Valmis tuottamaan"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Real Cost"
-msgstr ""
+msgstr "Todelliset kustannukset"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 #, python-format
 msgid "Real Costs"
-msgstr ""
+msgstr "Todelliset kustannukset"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration
@@ -4731,12 +4768,12 @@ msgstr "Vastaanottoajan arviointi."
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason4
 msgid "Reduced Speed"
-msgstr ""
+msgstr "Alennettu nopeus"
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason6
 msgid "Reduced Yield"
-msgstr ""
+msgstr "Alentunut tuotto"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__code
@@ -4797,7 +4834,7 @@ msgstr "Täydennä tilauksesta (MTO)"
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 #, python-format
 msgid "Replenishments"
-msgstr ""
+msgstr "Täydennykset"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_reporting
@@ -5005,7 +5042,7 @@ msgstr "Valitse kopioitavat toiminnot"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Selection not supported."
-msgstr ""
+msgstr "Valintaa ei tueta."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__sequence
@@ -5051,7 +5088,7 @@ msgstr "Määritä määrät ja vahvista"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid "Set Quantity"
-msgstr ""
+msgstr "Aseta määrä"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
@@ -5087,7 +5124,7 @@ msgstr "Asetusaika (minuuttia)"
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason2
 msgid "Setup and Adjustments"
-msgstr ""
+msgstr "Asetukset ja säädöt"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_allocation
@@ -5127,12 +5164,12 @@ msgstr "Näytä ponnahdusikkuna?"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_produce
 msgid "Show Produce"
-msgstr ""
+msgstr "Näytä tuotanto"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_produce_all
 msgid "Show Produce All"
-msgstr ""
+msgstr "Näytä koko tuotanto"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -5195,6 +5232,8 @@ msgid ""
 "Some product moves have already been confirmed, this manufacturing order "
 "can't be completely cancelled. Are you still sure you want to process?"
 msgstr ""
+"Jotkin tuotesiirrot on jo vahvistettu, tätä valmistustilausta ei voida "
+"peruuttaa kokonaan. Oletko vielä varma, että haluat käsitellä sen?"
 
 #. module: mrp
 #. odoo-python
@@ -5205,6 +5244,9 @@ msgid ""
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
+"Jotkin työtilaukset on jo tehty, joten et voi perua tämän valmistustilauksen suunnittelua.\n"
+"\n"
+"Toteutuneita prosessin edistysaskeleita ei voi peruuttaa."
 
 #. module: mrp
 #. odoo-python
@@ -5215,6 +5257,9 @@ msgid ""
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
+"Jotkin työtilaukset on jo aloitettu, joten et voi perua tämän valmistustilauksen suunnittelua.\n"
+"\n"
+"Toteutuneita prosessin edistysaskeleita ei voi peruuttaa."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
@@ -5478,17 +5523,19 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__has_routing_lines
 msgid "Technical field for workcenter views"
-msgstr ""
+msgstr "Tekninen kenttä työkeskusnäkymiä varten"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce_all
 msgid "Technical field to check if produce all button can be shown"
 msgstr ""
+"Tekninen kenttä, jonka avulla voidaan tarkistaa, voidaanko Tuota kaikki "
+"-painiketta näyttää"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce
 msgid "Technical field to check if produce button can be shown"
-msgstr ""
+msgstr "Tekninen kenttä, jolla tarkistetaan, voidaanko Tuota-painike näyttää"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
@@ -5508,7 +5555,7 @@ msgstr "Teksti"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__is_outdated_bom
 msgid "The BoM has been updated since creation of the MO"
-msgstr ""
+msgstr "Osaluetteloa on päivitetty valmistustilauksen luomisen jälkeen"
 
 #. module: mrp
 #. odoo-python
@@ -5640,12 +5687,12 @@ msgstr "Jo tuotettu määrä, joka odottaa jakamista takaisintoimitusketjussa."
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
 #, python-format
 msgid "The quantity to produce must be positive!"
-msgstr "Valmistettava määrä on oltava positiivinen"
+msgstr "Valmistettava määrä on oltava positiivinen!"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_unbuild_qty_positive
 msgid "The quantity to unbuild must be positive!"
-msgstr ""
+msgstr "Purettavan määrän on oltava positiivinen!"
 
 #. module: mrp
 #. odoo-python
@@ -5722,7 +5769,7 @@ msgstr "Kulutettavia komponentteja ei ole. Oletko varma, että haluat jatkaa?"
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "There is no defined calendar on workcenter %s."
-msgstr ""
+msgstr "Työkeskuksessa %s ei ole määriteltyä kalenteria."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
@@ -5947,7 +5994,7 @@ msgstr "Puulevyn pintakerros."
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Total Cost of Components"
-msgstr ""
+msgstr "Komponenttien kokonaiskustannukset"
 
 #. module: mrp
 #. odoo-javascript
@@ -5955,7 +6002,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Total Cost of Operations"
-msgstr ""
+msgstr "Toiminnan kokonaiskustannukset"
 
 #. module: mrp
 #. odoo-javascript
@@ -5963,7 +6010,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Total Cost of Production"
-msgstr ""
+msgstr "Tuotannon kokonaiskustannukset"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
@@ -6151,7 +6198,7 @@ msgstr "Yksikkökustannus"
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 #, python-format
 msgid "Unit Costs"
-msgstr ""
+msgstr "Yksikkökustannukset"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unit_factor
@@ -6203,6 +6250,8 @@ msgid ""
 "Unlock to adjust component demand during production, or consumed quantities "
 "once the manufacturing order is done."
 msgstr ""
+"Lukituksen avaaminen komponenttien kysynnän mukauttamiseksi tuotannon aikana"
+" tai kulutettujen määrien mukauttamiseksi, kun valmistustilaus on tehty."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_unlocked_by_default
@@ -6259,6 +6308,8 @@ msgid ""
 "Use Manufacturing Orders (MO) to build finished products while consuming "
 "components: i.e. 1 Table = 4 Table Legs + 1 Table Top"
 msgstr ""
+"Käytä valmistustilauksia (MO) valmiiden tuotteiden rakentamiseen, kun "
+"komponentteja kuluu: esim. 1 pöytä = 4 pöydän jalkaa + 1 pöytälevy"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_workorder_dependencies
@@ -6268,7 +6319,7 @@ msgstr "Käytä operaation riippuvuuksia"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_reception_report
 msgid "Use Reception Report with Manufacturing Orders"
-msgstr "Käytä vastaanottoraporttia valmistustilausten kansas"
+msgstr "Käytä vastaanottoraporttia valmistustilausten kanssa"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -6307,7 +6358,7 @@ msgstr "Vahvista"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__mark_as_done
 msgid "Valide all the productions after the split"
-msgstr ""
+msgstr "Vahvista kaikki tuotannot jakamisen jälkeen"
 
 #. module: mrp
 #. odoo-python
@@ -6330,7 +6381,7 @@ msgstr "Muunnelma"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Vendor ABC"
-msgstr ""
+msgstr "Myyjä ABC"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_document__priority__3
@@ -6941,6 +6992,15 @@ msgid ""
 "                            <span invisible=\"mrp_production_count == 1\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
+"Kulutit eri määrän kuin oletit seuraavien tuotteiden osalta.\n"
+"                       <b invisible=\"consumption == 'strict'\">\n"
+"                            Vahvista, että tämä on tehty tarkoituksella.\n"
+"                       </b>\n"
+"                       <b invisible=\"consumption != 'strict'\">\n"
+"                            Tarkista komponenttien kulutus tai pyydä esimiestä vahvistamaan\n"
+"                           <span invisible=\"mrp_production_count != 1\">tämä valmistustilaus</span>\n"
+"                           <span invisible=\"mrp_production_count == 1\">nämä valmistustilaukset</span>.\n"
+"                       </b>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
@@ -7011,7 +7071,7 @@ msgstr "Sinun on annettava eränumero valmiille tuotteelle."
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You need to supply Lot/Serial Number for products and 'consume' them:"
-msgstr ""
+msgstr "Sinun on annettava tuotteiden erä-/sarjanumero ja \"kulutettava\" ne:"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
@@ -7046,7 +7106,7 @@ msgstr "päivää"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "e.g. SN0000001"
-msgstr ""
+msgstr "esim. SN0000001"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -7071,7 +7131,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "it is added as a component in a manufacturing order"
-msgstr ""
+msgstr "se lisätään komponenttina valmistustilaukseen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -7079,6 +7139,8 @@ msgid ""
 "it is moved via a transfer, such as a receipt or a delivery order for "
 "instance."
 msgstr ""
+"se siirretään siirron, kuten esimerkiksi kuitin tai toimitustilauksen, "
+"kautta."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -7122,7 +7184,7 @@ msgstr "päiväyksellä"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "ordered instead of"
-msgstr "Tilattu sen sijasta"
+msgstr "tilattu sen sijasta, että"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view

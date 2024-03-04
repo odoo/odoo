@@ -68,6 +68,16 @@
     <t t-name="website.form_field_description">
         <!-- The actual value for this case is handled in JS as it can be -->
         <!-- edited with formatting by the user -->
+        <!--
+            TODO using "small" alongside with the "form-text" class is actually
+            a mistake in current Bootstrap version: it has no effect since the
+            "form-text" class already enforces the default "small" behavior of
+            Bootstrap. In master, remove "small" on all of these.
+
+            TODO changing "font style" (tag) should also be disabled on those
+            form descriptions as the behavior is kinda weird (but it mainly does
+            not make sense to try and change it over there anyway).
+        -->
         <div t-if="default_description" class="s_website_form_field_description small form-text text-muted" contenteditable="true">
             <t t-esc="default_description"/>
         </div>
@@ -279,7 +289,7 @@
             <t t-call="website.form_field">
                 <select class="form-select s_website_form_input" t-att-name="field.name" t-att-required="field.required || field.modelRequired || None" t-att-id="field.id" style="display: none">
                     <t t-foreach="field.records" t-as="record" t-key="record_index">
-                        <option t-esc="record.display_name" t-att-value="record.id" t-att-selected="record.selected and 'selected' or None"/>
+                        <option t-esc="record.display_name" t-att-value="record.id" t-att="{selected: record.selected and 'selected' or None}"/>
                     </t>
                 </select>
                 <div id="editable_select" class="form-control s_website_form_input">

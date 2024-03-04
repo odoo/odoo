@@ -30,7 +30,7 @@
             <field name="name">Project: Task Rating Request</field>
             <field name="model_id" ref="project.model_project_task"/>
             <field name="active" eval="False"/>
-            <field name="subject">{{ object.project_id.company_id.name }}: Satisfaction Survey</field>
+            <field name="subject">{{ object.project_id.company_id.name or user.env.company.name }}: Satisfaction Survey</field>
             <field name="email_from">{{ (object._rating_get_operator().email_formatted if object._rating_get_operator() else user.email_formatted) }}</field>
             <field name="partner_to" >{{ object._rating_get_partner().id }}</field>
             <field name="description">Set this template on a project stage to request feedback from your customers. Enable the "customer ratings" feature on the project</field>

@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 import { formatDate } from "@web/core/l10n/dates";
@@ -30,7 +31,11 @@ ResumeListRenderer.rowsTemplate = "hr_skills.ResumeListRenderer.Rows";
 ResumeListRenderer.recordRowTemplate = "hr_skills.ResumeListRenderer.RecordRow";
 
 
-export class ResumeX2ManyField extends SkillsX2ManyField {}
+export class ResumeX2ManyField extends SkillsX2ManyField {
+    getWizardTitleName() {
+        return _t("Create a resume line");
+    }
+}
 ResumeX2ManyField.components = {
     ...SkillsX2ManyField.components,
     ListRenderer: ResumeListRenderer,

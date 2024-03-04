@@ -113,7 +113,7 @@
                                         <label for="alias_name" class="fw-bold o_form_label" string="Create tasks by sending an email to"/>
                                         <field name="alias_email" class="oe_read_only d-inline" widget="email" readonly="1" invisible="not alias_name" />
                                         <span class="oe_edit_only o_row">
-                                            <field name="alias_name" class="oe_inline"/>@
+                                            <field name="alias_name"/>@
                                             <field name="alias_domain_id" class="oe_inline" placeholder="e.g. domain.com"
                                                    options="{'no_create': True, 'no_open': True}"/>
                                         </span>
@@ -336,7 +336,7 @@
                     </div>
                     <field name="user_id" invisible="1"/>
                     <div class="row o_settings_container"/>
-                    <div name="alias_def" class="mt-4" colspan="2">
+                    <div name="alias_def" class="mt-2" colspan="2">
                         <label for="alias_name" string="Create tasks by sending an email to"/>
                         <span>
                             <field name="alias_name" placeholder="e.g. office-party"/>@
@@ -390,6 +390,7 @@
                     <field name="color"/>
                     <field name="task_count"/>
                     <field name="closed_task_count"/>
+                    <field name="open_task_count"/>
                     <field name="milestone_count_reached"/>
                     <field name="milestone_count"/>
                     <field name="allow_milestones"/>
@@ -493,11 +494,11 @@
                                         <div class="o_project_kanban_boxes d-flex align-items-baseline">
                                             <a class="o_project_kanban_box" name="action_view_tasks" type="object">
                                                 <div>
-                                                    <span class="o_value"><t t-esc="record.task_count.value - record.closed_task_count.value"/></span>
+                                                    <span class="o_value"><t t-esc="record.open_task_count.value"/></span>
                                                     <span class="o_label ms-1"><t t-esc="record.label_tasks.value"/></span>
                                                 </div>
                                             </a>
-                                            <a groups='project.group_project_milestone' t-if="record.allow_milestones and record.allow_milestones.raw_value and record.milestone_count.value &gt; 0"
+                                            <a groups='project.group_project_milestone' t-if="record.allow_milestones and record.allow_milestones.raw_value and record.milestone_count.raw_value &gt; 0"
                                                 class="o_kanban_inline_block btn-link text-dark small"
                                                 role="button"
                                                 name="action_get_list_view"

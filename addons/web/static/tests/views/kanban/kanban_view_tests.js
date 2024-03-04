@@ -4499,6 +4499,8 @@ QUnit.module("Views", (hooks) => {
         await editColumnName(target, "new column");
         await validateColumn(target);
 
+        await nextTick();
+
         assert.strictEqual(target.querySelector(".o_column_quick_create input").value, "");
         assert.containsN(target, ".o_kanban_group", 2);
 
@@ -6252,6 +6254,55 @@ QUnit.module("Views", (hooks) => {
             "new column 2",
             "the last column should be the newly created one"
         );
+    });
+
+    QUnit.test("delete an empty column, then a column with records.", async (assert) => {
+        patchDialog((_cls, props) => props.confirm());
+        let firstLoad = true;
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch:
+                '<kanban on_create="quick_create">' +
+                '<field name="product_id"/>' +
+                '<templates><t t-name="kanban-box">' +
+                '<div><field name="foo"/></div>' +
+                "</t></templates>" +
+                "</kanban>",
+            groupBy: ["product_id"],
+            async mockRPC(route, args, performRpc) {
+                if (args.method === "web_read_group") {
+                    // override read_group to return an extra empty groups
+                    const result = await performRpc(...arguments);
+                    if (firstLoad) {
+                        result.groups.unshift({
+                            __domain: [["product_id", "=", 7]],
+                            product_id: [7, "empty group"],
+                            product_id_count: 0,
+                        });
+                        result.length = 3;
+                        firstLoad = false;
+                    }
+                    return result;
+                }
+            },
+        });
+
+        assert.containsOnce(target, ".o_kanban_header span:contains('empty group')");
+        assert.containsOnce(target, ".o_kanban_header span:contains('hello')");
+        assert.containsNone(target, ".o_kanban_header .o_column_title:contains('None')");
+        // Delete the empty group
+        let clickColumnAction = await toggleColumnActions(target);
+        await clickColumnAction("Delete");
+        // Delete the group 'hello'
+        clickColumnAction = await toggleColumnActions(target);
+        await clickColumnAction("Delete");
+        // None of the previous groups should be present inside the view. Instead, a 'none' column should be displayed.
+        assert.containsNone(target, ".o_kanban_header span:contains('empty group')");
+        assert.containsNone(target, ".o_kanban_header span:contains('hello')");
+        assert.containsOnce(target, ".o_kanban_header .o_column_title:contains('None')");
     });
 
     QUnit.test("edit a column in grouped on m2o", async (assert) => {
@@ -9440,6 +9491,57 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test("filter on progressbar in new groups", async (assert) => {
+        serverData.views = {
+            "partner,some_view_ref,form": `<form><field name="foo"/></form>`,
+        };
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                    <field name="bar"/>
+                    <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
+                    <templates><t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t></templates>
+                </kanban>
+            `,
+            groupBy: ["product_id"],
+        });
+
+        assert.containsN(target, ".o_kanban_group", 2);
+
+        await createColumn(target);
+        await editColumnName(target, "new column 1");
+        await validateColumn(target);
+        await editColumnName(target, "new column 2");
+        await validateColumn(target);
+        assert.containsN(target, ".o_kanban_group", 4);
+        assert.containsNone(target.querySelectorAll(".o_kanban_group")[2], ".o_kanban_record");
+        assert.containsNone(target.querySelectorAll(".o_kanban_group")[3], ".o_kanban_record");
+
+        await quickCreateRecord(target, 2);
+        await editInput(target, ".o_field_widget[name=foo] input", "new record 1");
+        await validateRecord(target);
+        await quickCreateRecord(target, 3);
+        await editInput(target, ".o_field_widget[name=foo] input", "new record 2");
+        await validateRecord(target);
+        assert.containsOnce(target.querySelectorAll(".o_kanban_group")[2], ".o_kanban_record");
+        assert.containsOnce(target.querySelectorAll(".o_kanban_group")[3], ".o_kanban_record");
+
+        assert.containsNone(target, ".o_kanban_group_show_200");
+
+        await click(
+            target.querySelectorAll(".o_kanban_group")[2],
+            ".o_column_progress .progress-bar"
+        );
+        assert.containsOnce(target, ".o_kanban_group_show_200");
+        assert.hasClass(target.querySelectorAll(".o_kanban_group")[2], "o_kanban_group_show_200");
+    });
+
     QUnit.test('column progressbars: "false" bar is clickable', async (assert) => {
         serverData.models.partner.records.push({
             id: 5,
@@ -10315,6 +10417,123 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["web_read_group", "read_progress_bar", "web_search_read"]);
     });
 
+    QUnit.test(
+        "progress bar with aggregates: activate bars (grouped by boolean)",
+        async (assert) => {
+            serverData.models.partner.records = [
+                { foo: "yop", bar: true, int_field: 1 },
+                { foo: "yop", bar: true, int_field: 2 },
+                { foo: "blip", bar: true, int_field: 4 },
+                { foo: "gnap", bar: true, int_field: 8 },
+            ];
+
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <kanban>
+                        <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
+                        <templates><t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t></templates>
+                    </kanban>`,
+                groupBy: ["bar"],
+            });
+
+            assert.deepEqual(getTooltips(target, 0), ["2 yop", "1 gnap", "1 blip"]);
+            assert.deepEqual(getCounters(target), ["15"]);
+
+            await click(getProgressBars(target, 0)[0]);
+            assert.deepEqual(getCounters(target), ["3"]);
+
+            await click(getProgressBars(target, 0)[2]);
+            assert.deepEqual(getCounters(target), ["4"]);
+
+            await click(getProgressBars(target, 0)[2]);
+            assert.deepEqual(getCounters(target), ["15"]);
+        }
+    );
+
+    QUnit.test(
+        "progress bar with aggregates: activate bars (grouped by many2one)",
+        async (assert) => {
+            serverData.models.partner.records = [
+                { foo: "yop", product_id: 3, int_field: 1 },
+                { foo: "yop", product_id: 3, int_field: 2 },
+                { foo: "blip", product_id: 3, int_field: 4 },
+                { foo: "gnap", product_id: 3, int_field: 8 },
+            ];
+
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <kanban>
+                        <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
+                        <templates><t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t></templates>
+                    </kanban>`,
+                groupBy: ["product_id"],
+            });
+
+            assert.deepEqual(getTooltips(target, 0), ["2 yop", "1 gnap", "1 blip"]);
+            assert.deepEqual(getCounters(target), ["15"]);
+
+            await click(getProgressBars(target, 0)[0]);
+            assert.deepEqual(getCounters(target), ["3"]);
+
+            await click(getProgressBars(target, 0)[2]);
+            assert.deepEqual(getCounters(target), ["4"]);
+
+            await click(getProgressBars(target, 0)[2]);
+            assert.deepEqual(getCounters(target), ["15"]);
+        }
+    );
+
+    QUnit.test("progress bar with aggregates: activate bars (grouped by date)", async (assert) => {
+        serverData.models.partner.records = [
+            { foo: "yop", date: "2023-10-08", int_field: 1 },
+            { foo: "yop", date: "2023-10-08", int_field: 2 },
+            { foo: "blip", date: "2023-10-08", int_field: 4 },
+            { foo: "gnap", date: "2023-10-08", int_field: 8 },
+        ];
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
+                    <templates><t t-name="kanban-box">
+                        <div>
+                            <field name="foo"/>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+            groupBy: ["date:week"],
+        });
+
+        assert.deepEqual(getTooltips(target, 0), ["2 yop", "1 gnap", "1 blip"]);
+        assert.deepEqual(getCounters(target), ["15"]);
+
+        await click(getProgressBars(target, 0)[0]);
+        assert.deepEqual(getCounters(target), ["3"]);
+
+        await click(getProgressBars(target, 0)[2]);
+        assert.deepEqual(getCounters(target), ["4"]);
+
+        await click(getProgressBars(target, 0)[2]);
+        assert.deepEqual(getCounters(target), ["15"]);
+    });
+
     QUnit.test("load more should load correct records after drag&drop event", async (assert) => {
         // Add a sequence number and initialize
         serverData.models.partner.records.forEach((el, i) => (el.sequence = i));
@@ -11055,7 +11274,7 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("set cover image", async (assert) => {
-        assert.expect(10);
+        assert.expect(11);
 
         serviceRegistry.add("dialog", dialogService, { force: true });
         serviceRegistry.add("http", {
@@ -11111,7 +11330,7 @@ QUnit.module("Views", (hooks) => {
         await click(document.body, ".modal .o_kanban_cover_image img", {
             skipVisibilityCheck: true,
         });
-        await click(document.body, ".modal .btn-primary:first-child");
+        await click(document.querySelector(".modal .btn-primary:first-child"));
 
         assert.containsOnce(target, 'img[data-src*="/web/image/1"]');
 
@@ -11123,6 +11342,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(document.body, ".modal .o_kanban_cover_image");
         assert.containsOnce(document.body, ".modal .btn:contains(Select)");
         assert.containsOnce(document.body, ".modal .btn:contains(Discard)");
+        assert.containsNone(document.body, ".modal .btn:contains(Remove Cover Image)");
 
         await triggerEvent(
             document.body,
@@ -11135,6 +11355,73 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, 'img[data-src*="/web/image/2"]');
 
         // await click(target, ".o_kanban_record:first-child .o_attachment_image"); //Not sure, to discuss
+
+        assert.verifySteps(["1", "2"], "should writes on both kanban records");
+    });
+
+    QUnit.test("unset cover image", async (assert) => {
+        serverData.models.partner.records[0].displayed_image_id = 1;
+        serverData.models.partner.records[1].displayed_image_id = 2;
+        serviceRegistry.add("dialog", dialogService, { force: true });
+        serviceRegistry.add("http", {
+            start: () => ({}),
+        });
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `<kanban>
+                    <templates>
+                        <t t-name="kanban-menu">
+                            <a type="set_cover" data-field="displayed_image_id" class="dropdown-item">Set Cover Image</a>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="name"/>
+                                <div>
+                                    <field name="displayed_image_id" widget="attachment_image"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            async mockRPC(_route, { model, method, args }) {
+                if (model === "partner" && method === "web_save") {
+                    assert.step(String(args[0][0]));
+                    assert.strictEqual(args[1].displayed_image_id, false);
+                }
+            },
+        });
+
+        await toggleRecordDropdown(target, 0);
+        await click(getCard(target, 0), ".oe_kanban_action");
+
+        assert.containsOnce(getCard(target, 0), 'img[data-src*="/web/image/1"]');
+        assert.containsOnce(getCard(target, 1), 'img[data-src*="/web/image/2"]');
+
+        assert.containsOnce(document.body, ".modal .o_kanban_cover_image");
+        assert.containsOnce(document.body, ".modal .btn:contains(Select)");
+        assert.containsOnce(document.body, ".modal .btn:contains(Discard)");
+        assert.containsOnce(document.body, ".modal .btn:contains(Remove Cover Image)");
+
+        await click(document.querySelector(".modal .modal-footer .btn-secondary")); // click on "Remove Cover Image" button
+
+        assert.containsNone(getCard(target, 0), "img", "The cover image should be removed.");
+
+        await toggleRecordDropdown(target, 1);
+        const coverButton = getCard(target, 1).querySelector("a");
+        assert.strictEqual(coverButton.innerText.trim(), "Set Cover Image");
+        await click(coverButton);
+
+        await triggerEvent(
+            document.body,
+            ".modal .o_kanban_cover_image img",
+            "dblclick",
+            { bubbles: true },
+            { skipVisibilityCheck: true }
+        );
+
+        assert.containsNone(getCard(target, 1), "img", "The cover image should be removed.");
 
         assert.verifySteps(["1", "2"], "should writes on both kanban records");
     });
@@ -13774,7 +14061,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("scroll on group unfold and progressbar click", async (assert) => {
-        assert.expect(7);
+        assert.expect(15);
 
         await makeView({
             type: "kanban",
@@ -13789,17 +14076,21 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
             groupBy: ["product_id"],
             async mockRPC(route, args, performRPC) {
+                assert.step(args.method);
                 if (args.method === "web_read_group") {
                     const result = await performRPC(route, args);
                     if (result.groups.length) {
                         result.groups[0].__fold = false;
-                        result.groups[1].__fold = true;
+                        if (result.groups[1]) {
+                            result.groups[1].__fold = true;
+                        }
                     }
                     return result;
                 }
             },
         });
 
+        assert.verifySteps(["get_views", "web_read_group", "read_progress_bar", "web_search_read"]);
         const content = target.querySelector(".o_content");
         content.scrollTo = (params) => {
             assert.step("scrolled");
@@ -13807,12 +14098,12 @@ QUnit.module("Views", (hooks) => {
         };
 
         await click(getProgressBars(target, 0)[0]);
-        assert.verifySteps(["scrolled"]);
+        assert.verifySteps(["web_read_group", "web_search_read", "scrolled"]);
 
         const column1 = getColumn(target, 1);
         assert.hasClass(column1, "o_column_folded");
         await click(column1);
-        assert.verifySteps(["scrolled"]);
+        assert.verifySteps(["web_search_read", "scrolled"]);
     });
 
     QUnit.test(
@@ -14306,6 +14597,42 @@ QUnit.module("Views", (hooks) => {
 
             assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 1);
             assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
+        }
+    );
+
+    QUnit.test(
+        "can quick create a column when pressing enter when input is focused",
+        async (assert) => {
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `<kanban>
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+                groupBy: ["product_id"],
+            });
+
+            assert.containsN(target, ".o_kanban_group", 2);
+
+            await createColumn(target);
+
+            // We don't use the editInput helper as it would trigger a change event automatically.
+            // We need to wait for the enter key to trigger the event.
+            const input = target.querySelector(".o_column_quick_create input");
+            input.value = "New Column";
+            await triggerEvent(input, null, "input");
+
+            await triggerEvent(target, ".o_quick_create_unfolded input", "keydown", {
+                key: "Enter",
+            });
+
+            assert.containsN(target, ".o_kanban_group", 3);
         }
     );
 });

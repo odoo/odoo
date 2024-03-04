@@ -2,7 +2,6 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from '@web/core/utils/hooks';
-import { useActiveElement } from '@web/core/ui/ui_service';
 import {
     markup,
     Component,
@@ -60,8 +59,6 @@ export class WebsiteEditorComponent extends Component {
                 this.onWillUnmount();
             }
         });
-
-        useActiveElement('wysiwyg-adapter');
     }
     /**
      * Starts the wysiwyg or disable edition if currently

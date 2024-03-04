@@ -3,15 +3,15 @@
 # 	* pos_self_order
 # 
 # Translators:
-# Wil Odoo, 2023
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
+# Wil Odoo, 2024
 # Maitê Dietze, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Maitê Dietze, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -36,6 +36,13 @@ msgid ""
 msgstr ""
 "%s não está mais disponível, e por isso foi removido do seu pedido. Revise o"
 " pedido e valide-o novamente."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, python-format
+msgid "/ Tracker number:"
+msgstr "/ Número do rastreador:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -669,6 +676,20 @@ msgid "My Orders"
 msgstr "Meus pedidos"
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, python-format
+msgid "NEW"
+msgstr "NOVO"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, python-format
+msgid "NOTE"
+msgstr "NOTA"
+
+#. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand_name
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
 msgid "Name of the image to display on the self order screen"
@@ -929,6 +950,20 @@ msgstr "Variante do produto"
 #, python-format
 msgid "Product image"
 msgstr "Imagem do produto"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Product is not available"
+msgstr "Produto indisponível"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Product not found"
+msgstr "Produto não encontrado"
 
 #. module: pos_self_order
 #: model:ir.actions.report,name:pos_self_order.report_self_order_qr_codes_page
@@ -1241,6 +1276,13 @@ msgstr "Não classificado"
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__warning
 msgid "Warning"
 msgstr "Aviso"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "We're currently closed"
+msgstr "Estamos fechados no momento"
 
 #. module: pos_self_order
 #. odoo-javascript

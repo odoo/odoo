@@ -3,9 +3,10 @@
 # 	* account_edi
 # 
 # Translators:
-# Milan Bojovic, 2023
+# Milan Bojovic <mbojovic@outlook.com>, 2023
 # Martin Trigaux, 2023
 # Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023
+# コフスタジオ, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023\n"
+"Last-Translator: コフスタジオ, 2024\n"
 "Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,40 +27,40 @@ msgstr ""
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing error(s)"
-msgstr ""
+msgstr "Elektronska faktura greška(e) "
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing info(s)"
-msgstr ""
+msgstr "Elektronska faktura informacija(e)"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing warning(s)"
-msgstr ""
+msgstr "Elektronska faktura upozorenje(a)"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid "A cancellation of the EDI has been requested."
-msgstr ""
+msgstr "Otkazivanje EDI-ja je zatraženo."
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid "A request for cancellation of the EDI has been called off."
-msgstr ""
+msgstr "Zahtev za otkazivanje EDI-ja je povučen."
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move_send
 msgid "Account Move Send"
-msgstr ""
+msgstr "Prenos računa poslat"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -70,7 +71,7 @@ msgstr "Prilog"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__blocking_level
 msgid "Blocking Level"
-msgstr ""
+msgstr "Blokiranje nivoa"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__blocking_level
@@ -80,11 +81,15 @@ msgid ""
 "  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
 "  * Error: there is an error that blocks the current Electronic Invoicing operation."
 msgstr ""
+"Blokira trenutno izvršavanje dokumenta u zavisnosti od ozbiljnosti greške:\n"
+"  * Info: dokument nije blokiran i sve funkcioniše kako treba.\n"
+"  * Upozorenje: postoji greška koja ne sprečava trenutno izvršavanje operacije Elektronskog fakturisanja da uspe.\n"
+"  * Greška: postoji greška koja blokira trenutno izvršavanje operacije Elektronskog fakturisanja."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Call off EDI Cancellation"
-msgstr ""
+msgstr "Poništite otkazivanje EDI-a"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
@@ -100,6 +105,8 @@ msgid ""
 "Cannot deactivate (%s) on this journal because not all documents are "
 "synchronized"
 msgstr ""
+"Ne može se deaktivirati (%s) na ovom dnevniku jer nisu svi dokumenti "
+"sinhronizovani."
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__code
@@ -109,7 +116,7 @@ msgstr "Kod"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_journal__compatible_edi_ids
 msgid "Compatible Edi"
-msgstr ""
+msgstr "Kompatibilni Edi"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_uid
@@ -137,86 +144,86 @@ msgstr "Preuzmi"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "EDI Documents"
-msgstr ""
+msgstr "EDI Dokumenti"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_format
 msgid "EDI format"
-msgstr ""
+msgstr "EDI format"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
 msgid "EDI format that support moves in this journal"
-msgstr ""
+msgstr "EDI format koji podržava pomeranja u ovom izveštaju"
 
 #. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
 msgid "EDI: Perform web services operations"
-msgstr ""
+msgstr "EDI: Izvršite operacije veb servisa"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_blocking_level
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_blocking_level
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_blocking_level
 msgid "Edi Blocking Level"
-msgstr ""
+msgstr "Edi Nivo Blokiranja"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_content
 msgid "Edi Content"
-msgstr ""
+msgstr "Edi Sadržaj"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_document_ids
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_document_ids
 msgid "Edi Document"
-msgstr ""
+msgstr "Edi Dokument"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_count
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_count
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_count
 msgid "Edi Error Count"
-msgstr ""
+msgstr "Edi Broj Grešaka"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_message
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_message
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_message
 msgid "Edi Error Message"
-msgstr ""
+msgstr "Edi Poruka o Grešci"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
 msgid "Edi Format"
-msgstr ""
+msgstr "Edi Format"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_abandon_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_abandon_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_abandon_cancel_button
 msgid "Edi Show Abandon Cancel Button"
-msgstr ""
+msgstr "Edi Prikaži Napusti Dugme Otkazivanja"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_cancel_button
 msgid "Edi Show Cancel Button"
-msgstr ""
+msgstr "Edi Prikaz Otkaži Dugme"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_web_services_to_process
 msgid "Edi Web Services To Process"
-msgstr ""
+msgstr "Edi Web Servisi za obradu"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_document
 msgid "Electronic Document for an account.move"
-msgstr ""
+msgstr "Elektronski dokument za account.move"
 
 #. module: account_edi
 #: model:ir.actions.act_window,name:account_edi.action_open_edi_documents
@@ -225,17 +232,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_state
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_state
 msgid "Electronic invoicing"
-msgstr ""
+msgstr "Elektronsko fakturisanje"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing processing needed"
-msgstr ""
+msgstr "Elektronska obrada fakturisanja je potrebna."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing state"
-msgstr ""
+msgstr "Elektronsko fakturisanje stanje"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__error
@@ -247,14 +254,14 @@ msgstr "Greška"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
 msgid "Format Name"
-msgstr ""
+msgstr "Format naziv"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_error_count
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_error_count
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_error_count
 msgid "How many EDIs are in error for this move?"
-msgstr ""
+msgstr "Koliko ima EDI-ja sa greškom za ovaj potez?"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
@@ -277,6 +284,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Nevažeća konfiguracija fakture:\n"
+"\n"
+"%s"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_journal
@@ -314,22 +324,22 @@ msgstr "Naziv"
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_document_unique_edi_document_by_move_by_format
 msgid "Only one edi document by move by format"
-msgstr ""
+msgstr "Samo jedan edi dokument premeštajem po formatu"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Process now"
-msgstr ""
+msgstr "Procesiraj sada"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "Izveštaj o akciji"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Request EDI Cancellation"
-msgstr ""
+msgstr "Zahtev za otkazivanje EDI-a"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -357,7 +367,7 @@ msgstr "Država"
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_state
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_state
 msgid "The aggregated state of all the EDIs with web-service of this move"
-msgstr ""
+msgstr "Aggregirano stanje svih EDI-ja sa veb-servisom ovog poteza"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
@@ -365,11 +375,13 @@ msgid ""
 "The file generated by edi_format_id when the invoice is posted (and this "
 "document is processed)."
 msgstr ""
+"Datoteka generisana od strane edi_format_id kada je faktura objavljena (i "
+"ovaj dokument je obrađen)."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "The invoice will soon be sent to"
-msgstr ""
+msgstr "Faktura će uskoro biti poslata na"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
@@ -377,24 +389,25 @@ msgid ""
 "The text of the last error that happened during Electronic Invoice "
 "operation."
 msgstr ""
+"Tekst poslednje greške koja se desila tokom operacije elektronskog računa."
 
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
 msgid "This code already exists"
-msgstr ""
+msgstr "Ovaj kod već postoji"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_edi_document.py:0
 #, python-format
 msgid "This document is being sent by another process already. "
-msgstr ""
+msgstr "Ovaj dokument već šalje drugi proces."
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_cancel
 msgid "To Cancel"
-msgstr ""
+msgstr "Otkazati"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_send
@@ -417,6 +430,8 @@ msgid ""
 " has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
 msgstr ""
+"Ne možete izmeniti sledeći unos izveštaja%s jer je elektronski dokument već "
+"poslat. Umesto toga, koristite dugme 'Zahtev za otkazivanje EDI'."
 
 #. module: account_edi
 #. odoo-python
@@ -424,9 +439,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You can't unlink an attachment being an EDI document sent to the government."
-msgstr ""
+msgstr "Ne možete odvojiti prilog koji je EDI dokument poslat vladi."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "⇒ See errors"
-msgstr ""
+msgstr "⇒ Pogledaj greške"

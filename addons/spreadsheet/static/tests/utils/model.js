@@ -28,6 +28,7 @@ export function setupDataSourceEvaluation(model) {
  *
  * @param {object} params
  * @param {object} [params.spreadsheetData] Spreadsheet data to import
+ * @param {object} [params.modelConfig]
  * @param {ServerData} [params.serverData] Data to be injected in the mock server
  * @param {function} [params.mockRPC] Mock rpc function
  */
@@ -41,10 +42,13 @@ export async function createModelWithDataSource(params = {}) {
         serverData: params.serverData || getBasicServerData(),
         mockRPC: params.mockRPC,
     });
+    const config = params.modelConfig;
     const model = new Model(params.spreadsheetData, {
+        ...config,
         custom: {
             env,
             dataSources: new DataSources(env),
+            ...config?.custom,
         },
     });
     setupDataSourceEvaluation(model);

@@ -425,6 +425,7 @@
                 </xpath>
                 <field name="product_tag_ids" position="attributes">
                     <attribute name="options">{'no_open': True}</attribute>
+                    <attribute name="context">{'product_template_id': product_tmpl_id}</attribute>
                 </field>
                 <field name="product_tag_ids" position="after">
                     <field name="additional_product_tag_ids" widget="many2many_tags"/>
@@ -541,7 +542,9 @@ action = {
                 <field name="default_code" invisible="1"/>
                 <templates>
                     <t t-name="kanban-menu">
-                        <a role="menuitem" type="edit" class="dropdown-item border-top-0">Edit</a>
+                        <div class="o_product_catalog_cancel_global_click">
+                            <a role="menuitem" type="edit" class="dropdown-item border-top-0">Edit</a>
+                        </div>
                     </t>
                     <t t-name="kanban-box">
                         <div class="d-flex flex-grow-1">

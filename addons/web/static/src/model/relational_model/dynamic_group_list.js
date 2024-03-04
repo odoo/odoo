@@ -3,6 +3,7 @@
 
 import { Domain } from "@web/core/domain";
 import { DynamicList } from "./dynamic_list";
+import { getGroupServerValue } from "./utils";
 
 export class DynamicGroupList extends DynamicList {
     static type = "DynamicGroupList";
@@ -226,6 +227,7 @@ export class DynamicGroupList extends DynamicList {
             __domain: domain,
             [this.groupByField.name]: [id, groupName],
             value: id,
+            serverValue: getGroupServerValue(this.groupByField, id),
             displayName: groupName,
             rawValue: [id, groupName],
         };
@@ -247,11 +249,11 @@ export class DynamicGroupList extends DynamicList {
     async _deleteGroups(groups) {
         const shouldReload = groups.some((g) => g.count > 0);
         await this._unlinkGroups(groups);
+        const configGroups = { ...this.config.groups };
+        for (const group of groups) {
+            delete configGroups[group.value];
+        }
         if (shouldReload) {
-            const configGroups = { ...this.config.groups };
-            for (const group of groups) {
-                delete configGroups[group.value];
-            }
             await this.model._updateConfig(
                 this.config,
                 { groups: configGroups },
@@ -261,6 +263,7 @@ export class DynamicGroupList extends DynamicList {
             for (const group of groups) {
                 this._removeGroup(group);
             }
+            this.model._updateConfig(this.config, { groups: configGroups }, { reload: false });
         }
     }
 

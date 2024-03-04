@@ -12,4 +12,4 @@ class ProductTag(models.Model):
         help="Whether the tag is displayed on the eCommerce.",
         default=True,
     )
-    image = fields.Image(string="Image", max_width=50, max_height=50)
+    image = fields.Image(string="Image", max_width=200, max_height=200)

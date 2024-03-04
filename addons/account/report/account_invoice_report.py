@@ -47,6 +47,8 @@ class AccountInvoiceReport(models.Model):
     price_subtotal = fields.Float(string='Untaxed Total', readonly=True)
     price_total = fields.Float(string='Total in Currency', readonly=True)
     price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
+    price_margin = fields.Float(string='Margin', readonly=True)
+    inventory_value = fields.Float(string='Inventory Value', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
 
     _depends = {
@@ -59,7 +61,7 @@ class AccountInvoiceReport(models.Model):
             'move_id', 'product_id', 'product_uom_id', 'account_id',
             'journal_id', 'company_id', 'currency_id', 'partner_id',
         ],
-        'product.product': ['product_tmpl_id'],
+        'product.product': ['product_tmpl_id', 'standard_price'],
         'product.template': ['categ_id'],
         'uom.uom': ['category_id', 'factor', 'name', 'uom_type'],
         'res.currency.rate': ['currency_id', 'name'],
@@ -104,6 +106,13 @@ class AccountInvoiceReport(models.Model):
                    -- convert to template uom
                    * (NULLIF(COALESCE(uom_line.factor, 1), 0.0) / NULLIF(COALESCE(uom_template.factor, 1), 0.0)),
                    0.0) * currency_table.rate                               AS price_average,
+                CASE
+                    WHEN move.move_type NOT IN ('out_invoice', 'out_receipt') THEN 0.0
+                    ELSE -line.balance * currency_table.rate - (line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)) * product_standard_price.value_float
+                END
+                                                                            AS price_margin,
+                line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('out_invoice','in_refund','out_receipt') THEN -1 ELSE 1 END)
+                    * product_standard_price.value_float                    AS inventory_value,
                 COALESCE(partner.country_id, commercial_partner.country_id) AS country_id,
                 line.currency_id                                            AS currency_id
         '''
@@ -120,6 +129,9 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN uom_uom uom_template ON uom_template.id = template.uom_id
                 INNER JOIN account_move move ON move.id = line.move_id
                 LEFT JOIN res_partner commercial_partner ON commercial_partner.id = move.commercial_partner_id
+                LEFT JOIN ir_property product_standard_price
+                    ON product_standard_price.res_id = CONCAT('product.product,', product.id)
+                    AND product_standard_price.name = 'standard_price'
                 JOIN {currency_table} ON currency_table.company_id = line.company_id
         '''.format(
             currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today())

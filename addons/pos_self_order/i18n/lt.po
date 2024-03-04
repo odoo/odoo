@@ -11,17 +11,17 @@
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2023
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2023
-# Linas Versada <linaskrisiukenas@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Jonas Zinkevicius <jozi@odoo.com>, 2024
+# Linas Versada <linaskrisiukenas@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2024\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +41,13 @@ msgstr ""
 msgid ""
 "%s is not available anymore, it has thus been removed from your order. "
 "Please review your order and validate it again."
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, python-format
+msgid "/ Tracker number:"
 msgstr ""
 
 #. module: pos_self_order
@@ -655,6 +662,20 @@ msgid "My Orders"
 msgstr "Mano užsakymai"
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, python-format
+msgid "NEW"
+msgstr "NAUJAS"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, python-format
+msgid "NOTE"
+msgstr "PASTABA"
+
+#. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand_name
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
 msgid "Name of the image to display on the self order screen"
@@ -913,6 +934,20 @@ msgstr "Produkto variantas"
 #, python-format
 msgid "Product image"
 msgstr "Produkto paveikslėlis"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Product is not available"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Product not found"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.actions.report,name:pos_self_order.report_self_order_qr_codes_page
@@ -1222,6 +1257,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__warning
 msgid "Warning"
 msgstr "Įspėjimas"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "We're currently closed"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript

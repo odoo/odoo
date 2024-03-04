@@ -3,14 +3,9 @@
 # 	* product_margin
 # 
 # Translators:
-# Vasiliy Korobatov <korobatov@gmail.com>, 2023
-# Ivan Kropotkin <yelizariev@itpp.dev>, 2023
-# alenafairy, 2023
 # Alena Vlasova, 2023
-# ILMIR <karamov@it-projects.info>, 2023
-# Irina Fedulova <istartlin@gmail.com>, 2023
-# Сергей Шебанин <sergey@shebanin.ru>, 2023
 # Martin Trigaux, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,17 +24,17 @@ msgstr ""
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_num_invoiced
 msgid "# Invoiced in Purchase"
-msgstr "Счетов в закупках"
+msgstr "# Счет-фактура при покупке"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__sale_num_invoiced
 msgid "# Invoiced in Sale"
-msgstr "Счетов в продажах"
+msgstr "# Счет-фактура при продаже"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "# Purchased"
-msgstr "Закуплено"
+msgstr "# Куплено"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -49,32 +44,32 @@ msgstr "Критерии анализа"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_avg_price
 msgid "Avg. Price in Customer Invoices."
-msgstr "Ср. цена в счетах клиента."
+msgstr "Avg. Цена в счетах-фактурах клиентов."
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_avg_price
 msgid "Avg. Price in Vendor Bills"
-msgstr ""
+msgstr "Avg. Цена в счетах поставщиков"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_avg_price
 msgid "Avg. Purchase Unit Price"
-msgstr "Ср. цена за единицу закупки"
+msgstr "Avg. Цена единицы покупки"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__sale_avg_price
 msgid "Avg. Sale Unit Price"
-msgstr "Ср. цена за единицу продажи"
+msgstr "Avg. Цена продажи единицы продукции"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Avg. Unit Price"
-msgstr "Ср. цена единицы"
+msgstr "Avg. Цена единицы продукции"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "Cancel"
-msgstr "Отмена"
+msgstr "Отменить"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -89,18 +84,18 @@ msgstr "Создано"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__create_date
 msgid "Created on"
-msgstr "Дата создания"
+msgstr "Создано"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__display_name
 msgid "Display Name"
-msgstr "Показывать название"
+msgstr "Отображаемое имя"
 
 #. module: product_margin
 #: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__draft_open_paid
 #: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__draft_open_paid
 msgid "Draft, Open and Paid"
-msgstr "Черновик, Открыто и Оплачено"
+msgstr "Черновик, открытый и оплаченный"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__expected_margin
@@ -110,53 +105,53 @@ msgstr "Ожидаемая маржа"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__expected_margin_rate
 msgid "Expected Margin (%)"
-msgstr "Ожидаемая наценка (%)"
+msgstr "Ожидаемая маржа (%)"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__sale_expected
 msgid "Expected Sale"
-msgstr "Ожидаемые продажи"
+msgstr "Ожидаемая распродажа"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__expected_margin
 msgid "Expected Sale - Normal Cost"
-msgstr "Ожидаемые продажи — Нормальная цена"
+msgstr "Ожидаемая продажа - нормальная стоимость"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sales_gap
 msgid "Expected Sale - Turn Over"
-msgstr "Ожидаемые продажи — Оборот"
+msgstr "Ожидаемые продажи - Оборот"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__expected_margin_rate
 msgid "Expected margin * 100 / Expected Sale"
-msgstr "Ожидаемая маржа * 100 / Ожидаемые продажи"
+msgstr "Ожидаемая маржа * 100 / Ожидаемая продажа"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__from_date
 msgid "From"
-msgstr "C"
+msgstr "От"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "General Information"
-msgstr "Общая информация"
+msgstr "Основная информация"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__id
 msgid "ID"
-msgstr "Идентификатор"
+msgstr "ID"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__invoice_state
 #: model:ir.model.fields,field_description:product_margin.field_product_product__invoice_state
 msgid "Invoice State"
-msgstr "Состояние счёта"
+msgstr "Состояние счета-фактуры"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновил"
+msgstr "Последнее обновление"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__write_date
@@ -166,17 +161,17 @@ msgstr "Последнее обновление"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__date_from
 msgid "Margin Date From"
-msgstr "Дата маржи от"
+msgstr "Дата наложения От"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__date_to
 msgid "Margin Date To"
-msgstr "Дата маржи до"
+msgstr "Дата маржи До"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Margins"
-msgstr "Маржа"
+msgstr "Отступы"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__normal_cost
@@ -186,18 +181,18 @@ msgstr "Нормальная стоимость"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_gap
 msgid "Normal Cost - Total Cost"
-msgstr "Нормальная цена - итоговая цена"
+msgstr "Нормальные затраты - Общие затраты"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "Open Margins"
-msgstr "Открытая маржа"
+msgstr "Открытые поля"
 
 #. module: product_margin
 #: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__open_paid
 #: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__open_paid
 msgid "Open and Paid"
-msgstr "Открыто и Оплачено"
+msgstr "Открытые и платные"
 
 #. module: product_margin
 #: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__paid
@@ -208,7 +203,7 @@ msgstr "Оплачено"
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
 msgid "Product Margin"
-msgstr "Маржа продукции"
+msgstr "Маржа продукта"
 
 #. module: product_margin
 #. odoo-python
@@ -220,7 +215,7 @@ msgstr "Маржа продукции"
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 #, python-format
 msgid "Product Margins"
-msgstr "Маржа продукции"
+msgstr "Маржинальность продукции"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_product
@@ -230,17 +225,17 @@ msgstr "Вариант продукта"
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "Properties categories"
-msgstr "Категории характеристик"
+msgstr "Категории свойств"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_gap
 msgid "Purchase Gap"
-msgstr "Отставание закупок"
+msgstr "Разрыв в покупке"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Purchases"
-msgstr "Закупки"
+msgstr "Покупки"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -251,7 +246,7 @@ msgstr "Продажи"
 #: model:ir.model.fields,field_description:product_margin.field_product_product__sales_gap
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Sales Gap"
-msgstr "Отставание продаж"
+msgstr "Разрыв в продажах"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -261,71 +256,71 @@ msgstr "Стандартная цена"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
-msgstr "Сумма произведений себестоимости на количество счетов от поставщика"
+msgstr "Сумма умножения себестоимости и количества счетов поставщика"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__turnover
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
-msgstr "Произведение фактурной цены и количества счетов клиента"
+msgstr "Сумма умножения цены счета-фактуры и количества счетов-фактур клиента"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
-msgstr ""
-"Сумма произведений цены в счетах-фактурах на количество счетов от поставщика"
+msgstr "Сумма умножения цены счета-фактуры и количества счетов поставщика"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_expected
 msgid ""
 "Sum of Multiplication of Sale Catalog price and quantity of Customer "
 "Invoices"
-msgstr "Произведение цены по каталогу продаж и количества счетов клиента"
+msgstr ""
+"Сумма умножения цены каталога продаж и количества счетов-фактур клиентов"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_num_invoiced
 msgid "Sum of Quantity in Customer Invoices"
-msgstr "Суммарное количество в счетах заказчика"
+msgstr "Сумма количества в счетах-фактурах клиентов"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_num_invoiced
 msgid "Sum of Quantity in Vendor Bills"
-msgstr "Сумма количеств в счетах поставщика"
+msgstr "Сумма количества в счетах поставщиков"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__to_date
 msgid "To"
-msgstr "В"
+msgstr "Кому"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_cost
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Total Cost"
-msgstr "Итоговая стоимость"
+msgstr "Общая стоимость"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Total Margin"
-msgstr "Итоговая маржа"
+msgstr "Общая маржа"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_margin_rate
 msgid "Total Margin Rate(%)"
-msgstr "Итоговый коэффициент маржи (%)"
+msgstr "Общая маржинальная ставка (%)"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__total_margin_rate
 msgid "Total margin * 100 / Turnover"
-msgstr "Итоговая маржа × 100 ÷ оборот"
+msgstr "Общая маржа * 100 / Оборот"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__turnover
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Turnover"
-msgstr "Оборот"
+msgstr "Rotazione"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__total_margin
 msgid "Turnover - Standard price"
-msgstr "Оборот - Стандартная цена"
+msgstr "Оборот - стандартная цена"

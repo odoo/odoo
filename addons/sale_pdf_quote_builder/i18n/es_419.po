@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Lucia Pacheco, 2023
 # Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +30,12 @@ msgid ""
 msgstr ""
 "(object.state in ('draft', 'sent') and 'Cotización - %s' % (object.name)) or"
 " 'Orden - %s' % (object.name)"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "<i class=\"fa fa-arrow-right\"/> Download examples"
+msgstr "<i class=\"fa fa-arrow-right\"/>Descargar ejemplos"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on
@@ -78,6 +84,11 @@ msgstr "Páginas de encabezado"
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
 msgid "Inside quote"
 msgstr "Dentro de la cotización"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "Learn more from the documentation."
+msgstr "Para más información, consulte la documentación"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
@@ -131,12 +142,14 @@ msgid ""
 "Provide header pages and footer pages to compose an attractive quotation\n"
 "                            with more information about your company, your products and your services.\n"
 "                            The pdf of your quotes will be built by putting together header pages,\n"
-"                            product descriptions, details of the quote and then the footer pages."
+"                            product descriptions, details of the quote and then the footer pages.\n"
+"                            If empty, it will use those define in the company settings.<br/>"
 msgstr ""
-"Proporcione páginas de encabezado y páginas de pie de página para crear una cotización atractiva\n"
-"                            con más información sobre su empresa, sus productos y sus servicios.\n"
-"                            El PDF de sus cotizaciones se creará juntando las páginas de encabezado,\n"
-"                            las descripciones de los productos, los detalles de la cotización y luego los pies de página."
+"Cree encabezados y pies de páginas para crear una cotización llamativa\n"
+"                            que tenga información sobre su empresa y los productos o servicios que ofrece.\n"
+"                            Para crear el archivo PDF de sus cotizaciones se tomarán el encabezado,\n"
+"                            las descripciones de los productos, los detalles de la cotización, los pies de página y se juntarán.\n"
+"                            Si está vacío, usará lo que esté definido en los ajustes de la empresa.<br/>"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw

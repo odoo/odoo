@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="res_partner_tree_l10n_it" model="ir.ui.view">
+        <field name="name">res.partner.tree.l10n.it</field>
+        <field name="mode">primary</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="l10n_it_codice_fiscale"/>
+                <field name="l10n_it_pa_index"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="res_partner_form_l10n_it" model="ir.ui.view">
         <field name="name">res.partner.form.l10n.it</field>
         <field name="model">res.partner</field>
@@ -109,7 +122,7 @@
                     <div class="alert alert-warning" role="alert"
                         invisible="not l10n_it_edi_header 
                                    or state == 'draft'
-                                   or l10n_it_edi_state in (False, 'forwarded', 'accepted_by_pa_partner', 'accepted_by_pa_partner_after_expiry', 'forward_failed')">
+                                   or l10n_it_edi_state in ('forwarded', 'accepted_by_pa_partner', 'accepted_by_pa_partner_after_expiry', 'forward_failed')">
                         <div class="p-0 m-0"><i class='fa fa-warning' role="img" title="EDI (Italy)"/><span class="mx-1">E-invoicing (Italy)</span></div>
                         <field name="l10n_it_edi_header"/>
                     </div>

@@ -146,6 +146,9 @@ QUnit.test("rendering with PWA installation request", async (assert) => {
     });
 
     const { env } = await start();
+    // This event must be triggered to initialize the installPrompt service properly
+    // as if it was run by a browser supporting PWA (never triggered in a test otherwise).
+    browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
     patchWithCleanup(env.services.installPrompt, {
         show() {
             assert.step("show prompt");
@@ -157,10 +160,9 @@ QUnit.test("rendering with PWA installation request", async (assert) => {
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem");
-    assert.ok(
-        target
-            .querySelector(".o-mail-NotificationItem img")
-            .dataset.src.includes("/web/image?field=avatar_128&id=2&model=res.partner")
+    assert.containsOnce(
+        target,
+        ".o-mail-NotificationItem img[data-src*='/web/image?field=avatar_128&id=2&model=res.partner']"
     );
     assert.strictEqual(
         target.querySelector(".o-mail-NotificationItem-name").textContent,
@@ -173,6 +175,46 @@ QUnit.test("rendering with PWA installation request", async (assert) => {
 
     await click(".o-mail-NotificationItem a.btn-primary");
     assert.verifySteps(["show prompt"]);
+});
+
+QUnit.test("installation of the PWA request can be dismissed", async (assert) => {
+    patchWithCleanup(browser, {
+        BeforeInstallPromptEvent: () => {},
+    });
+    patchWithCleanup(browser.localStorage, {
+        getItem(key) {
+            if (key === "pwa.installationState") {
+                assert.step("getItem " + key);
+                // in this test, installation has not yet proceeded
+                return null;
+            }
+            return super.getItem(key);
+        },
+        setItem(key, value) {
+            if (key === "pwa.installationState") {
+                assert.step("installationState value:  " + value);
+            }
+            return super.setItem(key, value);
+        },
+    });
+
+    const { env } = await start();
+    // This event must be triggered to initialize the installPrompt service properly
+    // as if it was run by a browser supporting PWA (never triggered in a test otherwise).
+    browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
+    patchWithCleanup(env.services.installPrompt, {
+        show() {
+            assert.step("show prompt should not be triggered");
+        },
+    });
+    assert.verifySteps(["getItem pwa.installationState"]);
+
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem .fa-close");
+    assert.verifySteps(["installationState value:  dismissed"]);
+
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
 QUnit.test("rendering with PWA installation request (dismissed)", async (assert) => {
@@ -193,6 +235,9 @@ QUnit.test("rendering with PWA installation request (dismissed)", async (assert)
     });
 
     await start();
+    // This event must be triggered to initialize the installPrompt service properly
+    // as if it was run by a browser supporting PWA (never triggered in a test otherwise).
+    browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
     assert.verifySteps(["getItem pwa.installationState"]);
     assert.containsNone(target, ".o-mail-MessagingMenu-counter");
 
@@ -205,12 +250,6 @@ QUnit.test("rendering with PWA installation request (already running as PWA)", a
 
     patchWithCleanup(browser, {
         BeforeInstallPromptEvent: () => {},
-        matchMedia(media) {
-            if (media === "(display-mode: standalone)") {
-                return { matches: true };
-            }
-            return super.matchMedia(media);
-        },
     });
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
@@ -224,6 +263,8 @@ QUnit.test("rendering with PWA installation request (already running as PWA)", a
     });
 
     await start();
+    // The 'beforeinstallprompt' event is not triggered here, since the
+    // browser wouldn't trigger it when the app is already launched
     assert.verifySteps(["getItem pwa.installationState"]);
     assert.containsNone(target, ".o-mail-MessagingMenu-counter");
 

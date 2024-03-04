@@ -106,19 +106,20 @@
                 </t>
             </CabeceraFactura>
             <DatosFactura t-if="is_emission">
+                <FechaOperacion t-out="format_date(invoice.invoice_date) if format_date(datetime_now) != format_date(invoice.invoice_date) else None"/>
                 <DescripcionFactura t-out="invoice.invoice_origin or 'manual'"/>
                 <DetallesFactura>
                     <IDDetalleFactura t-foreach="invoice_lines" t-as="line_values">
                         <t t-set="line" t-value="line_values['line']"/>
                         <DescripcionDetalle t-out="line_values['description']"/>
-                        <Cantidad t-out="format_float(line.quantity)"/>
-                        <ImporteUnitario t-out="format_float(line_values['unit_price'])"/>
-                        <Descuento t-out="format_float(line_values['discount'])"/>
-                        <ImporteTotal t-out="format_float(line_values['total'])"/>
+                        <Cantidad t-out="format_float(line.quantity, precision_digits=8)"/>
+                        <ImporteUnitario t-out="format_float(line_values['unit_price'], precision_digits=8)"/>
+                        <Descuento t-out="format_float(line_values['discount'], precision_digits=8)"/>
+                        <ImporteTotal t-out="format_float(line_values['total'], precision_digits=8)"/>
                     </IDDetalleFactura>
                 </DetallesFactura>
                 <ImporteTotalFactura t-out="format_float(amount_total)"/>
-                <!-- <RetencionSoportada/> NOTE (potentially has to be computed/decided manually) -->
+                <RetencionSoportada t-if="amount_retention != 0.0" t-out="format_float(amount_retention)"/>
                 <!-- <BaseImponibleACoste/> NOTE (only applicable with ClaveRegimenIvaOpTrascendencia 06, not supported yet) -->
                 <Claves>
                     <IDClave t-foreach="regime_key" t-as="key">

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import Form, TransactionCase
 from odoo import Command
 
 
@@ -186,3 +186,28 @@ class TestAnalyticAccount(TransactionCase):
         plans_json = self.env['account.analytic.plan'].get_relevant_plans()
         self.assertEqual(2, len(plans_json) - self.analytic_plan_offset,
                          "The parent plan should be available even if the analytic account is set on child of third generation")
+
+    def test_all_account_count_with_subplans(self):
+        self.analytic_plan = self.env['account.analytic.plan'].create({
+            'name': 'Parent Plan',
+        })
+        self.analytic_sub_plan = self.env['account.analytic.plan'].create({
+            'name': 'Sub Plan',
+            'parent_id': self.analytic_plan.id,
+        })
+        self.analytic_sub_sub_plan = self.env['account.analytic.plan'].create({
+            'name': 'Sub Sub Plan',
+            'parent_id': self.analytic_sub_plan.id,
+        })
+
+        self.env['account.analytic.account'].create([
+            {'name': 'Account', 'plan_id': self.analytic_plan.id},
+            {'name': 'Child Account', 'plan_id': self.analytic_sub_plan.id},
+            {'name': 'Grand Child Account', 'plan_id': self.analytic_sub_sub_plan.id}
+        ])
+
+        expected_values = {self.analytic_plan: 3, self.analytic_sub_plan: 2, self.analytic_sub_sub_plan: 1}
+        for plan, expected_value in expected_values.items():
+            with self.subTest(plan=plan.name, expected_count=expected_value):
+                with Form(plan) as plan_form:
+                    self.assertEqual(plan_form.record.all_account_count, expected_value)

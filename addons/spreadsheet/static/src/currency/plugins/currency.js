@@ -14,6 +14,7 @@ const DATA_SOURCE_ID = "CURRENCIES";
 class CurrencyPlugin extends UIPlugin {
     constructor(config) {
         super(config);
+        this.currentCompanyCurrencyFormat = config.defaultCurrencyFormat;
         this.dataSources = config.custom.dataSources;
         if (this.dataSources) {
             this.dataSources.add(DATA_SOURCE_ID, CurrencyDataSource);
@@ -38,10 +39,7 @@ class CurrencyPlugin extends UIPlugin {
     }
 
     /**
-     *
      * @param {Currency | undefined} currency
-     * @private
-     *
      * @returns {string | undefined}
      */
     computeFormatFromCurrency(currency) {
@@ -56,24 +54,14 @@ class CurrencyPlugin extends UIPlugin {
     }
 
     /**
-     * Returns the default display format of a given currency
-     * @param {string} currencyName
-     * @returns {string | undefined}
-     */
-    getCurrencyFormat(currencyName) {
-        const currency =
-            currencyName &&
-            this.dataSources &&
-            this.dataSources.get(DATA_SOURCE_ID).getCurrency(currencyName);
-        return this.computeFormatFromCurrency(currency);
-    }
-
-    /**
      * Returns the default display format of a the company currency
      * @param {number|undefined} companyId
      * @returns {string | undefined}
      */
     getCompanyCurrencyFormat(companyId) {
+        if (!companyId && this.currentCompanyCurrencyFormat) {
+            return this.currentCompanyCurrencyFormat;
+        }
         const currency =
             this.dataSources &&
             this.dataSources.get(DATA_SOURCE_ID).getCompanyCurrencyFormat(companyId);
@@ -81,6 +69,10 @@ class CurrencyPlugin extends UIPlugin {
     }
 }
 
-CurrencyPlugin.getters = ["getCurrencyRate", "getCurrencyFormat", "getCompanyCurrencyFormat"];
+CurrencyPlugin.getters = [
+    "getCurrencyRate",
+    "computeFormatFromCurrency",
+    "getCompanyCurrencyFormat",
+];
 
 featurePluginRegistry.add("odooCurrency", CurrencyPlugin);

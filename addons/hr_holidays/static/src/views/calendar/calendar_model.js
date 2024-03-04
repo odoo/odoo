@@ -26,19 +26,20 @@ export class TimeOffCalendarModel extends CalendarModel {
     }
 
     makeContextDefaults(record) {
-        const { scale } = this.meta;
         const context = super.makeContextDefaults(record);
         if (this.employeeId) {
-            context['default_employee_id'] = this.employeeId;
+            context["default_employee_id"] = this.employeeId;
         }
 
-        if(['day', 'week'].includes(scale)) {
-            if ('default_date_from' in context) {
-                context['default_date_from'] = serializeDateTime(deserializeDateTime(context['default_date_from']).set({ hours: 7 }));
-            }
-            if ('default_date_to' in context) {
-                context['default_date_to'] = serializeDateTime(deserializeDateTime(context['default_date_from']).set({ hours: 19 }));
-            }
+        if ("default_date_from" in context) {
+            context["default_date_from"] = serializeDateTime(
+                deserializeDateTime(context["default_date_from"]).set({ hours: 7 })
+            );
+        }
+        if ("default_date_to" in context) {
+            context["default_date_to"] = serializeDateTime(
+                deserializeDateTime(context["default_date_to"]).set({ hours: 19 })
+            );
         }
         return context;
     }

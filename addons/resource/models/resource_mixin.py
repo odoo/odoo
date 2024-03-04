@@ -76,6 +76,10 @@ class ResourceMixin(models.AbstractModel):
         default['resource_calendar_id'] = resource.calendar_id.id
         return super().copy_data(default)
 
+    def _get_calendar(self, date_from=None):
+        self.ensure_one()
+        return self.resource_calendar_id or self.company_id.resource_calendar_id
+
     def _get_work_days_data_batch(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None):
         """
             By default the resource calendar is used, but it can be
@@ -97,7 +101,7 @@ class ResourceMixin(models.AbstractModel):
 
         mapped_resources = defaultdict(lambda: self.env['resource.resource'])
         for record in self:
-            mapped_resources[calendar or record.resource_calendar_id] |= record.resource_id
+            mapped_resources[calendar or record._get_calendar(from_datetime)] |= record.resource_id
 
         for calendar, calendar_resources in mapped_resources.items():
             if not calendar:

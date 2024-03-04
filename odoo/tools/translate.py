@@ -292,6 +292,47 @@ def parse_xml(text):
 def serialize_xml(node):
     return etree.tostring(node, method='xml', encoding='unicode')
 
+
+MODIFIER_ATTRS = {"invisible", "readonly", "required", "column_invisible", "attrs", "states"}
+def xml_term_adapter(term_en):
+    """
+    Returns an `adapter(term)` function that will ensure the modifiers are copied
+    from the base `term_en` to the translated `term` when the XML structure of
+    both terms match. `term_en` and any input `term` to the adapter must be valid
+    XML terms. Using the adapter only makes sense if `term_en` contains some tags
+    from TRANSLATED_ELEMENTS.
+    """
+    orig_node = parse_xml(f"<div>{term_en}</div>")
+
+    def same_struct_iter(left, right):
+        if left.tag != right.tag:
+            raise ValueError("Non matching struct")
+        yield left, right
+        left_iter = left.iterchildren()
+        right_iter = right.iterchildren()
+        for lc, rc in zip(left_iter, right_iter):
+            yield from same_struct_iter(lc, rc)
+        if next(left_iter, None) is not None or next(right_iter, None) is not None:
+            raise ValueError("Non matching struct")
+
+    def adapter(term):
+        new_node = parse_xml(f"<div>{term}</div>")
+        try:
+            for orig_n, new_n in same_struct_iter(orig_node, new_node):
+                removed_attrs = [k for k in new_n.attrib if k in MODIFIER_ATTRS and k not in orig_n.attrib]
+                for k in removed_attrs:
+                    del new_n.attrib[k]
+                keep_attrs = {k: v for k, v in orig_n.attrib.items() if k in MODIFIER_ATTRS}
+                new_n.attrib.update(keep_attrs)
+        except ValueError:  # non-matching structure
+            return term
+
+        # remove tags <div> and </div> from result
+        return serialize_xml(new_node)[5:-6]
+
+    return adapter
+
+
 _HTML_PARSER = etree.HTMLParser(encoding='utf8')
 
 def parse_html(text):
@@ -367,11 +408,20 @@ def get_text_content(term):
     content = html.fromstring(term).text_content()
     return " ".join(content.split())
 
+def is_text(term):
+    """ Return whether the term has only text. """
+    return len(html.fromstring(f"<_>{term}</_>")) == 0
+
 xml_translate.get_text_content = get_text_content
 html_translate.get_text_content = get_text_content
 
 xml_translate.term_converter = xml_term_converter
 html_translate.term_converter = html_term_converter
+
+xml_translate.is_text = is_text
+html_translate.is_text = is_text
+
+xml_translate.term_adapter = xml_term_adapter
 
 def translate_sql_constraint(cr, key, lang):
     cr.execute("""
@@ -893,7 +943,7 @@ def _extract_translatable_qweb_terms(element, callback):
             # them all lower case.
             # https://www.w3schools.com/html/html5_syntax.asp
             # https://github.com/odoo/owl/blob/master/doc/reference/component.md#composition
-            if not el.tag[0].isupper() and 't-component' not in el.attrib:
+            if not el.tag[0].isupper() and 't-component' not in el.attrib and 't-set-slot' not in el.attrib:
                 for att in ('title', 'alt', 'label', 'placeholder', 'aria-label'):
                     if att in el.attrib:
                         _push(callback, el.attrib[att], el.sourceline)
@@ -1675,7 +1725,7 @@ def _get_translation_upgrade_queries(cr, field):
                 SELECT it.res_id as res_id, jsonb_object_agg(it.lang, it.value) AS value, bool_or(imd.noupdate) AS noupdate
                   FROM _ir_translation it
              LEFT JOIN ir_model_data imd
-                    ON imd.model = %s AND imd.res_id = it.res_id
+                    ON imd.model = %s AND imd.res_id = it.res_id AND imd.module != '__export__'
                  WHERE it.type = 'model' AND it.name = %s AND it.state = 'translated'
               GROUP BY it.res_id
             )

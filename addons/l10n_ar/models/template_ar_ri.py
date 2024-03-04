@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'name': _('Argentine Generic Chart of Accounts for Registered Accountants'),
             'parent': 'ar_ex',
             'code_digits': '12',
-            'property_tax_payable_account_id': 'ri_iva_saldo_a_pagar',
-            'property_tax_receivable_account_id': 'ri_iva_saldo_tecnico_favor',
         }
 
     @template('ar_ri', 'res.company')

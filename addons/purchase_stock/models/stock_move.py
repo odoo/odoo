@@ -25,7 +25,10 @@ class StockMove(models.Model):
 
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
-        return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_ids']
+        excluded_fields = super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_id']
+        if self.env['ir.config_parameter'].sudo().get_param('purchase_stock.merge_different_procurement'):
+            excluded_fields += ['procure_method']
+        return excluded_fields
 
     def _compute_partner_id(self):
         # dropshipped moves should have their partner_ids directly set
@@ -47,7 +50,7 @@ class StockMove(models.Model):
         received_qty = line.qty_received
         if self.state == 'done':
             received_qty -= self.product_uom._compute_quantity(self.quantity, line.product_uom, rounding_method='HALF-UP')
-        if float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom.rounding) > 0:
+        if line.product_id.purchase_method == 'purchase' and float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom.rounding) > 0:
             move_layer = line.move_ids.sudo().stock_valuation_layer_ids
             invoiced_layer = line.sudo().invoice_lines.stock_valuation_layer_ids
             # value on valuation layer is in company's currency, while value on invoice line is in order's currency

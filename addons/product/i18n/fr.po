@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Jolien De Paepe, 2023
+# Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,7 +70,7 @@ msgstr ""
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%(percentage)s %% discount and %(price)s surcharge"
-msgstr "%(percentage)s %% remise et %(price)s surcharge"
+msgstr "%(percentage)s %% remise et supplément de %(price)s "
 
 #. module: product
 #. odoo-python
@@ -107,6 +107,13 @@ msgstr "'Étiquettes de produits - %s' % (object.name)"
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.name)"
 msgstr "'Conditionnement des produits - %s' % (object.name)"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid "(e.g: product description, ebook, legal notice, ...)."
+msgstr "(par ex. description du produit, ebook, mentions légales,...)"
 
 #. module: product
 #. odoo-python
@@ -225,6 +232,11 @@ msgid "<span class=\"text-bg-danger\">Archived</span>"
 msgstr "<span class=\"text-bg-danger\">Archivé</span>"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+msgid "<span class=\"text-bg-secondary\">Variant</span>"
+msgstr "<span class=\"text-bg-secondary\">Variante</span>"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<span>%</span>"
 msgstr "<span>%</span>"
@@ -234,6 +246,11 @@ msgstr "<span>%</span>"
 msgid "<span>All general settings about this product are managed on</span>"
 msgstr ""
 "<span>Tous les paramètres généraux de ce produit sont gérés sur</span>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+msgid "<span>Variant </span>"
+msgstr "<span>Variante </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -1176,7 +1193,6 @@ msgstr "Document"
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #: model:ir.model.fields,field_description:product.field_product_product__product_document_ids
 #: model:ir.model.fields,field_description:product.field_product_template__product_document_ids
@@ -1192,9 +1208,21 @@ msgid "Documents Count"
 msgstr "Nombre de documents"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_search
+msgid "Documents of this variant"
+msgstr "Documents de cette variante"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "Download"
 msgstr "Télécharger"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid "Download examples"
+msgstr "Télécharger les exemples"
 
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
@@ -1225,14 +1253,6 @@ msgstr "Dymo"
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
 msgid "Dynamically"
 msgstr "Dynamique"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_product.py:0
-#: code:addons/product/models/product_template.py:0
-#, python-format
-msgid "E.G: product description, ebook, legal notice, ..."
-msgstr "Par ex. description du produit, ebook, mentions légales,..."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
@@ -1608,21 +1628,21 @@ msgstr "L'image est un lien"
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "Import Template for Pricelists"
-msgstr "Import du modèle pour les listes de prix"
+msgstr "Modèle d'importation pour les listes de prix"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr "Importer un modèle pour les produits"
+msgstr "Modèle d'importation pour les produits"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_supplierinfo.py:0
 #, python-format
 msgid "Import Template for Vendor Pricelists"
-msgstr "Import du modèle pour les listes de prix des vendeurs"
+msgstr "Modèle d'importation pour les listes de prix des vendeurs"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
@@ -2204,7 +2224,7 @@ msgstr "Règles de prix"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_surcharge
 msgid "Price Surcharge"
-msgstr "Surcharge du prix"
+msgstr "Supplément"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__list_price
@@ -2263,7 +2283,7 @@ msgstr "Règle des listes des prix"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Pricelist Rules"
-msgstr "Règles des listes de prix"
+msgstr "Règles de liste de prix"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
@@ -2556,6 +2576,7 @@ msgstr "Unité de mesure du produit"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__0_product_variant
+#: model_terms:ir.ui.view,arch_db:product.product_document_form
 #: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Variant"
@@ -2864,8 +2885,8 @@ msgid ""
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
 msgstr ""
 "Fixe le prix comme un multiple de cette valeur.\n"
-"L'arrondi sera appliqué après la remise et avant la surcharge.\n"
-"Pour avoir un prix dont la fin est 9.99, mettre l'arrondi à 10 et la surcharge à -0.01"
+"L'arrondi sera appliqué après la remise et avant le supplément.\n"
+"Pour avoir un prix dont la fin est 9.99, mettre l'arrondi à 10 et le supplément à -0.01"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -3340,7 +3361,6 @@ msgstr "Charger"
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Upload files to your product"
@@ -3358,15 +3378,14 @@ msgstr "URL"
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid ""
 "Use this feature to store any files you would like to share with your "
-"customers."
+"customers"
 msgstr ""
 "Utilisez cette fonctionnalité pour stocker les fichiers que vous voulez "
-"partager avec vos clients."
+"partager avec vos clients"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products

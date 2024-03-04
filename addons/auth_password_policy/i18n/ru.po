@@ -3,11 +3,10 @@
 # 	* auth_password_policy
 # 
 # Translators:
-# Ivan Kropotkin <yelizariev@itpp.dev>, 2023
 # Denis Baranov <baranov@itlibertas.com>, 2023
 # Martin Trigaux, 2023
-# ILMIR <karamov@it-projects.info>, 2023
 # Sergo S, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sergo S, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +25,7 @@ msgstr ""
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_config_settings
 msgid "Config Settings"
-msgstr "Конфигурационные настройки"
+msgstr "Параметры конфигурации"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
@@ -38,8 +37,8 @@ msgstr "Минимальная длина пароля"
 msgid ""
 "Minimum number of characters passwords must contain, set to 0 to disable."
 msgstr ""
-"Минимальное количество символов, которые пароль должен содержать, установите"
-" на 0, чтобы выключить."
+"Минимальное количество символов, которое должен содержать пароль; для "
+"отключения установите значение 0."
 
 #. module: auth_password_policy
 #. odoo-javascript
@@ -53,8 +52,7 @@ msgstr "Пароль"
 #: code:addons/auth_password_policy/models/res_users.py:0
 #, python-format
 msgid "Passwords must have at least %d characters, got %d."
-msgstr ""
-"Пароль должен иметь по крайней мере %d символов, в то время как получено %d."
+msgstr "Пароли должны содержать не менее %d символов, а если есть - %d."
 
 #. module: auth_password_policy
 #. odoo-javascript
@@ -65,6 +63,9 @@ msgid ""
 "\n"
 "Hint: to increase password strength, increase length, use multiple words, and use non-letter characters."
 msgstr ""
+"Требуется: %s\n"
+"\n"
+"Подсказка: чтобы повысить надежность пароля, увеличьте его длину, используйте несколько слов и небуквенные символы."
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
@@ -76,18 +77,18 @@ msgstr "Пользователь"
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
 msgid "at least %s character classes"
-msgstr ""
+msgstr "не менее %s классов символов"
 
 #. module: auth_password_policy
 #. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
 msgid "at least %s characters"
-msgstr ""
+msgstr "не менее %s символов"
 
 #. module: auth_password_policy
 #. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
 msgid "at least %s words"
-msgstr ""
+msgstr "не менее %s слов"

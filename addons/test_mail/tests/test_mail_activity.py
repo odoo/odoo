@@ -124,15 +124,14 @@ class TestActivityRights(TestActivityCommon):
                     [('id', '=', test_activity.id)],
                     ['summary'])
 
-        # cannot create activities for people that cannot access record
+        # can create activities for people that cannot access record
         with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
-            with self.assertRaises(exceptions.UserError):
-                activity = self.env['mail.activity'].create({
-                    'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
-                    'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
-                    'res_id': self.test_record.id,
-                    'user_id': self.user_employee.id,
-                })
+            self.env['mail.activity'].create({
+                'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
+                'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+                'res_id': self.test_record.id,
+                'user_id': self.user_employee.id,
+            })
 
         # cannot create activities if no access to the document
         with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
@@ -601,12 +600,14 @@ class TestActivityMixin(TestActivityCommon):
         ])
 
         origin_1, origin_2 = self.env['mail.test.activity'].search([], limit=2)
+        activity_type = self.env.ref('test_mail.mail_act_test_todo')
+        activity_type.sudo().keep_done = True
 
         with patch('odoo.addons.mail.models.mail_activity.datetime', MockedDatetime), \
             patch('odoo.addons.mail.models.mail_activity_mixin.datetime', MockedDatetime):
             origin_1_activity_1 = self.env['mail.activity'].create({
                 'summary': 'Test',
-                'activity_type_id': 1,
+                'activity_type_id': activity_type.id,
                 'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
                 'res_id': origin_1.id,
                 'date_deadline': today_utc,
@@ -624,7 +625,7 @@ class TestActivityMixin(TestActivityCommon):
 
             origin_2_activity_1 = self.env['mail.activity'].create({
                 'summary': 'Test',
-                'activity_type_id': 1,
+                'activity_type_id': activity_type.id,
                 'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
                 'res_id': origin_2.id,
                 'date_deadline': today_utc + relativedelta(hours=8),
@@ -674,6 +675,22 @@ class TestActivityMixin(TestActivityCommon):
             result = self.env['mail.test.activity'].search([('activity_state', 'in', ('today', False))])
             self.assertTrue(len(result) > 0)
             self.assertEqual(result, all_activity_mixin_record.filtered(lambda p: p.activity_state in ('today', False)))
+
+            # Check that activity done are not taken into account by group and search by activity_state.
+            Model = self.env['mail.test.activity']
+            search_params = {
+                'domain': [('id', 'in', (origin_1 | origin_2).ids), ('activity_state', '=', 'overdue')]}
+            read_group_params = {'domain': [('id', 'in', (origin_1 | origin_2).ids)], 'fields': ['id:array_agg'],
+                                 'groupby': ['activity_state']}
+            self.assertEqual(Model.search(**search_params), origin_1)
+            self.assertEqual(
+                {(e['activity_state'], e['activity_state_count']) for e in Model.read_group(**read_group_params)},
+                {('today', 1), ('overdue', 1)})
+            origin_1_activity_2.action_feedback(feedback='Done')
+            self.assertFalse(Model.search(**search_params))
+            self.assertEqual(
+                {(e['activity_state'], e['activity_state_count']) for e in Model.read_group(**read_group_params)},
+                {('today', 2)})
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_mail_activity_mixin_search_state_different_day_but_close_time(self):

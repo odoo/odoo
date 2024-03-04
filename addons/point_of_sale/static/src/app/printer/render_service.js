@@ -10,7 +10,7 @@ export class RenderContainer extends Component {
     // place where to momentarily render some html code
     // we should only intact with that div through the `whenMounted` function
     static template = xml`
-        <div style="left: -1000px; position: absolute;">
+        <div style="left: -1000px; position: fixed;">
             <div t-ref="ref">
                 <t t-if="props.comp.component" t-component="props.comp.component" t-props="props.comp.props"/>
             </div>
@@ -80,9 +80,13 @@ registry.category("services").add("renderer", renderService);
  */
 const applyWhenMounted = async ({ el, container, callback }) => {
     const elClone = el.cloneNode(true);
+    const sameClassElements = container.querySelectorAll(`.${[...el.classList].join(".")}`);
+    // Remove all elements with the same class as the one we are about to add
+    sameClassElements.forEach(element => {
+        element.remove();
+    });
     container.appendChild(elClone);
     const res = await callback(elClone);
-    elClone.remove();
     return res;
 };
 

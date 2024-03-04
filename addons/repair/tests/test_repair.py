@@ -3,6 +3,7 @@
 from odoo.exceptions import UserError
 from odoo.tests import tagged, common, Form
 from odoo.tools import float_compare, float_is_zero
+from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -303,8 +304,13 @@ class TestRepair(common.TransactionCase):
         self.assertEqual(lineD.state, 'assigned')
         num_of_lines = len(repair.move_ids)
         self.assertFalse(repair.move_id)
-        repair.action_repair_end()
-
+        end_action = repair.action_repair_end()
+        self.assertEqual(end_action.get("res_model"), "repair.warn.uncomplete.move")
+        warn_uncomplete_wizard = Form(
+            self.env['repair.warn.uncomplete.move']
+            .with_context(**end_action['context'])
+            ).save()
+        warn_uncomplete_wizard.action_validate()
         self.assertEqual(repair.state, "done")
         done_moves = repair.move_ids - lineD
         #line a,b,c are 'done', line d is 'cancel'
@@ -574,3 +580,75 @@ class TestRepair(common.TransactionCase):
         repair.action_repair_end()
         self.assertEqual(repair.state, 'done')
         self.assertEqual(len(return_picking.move_ids), 1)
+
+    def test_repair_with_product_in_package(self):
+        """
+        Test That a repair order can be validated when the repaired product is tracked and in a package
+        """
+        self.product_product_3.tracking = 'serial'
+        self.product_product_3.type = 'product'
+        # Create two serial numbers
+        sn_1 = self.env['stock.lot'].create({'name': 'sn_1', 'product_id': self.product_product_3.id})
+        sn_2 = self.env['stock.lot'].create({'name': 'sn_2', 'product_id': self.product_product_3.id})
+
+        # Create two packages
+        package_1 = self.env['stock.quant.package'].create({'name': 'Package-test-1'})
+        package_2 = self.env['stock.quant.package'].create({'name': 'Package-test-2'})
+
+        # update the quantity of the product in the stock
+        self.env['stock.quant']._update_available_quantity(self.product_product_3, self.stock_warehouse.lot_stock_id, 1, lot_id=sn_1, package_id=package_1)
+        self.env['stock.quant']._update_available_quantity(self.product_product_3, self.stock_warehouse.lot_stock_id, 1, lot_id=sn_2, package_id=package_2)
+        self.assertEqual(self.product_product_3.qty_available, 2)
+        # create a repair order
+        repair_order = self.env['repair.order'].create({
+            'product_id': self.product_product_3.id,
+            'product_uom': self.product_product_3.uom_id.id,
+            # 'guarantee_limit': '2019-01-01',
+            'location_id': self.stock_warehouse.lot_stock_id.id,
+            'lot_id': sn_1.id,
+            'picking_type_id': self.stock_warehouse.repair_type_id.id,
+            'move_ids': [
+                (0, 0, {
+                    'product_id': self.product_product_5.id,
+                    'product_uom_qty': 1.0,
+                    'state': 'draft',
+                    'repair_line_type': 'add',
+                })
+            ],
+        })
+        # Validate and complete the repair order
+        repair_order.action_validate()
+        self.assertEqual(repair_order.state, 'confirmed')
+        repair_order.action_repair_start()
+        self.assertEqual(repair_order.state, 'under_repair')
+        repair_order.move_ids.quantity = 1
+        repair_order.action_repair_end()
+        self.assertEqual(repair_order.state, 'done')
+
+    def test_repair_multi_unit_order_with_serial_tracking(self):
+        """
+        Test that a sale order with a single order line with quantity > 1 for a product that creates a repair order and
+        is tracked via serial number creates multiple repair orders rather than grouping the line into a single RO
+        """
+        product_a = self.env['product.product'].create({
+            'name': 'productA',
+            'detailed_type': 'product',
+            'tracking': 'serial',
+            'create_repair': True,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.res_partner_1.id,
+            'order_line': [Command.create({
+                'product_id': product_a.id,
+                'product_uom_qty': 3.0,
+            })]
+        })
+        sale_order.action_confirm()
+
+        repair_orders = sale_order.repair_order_ids
+        self.assertRecordValues(repair_orders, [
+            {'product_id': product_a.id, 'product_qty': 1.0},
+            {'product_id': product_a.id, 'product_qty': 1.0},
+            {'product_id': product_a.id, 'product_qty': 1.0},
+        ])

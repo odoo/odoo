@@ -3,17 +3,17 @@
 # 	* pos_self_order
 # 
 # Translators:
-# Junko Augias, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +34,13 @@ msgid ""
 "%s is not available anymore, it has thus been removed from your order. "
 "Please review your order and validate it again."
 msgstr "%s は利用できなくなりました。そのため、オーダから削除されました。オーダ内容を再度ご確認下さい。"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, python-format
+msgid "/ Tracker number:"
+msgstr "/ 追跡番号:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -128,14 +135,14 @@ msgstr "エラーが発生しました"
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 #, python-format
 msgid "Any items already sent will not be canceled"
-msgstr "すでに発送済のプロダクトはキャンセルされません。"
+msgstr "すでに発送済のプロダクトは取消されません。"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 #, python-format
 msgid "Are you sure you want to cancel this order?"
-msgstr "本当にこのオーダをキャンセルしますか？"
+msgstr "本当にこのオーダを取消しますか？"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -183,14 +190,14 @@ msgstr "戻る"
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #, python-format
 msgid "Cancel"
-msgstr "キャンセル"
+msgstr "取消"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 #, python-format
 msgid "Cancel Order"
-msgstr "オーダをキャンセル"
+msgstr "オーダを取消"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -199,7 +206,7 @@ msgstr "オーダをキャンセル"
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.js:0
 #, python-format
 msgid "Cancel order"
-msgstr "オーダをキャンセル"
+msgstr "オーダを取消"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_service_mode
@@ -655,6 +662,20 @@ msgid "My Orders"
 msgstr "自分のオーダ"
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, python-format
+msgid "NEW"
+msgstr "NEW"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, python-format
+msgid "NOTE"
+msgstr "メモ"
+
+#. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand_name
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
 msgid "Name of the image to display on the self order screen"
@@ -913,6 +934,20 @@ msgstr "プロダクトバリアント"
 #, python-format
 msgid "Product image"
 msgstr "プロダクト画像"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Product is not available"
+msgstr "プロダクトは利用できません"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Product not found"
+msgstr "製品は見つかりませんでした"
 
 #. module: pos_self_order
 #: model:ir.actions.report,name:pos_self_order.report_self_order_qr_codes_page
@@ -1224,6 +1259,13 @@ msgstr "警告"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "We're currently closed"
+msgstr "現在閉店中です"
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_index.xml:0
 #, python-format
 msgid "We're currently closed."
@@ -1275,7 +1317,7 @@ msgstr "選択"
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "Your order has been canceled"
-msgstr "オーダがキャンセルされました"
+msgstr "オーダが取消されました"
 
 #. module: pos_self_order
 #. odoo-javascript

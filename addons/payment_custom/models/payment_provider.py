@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.osv.expression import OR
 
 
 class PaymentProvider(models.Model):
@@ -62,6 +63,14 @@ class PaymentProvider(models.Model):
                     f'<p><br></p>' \
                     f'</div>'
 
+    @api.model
+    def _get_removal_domain(self, provider_code):
+        return OR([
+            super()._get_removal_domain(provider_code),
+            [('code', '=', 'custom'), ('custom_mode', '=', provider_code)],
+        ])
+
+    @api.model
     def _get_removal_values(self):
         """ Override of `payment` to nullify the `custom_mode` field. """
         res = super()._get_removal_values()

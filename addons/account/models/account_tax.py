@@ -95,10 +95,10 @@ class AccountTax(models.Model):
           help="This dummy field lets us use another search method on the field 'name'."
                "This allows more freedom on how to search the 'name' compared to 'filter_domain'."
                "See '_search_name' and '_parse_name_search' for why this is not possible with 'filter_domain'.")
-    type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Type', required=True, default="sale",
+    type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Type', required=True, default="sale", tracking=True,
         help="Determines where the tax is selectable. Note: 'None' means a tax can't be used by itself, however it can still be used in a group. 'adjustment' is used to perform tax adjustment.")
     tax_scope = fields.Selection([('service', 'Services'), ('consu', 'Goods')], string="Tax Scope", help="Restrict the use of taxes to a type of product.")
-    amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
+    amount_type = fields.Selection(default='percent', string="Tax Computation", required=True, tracking=True,
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')],
         help="""
     - Group of Taxes: The tax is a set of sub taxes.
@@ -121,7 +121,7 @@ class AccountTax(models.Model):
     amount = fields.Float(required=True, digits=(16, 4), default=0.0, tracking=True)
     description = fields.Char(string='Description', translate=True)
     invoice_label = fields.Char(string='Label on Invoices', translate=True)
-    price_include = fields.Boolean(string='Included in Price', default=False,
+    price_include = fields.Boolean(string='Included in Price', default=False, tracking=True,
         help="Check this if the price you use on the product and invoices includes this tax.")
     include_base_amount = fields.Boolean(string='Affect Base of Subsequent Taxes', default=False, tracking=True,
         help="If set, taxes with a higher sequence than this one will be affected by it, provided they accept it.")
@@ -213,12 +213,6 @@ class AccountTax(models.Model):
             if record.tax_group_id.country_id and record.tax_group_id.country_id != record.country_id:
                 raise ValidationError(_("The tax group must have the same country_id as the tax using it."))
 
-    @api.constrains('amount_type', 'type_tax_use', 'price_include', 'include_base_amount')
-    def _constrains_fields_after_tax_is_used(self):
-        for tax in self:
-            if tax.is_used:
-                raise ValidationError(_("This tax has been used in transactions. For that reason, it is forbidden to modify this field."))
-
     @api.depends('company_id')
     def _compute_country_id(self):
         for tax in self:
@@ -292,42 +286,55 @@ class AccountTax(models.Model):
         for tax in self:
             tax.is_used = tax.id in used_taxes
 
-    @api.depends('repartition_line_ids.account_id', 'repartition_line_ids.factor_percent', 'repartition_line_ids.use_in_tax_closing', 'repartition_line_ids.tag_ids')
+    @api.depends('repartition_line_ids.account_id', 'repartition_line_ids.sequence', 'repartition_line_ids.factor_percent', 'repartition_line_ids.use_in_tax_closing', 'repartition_line_ids.tag_ids')
     def _compute_repartition_lines_str(self):
         for tax in self:
             repartition_lines_str = tax.repartition_lines_str or ""
             if tax.is_used:
-                for repartition_line in tax.repartition_line_ids:
-                    repartition_line_info = {
-                        _('id'): repartition_line.id,
+                repartition_line_info = {}
+                invoice_sequence = 0
+                refund_sequence = 0
+                for repartition_line in tax.repartition_line_ids.sorted(key=lambda r: (r.document_type, r.sequence)):
+                    # Clean sequence numbers to avoid unnecessary logging when complex
+                    # operations are executed such as:
+                    #   1. Create a invoice repartition line with a factor of 50%
+                    #   2. Delete the invoice line above
+                    #   3. Update the last refund repartition line factor to 50%
+                    sequence = (invoice_sequence := invoice_sequence + 1) if repartition_line.document_type == 'invoice' else (refund_sequence := refund_sequence + 1)
+                    repartition_line_info[(repartition_line.document_type, sequence)] = {
                         _('Factor Percent'): repartition_line.factor_percent,
-                        _('Account'): repartition_line.account_id.name or _('None'),
+                        _('Account'): repartition_line.account_id.display_name or _('None'),
                         _('Tax Grids'): repartition_line.tag_ids.mapped('name') or _('None'),
                         _('Use in tax closing'): _('True') if repartition_line.use_in_tax_closing else _('False'),
                     }
-                    repartition_lines_str += str(repartition_line_info) + '//'
-                repartition_lines_str = repartition_lines_str.strip('//')
+                repartition_lines_str = str(repartition_line_info)
             tax.repartition_lines_str = repartition_lines_str
 
-    def _message_log_repartition_lines(self, old_value_str, new_value_str):
+    def _message_log_repartition_lines(self, old_values_str, new_values_str):
         self.ensure_one()
         if not self.is_used:
             return
 
-        old_values = old_value_str.split('//')
-        new_values = new_value_str.split('//')
+        old_line_values_dict = ast.literal_eval(old_values_str)
+        new_line_values_dict = ast.literal_eval(new_values_str)
 
-        kwargs = {}
-        for old_value, new_value in zip(old_values, new_values):
-            if old_value != new_value:
-                old_value = ast.literal_eval(old_value)
-                new_value = ast.literal_eval(new_value)
-                diff_keys = [key for key in old_value if old_value[key] != new_value[key]]
-                repartition_line = self.env['account.tax.repartition.line'].search([('id', '=', new_value['id'])])
+        # Categorize the lines that were added/removed/modified
+        modified_lines = [
+            (line, old_line_values_dict[line], new_line_values_dict[line])
+            for line in old_line_values_dict.keys() & new_line_values_dict.keys()
+        ]
+        added_and_deleted_lines = [
+            (line, _('Removed'), old_line_values_dict[line]) if line in old_line_values_dict else (line, _('New'), new_line_values_dict[line])
+            for line in old_line_values_dict.keys() ^ new_line_values_dict.keys()
+        ]
+
+        for (document_type, sequence), old_value, new_value in modified_lines:
+            diff_keys = [key for key in old_value if old_value[key] != new_value[key]]
+            if diff_keys:
                 body = Markup("<b>{type}</b> {rep} {seq}:<ul class='mb-0 ps-4'>{changes}</ul>").format(
-                    type=repartition_line.document_type.capitalize(),
+                    type=document_type.capitalize(),
                     rep=_('repartition line'),
-                    seq=repartition_line.sequence + 1,
+                    seq=sequence,
                     changes=Markup().join(
                         [Markup("""
                             <li>
@@ -335,12 +342,31 @@ class AccountTax(models.Model):
                                 <i class='o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600'/>
                                 <span class='o-mail-Message-trackingNew me-1 fw-bold text-info'>{new}</span>
                                 <span class='o-mail-Message-trackingField ms-1 fst-italic text-muted'>({diff})</span>
-                            </li>""").format(old=old_value[diff_key], new=new_value[diff_key], diff=diff_key)
+                            </li>
+                        """).format(old=old_value[diff_key], new=new_value[diff_key], diff=diff_key)
                         for diff_key in diff_keys]
                     )
                 )
-                kwargs['body'] = body
-                super()._message_log(**kwargs)
+                super()._message_log(body=body)
+
+        for (document_type, sequence), operation, value in added_and_deleted_lines:
+            body = Markup("<b>{op} {type}</b> {rep} {seq}:<ul class='mb-0 ps-4'>{changes}</ul>").format(
+                op=operation,
+                type=document_type.capitalize(),
+                rep=_('repartition line'),
+                seq=sequence,
+                changes=Markup().join(
+                    [Markup("""
+                        <li>
+                            <span class='o-mail-Message-trackingNew me-1 fw-bold text-info'>{value}</span>
+                            <span class='o-mail-Message-trackingField ms-1 fst-italic text-muted'>({diff})</span>
+                        </li>
+                    """).format(value=value[key], diff=key)
+                    for key in value]
+                )
+            )
+            super()._message_log(body=body)
+        return
 
     def _message_log(self, **kwargs):
         # OVERRIDE _message_log
@@ -721,19 +747,29 @@ class AccountTax(models.Model):
         # || tax_3 |   ..   |          |
         # ||  ...  |   ..   |    ..    |
         #    ----------------------------
-        def recompute_base(base_amount, fixed_amount, percent_amount, division_amount):
-            # Recompute the new base amount based on included fixed/percent amounts and the current base amount.
-            # Example:
-            #  tax  |  amount  |   type   |  price_include  |
-            # -----------------------------------------------
-            # tax_1 |   10%    | percent  |  t
-            # tax_2 |   15     |   fix    |  t
-            # tax_3 |   20%    | percent  |  t
-            # tax_4 |   10%    | division |  t
-            # -----------------------------------------------
+        def recompute_base(base_amount, incl_tax_amounts):
+            """ Recompute the new base amount based on included fixed/percent amounts and the current base amount. """
+            fixed_amount = incl_tax_amounts['fixed_amount']
+            division_amount = sum(tax_factor for _i, tax_factor in incl_tax_amounts['division_taxes'])
+            percent_amount = sum(tax_factor for _i, tax_factor in incl_tax_amounts['percent_taxes'])
 
-            # if base_amount = 145, the new base is computed as:
-            # (145 - 15) / (1.0 + 30%) * 90% = 130 / 1.3 * 90% = 90
+            if company.country_code == 'IN':
+                # For the indian case, when facing two percent price-included taxes having the same percentage,
+                # both need to produce the same tax amounts. To do that, the tax amount of those taxes are computed
+                # directly during the first traveling in reversed order.
+                total_percentage = sum(tax_factor for _i, tax_factor in incl_tax_amounts['percent_taxes'])
+                for i, tax_factor in incl_tax_amounts['percent_taxes']:
+                    tax_amount = float_round(base * tax_factor / (100 + total_percentage), precision_rounding=prec)
+                    cached_tax_amounts[i] = tax_amount
+                    fixed_amount += tax_amount
+                percent_amount = 0.0
+
+            incl_tax_amounts.update({
+                'percent_taxes': [],
+                'division_taxes': [],
+                'fixed_amount': 0.0,
+            })
+
             return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100
 
         # The first/last base must absolutely be rounded to work in round globally.
@@ -780,7 +816,11 @@ class AccountTax(models.Model):
         i = len(taxes) - 1
         store_included_tax_total = True
         # Keep track of the accumulated included fixed/percent amount.
-        incl_fixed_amount = incl_percent_amount = incl_division_amount = 0
+        incl_tax_amounts = {
+            'percent_taxes': [],
+            'division_taxes': [],
+            'fixed_amount': 0.0,
+        }
         # Store the tax amounts we compute while searching for the total_excluded
         cached_tax_amounts = {}
         if handle_price_include:
@@ -793,20 +833,19 @@ class AccountTax(models.Model):
                 sum_repartition_factor = sum(tax_repartition_lines.mapped("factor"))
 
                 if tax.include_base_amount:
-                    base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount)
-                    incl_fixed_amount = incl_percent_amount = incl_division_amount = 0
+                    base = recompute_base(base, incl_tax_amounts)
                     store_included_tax_total = True
-                if tax.price_include or self._context.get('force_price_include'):
+                if self._context.get('force_price_include', tax.price_include):
                     if tax.amount_type == 'percent':
-                        incl_percent_amount += tax.amount * sum_repartition_factor
+                        incl_tax_amounts['percent_taxes'].append((i, tax.amount * sum_repartition_factor))
                     elif tax.amount_type == 'division':
-                        incl_division_amount += tax.amount * sum_repartition_factor
+                        incl_tax_amounts['division_taxes'].append((i, tax.amount * sum_repartition_factor))
                     elif tax.amount_type == 'fixed':
-                        incl_fixed_amount += abs(quantity) * tax.amount * sum_repartition_factor * abs(fixed_multiplicator)
+                        incl_tax_amounts['fixed_amount'] = abs(quantity) * tax.amount * sum_repartition_factor * abs(fixed_multiplicator)
                     else:
                         # tax.amount_type == other (python)
                         tax_amount = tax._compute_amount(base, sign * price_unit, quantity, product, partner, fixed_multiplicator) * sum_repartition_factor
-                        incl_fixed_amount += tax_amount
+                        incl_tax_amounts['fixed_amount'] += tax_amount
                         # Avoid unecessary re-computation
                         cached_tax_amounts[i] = tax_amount
                     # In case of a zero tax, do not store the base amount since the tax amount will
@@ -819,7 +858,7 @@ class AccountTax(models.Model):
                         store_included_tax_total = False
                 i -= 1
 
-        total_excluded = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount)
+        total_excluded = recompute_base(base, incl_tax_amounts)
         if self._context.get('round_base', True):
             total_excluded = currency.round(total_excluded)
 
@@ -834,7 +873,7 @@ class AccountTax(models.Model):
 
         # Get product tags, account.account.tag objects that need to be injected in all
         # the tax_tag_ids of all the move lines created by the compute all for this product.
-        product_tag_ids = product.account_tag_ids.ids if product else []
+        product_tag_ids = product.sudo().account_tag_ids.ids if product else []
 
         taxes_vals = []
         i = 0
@@ -855,6 +894,8 @@ class AccountTax(models.Model):
                 # We know the total to reach for that tax, so we make a substraction to avoid any rounding issues
                 tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount)
                 cumulated_tax_included_amount = 0
+            elif price_include and i in cached_tax_amounts:
+                tax_amount = cached_tax_amounts[i]
             else:
                 tax_amount = tax.with_context(force_price_include=False)._compute_amount(
                     tax_base_amount, sign * price_unit, quantity, product, partner, fixed_multiplicator)
@@ -1117,6 +1158,7 @@ class AccountTax(models.Model):
             return {'tax': tax_values['tax_repartition_line'].tax_id}
 
         global_tax_details = {
+            'to_process': to_process,
             'base_amount_currency': 0.0,
             'base_amount': 0.0,
             'tax_amount_currency': 0.0,
@@ -1532,20 +1574,6 @@ class AccountTaxRepartitionLine(models.Model):
     )
 
     tag_ids_domain = fields.Binary(string="tag domain", help="Dynamic domain used for the tag that can be set on tax", compute="_compute_tag_ids_domain")
-
-    @api.model_create_multi
-    def create(self, vals):
-        tax_ids = {tax_id for line in vals if (tax_id := line.get('tax_id'))}
-        taxes = self.env['account.tax'].browse(tax_ids)
-        for tax in taxes.filtered('is_used'):
-            raise ValidationError(_("The tax named %s has already been used, you cannot add nor delete its tax repartition lines.", tax.name))
-        return super().create(vals)
-
-    @api.ondelete(at_uninstall=False)
-    def _check_tax_use(self):
-        for repartition_line in self:
-            if repartition_line.tax_id.is_used:
-                raise ValidationError(_("The tax named %s has already been used, you cannot add nor delete its tax repartition lines.", repartition_line.tax_id.name))
 
     @api.depends('company_id.multi_vat_foreign_country_ids', 'company_id.account_fiscal_country_id')
     def _compute_tag_ids_domain(self):

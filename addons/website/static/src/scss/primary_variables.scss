@@ -1973,11 +1973,13 @@ $o-base-website-values-palette: (
     'display-3-font-size': null, // Default to BS
     'display-4-font-size': null, // Default to BS
 
-    // Forced to use `rem` by default instead of Bootstrap default using `em` as
-    // the editor would not be working with `em` values for now. This will have
-    // the drawback of changing the default small behavior of bootstrap which
-    // can normally be put inside titles etc... but that's not the way the
-    // editor will allow to use it for now. This is a compromise.
+    // Note that this custom value is not directly linked to the
+    // "small-font-size" variable of bootstrap. Indeed we want the default
+    // "small" behavior of bootstrap to stay the same: being "smaller" that the
+    // context where it is used (em units). Here we want to define a specific
+    // fixed font-size for a smaller font-size than the base font size. However,
+    // the default value for the "smaller" behavior of Bootstrap is based on
+    // this value anyway. See SMALLER_FONT_SIZE_RATIO.
     'small-font-size': 0.875rem,
 
     'google-fonts': null,

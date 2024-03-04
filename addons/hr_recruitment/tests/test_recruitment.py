@@ -12,14 +12,17 @@ class TestRecruitment(TransactionCase):
         dup1, dup2, no_dup = self.env['hr.applicant'].create([
             {
                 'name': 'Application 1',
+                'partner_name': 'Application 1',
                 'email_from': 'laurie.poiret@aol.ru',
             },
             {
                 'name': 'Application 2',
+                'partner_name': 'Application 2',
                 'email_from': 'laurie.POIRET@aol.ru',
             },
             {
                 'name': 'Application 3',
+                'partner_name': 'Application 3',
                 'email_from': 'laure.poiret@aol.ru',
             },
         ])
@@ -35,37 +38,44 @@ class TestRecruitment(TransactionCase):
             {
                 'active': False,  # Refused/archived application should still count
                 'name': 'Application A',
+                'partner_name': 'Application A',
                 'email_from': 'abc@odoo.com',
                 'partner_phone': '123',
                 'partner_mobile': '14-15-16',
             },
             {
                 'name': 'Application B',
+                'partner_name': 'Application B',
                 'partner_phone': '456',
                 'partner_mobile': '11-12-13',
             },
             {
                 'name': 'Application C',
+                'partner_name': 'Application C',
                 'email_from': 'def@odoo.com',
                 'partner_phone': '123',
                 'partner_mobile': '14-15-16',
             },
             {
                 'name': 'Application D',
+                'partner_name': 'Application D',
                 'email_from': 'def@odoo.com',
                 'partner_phone': '456',
                 'partner_mobile': '14-15-16',
             },
             {
                 'name': 'Application E',
+                'partner_name': 'Application E',
                 'partner_phone': '',
             },
             {
                 'name': 'Application F',
+                'partner_name': 'Application F',
                 'partner_phone': '11-12-13', # In case phone is configured in a wrong field
             },
             {
                 'name': 'Application G',
+                'partner_name': 'Application G',
                 'partner_phone': '',
             },
         ])
@@ -76,4 +86,3 @@ class TestRecruitment(TransactionCase):
         self.assertEqual(D.application_count, 3) # A, B, C
         self.assertEqual(E.application_count, 0) # Should not match with G
         self.assertEqual(F.application_count, 1) # B
-

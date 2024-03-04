@@ -23,6 +23,13 @@ export class DateTimePickerPopover extends Component {
 
     static template = "web.DateTimePickerPopover";
 
+    get isDateTimeRange() {
+        return (
+            this.props.pickerProps.type === "datetime" ||
+            Array.isArray(this.props.pickerProps.value)
+        );
+    }
+
     //-------------------------------------------------------------------------
     // Lifecycle
     //-------------------------------------------------------------------------

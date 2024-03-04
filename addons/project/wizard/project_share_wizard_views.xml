@@ -25,7 +25,7 @@
                         <label for="partner_ids" string="Invite People" invisible="access_mode == 'read'"/>
                         <label for="partner_ids" invisible="access_mode == 'edit'"/>
                     </div>
-                    <field name="partner_ids" widget="many2many_tags_email" options="{'no_quick_create': True}" placeholder="Add contacts to share the project..." nolabel="1" context="{'show_email': True, 'force_email':True}" class="mb-4"/>
+                    <field name="partner_ids" widget="many2many_tags_email" options="{'no_quick_create': True}" placeholder="Add contacts to share the project..." nolabel="1" context="{'form_view_ref': 'base.view_partner_simple_form'}" class="mb-4"/>
                 </group>
                 <field name="note" placeholder="Add a note" nolabel="1"/>
                 <footer>

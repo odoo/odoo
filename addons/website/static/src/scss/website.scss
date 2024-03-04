@@ -297,7 +297,8 @@ $-seen-urls: ();
     .o_menu_image_placeholder {
         width: 80px !important;
     }
-    #top_menu {
+    // TODO in master: remove the `#top_menu` selector.
+    #top_menu, .top_menu {
         flex-wrap: nowrap !important;
         &.o_menu_loading {
             overflow: hidden !important;
@@ -996,10 +997,6 @@ $-transition-duration: 200ms;
     }
 }
 
-.o_hoverable_dropdown .nav-link.dropdown-toggle:focus {
-    outline: none;
-}
-
 // Navbar
 .navbar .o_extra_menu_items > .show {
     > li {
@@ -1038,7 +1035,8 @@ header {
         z-index: $zindex-website-header;
     }
     &:not(.o_header_no_transition) {
-        #o_main_nav {
+        // TODO in master: remove the `#o_main_nav` selector.
+        #o_main_nav, .o_main_nav {
             transition: all $-transition-duration, color 0ms;
         }
         .navbar-brand {
@@ -1077,7 +1075,8 @@ header {
         $-is-hamburger: o-website-value('header-template') == 'hamburger';
         @include media-breakpoint-up(md) {
             @if $-is-hamburger {
-                #o_main_nav {
+                // TODO in master: remove the `#o_main_nav` selector.
+                #o_main_nav, .o_main_nav {
                     padding-top: $spacer * 0.5;
                     padding-bottom: $spacer * 0.5;
                 }
@@ -1085,7 +1084,8 @@ header {
         }
     }
 
-    #o_main_nav {
+    // TODO in master: remove the `#o_main_nav` selector.
+    #o_main_nav, .o_main_nav {
         flex-direction: inherit;
     }
 
@@ -1145,7 +1145,8 @@ header {
                         max-width: 100%;
                         padding: 0 0 $spacer 0;
                     }
-                    #o_main_nav {
+                    // TODO in master: remove the `#o_main_nav` selector.
+                    #o_main_nav, .o_main_nav {
                         flex-direction: column;
                         align-items: start;
                         padding: 0;
@@ -1184,9 +1185,14 @@ header {
         @include o-apply-colors('header-sales_one-custom');
         @include o-add-gradient('menu-secondary-gradient');
     }
-    header#top > nav:not(.o_header_mobile) #o_main_nav > .container {
-        // TODO: remove in master and add "align-items-center" in the XML.
-        align-items: center;
+    header#top > nav:not(.o_header_mobile) {
+        // TODO in master: remove the `#o_main_nav` selector.
+        #o_main_nav,.o_main_nav {
+            > .container {
+                // TODO: remove in master and add "align-items-center" in the XML.
+                align-items: center;
+            }
+        }
     }
 } @else if o-website-value('header-template') == 'sales_two' {
     #wrapwrap .o_header_sales_two_top {
@@ -1194,9 +1200,14 @@ header {
         @include o-apply-colors('header-sales_two-custom');
         @include o-add-gradient('menu-secondary-gradient');
     }
-    header#top > nav:not(.o_header_mobile) #o_main_nav #top_menu {
-        // TODO: remove in master and add "align-items-center" in the XML.
-        align-items: center;
+    header#top > nav:not(.o_header_mobile) {
+        // TODO in master: remove the `#o_main_nav` and `#top_menu` selectors.
+        #o_main_nav, .o_main_nav {
+            #top_menu, .top_menu {
+                // TODO: remove in master and add "align-items-center" in the XML.
+                align-items: center;
+            }
+        }
     }
 } @else if o-website-value('header-template') == 'sales_three' {
     #wrapwrap .o_header_sales_three_top {
@@ -1210,9 +1221,14 @@ header {
         @include o-apply-colors('header-sales_four-custom');
         @include o-add-gradient('menu-secondary-gradient');
     }
-    header#top > nav:not(.o_header_mobile) #o_main_nav .navbar-nav {
-        // TODO: remove in master and add "align-items-center" in the XML.
-        align-items: center;
+    header#top > nav:not(.o_header_mobile) {
+        // TODO in master: remove the `#o_main_nav` selector.
+        #o_main_nav, .o_main_nav {
+            .navbar-nav {
+                // TODO: remove in master and add "align-items-center" in the XML.
+                align-items: center;
+            }
+        }
     }
 }
 
@@ -1673,6 +1689,11 @@ input[value*="data-oe-translation-initial-sha"] {
         box-shadow: none;
         z-index: 0;
     }
+}
+
+// Notification
+.o_notification_manager .o_notification {
+    --Notification__background-color: #{$body-bg};
 }
 
 //------------------------------------------------------------------------------

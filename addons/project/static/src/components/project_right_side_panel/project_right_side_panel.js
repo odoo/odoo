@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from '@web/core/utils/hooks';
-import { formatFloat } from "@web/core/utils/numbers";
+import { formatFloat } from "@web/views/fields/formatters";
 import { ViewButton } from '@web/views/view_button/view_button';
 import { FormViewDialog } from '@web/views/view_dialogs/form_view_dialog';
 

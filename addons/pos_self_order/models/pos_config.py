@@ -320,10 +320,26 @@ class PosConfig(models.Model):
             )
         )
 
+    def _get_kitchen_printer(self):
+        self.ensure_one()
+        printerData = {}
+        for printer in self.printer_ids:
+            printerData[printer.id] = {
+                "printer_type": printer.printer_type,
+                "proxy_ip": printer.proxy_ip,
+                "product_categories_ids": printer.product_categories_ids.ids,
+            }
+        return printerData
+
+    def _get_self_ordering_payment_methods_data(self, payment_methods):
+        excluded_fields = ['image']
+        payment_search_fields = self.current_session_id._loader_params_pos_payment_method()['search_params']['fields']
+        filtered_fields = [field for field in payment_search_fields if field not in excluded_fields]
+        return payment_methods.read(filtered_fields)
+
     def _get_self_ordering_data(self):
         self.ensure_one()
-        payment_search_params = self.current_session_id._loader_params_pos_payment_method()
-        payment_methods = self._get_allowed_payment_methods().read(payment_search_params['search_params']['fields'])
+        payment_methods = self._get_self_ordering_payment_methods_data(self._get_allowed_payment_methods())
         default_language = self.self_ordering_default_language_id.read(["code", "name", "iso_code", "flag_image_url"])
 
         return {
@@ -356,6 +372,7 @@ class PosConfig(models.Model):
                 "receipt_header": self.receipt_header,
                 "receipt_footer": self.receipt_footer,
             },
+            "kitchen_printers": self._get_kitchen_printer(),
         }
 
     def _get_combos_data(self):
@@ -378,7 +395,7 @@ class PosConfig(models.Model):
         for image in images:
             encoded_images.append({
                 'id': image.id,
-                'data': image.datas.decode('utf-8'),
+                'data': image.sudo().datas.decode('utf-8'),
             })
         return encoded_images
 

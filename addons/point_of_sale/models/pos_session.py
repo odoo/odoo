@@ -799,7 +799,8 @@ class PosSession(models.Model):
                     stock_moves = self.env['stock.move'].sudo().search([
                         ('picking_id', 'in', order.picking_ids.ids),
                         ('company_id.anglo_saxon_accounting', '=', True),
-                        ('product_id.categ_id.property_valuation', '=', 'real_time')
+                        ('product_id.categ_id.property_valuation', '=', 'real_time'),
+                        ('product_id.type', '=', 'product'),
                     ])
                     for move in stock_moves:
                         exp_key = move.product_id._get_product_accounts()['expense']
@@ -829,6 +830,7 @@ class PosSession(models.Model):
                     ('picking_id', 'in', global_session_pickings.ids),
                     ('company_id.anglo_saxon_accounting', '=', True),
                     ('product_id.categ_id.property_valuation', '=', 'real_time'),
+                    ('product_id.type', '=', 'product'),
                 ])
                 for move in stock_moves:
                     exp_key = move.product_id._get_product_accounts()['expense']
@@ -1687,6 +1689,8 @@ class PosSession(models.Model):
         loaded_data['pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
         loaded_data['open_orders'] = self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui()
         loaded_data['partner_commercial_fields'] = self.env['res.partner']._commercial_fields()
+        loaded_data['show_product_images'] = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.show_product_images', 'yes')
+        loaded_data['show_category_images'] = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.show_category_images', 'yes')
 
     @api.model
     def _pos_ui_models_to_load(self):

@@ -57,7 +57,7 @@ export const userService = {
                 return settings;
             },
             async setUserSettings(key, value) {
-                settings = await env.services.orm.call(
+                const changedSettings = await env.services.orm.call(
                     "res.users.settings",
                     "set_res_users_settings",
                     [[this.settings.id]],
@@ -67,6 +67,7 @@ export const userService = {
                         },
                     }
                 );
+                Object.assign(settings, changedSettings);
             },
             name: session.name,
             userName: session.username,

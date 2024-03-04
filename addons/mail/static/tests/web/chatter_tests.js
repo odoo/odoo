@@ -54,6 +54,7 @@ QUnit.test("can post a message on a record thread", async (assert) => {
                         attachment_tokens: [],
                         canned_response_ids: [],
                         message_type: "comment",
+                        partner_additional_values: {},
                         partner_emails: [],
                         partner_ids: [],
                         subtype_xmlid: "mail.mt_comment",
@@ -95,6 +96,7 @@ QUnit.test("can post a note on a record thread", async (assert) => {
                         body: "hey",
                         canned_response_ids: [],
                         message_type: "comment",
+                        partner_additional_values: {},
                         partner_emails: [],
                         partner_ids: [],
                         subtype_xmlid: "mail.mt_note",
@@ -843,5 +845,5 @@ QUnit.test("Mentions in composer should still work when using pager", async () =
     await click("button", { text: "Log note" });
     await click(".o_pager_next");
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestion");
+    await contains(".o-mail-Composer-suggestion", { count: 2 });
 });

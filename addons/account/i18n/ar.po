@@ -3,16 +3,16 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4600,8 +4600,8 @@ msgid ""
 "Create a structured report with multiple sections for convenient navigation "
 "and simultaneous printing."
 msgstr ""
-"أنشئ تقريرًا منظمًا يشتمل على أقسام متعددة لسهولة التنقل والطباعة المتزامنة."
-" "
+"أنشئ تقريراً منظماً يحتوي على أقسام متعددة للتنقل بسهولة والطباعة في الوقت "
+"ذاته. "
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
@@ -4953,7 +4953,7 @@ msgstr "الرصيد الحالي "
 #: model:account.account,name:account.1_current_liabilities
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__liability_current
 msgid "Current Liabilities"
-msgstr "الالتزامات المتداولة "
+msgstr "الالتزامات الجارية "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__current_statement_balance
@@ -6297,15 +6297,6 @@ msgid "Epd Needed"
 msgstr "Epd Needed"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-#, python-format
-msgid ""
-"Error while loading the localization. You should probably update your "
-"localization app first."
-msgstr ""
-
-#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
@@ -6314,6 +6305,17 @@ msgstr ""
 #, python-format
 msgid "Equity"
 msgstr "رأس المال "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Error while loading the localization. You should probably update your "
+"localization app first."
+msgstr ""
+"حدث خطأ أثناء تحميل الأقلمة. ربما ينبغي عليك تحديث تطبيق الأقلمة الخاص بك "
+"أولاً. "
 
 #. module: account
 #. odoo-python
@@ -7930,6 +7932,13 @@ msgstr "نطاق الرمز البريدي خاطئ. الرجاء تكوينه �
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr "النطاق غير صالح للتعبير '%s' للبند '%s': %s "
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Invalid fiscal year last day"
@@ -8188,7 +8197,7 @@ msgstr "مفوتر"
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #, python-format
 msgid "Invoices"
-msgstr "الفواتير"
+msgstr "فواتير العملاء "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -8213,10 +8222,39 @@ msgstr "إحصائيات الفواتير"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "Invoices are being sent in the background."
+msgstr "يتم إرسال الفواتير في الخلفية. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices in error"
+msgstr "الفواتير التي تحتوي على خطأ "
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Invoices owed to you"
 msgstr "الفواتير المستحقة لك"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices sent"
+msgstr "الفواتير المرسلة "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices sent successfully."
+msgstr "تم إرسال الفواتير بنجاح. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -9352,7 +9390,7 @@ msgstr "بيان:"
 #. module: account
 #: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr "معالج دمج الشريك"
+msgstr "معالج دمج الوكيل "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error
@@ -9617,6 +9655,13 @@ msgid "Never"
 msgstr "مطلقًا"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "New"
+msgstr "جديد"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "New Journal Name"
 msgstr "اسم جديد لدفتر اليومية"
@@ -9795,7 +9840,7 @@ msgstr "الأصول غير المتداولة"
 #: model:account.account,name:account.1_non_current_liabilities
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__liability_non_current
 msgid "Non-current Liabilities"
-msgstr "الالتزامات غير المتداولة "
+msgstr "الالتزامات غير الجارية "
 
 #. module: account
 #: model:account.account,name:account.1_non_current_assets
@@ -10132,6 +10177,13 @@ msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr "يوجد حساب بنكي واحد أو أكثر لهذا الشريك مستخدم من قِبَل غيره "
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "One or more invoices couldn't be processed."
+msgstr "تعذرت معالجة فاتورة واحدة أو أكثر. "
+
+#. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
 msgid "Online Payments"
 msgstr "المدفوعات عبر الإنترنت "
@@ -10206,8 +10258,11 @@ msgid "Oops"
 msgstr "عذراً "
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
+#, python-format
 msgid "Open"
 msgstr "فتح"
 
@@ -11045,7 +11100,7 @@ msgstr "نسبة من السعر"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__division
 msgid "Percentage of Price Tax Included"
-msgstr "يشمل ضريبة نسبة من السعر "
+msgstr "نسبة من السعر شاملة الضريبة "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__percentage
@@ -11770,6 +11825,14 @@ msgstr ""
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
 msgstr "إعادة إنشاء تسلسل قيود اليومية. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Removed"
+msgstr "تمت الإزالة "
 
 #. module: account
 #: model:account.account,name:account.1_expense_rent
@@ -12605,15 +12668,29 @@ msgid ""
 "money."
 msgstr ""
 "إرسال فواتير مزيفة مع رقم حساب احتيالي هي ممارسة تصيّد احتيالية شائعة. "
-"لحماية نفسك، تأكد دائمة من صحة أرقام الحسابات البنكية الجديدة، ويُفضل القيام"
-" بذلك عن طريق المورّد، حيث إن التصيّد الاحتيالي يحدث عادة عندما لا تكون "
-"عناوين البريد الإلكتروني الخاصة بهم آمنة. بمجرد أن تتحقق من الصحة، سيكون "
-"بوسعك تفعيل إمكانية إرسال المال. "
+"لحماية نفسك، تأكد دائماً من صحة أرقام الحسابات البنكية الجديدة، ويُفضل "
+"القيام بذلك عن طريق المورّد، حيث إن التصيّد الاحتيالي يحدث عادة عندما لا "
+"تكون عناوين البريد الإلكتروني الخاصة بهم آمنة. بمجرد أن تتحقق من الصحة، "
+"سيكون بوسعك تفعيل إمكانية إرسال المال. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "Sending invoices"
+msgstr "جاري إرسال الفواتير "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Sent"
 msgstr "تم الإرسال"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Sent invoices"
+msgstr "الفواتير المرسلة "
 
 #. module: account
 #: model:mail.template,description:account.mail_template_data_payment_receipt
@@ -16728,8 +16805,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
 msgstr ""
 "لا يمكنك استيراد \"openning_balance\" إذا تم ترحيل الحركة الافتتاحية (%s) "
 "بالفعل. إذا كنت متأكداً تماماً من أنك ترغب في تعديل الرصيد الافتتاحي "
@@ -17213,7 +17290,7 @@ msgstr "مثال: domain.com "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "following partners."
-msgstr ""
+msgstr "الوكلاء. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17266,6 +17343,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__percentage
 msgid "in percentage"
 msgstr "بالنسبة المئوية "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "invoices"
+msgstr "فواتير العملاء "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account

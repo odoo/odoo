@@ -18,7 +18,12 @@ export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
     }
 
     get sources() {
-        return super.sources.concat(
+        const sources = super.sources;
+        if (!this.props.canCreate)
+        {
+            return sources;
+        }
+        return sources.concat(
             {
                 options: async (request) => {
                     if (this.validateSearchTerm(request)) {
@@ -62,7 +67,19 @@ export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
 
 }
 
-export class PartnerAutoCompleteMany2one extends Many2OneField {}
+PartnerMany2XAutocomplete.props = {
+    ...Many2XAutocomplete.props,
+    canCreate: { type: Boolean, optional: true },
+}
+
+export class PartnerAutoCompleteMany2one extends Many2OneField {
+    get Many2XAutocompleteProps() {
+        return {
+            ...super.Many2XAutocompleteProps,
+            canCreate: this.props.canCreate,
+        };
+    }
+}
 
 PartnerAutoCompleteMany2one.components = {
     ...Many2OneField.components,

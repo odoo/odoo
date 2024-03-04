@@ -28,10 +28,8 @@ class kioskAttendanceApp extends Component{
         this.rpc = useService("rpc");
         this.barcode = useService("barcode");
         this.notification = useService("notification");
-        this.companyImageUrl = url("/web/image", {
-            model: "res.company",
-            id: this.props.companyId,
-            field: "logo",
+        this.companyImageUrl = url("/web/binary/company_logo", {
+            company: this.props.companyId,
         });
         this.lockScanner = false;
         if (this.props.kioskMode !== 'manual'){

@@ -1056,7 +1056,7 @@ export class ListRenderer extends Component {
             optionalColumn.forEach((col) => {
                 this.optionalActiveFields[col.name] = optionalActiveFields.includes(col.name);
             });
-        } else {
+        } else if (optionalActiveFields !== "") {
             for (const col of optionalColumn) {
                 this.optionalActiveFields[col.name] = col.optional === "show";
             }

@@ -5037,7 +5037,7 @@ msgstr "Wenig Bestand? Füllen wir ihn auf."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__mto_pull_id
 msgid "MTO rule"
-msgstr "Einzelfertigungsregel"
+msgstr "Auftragsfertigungregel"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -6918,7 +6918,7 @@ msgstr "Verpacken"
 msgid "Put your products in packs (e.g. parcels, boxes) and track them"
 msgstr ""
 "Packen Sie Ihre Produkte in Verpackungen (z. B. Pakete, Kisten) und "
-"verfolgen Sie sie."
+"verfolgen Sie sie"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_putaway_rule
@@ -7483,7 +7483,7 @@ msgstr "Mengen auffüllen"
 #: model:stock.route,name:stock.route_warehouse0_mto
 #, python-format
 msgid "Replenish on Order (MTO)"
-msgstr "Auffüllung nach Auftrag (Einzelfertigung)"
+msgstr "Auffüllung nach Auftrag (Auftragsfertigung)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
@@ -7559,7 +7559,7 @@ msgstr "Zählung anfordern"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Request your vendors to deliver to your customers"
-msgstr "Bitten Sie Ihre Lieferanten, direkt an Ihre Kunden zu liefern."
+msgstr "Bitten Sie Ihre Lieferanten, direkt an Ihre Kunden zu liefern"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_sign_delivery
@@ -7812,6 +7812,14 @@ msgid ""
 msgstr ""
 "Routen werden auch für die Beschaffung aus eigenen Lagerhäusern definiert "
 "und können bei Produkten oder Produktkategorien ausgewählt werden."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr "Regel %s gehört zu %s, während die Route zu %s gehört."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8220,7 +8228,7 @@ msgstr "Legen Sie Eigentümer für gelagerte Produkte fest"
 msgid "Set product attributes (e.g. color, size) to manage variants"
 msgstr ""
 "Legen Sie Produktattribute fest (z. B. Farbe, Größe), um Varianten zu "
-"verwalten."
+"verwalten"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_to_zero_quants_tree
@@ -9700,7 +9708,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Track product location in your warehouse"
-msgstr "Verfolgen Sie den Aufbewahrungsort des Produkts in Ihrem Lagerhaus"
+msgstr "Verfolgen Sie den Lagerort von Produkten in Ihrem Lagerhaus"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product

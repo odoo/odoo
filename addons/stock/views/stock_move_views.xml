@@ -101,7 +101,7 @@
                     <field name="product_id"/>
                     <field name="show_details_visible"/>
                     <field name="product_uom_qty"/>
-                    <field name="product_qty"/>
+                    <field name="product_qty" readonly="1" force_save="0"/>
                     <field name="quantity"/>
                     <field name="is_inventory"/>
                     <field name="state"/>
@@ -123,7 +123,11 @@
                                         <span>Quantity <field name="quantity"/></span>
                                     </div>
                                     <div invisible="is_inventory">
-                                        <span>Quantity <field name="quantity"/></span>
+                                        <span>
+                                            Quantity <field name="quantity"/> /
+                                            <field name="product_uom_qty" readonly="state != 'draft'"/>
+                                            <field name="product_uom" groups="uom.group_uom" class="ms-1"/>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -160,11 +164,11 @@
                     <field name="show_lots_m2o" invisible="1"/>
                     <group>
                         <group>
-                            <field name="product_id" readonly="1"/>
+                            <field name="product_id" readonly="id or move_line_ids"/>
                             <label for="product_uom_qty"/>
                             <div class="o_row">
-                                <span><field name="product_uom_qty" readonly="1" nolabel="1"/></span>
-                                <span><field name="product_uom" groups="uom.group_uom" readonly="1" nolabel="1" options="{'no_open': True}"/></span>
+                                <span><field name="product_uom_qty" readonly="state != 'draft'" nolabel="1"/></span>
+                                <span><field name="product_uom" groups="uom.group_uom" readonly="state != 'draft'" nolabel="1" options="{'no_open': True}"/></span>
                             </div>
                         </group>
                         <group/>
@@ -174,8 +178,8 @@
                         <widget class="btn btn-link btn-group" name="import_lots" invisible="not display_import_lot"/>
                     </div>
                     <field name="move_line_ids"
-                           readonly="state == 'cancel' or (state == 'done' and is_locked)"
-                           context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree', 'form_view_ref': 'stock.view_move_line_mobile_form', 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"
+                           readonly="state == 'cancel' or (state == 'done' and is_locked) or not product_id"
+                           context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree', 'form_view_ref': 'stock.view_move_line_mobile_form', 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id, 'active_picking_id': picking_id}"
                            widget="sml_x2_many"/>
                 </form>
             </field>

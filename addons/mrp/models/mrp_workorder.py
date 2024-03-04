@@ -145,26 +145,27 @@ class MrpWorkorder(models.Model):
                                      domain="[('allow_workorder_dependencies', '=', True), ('id', '!=', id), ('production_id', '=', production_id)]",
                                      copy=False)
 
-    @api.depends('production_availability', 'blocked_by_workorder_ids', 'blocked_by_workorder_ids.state')
+    @api.depends('production_availability', 'blocked_by_workorder_ids.state')
     def _compute_state(self):
-        # Force the flush of the production_availability, the wo state is modify in the _compute_reservation_state
-        # It is a trick to force that the state of workorder is computed as the end of the
-        # cyclic depends with the mo.state, mo.reservation_state and wo.state
+        # Force to compute the production_availability right away.
+        # It is a trick to force that the state of workorder is computed at the end of the
+        # cyclic depends with the mo.state, mo.reservation_state and wo.state and avoid recursion error
+        self.mapped('production_availability')
         for workorder in self:
             if workorder.state == 'pending':
                 if all([wo.state in ('done', 'cancel') for wo in workorder.blocked_by_workorder_ids]):
-                    workorder.state = 'ready' if workorder.production_id.reservation_state == 'assigned' else 'waiting'
+                    workorder.state = 'ready' if workorder.production_availability == 'assigned' else 'waiting'
                     continue
             if workorder.state not in ('waiting', 'ready'):
                 continue
             if not all([wo.state in ('done', 'cancel') for wo in workorder.blocked_by_workorder_ids]):
                 workorder.state = 'pending'
                 continue
-            if workorder.production_id.reservation_state not in ('waiting', 'confirmed', 'assigned'):
+            if workorder.production_availability not in ('waiting', 'confirmed', 'assigned'):
                 continue
-            if workorder.production_id.reservation_state == 'assigned' and workorder.state == 'waiting':
+            if workorder.production_availability == 'assigned' and workorder.state == 'waiting':
                 workorder.state = 'ready'
-            elif workorder.production_id.reservation_state != 'assigned' and workorder.state == 'ready':
+            elif workorder.production_availability != 'assigned' and workorder.state == 'ready':
                 workorder.state = 'waiting'
 
     @api.depends('production_state', 'date_start', 'date_finished')
@@ -248,7 +249,8 @@ class MrpWorkorder(models.Model):
                     'date_from': wo.date_start,
                     'date_to': wo.date_finished,
                 })
-            elif wo.date_start and wo.date_finished:
+            elif wo.date_start:
+                wo.date_finished = wo._calculate_date_finished()
                 wo.leave_id = wo.env['resource.calendar.leaves'].create({
                     'name': wo.display_name,
                     'calendar_id': wo.workcenter_id.resource_calendar_id.id,
@@ -407,6 +409,9 @@ class MrpWorkorder(models.Model):
     def _onchange_date_finished(self):
         if self.date_start and self.date_finished and self.workcenter_id:
             self.duration_expected = self._calculate_duration_expected()
+        if not self.date_finished and self.date_start:
+            raise UserError(_("It is not possible to unplan one single Work Order. "
+                              "You should unplan the Manufacturing Order instead in order to unplan all the linked operations."))
 
     def _calculate_duration_expected(self, date_start=False, date_finished=False):
         interval = self.workcenter_id.resource_calendar_id.get_work_duration_data(
@@ -587,6 +592,11 @@ class MrpWorkorder(models.Model):
             if wo.state in ('done', 'cancel'):
                 continue
 
+            if wo.production_id.state != 'progress':
+                wo.production_id.write({
+                    'date_start': fields.Datetime.now()
+                })
+
             if wo.product_tracking == 'serial' and wo.qty_producing == 0:
                 wo.qty_producing = 1.0
             elif wo.qty_producing == 0:
@@ -597,10 +607,6 @@ class MrpWorkorder(models.Model):
                     wo._prepare_timeline_vals(wo.duration, fields.Datetime.now())
                 )
 
-            if wo.production_id.state != 'progress':
-                wo.production_id.write({
-                    'date_start': fields.Datetime.now()
-                })
             if wo.state == 'progress':
                 continue
             date_start = fields.Datetime.now()

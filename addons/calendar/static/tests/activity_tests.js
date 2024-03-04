@@ -35,3 +35,33 @@ QUnit.test("activity click on Reschedule", async () => {
     await click(".btn", { text: "Reschedule" });
     await contains(".o_calendar_view");
 });
+
+QUnit.test("Can cancel activity linked to an event", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Milan Kundera" });
+    const activityTypeId = pyEnv["mail.activity.type"].create({
+        icon: "fa-calendar",
+        name: "Meeting",
+    });
+    const attendeeId = pyEnv["calendar.attendee"].create({
+        partner_id: partnerId,
+    });
+    const calendaMeetingId = pyEnv["calendar.event"].create({
+        res_model: "calendar.event",
+        name: "meeting1",
+        start: "2022-07-06 06:30:00",
+        attendee_ids: [attendeeId],
+    });
+    pyEnv["mail.activity"].create({
+        name: "Small Meeting",
+        activity_type_id: activityTypeId,
+        can_write: true,
+        res_id: partnerId,
+        res_model: "res.partner",
+        calendar_event_id: calendaMeetingId,
+    });
+    const { openFormView } = await start();
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Activity .btn", { text: "Cancel" });
+    await contains(".o-mail-Activity", { count: 0 });
+});

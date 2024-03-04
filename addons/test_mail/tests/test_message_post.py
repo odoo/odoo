@@ -1056,7 +1056,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         test_record = self.test_record.with_env(self.env)
         test_record.message_subscribe((self.partner_1 | self.partner_admin).ids)
 
-        with freeze_time(now), \
+        with self.mock_datetime_and_now(now), \
              self.assertMsgWithoutNotifications(), \
              self.capture_triggers(cron_id) as capt:
             msg = test_record.message_post(
@@ -1076,12 +1076,12 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertEqual(schedules.scheduled_datetime, scheduled_datetime)
 
         # trigger cron now -> should not sent as in future
-        with freeze_time(now):
+        with self.mock_datetime_and_now(now):
             self.env['mail.message.schedule'].sudo()._send_notifications_cron()
         self.assertTrue(schedules.exists(), msg='Should not have sent the message')
 
         # Send the scheduled message from the cron at right date
-        with freeze_time(now + timedelta(days=5)), self.mock_mail_gateway(mail_unlink_sent=True):
+        with self.mock_datetime_and_now(now + timedelta(days=5)), self.mock_mail_gateway(mail_unlink_sent=True):
             self.env['mail.message.schedule'].sudo()._send_notifications_cron()
         self.assertFalse(schedules.exists(), msg='Should have sent the message')
         # check notifications have been sent
@@ -1099,11 +1099,11 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         })
 
         # Send the scheduled message from the CRON
-        with freeze_time(now + timedelta(days=5)), self.assertNoNotifications():
+        with self.mock_datetime_and_now(now + timedelta(days=5)), self.assertNoNotifications():
             self.env['mail.message.schedule'].sudo()._send_notifications_cron()
 
         # schedule in the past = send when posting
-        with freeze_time(now), \
+        with self.mock_datetime_and_now(now), \
              self.mock_mail_gateway(mail_unlink_sent=False), \
              self.capture_triggers(cron_id) as capt:
             msg = test_record.message_post(

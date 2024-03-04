@@ -171,8 +171,11 @@ class ProductTemplate(models.Model):
     def _compute_product_document_count(self):
         for template in self:
             template.product_document_count = template.env['product.document'].search_count([
-                ('res_model', '=', 'product.template'),
-                ('res_id', '=', template.id),
+                '|',
+                    '&', ('res_model', '=', 'product.template'), ('res_id', '=', template.id),
+                    '&',
+                        ('res_model', '=', 'product.product'),
+                        ('res_id', 'in', template.product_variant_ids.ids),
             ])
 
     @api.depends('image_1920', 'image_1024')
@@ -608,20 +611,33 @@ class ProductTemplate(models.Model):
                 'default_res_id': self.id,
                 'default_company_id': self.company_id.id,
             },
-            'domain': [('res_id', 'in', self.ids), ('res_model', '=', self._name)],
+            'domain': [
+                '|',
+                    '&', ('res_model', '=', 'product.template'), ('res_id', '=', self.id),
+                    '&',
+                        ('res_model', '=', 'product.product'),
+                        ('res_id', 'in', self.product_variant_ids.ids),
+            ],
             'target': 'current',
             'help': """
                 <p class="o_view_nocontent_smiling_face">
                     %s
-                </p><p>
+                </p>
+                <p>
                     %s
                     <br/>
                     %s
                 </p>
+                <p>
+                    <a class="oe_link" href="https://www.odoo.com/documentation/17.0/_downloads/5f0840ed187116c425fdac2ab4b592e1/pdfquotebuilderexamples.zip">
+                    %s
+                    </a>
+                </p>
             """ % (
                 _("Upload files to your product"),
-                _("Use this feature to store any files you would like to share with your customers."),
-                _("E.G: product description, ebook, legal notice, ..."),
+                _("Use this feature to store any files you would like to share with your customers"),
+                _("(e.g: product description, ebook, legal notice, ...)."),
+                _("Download examples")
             )
         }
 
@@ -833,7 +849,9 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return self.product_variant_ids.filtered(lambda p: p._is_variant_possible(parent_combination))
 
-    def _get_attribute_exclusions(self, parent_combination=None, parent_name=None):
+    def _get_attribute_exclusions(
+        self, parent_combination=None, parent_name=None, combination_ids=None
+    ):
         """Return the list of attribute exclusions of a product.
 
         :param parent_combination: the combination from which
@@ -842,6 +860,8 @@ class ProductTemplate(models.Model):
         :type parent_combination: recordset `product.template.attribute.value`
         :param parent_name: the name of the parent product combination.
         :type parent_name: str
+        :param list combination: The combination of the product, as a
+            list of `product.template.attribute.value` ids.
 
         :return: dict of exclusions
             - exclusions: from this product itself
@@ -860,12 +880,14 @@ class ProductTemplate(models.Model):
         archived_products = self.with_context(active_test=False).product_variant_ids.filtered(lambda l: not l.active)
         active_combinations = set(tuple(product.product_template_attribute_value_ids.ids) for product in self.product_variant_ids)
         return {
-            'exclusions': self._complete_inverse_exclusions(self._get_own_attribute_exclusions()),
+            'exclusions': self._complete_inverse_exclusions(
+                self._get_own_attribute_exclusions(combination_ids=combination_ids)
+            ),
             'archived_combinations': list(set(
                 tuple(product.product_template_attribute_value_ids.ids)
                 for product in archived_products
                 if product.product_template_attribute_value_ids and all(
-                    ptav.ptav_active
+                    ptav.ptav_active or combination_ids and ptav.id in combination_ids
                     for ptav in product.product_template_attribute_value_ids
                 )
             ) - active_combinations),
@@ -891,9 +913,11 @@ class ProductTemplate(models.Model):
 
         return result
 
-    def _get_own_attribute_exclusions(self):
+    def _get_own_attribute_exclusions(self, combination_ids=None):
         """Get exclusions coming from the current template.
 
+        :param list combination: The combination of the product, as a
+            list of `product.template.attribute.value` ids.
         Dictionnary, each product template attribute value is a key, and for each of them
         the value is an array with the other ptav that they exclude (empty if no exclusion).
         """
@@ -906,7 +930,9 @@ class ProductTemplate(models.Model):
                     lambda filter_line: filter_line.product_tmpl_id == self
                 ) for value in filter_line.value_ids if value.ptav_active
             ]
-            for ptav in product_template_attribute_values if ptav.ptav_active
+            for ptav in product_template_attribute_values if (
+                ptav.ptav_active or combination_ids and ptav.id in combination_ids
+            )
         }
 
     def _get_parent_attribute_exclusions(self, parent_combination):

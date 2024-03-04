@@ -12,6 +12,7 @@ class IrDefault(models.Model):
     _name = 'ir.default'
     _description = 'Default Values'
     _rec_name = 'field_id'
+    _allow_sudo_commands = False
 
     field_id = fields.Many2one('ir.model.fields', string="Field", required=True,
                                ondelete='cascade', index=True)

@@ -237,6 +237,93 @@ QUnit.module("Web Components", (hooks) => {
         );
     });
 
+    QUnit.test("Use a null value for choices", async (assert) => {
+        class Parent extends Component {
+            static components = { SelectMenu };
+            static template = xml`
+                <SelectMenu
+                    choices="this.choices"
+                    value="this.state.value"
+                />
+            `;
+            setup() {
+                this.choices = [
+                    { label: "Nothing", value: null },
+                    { label: "Everything", value: "things" },
+                ];
+                this.state = useState({
+                    value: null,
+                });
+            }
+            setValue(newValue) {
+                this.state.value = newValue;
+            }
+        }
+
+        const comp = await mount(Parent, target, { env });
+        assert.equal(
+            getValue(),
+            "Nothing",
+            `The select value with an empty string has the "Null" value selected`
+        );
+
+        comp.setValue("things");
+        await nextTick();
+        assert.equal(
+            getValue(),
+            "Everything",
+            `After changing the value props, the select value shoud be "Everything"`
+        );
+    });
+
+    QUnit.test(
+        "Use an empty string as the value for a choice display the corresponding choice",
+        async (assert) => {
+            class Parent extends Component {
+                static components = { SelectMenu };
+                static template = xml`
+                <SelectMenu
+                    choices="this.choices"
+                    value="this.state.value"
+                />
+            `;
+                setup() {
+                    this.choices = [
+                        { label: "Empty", value: "" },
+                        { label: "Full", value: "full" },
+                    ];
+                    this.state = useState({ value: "" });
+                }
+                setValue(newValue) {
+                    this.state.value = newValue;
+                }
+            }
+
+            const comp = await mount(Parent, target, { env });
+            assert.equal(
+                getValue(),
+                "Empty",
+                `The select value with an empty string has the "Empty" value selected`
+            );
+
+            comp.setValue("full");
+            await nextTick();
+            assert.equal(
+                getValue(),
+                "Full",
+                `After changing the value props, the select value shoud be "Full"`
+            );
+
+            comp.setValue(null);
+            await nextTick();
+            assert.equal(
+                getValue(),
+                "",
+                `After changing the value props to a null value, the select has no value selected`
+            );
+        }
+    );
+
     QUnit.test(
         "Clear button calls 'onSelect' with null value and appears only when value is not null",
         async (assert) => {
@@ -1013,5 +1100,144 @@ QUnit.module("Web Components", (hooks) => {
             "CoucouGood afternoon",
             "SelectMenu has two updated choices available"
         );
+    });
+
+    QUnit.test("SelectMenu group items only after being opened", async (assert) => {
+        let count = 0;
+
+        patchWithCleanup(SelectMenu.prototype, {
+            filterOptions(args) {
+                assert.step("filterOptions");
+                super.filterOptions(args);
+            },
+        });
+        class Parent extends Component {
+            static components = { SelectMenu };
+            static props = ["*"];
+            static template = xml`
+                <SelectMenu
+                    choices="state.choices"
+                    groups="state.groups"
+                    value="state.value"
+                    onInput.bind="onInput"
+                />
+            `;
+            setup() {
+                this.state = useState({
+                    choices: [{ label: "Option A", value: "optionA" }],
+                    groups: [
+                        {
+                            label: "Group A",
+                            choices: [
+                                { label: "Option C", value: "optionC" },
+                                { label: "Option B", value: "optionB" },
+                            ],
+                        },
+                    ],
+                    value: "hello",
+                });
+            }
+
+            onInput() {
+                count++;
+                assert.verifySteps(
+                    ["filterOptions"],
+                    "options have been filtered when typing on the search input"
+                );
+                if (count === 1) {
+                    this.state.choices = [{ label: "Option C", value: "optionC" }];
+                    this.state.groups = [
+                        {
+                            label: "Group B",
+                            choices: [{ label: "Option D", value: "optionD" }],
+                        },
+                    ];
+                } else {
+                    this.state.choices = [{ label: "Option A", value: "optionA" }];
+                    this.state.groups = [
+                        {
+                            label: "Group A",
+                            choices: [
+                                { label: "Option C", value: "optionC" },
+                                { label: "Option B", value: "optionB" },
+                            ],
+                        },
+                    ];
+                }
+            }
+        }
+
+        await mount(Parent, target, { env });
+        assert.verifySteps([], "options have not yet been filtered");
+
+        await open();
+        assert.strictEqual(
+            target.querySelector(".o_select_menu_menu").textContent,
+            "Option AGroup AOption BOption C"
+        );
+        assert.verifySteps(["filterOptions"], "options have been filtered when the menu opens");
+
+        // edit the input, to trigger onInput and update the props
+        await editInput(target, "input.o_select_menu_sticky", "option d");
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".o_select_menu_menu").textContent,
+            "Group BOption D",
+            "options and groups have been recomputed"
+        );
+        assert.verifySteps(
+            ["filterOptions"],
+            "options have been filtered since the choices changed"
+        );
+
+        // edit the input, to trigger onInput and update the props
+        await editInput(target, "input.o_select_menu_sticky", "");
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".o_select_menu_menu").textContent,
+            "Option AGroup AOption BOption C"
+        );
+        assert.verifySteps(
+            ["filterOptions"],
+            "options have been filtered since the choices changed"
+        );
+    });
+
+    QUnit.test("search value is cleared when reopening the menu", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.state = useState({
+                    choices: [
+                        { label: "Option A", value: "optionA" },
+                    ],
+                    value: "hello",
+                });
+            }
+
+            onInput(searchValue) {
+                assert.step("search=" + searchValue);
+            }
+        }
+        Parent.components = { SelectMenu };
+        Parent.template = xml`
+            <SelectMenu
+                choices="state.choices"
+                groups="state.groups"
+                value="state.value"
+                onInput.bind="onInput"
+            />
+        `;
+
+        await mount(Parent, target, { env });
+        await open();
+        assert.verifySteps([], "onInput props has not been called initially");
+        await editInput(target, "input.o_select_menu_sticky", "a");
+        assert.verifySteps(["search=a"], "onInput props has been called with the right search string");
+
+        // opening the menu should clear the search string, trigger onInput and update the props
+        await triggerEvent(target, ".o_select_menu_toggler", "keydown", { key: "Escape" });
+        await open();
+        assert.verifySteps(["search="], "onInput props has been called with the empty search string");
+        assert.strictEqual(target.querySelector(".o_select_menu_sticky").value, "", "search input is empty");
     });
 });

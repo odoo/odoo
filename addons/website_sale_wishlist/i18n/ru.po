@@ -4,14 +4,10 @@
 # 
 # Translators:
 # Collex100, 2023
-# Alena Vlasova, 2023
-# Сергей Шебанин <sergey@shebanin.ru>, 2023
-# alenafairy, 2023
-# Irina Fedulova <istartlin@gmail.com>, 2023
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
+# Alena Vlasova, 2023
 # Martin Trigaux, 2023
-# ILMIR <karamov@it-projects.info>, 2023
-# Oleg Kuryan <oleg@ventor.tech>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:10+0000\n"
-"Last-Translator: Oleg Kuryan <oleg@ventor.tech>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +29,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-heart\"/>\n"
 "            Wishlist"
 msgstr ""
+"<i class=\"fa fa-fw fa-heart\"/>\n"
+"            Список желаний"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
@@ -40,6 +38,8 @@ msgid ""
 "<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to "
 "wishlist\"/>Add to wishlist"
 msgstr ""
+"<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to "
+"wishlist\"/>Добавить в список желаний"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -54,7 +54,7 @@ msgstr "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
 msgid "Active"
-msgstr "Активно"
+msgstr "Активный"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -64,22 +64,22 @@ msgstr "Добавить <span class=\"d-none d-md-inline\">в корзину</s
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Add product to my cart but keep it in my wishlist"
-msgstr "Добавить продукт в мою корзину, но оставить его в списке пожеланий"
+msgstr "Добавить товар в корзину, но сохранить его в списке желаний"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
 msgid "Add to Wishlist"
-msgstr "Добавить в список пожеланий"
+msgstr "Добавить в избранное"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid "Add to wishlist"
-msgstr ""
+msgstr "Добавить в избранное"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
 msgid "Contact"
-msgstr "Контакт"
+msgstr "Контакты"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -94,7 +94,7 @@ msgstr "Создано"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_date
 msgid "Created on"
-msgstr "Дата создания"
+msgstr "Создано"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__currency_id
@@ -104,22 +104,22 @@ msgstr "Валюта по умолчанию"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__display_name
 msgid "Display Name"
-msgstr "Показывать название"
+msgstr "Отображаемое имя"
 
 #. module: website_sale_wishlist
 #: model:ir.model.constraint,message:website_sale_wishlist.constraint_product_wishlist_product_unique_partner_id
 msgid "Duplicated wishlisted product for this partner."
-msgstr "Дублированные товары список пожеланий для этого партнера."
+msgstr "Дублирование продукта в списке желаний для этого партнера."
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id
 msgid "ID"
-msgstr "Идентификатор"
+msgstr "ID"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновил"
+msgstr "Последнее обновление"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__write_date
@@ -129,7 +129,7 @@ msgstr "Последнее обновление"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "My Wishlist"
-msgstr "Мой список пожеланий"
+msgstr "Мой список желаний"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__partner_id
@@ -144,23 +144,23 @@ msgstr "Цена"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__price
 msgid "Price of the product when it has been added in the wishlist"
-msgstr "Цена продукта в момент добавления в список пожеланий"
+msgstr "Цена товара, когда он добавлен в список желаний"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__pricelist_id
 msgid "Pricelist"
-msgstr "Прайс"
+msgstr "Прайс-лист"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__pricelist_id
 msgid "Pricelist when added"
-msgstr "Прайс лист в момент добавления"
+msgstr "Прейскурант цен при добавлении"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_product_template
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__product_id
 msgid "Product"
-msgstr "Продукт"
+msgstr "Товар"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_product_product
@@ -170,22 +170,22 @@ msgstr "Вариант продукта"
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_product_wishlist
 msgid "Product Wishlist"
-msgstr "Список желаемых товаров"
+msgstr "Избранные товары"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Product image"
-msgstr "изображение товара"
+msgstr "Изображение товара"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Shop Wishlist"
-msgstr "Список пожеланий для покупки"
+msgstr "Список магазинов"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
 msgid "Show/hide empty wishlist"
-msgstr ""
+msgstr "Показать/скрыть пустой список желаний"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_users
@@ -195,7 +195,7 @@ msgstr "Пользователь"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__website_id
 msgid "Website"
-msgstr "Вебсайт"
+msgstr "Сайт"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__wishlist_ids
@@ -203,4 +203,4 @@ msgstr "Вебсайт"
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header_wishlist_link
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
 msgid "Wishlist"
-msgstr "Список пожеланий"
+msgstr "Избранное"

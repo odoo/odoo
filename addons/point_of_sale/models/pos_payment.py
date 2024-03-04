@@ -16,7 +16,7 @@ class PosPayment(models.Model):
     _order = "id desc"
 
     name = fields.Char(string='Label', readonly=True)
-    pos_order_id = fields.Many2one('pos.order', string='Order', required=True)
+    pos_order_id = fields.Many2one('pos.order', string='Order', required=True, index=True)
     amount = fields.Monetary(string='Amount', required=True, currency_field='currency_id', readonly=True, help="Total amount of the payment.")
     payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', required=True)
     payment_date = fields.Datetime(string='Date', required=True, readonly=True, default=lambda self: fields.Datetime.now())
@@ -91,6 +91,6 @@ class PosPayment(models.Model):
                 'account_id': pos_session.company_id.account_default_pos_receivable_account_id.id,
                 'move_id': payment_move.id,
             }, amounts['amount'], amounts['amount_converted'])
-            self.env['account.move.line'].with_context(check_move_validity=False).create([credit_line_vals, debit_line_vals])
+            self.env['account.move.line'].create([credit_line_vals, debit_line_vals])
             payment_move._post()
         return result

@@ -9,6 +9,7 @@
                     categories="getCategories()"
                     onClick="(id) => this.pos.setSelectedCategoryId(id)"
                     showImage="showCategoryImages"
+                    class="ui.isSmall ? 'scrollbar-hidden' : ''"
                 />
                 <Input tModel="[pos, 'searchProductWord']"
                     class="'p-2'"
@@ -25,7 +26,7 @@
                             name="product.display_name"
                             productId="product.id"
                             price="product.getFormattedUnitPrice()"
-                            imageUrl="product.getImageUrl()"
+                            imageUrl="pos.show_product_images and product.getImageUrl()"
                             onClick="() =>this.pos.addProductToCurrentOrder(product)"
                             productInfo="true"
                             onProductInfoClick="() => this.onProductInfoClick(product)"

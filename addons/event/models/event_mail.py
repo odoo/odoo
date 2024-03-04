@@ -301,13 +301,13 @@ class EventMailRegistration(models.Model):
         for reg_mail in todo:
             organizer = reg_mail.scheduler_id.event_id.organizer_id
             company = self.env.company
-            author = self.env.ref('base.user_root')
+            author = self.env.ref('base.user_root').partner_id
             if organizer.email:
                 author = organizer
             elif company.email:
                 author = company.partner_id
             elif self.env.user.email:
-                author = self.env.user
+                author = self.env.user.partner_id
 
             email_values = {
                 'author_id': author.id,

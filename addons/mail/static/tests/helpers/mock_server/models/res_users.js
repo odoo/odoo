@@ -3,6 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { today, serializeDate } from "@web/core/l10n/dates";
 import { MockServer } from "@web/../tests/helpers/mock_server";
+import { DISCUSS_ACTION_ID } from "../../test_constants";
 
 patch(MockServer.prototype, {
     async _performRPC(route, args) {
@@ -22,6 +23,7 @@ patch(MockServer.prototype, {
         const user = this.getRecords("res.users", [["id", "in", ids]])[0];
         const userSettings = this._mockResUsersSettings_FindOrCreateForUser(user.id);
         return {
+            action_discuss_id: DISCUSS_ACTION_ID,
             channels: this._mockDiscussChannelChannelInfo(
                 this._mockResPartner_GetChannelsAsMember(user.partner_id).map(
                     (channel) => channel.id
@@ -37,7 +39,6 @@ patch(MockServer.prototype, {
             hasGifPickerFeature: true,
             hasMessageTranslationFeature: true,
             initBusId: this.lastBusNotificationId,
-            menu_id: false, // not useful in QUnit tests
             needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
             odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
             shortcodes: this.pyEnv["mail.shortcode"].searchRead([], {

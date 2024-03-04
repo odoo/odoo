@@ -3,9 +3,9 @@
 # 	* hr_recruitment_survey
 # 
 # Translators:
-# Сергей Шебанин <sergey@shebanin.ru>, 2023
 # Martin Trigaux, 2023
 # Alena Vlasova, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Alena Vlasova, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +47,28 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Уважаемый <t t-out=\"object.partner_id.name or 'applicant'\">[имя заявителя]</t><br><br>\n"
+"       <t>\n"
+"            Вы прошли процедуру найма, и мы хотели бы, чтобы вы ответили на несколько вопросов.\n"
+"       </t>\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t>\n"
+"                    Начните письменное интервью\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"       <t t-if=\"object.deadline\">\n"
+"            Пожалуйста, ответьте на собеседование на <t t-out=\"format_date(object.deadline)\">[крайняя дата]</t>.<br><br>\n"
+"       </t>\n"
+"       <t>\n"
+"            Желаем вам удачи! Заранее благодарим вас за участие.\n"
+"       </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -54,30 +76,30 @@ msgid ""
 "<span class=\"o_stat_text\">Consult</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Консультация</span>\n"
-"<span class=\"o_stat_text\">Интервью</span>"
+"<span class=\"o_stat_text\">Проконсультируйтесь</span>\n"
+"                        <span class=\"o_stat_text\">Интервью</span>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
 msgid "About you"
-msgstr "О себе"
+msgstr "О вас"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q7
 msgid "Activities"
-msgstr "Деятельность"
+msgstr "Активность"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_applicant
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__applicant_id
 msgid "Applicant"
-msgstr "Соискатель"
+msgstr "Кандидат"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,name:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Applicant: Interview"
-msgstr ""
+msgstr "Соискатель: Интервью"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
@@ -86,14 +108,14 @@ msgid ""
 "Choose an interview form for this job position and you will be able to "
 "print/answer this interview from all applicants who apply for this job"
 msgstr ""
-"Выберите форму собеседования на эту должность, и вы сможете "
-"распечатать/провести это собеседование со всеми соискателями, претендующими "
-"на эту работу"
+"Выберите форму собеседования для этой вакансии, и вы сможете "
+"распечатать/ответить на это собеседование всех кандидатов, претендующих на "
+"эту должность"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Display Interview Form"
-msgstr "Открыть форму собеседования"
+msgstr "Форма для интервью на дисплее"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q4
@@ -103,7 +125,7 @@ msgstr "Образование"
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
 msgid "From which university did or will you graduate?"
-msgstr ""
+msgstr "Какой университет вы закончили или собираетесь закончить?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row2
@@ -113,63 +135,60 @@ msgstr "Ладить с коллегами"
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row8
 msgid "Getting perks such as free parking, gym passes"
-msgstr ""
-"Получение таких бонусов, как бесплатная парковка, абонементы в спортзал"
+msgstr "Получение льгот, таких как бесплатная парковка, абонементы в спортзал"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row1
 msgid "Having a good pay"
-msgstr "Иметь хорошую оплату труда"
+msgstr "Хорошая зарплата"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row3
 msgid "Having a nice office environment"
-msgstr "Иметь хорошую офисную обстановку"
+msgstr "Приятная обстановка в офисе"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row7
 msgid "Having freebies such as tea, coffee and stationery"
-msgstr ""
-"Наличие бесплатных бенефитов, таких как чай, кофе и канцелярские "
-"принадлежности"
+msgstr "Бесплатные подарки, такие как чай, кофе и канцелярские принадлежности"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col2
 msgid "Important"
-msgstr "Важное"
+msgstr "Важно"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__survey_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interview Form"
-msgstr "Форма интервью"
+msgstr "Форма для собеседования"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
 #, python-format
 msgid "Interview Form: %s"
-msgstr ""
+msgstr "Форма интервью: %s"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
 msgid "Interview Survey"
-msgstr "Опрос"
+msgstr "Интервью Опрос"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interviews"
-msgstr "Собеседования"
+msgstr "Интервью"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
 msgid "Job Position"
-msgstr "Должность"
+msgstr "Место работы"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q6
 msgid "Knowledge"
-msgstr "База знаний"
+msgstr "Знание"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row6
@@ -179,7 +198,7 @@ msgstr "Качество управления"
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col1
 msgid "Not important"
-msgstr "Неважно"
+msgstr "Не важно"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row5
@@ -189,12 +208,12 @@ msgstr "Расположение офиса"
 #. module: hr_recruitment_survey
 #: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Participate to {{ object.survey_id.display_name }} interview"
-msgstr ""
+msgstr "Примите участие в интервью {{ object.survey_id.display_name }}"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q5
 msgid "Past work experiences"
-msgstr "Прошлый опыт работы"
+msgstr "Опыт работы в прошлом"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
@@ -202,6 +221,8 @@ msgid ""
 "Please answer those questions to help recruitment officers to preprocess "
 "your application."
 msgstr ""
+"Пожалуйста, ответьте на эти вопросы, чтобы помочь специалистам по подбору "
+"персонала подготовить ваше заявление."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
@@ -209,13 +230,15 @@ msgid ""
 "Please fill information about you: who you are, what are your education, experience, and activities.\n"
 "    It will help us managing your application."
 msgstr ""
+"Пожалуйста, заполните информацию о себе: кто вы, какое у вас образование, опыт и деятельность.\n"
+"    Это поможет нам обработать вашу заявку."
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 #, python-format
 msgid "Please provide an applicant name."
-msgstr ""
+msgstr "Пожалуйста, укажите имя заявителя."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
@@ -223,39 +246,43 @@ msgstr ""
 msgid ""
 "Please summarize your education history: schools, location, diplomas, ..."
 msgstr ""
+"Пожалуйста, кратко опишите историю вашего образования: школы, "
+"местоположение, дипломы, ..."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
 msgid ""
 "Please tell us a bit more about yourself: what are your main activities, ..."
 msgstr ""
+"Пожалуйста, расскажите нам немного больше о себе: каковы ваши основные "
+"занятия, ..."
 
 #. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
 msgid "Recruitment Form"
-msgstr "Рекрутинговая форма"
+msgstr "Анкета для набора персонала"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_ids
 msgid "Responses"
-msgstr ""
+msgstr "Ответы"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "See interview report"
-msgstr "Посмотреть отчет о собеседовании"
+msgstr "Смотрите отчет об интервью"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "Send Interview"
-msgstr ""
+msgstr "Отправить интервью"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 #, python-format
 msgid "Send an interview"
-msgstr ""
+msgstr "Отправить интервью"
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -268,33 +295,32 @@ msgstr "Опрос"
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_invite
 msgid "Survey Invitation Wizard"
-msgstr "Приглашение к участию в опросе"
+msgstr "Мастер приглашений на опрос"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
 msgid "Survey User Input"
-msgstr "Ввод данных пользователем опроса"
+msgstr "Опрос пользователей ввод"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description_done:hr_recruitment_survey.survey_recruitment_form
 msgid "Thank you for answering this survey. We will come back to you soon."
 msgstr ""
-"Спасибо, что приняли участие в этом опросе. Мы вернемся с обратной связью в "
-"ближайшее время."
+"Спасибо, что ответили на этот опрос. Мы вернемся к вам в ближайшее время."
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/survey_user_input.py:0
 #, python-format
 msgid "The applicant \"%s\" has finished the survey."
-msgstr "Соискатель \"%s\" завершил прохождение опроса."
+msgstr "Заявитель \"%s\" завершил опрос."
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/survey_invite.py:0
 #, python-format
 msgid "The survey %(survey_link)s has been sent to %(partner_link)s"
-msgstr "Опрос %(survey_link)sбыл отправлен %(partner_link)s"
+msgstr "Опрос %(survey_link)s был отправлен на %(partner_link)s"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col3
@@ -309,17 +335,17 @@ msgstr "Вас направил сотрудник?"
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
 msgid "What are your main knowledge regarding the job you are applying to?"
-msgstr ""
+msgstr "Каковы ваши основные знания о работе, на которую вы претендуете?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
 msgid "What is important for you?"
-msgstr ""
+msgstr "Что для вас важно?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q1
 msgid "Which country are you from?"
-msgstr ""
+msgstr "Из какой вы страны?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4

@@ -210,6 +210,9 @@ class AccountEdiFormat(models.Model):
         """
         signed_xml = self._l10n_sa_sign_xml(unsigned_xml, x509_cert, invoice.l10n_sa_invoice_signature)
         if invoice._l10n_sa_is_simplified():
+            # Applying with_prefetch() to set the _prefetch_ids = _ids,
+            # preventing premature QR code computation for other invoices.
+            invoice = invoice.with_prefetch()
             return self._l10n_sa_apply_qr_code(invoice, signed_xml)
         return signed_xml
 
@@ -227,18 +230,22 @@ class AccountEdiFormat(models.Model):
         try:
             PCSID_data = invoice.journal_id._l10n_sa_api_get_pcsid()
         except UserError as e:
-            return {'error': _("Could not generate PCSID values: \n") + e.args[0], 'blocking_level': 'error'}
+            return ({
+                'error': _("Could not generate PCSID values: \n") + e.args[0],
+                'blocking_level': 'error',
+                'response': unsigned_xml
+            }, unsigned_xml)
         x509_cert = PCSID_data['binarySecurityToken']
 
         # Apply Signature/QR code on the generated XML document
         try:
             signed_xml = self._l10n_sa_get_signed_xml(invoice, unsigned_xml, x509_cert)
         except UserError as e:
-            return {
+            return ({
                 'error': _("Could not generate signed XML values: \n") + e.args[0],
                 'blocking_level': 'error',
                 'response': unsigned_xml
-            }
+            }, unsigned_xml)
 
         # Once the XML content has been generated and signed, we submit it to ZATCA
         return self._l10n_sa_submit_einvoice(invoice, signed_xml, PCSID_data), signed_xml

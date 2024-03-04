@@ -85,7 +85,7 @@ export class SuggestionService {
                 return this.searchPartnerSuggestions(cleanedSearchTerm, thread, sort);
             }
             case "#":
-                return this.searchChannelSuggestions(cleanedSearchTerm, thread, sort);
+                return this.searchChannelSuggestions(cleanedSearchTerm, sort);
         }
         return {
             type: undefined,
@@ -118,10 +118,6 @@ export class SuggestionService {
         const mainSuggestionList = [];
         const extraSuggestionList = [];
         for (const partner of partners) {
-            if (partner.eq(this.store.odoobot)) {
-                // ignore archived partners (except OdooBot)
-                continue;
-            }
             if (!partner.name) {
                 continue;
             }
@@ -172,24 +168,8 @@ export class SuggestionService {
         });
     }
 
-    searchChannelSuggestions(cleanedSearchTerm, thread, sort) {
-        let threads;
-        if (
-            thread &&
-            (thread.type === "group" ||
-                thread.type === "chat" ||
-                (thread.type === "channel" && thread.authorizedGroupFullName))
-        ) {
-            // Only return the current channel when in the context of a
-            // group restricted channel or group or chat. Indeed, the message with the mention
-            // would appear in the target channel, so this prevents from
-            // inadvertently leaking the private message into the mentioned
-            // channel.
-            threads = [thread];
-        } else {
-            threads = Object.values(this.store.Thread.records);
-        }
-        const suggestionList = threads.filter(
+    searchChannelSuggestions(cleanedSearchTerm, sort) {
+        const suggestionList = Object.values(this.store.Thread.records).filter(
             (thread) =>
                 thread.type === "channel" &&
                 thread.displayName &&

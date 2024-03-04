@@ -4,6 +4,7 @@ from lxml import etree
 
 from odoo import models, _
 from odoo.tools import html2plaintext, cleanup_xml_node
+from odoo.tools.float_utils import float_round
 
 
 class AccountEdiXmlUBL20(models.AbstractModel):
@@ -337,7 +338,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'currency_dp': self._get_currency_decimal_places(line.currency_id),
 
             # The price of an item, exclusive of VAT, after subtracting item price discount.
-            'price_amount': gross_price_unit,
+            'price_amount': float_round(gross_price_unit, 10),
             'product_price_dp': self.env['decimal.precision'].precision_get('Product Price'),
 
             # The number of item units to which the price applies.
@@ -600,7 +601,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # ==== partner_id ====
 
         role = "Customer" if invoice.journal_id.type == 'sale' else "Supplier"
-        vat = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:CompanyID', tree)
+        vat = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:CompanyID[string-length(text()) > 5]', tree)
         phone = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Telephone', tree)
         mail = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:ElectronicMail', tree)
         name = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Name', tree)
@@ -635,6 +636,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             if invoice_date_due_node is not None and invoice_date_due_node.text:
                 invoice.invoice_date_due = invoice_date_due_node.text
                 break
+
+        # ==== Bank Details ====
+
+        bank_detail_nodes = tree.findall('.//{*}PaymentMeans')
+        bank_details = [bank_detail_node.findtext('{*}PayeeFinancialAccount/{*}ID') for bank_detail_node in bank_detail_nodes]
+
+        if bank_details:
+            self._import_retrieve_and_fill_partner_bank_details(invoice, bank_details=bank_details)
 
         # ==== Reference ====
 

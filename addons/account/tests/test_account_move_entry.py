@@ -1160,3 +1160,47 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         with self.assertRaisesRegex(UserError, 'not balanced'), self.env.cr.savepoint():
             stealer_move.write({'line_ids': [Command.link(honest_move.line_ids[0].id)]})
+
+    def test_validate_move_wizard_with_auto_post_entry(self):
+        """ Test that the wizard to validate a move with auto_post is working fine. """
+        self.test_move.date = fields.Date.today() + relativedelta(months=3)
+        self.test_move.auto_post = 'at_date'
+        wizard = self.env['validate.account.move'].with_context(active_model='account.move', active_ids=self.test_move.ids).create({})
+        wizard.force_post = True
+        wizard.validate_move()
+        self.assertTrue(self.test_move.state == 'posted')
+
+    def test_cumulated_balance(self):
+        move = self.env['account.move'].create({
+            'line_ids': [Command.create({
+                'balance': 100,
+                'account_id': self.company_data['default_account_receivable'].id,
+            }), Command.create({
+                'balance': 100,
+                'account_id': self.company_data['default_account_tax_sale'].id,
+            }), Command.create({
+                'balance': -200,
+                'account_id': self.company_data['default_account_revenue'].id,
+            })]
+        })
+
+        for order, expected in [
+            ('balance DESC', [
+                (100, 0),
+                (100, -100),
+                (-200, -200),
+            ]),
+            ('balance ASC', [
+                (-200, 0),
+                (100, 200),
+                (100, 100),
+            ]),
+        ]:
+            read_results = self.env['account.move.line'].search_read(
+                domain=[('move_id', '=', move.id)],
+                fields=['balance', 'cumulated_balance'],
+                order=order,
+            )
+            for (balance, cumulated_balance), read_result in zip(expected, read_results):
+                self.assertAlmostEqual(balance, read_result['balance'])
+                self.assertAlmostEqual(cumulated_balance, read_result['cumulated_balance'])

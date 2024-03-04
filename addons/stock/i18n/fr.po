@@ -194,7 +194,7 @@ msgstr "'Lot-Série - %s' % object.name"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_type_label
 msgid "'Operation-type - %s' % object.name"
-msgstr "'Type d\'opération - %s' % object.name"
+msgstr "'Type d'\\opération - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_packages
@@ -4047,7 +4047,7 @@ msgstr "Importer des lots"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Import Template for Inventory Adjustments"
-msgstr "Modèle d'import pour les ajustements d'inventaire"
+msgstr "Modèle d'importation pour les ajustements d'inventaire"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -5244,7 +5244,7 @@ msgstr "Mouvements"
 #: model:ir.ui.menu,name:stock.stock_move_line_menu
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_pivot
 msgid "Moves History"
-msgstr "Historique des déplacements"
+msgstr "Historique des mouvements"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__group_id
@@ -7789,6 +7789,14 @@ msgid ""
 msgstr ""
 "Des routes seront créées pour ces entrepôts de réapprovisionnement et vous "
 "pourrez les activer au niveau des produits et catégories de produits"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr "La règle %s appartient à %s tandis que la route appartient à %s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message

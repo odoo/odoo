@@ -29,33 +29,30 @@
     .o_select_menu_menu {
         min-width: fit-content;
         max-height: 350px;
-        border: 1px solid $o-brand-primary;
 
+        input {
+            cursor: text !important;
+        }
         .o_select_menu_sticky {
             background-color: $dropdown-bg !important;
 
-            &.o_select_menu_item {
-                &:focus, &:hover {
-                    background: $dropdown-border-color !important;
-                }
+            &.o_select_menu_item.focus {
+                background: $dropdown-border-color !important;
             }
         }
         .o_select_menu_group {
-            top: 40px;
+            top: 50px;
         }
     }
 
-    .o_select_menu_multi_select {
-        .o_select_active {
-            background: $o-brand-primary;
-            background: linear-gradient(to right, $o-danger 50%, $o-brand-primary 50%);
-            background-size: 200% 100%;
-            background-position: right bottom;
-            transition: background .4s cubic-bezier(0.33, 1, 0.68, 1);
-        }
+    .o_select_active {
+        color: white;
+    }
 
+    .o_select_menu_multi_select {
         .o_select_active:hover {
-            background-position: left bottom;
+            background: $o-danger !important;
+            transition: background .5s;
         }
     }
 

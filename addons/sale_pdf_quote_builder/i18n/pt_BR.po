@@ -3,7 +3,7 @@
 # 	* sale_pdf_quote_builder
 # 
 # Translators:
-# Maitê Dietze, 2023
+# Maitê Dietze, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Maitê Dietze, 2023\n"
+"Last-Translator: Maitê Dietze, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +27,12 @@ msgid ""
 msgstr ""
 "(object.state in ('draft', 'sent') and 'Cotação - %s' % (object.name)) or "
 "'Pedido - %s' % (object.name)"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "<i class=\"fa fa-arrow-right\"/> Download examples"
+msgstr "<i class=\"fa fa-arrow-right\"/> Baixar exemplos"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on
@@ -75,6 +81,11 @@ msgstr "Páginas de cabeçalho"
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
 msgid "Inside quote"
 msgstr "Cotação interna"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "Learn more from the documentation."
+msgstr "Saiba mais na documentação."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
@@ -128,12 +139,14 @@ msgid ""
 "Provide header pages and footer pages to compose an attractive quotation\n"
 "                            with more information about your company, your products and your services.\n"
 "                            The pdf of your quotes will be built by putting together header pages,\n"
-"                            product descriptions, details of the quote and then the footer pages."
+"                            product descriptions, details of the quote and then the footer pages.\n"
+"                            If empty, it will use those define in the company settings.<br/>"
 msgstr ""
 "Forneça páginas de cabeçalho e de rodapé para compor cotações atrativas\n"
 "                            com mais informações sobre a sua empresa, produtos e serviços.\n"
 "                            O PDF das cotações será construído juntando as páginas de cabeçalho,\n"
-"                            as descrições de produto, os detalhes da cotação e, enfim, as páginas de rodapé."
+"                            as descrições de produto, os detalhes da cotação e, enfim, as páginas de rodapé.\n"
+"Se em em branco, serão utilizadas as configuradas nas definições da empresa.<br/>"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw

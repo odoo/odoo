@@ -29,7 +29,7 @@ export const busService = {
         let isActive = false;
         let isInitialized = false;
         let isUsingSharedWorker = browser.SharedWorker && !isIosApp();
-        const startTs = new Date().getTime();
+        const startedAt = luxon.DateTime.now().set({ milliseconds: 0 });
         const connectionInitializedDeferred = new Deferred();
 
         /**
@@ -101,7 +101,7 @@ export const busService = {
                 debug: odoo.debug,
                 lastNotificationId: multiTab.getSharedValue("last_notification_id", 0),
                 uid,
-                startTs,
+                startTs: startedAt.valueOf(),
             });
         }
 
@@ -201,6 +201,7 @@ export const busService = {
                     callback(detail)
                 );
             },
+            startedAt,
         };
     },
 };

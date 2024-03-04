@@ -30,6 +30,14 @@ function _createFilterDomain(fieldName, bars, value) {
     return filterDomain;
 }
 
+function _groupsToAggregateValues(groups, groupBy, fields) {
+    const groupByFieldName = groupBy[0].split(":")[0];
+    return groups.map((g) => {
+        const groupInfo = extractInfoFromGroupData(g, groupBy, fields);
+        return Object.assign(groupInfo.aggregates, { [groupByFieldName]: groupInfo.serverValue });
+    });
+}
+
 class ProgressBarState {
     constructor(progressAttributes, model, aggregateFields, activeBars = {}) {
         this.progressAttributes = progressAttributes;
@@ -185,22 +193,19 @@ class ProgressBarState {
             bars,
             activeBar.value
         );
-        const { context, groupBy, resModel } = this.model.root;
+        const { context, fields, groupBy, resModel } = this.model.root;
         const kwargs = { context };
-        const fieldNames = this._aggregateFields.map((f) => f.name);
-        const fields = [...fieldNames, group.groupByField.name];
+        const fieldNames = [...this._aggregateFields.map((f) => f.name), group.groupByField.name];
         const domain = filterDomain
             ? Domain.and([group.groupDomain, filterDomain]).toList()
             : group.groupDomain;
         return this.model.orm
-            .webReadGroup(resModel, domain, fields, groupBy, kwargs)
+            .webReadGroup(resModel, domain, fieldNames, groupBy, kwargs)
             .then((res) => {
                 if (res.length) {
-                    const resGroup = _findGroup(res.groups, group.groupByField, group.serverValue);
-                    activeBar.aggregates = {
-                        ...resGroup,
-                        [group.groupByField.name]: group.serverValue,
-                    };
+                    const groupByField = group.groupByField;
+                    const aggrValues = _groupsToAggregateValues(res.groups, groupBy, fields);
+                    activeBar.aggregates = _findGroup(aggrValues, groupByField, group.serverValue);
                 }
             });
     }
@@ -239,10 +244,7 @@ class ProgressBarState {
             groupBy,
             kwargs
         );
-        this._aggregateValues = res.groups.map((r) => {
-            const groupInfo = extractInfoFromGroupData(r, groupBy, fields);
-            return { ...groupInfo.aggregates, [firstGroupByName]: groupInfo.serverValue };
-        });
+        this._aggregateValues = _groupsToAggregateValues(res.groups, groupBy, fields);
     }
 
     async _updateProgressBar() {

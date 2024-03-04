@@ -76,3 +76,34 @@
             }
         },
     ]});
+
+    registry.category("web_tour.tours").add('hr_expense_access_rights_test_tour', {
+        test: true,
+        url: "/web",
+        steps: () => [stepUtils.showAppsMenuItem(),
+        {
+            content: "Go to Expense",
+            trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
+        },
+        {
+            content: "Go to My Expenses",
+            trigger: 'button[data-menu-xmlid="hr_expense.menu_hr_expense_my_expenses"]',
+        },
+        {
+            content: "Go to My Reports",
+            trigger: 'a[data-menu-xmlid="hr_expense.menu_hr_expense_sheet_my_reports"]',
+        },
+        {
+            content: "Go to First Expense for employee",
+            trigger: 'td[data-tooltip="First Expense for employee"]',
+        },
+        {
+            content: "Click Submit to Manager Button",
+            trigger: '.o_expense_sheet_submit',
+        },
+        {
+            content: 'Verify the expene sheet is submitted',
+            trigger: '.o_arrow_button_current:contains("Submitted")',
+            isCheck: true,
+        },
+    ]});

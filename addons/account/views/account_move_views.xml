@@ -317,13 +317,13 @@
                     <field name="date"/>
                     <field name="date_maturity" string="Due Date"/>
                     <field name="discount_date" string="Discount Date"/>
-                    <field name="balance" string="Amount" filter_domain="['|', ('credit', '=', self), ('debit', '=', self)]"/>
+                    <field name="balance" string="Amount" filter_domain="['|', ('credit', '=', raw_value), ('debit', '=', raw_value)]"/>
                     <field name="account_id"/>
                     <field name="account_type"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
                     <field name="move_id" string="Journal Entry" filter_domain="[
-                        '|', '|', ('move_id.name', 'ilike', self), ('move_id.ref', 'ilike', self), ('move_id.partner_id', 'ilike', self)]"/>
+                        '|', ('move_id.name', 'ilike', self), ('move_id.ref', 'ilike', self)]"/>
                     <field name="tax_ids" />
                     <field name="tax_line_id" string="Originator Tax"/>
                     <field name="reconcile_model_id"/>
@@ -874,7 +874,7 @@
                             <h1>
                                 <field name="name" invisible="name == '/' and not posted_before and not quick_edit_mode" readonly="state != 'draft'" placeholder="Draft"/>
 
-                                <span invisible="state != 'draft' or name != '/' or quick_edit_mode">Draft</span>
+                                <span invisible="state != 'draft' or name != '/' or posted_before or quick_edit_mode">Draft</span>
                             </h1>
                         </div>
                         <group>
@@ -1013,8 +1013,8 @@
                                                widget="many2one_barcode"
                                                domain="
                                                     context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')
-                                                    and [('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]
-                                                    or [('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]
+                                                    and [('sale_ok', '=', True)]
+                                                    or [('purchase_ok', '=', True)]
                                                "/>
                                         <field name="name" widget="section_and_note_text" optional="show"/>
                                         <field name="account_id"

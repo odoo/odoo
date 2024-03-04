@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
+import { contains } from "@web/../tests/utils";
 
 const messagesContain = (text) => `.o-mail-Message:contains("${text}")`;
 
@@ -43,17 +44,14 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             run: "click",
         },
         {
-            trigger: messagesContain("I want to buy the software"),
+            trigger: ".o-mail-ChatWindow",
             // check selected option is posted and reactions are available since
             // the thread has been persisted in the process
-            run() {
-                if (
-                    !this.$anchor[0].querySelector(
-                        ".o-mail-Message-actions [title='Add a Reaction']"
-                    )
-                ) {
-                    console.error("Reactions should be available since thread is persisted.");
-                }
+            async run() {
+                await contains(".o-mail-Message-actions [title='Add a Reaction']", {
+                    target: this.$anchor[0].getRootNode(),
+                    parent: [".o-mail-Message", { text: "I want to buy the software" }],
+                });
             },
         },
         {

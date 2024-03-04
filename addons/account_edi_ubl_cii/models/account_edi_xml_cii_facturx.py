@@ -253,7 +253,7 @@ class AccountEdiXmlCII(models.AbstractModel):
         role = invoice.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
         name = self._find_value(f"//ram:{role}/ram:Name", tree)
         mail = self._find_value(f"//ram:{role}//ram:URIID[@schemeID='SMTP']", tree)
-        vat = self._find_value(f"//ram:{role}/ram:SpecifiedTaxRegistration/ram:ID", tree)
+        vat = self._find_value(f"//ram:{role}/ram:SpecifiedTaxRegistration/ram:ID[string-length(text()) > 5]", tree)
         phone = self._find_value(f"//ram:{role}/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber", tree)
         country_code = self._find_value(f'//ram:{role}/ram:PostalTradeAddress//ram:CountryID', tree)
         self._import_retrieve_and_fill_partner(invoice, name=name, phone=phone, mail=mail, vat=vat, country_code=country_code)
@@ -272,6 +272,18 @@ class AccountEdiXmlCII(models.AbstractModel):
             else:
                 logs.append(_("Could not retrieve currency: %s. Did you enable the multicurrency option and "
                               "activate the currency?", currency_code_node.text))
+
+        # ==== Bank Details ====
+
+        bank_detail_nodes = tree.findall('.//{*}SpecifiedTradeSettlementPaymentMeans')
+        bank_details = [
+            bank_detail_node.findtext('{*}PayeePartyCreditorFinancialAccount/{*}IBANID')
+            or bank_detail_node.findtext('{*}PayeePartyCreditorFinancialAccount/{*}ProprietaryID')
+            for bank_detail_node in bank_detail_nodes
+        ]
+
+        if bank_details:
+            self._import_retrieve_and_fill_partner_bank_details(invoice, bank_details=bank_details)
 
         # ==== Reference ====
 

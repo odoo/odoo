@@ -155,6 +155,14 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             // we need to check if it's the carrier that is selected
             if (result.new_amount_total_raw !== undefined) {
                 this._updateShippingCost(result.new_amount_total_raw);
+                // reload page only when amount_total switches between zero and not zero
+                const hasPaymentMethod = document.querySelector(
+                    "div[name='o_website_sale_free_cart']"
+                ) === null;
+                const shouldDisplayPaymentMethod = result.new_amount_total_raw !== 0;
+                if (hasPaymentMethod !==  shouldDisplayPaymentMethod) {
+                    location.reload(false);
+                }
             }
             this._updateShippingCost(result.new_amount_delivery);
         }
@@ -350,7 +358,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         const radio = ev.currentTarget.closest('.o_delivery_carrier_select').querySelector(
             'input[type="radio"]'
         );
-        if (radio.checked) {
+        if (radio.checked && !this._shouldDisplayPickupLocations(ev)) {
             return;
         }
 

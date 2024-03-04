@@ -68,6 +68,7 @@ class Project(models.Model):
             task_counts_per_project_id[project.id]['closed_task_count' if state in CLOSED_STATES else 'open_task_count'] += count
         for project in self:
             open_task_count, closed_task_count = task_counts_per_project_id[project.id].values()
+            project.open_task_count = open_task_count
             project.closed_task_count = closed_task_count
             project.task_count = open_task_count + closed_task_count
 
@@ -133,6 +134,8 @@ class Project(models.Model):
         'resource.calendar', string='Working Time', compute='_compute_resource_calendar_id')
     type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count")
+    open_task_count = fields.Integer(compute='_compute_task_count', string="Open Task Count")
+    # [XBO] TODO: remove me in master
     closed_task_count = fields.Integer(compute='_compute_task_count', string="Closed Task Count")
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks',
                                domain=lambda self: [('state', 'in', self.env['project.task'].OPEN_STATES)])

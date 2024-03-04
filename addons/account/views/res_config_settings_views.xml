@@ -47,11 +47,11 @@
                                 <div class="content-group">
                                     <div class="row mt16">
                                         <label string="Sales Tax" for="sale_tax_id" class="col-lg-3 o_light_label"/>
-                                        <field name="sale_tax_id" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
+                                        <field name="sale_tax_id" domain="[('type_tax_use', 'in', ('sale', 'all'))]"/>
                                     </div>
                                     <div class="row">
                                         <label string="Purchase Tax" for="purchase_tax_id" class="col-lg-3 o_light_label"/>
-                                        <field name="purchase_tax_id" domain="[('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company_id)]"/>
+                                        <field name="purchase_tax_id" domain="[('type_tax_use', 'in', ('purchase', 'all'))]"/>
                                     </div>
                                 </div>
                             </setting>

@@ -233,6 +233,8 @@ export async function applyModifications(img, dataOptions = {}) {
     // Crop
     const container = document.createElement('div');
     const original = await loadImage(originalSrc);
+    // loadImage may have ended up loading a different src (see: LOAD_IMAGE_404)
+    originalSrc = original.getAttribute('src');
     container.appendChild(original);
     await activateCropper(original, 0, data);
     let croppedImg = $(original).cropper('getCroppedCanvas', {width, height});
@@ -358,6 +360,7 @@ export function loadImage(src, img = new Image()) {
         img.src = source;
     };
     // The server will return a placeholder image with the following src.
+    // grep: LOAD_IMAGE_404
     const placeholderHref = "/web/image/__odoo__unknown__src__/";
 
     return new Promise((resolve, reject) => {
@@ -419,6 +422,8 @@ async function _updateImageData(src, key = 'objectURL') {
 }
 /**
  * Returns the size of a cached image.
+ * Warning: this supposes that the image is already in the cache, i.e. that
+ * _updateImageData was called before.
  *
  * @param {String} src used as a key on the image cache map.
  * @returns {Number} size of the image in bytes.
@@ -434,7 +439,9 @@ function _getImageSizeFromCache(src) {
  * @param {DOMStringMap} dataset dataset containing the cropperDataFields
  */
 export async function activateCropper(image, aspectRatio, dataset) {
-    image.src = await _loadImageObjectURL(image.getAttribute('src'));
+    const oldSrc = image.src;
+    const newSrc = await _loadImageObjectURL(image.getAttribute('src'));
+    image.src = newSrc;
     $(image).cropper({
         viewMode: 2,
         dragMode: 'move',
@@ -446,6 +453,9 @@ export async function activateCropper(image, aspectRatio, dataset) {
         minContainerWidth: 1,
         minContainerHeight: 1,
     });
+    if (oldSrc === newSrc && image.complete) {
+        return;
+    }
     return new Promise(resolve => image.addEventListener('ready', resolve, {once: true}));
 }
 /**
@@ -471,14 +481,25 @@ export async function loadImageInfo(img, rpc, attachmentSrc = '') {
     // the URL object if the src of the img is a relative or protocol relative
     // URL. The original attachment linked to the img is then retrieved thanks
     // to the path of the built URL object.
-    const srcUrl = new URL(src, img.ownerDocument.defaultView.location.href);
+    let docHref = img.ownerDocument.defaultView.location.href;
+    if (docHref === "about:srcdoc") {
+        docHref = window.location.href;
+    }
+
+    const srcUrl = new URL(src, docHref);
     const relativeSrc = srcUrl.pathname;
 
     const {original} = await rpc('/web_editor/get_image_info', {src: relativeSrc});
     // If src was an absolute "external" URL, we consider unlikely that its
     // relative part matches something from the DB and even if it does, nothing
     // bad happens, besides using this random image as the original when using
-    // the options, instead of having no option.
+    // the options, instead of having no option. Note that we do not want to
+    // check if the image is local or not here as a previous bug converted some
+    // local (relative src) images to absolute URL... and that before users had
+    // setup their website domain. That means they can have an absolute URL that
+    // looks like "https://mycompany.odoo.com/web/image/123" that leads to a
+    // "local" image even if the domain name is now "mycompany.be".
+    //
     // The "redirect" check is for when it is a redirect image attachment due to
     // an external URL upload.
     if (original && original.image_src && !/\/web\/image\/\d+-redirect\//.test(original.image_src)) {

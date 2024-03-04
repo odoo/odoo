@@ -180,13 +180,20 @@ function sanitizeNode(node, root) {
         node = parent; // The node has been removed, update the reference.
     } else if (
         node.nodeName === 'P' && // Note: not sure we should limit to <p>.
-        node.parentElement.nodeName === 'LI'
+        node.parentElement.nodeName === 'LI' &&
+        !node.parentElement.classList.contains('nav-item')
     ) {
         // Remove empty paragraphs in <li>.
+        const classes = node.classList;
         const parent = node.parentElement;
         const restoreCursor = shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
         if (isEmptyBlock(node)) {
             node.remove();
+        } else if (classes.length) {
+            const spanEl = document.createElement('span');
+            spanEl.setAttribute('class', classes);
+            spanEl.append(...node.childNodes);
+            node.replaceWith(spanEl);
         } else {
             unwrapContents(node);
         }
@@ -245,7 +252,7 @@ export function sanitize(nodeToSanitize, root = nodeToSanitize) {
         let node = isList ? block.parentElement : block;
 
         // Sanitize the tree.
-        while (node?.isConnected && root.contains(node)) {
+        while (node && !(root.isConnected && !node.isConnected) && root.contains(node)) {
             if (!isProtected(node)) {
                 node = sanitizeNode(node, root); // The node itself might be replaced during sanitization.
             }

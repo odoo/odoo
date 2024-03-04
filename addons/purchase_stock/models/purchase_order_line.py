@@ -175,6 +175,8 @@ class PurchaseOrderLine(models.Model):
                 pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
                 picking = pickings and pickings[0] or False
                 if not picking:
+                    if not line.product_qty > line.qty_received:
+                        continue
                     res = line.order_id._prepare_picking()
                     picking = self.env['stock.picking'].create(res)
 

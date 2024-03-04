@@ -3,10 +3,9 @@
 # 	* pos_online_payment_self_order
 # 
 # Translators:
-# ILMIR <karamov@it-projects.info>, 2023
-# Сергей Шебанин <sergey@shebanin.ru>, 2023
 # Dinar <gabbasov@it-projects.info>, 2023
 # Martin Trigaux, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,12 +24,12 @@ msgstr ""
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_res_config_settings
 msgid "Config Settings"
-msgstr "Конфигурационные настройки"
+msgstr "Параметры конфигурации"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Online Payment"
-msgstr "Онлайн-платеж"
+msgstr "Онлайн платеж"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
@@ -55,24 +54,24 @@ msgstr "Оплатить"
 #: code:addons/pos_online_payment_self_order/static/src/components/order_widget/order_widget.js:0
 #, python-format
 msgid "Pay at cashier"
-msgstr ""
+msgstr "Оплатить у кассира"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Pay at cashier if empty"
-msgstr ""
+msgstr "Оплатите в кассе, если пусто"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Payment Methods"
-msgstr "Методы Оплаты"
+msgstr "Способы оплаты"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.xml:0
 #, python-format
 msgid "Payment in progress"
-msgstr ""
+msgstr "Оплата в процессе"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_pos_config
@@ -82,27 +81,27 @@ msgstr "Конфигурация точки продаж"
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Заказы точки продажи"
+msgstr "Заказы в торговых точках"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.xml:0
 #, python-format
 msgid "Scan the QR code to pay"
-msgstr ""
+msgstr "Отсканируйте QR-код для оплаты"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_res_config_settings__pos_self_order_online_payment_method_id
 msgid "Self Online Payment"
-msgstr ""
+msgstr "Самостоятельная онлайн-оплата"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.js:0
 #, python-format
 msgid "The current order cannot be paid (maybe it is already paid)."
-msgstr ""
+msgstr "Текущий заказ не может быть оплачен (возможно, он уже оплачен)."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,help:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
@@ -110,6 +109,8 @@ msgstr ""
 msgid ""
 "The online payment method to use when a customer pays a self-order online."
 msgstr ""
+"Способ онлайн-оплаты, который используется, когда клиент оплачивает "
+"самостоятельный заказ онлайн."
 
 #. module: pos_online_payment_self_order
 #. odoo-python
@@ -120,8 +121,11 @@ msgid ""
 "least one published payment provider supporting the currency of that POS "
 "config."
 msgstr ""
+"Способ онлайн-оплаты, используемый для самостоятельного заказа в "
+"конфигурации POS, должен иметь по крайней мере одного опубликованного "
+"поставщика платежей, поддерживающего валюту этой конфигурации POS."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__use_self_order_online_payment
 msgid "Use Self Order Online Payment"
-msgstr ""
+msgstr "Используйте онлайн-оплату при самостоятельном заказе"

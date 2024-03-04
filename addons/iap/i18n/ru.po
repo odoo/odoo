@@ -4,11 +4,10 @@
 # 
 # Translators:
 # Alena Vlasova, 2023
-# ILMIR <karamov@it-projects.info>, 2023
 # Martin Trigaux, 2023
 # alenafairy, 2023
-# Сергей Шебанин <sergey@shebanin.ru>, 2023
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ivan Kropotkin <yelizariev@itpp.dev>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +26,7 @@ msgstr ""
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_info_id
 msgid "Account Info"
-msgstr ""
+msgstr "Информация Учетной Записи"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -43,18 +42,20 @@ msgstr "Токен учетной записи"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__account_uuid_hashed
 msgid "Account UUID"
-msgstr "UUID учётной записи"
+msgstr "UUID учетной записи"
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__account_token
 msgid ""
 "Account token is your authentication key for this service. Do not share it."
 msgstr ""
+"Токен учетной записи - это ваш ключ аутентификации для этой службы. Не "
+"сообщайте его."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_info_ids
 msgid "Accounts from IAP"
-msgstr ""
+msgstr "Счета от IAP"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
@@ -65,7 +66,7 @@ msgstr "Баланс"
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "Buy Credit"
-msgstr ""
+msgstr "Купить кредит"
 
 #. module: iap
 #. odoo-javascript
@@ -73,14 +74,14 @@ msgstr ""
 #: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
 #, python-format
 msgid "Buy credits"
-msgstr "Купить подписку"
+msgstr "Купить услуги"
 
 #. module: iap
 #. odoo-javascript
 #: code:addons/iap/static/src/xml/iap_templates.xml:0
 #, python-format
 msgid "Cancel"
-msgstr "Отмена"
+msgstr "Отменить"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_ids
@@ -97,7 +98,7 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_date
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__create_date
 msgid "Created on"
-msgstr "Дата создания"
+msgstr "Создано"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__description
@@ -109,12 +110,12 @@ msgstr "Описание"
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__display_name
 msgid "Display Name"
-msgstr "Показывать название"
+msgstr "Отображаемое имя"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "Hide Token"
-msgstr ""
+msgstr "Скрыть токен"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -127,42 +128,42 @@ msgstr "IAP"
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__account_id
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "IAP Account"
-msgstr "Аккаунт IAP"
+msgstr "IAP учетная запись"
 
 #. module: iap
 #: model:ir.model,name:iap.model_iap_account_info
 msgid "IAP Account Info"
-msgstr ""
+msgstr "Информация об учетной записи IAP"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_account_menu
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
 msgid "IAP Accounts"
-msgstr "Учетные записи IAP"
+msgstr "IAP учетные записи"
 
 #. module: iap
 #: model:ir.model,name:iap.model_iap_enrich_api
 msgid "IAP Lead Enrichment API"
-msgstr ""
+msgstr "IAP Lead Enrichment API"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__id
 msgid "ID"
-msgstr "Идентификатор"
+msgstr "ID"
 
 #. module: iap
 #. odoo-javascript
 #: code:addons/iap/static/src/xml/iap_templates.xml:0
 #, python-format
 msgid "Insufficient credit to perform this service."
-msgstr "Недостаточный кредит для выполнения этой услуги."
+msgstr "Недостаточно средств для проведения операции."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновил"
+msgstr "Последнее обновление"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_date
@@ -173,17 +174,17 @@ msgstr "Последнее обновление"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
 msgid "Name"
-msgstr "Название"
+msgstr "Имя"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "Odoo IAP"
-msgstr ""
+msgstr "Odoo IAP"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__service_name
 msgid "Related Service"
-msgstr ""
+msgstr "Сопутствующие услуги"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_name
@@ -194,14 +195,14 @@ msgstr "Название услуги"
 #: model:ir.model.fields,field_description:iap.field_iap_account__show_token
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "Show Token"
-msgstr ""
+msgstr "Показать токен"
 
 #. module: iap
 #. odoo-javascript
 #: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
 #, python-format
 msgid "Start a Trial at Odoo"
-msgstr "Начать испытания в Odoo"
+msgstr "Начните пробное использование Odoo"
 
 #. module: iap
 #. odoo-python
@@ -211,6 +212,8 @@ msgid ""
 "The url that this service requested returned an error. Please contact the "
 "author of the app. The url it tried to contact was %s"
 msgstr ""
+"Url, запрошенный этой службой, вернул ошибку. Пожалуйста, свяжитесь с "
+"автором приложения. Url, с которым он пытался связаться, был %s"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
@@ -221,7 +224,7 @@ msgstr "Порог"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__unit_name
 msgid "Unit Name"
-msgstr ""
+msgstr "Название единицы"
 
 #. module: iap
 #. odoo-javascript
@@ -229,26 +232,28 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 #, python-format
 msgid "View My Services"
-msgstr ""
+msgstr "Посмотреть мои услуги"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "View your IAP Services and recharge your credits"
-msgstr ""
+msgstr "Просматривайте свои услуги IAP и пополняйте кредиты"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warn_me
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__warn_me
 msgid "Warn me"
-msgstr ""
+msgstr "Предупредите меня"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_email
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__warning_email
 msgid "Warning Email"
-msgstr ""
+msgstr "Предупреждающее электронное письмо"
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__warn_me
 msgid "We will send you an email when your balance gets below that threshold"
 msgstr ""
+"Мы отправим вам электронное письмо, когда ваш баланс опустится ниже этого "
+"порога"

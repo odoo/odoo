@@ -60,6 +60,8 @@ const hasValidSelection = OdooEditorLib.hasValidSelection;
 const parseHTML = OdooEditorLib.parseHTML;
 const closestBlock = OdooEditorLib.closestBlock;
 const getRangePosition = OdooEditorLib.getRangePosition;
+const getCursorDirection = OdooEditorLib.getCursorDirection;
+const DIRECTIONS = OdooEditorLib.DIRECTIONS;
 
 function getJqueryFromDocument(doc) {
     if (doc.defaultView && doc.defaultView.$) {
@@ -189,6 +191,10 @@ export class Wysiwyg extends Component {
             withGradients: true,
             onColorLeave: () => {
                 this.odooEditor.historyRevertCurrentStep();
+                // Compute the selection to ensure it's preserved between
+                // selectionchange events in case this gets triggered multiple
+                // times quickly.
+                this.odooEditor._computeHistorySelection();
             },
             onInputEnter: (ev) => {
                 const pickergroup = ev.target.closest('.colorpicker-group');
@@ -390,6 +396,8 @@ export class Wysiwyg extends Component {
             return savedVideo;
         };
 
+        weUtils.setEditableDocument(this.options.document);
+
         const _getContentEditableAreas = this.options.getContentEditableAreas;
         this.odooEditor = new OdooEditor(this.$editable[0], Object.assign({
             _t: _t,
@@ -482,7 +490,7 @@ export class Wysiwyg extends Component {
             plugins: options.editorPlugins,
             direction: options.direction || localization.direction || 'ltr',
             collaborationClientAvatarUrl: this._getCollaborationClientAvatarUrl(),
-            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
+            renderingClasses: ["o_dirty", "o_transform_removal", "oe_edited_link", "o_menu_loading", "o_draggable"],
             dropImageAsAttachment: options.dropImageAsAttachment,
             foldSnippets: !!options.foldSnippets,
             useResponsiveFontSizes: options.useResponsiveFontSizes,
@@ -656,8 +664,8 @@ export class Wysiwyg extends Component {
                             target: $target[0],
                             wysiwyg: this,
                             container,
-                            notify: (params) => {
-                                this.notification.add(params.message, { type: params.type });
+                            notify: (message, params) => {
+                                this.notification.add(message, { type: params.type });
                             },
                         });;
                         $target.data('popover-widget-initialized', this.linkPopover);
@@ -1560,8 +1568,17 @@ export class Wysiwyg extends Component {
                         anchorOffset = focusOffset = index;
                     }
                 } else {
-                    anchorNode = link;
-                    focusNode = link;
+                    const isDirectionRight = getCursorDirection(selection.anchorNode, 0, selection.focusNode, 0) === DIRECTIONS.RIGHT;
+                    if (
+                        closestElement(selection.anchorNode, 'a') === link &&
+                        closestElement(selection.focusNode, 'a') === link
+                    ) {
+                        [anchorNode, focusNode] = isDirectionRight
+                            ? [selection.anchorNode, selection.focusNode]
+                            : [selection.focusNode, selection.anchorNode];
+                    } else {
+                        [anchorNode, focusNode] = [link, link];
+                    }
                 }
                 if (!focusOffset) {
                     focusOffset = focusNode.childNodes.length || focusNode.length;
@@ -1646,25 +1663,30 @@ export class Wysiwyg extends Component {
         const targetEl = this.odooEditor.document.getSelection();
         const closest = closestBlock(targetEl.anchorNode);
         const restoreSelection = preserveCursor(this.odooEditor.document);
-        const blockWidth = parseInt(getComputedStyle(closest).width.slice(0, -2)); // remove 'px'
-        // Calculate one/fouth portion of blockWidth, and then on the basis of our cursor position
-        // check in which quadrant it falls, give the popover its position accordingly
-        const portionWidth = (blockWidth / 4);
-        const cursorAt = getRangePosition(targetEl, this.odooEditor.document).left;
-        let position = 'end';
-        if (cursorAt < portionWidth * 2) {
-            position = 'start';
-        } else if (cursorAt <= portionWidth * 3) {
-            position = 'middle';
-        }
 
         this.popover.add(closest, EmojiPicker, {
                 onSelect: (str) => {
                     restoreSelection();
                     this.odooEditor.execCommand('insert', str);
                 },
+            }, {
+                onPositioned: (popover) => {
+                    restoreSelection();
+                    // Set the 'parentContextRect' option in 'options' when
+                    // 'getContextFromParentRect' is available. This facilitates
+                    // element positioning relative to a parent or reference
+                    // rectangle.
+                    const options = {};
+                    if (this.options.getContextFromParentRect) {
+                        options['parentContextRect'] = this.options.getContextFromParentRect();
+                    }
+                    const rangePosition = getRangePosition(popover, this.options.document, options);
+                    popover.style.top = rangePosition.top + 'px';
+                    popover.style.left = rangePosition.left + 'px';
+                    const oInputBox = popover.querySelector('input');
+                    oInputBox?.focus();
+                },
             },
-            { position: `bottom-${position}`}
         );
     }
     /**
@@ -1895,15 +1917,7 @@ export class Wysiwyg extends Component {
             }
             this._updateMediaJustifyButton(justifyBtn.id);
         });
-        $toolbar.find('#image-crop').click(e => {
-            if (!this.lastMediaClicked) {
-                return;
-            }
-            this.imageCropProps.media = this.lastMediaClicked;
-            this.imageCropProps.showCount++;
-            this.odooEditor.toolbarHide();
-            $(this.lastMediaClicked).on('image_cropper_destroyed', () => this.odooEditor.toolbarShow());
-        });
+        $toolbar.find('#image-crop').click(() => this._showImageCrop());
         $toolbar.find('#image-transform').click(e => {
             if (!this.lastMediaClicked) {
                 return;
@@ -1954,6 +1968,16 @@ export class Wysiwyg extends Component {
             // Scroll event does not bubble.
             document.addEventListener('scroll', this._onScroll, true);
         }
+    }
+
+    _showImageCrop() {
+        if (!this.lastMediaClicked) {
+            return;
+        }
+        this.imageCropProps.media = this.lastMediaClicked;
+        this.imageCropProps.showCount++;
+        this.odooEditor.toolbarHide();
+        $(this.lastMediaClicked).on('image_cropper_destroyed', () => this.odooEditor.toolbarShow());
     }
     /**
      * @private
@@ -2022,7 +2046,7 @@ export class Wysiwyg extends Component {
             const range = new Range();
             range.setStart(first, 0);
             range.setEnd(...endPos(last));
-            sel.addRange(range);
+            sel.addRange(getDeepRange(this.odooEditor.editable, { range }));
         }
 
         const hexColor = this._colorToHex(color);
@@ -2137,6 +2161,7 @@ export class Wysiwyg extends Component {
             '#list',
             '#colorInputButtonGroup',
             '#media-insert', // "Insert media" should be replaced with "Replace media".
+            '#chatgpt', // Chatgpt should be removed when media is in selection.
         ].join(','))){
             el.classList.toggle('d-none', isInMedia);
         }
@@ -2289,7 +2314,8 @@ export class Wysiwyg extends Component {
                     </div>
                 `).childNodes[0];
                 this.odooEditor.execCommand('insert', bannerElement);
-                setSelection(bannerElement.querySelector('.o_editor_banner > div'), 0);
+                this.odooEditor.activateContenteditable();
+                setSelection(bannerElement.querySelector('.o_editor_banner > div > p'), 0);
             },
         }
     }
@@ -2639,7 +2665,7 @@ export class Wysiwyg extends Component {
                         .removeClass(id)
                         .popover({
                             trigger: 'hover',
-                            content: response.message.data.message || '',
+                            content: response.message.data?.message || '',
                             placement: 'auto',
                         })
                         .popover('show');

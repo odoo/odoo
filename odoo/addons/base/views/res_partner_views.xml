@@ -113,7 +113,7 @@
                     <group>
                         <field name="function" placeholder="e.g. Sales Director" invisible="is_company"/>
                         <field name="user_ids" invisible="1"/>
-                        <field name="email" widget="email" context="{'gravatar_image': True}" required="context.get('force_email', False) or user_ids"/>
+                        <field name="email" widget="email" context="{'gravatar_image': True}" required="True"/>
                         <field name="phone" widget="phone" options="{'enable_sms': false}"/>
                         <field name="mobile" widget="phone" options="{'enable_sms': false}"/>
                     </group>

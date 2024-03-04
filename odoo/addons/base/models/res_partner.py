@@ -166,6 +166,7 @@ class Partner(models.Model):
     _name = "res.partner"
     _order = "complete_name ASC, id DESC"
     _rec_names_search = ['complete_name', 'email', 'ref', 'vat', 'company_registry']  # TODO vat must be sanitized the same way for storing/searching
+    _allow_sudo_commands = False
 
     # the partner types that must be added to a partner's complete name, like "Delivery"
     _complete_name_displayed_types = ('invoice', 'delivery', 'other')
@@ -332,22 +333,24 @@ class Partner(models.Model):
             return "base/static/img/money.png"
         return super()._avatar_get_placeholder_path()
 
+    def _get_complete_name(self):
+        self.ensure_one()
+
+        displayed_types = self._complete_name_displayed_types
+        type_description = dict(self._fields['type']._description_selection(self.env))
+
+        name = self.name or ''
+        if self.company_name or self.parent_id:
+            if not name and self.type in displayed_types:
+                name = type_description[self.type]
+            if not self.is_company:
+                name = f"{self.commercial_company_name or self.sudo().parent_id.name}, {name}"
+        return name.strip()
+
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name', 'commercial_company_name')
     def _compute_complete_name(self):
-        displayed_types = self._complete_name_displayed_types
-        # determine the labels of partner types to be included
-        # as 'displayed_types' (without user lang to avoid context dependency)
-        type_description = dict(self._fields['type']._description_selection(self.with_context({}).env))
-
         for partner in self:
-            name = partner.name or ''
-            if partner.company_name or partner.parent_id:
-                if not name and partner.type in displayed_types:
-                    name = type_description[partner.type]
-                if not partner.is_company:
-                    name = f"{partner.commercial_company_name or partner.sudo().parent_id.name}, {name}"
-
-            partner.complete_name = name.strip()
+            partner.complete_name = partner.with_context({})._get_complete_name()
 
     @api.depends('lang')
     def _compute_active_lang_count(self):
@@ -431,8 +434,6 @@ class Partner(models.Model):
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
-        if (not view_id) and (view_type == 'form') and self._context.get('force_email'):
-            view_id = self.env.ref('base.view_partner_simple_form').id
         arch, view = super()._get_view(view_id, view_type, **options)
         company = self.env.company
         if company.country_id.vat_label:
@@ -840,10 +841,10 @@ class Partner(models.Model):
                 }
 
     @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id', 'commercial_company_name')
-    @api.depends_context('show_address', 'partner_show_db_id', 'address_inline', 'show_email', 'show_vat')
+    @api.depends_context('show_address', 'partner_show_db_id', 'address_inline', 'show_email', 'show_vat', 'lang')
     def _compute_display_name(self):
         for partner in self:
-            name = partner.complete_name
+            name = partner.with_context({'lang': self.env.lang})._get_complete_name()
             if partner._context.get('show_address'):
                 name = name + "\n" + partner._display_address(without_company=True)
             name = re.sub(r'\s+\n', '\n', name)

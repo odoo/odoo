@@ -616,33 +616,13 @@ class ProductProduct(models.Model):
         }
 
     def action_open_documents(self):
-        self.ensure_one()
-        return {
-            'name': _('Documents'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'product.document',
-            'view_mode': 'kanban,tree,form',
-            'context': {
-                'default_res_model': self._name,
-                'default_res_id': self.id,
-                'default_company_id': self.company_id.id,
-            },
-            'domain': [('res_id', 'in', self.ids), ('res_model', '=', self._name)],
-            'target': 'current',
-            'help': """
-                <p class="o_view_nocontent_smiling_face">
-                    %s
-                </p><p>
-                    %s
-                    <br/>
-                    %s
-                </p>
-            """ % (
-                _("Upload files to your product"),
-                _("Use this feature to store any files you would like to share with your customers."),
-                _("E.G: product description, ebook, legal notice, ..."),
-            )
-        }
+        res = self.product_tmpl_id.action_open_documents()
+        res['context'].update({
+            'default_res_model': self._name,
+            'default_res_id': self.id,
+            'search_default_context_variant': True,
+        })
+        return res
 
     #=== BUSINESS METHODS ===#
 

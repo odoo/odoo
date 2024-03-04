@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import ast
 import base64
+import json
 import logging
 import lxml
 import os
@@ -25,8 +26,6 @@ _logger = logging.getLogger(__name__)
 APPS_URL = "https://apps.odoo.com"
 MAX_FILE_SIZE = 100 * 1024 * 1024  # in megabytes
 
-def to_tuple(t):
-    return tuple(map(to_tuple, t)) if isinstance(t, (list, tuple)) else t
 
 class IrModule(models.Model):
     _inherit = "ir.module.module"
@@ -99,7 +98,7 @@ class IrModule(models.Model):
             mode = 'update' if not force else 'init'
         else:
             assert terp.get('installable', True), "Module not installable"
-            self.create(dict(name=module, state='installed', imported=True, **values))
+            mod = self.create(dict(name=module, state='installed', imported=True, **values))
             mode = 'init'
 
         kind_of_files = ['data', 'init_xml', 'update_xml']
@@ -195,6 +194,8 @@ class IrModule(models.Model):
             'res_id': asset.id,
         } for asset in created_assets])
 
+        mod._update_from_terp(terp)
+
         return True
 
     @api.model
@@ -287,9 +288,8 @@ class IrModule(models.Model):
     @api.model
     def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
         if _domain_asks_for_industries(domain):
-            fields_name = tuple(specification.keys())
-            domain_tuple = to_tuple(domain or [])
-            modules_list = self._get_modules_from_apps(fields_name, 'industries', False, domain_tuple, offset=offset, limit=limit)
+            fields_name = list(specification.keys())
+            modules_list = self._get_modules_from_apps(fields_name, 'industries', False, domain, offset=offset, limit=limit)
             return {
                 'length': len(modules_list),
                 'records': modules_list,
@@ -308,7 +308,7 @@ class IrModule(models.Model):
         }
 
     def web_read(self, specification):
-        fields = tuple(specification.keys())
+        fields = list(specification.keys())
         module_type = self.env.context.get('module_type', 'official')
         if module_type != 'official':
             modules_list = self._get_modules_from_apps(fields, module_type, self.env.context.get('module_name'))
@@ -317,27 +317,26 @@ class IrModule(models.Model):
             return super().web_read(specification)
 
     @api.model
-    @ormcache('fields', 'module_type', 'module_name', 'domain', 'limit', 'offset')
     def _get_modules_from_apps(self, fields, module_type, module_name, domain=None, limit=None, offset=None):
+        if 'name' not in fields:
+            fields = fields + ['name']
         payload = {
-            'series': major_version,
-            'module_fields': fields,
-            'module_type': module_type,
-            'module_name': module_name,
-            'domain': domain,
-            'limit': limit,
-            'offset': offset,
+            'params': {
+                'series': major_version,
+                'module_fields': fields,
+                'module_type': module_type,
+                'module_name': module_name,
+                'domain': domain,
+                'limit': limit,
+                'offset': offset,
+            }
         }
         try:
-            resp = requests.post(
-                f"{APPS_URL}/loempia/listdatamodules",
-                json={'params': payload},
-                timeout=5.0,
-            )
+            resp = self._call_apps(json.dumps(payload))
             resp.raise_for_status()
             modules_list = resp.json().get('result', [])
             for mod in modules_list:
-                module_name = mod.get('name', module_name)
+                module_name = mod['name']
                 existing_mod = self.search([('name', '=', module_name), ('state', '=', 'installed')])
                 mod['id'] = existing_mod.id if existing_mod else -1
                 if 'icon' in fields:
@@ -356,6 +355,17 @@ class IrModule(models.Model):
             raise UserError(_('The list of industry applications cannot be fetched. Please try again later'))
         except requests.exceptions.ConnectionError:
             raise UserError(_('Connection to %s failed The list of industry modules cannot be fetched') % APPS_URL)
+
+    @api.model
+    @ormcache('payload')
+    def _call_apps(self, payload):
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        return requests.post(
+                f"{APPS_URL}/loempia/listdatamodules",
+                data=payload,
+                headers=headers,
+                timeout=5.0,
+            )
 
     @api.model
     @ormcache()
@@ -392,7 +402,7 @@ class IrModule(models.Model):
                 'modules_dependencies': missing_dependencies_description,
             })
             return {
-                'name': 'Install an App',
+                'name': _("Install an Industry"),
                 'view_mode': 'form',
                 'target': 'new',
                 'res_id': import_module.id,

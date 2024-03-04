@@ -93,6 +93,7 @@ class TestSaleCommonBase(TransactionCase):
             'default_pricelist': cls.env['product.pricelist'].with_company(company).create({
                 'name': 'default_pricelist',
                 'currency_id': company.currency_id.id,
+                'company_id': False,
             }),
 
             # Product category

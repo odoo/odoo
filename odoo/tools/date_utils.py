@@ -65,7 +65,7 @@ def get_fiscal_year(date, day=31, month=12):
 
     def fix_day(year, month, day):
         max_day = calendar.monthrange(year, month)[1]
-        if (month == 2 and day in (28, max_day)) or (month != 2 and day in (30, max_day)):
+        if month == 2 and day in (28, max_day):
             return max_day
         return min(day, max_day)
 

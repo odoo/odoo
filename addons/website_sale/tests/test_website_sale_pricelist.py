@@ -240,8 +240,8 @@ class TestWebsitePriceList(TransactionCase):
         so.pricelist_id = promo_pricelist
         with MockRequest(self.env, website=current_website, sale_order_id=so.id):
             so._cart_update(product_id=product.id, line_id=sol.id, set_qty=500)
-        self.assertEqual(sol.price_unit, 37.0, 'Both reductions should be applied')
-        self.assertEqual(sol.discount, 25.0, 'Both reductions should be applied')
+        self.assertEqual(sol.price_unit, 100.0, 'Both reductions should be applied')
+        self.assertEqual(sol.discount, 72.25, 'Both reductions should be applied')
         self.assertEqual(sol.price_total, 13875)
 
     def test_pricelist_with_no_list_price(self):

@@ -72,15 +72,24 @@ export class SelectionField extends Component {
         switch (this.type) {
             case "many2one":
                 if (value === false) {
-                    this.props.record.update({ [this.props.name]: false }, { save: this.props.autosave });
+                    this.props.record.update(
+                        { [this.props.name]: false },
+                        { save: this.props.autosave }
+                    );
                 } else {
-                    this.props.record.update({
-                        [this.props.name]: this.options.find((option) => option[0] === value),
-                    }, { save: this.props.autosave });
+                    this.props.record.update(
+                        {
+                            [this.props.name]: this.options.find((option) => option[0] === value),
+                        },
+                        { save: this.props.autosave }
+                    );
                 }
                 break;
             case "selection":
-                this.props.record.update({ [this.props.name]: value }, { save: this.props.autosave });
+                this.props.record.update(
+                    { [this.props.name]: value },
+                    { save: this.props.autosave }
+                );
                 break;
         }
     }
@@ -100,7 +109,7 @@ export const selectionField = {
         };
         if (viewType === "kanban") {
             props.readonly = dynamicInfo.readonly;
-        };
+        }
         return props;
     },
 };

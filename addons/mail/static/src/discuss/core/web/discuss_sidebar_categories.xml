@@ -34,7 +34,7 @@
                 <t t-set="thread" t-value="thread"/>
             </t>
         </t>
-        <t t-elif="store.discuss.thread.in(category.threads)" t-call="mail.DiscussSidebarChannel">
+        <t t-elif="store.discuss.thread?.in(category.threads)" t-call="mail.DiscussSidebarChannel">
             <t t-set="thread" t-value="store.discuss.thread"/>
         </t>
     </t>

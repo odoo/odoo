@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Maitê Dietze, 2023
+# Maitê Dietze, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Maitê Dietze, 2023\n"
+"Last-Translator: Maitê Dietze, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,6 +65,21 @@ msgstr ""
 "<span>\n"
 "                                    Quero migrar minha conexão do Peppol para o Odoo (opcional):\n"
 "                                </span>"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"A participant with these details has already been registered on the network."
+" If you have previously registered to an alternative Peppol service, please "
+"deregister from that service, or request a migration key before trying "
+"again."
+msgstr ""
+"Um participante com esses detalhes já foi registrado na rede. Caso tenha se "
+"registrado anteriormente em um serviço Peppol alternativo, cancele seu "
+"registro nesse serviço ou solicite uma chave de migração antes de tentar "
+"novamente."
 
 #. module: account_peppol
 #. odoo-python
@@ -215,6 +230,13 @@ msgstr "Configurações"
 #, python-format
 msgid "Confirm"
 msgstr "Confirmar"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Connection error, please try again later."
+msgstr "Erro de conexão. Tente novamente mais tarde."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_partner
@@ -617,6 +639,13 @@ msgid "SMS verification code"
 msgstr "Código de verificação por SMS"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+#, python-format
+msgid "Send again"
+msgstr "Enviar novamente"
+
+#. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_move_send__checkbox_send_peppol
 msgid "Send the invoice via PEPPOL"
 msgstr "Send the invoice via PEPPOL"
@@ -751,8 +780,31 @@ msgstr "O ID exclusivo que identifica esse usuário, normalmente o VAT/CNPJ"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
+msgid "The verification code is not correct"
+msgstr "O código de verificação não está correto"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
 msgid "The verification code should contain six digits."
 msgstr "O código de verificação deve conter seis dígitos."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "This verification code has expired. Please request a new one."
+msgstr "Este código de verificação expirou. Solicite outro."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Too many attempts to request an SMS code. Please try again later."
+msgstr ""
+"Muitas tentativas para solicitar um código de SMS. Tente novamente mais "
+"tarde."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
@@ -833,7 +885,9 @@ msgid "Verify partner's PEPPOL endpoint"
 msgstr "Verify partner's PEPPOL endpoint"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+#, python-format
 msgid "Verify phone number"
 msgstr "Verificar número de telefone"
 
@@ -881,3 +935,8 @@ msgstr "Seu código de confirmação é"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your migration key is:"
 msgstr "Sua chave de migração é:"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Your registration should be activated within a day."
+msgstr "Seu registro deve ser ativado dentro de um dia."

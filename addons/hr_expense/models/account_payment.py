@@ -31,7 +31,8 @@ class AccountPayment(models.Model):
 
     def _synchronize_to_moves(self, changed_fields):
         # EXTENDS account
-        if self.expense_sheet_id:
+        trigger_fields = set(self._get_trigger_fields_to_synchronize()) | {'ref', 'expense_sheet_id', 'payment_method_line_id'}
+        if self.expense_sheet_id and any(field_name in trigger_fields for field_name in changed_fields):
             raise UserError(_("You cannot do this modification since the payment is linked to an expense report."))
         return super()._synchronize_to_moves(changed_fields)
 

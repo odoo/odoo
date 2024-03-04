@@ -1,0 +1,104 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_xendit
+# 
+# Translators:
+# Wil Odoo, 2024
+# Jolien De Paepe, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~17.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-07 10:24+0000\n"
+"PO-Revision-Date: 2024-01-23 08:23+0000\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+msgid ""
+"An error occurred during the processing of your payment (status %s). Please "
+"try again."
+msgstr ""
+"Une erreur est survenue lors du traitement de votre paiement (statut %s). "
+"Veuillez réessayer."
+
+#. module: payment_xendit
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__code
+msgid "Code"
+msgstr "Code"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid "Could not establish the connection to the API."
+msgstr "Impossible d'établir la connexion à l'API."
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+msgid "No transaction found matching reference %s."
+msgstr "Aucune transaction ne correspond à la référence %s."
+
+#. module: payment_xendit
+#: model:ir.model,name:payment_xendit.model_payment_provider
+msgid "Payment Provider"
+msgstr "Fournisseur de paiement"
+
+#. module: payment_xendit
+#: model:ir.model,name:payment_xendit.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transaction de paiement"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+msgid "Received data with missing reference."
+msgstr "Données reçues avec référence manquante."
+
+#. module: payment_xendit
+#: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
+msgid "Secret Key"
+msgstr "Clé secrète"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid ""
+"The communication with the API failed. Xendit gave us the following "
+"information: '%s'"
+msgstr ""
+"Échec de la communication avec l'API. Xendit nous a fourni les informations "
+"suivantes : '%s'"
+
+#. module: payment_xendit
+#: model:ir.model.fields,help:payment_xendit.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Le code technique de ce fournisseur de paiement."
+
+#. module: payment_xendit
+#: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
+msgid "Webhook Token"
+msgstr "Jeton Webhook"
+
+#. module: payment_xendit
+#: model:ir.model.fields.selection,name:payment_xendit.selection__payment_provider__code__xendit
+msgid "Xendit"
+msgstr "Xendit"
+
+#. module: payment_xendit
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_secret_key
+msgid "Xendit Secret Key"
+msgstr "Clé secrète Xendit"
+
+#. module: payment_xendit
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_webhook_token
+msgid "Xendit Webhook Token"
+msgstr "Jeton Webhook Xendit"

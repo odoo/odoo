@@ -66,7 +66,7 @@
                         <label class="form-label label" for="pricelist">Pricelist</label>
                         <select class="detail form-select" id="pricelist" name="property_product_pricelist" t-model="changes.property_product_pricelist" t-att="{'disabled': isFieldCommercialAndPartnerIsChild('property_product_pricelist')}" t-att-class="{'border-danger': missingFields.includes('property_product_pricelist')}">
                             <t t-foreach="pos.pricelists" t-as="pricelist" t-key="pricelist.id">
-                                <option t-att-value="pricelist.id" t-att-selected="props.partner.property_product_pricelist ? (pricelist.id === props.partner.property_product_pricelist[0] ? true : undefined) : pricelist.id === pos.default_pricelist.id ? true : undefined">
+                                <option t-att-value="pricelist.id" t-att-selected="props.partner.property_product_pricelist ? (pricelist.id === props.partner.property_product_pricelist[0] ? true : undefined) : pricelist.id === pos.default_pricelist?.id ? true : undefined">
                                     <t t-esc="pricelist.display_name" />
                                 </option>
                             </t>

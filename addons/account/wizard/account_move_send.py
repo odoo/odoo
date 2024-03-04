@@ -41,7 +41,7 @@ class AccountMoveSend(models.TransientModel):
         readonly=False,
     )
     display_mail_composer = fields.Boolean(compute='_compute_send_mail_extra_fields')
-    send_mail_warning_message = fields.Boolean(compute='_compute_send_mail_extra_fields')
+    send_mail_warning_message = fields.Json(compute='_compute_send_mail_extra_fields')
     send_mail_readonly = fields.Boolean(compute='_compute_send_mail_extra_fields')
     mail_template_id = fields.Many2one(
         comodel_name='mail.template',
@@ -254,7 +254,17 @@ class AccountMoveSend(models.TransientModel):
             wizard.display_mail_composer = wizard.mode == 'invoice_single'
             invoices_without_mail_data = wizard.move_ids.filtered(lambda x: not x.partner_id.email)
             wizard.send_mail_readonly = invoices_without_mail_data == wizard.move_ids
-            wizard.send_mail_warning_message = bool(invoices_without_mail_data) and (wizard.checkbox_send_mail or wizard.send_mail_readonly)
+            if not (invoices_without_mail_data and wizard.checkbox_send_mail or wizard.send_mail_readonly):
+                wizard.send_mail_warning_message = False
+            else:
+                partners = invoices_without_mail_data.partner_id
+                wizard.send_mail_warning_message = {
+                    **(wizard.send_mail_warning_message or {}),
+                    'partner_missing_email': {
+                        'message': _("Partner(s) should have an email address."),
+                        'action_text': _("View Partner(s)"),
+                        'action': partners._get_records_action(name=_("Check Partner(s)"))
+                    }}
 
     @api.depends('mail_template_id')
     def _compute_mail_lang(self):
@@ -326,25 +336,8 @@ class AccountMoveSend(models.TransientModel):
     # -------------------------------------------------------------------------
 
     def action_open_partners_without_email(self, res_ids=None):
-        partners = self.move_ids.mapped("partner_id").filtered(lambda x: not x.email)
-        if len(partners) == 1:
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'res.partner',
-                'view_mode': 'form',
-                'target': 'current',
-                'res_id': partners.id,
-            }
-        else:
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'res.partner',
-                'view_mode': 'tree,form',
-                'target': 'current',
-                'name': _('Partners without email'),
-                'context': {'create': False, 'delete': False},
-                'domain': [('id', 'in', partners.ids)],
-            }
+        # TODO: remove this method in master
+        return self.move_ids.mapped("partner_id").filtered(lambda x: not x.email)._get_records_action(name=_("Partners without email"))
 
     @api.model
     def _need_invoice_document(self, invoice):
@@ -508,7 +501,7 @@ class AccountMoveSend(models.TransientModel):
     def _send_mails(self, moves_data):
         subtype = self.env.ref('mail.mt_comment')
 
-        for move, move_data in moves_data.items():
+        for move, move_data in [(move, move_data) for move, move_data in moves_data.items() if move.partner_id.email]:
             mail_template = move_data['mail_template_id']
             mail_lang = move_data['mail_lang']
             mail_params = self._get_mail_params(move, move_data)
@@ -562,8 +555,7 @@ class AccountMoveSend(models.TransientModel):
                 self._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
                 invoice_data['blocking_error'] = invoice_data.get('error') \
                                                  and not (allow_fallback_pdf and invoice_data.get('error_but_continue'))
-                if invoice_data['blocking_error']:
-                    continue
+                invoice_data['error_but_continue'] = allow_fallback_pdf and invoice_data.get('error_but_continue')
 
         invoices_data_web_service = {
             invoice: invoice_data
@@ -576,7 +568,7 @@ class AccountMoveSend(models.TransientModel):
         invoices_data_pdf = {
             invoice: invoice_data
             for invoice, invoice_data in invoices_data.items()
-            if not invoice_data.get('error') or not invoice_data.get('blocking_error', True)
+            if not invoice_data.get('error') or invoice_data.get('error_but_continue')
         }
         for invoice, invoice_data in invoices_data_pdf.items():
             if self._need_invoice_document(invoice) and not invoice_data.get('error'):
@@ -603,8 +595,8 @@ class AccountMoveSend(models.TransientModel):
             self._call_web_service_after_invoice_pdf_render(invoices_data_web_service)
 
         # Create and link the generated documents to the invoice if the web-service didn't failed.
-        for invoice, invoice_data in invoices_data_pdf.items():
-            if not invoice_data.get('error') and self._need_invoice_document(invoice):
+        for invoice, invoice_data in invoices_data_web_service.items():
+            if self._need_invoice_document(invoice) and (not invoice_data.get('error') or allow_fallback_pdf):
                 self._link_invoice_documents(invoice, invoice_data)
 
     @api.model
@@ -629,7 +621,7 @@ class AccountMoveSend(models.TransientModel):
                 'close': True,  # close the wizard
             }
         else:
-            filename = next(iter(moves_data))._get_invoice_report_filename(extension='zip') if len(moves_data) == 1 else 'invoices.zip'
+            filename = next(iter(moves_data))._get_invoice_report_filename(extension='zip') if len(moves_data) == 1 else _('invoices') + '.zip'
             return {
                 'type': 'ir.actions.act_url',
                 'url': f"/account/export_zip_documents?{url_encode({'ids': attachment_ids, 'filename': filename})}",
@@ -667,13 +659,15 @@ class AccountMoveSend(models.TransientModel):
             self._generate_invoice_fallback_documents(errors)
 
         # Send mail.
-        success = {move: move_data for move, move_data in moves_data.items() if not move_data.get('error') and move.partner_id.email}
+        success = {move: move_data for move, move_data in moves_data.items() if not move_data.get('error')}
         if success:
             self._hook_if_success(success, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
 
         # Update send and print values of moves
-        for move in moves:
-            if move.send_and_print_values:
+        for move, move_data in moves_data.items():
+            if from_cron and move_data.get('error'):
+                move.send_and_print_values = {'error': True}
+            else:
                 move.send_and_print_values = False
 
         to_download = {move: move_data for move, move_data in moves_data.items() if move_data.get('download')}
@@ -705,9 +699,18 @@ class AccountMoveSend(models.TransientModel):
         if process_later:
             # Set sending information on moves
             for move in self.move_ids:
-                move.send_and_print_values = self._get_wizard_values()
+                move.send_and_print_values = {'sp_partner_id': self.env.user.partner_id.id, **self._get_wizard_values()}
             self.env.ref('account.ir_cron_account_move_send')._trigger()
-            return {'type': 'ir.actions.act_window_close'}
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'info',
+                    'title': _('Sending invoices'),
+                    'message': _('Invoices are being sent in the background.'),
+                    'next': {'type': 'ir.actions.act_window_close'},
+                },
+            }
 
         return self._process_send_and_print(
             self.move_ids,

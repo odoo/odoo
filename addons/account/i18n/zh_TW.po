@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -255,7 +255,7 @@ msgstr "）。<br/>"
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "- %(name)s in %(company)s"
-msgstr ""
+msgstr "- %(name)s（公司：%(company)s）"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1498,7 +1498,7 @@ msgstr "就同一稅項，只能設立單一條稅務財務規則。"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "A temporary number can not be used in a real matching"
-msgstr ""
+msgstr "臨時號碼不能用於實際配對"
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -4110,7 +4110,7 @@ msgstr "日記帳相關的公司"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Complete the partner data with email"
-msgstr ""
+msgstr "以電郵填寫合作夥伴數據"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -6176,15 +6176,6 @@ msgid "Epd Needed"
 msgstr "Epd 必需"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-#, python-format
-msgid ""
-"Error while loading the localization. You should probably update your "
-"localization app first."
-msgstr ""
-
-#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
@@ -6193,6 +6184,15 @@ msgstr ""
 #, python-format
 msgid "Equity"
 msgstr "權益"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Error while loading the localization. You should probably update your "
+"localization app first."
+msgstr "載入本地化資料時出錯。請先嘗試更新本地化應用程式。"
 
 #. module: account
 #. odoo-python
@@ -6879,12 +6879,12 @@ msgstr "間距"
 msgid ""
 "Gaps due to canceled invoices, deleted entries or manual errors in open "
 "period."
-msgstr ""
+msgstr "因取消發票、刪除記項，或開放期間的人手錯誤，所造成的間隙。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Gaps in the sequence"
-msgstr ""
+msgstr "序列間隙"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_generate_entries
@@ -7753,6 +7753,13 @@ msgstr "無效的\"郵編範圍\"，請正確的設定."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr "表達式 %s（行數：%s）的域無效：%s"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Invalid fiscal year last day"
@@ -8030,10 +8037,39 @@ msgstr "應收憑單統計"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "Invoices are being sent in the background."
+msgstr "發票正在後台發送。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices in error"
+msgstr "發票有錯誤"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Invoices owed to you"
 msgstr "您的應收憑單"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices sent"
+msgstr "發票已發送"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices sent successfully."
+msgstr "發票已成功發送。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -9413,6 +9449,13 @@ msgid "Never"
 msgstr "從不"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "New"
+msgstr "新增"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "New Journal Name"
 msgstr "新日記帳名稱"
@@ -9904,12 +9947,19 @@ msgstr "一旦安裝，設定 '銀行費用' 到 '文件匯入' 在銀行帳戶�
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once your invoice is ready, confirm it."
-msgstr ""
+msgstr "發票就緒時，請確認它。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr "此合作夥伴設定的一個或多個銀行賬戶也被其他人使用"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "One or more invoices couldn't be processed."
+msgstr "有一張或多張發票未能處理。"
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -9980,8 +10030,11 @@ msgid "Oops"
 msgstr "哎呀"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
+#, python-format
 msgid "Open"
 msgstr "開啟"
 
@@ -10476,14 +10529,14 @@ msgstr "合作夥伴"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "Partners that are used in hashed entries cannot be merged."
-msgstr ""
+msgstr "雜湊記項使用的合作夥伴，不可合併。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Partners without email"
-msgstr ""
+msgstr "沒有電子郵件的合作夥伴"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10914,7 +10967,7 @@ msgstr "請至少設定一個匹配文字以建立對應合作夥伴."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "Please specify an email address on the"
-msgstr ""
+msgstr "請為以下項目設定電郵地址："
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -11535,6 +11588,14 @@ msgstr "如果發現不一致，請重新載入會計數據（稅款、賬戶等
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
 msgstr "重新建立日記帳分錄的序列."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Removed"
+msgstr "已刪除"
 
 #. module: account
 #: model:account.account,name:account.1_expense_rent
@@ -12362,9 +12423,23 @@ msgstr ""
 "傳送帶有欺詐性賬戶號碼的虛假發票，是常見的網絡釣魚行為。為保障你自己，請務必驗證新的銀行賬戶號碼，最好是致電供應商，因為網絡釣魚通常在他們電子郵件已外洩時發生。完成驗證後，你便可以啟用匯款功能。"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "Sending invoices"
+msgstr "正在傳送發票"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Sent"
 msgstr "發送"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Sent invoices"
+msgstr "已發送發票"
 
 #. module: account
 #: model:mail.template,description:account.mail_template_data_payment_receipt
@@ -13232,7 +13307,7 @@ msgstr "當有利於公司時，稅務往來科目用作稅務結算分錄的對
 #: model:ir.model.fields,help:account.field_account_move_line__tax_repartition_line_id
 msgid ""
 "Tax distribution line that caused the creation of this move line, if any"
-msgstr "導致建立此傳票明細的税金分配明细(如果有)"
+msgstr "導致建立此分錄行的稅項分配資料行（如有）"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14237,6 +14312,10 @@ msgid ""
 "The financial end year detected here is '%(year_end)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"每個財政年度開始時，序列會從 1 重新開始。\n"
+"此處偵測到的財務開始年份為 %(year)s。\n"
+"此處偵測到的財務結束年份為 %(year_end)s。\n"
+"這情況下的遞增數字是 %(formatted_seq)s。"
 
 #. module: account
 #. odoo-python
@@ -15684,7 +15763,7 @@ msgstr "應收憑單警告"
 msgid ""
 "We can't leave this document without any company. Please select a company "
 "for this document."
-msgstr ""
+msgstr "本文件不可缺少公司資料。請為本文件選擇一間公司。"
 
 #. module: account
 #. odoo-python
@@ -16274,18 +16353,16 @@ msgstr "您不能有一個以上以\"年度營收\"為類型的科目. (科目: 
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
-msgstr ""
-"若開始記賬分錄 (%s) 已過賬，便不能再匯入「openning_balance」。                         "
-"若你絕對確定要修改賬戶的期初結餘，請將分錄重設為草稿。"
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
+msgstr "若開始記賬分錄 (%s) 已過賬，便不能再匯入「openning_balance」。若你絕對確定要修改賬戶的期初結餘，請將分錄重設為草稿。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot merge accounts."
-msgstr ""
+msgstr "你不可合併賬戶。"
 
 #. module: account
 #. odoo-python
@@ -16728,7 +16805,7 @@ msgstr "例如domain.com"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "following partners."
-msgstr ""
+msgstr "正關注合作夥伴。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16780,6 +16857,13 @@ msgstr "不包括與客戶所在國家/地區的稅金法律相關的任何費�
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__percentage
 msgid "in percentage"
 msgstr "百分比"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "invoices"
+msgstr "發票"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account

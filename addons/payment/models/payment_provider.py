@@ -322,6 +322,20 @@ class PaymentProvider(models.Model):
                     }
                 }
 
+    @api.onchange('company_id')
+    def _onchange_company_block_if_existing_transactions(self):
+        """ Raise a user error when the company is changed and linked transactions exist.
+
+        :return: None
+        :raise UserError: If transactions are linked to the provider.
+        """
+        if self._origin.company_id != self.company_id and self.env['payment.transaction'].search(
+            [('provider_id', '=', self._origin.id)], limit=1
+        ):
+            raise UserError(_(
+                "You cannot change the company of a payment provider with existing transactions."
+            ))
+
     #=== CRUD METHODS ===#
 
     @api.model_create_multi
@@ -637,13 +651,17 @@ class PaymentProvider(models.Model):
         return
 
     @api.model
+    def _get_removal_domain(self, provider_code):
+        return [('code', '=', provider_code)]
+
+    @api.model
     def _remove_provider(self, provider_code):
         """ Remove the module-specific data of the given provider.
 
         :param str provider_code: The code of the provider whose data to remove.
         :return: None
         """
-        providers = self.search([('code', '=', provider_code)])
+        providers = self.search(self._get_removal_domain(provider_code))
         providers.write(self._get_removal_values())
 
     def _get_removal_values(self):

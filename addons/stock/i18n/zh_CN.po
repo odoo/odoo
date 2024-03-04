@@ -5,10 +5,11 @@
 # Translators:
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
 # 何彬 <vnsoft.he@gmail.com>, 2023
-# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # Wil Odoo, 2024
-# Martin Trigaux, 2024
 # Chloe Wang, 2024
+# Yazi Tian, 2024
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
+# 湘子 南 <1360857908@qq.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,7 +111,7 @@ msgstr "# 退货"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "%(name)s (copy)(%(id)s)"
-msgstr ""
+msgstr "%(name)s (copy)(%(id)s)"
 
 #. module: stock
 #. odoo-python
@@ -331,7 +332,7 @@ msgstr "2 x 7已含价"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "2021-9-01"
-msgstr "2021 年 9 月 1 日"
+msgstr "2021-9-01"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -341,7 +342,7 @@ msgstr "2023-01-01"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "2023-09-24"
-msgstr "2023 年 9 月 24 日"
+msgstr "2023-09-24"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -513,7 +514,7 @@ msgstr "<span class=\"o_stat_text\">分配</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Detailed Operations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">详细操作</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -1229,7 +1230,7 @@ msgstr "确认时"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 msgid "At Customer"
-msgstr ""
+msgstr "向客户"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_attachment_count
@@ -1427,7 +1428,7 @@ msgstr "在安排日期之前"
 msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
-msgstr "以下文本仅作为建议，Odoo公司不承担责任。"
+msgstr "以下文本仅作为建议，ERP 公司不承担责任."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
@@ -2461,7 +2462,7 @@ msgstr "通过此仓库的默认路线"
 msgid ""
 "Define a minimum stock rule so that Odoo automatically creates requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
-msgstr "设置一个最小库存规则，odoo会依据规则自动创建报价单或确认生产单，以满足最小库存量。"
+msgstr "设置一个最小库存规则，so ERP 会依据规则自动创建报价单或确认制造单，以满足最小库存补给量."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -2483,7 +2484,7 @@ msgstr ""
 "（库存、货架、储位等等），\n"
 "业务伙伴位置（客户、\n"
 "供应商）和虚拟位置，即是对方的库存作业，如：生产订单\n"
-"的消耗、盘点等。"
+"的消耗、盘点等."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__removal_strategy_id
@@ -3059,8 +3060,9 @@ msgid ""
 " inventory adjustments, batch picking, moving lots or pallets, low inventory"
 " checks, etc. Go to the \"Apps\" menu to activate the barcode interface."
 msgstr ""
-"享受Odoo条码应用带来的快节奏体验。它的速度快得惊人，即使没有稳定的网络连接也能工作。它支持所有流程：盘点、批量拣货、移动批次或托盘、低库存检查等。进入"
-" \"应用 \"菜单，激活条码界面。"
+"享受 ERP "
+"条码应用带来的快节奏体验。它的速度快得惊人，即使没有稳定的互联网连接也能工作。它支持所有流程：库存调整、批量拣货、移动批次或托盘、低库存检查等。进入 "
+"\"应用 \"菜单，激活条码界面."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -3083,9 +3085,9 @@ msgid ""
 "            physical, partner or virtual locations."
 msgstr ""
 "系统中每一个库存作业都是将产品从一个\n"
-"位置移至另一位置。例如，若果您从供应商那边收到产品，\n"
-"Odoo将会把产品从供应商位置调拨到仓位置置。每个报告可用在\n"
-"实体位置、业务伙伴位置或者虚拟位置进行。"
+"位置移到另一位置。实例，若果您从供应商那边收到产品，\n"
+"ERP 将会把产品从供应商位置移动到库存位置。每个报告可用在\n"
+"实体位置、业务伙伴位置或者虚拟位置进行."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -3760,63 +3762,63 @@ msgstr ""
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the delivery slip "
 "of a picking when it is validated."
-msgstr "如果勾选该复选框，Odoo 将在拣货验证后自动打印交货单。"
+msgstr "如果勾选该复选框，ERP 将在拣货验证后自动打印送货单."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_lot_labels
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN labels "
 "of a picking when it is validated."
-msgstr "如果勾选该复选框，Odoo 将在验证拣货时自动打印拣货的批次/SN 标签。"
+msgstr "如果勾选该复选框，ERP 将在验证拣货时自动打印拣货的批次/SN 标签。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_package_label
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the package label "
 "when \"Put in Pack\" button is used."
-msgstr "如果勾选该复选框，Odoo 将在使用 \"放入包装 \"按钮时自动打印包装标签。"
+msgstr "如果勾选该复选框，ERP 将在使用 \"放入包装 \"按钮时自动打印包裹标签."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_packages
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the packages and "
 "their contents of a picking when it is validated."
-msgstr "如果勾选该复选框，Odoo 将在采样验证时自动打印采样包及其内容。"
+msgstr "如果勾选该复选框，ERP 将在采样验证时自动打印拣货包裹及其内容."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels"
 " of a picking when it is validated."
-msgstr "如果勾选该复选框，Odoo 将在采摘验证时自动打印产品标签。"
+msgstr "如果勾选该复选框，ERP 将在拣货验证时自动打印产品标签."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report_labels
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
 "report labels of a picking when it is validated."
-msgstr "如果勾选该复选框，Odoo 将在采摘验证时自动打印采摘的接收报告标签。"
+msgstr "如果勾选该复选框，ERP 将在采摘验证时自动打印拣货的接收报告标签."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
 "report of a picking when it is validated and has assigned moves."
-msgstr "如果勾选该复选框，Odoo 将在采摘验证并分配移动后自动打印采摘的接收报告。"
+msgstr "如果勾选该复选框，ERP 将在拣货验证并指派移动后自动打印拣货的接收报告."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_return_slip
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the return slip of"
 " a picking when it is validated."
-msgstr "如果勾选该复选框，Odoo 将在验证拣货时自动打印退货单。"
+msgstr "如果勾选该复选框，ERP 将在验证拣货时自动打印退货单。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_show_reception_report
 msgid ""
 "If this checkbox is ticked, Odoo will automatically show the reception "
 "report (if there are moves to allocate to) when validating."
-msgstr "如果勾选此复选框，Odoo将在验证时自动显示接收报表（如果有要分配的库存移动）。"
+msgstr "如果勾选此复选框，ERP 将在验证时自动显示接收报表（如果有要分配的库存移动）。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
@@ -3908,7 +3910,7 @@ msgstr "库存调整导入模版"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "In Stock"
-msgstr ""
+msgstr "有库存"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
@@ -4345,7 +4347,7 @@ msgstr "保持差异"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "Keep current lines"
-msgstr ""
+msgstr "保留当前明细行"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -4608,7 +4610,7 @@ msgstr "链接的移动"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "List view of detailed operations"
-msgstr ""
+msgstr "详细操作的列表视图"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -4663,7 +4665,7 @@ msgstr "位置类型"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr "系统存储成品的位置."
+msgstr "系统成品入库的位置."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
@@ -4900,7 +4902,7 @@ msgstr "手动作业"
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "Manual Replenishment"
-msgstr "手动补给"
+msgstr "手动补货"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__reservation_method__manual
@@ -5489,9 +5491,9 @@ msgid ""
 "                                        install the IoT App on a computer that is on the same local network as the\n"
 "                                        barcode operator and configure the routing of the reports."
 msgstr ""
-"Odoo 默认打开 PDF 预览。如果您（仅限企业用户）想立即打印，请执行以下操作\n"
+"ERP 默认打开 PDF 预览。如果您（仅限企业用户）想立即打印，请执行以下操作\n"
 "                                        在与条码操作员位于同一本地网络的计算机上安装 IoT 应用程序，并配置报告的路由。\n"
-"                                        条码操作员的计算机上安装物联网应用程序，并配置报告的路由。"
+"                                        条码作业员的计算机上安装物联网应用程序，并配置报告的路由."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -7061,7 +7063,7 @@ msgstr "接收产品到收料区， 检验， 然后入库（3步收货）"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Receive in 1 step (stock)"
-msgstr "单步接收（库存）"
+msgstr "1 步接收 (库存)"
 
 #. module: stock
 #. odoo-python
@@ -7566,6 +7568,14 @@ msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
 msgstr "将会为这些补充仓库创建路线，而且您可以在产品和产品类别选择它们"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8534,7 +8544,7 @@ msgstr "储存位置"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Store To"
-msgstr ""
+msgstr "储存到"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_multi_locations
@@ -8693,7 +8703,7 @@ msgstr "第一个序列中是默认的"
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "The following replenishment order have been generated"
-msgstr ""
+msgstr "已生成以下补货订单"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
@@ -9105,7 +9115,7 @@ msgid ""
 "recommended that you select a unique prefix to avoid issues and/or repeated "
 "reference values or assign the existing reference sequence to this operation"
 " type."
-msgstr ""
+msgstr "此序列前缀已被其他操作类型使用。建议您选择一个唯一的前缀，以避免出现问题和/或重复参考值，或将现有参考序列分配给此操作类型。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -9177,7 +9187,7 @@ msgstr "待欠单"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "To Count"
-msgstr "(点数)"
+msgstr "计数"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
@@ -10571,7 +10581,7 @@ msgstr "您需要激活存储位置，以便能够执行内部作业类型。"
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "You need to select a route to replenish your products"
-msgstr ""
+msgstr "您需要选择补货的路线"
 
 #. module: stock
 #. odoo-python
@@ -10635,9 +10645,9 @@ msgid ""
 "            Choose the quantity to buy or manufacture and launch orders in a click.\n"
 "            To save time in the future, set the rules as \"automated\"."
 msgstr ""
-"在odoo系统可以自动补货，目的是减少人工干预，降低人力成本。在这里您可以找到基于智能化的库存预测的补货建议。\n"
-"            然后您就选择要购买或生产的数量，然后单击启动订单。\n"
-"            为了节省将来的时间，请将规则设置为“automated自动补货”。"
+"查找 ERP 系统可以自动补货，目的是减少人工干预，降低人力成本。在这里您可以找到基于智能化的库存预测的补货建议。\n"
+"            然后您就选择要购买或制造的数量，然后点击启动订单。\n"
+"            为了保存节省将来的时间，请将规则设置为“automated自动补货”."
 
 #. module: stock
 #: model_terms:res.company,lunch_notify_message:stock.res_company_1

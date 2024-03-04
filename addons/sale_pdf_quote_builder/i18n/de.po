@@ -3,7 +3,7 @@
 # 	* sale_pdf_quote_builder
 # 
 # Translators:
-# Larissa Manderfeld, 2023
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +27,12 @@ msgid ""
 msgstr ""
 "(object.state in ('draft', 'sent') and 'Angebot - %s' % (object.name)) or "
 "'Auftrag - %s' % (object.name)"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "<i class=\"fa fa-arrow-right\"/> Download examples"
+msgstr "<i class=\"fa fa-arrow-right\"/> Beispiele herunterladen"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on
@@ -75,6 +81,11 @@ msgstr "Kopfzeilenseiten"
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
 msgid "Inside quote"
 msgstr "Innerhalb des Angebots"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "Learn more from the documentation."
+msgstr "Erfahren Sie mehr in der Dokumentation."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
@@ -128,12 +139,14 @@ msgid ""
 "Provide header pages and footer pages to compose an attractive quotation\n"
 "                            with more information about your company, your products and your services.\n"
 "                            The pdf of your quotes will be built by putting together header pages,\n"
-"                            product descriptions, details of the quote and then the footer pages."
+"                            product descriptions, details of the quote and then the footer pages.\n"
+"                            If empty, it will use those define in the company settings.<br/>"
 msgstr ""
 "Stellen Sie Kopf- und Fußseiten zur Verfügung, um ein attraktives Angebot\n"
 "                            mit weiteren Informationen über Ihr Unternehmen, Ihre Produkte und Ihre Dienstleistungen zu erstellen.\n"
 "                            Das PDF Ihrer Angebote wird durch die Zusammenstellung von Kopfzeilenseiten,\n"
-"                            Produktbeschreibungen, Details des Angebots und dann der Fußseiten erstellt."
+"                            Produktbeschreibungen, Details des Angebots und dann der Fußseiten erstellt.\n"
+"                            Falls leer, werden die in den Unternehmenseinstellungen definierten Werte verwendet.<br/>"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw

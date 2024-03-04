@@ -113,11 +113,11 @@ class PortalChatter(http.Controller):
         return bool(message) or bool(attachment_ids)
 
     @http.route('/mail/avatar/mail.message/<int:res_id>/author_avatar/<int:width>x<int:height>', type='http', auth='public')
-    def portal_avatar(self, res_id=None, height=50, width=50, access_token=None):
+    def portal_avatar(self, res_id=None, height=50, width=50, access_token=None, _hash=None, pid=None):
         """ Get the avatar image in the chatter of the portal """
-        if access_token:
+        if access_token or (_hash and pid):
             message = request.env['mail.message'].browse(int(res_id)).exists().filtered(
-                lambda msg: _check_special_access(msg.model, msg.res_id, token=access_token)
+                lambda msg: _check_special_access(msg.model, msg.res_id, access_token, _hash, pid and int(pid))
             ).sudo()
         else:
             message = request.env.ref('web.image_placeholder').sudo()

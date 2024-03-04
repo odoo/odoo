@@ -120,7 +120,7 @@ msgstr ""
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
 msgstr ""
-"'Tíquet de página completa - %s' % (object.name or 'Event').replace('/','')"
+"'Ticket de página completa - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
@@ -649,7 +649,7 @@ msgstr ""
 "                        </a>\n"
 "                    </t>\n"
 "                    <t t-elif=\"not object.company_id.uses_default_logo\">\n"
-"                        <img t-att-src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\">\n"
+"                        <img t-att-src=\"'/logotipo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\">\n"
 "                    </t>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
@@ -1076,7 +1076,7 @@ msgstr ""
 "                        Descargar pase\n"
 "                    </a>\n"
 "                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
-"                        <img t-att-src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\">\n"
+"                        <img t-att-src=\"'/logotipo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\">\n"
 "                    </t>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
@@ -1540,7 +1540,7 @@ msgstr ""
 "                        </div>\n"
 "                    </t>\n"
 "                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
-"                        <img t-att-src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\">\n"
+"                        <img t-att-src=\"'/logotipo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\">\n"
 "                    </t>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
@@ -1807,7 +1807,7 @@ msgstr "Icono de tipo de actvidad"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "Add a description..."
-msgstr "Añadir una descripción.."
+msgstr "Agregar una descripción.."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2561,7 +2561,7 @@ msgstr "Fecha del final del evento"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Event Gamification"
-msgstr "Ludificación del evento"
+msgstr "Ludificación de eventoss"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -2600,7 +2600,7 @@ msgstr "Organizador del evento"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Registration"
-msgstr "Inscripción del evento"
+msgstr "Inscripción al evento"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
@@ -2696,7 +2696,7 @@ msgstr "Plantilla de entradas del evento"
 #: model:ir.ui.menu,name:event.menu_event_type
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Templates"
-msgstr "Plantilla del evento"
+msgstr "Plantillas de evento"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
@@ -2833,7 +2833,7 @@ msgstr "Experimenta música en vivo, comida local y bebidas."
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
 msgid "Folded in Kanban"
-msgstr "Doblado en Kanban"
+msgstr "Plegado en kanban"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_follower_ids
@@ -2988,12 +2988,12 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_done
 msgid "Green Kanban Label"
-msgstr "Etiqueta Kanban verde"
+msgstr "Etiqueta kanban verde"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_normal
 msgid "Grey Kanban Label"
-msgstr "Etiqueta Kanban gris"
+msgstr "Etiqueta kanban gris"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -3184,7 +3184,7 @@ msgstr "Es un seguidor"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
 msgid "Is One Day"
-msgstr "Es un dia"
+msgstr "Es un día"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_ongoing
@@ -3195,7 +3195,7 @@ msgstr "En Curso"
 #: model:ir.model.fields,help:event.field_event_type__seats_max
 msgid "It will select this default maximum value when you choose this event"
 msgstr ""
-"Se seleccionará este valor máximo por defecto cuando selecciones este evento"
+"Se seleccionará este valor máximo por defecto cuando seleccione este evento"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3237,7 +3237,7 @@ msgstr "Estado de kanban"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__kanban_state_label
 msgid "Kanban State Label"
-msgstr "Etiqueta del estado de Kanban"
+msgstr "Etiqueta del estado de kanban"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__legend_done
@@ -3447,7 +3447,7 @@ msgstr "Música"
 #: model:ir.model.fields,field_description:event.field_event_event__my_activity_date_deadline
 #: model:ir.model.fields,field_description:event.field_event_registration__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Mi fecha límite de actividad"
+msgstr "Fecha límite de mi actividad"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -3481,7 +3481,7 @@ msgstr "Siguiente evento en el calendario de actividades."
 #: model:ir.model.fields,field_description:event.field_event_event__activity_date_deadline
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Fecha límite de siguiente actividad"
+msgstr "Fecha límite de la siguiente actividad"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_summary
@@ -3493,7 +3493,7 @@ msgstr "Resumen de la siguiente actividad"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_type_id
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_type_id
 msgid "Next Activity Type"
-msgstr "Tipo de siguiente actividad"
+msgstr "Tipo de la siguiente actividad"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
@@ -3511,7 +3511,7 @@ msgstr "¡No hay asistentes!"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__barcode_nomenclature_id
 msgid "Nomenclature"
-msgstr "Denominación"
+msgstr "Nomenclatura"
 
 #. module: event
 #. odoo-python
@@ -3829,7 +3829,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_blocked
 msgid "Red Kanban Label"
-msgstr "Etiqueta Kanban roja"
+msgstr "Etiqueta kanban roja"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__open
@@ -4053,12 +4053,12 @@ msgstr "Seleccionar asistente"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets on your website"
-msgstr "Vende entradas en tu sitio web"
+msgstr "Venda entradas en su sitio web"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with sales orders"
-msgstr "Vende entradas con órdenes de venta"
+msgstr "Venda entradas con órdenes de venta"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__notification_type
@@ -4223,8 +4223,8 @@ msgid ""
 msgstr ""
 "Estado basado en actividades\n"
 "Vencida: la fecha límite ya ha pasado\n"
-"Hoy: La fecha tope es hoy\n"
-"Planificada: futuras actividades."
+"Hoy: la fecha límite es hoy\n"
+"Planificada: actividades futuras."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_tag__color
@@ -4515,7 +4515,7 @@ msgid ""
 "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
 "new one."
 msgstr ""
-"Los tipos de entradas te permiten distinguir a tus asistentes. Vamos a "
+"Los tipos de boletos le permiten distinguir a sus asistentes. Vamos a "
 "<b>crear</b> uno nuevo."
 
 #. module: event
@@ -4567,7 +4567,7 @@ msgstr "Inscripciones totales para este evento"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
 msgid "Tracks and Agenda"
-msgstr "Grabaciones y Agenda "
+msgstr "Sesiones y agenda "
 
 #. module: event
 #: model:event.type,name:event.event_type_1
@@ -4656,7 +4656,7 @@ msgstr "Próximos/En marcha"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
 msgid "Use Barcode"
-msgstr "Usar Código de barras"
+msgstr "Usar código de barras"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__use_event_barcode
@@ -4819,7 +4819,7 @@ msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
 msgstr ""
-"Puedes incluso añadir una descripción para ayudar a tus compañeros de "
+"También puede agregar una descripción para ayudar a sus compañeros de "
 "trabajo a entender el significado y el propósito de esta etapa."
 
 #. module: event

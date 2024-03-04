@@ -3,15 +3,15 @@
 # 	* project
 # 
 # Translators:
-# Wil Odoo, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Wil Odoo, 2024
 # Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -198,6 +198,9 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
 "<b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>メモを記録</b>、社内コミュニケーション用 "
+"<i>(このタスクをフォローしている人たちには、特にタグを付けない限り、あなたがログに記録しているメモは通知されません)</i>。同僚をピン付するには@"
+" <b>メンション</b>を使用、またはチーム全体に知らせるには# <b>メンション</b>を使用して下さい。"
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -1239,6 +1242,7 @@ msgid ""
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
 msgstr ""
+"プロジェクト用に<b>名前</b>を選択して下さい。 <i>好きなもの何でも可能です: 顧客、 プロダクト、チーム、建設現場の名前など</i>"
 
 #. module: project
 #. odoo-javascript
@@ -2106,12 +2110,12 @@ msgstr "かんばんで折り込む"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow and comments tasks of your projects"
-msgstr "プロジェクトのタスクのフォローやコメントができます"
+msgstr "プロジェクトのタスクのフォローやコメントができます。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow the evolution of your projects"
-msgstr "プロジェクトの進捗をフォローできます"
+msgstr "プロジェクトの進捗をフォローできます。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2772,7 +2776,7 @@ msgstr "製造"
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "Margin"
-msgstr "粗利益"
+msgstr "マージン"
 
 #. module: project
 #. odoo-javascript
@@ -3034,6 +3038,13 @@ msgid "Next Activity"
 msgstr "次の活動"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "次の活動カレンダーイベント"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__activity_date_deadline
@@ -3245,6 +3256,11 @@ msgstr "毎月1回"
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr "おっと！何かがうまくいきませんでした。ページをリロードしてログインしてみてください。"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__open_task_count
+msgid "Open Task Count"
+msgstr "オープンタスク数"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -4532,7 +4548,7 @@ msgstr "タスク承認済"
 #: model:mail.message.subtype,name:project.mt_project_task_canceled
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Canceled"
-msgstr "タスクキャンセル済"
+msgstr "タスクが取消されました"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
@@ -5272,18 +5288,28 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
+"チャターを使用して<b>メールを送信</b>し、顧客と効率的にやり取りしましょう。新しい人をフォロワーリストに追加して、このタスクに関する主な変更を認識してもらいましょう。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
-"            #tags Set tags on the task\n"
-"            @user Assign the task to a user\n"
-"            ! Set the task a high priority\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
 "\n"
-"            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"新しいタスクを設定するのにこれらのキーワードを使いましょう:\n"
+"\n"
+"       30h タスクに30時間を割り当てる\n"
+"      #タグ タスクにタグを設定する\n"
+"        @ユーザ タスクをユーザーに割り当てる \n"
+"        ! タスクに高い優先順位を設定\n"
+"\n"
+"        正しいフォーマットと順序を使うようにしましょう。 例: 設定画面の改善 5h #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id
@@ -5691,7 +5717,7 @@ msgstr "日々の活動を整理するアイコン"
 msgid ""
 "icon to see tasks waiting on other ones. Once a task is marked as complete "
 "or canceled, all of its dependencies will be unblocked."
-msgstr "他のタスクを待っているタスクを表示するアイコン。タスクが完了またはキャンセルとマークされると、そのタスクの全ての依存関係が解除されます。"
+msgstr "他のタスクを待っているタスクを表示するアイコン。タスクが完了または取消とマークされると、そのタスクの全ての依存関係が解除されます。"
 
 #. module: project
 #. odoo-javascript
@@ -5750,7 +5776,7 @@ msgstr "タスクが次のステージへ検証されたことを同僚に知ら
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "state to mark the task as canceled."
-msgstr "タスクをキャンセル済とマークするステータス"
+msgstr "タスクを取消済とマークするステータス"
 
 #. module: project
 #. odoo-javascript

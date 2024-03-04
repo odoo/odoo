@@ -42,12 +42,17 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
         vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
 
         if not partner.vat and partner.company_registry:
-            return [{
-                'company_id': partner.company_registry,
-                'tax_scheme_vals': {
-                    'id': 'VAT',
-                },
-            }]
+            # Use company_registry (Company ID) as the VAT replacement
+            vals_list = [{'company_id': partner.company_registry, 'tax_scheme_vals': {'id': 'VAT'}}]
+
+        # The validator for CIUS-RO (which extends the validations from the BIS3 Schematron) asserts a rule where:
+        # [BR-CO-09] if the PartyTaxScheme/TaxScheme/ID == 'VAT', CompanyID must start with a country code prefix.
+        # In Romania however, the CompanyID can be with or without country code prefix and still be perfectly valid.
+        # We have to handle their cases by changing the TaxScheme/ID to 'something other than VAT',
+        # preventing the trigger of the rule and allow Romanian companies without prefixed VAT to use CIUS-RO.
+        for vals in vals_list:
+            if partner.country_code == 'RO' and not vals['company_id'].upper().startswith('RO'):
+                vals['tax_scheme_vals']['id'] = 'NO_VAT'
 
         return vals_list
 
@@ -74,9 +79,9 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
 
     def _get_document_type_code_vals(self, invoice, invoice_data):
         # EXTENDS 'account_edi_ubl_cii
-        # http://www.datypic.com/sc/ubl20/e-cbc_DocumentTypeCode.html
         vals = super()._get_document_type_code_vals(invoice, invoice_data)
-        vals['value'] = "380" if invoice.move_type == 'out_invoice' else "381"
+        # [UBL-SR-43] DocumentTypeCode should only show up on a CreditNote XML with the value '50'
+        vals['value'] = '50' if invoice.move_type == 'out_refund' else False
         return vals
 
     def _export_invoice_constraints(self, invoice, vals):
@@ -96,17 +101,6 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
                 constraints[f"ciusro_{partner_type}_tax_identifier_required"] = _(
                     "The following partner doesn't have a VAT nor Company ID: %s. "
                     "At least one of them is required. ",
-                    partner.name)
-
-            if partner.vat and not partner.vat.startswith(partner.country_code):
-                constraints[f"ciusro_{partner_type}_country_code_vat_required"] = _(
-                    "The following partner's doesn't have a country code prefix in their VAT: %s.",
-                    partner.name)
-
-            if (not partner.vat and partner.company_registry
-                    and not partner.company_registry.startswith(partner.country_code)):
-                constraints[f"ciusro_{partner_type}_country_code_company_registry_required"] = _(
-                    "The following partner's doesn't have a country code prefix in their Company ID: %s.",
                     partner.name)
 
             if (partner.country_code == 'RO'

@@ -8,6 +8,8 @@ import {
 
 let editableWindow = window;
 const _setEditableWindow = (ew) => editableWindow = ew;
+let editableDocument = document;
+const _setEditableDocument = (ed) => editableDocument = ed;
 
 const COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES = ['primary', 'secondary', 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'success', 'info', 'warning', 'danger'];
 
@@ -100,11 +102,11 @@ const BACKGROUND_IMAGE_ATTRIBUTES = new Set([
  *                  - the inverse otherwise
  */
 function _computePxByRem(toRem) {
-    if (_computePxByRem.PX_BY_REM === undefined) {
-        const htmlStyle = editableWindow.getComputedStyle(editableWindow.document.documentElement);
-        _computePxByRem.PX_BY_REM = parseFloat(htmlStyle['font-size']);
+    if (editableDocument.PX_BY_REM === undefined) {
+        const htmlStyle = editableWindow.getComputedStyle(editableDocument.documentElement);
+        editableDocument.PX_BY_REM = parseFloat(htmlStyle['font-size']);
     }
-    return toRem ? (1 / _computePxByRem.PX_BY_REM) : _computePxByRem.PX_BY_REM;
+    return toRem ? (1 / editableDocument.PX_BY_REM) : editableDocument.PX_BY_REM;
 }
 /**
  * Converts the given (value + unit) string to a numeric value expressed in
@@ -507,6 +509,7 @@ export default {
     generateHTMLId: _generateHTMLId,
     getColorClass: _getColorClass,
     setEditableWindow: _setEditableWindow,
+    setEditableDocument: _setEditableDocument,
     addBackgroundImageAttributes: _addBackgroundImageAttributes,
     isBackgroundImageAttribute: _isBackgroundImageAttribute,
     shouldEditableMediaBeEditable: _shouldEditableMediaBeEditable,

@@ -3,9 +3,10 @@
 # 	* mrp
 # 
 # Translators:
+# Wil Odoo, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
-# Wil Odoo, 2024
 # Chloe Wang, 2024
+# 湘子 南 <1360857908@qq.com>, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 
 msgid ""
@@ -50,7 +51,7 @@ msgstr " <br/><br/>组件将取自<b>%s</b>。"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
 msgid " When all components are available"
-msgstr " 当所有组件都可用时"
+msgstr " 当所有组件都可用"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_count
@@ -61,7 +62,7 @@ msgstr "# 物料清单"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__used_in_bom_count
 msgid "# BoM Where Used"
-msgstr "#使用的物料清单（BOM）"
+msgstr "#使用的物料清单 BoM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_ready_count
@@ -77,7 +78,7 @@ msgstr "#工单"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
 msgid "# of BoM Where is Used"
-msgstr "#使用的物料清单（BOM）"
+msgstr "#使用的物料清单 BoM"
 
 #. module: mrp
 #. odoo-python
@@ -112,7 +113,7 @@ msgstr "%s（新）%s"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s Child MO's"
-msgstr "%s子级生产订单（MO）的"
+msgstr "%s下级生产订单 MO 的"
 
 #. module: mrp
 #. odoo-python
@@ -124,7 +125,7 @@ msgstr "%s无法删除。请先取消。"
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
 msgid "'Bom Overview - %s' % object.display_name"
-msgstr "'物料清单（BOM）概述-%s' % object.display_name"
+msgstr "'料清单 BoM 概览-%s' % object.display_name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_finished_product
@@ -134,7 +135,7 @@ msgstr "'成品-%s' % object.name"
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_mrp_mo_overview
 msgid "'MO Overview - %s' % object.display_name"
-msgstr "'物料清单（BOM）概述-%s' % object.display_name"
+msgstr "'MO 概览-%s' % object.display_name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
@@ -291,7 +292,7 @@ msgstr "<span class=\"o_stat_text\">BoM 预览</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Child MO</span>"
-msgstr "<span class=\"o_stat_text\">子级生产订单（MO）</span>"
+msgstr "<span class=\"o_stat_text\">下级生产订单 MO</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -349,7 +350,7 @@ msgstr "<span class=\"o_stat_text\">报废</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Source MO</span>"
-msgstr "<span class=\"o_stat_text\">源生产订单（MO）</span>"
+msgstr "<span class=\"o_stat_text\">源生产订单 MO </span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -551,8 +552,8 @@ msgid ""
 "A BoM of type Kit is not produced with a manufacturing order.<br/>\n"
 "                                Instead, it is used to decompose a BoM into its components when:"
 msgstr ""
-"类型为\"套件\"的物料清单（BoM）并非在制造订单下制造。<br/>\n"
-"                                相反，在以下情况下，用于将物料清单分解为组件："
+"类型为\"套件\"的物料清单 BoM 并非在制造订单下制造。<br/>\n"
+"                                相反，在以下情况下，用于将物料清单 BoM 分解为组件:"
 
 #. module: mrp
 #. odoo-python
@@ -567,7 +568,7 @@ msgstr "制造订单已完成或已取消。"
 #, python-format
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
-msgstr "具有套件类型物料清单（BOM）的产品不能具有重新订购规则。"
+msgstr "具有套件类型物料清单的产品不能具有重新订货规则."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -634,7 +635,7 @@ msgid ""
 "Add by-products to bills of materials. This can be used to get several "
 "finished products as well. Without this option you only do: A + B = C. With "
 "the option: A + B = C + D."
-msgstr "添加副产品至物料清单（BOM）。该选项也可用于获得成品。如果没有该选项，您须：A + B = C。选项：A + B = C + D。"
+msgstr "添加副产品至物料清单。该选项也可用于获得完工产品。如果没有该选项，您须：A + B = C。选项：A + B = C + D."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -959,24 +960,24 @@ msgstr "等待组件"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr "物料清单（BOM）概述报告"
+msgstr "物料清单 BOM 概览报告"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
 msgid "BOM Product Variants"
-msgstr "物料清单（BOM）产品变体"
+msgstr "物料清单 BOM 产品变体"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_byproduct__bom_product_template_attribute_value_ids
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__bom_product_template_attribute_value_ids
 msgid "BOM Product Variants needed to apply this line."
-msgstr "需应用至该行的物料清单（BOM）产品变体。"
+msgstr "需应用至该行的物料清单 BOM 产品变体."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_line_ids
 msgid "BOM lines of the referred bom"
-msgstr "参考物料清单（BOM）中的物料清单行"
+msgstr "参考物料清单 BOM 中的物料清单明细行"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder_line
@@ -993,14 +994,14 @@ msgstr "欠单确认行"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO"
-msgstr "欠单生产订单（MO）"
+msgstr "欠单生产订单 MO"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO's"
-msgstr "欠单生产订单（MO）的"
+msgstr "欠单生产订单 MO 的"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__backorder_sequence
@@ -1043,12 +1044,12 @@ msgstr "物料清单行"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "Bill of Material line"
-msgstr "物料清单（BOM）行"
+msgstr "物料账单明细行"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__mo_bom_id
 msgid "Bill of Material used on the Production Order"
-msgstr "生产订单上使用的物料清单（BOM）"
+msgstr "生产订单上使用的物料账单 BOM"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_open_bom
@@ -1141,7 +1142,7 @@ msgstr "阻塞"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__bom_id
 msgid "BoM"
-msgstr "物料清单（BOM）"
+msgstr "物料清单 BoM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_line_ids
@@ -1149,7 +1150,7 @@ msgstr "物料清单（BOM）"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_product_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_template_search_view
 msgid "BoM Components"
-msgstr "物料清单（BOM）组件"
+msgstr "物料清单 BoM 组件"
 
 #. module: mrp
 #. odoo-javascript
@@ -1157,30 +1158,30 @@ msgstr "物料清单（BOM）组件"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "BoM Cost"
-msgstr "物料清单（BOM）成本"
+msgstr "物料清单 BoM 成本"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
 msgid "BoM Line"
-msgstr "物料清单（BOM）行"
+msgstr "物料清单 BoM 明细行"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__bom_line_ids
 msgid "BoM Lines"
-msgstr "物料清单（BOM）行"
+msgstr "物料清单 BoM 明细行"
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_report_mrp_bom
 #: model:ir.actions.report,name:mrp.action_report_bom_structure
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Overview"
-msgstr "物料清单（BOM）概述"
+msgstr "物料清单 BoM 概览"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "BoM Type"
-msgstr "物料清单（BOM）类型"
+msgstr "物料清单 BoM 类型"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
@@ -1208,7 +1209,7 @@ msgstr "副产品"
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "By-product %s should not be the same as BoM product."
-msgstr "副产品%s不应与物料清单（BOM）产品相同。"
+msgstr "副产品%s不应与物料清单 BoM 产品相同."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__byproduct_id
@@ -1696,7 +1697,7 @@ msgid ""
 "the status of work orders upon MO confirmation. If this feature is ticked, "
 "and nothing is specified, Odoo will assume that all operations can be "
 "started simultaneously."
-msgstr "创建会影响生产订单（MO）确定后安排和工单状态的作业级依赖项。如果勾选该功能，且未指定任何内容，Odoo将假定所有作业可以同时开始。"
+msgstr "创建会影响生产订单 MO 确认后安排和工单状态的计划作业级依赖项。如果勾选该功能，且未指定任何内容，ERP 将假定所有作业可以同时开始."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
@@ -2015,7 +2016,7 @@ msgstr "显示消耗的批号/序列号。"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Displays the produced Lot/Serial Numbers."
-msgstr ""
+msgstr "显示生产批次/序列号码."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
@@ -2164,7 +2165,7 @@ msgstr "预估%s"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "Exception(s) occurred on the manufacturing order(s):"
-msgstr "制造订单发生的例外情况："
+msgstr "制造订单发生的例外情况:"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -2611,35 +2612,35 @@ msgstr "如果该启用字段设置为错误，则可以隐藏而非删除源记
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report labels of a MO when it is done."
-msgstr "如果勾选该复选框，Odoo 将在完成 MO 后自动打印分配报告标签。"
+msgstr "如果勾选该复选框，ERP 将在完成 MO 后自动打印分配报告标签。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_mrp_reception_report
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report of a MO when it is done and has assigned moves."
-msgstr "如果勾选该复选框，Odoo 将在 MO 完成并分配移动后自动打印分配报告。"
+msgstr "如果勾选该复选框，ERP 将在 MO 完成并指派移动后自动打印分配报告."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_lot
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN label "
 "of a MO when it is done."
-msgstr "如果勾选该复选框，Odoo 将在完成 MO 时自动打印批次/SN 标签。"
+msgstr "如果勾选该复选框，ERP 将在完成 MO 时自动打印批次/SN 标签。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels"
 " of a MO when it is done."
-msgstr "如果勾选该复选框，Odoo 将在完成 MO 时自动打印产品标签。"
+msgstr "如果勾选该复选框，ERP 将在完成 MO 时自动打印产品标签。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_production_order
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the production "
 "order of a MO when it is done."
-msgstr "如果勾选该复选框，Odoo 将在 MO 完成后自动打印生产单。"
+msgstr "如果勾选该复选框，ERP 将在 MO 完成后自动打印生产订单."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_height
@@ -2968,7 +2969,7 @@ msgstr "系统搜索组件的位置。"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr "系统存储成品的位置。"
+msgstr "系统成品入库的位置。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_dest_id
@@ -3239,7 +3240,7 @@ msgstr "制造预测"
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__manufacturing_lead
 #, python-format
 msgid "Manufacturing Lead Time"
-msgstr "制造提前期"
+msgstr "制造前置时间"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manu_type_id
@@ -3657,7 +3658,7 @@ msgstr "错误数量"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_child_count
 msgid "Number of generated MO"
-msgstr "已生成物料清单（MO）的数量"
+msgstr "已生成物料清单 MO 的数量"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction_counter
@@ -3681,17 +3682,17 @@ msgstr "可以为该产品并行生产的件数。"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
 msgid "Number of source MO"
-msgstr "源物料清单（MO）的数量"
+msgstr "源物料清单 MO 的数量"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "OEE"
-msgstr "设备综合效率（OEE）"
+msgstr "设备综合效率 OEE"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee_target
 msgid "OEE Target"
-msgstr "设备综合效率（OEE）目标"
+msgstr "设备综合效率 OEE 目标"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -3700,14 +3701,14 @@ msgid ""
 "                                install the IoT App on a computer that is on the same local network as the\n"
 "                                barcode operator and configure the routing of the reports."
 msgstr ""
-"Odoo 默认打开 PDF 预览。如果您想立即打印、\n"
+"ERP 默认打开 PDF 预览。如果您想立即打印、\n"
 "                                在与条码操作员位于同一本地网络的计算机上安装 IoT 应用程序，并配置报告的路由。\n"
-"                                条码操作员的计算机上安装物联网应用程序，并配置报告的路由。"
+"                                条码作业员的计算机上安装物联网应用程序，并配置报告的路由."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee
 msgid "Oee"
-msgstr "设备综合效率（OEE）"
+msgstr "设备综合效率 OEE"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -3902,7 +3903,7 @@ msgstr "包装条形码"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
 msgid "Parent BoM"
-msgstr "上级物料清单（BOM）"
+msgstr "上级物料清单 BoM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__parent_product_tmpl_id
@@ -3980,7 +3981,7 @@ msgstr "拣取组件，进行制造，储存产品（3个步骤）"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
 msgid "Picking Before Manufacturing MTO Rule"
-msgstr "在订货制造（MTO）规则前拣取"
+msgstr "在订货制造 MTO 规则前拣货"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_type_id
@@ -4313,7 +4314,7 @@ msgstr "产品数量"
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_replenish
 msgid "Product Replenish"
-msgstr "补料"
+msgstr "产品补充"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_tmpl_id
@@ -4421,7 +4422,7 @@ msgstr "生产工作中心"
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Production of Draft MO"
-msgstr "草稿状态生产订单（MO）的生产"
+msgstr "草稿状态生产订单 MO 的生产"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -4697,7 +4698,7 @@ msgstr "补货"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Replenish on Order (MTO)"
-msgstr "订单补货补给（订货生产（MTO））"
+msgstr "订单补货补充 (MTO)"
 
 #. module: mrp
 #. odoo-javascript
@@ -4870,7 +4871,7 @@ msgstr "搜索"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Search Bill Of Material"
-msgstr "搜索物料清单（BOM）"
+msgstr "搜索物料账单 BoM"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -6328,7 +6329,7 @@ msgid ""
 "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also."
 msgstr ""
 "如果启用，则专门手动记录该组件的消耗登记。\n"
-"如果未启用，且任何组件消耗量在制造订单中手动编辑，Odoo会假定手动消耗。"
+"如果未启用，且任何组件消耗量在制造订单中手动编辑，ERP 会假定手动消耗."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__asap
@@ -6358,7 +6359,8 @@ msgid ""
 "perfectly integrated into the process. Workers can trigger feedback loops, "
 "maintenance alerts, scrap products, etc."
 msgstr ""
-"通过Odoo工作中心控制面板，工作人员可以在店铺启动工单，并遵循工作表中的指示。质量测试已集成至过程。工作人员可以触发反馈回路、维护警报、报废产品等。"
+"通过 ERP "
+"工作中心控制面板，工作人员可以在店铺启动工单，并遵循工作表中的关注者。质量测试已集成至过程。工作人员可以触发器反馈回路、维护警报、报废产品等."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning
@@ -6846,7 +6848,7 @@ msgstr "需提供成品批次。"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You need to supply Lot/Serial Number for products and 'consume' them:"
-msgstr ""
+msgstr "您需要提供产品的批次/序列号并'使用'它们："
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder

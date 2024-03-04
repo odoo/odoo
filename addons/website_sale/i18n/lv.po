@@ -5,14 +5,14 @@
 # Translators:
 # Camille Dantinne <cmd@odoo.com>, 2023
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2023
-# Will Sensors, 2023
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # JanisJanis <jbojars@gmail.com>, 2023
 # InfernalLV <karlisdreizis@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Anzelika Adejanova, 2023
 # Arnis Putniņš <arnis@allegro.lv>, 2023
 # ievaputnina <ievai.putninai@gmail.com>, 2024
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
+# Will Sensors, 2024
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: ievaputnina <ievai.putninai@gmail.com>, 2024\n"
+"Last-Translator: Will Sensors, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -830,7 +830,7 @@ msgstr "Norēķini"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Billing address"
-msgstr ""
+msgstr "Norēķinu adrese"
 
 #. module: website_sale
 #. odoo-python
@@ -852,6 +852,10 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"Palieliniet pārdošanas apjomu, izmantojot vairāku veidu programmas: Kuponi, "
+"akcijas, dāvanu kartes, lojalitātes programmas. Var iestatīt īpašus "
+"nosacījumus (produkti, klienti, minimālā pirkuma summa, periods). Atlīdzības"
+" var būt atlaides (% or summa) vai bezmaksas produkti."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -878,7 +882,7 @@ msgstr ""
 #. module: website_sale
 #: model:product.attribute,name:website_sale.product_attribute_brand
 msgid "Brand"
-msgstr ""
+msgstr "Marka"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_contact_us_button_url
@@ -1045,6 +1049,8 @@ msgid ""
 "Changing your name is not allowed once invoices have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
+"Pēc tam, kad jūsu kontam ir izrakstīti rēķini, nav atļauts mainīt savu vārdu"
+" un uzvārdu. Lūdzu, sazinieties ar mums tieši, lai veiktu šo operāciju."
 
 #. module: website_sale
 #. odoo-python
@@ -1410,7 +1416,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Express savienotājs"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1543,7 +1549,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
-msgstr ""
+msgstr "Atlaides, lojalitātes un dāvanu kartes"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__display_name
@@ -1590,7 +1596,7 @@ msgstr ""
 #: code:addons/website_sale/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "Nav piekļuves, izlaidiet šos datus lietotāja kopsavilkuma e-pastam"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1853,6 +1859,7 @@ msgstr ""
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
 msgstr ""
+"Automātiska rēķina ģenerēšana, kad ir apstiprināts tiešsaistes maksājums"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
@@ -2102,6 +2109,13 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
+#, python-format
+msgid "Item(s) added to your cart"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
 msgid "Journal Entry"
 msgstr "Grāmatojumi"
@@ -2254,6 +2268,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards & eWallet"
 msgstr ""
+"Akciju, kuponu, lojalitātes karšu, dāvanu karšu un e-portfeļa pārvaldība"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2478,7 +2493,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "To ziņojumu skaits, kuros nepieciešama rīcība"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__message_has_error_counter
@@ -2575,7 +2590,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__optional
 #: model:ir.model.fields.selection,name:website_sale.selection__website__account_on_checkout__optional
 msgid "Optional"
-msgstr ""
+msgstr "Pēc izvēles"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2625,7 +2640,7 @@ msgstr ""
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.out_of_stock_ribbon
 msgid "Out of stock"
-msgstr ""
+msgstr "Nav pieejams"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
@@ -2679,7 +2694,7 @@ msgstr "Maksājumu sniedzēji"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
 msgid "Payment Tokens"
-msgstr ""
+msgstr "Maksājumu žetoni"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
@@ -2860,7 +2875,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_document
 msgid "Product Document"
-msgstr ""
+msgstr "Produkta dokuments"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_image
@@ -3138,7 +3153,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Reitingi"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3475,7 +3490,7 @@ msgstr "Piegāde"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_delivery_invoice_address
 msgid "Shipping Address"
-msgstr ""
+msgstr "Piegādes adrese"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3722,7 +3737,7 @@ msgstr "Birkas"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_excluded
 msgid "Tax Excluded"
-msgstr "Nodoklis Neiekļauts"
+msgstr "Bez PVN"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_included
@@ -3738,6 +3753,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_sale_order__amount_delivery
 msgid "Tax included or excluded depending on the website configuration."
 msgstr ""
+"Atkarībā no vietnes konfigurācijas PVN ir iekļauts vai neiekļauts cenā."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -3939,6 +3955,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"Lai nosūtītu ielūgumus B2B režīmā, atveriet kontaktu vai atlasiet vairākus "
+"kontaktus saraksta skatā un nolaižamajā izvēlnē *Akcija* noklikšķiniet uz "
+"opcijas \"Portāla piekļuves pārvaldība\"."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4142,10 +4161,13 @@ msgid "Visitor Product Views History"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__shop_warning
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__shop_warning
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
+#, python-format
 msgid "Warning"
 msgstr "Brīdinājums"
 
@@ -4455,6 +4477,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Shop"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
+msgid "eCommerce cart"
 msgstr ""
 
 #. module: website_sale

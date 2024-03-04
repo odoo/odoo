@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-# Jolien De Paepe, 2023
+# Jolien De Paepe, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,6 +62,20 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span>Ik wil mijn Peppol-verbinding naar Odoo migreren (optioneel):</span>"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"A participant with these details has already been registered on the network."
+" If you have previously registered to an alternative Peppol service, please "
+"deregister from that service, or request a migration key before trying "
+"again."
+msgstr ""
+"Een deelnemer met deze gegevens is al geregistreerd op je netwerk. Als je al"
+" geregistreerd ben bij een andere Peppol-dienst, meld je dan af bij die "
+"dienst of vraag een migratiesleutel aan voordat je het opnieuw probeert."
 
 #. module: account_peppol
 #. odoo-python
@@ -213,6 +227,13 @@ msgstr "Configuratie instellingen"
 #, python-format
 msgid "Confirm"
 msgstr "Bevestigen"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Connection error, please try again later."
+msgstr "Verbindingsfout, probeer het later nog eens."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_partner
@@ -617,6 +638,13 @@ msgid "SMS verification code"
 msgstr "SMS verificatiecode"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+#, python-format
+msgid "Send again"
+msgstr "Verstuur opnieuw"
+
+#. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_move_send__checkbox_send_peppol
 msgid "Send the invoice via PEPPOL"
 msgstr "De factuur verzenden via PEPPOL"
@@ -752,8 +780,30 @@ msgstr "De unieke id die deze gebruiker identificeert, meestal het BTW-nummer"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
+msgid "The verification code is not correct"
+msgstr "De verificatiecode is niet correct"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
 msgid "The verification code should contain six digits."
 msgstr "De vertificatiecode moet uit zes cijfers bestaan."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "This verification code has expired. Please request a new one."
+msgstr "Deze verificatiecode is verlopen. Vraag een nieuwe code aan."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Too many attempts to request an SMS code. Please try again later."
+msgstr ""
+"Te veel pogingen om een SMS-code aan te vragen. Probeer het later nog eens."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
@@ -834,7 +884,9 @@ msgid "Verify partner's PEPPOL endpoint"
 msgstr "Controleer het PEPPOL eindpunt van de relatie"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+#, python-format
 msgid "Verify phone number"
 msgstr "Telefoonnummer verifiëren"
 
@@ -882,3 +934,8 @@ msgstr "Je confirmatiecode is"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your migration key is:"
 msgstr "Je migratiesleutel is:"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Your registration should be activated within a day."
+msgstr "Je registratie moet binnen de dag geactiveerd zijn."

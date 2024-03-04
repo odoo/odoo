@@ -365,7 +365,7 @@ class HolidaysType(models.Model):
             '|',
             ('company_id', 'in', self.env.context.get('allowed_company_ids')),
             ('company_id', '=', False),
-        ])
+        ], order='id')
         employee = self.env['hr.employee']._get_contextual_employee()
         if employee:
             return leave_types.get_allocation_data(employee, target_date)[employee]
@@ -380,7 +380,9 @@ class HolidaysType(models.Model):
         elif not target_date:
             target_date = fields.Date.today()
 
-        allocations_leaves_consumed, extra_data = employees._get_consumed_leaves(self, target_date)
+        allocations_leaves_consumed, extra_data = employees.with_context(
+            ignored_leave_ids=self.env.context.get('ignored_leave_ids')
+        )._get_consumed_leaves(self, target_date)
         leave_type_requires_allocation = self.filtered(lambda lt: lt.requires_allocation == 'yes')
 
         for employee in employees:
@@ -402,7 +404,7 @@ class HolidaysType(models.Model):
                         'closest_allocation_expire': False,
                         'holds_changes': False,
                         'total_virtual_excess': 0,
-                        'total_real_excess': 0,
+                        'virtual_excess_data': {},
                         'exceeding_duration': extra_data[employee][leave_type]['exceeding_duration'],
                         'request_unit': leave_type.request_unit,
                         'icon': leave_type.sudo().icon_id.url,
@@ -412,8 +414,13 @@ class HolidaysType(models.Model):
                     },
                     leave_type.requires_allocation,
                     leave_type.id)
-                for excess_days in extra_data[employee][leave_type]['excess_days'].values():
+                for excess_date, excess_days in extra_data[employee][leave_type]['excess_days'].items():
                     amount = excess_days['amount']
+                    lt_info[1]['virtual_excess_data'].update({
+                        excess_date.strftime('%Y-%m-%d'): excess_days
+                    }),
+                    if not leave_type.allows_negative:
+                        continue
                     lt_info[1]['virtual_leaves_taken'] += amount
                     lt_info[1]['virtual_remaining_leaves'] -= amount
                     lt_info[1]['total_virtual_excess'] += amount
@@ -423,7 +430,6 @@ class HolidaysType(models.Model):
                         lt_info[1]['leaves_approved'] += amount
                         lt_info[1]['leaves_taken'] += amount
                         lt_info[1]['remaining_leaves'] -= amount
-                        lt_info[1]['total_real_excess'] += amount
                 allocations_now = self.env['hr.leave.allocation']
                 allocations_date = self.env['hr.leave.allocation']
                 allocations_with_remaining_leaves = self.env['hr.leave.allocation']
@@ -462,9 +468,11 @@ class HolidaysType(models.Model):
                     closest_allocation_remaining += allocations_leaves_consumed[employee][leave_type][closest_allocation]['virtual_remaining_leaves']
                 if closest_allocation.date_to:
                     closest_allocation_expire = format_date(self.env, closest_allocation.date_to)
+                    calendar = employee.resource_calendar_id\
+                               or employee.company_id.resource_calendar_id
                     # closest_allocation_duration corresponds to the time remaining before the allocation expires
                     closest_allocation_duration =\
-                        employee.resource_calendar_id._attendance_intervals_batch(
+                        calendar._attendance_intervals_batch(
                             datetime.combine(closest_allocation.date_to, time.min).replace(tzinfo=pytz.UTC),
                             datetime.combine(target_date, time.max).replace(tzinfo=pytz.UTC))\
                         if leave_type.request_unit in ['hour']\
@@ -484,7 +492,8 @@ class HolidaysType(models.Model):
                     'closest_allocation_duration': closest_allocation_duration,
                     'holds_changes': holds_changes,
                 })
-                allocation_data[employee].append(lt_info)
+                if not self.env.context.get('from_dashboard', False) or lt_info[1]['max_leaves']:
+                    allocation_data[employee].append(lt_info)
         for employee in allocation_data:
             for leave_type_data in allocation_data[employee]:
                 for key, value in leave_type_data[1].items():

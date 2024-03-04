@@ -79,6 +79,7 @@ class ModuleCategory(models.Model):
     _name = "ir.module.category"
     _description = "Application"
     _order = 'name'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Name', required=True, translate=True, index=True)
     parent_id = fields.Many2one('ir.module.category', string='Parent Application', index=True)
@@ -153,6 +154,7 @@ class Module(models.Model):
     _rec_names_search = ['name', 'shortdesc', 'summary']
     _description = "Module"
     _order = 'application desc,sequence,name'
+    _allow_sudo_commands = False
 
     @classmethod
     def get_module_info(cls, name):
@@ -246,15 +248,14 @@ class Module(models.Model):
 
     @api.depends('icon')
     def _get_icon_image(self):
+        self.icon_image = ''
         for module in self:
-            module.icon_image = ''
+            if not module.id:
+                continue
             if module.icon:
-                path_parts = module.icon.split('/')
-                path = os.path.join(path_parts[1], *path_parts[2:])
-            elif module.id:
-                path = modules.module.get_module_icon_path(module)
+                path = os.path.join(module.icon.lstrip("/"))
             else:
-                path = ''
+                path = modules.module.get_module_icon_path(module)
             if path:
                 try:
                     with tools.file_open(path, 'rb') as image_file:
@@ -777,11 +778,14 @@ class Module(models.Model):
                 mod = self.create(dict(name=mod_name, state=state, **values))
                 res[1] += 1
 
-            mod._update_dependencies(terp.get('depends', []), terp.get('auto_install'))
-            mod._update_exclusions(terp.get('excludes', []))
-            mod._update_category(terp.get('category', 'Uncategorized'))
+            mod._update_from_terp(terp)
 
         return res
+
+    def _update_from_terp(self, terp):
+        self._update_dependencies(terp.get('depends', []), terp.get('auto_install'))
+        self._update_exclusions(terp.get('excludes', []))
+        self._update_category(terp.get('category', 'Uncategorized'))
 
     def _update_dependencies(self, depends=None, auto_install_requirements=()):
         self.env['ir.module.module.dependency'].flush_model()
@@ -935,6 +939,7 @@ class ModuleDependency(models.Model):
     _name = "ir.module.module.dependency"
     _description = "Module dependency"
     _log_access = False  # inserts are done manually, create and write uid, dates are always null
+    _allow_sudo_commands = False
 
     # the dependency name
     name = fields.Char(index=True)
@@ -977,6 +982,7 @@ class ModuleDependency(models.Model):
 class ModuleExclusion(models.Model):
     _name = "ir.module.module.exclusion"
     _description = "Module exclusion"
+    _allow_sudo_commands = False
 
     # the exclusion name
     name = fields.Char(index=True)

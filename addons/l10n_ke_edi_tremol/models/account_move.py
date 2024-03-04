@@ -80,6 +80,16 @@ class AccountMove(models.Model):
 
         return errors
 
+    def _l10n_ke_fiscal_device_details_filled(self):
+        self.ensure_one()
+        return all([
+            self.country_code == 'KE',
+            self.l10n_ke_cu_invoice_number,
+            self.l10n_ke_cu_serial_number,
+            self.l10n_ke_cu_qrcode,
+            self.l10n_ke_cu_datetime,
+        ])
+
     # -------------------------------------------------------------------------
     # SERIALISERS
     # -------------------------------------------------------------------------

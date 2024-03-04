@@ -44,18 +44,6 @@
         &.o_attendee_status_declined {
             --o-bg-opacity: 0;
         }
-
-        &.o_attendee_status_tentative, &.o_event_hatched {
-            .fc-bg {
-                background: repeating-linear-gradient(
-                    45deg,
-                    RGBA(var(--o-event-bg-rgb, #{to-rgb($info)}), .3),
-                    RGBA(var(--o-event-bg-rgb, #{to-rgb($info)}), .3) 10px,
-                    RGBA(var(--o-event-bg-rgb, #{to-rgb($info)}), .6) 10px,
-                    RGBA(var(--o-event-bg-rgb, #{to-rgb($info)}), .6) 20px
-                ) !important;
-            }
-        }
     }
 
     &.o_event_dot {

@@ -18,16 +18,8 @@
                 <field name="display_mail_composer" invisible="1"/>
                 <field name="mail_lang" invisible="1"/>
 
-                <!-- Warnings -->
-                <div name="warnings">
-                    <div class="alert alert-warning"
-                        role="alert"
-                        invisible="not send_mail_warning_message">
-                        Please specify an email address on the
-                        <button name="action_open_partners_without_email"
-                            type="object"
-                            class="btn btn-link p-0 align-baseline fst-italic">following partners.</button>
-                    </div>
+                <div class="m-0" name="warnings">
+                    <field name="send_mail_warning_message" class="o_field_html" widget="actionable_errors"/>
                 </div>
 
                 <!-- Options -->
@@ -62,7 +54,8 @@
                             <field name="mail_partner_ids"
                                    widget="many2many_tags_email"
                                    placeholder="Add contacts to notify..."
-                                   context="{'force_email': True, 'show_email': True}"/>
+                                   options="{'no_quick_create': True}"
+                                   context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                         </div>
                         <field name="mail_subject"
                                placeholder="Subject..."

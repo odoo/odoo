@@ -3,12 +3,11 @@
 # 	* onboarding
 # 
 # Translators:
-# ILMIR <karamov@it-projects.info>, 2023
-# alenafairy, 2023
 # Alena Vlasova, 2023
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
 # Martin Trigaux, 2023
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,27 +26,29 @@ msgstr ""
 #. module: onboarding
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_step
 msgid "#{alt}"
-msgstr ""
+msgstr "#{alt}"
 
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding__progress_ids
 msgid "All Onboarding Progress Records (across companies)."
-msgstr ""
+msgstr "Все записи о прохождении процедуры регистрации (во всех компаниях)."
 
 #. module: onboarding
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_step
 msgid "All done!"
-msgstr "Готово!"
+msgstr "Все сделано!"
 
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding_step__progress_ids
 msgid "All related Onboarding Progress Step Records (across companies)"
 msgstr ""
+"Все соответствующие записи о прогрессе в процессе регистрации (во всех "
+"компаниях)"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__step_image_alt
 msgid "Alt Text for the Step Image"
-msgstr ""
+msgstr "Текст Alt для изображения шага"
 
 #. module: onboarding
 #. odoo-python
@@ -57,21 +58,23 @@ msgid ""
 "An \"Opening Action\" is required for the following steps to be linked to an"
 " onboarding panel: %(step_titles)s"
 msgstr ""
+"Для того чтобы следующие шаги были связаны с панелью онбординга, требуется "
+"\"Действие открытия\": %(step_titles)s"
 
 #. module: onboarding
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_container
 msgid "Are you sure you want to hide these configuration steps?"
-msgstr ""
+msgstr "Вы уверены, что хотите скрыть эти шаги настройки?"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__button_text
 msgid "Button text"
-msgstr ""
+msgstr "Текст кнопки"
 
 #. module: onboarding
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_container
 msgid "Cancel"
-msgstr "Отмена"
+msgstr "Отменить"
 
 #. module: onboarding
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_container
@@ -81,17 +84,17 @@ msgstr "Закрыть"
 #. module: onboarding
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_container
 msgid "Close Panel"
-msgstr ""
+msgstr "Закрыть панель"
 
 #. module: onboarding
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_container
 msgid "Close the onboarding panel"
-msgstr ""
+msgstr "Закройте панель ввода в эксплуатацию"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__panel_close_action_name
 msgid "Closing action"
-msgstr ""
+msgstr "Завершающее действие"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__company_id
@@ -103,7 +106,7 @@ msgstr "Компания"
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__current_onboarding_state
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__current_step_state
 msgid "Completion State"
-msgstr ""
+msgstr "Состояние завершения"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__create_uid
@@ -119,7 +122,7 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__create_date
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__create_date
 msgid "Created on"
-msgstr "Дата создания"
+msgstr "Создано"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__description
@@ -132,7 +135,7 @@ msgstr "Описание"
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__display_name
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__display_name
 msgid "Display Name"
-msgstr "Показывать название"
+msgstr "Отображаемое имя"
 
 #. module: onboarding
 #: model:ir.model.fields.selection,name:onboarding.selection__onboarding_onboarding__current_onboarding_state__done
@@ -140,22 +143,22 @@ msgstr "Показывать название"
 #: model:ir.model.fields.selection,name:onboarding.selection__onboarding_progress__onboarding_state__done
 #: model:ir.model.fields.selection,name:onboarding.selection__onboarding_progress_step__step_state__done
 msgid "Done"
-msgstr "Выполнено"
+msgstr "Готово"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__done_icon
 msgid "Font Awesome Icon when completed"
-msgstr ""
+msgstr "Шрифт Awesome значок, когда завершена"
 
 #. module: onboarding
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_container
 msgid "Get them out of my sight!"
-msgstr ""
+msgstr "Уберите их с глаз моих!"
 
 #. module: onboarding
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_container
 msgid "Hide Onboarding Tips"
-msgstr ""
+msgstr "Скрыть советы по введению в должность"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__id
@@ -163,12 +166,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__id
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__id
 msgid "ID"
-msgstr "Идентификатор"
+msgstr "ID"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__is_per_company
 msgid "Is per company"
-msgstr ""
+msgstr "За компанию"
 
 #. module: onboarding
 #: model:ir.model.fields.selection,name:onboarding.selection__onboarding_onboarding__current_onboarding_state__just_done
@@ -176,7 +179,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:onboarding.selection__onboarding_progress__onboarding_state__just_done
 #: model:ir.model.fields.selection,name:onboarding.selection__onboarding_progress_step__step_state__just_done
 msgid "Just done"
-msgstr "Только что завершено"
+msgstr "Только Завершено"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__write_uid
@@ -184,7 +187,7 @@ msgstr "Только что завершено"
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__write_uid
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновил"
+msgstr "Последнее обновление"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__write_date
@@ -200,22 +203,24 @@ msgstr "Последнее обновление"
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_step
 #, python-format
 msgid "Let's do it"
-msgstr "Давайте приступим"
+msgstr "Давайте сделаем это"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__text_completed
 msgid "Message at completion"
-msgstr ""
+msgstr "Сообщение при завершении"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__name
 msgid "Name of the onboarding"
-msgstr ""
+msgstr "Название онбординга"
 
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding__panel_close_action_name
 msgid "Name of the onboarding model action to execute when closing the panel."
 msgstr ""
+"Имя действия модели onboarding, которое должно выполняться при закрытии "
+"панели."
 
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding_step__panel_step_open_action_name
@@ -223,13 +228,15 @@ msgid ""
 "Name of the onboarding step model action to execute when opening the step, "
 "e.g. action_open_onboarding_1_step_1"
 msgstr ""
+"Имя действия модели шага онбординга, которое должно выполняться при открытии"
+" шага, например, action_open_onboarding_1_step_1"
 
 #. module: onboarding
 #. odoo-python
 #: code:addons/onboarding/models/onboarding_onboarding.py:0
 #, python-format
 msgid "Nice work! Your configuration is done."
-msgstr "Хорошая работа! Ваше настройки завершено."
+msgstr "Отличная работа! Ваша конфигурация завершена."
 
 #. module: onboarding
 #: model:ir.model.fields.selection,name:onboarding.selection__onboarding_onboarding__current_onboarding_state__not_done
@@ -237,79 +244,80 @@ msgstr "Хорошая работа! Ваше настройки заверше�
 #: model:ir.model.fields.selection,name:onboarding.selection__onboarding_progress__onboarding_state__not_done
 #: model:ir.model.fields.selection,name:onboarding.selection__onboarding_progress_step__step_state__not_done
 msgid "Not done"
-msgstr "Не завершено"
+msgstr "Не выполнено"
 
 #. module: onboarding
 #: model:ir.model,name:onboarding.model_onboarding_onboarding
 msgid "Onboarding"
-msgstr ""
+msgstr "Онбординг"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__current_progress_id
 msgid "Onboarding Progress"
-msgstr ""
+msgstr "Продвижение по службе"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__progress_ids
 msgid "Onboarding Progress Records"
-msgstr ""
+msgstr "Записи о проделанной работе"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__progress_ids
 msgid "Onboarding Progress Step Records"
-msgstr ""
+msgstr "Записи о прохождении этапа регистрации"
 
 #. module: onboarding
 #: model:ir.model,name:onboarding.model_onboarding_progress_step
 msgid "Onboarding Progress Step Tracker"
-msgstr ""
+msgstr "Отслеживание шагов при вступлении в должность"
 
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding_step__current_progress_step_id
 msgid "Onboarding Progress Step for the current context (company)."
 msgstr ""
+"Шаг прогресса при вступлении в должность для текущего контекста (компании)."
 
 #. module: onboarding
 #: model:ir.model,name:onboarding.model_onboarding_progress
 msgid "Onboarding Progress Tracker"
-msgstr ""
+msgstr "Отслеживание хода работ по введению в должность"
 
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding__current_progress_id
 msgid "Onboarding Progress for the current context (company)."
-msgstr ""
+msgstr "Продвижение в процессе обучения для текущего контекста (компании)."
 
 #. module: onboarding
 #: model:ir.model,name:onboarding.model_onboarding_onboarding_step
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__step_id
 msgid "Onboarding Step"
-msgstr ""
+msgstr "Этап адаптации"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__step_state
 msgid "Onboarding Step Progress"
-msgstr ""
+msgstr "Продвижение по этапу регистрации"
 
 #. module: onboarding
 #: model:ir.actions.act_window,name:onboarding.action_view_onboarding_step
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_onboarding_step_view_tree
 msgid "Onboarding Steps"
-msgstr ""
+msgstr "Шаги по введению в должность"
 
 #. module: onboarding
 #: model:ir.model.constraint,message:onboarding.constraint_onboarding_onboarding_route_name_uniq
 msgid "Onboarding alias must be unique."
-msgstr ""
+msgstr "Псевдоним Onboarding должен быть уникальным."
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__onboarding_state
 msgid "Onboarding progress"
-msgstr ""
+msgstr "Прогресс в освоении новых знаний"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__step_ids
 msgid "Onboarding steps"
-msgstr ""
+msgstr "Этапы введения в должность"
 
 #. module: onboarding
 #: model:ir.actions.act_window,name:onboarding.action_view_onboarding_onboarding
@@ -318,37 +326,38 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_onboarding_step_view_form
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_onboarding_view_tree
 msgid "Onboardings"
-msgstr ""
+msgstr "Борта"
 
 #. module: onboarding
 #: model:ir.ui.menu,name:onboarding.menu_onboarding_step
 msgid "Onboardings Steps"
-msgstr ""
+msgstr "Шаги на борту"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__route_name
 msgid "One word name"
-msgstr ""
+msgstr "Название из одного слова"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__panel_step_open_action_name
 msgid "Opening action"
-msgstr ""
+msgstr "Действие открытия"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__progress_step_ids
 msgid "Progress Steps Trackers"
-msgstr ""
+msgstr "Трекеры шагов прогресса"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__progress_ids
 msgid "Related Onboarding Progress Tracker"
-msgstr ""
+msgstr "Related Onboarding Progress Tracker"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__onboarding_id
 msgid "Related onboarding tracked"
 msgstr ""
+"Связанные с этим вопросы, связанные с введением в должность, отслеживаются"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__sequence
@@ -359,12 +368,12 @@ msgstr "Последовательность"
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__is_per_company
 msgid "Should be done per company?"
-msgstr ""
+msgstr "Нужно ли это делать для каждой компании?"
 
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding_step__step_image_alt
 msgid "Show when impossible to load the image"
-msgstr ""
+msgstr "Показывается при невозможности загрузить изображение"
 
 #. module: onboarding
 #. odoo-python
@@ -376,17 +385,17 @@ msgstr "Шаг завершен!"
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__step_image
 msgid "Step Image"
-msgstr ""
+msgstr "Изображение шага"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__step_image_filename
 msgid "Step Image Filename"
-msgstr ""
+msgstr "Имя файла поэтапного изображения"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__current_progress_step_id
 msgid "Step Progress"
-msgstr ""
+msgstr "Шаг вперед"
 
 #. module: onboarding
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_onboarding_view_form
@@ -396,17 +405,17 @@ msgstr "Шаги"
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding_step__button_text
 msgid "Text on the panel's button to start this step"
-msgstr ""
+msgstr "Нажмите на кнопку панели, чтобы начать этот шаг"
 
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding__text_completed
 msgid "Text shown on onboarding when completed"
-msgstr ""
+msgstr "Текст, отображаемый на экране при заполнении"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__done_text
 msgid "Text to show when step is completed"
-msgstr ""
+msgstr "Текст для отображения при завершении шага"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__title
@@ -417,20 +426,20 @@ msgstr "Заголовок"
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_onboarding_view_form
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_onboarding_view_tree
 msgid "Toggle visibility"
-msgstr ""
+msgstr "Переключить видимость"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__is_onboarding_closed
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__is_onboarding_closed
 msgid "Was panel closed?"
-msgstr ""
+msgstr "Панель была закрыта?"
 
 #. module: onboarding
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_step
 msgid "o_onboarding_confetti"
-msgstr ""
+msgstr "o_onboarding_confetti"
 
 #. module: onboarding
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_panel
 msgid "onboarding.onboarding.step"
-msgstr ""
+msgstr "onboarding.onboarding.step"

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture, makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, editInput, getFixture, makeDeferred, mockSendBeacon, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { FormController } from '@web/views/form/form_controller';
 import { HtmlField } from "@web_editor/js/backend/html_field";
@@ -10,6 +10,7 @@ import { onRendered } from "@odoo/owl";
 import { wysiwygData } from "@web_editor/../tests/test_utils";
 import { OdooEditor } from '@web_editor/js/editor/odoo-editor/src/OdooEditor';
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
+import { insertText } from '@web_editor/js/editor/odoo-editor/test/utils';
 
 async function iframeReady(iframe) {
     const iframeLoadPromise = makeDeferred();
@@ -158,6 +159,47 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         })
         target.querySelector(".o_field_many2one input").dispatchEvent(customEvent);
     })
+
+    QUnit.test("discard html field changes in form", async (assert) => {
+        serverData.models.partner.records = [{ id: 1, txt: "<p>first</p>" }];
+        let wysiwyg;
+        const wysiwygPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await super.startWysiwyg(...arguments);
+                wysiwyg = this.wysiwyg;
+                wysiwygPromise.resolve();
+            },
+        });
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html" options="{'style-inline' : true}"/>
+                </form>`,
+        });
+        await wysiwygPromise;
+        const editor = wysiwyg.odooEditor;
+        const editable = editor.editable;
+        editor.testMode = true;
+        assert.strictEqual(editable.innerHTML, `<p>first</p>`);
+        const paragraph = editable.querySelector("p");
+        await setSelection(paragraph, 0);
+        await insertText(editor, "a");
+        assert.strictEqual(editable.innerHTML, `<p>afirst</p>`);
+        // For blur event here to call _onWysiwygBlur function in html_field
+        await editable.dispatchEvent(new Event("blur", { bubbles: true, cancelable: true }));
+        // Wait for the updates to be saved , if we don't wait the update of the value will
+        // be done after the call for discardChanges since it uses some async functions.
+        await new Promise((r) => setTimeout(r, 100));
+        const discardButton = target.querySelector(".o_form_button_cancel");
+        assert.ok(discardButton);
+        await click(discardButton);
+        assert.strictEqual(editable.innerHTML, `<p>first</p>`);
+    });
 
     QUnit.module('Sandboxed Preview');
 
@@ -408,6 +450,33 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
     QUnit.test("Ensure that urgentSave works even with modified image to save", async (assert) => {
         assert.expect(5);
+
+        let sendBeaconDef;
+        mockSendBeacon((route, blob) => {
+            blob.text().then((r) => {
+                const { params } = JSON.parse(r);
+                const { args, model } = params;
+                if (route === '/web/dataset/call_kw/partner/web_save' && model === 'partner') {
+                    if (writeCount === 0) {
+                        // Save normal value without image.
+                        assert.equal(args[1].txt, `<p class="test_target"><br></p>`);
+                    } else if (writeCount === 1) {
+                        // Save image with unfinished modification changes.
+                        assert.equal(args[1].txt, imageContainerHTML);
+                    } else if (writeCount === 2) {
+                        // Save the modified image.
+                        assert.equal(args[1].txt, getImageContainerHTML(newImageSrc, false));
+                    } else {
+                        // Fail the test if too many write are called.
+                        assert.ok(writeCount === 2, "Write should only be called 3 times during this test");
+                    }
+                    writeCount += 1;
+                }
+                sendBeaconDef.resolve();
+            });
+            return true;
+        });
+
         let formController;
         // Patch to get the controller instance.
         patchWithCleanup(FormController.prototype, {
@@ -473,20 +542,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                 route === '/web/dataset/call_kw/partner/web_save' &&
                 args.model === 'partner'
             ) {
-                if (writeCount === 0) {
-                    // Save normal value without image.
-                    assert.equal(args.args[1].txt, `<p class="test_target"><br></p>`);
-                } else if (writeCount === 1) {
-                    // Save image with unfinished modification changes.
-                    assert.equal(args.args[1].txt, imageContainerHTML);
-                } else if (writeCount === 2) {
-                    // Save the modified image.
-                    assert.equal(args.args[1].txt, getImageContainerHTML(newImageSrc, false));
-                } else {
-                    // Fail the test if too many write are called.
-                    assert.ok(writeCount === 2, "Write should only be called 3 times during this test");
-                }
-                writeCount += 1;
+                assert.ok(false, "write should only be called through sendBeacon");
             } else if (
                 route === `/web_editor/modify_image/${imageRecord.id}`
             ) {
@@ -518,8 +574,9 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         const editor = htmlField.wysiwyg.odooEditor;
 
         // Simulate an urgent save without any image in the content.
+        sendBeaconDef = makeDeferred();
         await formController.beforeUnload();
-        await nextTick();
+        await sendBeaconDef;
 
         // Replace the empty paragraph with a paragrah containing an unsaved
         // modified image
@@ -530,8 +587,9 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
         // Simulate an urgent save before the end of the RPC roundtrip for the
         // image.
+        sendBeaconDef = makeDeferred();
         await formController.beforeUnload();
-        await nextTick();
+        await sendBeaconDef;
 
         // Resolve the image modification (simulate end of RPC roundtrip).
         modifyImagePromise.resolve();
@@ -539,8 +597,9 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         await nextTick();
 
         // Simulate the last urgent save, with the modified image.
+        sendBeaconDef = makeDeferred();
         await formController.beforeUnload();
-        await nextTick();
+        await sendBeaconDef;
     });
 
     QUnit.test("Pasted/dropped images are converted to attachments on save", async (assert) => {
@@ -900,7 +959,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
     QUnit.module("Link");
 
     QUnit.test("link preview in Link Dialog", async (assert) => {
-        assert.expect(4);
+        assert.expect(6);
 
         serverData.models.partner.records.push({
             id: 1,
@@ -917,6 +976,26 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                 </form>`,
         });
 
+        // Test the popover option to edit the link
+        const a = document.querySelector(".test_target a");
+        // Wait for the popover to appear
+        await nextTick();
+        a.click();
+        await nextTick();
+        // Click on the edit link icon
+        document.querySelector("a.mx-1.o_we_edit_link.text-dark").click();
+        // Make sure popover is closed
+        await new Promise(resolve => $(a).on('hidden.bs.popover.link_popover', resolve));
+        let labelInputField = document.querySelector(".modal input#o_link_dialog_label_input");
+        let linkPreview = document.querySelector(".modal a#link-preview");
+        assert.strictEqual(labelInputField.value, 'This website',
+            "The label input field should match the link's content");
+        assert.strictEqual(linkPreview.innerText.replaceAll("\u200B", ""), "This website",
+            "Link label in preview should match label input field");
+
+        // Click on discard
+        await click(document, ".modal .modal-footer button.btn-secondary");
+
         const p = document.querySelector(".test_target");
         // Select link label to open the floating toolbar.
         setSelection(p, 0, p, 1);
@@ -925,8 +1004,8 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         document.querySelector("#toolbar #create-link").click();
         await nextTick();
 
-        const labelInputField = document.querySelector(".modal input#o_link_dialog_label_input");
-        const linkPreview = document.querySelector(".modal a#link-preview");
+        labelInputField = document.querySelector(".modal input#o_link_dialog_label_input");
+        linkPreview = document.querySelector(".modal a#link-preview");
         assert.strictEqual(labelInputField.value, 'This website',
             "The label input field should match the link's content");
         assert.strictEqual(linkPreview.innerText, 'This website',
@@ -940,5 +1019,40 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         await click(document, ".modal .modal-footer button.btn-primary");
         assert.strictEqual(p.innerText.replaceAll('\u200B', ''), 'New label',
             "The link's label should be updated");
+    });
+
+    QUnit.module("isDirty");
+
+    QUnit.test("isDirty should be false when the content is being transformed by the wysiwyg", async (assert) => {
+        assert.expect(2);
+
+        serverData.models.partner.records.push({
+            id: 1,
+            txt: "<p>a<span>b</span>c</p>",
+        });
+        let htmlField;
+        const wysiwygPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await super.startWysiwyg(...arguments);
+                htmlField = this;
+                wysiwygPromise.resolve();
+            }
+        });
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+        await wysiwygPromise;
+
+        assert.strictEqual(htmlField.wysiwyg.getValue(), '<p>abc</p>', 'the value should be sanitized by the wysiwyg');
+        assert.strictEqual(htmlField._isDirty(), false, 'should not be dirty as the content has not changed');
+
     });
 });

@@ -81,7 +81,7 @@ class SaleOrderLine(models.Model):
     product_id = fields.Many2one(
         comodel_name='product.product',
         string="Product",
-        change_default=True, ondelete='restrict', check_company=True, index='btree_not_null',
+        change_default=True, ondelete='restrict', index='btree_not_null',
         domain="[('sale_ok', '=', True)]")
     product_template_id = fields.Many2one(
         string="Product Template",
@@ -464,12 +464,13 @@ class SaleOrderLine(models.Model):
         for line in self:
             # check if there is already invoiced amount. if so, the price shouldn't change as it might have been
             # manually edited
-            if line.qty_invoiced > 0:
+            if line.qty_invoiced > 0 or (line.product_id.expense_policy == 'cost' and line.is_expense):
                 continue
             if not line.product_uom or not line.product_id:
                 line.price_unit = 0.0
             else:
-                price = line.with_company(line.company_id)._get_display_price()
+                line = line.with_company(line.company_id)
+                price = line._get_display_price()
                 line.price_unit = line.product_id._get_tax_included_unit_price(
                     line.company_id or line.env.company,
                     line.order_id.currency_id,
@@ -994,7 +995,12 @@ class SaleOrderLine(models.Model):
         if 'product_uom_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             self.filtered(
-                lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) != 0)._update_line_quantity(values)
+                lambda r: r.state == 'sale' and float_compare(
+                    r.product_uom_qty,
+                    values['product_uom_qty'],
+                    precision_digits=precision
+                ) != 0
+            )._update_line_quantity(values)
 
         # Prevent writing on a locked SO.
         protected_fields = self._get_protected_fields()
@@ -1193,7 +1199,8 @@ class SaleOrderLine(models.Model):
         the product is read-only or not.
 
         A product is considered read-only if the order is considered read-only (see
-        ``SaleOrder._is_readonly`` for more details) or if `self` contains multiple records.
+        ``SaleOrder._is_readonly`` for more details) or if `self` contains multiple records
+        or if it has sale_line_warn == "block".
 
         Note: This method cannot be called with multiple records that have different products linked.
 
@@ -1204,19 +1211,23 @@ class SaleOrderLine(models.Model):
                 'quantity': float,
                 'price': float,
                 'readOnly': bool,
+                'warning': String
             }
         """
         if len(self) == 1:
-            return {
+            res = {
                 'quantity': self.product_uom_qty,
                 'price': self.price_unit,
-                'readOnly': self.order_id._is_readonly(),
+                'readOnly': self.order_id._is_readonly() or (self.product_id.sale_line_warn == "block"),
             }
+            if self.product_id.sale_line_warn_msg:
+                res['warning'] = self.product_id.sale_line_warn_msg
+            return res
         elif self:
             self.product_id.ensure_one()
             order_line = self[0]
             order = order_line.order_id
-            return {
+            res = {
                 'readOnly': True,
                 'price': order.pricelist_id._get_product_price(
                     product=order_line.product_id,
@@ -1232,8 +1243,11 @@ class SaleOrderLine(models.Model):
                             to_unit=line.product_id.uom_id,
                         )
                     )
-                ),
+                )
             }
+            if self.product_id.sale_line_warn_msg:
+                res['warning'] = self.product_id.sale_line_warn_msg
+            return res
         else:
             return {
                 'quantity': 0,

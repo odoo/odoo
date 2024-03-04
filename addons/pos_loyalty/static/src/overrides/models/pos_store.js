@@ -178,20 +178,26 @@ patch(PosStore.prototype, {
                 const considerTheReward =
                     program.applies_on !== "both" || (program.applies_on == "both" && hasLine);
                 if (reward.reward_type === "product" && considerTheReward) {
-                    const product = this.db.get_product_by_id(reward.reward_product_ids[0]);
-                    const potentialQty = order._computePotentialFreeProductQty(
-                        reward,
-                        product,
-                        points
-                    );
-                    if (potentialQty <= 0) {
-                        continue;
+                    let hasPotentialQty = true;
+                    let potentialQty;
+                    for (const productId of reward.reward_product_ids) {
+                        const product = this.db.get_product_by_id(productId);
+                        potentialQty = order._computePotentialFreeProductQty(
+                            reward,
+                            product,
+                            points
+                        );
+                        if (potentialQty <= 0) {
+                            hasPotentialQty = false;
+                        }
                     }
-                    result.push({
-                        coupon_id: couponProgram.coupon_id,
-                        reward: reward,
-                        potentialQty,
-                    });
+                    if (hasPotentialQty) {
+                        result.push({
+                            coupon_id: couponProgram.coupon_id,
+                            reward: reward,
+                            potentialQty,
+                        });
+                    }
                 }
             }
         }

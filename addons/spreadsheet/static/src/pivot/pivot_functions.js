@@ -46,8 +46,9 @@ const ODOO_FILTER_VALUE = {
     description: _t("Return the current value of a spreadsheet filter."),
     args: [arg("filter_name (string)", _t("The label of the filter whose value to return."))],
     category: "Odoo",
-    compute: function (filterName) {
-        return this.getters.getFilterDisplayValue(filterName);
+    computeValueAndFormat: function (filterName) {
+        const unEscapedFilterName = toString(filterName.value).replaceAll('\\"', '"');
+        return this.getters.getFilterDisplayValue(unEscapedFilterName);
     },
     returns: ["STRING"],
 };
@@ -73,20 +74,10 @@ const ODOO_PIVOT = {
     computeFormat: function (pivotId, measureName, ...domain) {
         pivotId = toString(pivotId.value);
         const measure = toString(measureName.value);
-        const field = this.getters.getPivotDataSource(pivotId).getField(measure);
-        if (!field) {
-            return undefined;
+        if (measure === "__count") {
+            return "0";
         }
-        switch (field.type) {
-            case "integer":
-                return "0";
-            case "float":
-                return "#,##0.00";
-            case "monetary":
-                return this.getters.getCompanyCurrencyFormat() || "#,##0.00";
-            default:
-                return undefined;
-        }
+        return this.getters.getPivotFieldFormat(pivotId, measure);
     },
     returns: ["NUMBER", "STRING"],
 };
@@ -101,14 +92,13 @@ const ODOO_PIVOT_HEADER = {
     category: "Odoo",
     compute: function (pivotId, ...domain) {
         pivotId = toString(pivotId);
-        const args = domain.map(toString);
+        const domainArgs = domain.map(toString);
         assertPivotsExists(pivotId, this.getters);
-        assertDomainLength(args);
-        return this.getters.getDisplayedPivotHeaderValue(pivotId, args, this.locale);
+        assertDomainLength(domainArgs);
+        return this.getters.computeOdooPivotHeaderValue(pivotId, domainArgs);
     },
     computeFormat: function (pivotId, ...domain) {
         pivotId = toString(pivotId.value);
-        const pivot = this.getters.getPivotDataSource(pivotId);
         const len = domain.length;
         if (!len) {
             return undefined;
@@ -118,30 +108,7 @@ const ODOO_PIVOT_HEADER = {
         if (fieldName === "measure" || value === "false") {
             return undefined;
         }
-        const { aggregateOperator, field } = pivot.parseGroupField(fieldName);
-        switch (field.type) {
-            case "integer":
-                return "0";
-            case "float":
-            case "monetary":
-                return "#,##0.00";
-            case "date":
-            case "datetime":
-                switch (aggregateOperator) {
-                    case "day":
-                        return this.locale.dateFormat;
-                    case "month":
-                        return "mmmm yyyy";
-                    case "year":
-                        return "0";
-                    case "week":
-                    case "quarter":
-                        return undefined;
-                }
-                break;
-            default:
-                return undefined;
-        }
+        return this.getters.getPivotFieldFormat(pivotId, fieldName);
     },
     returns: ["NUMBER", "STRING"],
 };

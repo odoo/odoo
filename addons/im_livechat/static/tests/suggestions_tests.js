@@ -32,3 +32,26 @@ QUnit.test("Suggestions are shown after delimiter was used in text (:)", async (
     await insertText(".o-mail-Composer-input", " :");
     await contains(".o-mail-Composer-suggestion strong", { text: "hello" });
 });
+
+QUnit.test("Cannot mention other channels in a livechat", async () => {
+    const pyEnv = await startServer();
+    const [channelId] = pyEnv["discuss.channel"].create([
+        {
+            anonymous_name: "Visitor",
+            channel_type: "livechat",
+            channel_member_ids: [
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: pyEnv.publicPartnerId }),
+            ],
+        },
+        {
+            channel_type: "channel",
+            group_public_id: false,
+            name: "Link and Zelda",
+        },
+    ]);
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "#");
+    await contains(".o-mail-Composer-suggestion", { count: 0 });
+});

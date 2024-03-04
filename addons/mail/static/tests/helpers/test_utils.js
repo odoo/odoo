@@ -36,8 +36,7 @@ function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {})
     return async function openDiscuss(pActiveId) {
         const actionOpenDiscuss = {
             context: { ...context, active_id: pActiveId },
-            // hardcoded actionId, required for discuss_container props validation.
-            id: 104,
+            id: "mail.action_discuss",
             params,
             tag: "mail.action_discuss",
             type: "ir.actions.client",

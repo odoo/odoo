@@ -3,19 +3,20 @@
 # 	* project
 # 
 # Translators:
-# Wil Odoo, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
-# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 何彬 <vnsoft.he@gmail.com>, 2024
 # Chloe Wang, 2024
+# Wil Odoo, 2024
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
+# 湘子 南 <1360857908@qq.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -201,6 +202,8 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
 "<b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>日志笔记</b> 用于内部通信 <i>（除非您特别标记，否则关注此任务的人员不会收到您正在记录的笔记的通知）</i>。使用@ <b>提及</b> "
+"来提醒同事或使用# <b>提及</b> 来联系整个团队。"
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -756,7 +759,7 @@ msgstr "添加有关此任务的详细信息..."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
 msgid "Add extra content to display in the email"
-msgstr "添加额外内容以显示在电邮中"
+msgstr "添加额外内容以显示在电子邮件中"
 
 #. module: project
 #. odoo-javascript
@@ -1241,7 +1244,7 @@ msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the "
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
-msgstr ""
+msgstr "为您的项目选择 1 个<b>名称</b>。<i>可以是任何您想要的名称：客户名称、产品名称、团队名称、建筑工地名称等。</i>"
 
 #. module: project
 #. odoo-javascript
@@ -1632,7 +1635,7 @@ msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and you can\n"
 "      communicate on the task directly."
 msgstr ""
-"客户通过电子邮件提出反馈意见；Odoo 自动创建任务，您可以\n"
+"客户通过电子邮件提出反馈意见；ERP 自动创建任务，您可以\n"
 "      直接就任务进行沟通。"
 
 #. module: project
@@ -3024,6 +3027,13 @@ msgid "Next Activity"
 msgstr "下一个活动"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "下一活动日历事件"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__activity_date_deadline
@@ -3235,6 +3245,11 @@ msgstr "一个月一次"
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr "出错。请尝试重新加载页面并登录。"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__open_task_count
+msgid "Open Task Count"
+msgstr "开放任务计数"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -4769,14 +4784,14 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"相应于这个别名对应的模型(Odoo单据种类)。任何一封不属于对某个已存在的记录的到来邮件，将导致此模块中新记录的创建(例如，一个新的项目任务)。"
+"相应于这个别名对应的模型(ERP 单据种类)。任何一封不属于对某个已存在的记录的到来电子邮件，将导致此模型中新记录的创建(例如，一个新的项目任务)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "邮件别名的名称，例如，如果您要收取 <jobs@example.odoo.com> 的EMail,别名就要设为：\"jobs\""
+msgstr "邮件别名的名称，例如，如果您要收取 <jobs@example.baidu.com> 的EMail,别名就要设为：\"jobs\""
 
 #. module: project
 #. odoo-python
@@ -5255,19 +5270,28 @@ msgid ""
 "Use the chatter to <b>send emails</b> and communicate efficiently with your "
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
-msgstr ""
+msgstr "利用聊天工具<b>发送电子邮件</b> ，与客户进行高效沟通。将新人添加到关注者列表中，让他们了解有关这项任务的主要变化。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
-"            #tags Set tags on the task\n"
-"            @user Assign the task to a user\n"
-"            ! Set the task a high priority\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
 "\n"
-"            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"在标题中使用这些关键字来设置新任务：\n"
+"\n"
+"        30h 为任务指派 30 小时\n"
+"        #tags 为任务设置标签\n"
+"        @user 将任务指派给某个用户\n"
+"        ! 为任务设置高优先级\n"
+"\n"
+"        确保格式和顺序正确 例如，改进配置屏幕，5h #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id

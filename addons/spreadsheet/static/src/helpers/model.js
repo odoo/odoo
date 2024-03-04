@@ -5,8 +5,7 @@ import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
 
-const { toCartesian, UuidGenerator, createEmptySheet } = helpers;
-const uuidGenerator = new UuidGenerator();
+const { formatValue, isDefined, toCartesian } = helpers;
 
 export async function fetchSpreadsheetModel(env, resModel, resId) {
     const { data, revisions } = await env.services.orm.call(resModel, "join_spreadsheet_session", [
@@ -59,7 +58,7 @@ export async function freezeOdooData(model) {
                     col,
                     row,
                 });
-                cell.content = evaluatedCell.formattedValue;
+                cell.content = evaluatedCell.value.toString();
                 if (evaluatedCell.format) {
                     cell.format = getItemId(evaluatedCell.format, data.formats);
                 }
@@ -77,34 +76,21 @@ export async function freezeOdooData(model) {
             }
         }
     }
-    if (model.getters.getGlobalFilters().length === 0) {
-        return data;
-    }
-    data.sheets.push(exportGlobalFiltersToSheet(model, data));
+    exportGlobalFiltersToSheet(model, data);
     return data;
 }
 
 function exportGlobalFiltersToSheet(model, data) {
-    const styles = Object.entries(data.styles);
-    data.styles[styles.length + 1] = { bold: true };
-
-    const cells = {};
-    cells["A1"] = { content: _t("Filter"), style: styles.length + 1 };
-    cells["B1"] = { content: _t("Value"), style: styles.length + 1 };
-    let row = 2;
+    model.getters.exportSheetWithActiveFilters(data);
+    const locale = model.getters.getLocale();
     for (const filter of data.globalFilters) {
         const content = model.getters.getFilterDisplayValue(filter.label);
-        cells[`A${row}`] = { content: filter.label };
-        cells[`B${row}`] = { content };
-        filter["value"] = content;
-        row++;
+        filter["value"] = content
+            .flat()
+            .filter(isDefined)
+            .map(({ value, format }) => formatValue(value, { format, locale }))
+            .join(", ");
     }
-    return {
-        ...createEmptySheet(uuidGenerator.uuidv4(), _t("Active Filters")),
-        cells,
-        colNumber: 2,
-        rowNumber: model.getters.getGlobalFilters().length + 1,
-    };
 }
 
 /**

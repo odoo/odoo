@@ -112,3 +112,20 @@ class TestSnippets(HttpCase):
 
     def test_drag_and_drop_on_non_editable(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'test_drag_and_drop_on_non_editable', login='admin')
+
+    def test_snippet_image_gallery_reorder(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), "snippet_image_gallery_reorder", login='admin')
+
+    def test_snippet_image_gallery_thumbnail_update(self):
+        IrAttachment = self.env['ir.attachment']
+        base = 'http://%s:%s' % (HOST, config['http_port'])
+        IrAttachment.create({
+            'public': True,
+            'name': 's_default_image.jpg',
+            'type': 'url',
+            'url': base + '/web/image/website.s_banner_default_image',
+        })
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_image_gallery_thumbnail_update', login='admin')
+
+    def test_dropdowns_and_header_hide_on_scroll(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'dropdowns_and_header_hide_on_scroll', login='admin')

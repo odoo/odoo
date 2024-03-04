@@ -3,16 +3,17 @@
 # 	* sale
 # 
 # Translators:
-# Wil Odoo, 2023
 # Jolien De Paepe, 2024
+# Wil Odoo, 2024
+# Sarah Bellefroid, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2024\n"
+"Last-Translator: Sarah Bellefroid, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -729,23 +730,23 @@ msgstr "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Fait\" title=\"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-check\"/> <b>Authorized</b>"
-msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Autorisé</b>"
+msgid "<i class=\"fa fa-fw fa-check\"/> Authorized"
+msgstr "<i class=\"fa fa-fw fa-check\"/> Autorisé"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
-msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Payé</b>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>En attente de paiement</b>"
+msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
+msgstr "<i class=\"fa fa-fw fa-check\"/> Payé"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Expiré"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> Waiting Payment"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> En attente de paiement"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
@@ -794,11 +795,6 @@ msgstr "<small class=\"text-muted\">Votre contact</small>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
 msgstr "<small><b class=\"text-muted\">Votre avantage</b></small>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "<small><b>This offer expires on</b></small>"
-msgstr "<small><b>Cette offre expire le</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -886,8 +882,8 @@ msgstr "<span>TVA</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_document_kanban
-msgid "<span>Visible at</span>"
-msgstr "<span>Visible sur</span>"
+msgid "<span>Visibility</span>"
+msgstr "<span>Visibilité</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1165,11 +1161,11 @@ msgid ""
 "Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
 msgstr ""
 "Vous permet de partager le document avec vos clients dans le cadre d'une vente. \n"
-"Laissez ce champ vide si vous ne voulez pas partager ce document avec vos clients. \n"
+"Laissez ce champ vide si vous ne voulez pas partager ce document avec vos clients.\n"
 "Devis : le document sera envoyé aux clients et est accessible par eux à tout moment. \n"
 "Par exemple, cette option peut être utile pour partager des fichiers de description de produits. \n"
-"Commande confirmée : le document sera envoyé aux clients et est accessible par eux. \n"
-"Par exemple, cette option peut être utile pour partager des manuels d'utilisation ou des contenus numériques achetés dans le cadre d'un eCommerce. \n"
+"Commande confirmée : le document sera envoyé aux clients et est accessible par eux.\n"
+"Par exemple, cette option peut être utile pour partager des manuels d'utilisation ou des contenus numériques achetés dans le cadre d'un eCommerce.\n"
 "Dans le devis : Le document sera inclus dans le PDF du devis entre les pages d'en-tête et le tableau du devis."
 
 #. module: sale
@@ -1472,7 +1468,7 @@ msgstr ""
 "\n"
 "Si vous souhaitez facturer sur la base des quantités commandées :\n"
 "   • Pour les produits consommables ou stockables, ouvrez le produit, allez à l'onglet 'Informations générales' et modifiez la 'Politique de facturation' de 'Quantités livrées' à 'Quantités commandées'.\n"
-"   • Pour les servies (et les autres produits), modifiez la 'Politique de facturation' en 'Prépayé/Prix fixe'.\n"
+"   • Pour les services (et les autres produits), modifiez la 'Politique de facturation' en 'Prépayé/Prix fixe'.\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2211,6 +2207,13 @@ msgstr "Acompte <br/>"
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
+msgid "Down payment invoice"
+msgstr "Facture d'acompte"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
 msgid "Down payment of %s%%"
 msgstr "Acompte de %s%%"
 
@@ -2541,7 +2544,7 @@ msgstr "Importer des commandes Amazon et synchroniser les livraisons"
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr "Importer un modèle pour les produits"
+msgstr "Modèle d'importation pour les produits"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
@@ -2686,7 +2689,6 @@ msgstr "Facturé ce mois-ci"
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_ids
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
 msgstr "Factures clients"
@@ -2808,6 +2810,11 @@ msgstr "Écriture comptable"
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__lang
 msgid "Language"
 msgstr "Langue"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Last Invoices"
+msgstr "Dernières factures"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_uid
@@ -2959,7 +2966,7 @@ msgstr "Marketing"
 #: model:ir.model.fields,field_description:sale.field_sale_order__medium_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__medium_id
 msgid "Medium"
-msgstr "Moyenne"
+msgstr "Médium"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
@@ -3342,11 +3349,6 @@ msgstr "Date de la commande : "
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Order Date: Last 365 Days"
 msgstr "Date de la commande : 365 derniers jours"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Order Detail"
-msgstr "Détail de la commande"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -3831,7 +3833,6 @@ msgstr "Date du devis"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Quotation Date:"
 msgstr "Date du devis :"
 
@@ -4974,6 +4975,14 @@ msgstr ""
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr ""
 "Le pourcentage du montant qui doit être payer pour confirmer les devis."
+
+#. module: sale
+#. odoo-python
+#. odoo-python
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid "The product (%s) has incompatible values: %s"
+msgstr "Le produit (%s) a des valeurs incompatibles :%s"
 
 #. module: sale
 #. odoo-python

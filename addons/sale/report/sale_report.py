@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
+
 from odoo.addons.sale.models.sale_order import SALE_ORDER_STATE
 
 
@@ -72,7 +72,7 @@ class SaleReport(models.Model):
     weight = fields.Float(string="Gross Weight", readonly=True)
     volume = fields.Float(string="Volume", readonly=True)
 
-    discount = fields.Float(string="Discount %", readonly=True)
+    discount = fields.Float(string="Discount %", readonly=True, group_operator='avg')
     discount_amount = fields.Monetary(string="Discount Amount", readonly=True)
 
     # aggregates or computed fields

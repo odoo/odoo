@@ -446,6 +446,26 @@ class TestSaleOrder(SaleCommon):
         self.assertFalse(public_user.has_group('sale.group_auto_done_setting'))
         self.assertTrue(self.sale_order.locked)
 
+    def test_generate_account_analytic_when_confirm_so(self):
+        """ Test generate account analytic when SO with expense product is confirmed """
+        restaurant_expenses_product = self.env['product.product'].create({
+            'name': 'Restaurant Expenses',
+            'type': 'service',
+            'expense_policy': 'sales_price',
+            'list_price': 14.0,
+            'standard_price': 10.0,
+        })
+        sale_order = self.env['sale.order'].with_user(self.sale_user).create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': restaurant_expenses_product.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        self.assertFalse(sale_order.analytic_account_id)
+        sale_order.action_confirm()
+        self.assertTrue(sale_order.analytic_account_id, "An analytic account should be generated")
+
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
@@ -595,7 +615,7 @@ class TestSalesTeam(SaleCommon):
         company_b = self.env['res.company'].create({'name': 'B'})
         tax_group_a = self.env['account.tax.group'].create({'name': 'A', 'company_id': company_a.id})
         tax_group_b = self.env['account.tax.group'].create({'name': 'B', 'company_id': company_b.id})
-        country = self.env['res.country'].search([])[0]
+        country = self.env['res.country'].search([], limit=1)
 
         tax_a = self.env['account.tax'].create({
             'name': 'A',
@@ -629,6 +649,55 @@ class TestSalesTeam(SaleCommon):
         with self.assertRaises(UserError):
             sol.tax_id = tax_b
 
+    def test_assign_tax_multi_company(self):
+        root_company = self.env['res.company'].create({'name': 'B0 company'})
+        root_company.write({'child_ids': [
+            Command.create({'name': 'B1 company'}),
+            Command.create({'name': 'B2 company'}),
+        ]})
+
+        country = self.env['res.country'].search([], limit=1)
+        basic_tax_group = self.env['account.tax.group'].create({'name': 'basic group', 'country_id': country.id})
+        tax_b0 = self.env['account.tax'].create({
+            'name': 'B0 tax',
+            'company_id': root_company.id,
+            'amount': 10,
+            'tax_group_id': basic_tax_group.id,
+            'country_id': country.id,
+        })
+        tax_b1 = self.env['account.tax'].create({
+            'name': 'B1 tax',
+            'company_id': root_company.child_ids[0].id,
+            'amount': 11,
+            'tax_group_id': basic_tax_group.id,
+            'country_id': country.id,
+        })
+        tax_b2 = self.env['account.tax'].create({
+            'name': 'B2 tax',
+            'company_id': root_company.child_ids[1].id,
+            'amount': 20,
+            'tax_group_id': basic_tax_group.id,
+            'country_id': country.id,
+        })
+
+        sale_order = self.env['sale.order'].create({'partner_id': self.partner.id, 'company_id': root_company.child_ids[0].id})
+        product = self.env['product.product'].create({'name': 'Product'})
+
+        # In sudo to simulate an user that have access to both companies.
+        sol_b1 = self.env['sale.order.line'].sudo().create({
+            'name': product.name,
+            'product_id': product.id,
+            'order_id': sale_order.id,
+            'tax_id': tax_b1,
+        })
+
+        # should not raise anything
+        sol_b1.tax_id = tax_b0
+        sol_b1.tax_id = tax_b1
+        # should raise (b2 is not on the same branch lineage as b1)
+        with self.assertRaises(UserError):
+            sol_b1.tax_id = tax_b2
+
     def test_downpayment_amount_constraints(self):
         """Down payment amounts should be in the interval ]0, 1]."""
 
@@ -637,3 +706,32 @@ class TestSalesTeam(SaleCommon):
             self.sale_order.prepayment_percent = -1
         with self.assertRaises(ValidationError):
             self.sale_order.prepayment_percent = 1.01
+
+    def test_sales_team_defined_on_partner_user_no_team(self):
+        """ Test that sale order picks up a team from res.partner on change if user has no team specified """
+
+        crm_team0 = self.env['crm.team'].create({
+            'name':"Test Team A"
+        })
+
+        crm_team1 = self.env['crm.team'].create({
+            'name':"Test Team B"
+        })
+
+        partner_a = self.env['res.partner'].create({
+            'name': 'Partner A',
+            'team_id': crm_team0.id,
+        })
+
+        partner_b = self.env['res.partner'].create({
+            'name': 'Partner B',
+            'team_id': crm_team1.id,
+        })
+
+        sale_order = self.env['sale.order'].with_user(self.user_not_in_team).create({
+            'partner_id': partner_a.id,
+        })
+
+        self.assertEqual(sale_order.team_id, crm_team0, "Sales team should change to partner's")
+        sale_order.with_user(self.user_not_in_team).write({'partner_id': partner_b.id})
+        self.assertEqual(sale_order.team_id, crm_team1, "Sales team should change to partner's")

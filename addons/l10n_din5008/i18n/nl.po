@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 13:40+0000\n"
-"PO-Revision-Date: 2023-07-12 15:39+0200\n"
+"POT-Creation-Date: 2024-02-20 12:12+0000\n"
+"PO-Revision-Date: 2024-02-14 09:18+0100\n"
 "Last-Translator: Jort ten Donkelaar  <jort@aardug.eu>, 2023\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -15,6 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.din5008_css
@@ -69,8 +70,8 @@ msgstr "<span>|</span>"
 
 #. module: l10n_din5008
 #: model:ir.model,name:l10n_din5008.model_account_analytic_line
-msgid "Analytic Account"
-msgstr "Kostenplaats"
+msgid "Analytic Line"
+msgstr "Analytische boeking"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -95,6 +96,11 @@ msgid "City"
 msgstr "Plaats"
 
 #. module: l10n_din5008
+#: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__company_details
+msgid "Company Details"
+msgstr ""
+
+#. module: l10n_din5008
 #: model:ir.model,name:l10n_din5008.model_base_document_layout
 msgid "Company Document Layout"
 msgstr "Bedrijf document lay-out"
@@ -110,6 +116,14 @@ msgstr "Bedrijfs ID"
 #, python-format
 msgid "Credit Note"
 msgstr "Creditfactuur"
+
+#. module: l10n_din5008
+#. odoo-python
+#: code:addons/l10n_din5008/models/account_move.py:0
+#: code:addons/l10n_din5008/models/base_document_layout.py:0
+#, python-format
+msgid "Delivery Date"
+msgstr "Leverdatum"
 
 #. module: l10n_din5008
 #. odoo-python
@@ -132,9 +146,19 @@ msgid "Fiscal Country"
 msgstr "Fiscale land"
 
 #. module: l10n_din5008
+#: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__report_footer
+msgid "Footer text displayed at the bottom of all reports."
+msgstr ""
+
+#. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
 msgid "HRB Nr:"
 msgstr "Kvk nr.:"
+
+#. module: l10n_din5008
+#: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__company_details
+msgid "Header text displayed at the top of all reports."
+msgstr ""
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -174,7 +198,6 @@ msgstr "Factuuradres:"
 
 #. module: l10n_din5008
 #. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
 #: code:addons/l10n_din5008/models/account_move.py:0
 #, python-format
 msgid "Invoicing and Shipping Address:"
@@ -224,6 +247,11 @@ msgid "Reference"
 msgstr "Referentie"
 
 #. module: l10n_din5008
+#: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__report_footer
+msgid "Report Footer"
+msgstr ""
+
+#. module: l10n_din5008
 #. odoo-python
 #: code:addons/l10n_din5008/models/account_move.py:0
 #, python-format
@@ -254,12 +282,8 @@ msgstr "Het land waaruit de belastingrapporten voor dit bedrijf moeten worden ge
 
 #. module: l10n_din5008
 #: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__company_registry
-msgid ""
-"The registry number of the company. Use it if it is different from the Tax "
-"ID. It must be unique across all partners of a same country"
-msgstr ""
-"Het registratienummer van het bedrijf. Gebruik het als het verschilt van "
-"het BTW nummer. Het moet uniek zijn voor alle partners van hetzelfde land"
+msgid "The registry number of the company. Use it if it is different from the Tax ID. It must be unique across all partners of a same country"
+msgstr "Het registratienummer van het bedrijf. Gebruik het als het verschilt van het BTW nummer. Het moet uniek zijn voor alle partners van hetzelfde land"
 
 #. module: l10n_din5008
 #. odoo-python

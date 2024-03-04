@@ -6,6 +6,7 @@
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
 # Martin Trigaux, 2023
 # ILMIR <karamov@it-projects.info>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: ILMIR <karamov@it-projects.info>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,6 +43,7 @@ msgstr "Как настроить свою учетную запись PayPal?"
 #, python-format
 msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
 msgstr ""
+"Отсутствует значение для txn_id (%(txn_id)s) или txn_type (%(txn_type)s)."
 
 #. module: payment_paypal
 #. odoo-python
@@ -53,22 +55,22 @@ msgstr "Не найдено ни одной транзакции, соответ
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr ""
+msgstr "Маркер удостоверения PDT"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
 msgid "PayPal Transaction Type"
-msgstr ""
+msgstr "Тип транзакции PayPal"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_provider
 msgid "Payment Provider"
-msgstr "Платежный провайдер"
+msgstr "Поставщик платежей"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Операция Оплаты"
+msgstr "платеж"
 
 #. module: payment_paypal
 #: model:ir.model.fields.selection,name:payment_paypal.selection__payment_provider__code__paypal
@@ -80,7 +82,7 @@ msgstr "Paypal"
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr "Получены данные с неверным статусом платежа: %s"
+msgstr "Получены данные с недопустимым статусом платежа: %s"
 
 #. module: payment_paypal
 #. odoo-python
@@ -94,6 +96,8 @@ msgstr "Клиент покинул страницу оплаты."
 msgid ""
 "The public business email solely used to identify the account with PayPal"
 msgstr ""
+"Публичная рабочая электронная почта, используемая исключительно для "
+"идентификации счета в PayPal"
 
 #. module: payment_paypal
 #. odoo-python
@@ -104,8 +108,10 @@ msgid ""
 "because the 'Payment data transfer' option is not enabled on the PayPal "
 "dashboard."
 msgstr ""
+"Статус транзакции со ссылкой %(ref)s не был синхронизирован, потому что на "
+"панели PayPal не включена опция \"Передача данных платежа\"."
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr "Технический код этого платежного провайдера."
+msgstr "Технический код данного провайдера платежей."

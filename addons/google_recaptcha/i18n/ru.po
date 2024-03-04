@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Vasiliy Korobatov <korobatov@gmail.com>, 2023
-# Martin Trigaux, 2023
-# ILMIR <karamov@it-projects.info>, 2023
 # Irina Fedulova <istartlin@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,12 +25,12 @@ msgstr ""
 #. module: google_recaptcha
 #: model_terms:ir.ui.view,arch_db:google_recaptcha.res_config_settings_view_form
 msgid "<i class=\"oi oi-arrow-right\"/> Generate reCAPTCHA v3 keys"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right\"/> Генерация ключей reCAPTCHA v3"
 
 #. module: google_recaptcha
 #: model:ir.model,name:google_recaptcha.model_res_config_settings
 msgid "Config Settings"
-msgstr "Конфигурационные настройки"
+msgstr "Параметры конфигурации"
 
 #. module: google_recaptcha
 #: model:ir.model,name:google_recaptcha.model_ir_http
@@ -47,7 +47,7 @@ msgstr "Минимальная оценка"
 #: code:addons/google_recaptcha/static/src/js/recaptcha.js:0
 #, python-format
 msgid "No recaptcha site key set."
-msgstr ""
+msgstr "Ключ сайта recaptcha не установлен."
 
 #. module: google_recaptcha
 #. odoo-javascript
@@ -61,7 +61,7 @@ msgstr "Политика конфиденциальности"
 #: code:addons/google_recaptcha/static/src/xml/recaptcha.xml:0
 #, python-format
 msgid "Protected by reCAPTCHA,"
-msgstr "Защищено reCAPTCHA,"
+msgstr "Защищено с помощью reCAPTCHA,"
 
 #. module: google_recaptcha
 #: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_private_key
@@ -71,49 +71,49 @@ msgstr "Секретный ключ"
 #. module: google_recaptcha
 #: model:ir.model.fields,help:google_recaptcha.field_res_config_settings__recaptcha_min_score
 msgid ""
-"Should be between 0.0 and 1.0.\n"
+"By default, should be one of 0.1, 0.3, 0.7, 0.9.\n"
 "1.0 is very likely a good interaction, 0.0 is very likely a bot"
 msgstr ""
 
 #. module: google_recaptcha
 #: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_public_key
 msgid "Site Key"
-msgstr ""
+msgstr "Ключ сайта"
 
 #. module: google_recaptcha
 #. odoo-javascript
 #: code:addons/google_recaptcha/static/src/xml/recaptcha.xml:0
 #, python-format
 msgid "Terms of Service"
-msgstr "Условия обслуживания"
+msgstr "Условия использования"
 
 #. module: google_recaptcha
 #. odoo-python
 #: code:addons/google_recaptcha/models/ir_http.py:0
 #, python-format
 msgid "The reCaptcha private key is invalid."
-msgstr ""
+msgstr "Закрытый ключ reCAPTCHA недействителен."
 
 #. module: google_recaptcha
 #. odoo-python
 #: code:addons/google_recaptcha/models/ir_http.py:0
 #, python-format
 msgid "The reCaptcha token is invalid."
-msgstr ""
+msgstr "Токен reCAPTCHA недействителен."
 
 #. module: google_recaptcha
 #. odoo-javascript
 #: code:addons/google_recaptcha/static/src/js/recaptcha.js:0
 #, python-format
 msgid "The recaptcha site key is invalid."
-msgstr ""
+msgstr "Ключ сайта recaptcha недействителен."
 
 #. module: google_recaptcha
 #. odoo-python
 #: code:addons/google_recaptcha/models/ir_http.py:0
 #, python-format
 msgid "The request is invalid or malformed."
-msgstr ""
+msgstr "Запрос недействителен или искажен."
 
 #. module: google_recaptcha
 #. odoo-python
@@ -121,10 +121,11 @@ msgstr ""
 #, python-format
 msgid "Your request has timed out, please retry."
 msgstr ""
+"Время выполнения вашего запроса истекло, пожалуйста, повторите попытку."
 
 #. module: google_recaptcha
 #. odoo-javascript
 #: code:addons/google_recaptcha/static/src/xml/recaptcha.xml:0
 #, python-format
 msgid "apply."
-msgstr "применить."
+msgstr "применять."

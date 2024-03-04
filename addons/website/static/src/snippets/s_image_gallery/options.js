@@ -43,14 +43,14 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      * @private
      */
     _grid() {
-        const imgs = this._getItemsGallery();
+        const imgs = this._getImgHolderEls();
         var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
         var $container = this._replaceContent($row);
 
         imgs.forEach((img, index) => {
-            const $img = $(img.cloneNode());
+            const $img = $(img.cloneNode(true));
             var $col = $('<div/>', {class: colClass});
             $col.append($img).appendTo($row);
             if ((index + 1) % columns === 0) {
@@ -67,7 +67,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      * @returns {Promise}
      */
     _masonry() {
-        const imgs = this._getItemsGallery();
+        const imgs = this._getImgHolderEls();
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
         var cols = [];
@@ -100,7 +100,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
                 // Only on Chrome: appended images are sometimes invisible
                 // and not correctly loaded from cache, we use a clone of the
                 // image to force the loading.
-                smallestColEl.append(imgEl.cloneNode());
+                smallestColEl.append(imgEl.cloneNode(true));
                 await wUtils.onceAllImagesLoaded(this.$target);
             }
             resolve();
@@ -138,15 +138,16 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
     _nomode() {
         var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
         const imgs = this._getItemsGallery();
+        const imgHolderEls = this._getImgHolderEls();
 
         this._replaceContent($row);
 
-        imgs.forEach((img) => {
+        imgs.forEach((img, index) => {
             var wrapClass = 'col-lg-3';
             if (img.width >= img.height * 2 || img.width > 600) {
                 wrapClass = 'col-lg-6';
             }
-            var $wrap = $('<div/>', {class: wrapClass}).append(img);
+            var $wrap = $('<div/>', {class: wrapClass}).append(imgHolderEls[index]);
             $row.append($wrap);
         });
     },
@@ -157,10 +158,14 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      */
     _slideshow() {
         const imageEls = this._getItemsGallery();
+        const imgHolderEls = this._getImgHolderEls();
         const images = Array.from(imageEls).map((img) => ({
             // Use getAttribute to get the attribute value otherwise .src
             // returns the absolute url.
             src: img.getAttribute('src'),
+            // TODO: remove me in master. This is not needed anymore as the
+            // images of the rendered `website.gallery.slideshow` are replaced
+            // by the elements of `imgHolderEls`.
             alt: img.getAttribute('alt'),
         }));
         var currentInterval = this.$target.find('.carousel:first').attr('data-bs-interval');
@@ -170,10 +175,23 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
             title: "",
             interval: currentInterval || 0,
             id: 'slideshow_' + new Date().getTime(),
+            // TODO: in master, remove `attrClass` and `attStyle` from `params`.
+            // This is not needed anymore as the images of the rendered
+            // `website.gallery.slideshow` are replaced by the elements of
+            // `imgHolderEls`.
             attrClass: imageEls.length > 0 ? imageEls[0].className : '',
             attrStyle: imageEls.length > 0 ? imageEls[0].style.cssText : '',
         },
         $slideshow = $(renderToElement('website.gallery.slideshow', params));
+        const imgSlideshowEls = $slideshow[0].querySelectorAll("img[data-o-main-image]");
+        imgSlideshowEls.forEach((imgSlideshowEl, index) => {
+            // Replace the template image by the original one. This is needed in
+            // order to keep the characteristics of the image such as the
+            // filter, the width, the quality, the link on which the users are
+            // redirected once they click on the image etc...
+            imgSlideshowEl.after(imgHolderEls[index]);
+            imgSlideshowEl.remove();
+        });
         this._replaceContent($slideshow);
         this.$("img").toArray().forEach((img, index) => {
             $(img).attr({contenteditable: true, 'data-index': index});
@@ -191,6 +209,17 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
         const imgs = this.$('img').get();
         imgs.sort((a, b) => this._getIndex(a) - this._getIndex(b));
         return imgs;
+    },
+    /**
+     * Returns the images, or the images holder if this holder is an anchor,
+     * sorted by index.
+     *
+     * @private
+     * @returns {Array.<HTMLImageElement|HTMLAnchorElement>}
+     */
+    _getImgHolderEls: function () {
+        const imgEls = this._getItemsGallery();
+        return imgEls.map(imgEl => imgEl.closest("a") || imgEl);
     },
     /**
      * Returns the index associated to a given image.
@@ -417,9 +446,8 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                 multiImages: true,
                 onlyImages: true,
                 save: images => {
-                    let $newImageToSelect;
                     for (const image of images) {
-                        const $img = $('<img/>', {
+                        $('<img/>', {
                             class: $images.length > 0 ? $images[0].className : 'img img-fluid d-block ',
                             src: image.src,
                             'data-index': ++index,
@@ -427,15 +455,10 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                             'data-name': _t('Image'),
                             style: $images.length > 0 ? $images[0].style.cssText : '',
                         }).appendTo($container);
-                        if (!$newImageToSelect) {
-                            $newImageToSelect = $img;
-                        }
                     }
                     if (images.length > 0) {
                         savedPromise = this._relayout();
                         this.trigger_up('cover_update');
-                        // Triggers the re-rendering of the thumbnail
-                        $newImageToSelect.trigger('image_changed');
                     }
                 },
             };

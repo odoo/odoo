@@ -16,7 +16,7 @@ class MassMailing(models.Model):
     @api.depends('mailing_domain')
     def _compute_sale_quotation_count(self):
         quotation_data = self.env['sale.order'].sudo()._read_group(
-            [('source_id', 'in', self.source_id.ids)],
+            [('source_id', 'in', self.source_id.ids), ('order_line', '!=', False)],
             ['source_id'], ['__count'],
         )
         mapped_data = {source.id: count for source, count in quotation_data}

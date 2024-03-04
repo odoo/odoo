@@ -141,6 +141,30 @@ function changePaddingSize(direction) {
 }
 
 /**
+ * Checks if an element is visible on the screen, i.e., not masked by another
+ * element.
+ * 
+ * @param {String} elementSelector The selector of the element to be checked.
+ * @returns {Object} The steps required to check if the element is visible.
+ */
+function checkIfVisibleOnScreen(elementSelector) {
+    return {
+        content: "Check if the element is visible on screen",
+        trigger: `${elementSelector}`,
+        run() {
+            const boundingRect = this.$anchor[0].getBoundingClientRect();
+            const centerX = boundingRect.left + boundingRect.width / 2;
+            const centerY = boundingRect.top + boundingRect.height / 2;
+            const iframeDocument = document.querySelector(".o_iframe").contentDocument;
+            const el = iframeDocument.elementFromPoint(centerX, centerY);
+            if (!this.$anchor[0].contains(el)) {
+                console.error("The element is not visible on screen");
+            }
+        },
+    };
+}
+
+/**
  * Simple click on an element in the page.
  * @param {*} elementName
  * @param {*} selector
@@ -187,7 +211,7 @@ function clickOnSnippet(snippet, position = "bottom") {
     };
 }
 
-function clickOnSave(position = "bottom") {
+function clickOnSave(position = "bottom", timeout) {
     return [{
         trigger: "div:not(.o_loading_dummy) > #oe_snippets button[data-action=\"save\"]:not([disabled])",
         // TODO this should not be needed but for now it better simulates what
@@ -201,6 +225,7 @@ function clickOnSave(position = "bottom") {
         in_modal: false,
         content: markup(_t("Good job! It's time to <b>Save</b> your work.")),
         position: position,
+        timeout: timeout,
     }, {
         trigger: 'iframe body:not(.editor_enable)',
         noPrepend: true,
@@ -303,7 +328,7 @@ function getClientActionUrl(path, edition) {
 function clickOnExtraMenuItem(stepOptions, backend = false) {
     return Object.assign({}, {
         content: "Click on the extra menu dropdown toggle if it is there",
-        trigger: `${backend ? "iframe" : ""} #top_menu`,
+        trigger: `${backend ? "iframe" : ""} .top_menu`,
         run: function () {
             const extraMenuButton = this.$anchor[0].querySelector('.o_extra_menu_items a.nav-link');
             if (extraMenuButton) {
@@ -420,6 +445,31 @@ function selectElementInWeSelectWidget(widgetName, elementName, searchNeeded = f
     return steps;
 }
 
+/**
+ * Switches to a different website by clicking on the website switcher.
+ *
+ * @param {number} websiteId - The ID of the website to switch to.
+ * @param {string} websiteName - The name of the website to switch to.
+ * @returns {Array} - The steps required to perform the website switch.
+ */
+function switchWebsite(websiteId, websiteName) {
+    return [{
+        content: `Click on the website switch to switch to website '${websiteName}'`,
+        trigger: '.o_website_switcher_container button',
+    }, {
+        content: `Switch to website '${websiteName}'`,
+        extra_trigger: `iframe html:not([data-website-id="${websiteId}"])`,
+        trigger: `.o_website_switcher_container .dropdown-item:contains("${websiteName}")`,
+    }, {
+        content: "Wait for the iframe to be loaded",
+        // The page reload generates assets for the new website, it may take
+        // some time
+        timeout: 20000,
+        trigger: `iframe html[data-website-id="${websiteId}"]`,
+        isCheck: true,
+    }];
+}
+
 export default {
     addMedia,
     assertCssVariable,
@@ -431,22 +481,24 @@ export default {
     changeImage,
     changeOption,
     changePaddingSize,
-    clickOnElement,
+    checkIfVisibleOnScreen,
     clickOnEditAndWaitEditMode,
+    clickOnElement,
+    clickOnExtraMenuItem,
     clickOnSave,
     clickOnSnippet,
     clickOnText,
     dragNDrop,
+    getClientActionUrl,
     goBackToBlocks,
     goToTheme,
+    registerBackendAndFrontendTour,
+    registerThemeHomepageTour,
+    registerWebsitePreviewTour,
     selectColorPalette,
+    selectElementInWeSelectWidget,
     selectHeader,
     selectNested,
     selectSnippetColumn,
-    getClientActionUrl,
-    registerThemeHomepageTour,
-    clickOnExtraMenuItem,
-    registerWebsitePreviewTour,
-    registerBackendAndFrontendTour,
-    selectElementInWeSelectWidget,
+    switchWebsite,
 };

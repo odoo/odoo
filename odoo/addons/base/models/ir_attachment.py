@@ -739,4 +739,4 @@ class IrAttachment(models.Model):
             ('res_id', '=', 0),
             ('create_uid', '=', SUPERUSER_ID),
         ]).unlink()
-        self.clear_caches()
+        self.env.registry.clear_cache('assets')

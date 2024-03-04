@@ -30,7 +30,7 @@ class PurchaseOrderLine(models.Model):
         compute='_compute_price_unit_and_date_planned_and_name',
         digits='Discount',
         store=True, readonly=False)
-    taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)], context={'active_test': False})
+    taxes_id = fields.Many2many('account.tax', string='Taxes', context={'active_test': False})
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, index='btree_not_null')
@@ -482,7 +482,8 @@ class PurchaseOrderLine(models.Model):
         the product is read-only or not.
 
         A product is considered read-only if the order is considered read-only (see
-        ``PurchaseOrder._is_readonly`` for more details) or if `self` contains multiple records.
+        ``PurchaseOrder._is_readonly`` for more details) or if `self` contains multiple records
+        or if it has purchase_line_warn == "block".
 
         Note: This method cannot be called with multiple records that have different products linked.
 
@@ -496,6 +497,7 @@ class PurchaseOrderLine(models.Model):
                 'uom': dict,
                 'purchase_uom': dict,
                 'packaging': dict,
+                'warning': String,
             }
         """
         if len(self) == 1:

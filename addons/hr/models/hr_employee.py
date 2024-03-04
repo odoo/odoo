@@ -517,7 +517,8 @@ class HrEmployeePrivate(models.Model):
     def _get_calendar_attendances(self, date_from, date_to):
         self.ensure_one()
         employee_timezone = timezone(self.tz) if self.tz else None
-        return self.resource_calendar_id\
+        calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
+        return calendar\
             .with_context(employee_timezone=employee_timezone)\
             .get_work_duration_data(
                 date_from,

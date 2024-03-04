@@ -22,6 +22,7 @@ import {
     getRelativeDateDomain,
 } from "@spreadsheet/global_filters/helpers";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
+import { getItemId } from "../../helpers/model";
 
 const { DateTime } = luxon;
 
@@ -40,7 +41,8 @@ const MONTHS = {
     december: { value: 12, granularity: "month" },
 };
 
-const { UuidGenerator, createEmptyExcelSheet } = spreadsheet.helpers;
+const { UuidGenerator, createEmptyExcelSheet, createEmptySheet, toXC, toNumber } =
+    spreadsheet.helpers;
 const uuidGenerator = new UuidGenerator();
 
 export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
@@ -229,17 +231,29 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
         const value = this.getGlobalFilterValue(filter.id);
         switch (filter.type) {
             case "text":
-                return value || "";
+                return [[{ value: value || "" }]];
             case "date": {
+                if (filter.rangeType === "from_to") {
+                    const locale = this.getters.getLocale();
+                    const from = {
+                        value: value.from && toNumber(value.from, locale),
+                        format: locale.dateFormat,
+                    };
+                    const to = {
+                        value: value.to && toNumber(value.to, locale),
+                        format: locale.dateFormat,
+                    };
+                    return [[from], [to]];
+                }
                 if (value && typeof value === "string") {
                     const type = RELATIVE_DATE_RANGE_TYPES.find((type) => type.type === value);
                     if (!type) {
-                        return "";
+                        return [[{ value: "" }]];
                     }
-                    return type.description.toString();
+                    return [[{ value: type.description.toString() }]];
                 }
                 if (!value || value.yearOffset === undefined) {
-                    return "";
+                    return [[{ value: "" }]];
                 }
                 const periodOptions = getPeriodOptions(DateTime.local());
                 const year = String(DateTime.local().year + value.yearOffset);
@@ -250,11 +264,11 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
                     periodStr =
                         MONTHS[value.period] && String(MONTHS[value.period].value).padStart(2, "0");
                 }
-                return periodStr ? periodStr + "/" + year : year;
+                return [[{ value: periodStr ? periodStr + "/" + year : year }]];
             }
             case "relation":
                 if (!value?.length || !this.orm) {
-                    return "";
+                    return [[{ value: "" }]];
                 }
                 if (!this.recordsDisplayName[filter.id]) {
                     this.orm
@@ -266,9 +280,9 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
                                 sheetId: this.getters.getActiveSheetId(),
                             });
                         });
-                    return "";
+                    return [[{ value: "" }]];
                 }
-                return this.recordsDisplayName[filter.id].join(", ");
+                return [[{ value: this.recordsDisplayName[filter.id].join(", ") }]];
         }
     }
 
@@ -516,37 +530,48 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
         if (this.getters.getGlobalFilters().length === 0) {
             return;
         }
-        const styles = Object.entries(data.styles);
-        let titleStyleId =
-            styles.findIndex((el) => JSON.stringify(el[1]) === JSON.stringify({ bold: true })) + 1;
+        this.exportSheetWithActiveFilters(data);
+        data.sheets[data.sheets.length - 1] = {
+            ...createEmptyExcelSheet(uuidGenerator.uuidv4(), _t("Active Filters")),
+            ...data.sheets.at(-1),
+        };
+    }
 
-        if (titleStyleId <= 0) {
-            titleStyleId = styles.length + 1;
-            data.styles[styles.length + 1] = { bold: true };
+    exportSheetWithActiveFilters(data) {
+        if (this.getters.getGlobalFilters().length === 0) {
+            return;
         }
+        const styleId = getItemId({ bold: true }, data.styles);
 
         const cells = {};
-        cells["A1"] = { content: "Filter", style: titleStyleId };
-        cells["B1"] = { content: "Value", style: titleStyleId };
-        let row = 2;
+        cells["A1"] = { content: "Filter", style: styleId };
+        cells["B1"] = { content: "Value", style: styleId };
+        let numberOfCols = 2; // at least 2 cols (filter title and filter value)
+        let filterRowIndex = 1; // first row is the column titles
         for (const filter of this.getters.getGlobalFilters()) {
-            const content = this.getFilterDisplayValue(filter.label);
-            cells[`A${row}`] = { content: filter.label };
-            cells[`B${row}`] = { content };
-            row++;
+            cells[`A${filterRowIndex + 1}`] = { content: filter.label };
+            const result = this.getFilterDisplayValue(filter.label);
+            for (const colIndex in result) {
+                numberOfCols = Math.max(numberOfCols, Number(colIndex) + 2);
+                for (const rowIndex in result[colIndex]) {
+                    const cell = result[colIndex][rowIndex];
+                    const xc = toXC(Number(colIndex) + 1, Number(rowIndex) + filterRowIndex);
+                    cells[xc] = { content: cell.value.toString() };
+                    if (cell.format) {
+                        const formatId = getItemId(cell.format, data.formats);
+                        cells[xc].format = formatId;
+                    }
+                }
+            }
+            filterRowIndex += result[0].length;
         }
-        data.sheets.push({
-            ...createEmptyExcelSheet(uuidGenerator.uuidv4(), _t("Active Filters")),
+        const sheet = {
+            ...createEmptySheet(uuidGenerator.uuidv4(), _t("Active Filters")),
             cells,
-            colNumber: 2,
-            rowNumber: this.getters.getGlobalFilters().length + 1,
-            cols: {},
-            rows: {},
-            merges: [],
-            figures: [],
-            conditionalFormats: [],
-            charts: [],
-        });
+            colNumber: numberOfCols,
+            rowNumber: filterRowIndex,
+        };
+        data.sheets.push(sheet);
     }
 }
 
@@ -558,4 +583,5 @@ GlobalFiltersUIPlugin.getters = [
     "isGlobalFilterActive",
     "getTextFilterOptions",
     "getTextFilterOptionsFromRange",
+    "exportSheetWithActiveFilters",
 ];

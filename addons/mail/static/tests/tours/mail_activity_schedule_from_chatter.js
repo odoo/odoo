@@ -9,6 +9,25 @@ registry.category("web_tour.tours").add("mail_activity_schedule_from_chatter", {
             trigger: "button:contains('Activities')",
         },
         {
+            trigger: "input[id*='activity_type_id']",
+            run: "click",
+        },
+        {
+            trigger: ".dropdown-item:contains('Call')",
+        },
+        {
+            trigger: "input[id*='activity_type_id']:propValue('Call')",
+            run: () => {},
+        },
+        {
+            extra_trigger: "button:contains('Schedule')",
+            trigger: "input[id*='activity_type_id']",
+            run: "click",
+        },
+        {
+            trigger: ".dropdown-item:contains('To-Do')",
+        },
+        {
             trigger: "div[name='summary'] input",
             run: "text Play Mario Party",
         },

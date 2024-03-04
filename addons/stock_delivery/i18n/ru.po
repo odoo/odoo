@@ -3,18 +3,15 @@
 # 	* stock_delivery
 # 
 # Translators:
-# Vasiliy Korobatov <korobatov@gmail.com>, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
+# ILMIR <karamov@it-projects.info>, 2023
 # Viktor Pogrebniak <vp@aifil.ru>, 2023
 # Константин Коровин <korovin74@gmail.com>, 2023
 # Collex100, 2023
-# alenafairy, 2023
-# Ivan Kropotkin <yelizariev@itpp.dev>, 2023
 # Alena Vlasova, 2023
-# Irina Fedulova <istartlin@gmail.com>, 2023
-# Сергей Шебанин <sergey@shebanin.ru>, 2023
-# ILMIR <karamov@it-projects.info>, 2023
 # Evgeniia Kotova, 2023
 # Martin Trigaux, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -22,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,17 +32,17 @@ msgstr ""
 #: code:addons/stock_delivery/models/sale_order.py:0
 #, python-format
 msgid " (Estimated Cost: %s )"
-msgstr " (Ориентировочная цена: %s )"
+msgstr " (Сметная стоимость: %s )"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_quant_package_weight_form
 msgid "(computed:"
-msgstr ""
+msgstr "(Вычислено:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight (estimated): </span>"
-msgstr "<span> - Вес (ориентировочно): </span>"
+msgstr "<span> - Вес (предполагаемый): </span>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_stock_report_delivery_no_package_section_line
@@ -56,23 +53,23 @@ msgstr "<span> - Вес: </span>"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
 msgid "<span>Shipping Weight: </span>"
-msgstr "<span>Вес отправления: </span>"
+msgstr "<span>Вес при транспортировке: </span>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
 msgid "<strong>Carrier:</strong>"
-msgstr "Служба доставки:</strong>"
+msgstr "<strong>Перевозчик:</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>HS Code</strong>"
-msgstr "<strong>HS-код</strong>"
+msgstr "<strong>ТН ВЭД</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
 msgid "<strong>Shipping Weight: </strong>"
-msgstr ""
+msgstr "<strong>Вес при транспортировке: </strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
@@ -80,6 +77,8 @@ msgid ""
 "<strong>Shipping Weight:</strong>\n"
 "                    <br/>"
 msgstr ""
+"<strong>Вес при транспортировке:</strong>\n"
+"                    <br/>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
@@ -87,18 +86,18 @@ msgid ""
 "<strong>Total Weight:</strong>\n"
 "                <br/>"
 msgstr ""
-"<strong>Вес (всего):</strong>\n"
+"<strong>Общий вес:</strong>\n"
 "                <br/>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>Tracking Number:</strong>"
-msgstr "<strong>Трекинг номер:</strong>"
+msgstr "<strong>Номер отслеживания:</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
 msgid "<strong>Weight: </strong>"
-msgstr ""
+msgstr "<strong>Вес: </strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
@@ -112,17 +111,17 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
 msgid "Applicable on Shipping Methods"
-msgstr ""
+msgstr "Применяется при способах доставки"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_bulk
 msgid "Bulk Weight"
-msgstr "Объёмный Вес"
+msgstr "Насыпной вес"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Cancel"
-msgstr "Отмена"
+msgstr "Отменить"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -130,6 +129,7 @@ msgid ""
 "Cancelling a delivery may not be undoable. Are you sure you want to "
 "continue?"
 msgstr ""
+"Отмена доставки может быть невозможна. Вы уверены, что хотите продолжить?"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__carrier_id
@@ -147,7 +147,7 @@ msgstr "Код перевозчика"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
-msgstr ""
+msgstr "Название перевозчика"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__company_id
@@ -159,7 +159,7 @@ msgstr "Компания"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Cost: %(price).2f %(currency)s"
-msgstr ""
+msgstr "Стоимость: %(price).2f %(currency)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_uid
@@ -169,17 +169,17 @@ msgstr "Создано"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_date
 msgid "Created on"
-msgstr "Дата создания"
+msgstr "Создано"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
-msgstr ""
+msgstr "Мастер выбора курьера доставки"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr "Мастер выбора упаковки для доставки"
+msgstr "Мастер выбора пакета поставки"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__delivery_package_type_id
@@ -189,7 +189,7 @@ msgstr "Тип пакета доставки"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.vpicktree_view_tree
 msgid "Destination"
-msgstr "Назначение"
+msgstr "Место назначения"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__destination_country_code
@@ -205,12 +205,12 @@ msgstr "Отменить"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__display_name
 msgid "Display Name"
-msgstr "Показывать название"
+msgstr "Отображаемое имя"
 
 #. module: stock_delivery
 #: model:ir.actions.act_window,name:stock_delivery.act_delivery_trackers_url
 msgid "Display tracking links"
-msgstr "Отображать ссылки вистеження"
+msgstr "Отображение ссылок для отслеживания"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
@@ -218,38 +218,40 @@ msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
 "Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
+"Расчетная стоимость: клиенту будет выставлен счет на расчетную стоимость доставки.\n"
+"Реальная стоимость: покупателю будет выставлен счет на реальную стоимость доставки, стоимость доставки будет обновлена на СЦ после доставки."
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__hs_code
 #: model_terms:ir.ui.view,arch_db:stock_delivery.product_template_hs_code
 msgid "HS Code"
-msgstr "HS-код"
+msgstr "ТН ВЭД"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__id
 msgid "ID"
-msgstr "Идентификатор"
+msgstr "ID"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_route
 msgid "Inventory Routes"
-msgstr "Маршруты инвентаризации"
+msgstr "Маршруты запасов"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__invoice_policy
 msgid "Invoicing Policy"
-msgstr "Политика актирования"
+msgstr "Политика выставления счетов"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__is_return_picking
 msgid "Is Return Picking"
-msgstr ""
+msgstr "Собирает ли возврат"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновил"
+msgstr "Последнее обновление"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_date
@@ -264,18 +266,18 @@ msgstr "Нет интеграции с доставщиком"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
 msgid "OK"
-msgstr "ОК"
+msgstr "OK"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__country_of_origin
 msgid "Origin of Goods"
-msgstr ""
+msgstr "Происхождение товаров"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
 msgid "Package"
-msgstr "пакет"
+msgstr "Пакет"
 
 #. module: stock_delivery
 #. odoo-python
@@ -289,34 +291,34 @@ msgstr "Сведения о пакете"
 #: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
 #, python-format
 msgid "Package too heavy!"
-msgstr "Пакет слишком тяжелый!"
+msgstr "Упаковка слишком тяжелая!"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_quant_package
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__package_ids
 msgid "Packages"
-msgstr "Упаковка"
+msgstr "Пакеты"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__picking_id
 msgid "Picking"
-msgstr "Комплектование"
+msgstr "Выбор"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Print Return Label"
-msgstr "Напечатать возвратный лейбл"
+msgstr "Печать возвратной этикетки"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_product_template
 msgid "Product"
-msgstr "Продукт"
+msgstr "Товар"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Перемещение товара (позиция складского перемещения)"
+msgstr "Перемещение продукта (Позиции движения запасов)"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__delivery_type
@@ -331,12 +333,12 @@ msgstr "Реальная стоимость"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
 msgid "Return Label"
-msgstr "Возвратный лейбл"
+msgstr "Этикетка возврата"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Возвратная Комплектация"
+msgstr "Возвратить комплектование"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__route_ids
@@ -351,6 +353,8 @@ msgid ""
 "Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
 "As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
 msgstr ""
+"Правила происхождения определяют место происхождения товаров, т. е. не то, откуда они были доставлены, а то, где они были произведены или изготовлены.\n"
+"Таким образом, \"происхождение\" - это \"экономическая национальность\" товаров, обращающихся в торговле."
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__sale_price
@@ -375,7 +379,7 @@ msgstr "Сохранить"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Send to Shipper"
-msgstr "Отправить Грузоотправителю"
+msgstr "Отправить грузоотправителю"
 
 #. module: stock_delivery
 #. odoo-python
@@ -385,6 +389,8 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s"
 msgstr ""
+"Груз отправлен перевозчику %(carrier_name)s для отправки с номером "
+"отслеживания %(ref)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
@@ -412,7 +418,7 @@ msgstr "Вес с упаковкой"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
-msgstr "Вес груза:"
+msgstr "Вес:"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_product_product__hs_code
@@ -421,26 +427,31 @@ msgid ""
 "Standardized code for international shipping and goods declaration. At the "
 "moment, only used for the FedEx shipping provider."
 msgstr ""
+"Стандартизированный код для международных перевозок и декларирования "
+"товаров. На данный момент используется только для поставщика услуг по "
+"доставке FedEx."
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move
 msgid "Stock Move"
-msgstr "Перемещение на складе"
+msgstr "Движение запасов"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_package_type
 msgid "Stock package type"
-msgstr "Тип складской упаковки"
+msgstr "Тип комплекта поставки"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_rounding
 msgid "Technical field indicating weight's number of decimal places"
-msgstr ""
+msgstr "Техническое поле, указывающее количество десятичных знаков веса"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_is_kg
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
 msgstr ""
+"Техническое поле, указывающее, является ли весовая единица килограммом или "
+"нет (т.е. фунтом)"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code
@@ -461,6 +472,8 @@ msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
 msgstr ""
+"Пакет не может быть создан, потому что общий вес продуктов в комплектации "
+"составляет 0,0 %s"
 
 #. module: stock_delivery
 #. odoo-python
@@ -468,6 +481,7 @@ msgstr ""
 #, python-format
 msgid "The shipping price will be set once the delivery is done."
 msgstr ""
+"Цена доставки будет установлена после того, как доставка будет осуществлена."
 
 #. module: stock_delivery
 #. odoo-python
@@ -477,20 +491,20 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
-"Вес пакета выше, чем максимальный вес, разрешена для этого типа пакета. "
-"Выберите другой тип пакета."
+"Вес вашей посылки превышает максимальный вес, разрешенный для данного типа "
+"посылки. Пожалуйста, выберите другой тип посылки."
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "There is no matching delivery rule."
-msgstr "Нет соответствующего правила доставки."
+msgstr "Нет подходящего правила доставки."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__weight
 msgid "Total weight of all the products contained in the package."
-msgstr ""
+msgstr "Общий вес всех продуктов, содержащихся в упаковке."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__shipping_weight
@@ -499,26 +513,29 @@ msgid ""
 "shipping weight specified will default to their products' total weight. This"
 " is the weight used to compute the cost of the shipping."
 msgstr ""
+"Общий вес пакетов и товаров, не входящих в пакет. Для пакетов, в которых не "
+"указан вес доставки, по умолчанию будет указан общий вес товаров. Именно "
+"этот вес используется для расчета стоимости доставки."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight_bulk
 msgid "Total weight of products which are not in a package."
-msgstr ""
+msgstr "Общий вес товаров, не входящих в упаковку."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__shipping_weight
 msgid "Total weight of the package."
-msgstr "Суммарный вес пакета."
+msgstr "Общий вес посылки."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight
 msgid "Total weight of the products in the picking."
-msgstr "Суммарный вес продуктов в сборе"
+msgstr "Общий вес продукции в сборе."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
-msgstr "URL отслеживания"
+msgstr "URL-адрес трекеров"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -528,19 +545,19 @@ msgstr "Отслеживание"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr "Ссылка для отслеживания"
+msgstr "Номер слежения"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_tracking_url
 msgid "Tracking URL"
-msgstr "URL-адрес отслеживания"
+msgstr "Отслеживание URL"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Tracking links for shipment:"
-msgstr ""
+msgstr "Ссылки для отслеживания отправлений:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
@@ -550,7 +567,7 @@ msgstr "Отслеживание:"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking
 msgid "Transfer"
-msgstr "Перемещение"
+msgstr "Перевод"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move__weight
@@ -568,24 +585,24 @@ msgstr "Вес для перевозкы груза"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Weight for shipping"
-msgstr "Вес отправления"
+msgstr "Вес для транспортировки"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__weight_uom_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_uom_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "Метка единицы измерения веса"
+msgstr "Этикетка единицы измерения массы"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
 msgid "Weight:"
-msgstr ""
+msgstr "Вес:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
-msgstr "У вас есть несколько ссылок отслеживания, которые доступны в чате."
+msgstr "У вас есть несколько ссылок на трекеры, они доступны в чате."
 
 #. module: stock_delivery
 #. odoo-python
@@ -595,30 +612,30 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
-"Ваш метод доставки не переадресован на веб-сайт перевозчика для отслеживания"
-" этого заказа."
+"Ваш способ доставки не имеет перенаправления на сайте курьерской службы для "
+"отслеживания этого заказа."
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_delivery_zip_prefix
 msgid "Zip Prefix"
-msgstr ""
+msgstr "Префикс Zip"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDShipping Weight:"
-msgstr ""
+msgstr "^A0N,44,33^FDShipping Weight:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDWeight:"
-msgstr ""
+msgstr "^A0N,44,33^FDВес:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^FO310,200"
-msgstr ""
+msgstr "^FO310,200"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^FS"
-msgstr ""
+msgstr "^FS"

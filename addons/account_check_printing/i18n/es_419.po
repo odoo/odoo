@@ -25,7 +25,7 @@ msgstr ""
 #: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
 msgid ": Check Number Sequence"
-msgstr ": Secuencia de números de cheque "
+msgstr ": secuencia de números de cheque "
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -49,7 +49,7 @@ msgstr ""
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
 msgid "Amount in Words"
-msgstr "Cantidad en palabras"
+msgstr "Importe en letra"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -76,7 +76,7 @@ msgstr "Número del cheque"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
 msgid "Check Printing"
-msgstr "Impresión de los cheques"
+msgstr "Impresión de cheques"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
@@ -99,13 +99,13 @@ msgstr "Margen superior del cheque"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Check numbers can only consist of digits"
-msgstr "Los números de cheque sólo pueden incluir dígitos"
+msgstr "Los números de cheque solo pueden incluir dígitos"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr "Marque esta opción si sus cheques preimpresos no están numerados."
+msgstr "Seleccione esta opción si sus cheques preimpresos no están numerados."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -120,7 +120,7 @@ msgstr "Cheques"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
 msgid "Checks numbering sequence."
-msgstr "La secuencia de numeración de los cheques"
+msgstr "Secuencia de numeración de los cheques."
 
 #. module: account_check_printing
 #. odoo-python
@@ -186,8 +186,8 @@ msgid ""
 "In order to print multiple checks at once, they must belong to the same bank"
 " journal."
 msgstr ""
-"Para imprimir varios cheques a la vez, deben pertenecer al mismo diario "
-"bancario."
+"Los cheques deben pertenecer al mismo diario bancario para imprimir varios "
+"al mismo tiempo."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
@@ -228,7 +228,7 @@ msgstr ""
 "Manual: pague o cobre con cualquier método fuera de Odoo.\n"
 "Proveedores de pago: cada proveedor tiene su propio método de pago. Solicite una transacción en o a una tarjeta gracias al token de pago que el contacto guarda al hacer una compra o suscribirse en línea.\n"
 "Cheque: pague las facturas con un cheque e imprímalo desde Odoo.\n"
-"Depósito por lote: recolecte varios cheques de clientes a la vez y genere y envíe un depósito por lote a su banco. Es necesario el módulo account_batch_payment.\n"
+"Depósito por lote: cobre varios cheques de clientes a la vez y genere y envíe un depósito por lote a su banco. Es necesario el módulo account_batch_payment.\n"
 "Transferencia de crédito SEPA: pague en la zona SEPA al enviar un archivo de transferencia de crédito SEPA a su banco. Es necesario el módulo account_sepa.\n"
 "Domiciliación bancaria SEPA: cobre en la zona SEPA gracias a un mandato que le otorgará su contacto. Es necesario el módulo account_sepa.\n"
 
@@ -250,7 +250,7 @@ msgstr "Próximo número de cheque"
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 #, python-format
 msgid "Next Check Number should only contains numbers."
-msgstr "El siguiente número de cheque sólo debe contener números."
+msgstr "El siguiente número de cheque solo debe contener números."
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
@@ -282,8 +282,9 @@ msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
 msgstr ""
-"Los pagos que se imprimen como cheques deben tener la opción \"Cheque\" "
-"seleccionada como método de pago y no haber sido conciliados previamente"
+"Los pagos a imprimir como cheques deben tener la opción \"Cheque\" "
+"seleccionada como método de pago y no haber sido conciliados con "
+"anterioridad."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -297,7 +298,7 @@ msgstr "Introduzca el número del primer cheque preimpreso que va a imprimir."
 #: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
 msgid "Preferred Payment Method"
-msgstr "Forma de pago preferida"
+msgstr "Método de pago preferido"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
@@ -307,10 +308,10 @@ msgid ""
 "vendor bills by preferred payment method to register payments in mass. Use "
 "cases: create bank files for batch wires, check runs."
 msgstr ""
-"Forma de pago preferida al pagar a este proveedor. Se utiliza para filtrar "
+"Método de pago preferido al pagar a este proveedor. Se utiliza para filtrar "
 "facturas de proveedores por método de pago preferido para registrar pagos en"
 " masa. Casos de uso: crear archivos bancarios para transferencias por lotes,"
-" ejecuciones de cheques."
+" impresión de cheques."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -385,8 +386,8 @@ msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
-"Algo salio mal con el diseño del cheque. Seleccione otro diseño en "
-"Facturación/Contabilidad e inténtelo de nuevo."
+"Ocurrió un error con el diseño del cheque. Seleccione otro diseño en los "
+"ajustes de Facturación o Contabilidad e inténtelo de nuevo."
 
 #. module: account_check_printing
 #. odoo-python
@@ -396,7 +397,7 @@ msgid ""
 "The following numbers are already used:\n"
 "%s"
 msgstr ""
-"Los siguientes numeros ya están en uso:\n"
+"Los siguientes números ya están en uso:\n"
 "%s"
 
 #. module: account_check_printing
@@ -407,8 +408,8 @@ msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
 msgstr ""
-"El último número de cheque fue %s. Para evitar que el banco rechace un "
-"cheque, sólo puede utilizar un número mayor."
+"El número del último cheque fue %s. Para evitar que el banco lo rechace, "
+"solo puede utilizar un número mayor."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
@@ -446,12 +447,12 @@ msgstr ""
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
 msgstr ""
-"Esto permitirá guardar en los pagos el número del cheque correspondiente."
+"Esto permitirá guardar el número del cheque correspondiente en los pagos."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Unmark Sent"
-msgstr "Desmarcar Enviado"
+msgstr "Desmarcar enviado"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -466,5 +467,5 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
-"Tiene que elegir un diseño de cheque. Para ello, vaya a Configuración de "
-"Facturación/Contabilidad, busque \"Diseño de cheques\" y seleccione uno."
+"Debe elegir un diseño de cheque. Vaya a los ajustes de Facturación o "
+"Contabilidad, busque \"Diseño de cheques\" y seleccione uno."

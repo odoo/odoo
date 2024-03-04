@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -733,23 +733,23 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-check\"/> <b>Authorized</b>"
-msgstr "<i class=\"fa fa-fw fa-check\"/> <b>ได้รับอนุญาต</b>"
+msgid "<i class=\"fa fa-fw fa-check\"/> Authorized"
+msgstr "<i class=\"fa fa-fw fa-check\"/> ได้รับการอนุมัติ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
-msgstr "<i class=\"fa fa-fw fa-check\"/> <b>ชำระแล้ว</b>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>รอการชำระเงิน</b>"
+msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
+msgstr "<i class=\"fa fa-fw fa-check\"/> ชำระแล้ว"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/>สิ้นสุด"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> Waiting Payment"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> รอชำระเงิน"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
@@ -798,11 +798,6 @@ msgstr "<small class=\"text-muted\">ผู้ติดต่อของคุ�
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
 msgstr "<small><b class=\"text-muted\">ประโยชน์ของคุณ</b></small>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "<small><b>This offer expires on</b></small>"
-msgstr "<small><b>ข้อเสนอนี้หมดอายุในวันที่</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -889,8 +884,8 @@ msgstr "<span>ภาษี</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_document_kanban
-msgid "<span>Visible at</span>"
-msgstr "<span>สามารถดูได้ที่</span>"
+msgid "<span>Visibility</span>"
+msgstr "<span>การมองเห็น</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1129,7 +1124,7 @@ msgstr "เพิ่มสินค้า"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a section"
-msgstr "เพิ่มส่วน"
+msgstr "เพิ่มหมวด"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2198,6 +2193,13 @@ msgstr "เงินดาวน์ <br/>"
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
+msgid "Down payment invoice"
+msgstr "ใบแจ้งการชำระเงินมัดจำ"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
 msgid "Down payment of %s%%"
 msgstr "เงินดาวน์ของ %s%%"
 
@@ -2208,7 +2210,7 @@ msgid ""
 "not copied when duplicating a sales order."
 msgstr ""
 "มีการชำระเงินดาวน์เมื่อสร้างใบแจ้งหนี้จากใบคำสั่งขาย "
-"รายการจะไม่ถูกคัดลอกเมื่อทำซ้ำคำสั่งขาย"
+"รายการจะไม่ถูกคัดลอกเมื่อคัดลอกคำสั่งขาย"
 
 #. module: sale
 #. odoo-python
@@ -2664,7 +2666,6 @@ msgstr "ใบแจ้งหนี้ในเดือนนี้"
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_ids
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
 msgstr "การแจ้งหนี้"
@@ -2784,6 +2785,11 @@ msgstr "รายการบันทึก"
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__lang
 msgid "Language"
 msgstr "ภาษา"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Last Invoices"
+msgstr "ใบแจ้งหนี้ล่าสุด"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_uid
@@ -3308,11 +3314,6 @@ msgid "Order Date: Last 365 Days"
 msgstr "วันที่สั่งซื้อ: 365 วันที่ผ่านมา"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Order Detail"
-msgstr "รายละเอียดการสั่งซื้อ"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Order Lines"
@@ -3792,7 +3793,6 @@ msgstr "วันที่เสนอราคา"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Quotation Date:"
 msgstr "วันที่เสนอราคา:"
 
@@ -4240,8 +4240,8 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
-"รายการในใบสั่งขายที่จะเพิ่มเวลาที่ใช้ไปเพื่อออกใบแจ้งหนี้ให้กับลูกค้าของคุณ "
-"ลบรายการใบสั่งขายสำหรับรายการบันทึกเวลาที่ไม่สามารถเรียกเก็บเงินได้ออก"
+"รายการในใบสั่งขายที่จะใช้เวลาเพิ่มเพื่อออกใบแจ้งหนี้ให้กับลูกค้าของคุณ "
+"ลบรายการใบสั่งขายสำหรับรายการแผ่นเวลาที่ไม่สามารถเรียกเก็บเงินได้"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -4318,12 +4318,12 @@ msgstr "ค้นหาคำสั่งขาย"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_section
 msgid "Section"
-msgstr "ส่วน"
+msgstr "หมวด"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Section Name (eg. Products, Services)"
-msgstr "ชื่อส่วน (เช่น สินค้า และบริการ)"
+msgstr "ชื่อหมวด (เช่น สินค้า และบริการ)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_token
@@ -4913,6 +4913,14 @@ msgstr "เปอร์เซ็นต์ของจำนวนเงินท
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr "เปอร์เซ็นต์ของจำนวนเงินที่ต้องชำระเพื่อยืนยันใบเสนอราคา"
+
+#. module: sale
+#. odoo-python
+#. odoo-python
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid "The product (%s) has incompatible values: %s"
+msgstr "สินค้า (%s) มีค่าที่ไม่สามารถเข้ากันได้: %s"
 
 #. module: sale
 #. odoo-python

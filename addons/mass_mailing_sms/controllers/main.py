@@ -43,9 +43,11 @@ class MailingSMSController(http.Controller):
             return request.redirect('/web')
         # parse and validate number
         sms_number = post.get('sms_number', '').strip(' ')
+        country = request.env['res.country'].search([('code', '=', request.geoip.country_code)], limit=1)
         sanitized = phone_validation.phone_format(
             sms_number,
-            request.geoip.country_code,
+            country.code,
+            country.phone_code,
             force_format='E164',
             raise_exception=False,
         )

@@ -52,6 +52,32 @@ class ResPartner(models.Model):
             else:
                 partner.account_peppol_verification_label = 'not_valid'
 
+    @api.model
+    def _check_peppol_participant_exists(self, edi_identification):
+        hash_participant = md5(edi_identification.lower().encode()).hexdigest()
+        endpoint_participant = parse.quote_plus(f"iso6523-actorid-upis::{edi_identification}")
+        peppol_param = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode', False)
+        sml_zone = 'acc.edelivery' if peppol_param == 'test' else 'edelivery'
+        smp_url = f"http://B-{hash_participant}.iso6523-actorid-upis.{sml_zone}.tech.ec.europa.eu/{endpoint_participant}"
+
+        try:
+            response = requests.get(smp_url, timeout=TIMEOUT)
+        except requests.exceptions.ConnectionError:
+            return False
+        if response.status_code != 200:
+            return False
+        participant_info = etree.XML(response.content)
+        participant_identifier = participant_info.findtext('{*}ParticipantIdentifier')
+        service_metadata = participant_info.find('.//{*}ServiceMetadataReference')
+        service_href = ''
+        if service_metadata is not None:
+            service_href = service_metadata.attrib.get('href', '')
+        if edi_identification != participant_identifier or 'hermes-belgium' in service_href:
+            # all Belgian companies are pre-registered on hermes-belgium, so they will
+            # technically have an existing SMP url but they are not real Peppol participants
+            return False
+        return True
+
     @handle_demo
     def button_account_peppol_check_partner_endpoint(self):
         """ A basic check for whether a participant is reachable at the given
@@ -64,26 +90,7 @@ class ResPartner(models.Model):
         """
         self.ensure_one()
 
-        participant = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
-        hash_participant = md5(participant.lower().encode()).hexdigest()
-        endpoint_participant = parse.quote_plus(f"iso6523-actorid-upis::{participant}")
-        peppol_param = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode', False)
-        sml_zone = 'acc.edelivery' if peppol_param == 'test' else 'edelivery'
-        smp_url = f"http://B-{hash_participant}.iso6523-actorid-upis.{sml_zone}.tech.ec.europa.eu/{endpoint_participant}"
+        edi_identification = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
         self.account_peppol_validity_last_check = fields.Date.context_today(self)
-        try:
-            response = requests.get(smp_url, timeout=TIMEOUT)
-        except requests.exceptions.ConnectionError:
-            self.account_peppol_is_endpoint_valid = False
-        else:
-            if response.status_code != 200:
-                self.account_peppol_is_endpoint_valid = False
-                return
-
-            participant_info = etree.XML(response.content)
-            participant_identifier = participant_info.find('{*}ParticipantIdentifier').text
-            if participant != participant_identifier:
-                self.account_peppol_is_endpoint_valid = False
-                return
-
-            self.account_peppol_is_endpoint_valid = True
+        self.account_peppol_is_endpoint_valid = self._check_peppol_participant_exists(edi_identification)
+        return False

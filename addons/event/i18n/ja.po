@@ -5,7 +5,7 @@
 # Translators:
 # Noma Yuki, 2023
 # Wil Odoo, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Junko Augias, 2024
 # 
 msgid ""
@@ -225,7 +225,7 @@ msgid ""
 "                                        <span class=\"text-muted\">Air your tracks online through a Youtube integration</span>"
 msgstr ""
 "<br/>\n"
-"                                        <span class=\"text-muted\">Youtubeとの連携によるトラックのオンライン配信</span>"
+"                                        <span class=\"text-muted\">Youtubeとの連携によるセッションのオンライン配信</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -383,7 +383,7 @@ msgid ""
 "                                    <span class=\"text-muted\" invisible=\"state != 'cancel'\">Canceled</span>"
 msgstr ""
 "<span class=\"text-muted\" invisible=\"state != 'done'\">参加済</span>\n"
-"                                    <span class=\"text-muted\" invisible=\"state != 'cancel'\">キャンセル済</span>"
+"                                    <span class=\"text-muted\" invisible=\"state != 'cancel'\">取消済</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
@@ -1788,7 +1788,7 @@ msgstr "説明を追加..."
 msgid ""
 "Add a navigation menu to your event web pages with schedule, tracks, a track"
 " proposal form, etc."
-msgstr "スケジュール、トラック、トラック提案書などを含むイベントWebページにナビゲーションメニューを追加する。"
+msgstr "スケジュール、セッション、セッション提案フォームなどを含むイベントWebページにナビゲーションメニューを追加する。"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -2088,19 +2088,19 @@ msgstr "キャンペーン"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Cancel"
-msgstr "キャンセル"
+msgstr "取消"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Cancel Registration"
-msgstr "登録をキャンセル"
+msgstr "登録を取消"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "Canceled registration"
-msgstr "キャンセルされた登録"
+msgstr "取消済登録"
 
 #. module: event
 #: model:event.stage,name:event.event_stage_cancelled
@@ -2154,7 +2154,7 @@ msgstr "ライブを見に来てください、お会いできるのを楽しみ
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Communication"
-msgstr "通信費"
+msgstr "通信"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
@@ -3915,7 +3915,7 @@ msgstr "バッジのスキャン"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
-msgstr "スケジュールとトラック"
+msgstr "スケジュールとセッション"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
@@ -4492,7 +4492,7 @@ msgstr ""
 "未確認: アクション(特定のケース、特に販売ステータス)を有する保留状態の登録\n"
 "登録済: 顧客によって登録されたとみなされる登録\n"
 "出席済: 出席者がイベントに出席した登録\n"
-"キャンセル済: 手動でキャンセルされた登録"
+"取消済: 手動で取消された登録"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail

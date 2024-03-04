@@ -7,6 +7,7 @@ from . import test_barcode
 from . import test_base
 from . import test_basecase
 from . import test_cache
+from . import test_date_utils
 from . import test_deprecation
 from . import test_db_cursor
 from . import test_display_name
@@ -24,6 +25,7 @@ from . import test_ir_filters
 from . import test_ir_http
 from . import test_ir_mail_server
 from . import test_ir_model
+from . import test_ir_module
 from . import test_ir_sequence
 from . import test_ir_sequence_date_range
 from . import test_ir_default

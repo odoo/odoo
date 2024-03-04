@@ -1123,7 +1123,7 @@ class Channel(models.Model):
             additional_domain=[('request_partner_id', '=', partner.id)]
         ).mapped('res_id')
         for channel in self:
-            if channel.id not in requested_cids:
+            if channel.id not in requested_cids and channel.user_id:
                 activities += channel.activity_schedule(
                     'website_slides.mail_activity_data_access_request',
                     note=_('<b>%s</b> is requesting access to this course.', partner.name),

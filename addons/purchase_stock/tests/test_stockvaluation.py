@@ -2713,6 +2713,59 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'date': one_day_ago,   'debit': 25,    'credit': 0,    'reconciled': True},
         ])
 
+    def test_purchase_with_backorders_and_return_and_price_changes(self):
+        """
+        When you have multiples receipts associated to a Purchase Order, with 1 bill for each receipt,
+            then each bill has an impact on its own receipt only, hence if I modify the price on Bill01,
+            it will not have an effect on Receipt02.
+        However, if we create a return for a portion of a receipt,
+            the invoiced_qty will be higher than the received_qty. This could be iterpreted has the bill
+            being done before the receipt, which is not the case.
+        In this test, we ensure that if the Control Policy is 'On received quantities' (procure_method = 'receive'),
+            we keep using the purchase price for the svl unit_cost even when invoiced_qty > received_qty.
+        """
+        self.product1.categ_id.property_cost_method = 'average'
+        self.product1.categ_id.property_valuation = 'real_time'
+        self.product1.purchase_method = 'receive'  # ControlPolicy
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 100
+            po_line.price_unit = 10.0
+        po = po_form.save()
+        po.button_confirm()
+
+        def _validate_backorder(po, qty):
+            picking = po.picking_ids.filtered(lambda p: p.state not in ['done', 'draft', 'cancel']).ensure_one()
+            picking.move_ids.move_line_ids.quantity = qty
+            picking.button_validate()
+            # Validate picking with backorder
+            res_dict = picking.button_validate()
+            wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
+            wizard.process()
+            return picking
+
+        receipt01 = _validate_backorder(po, 30)
+        self.assertEqual(receipt01.move_ids.stock_valuation_layer_ids.ensure_one().value, 300.0)
+        bill01 = self._bill(po, price=12)
+        self.assertEqual(bill01.invoice_line_ids.stock_valuation_layer_ids.ensure_one().value, 60.0)
+
+        receipt02 = _validate_backorder(po, 30)
+        # Even though Bill01 updated the price for Receipt01, the layers of Receipt02 are not impacted.
+        self.assertEqual(receipt02.move_ids.stock_valuation_layer_ids.ensure_one().value, 300.0)
+        bill02 = self._bill(po, price=13)
+        self.assertEqual(bill02.invoice_line_ids.stock_valuation_layer_ids.ensure_one().value, 90.0)
+
+        # With the return, the invoiced qty > received qty,
+        # this must NOT be interpreted as the invoice done before the picking (purchase_method = 'purchase')
+        self._return(receipt02, qty=10)
+
+        receipt03 = _validate_backorder(po, 30)
+        # Like Receipt02 layers, Receipt03 layers should not be impacted by the previous price changes.
+        self.assertEqual(receipt03.move_ids.stock_valuation_layer_ids.ensure_one().value, 300.0)
+
     def test_invoice_on_ordered_qty_with_backorder_and_different_currency_automated(self):
         """Create a PO with currency different from the company currency. Set the
         product to be invoiced on ordered quantities. Receive partially the products
@@ -2933,3 +2986,91 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             [self.eur_currency._convert(line.amount_currency, company.currency_id, company, bill_date) for line in bill.line_ids],
             [line.balance for line in bill.line_ids]
         )
+
+    def test_analytic_distribution_propagation_with_exchange_difference(self):
+        # Create 2 rates in order to generate an exchange difference later.
+        eur = self.env.ref('base.EUR')
+        eur.write({
+            'rate_ids': [
+                Command.clear(),
+                Command.create({
+                    'name': fields.Date.from_string('2023-01-01'),
+                    'company_rate': 2.0,
+                }),
+                Command.create({
+                    'name': fields.Date.from_string('2023-12-01'),
+                    'company_rate': 3.0,
+                }),
+            ],
+            'active': True,
+        })
+
+        # Create a mandatory analytic account.
+        analytic_plan = self.env['account.analytic.plan'].create({
+            'name': 'Analytic Plan',
+            'default_applicability': 'mandatory',
+        })
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Analytic Account',
+            'plan_id': analytic_plan.id},
+        )
+
+        # Create a storable product with FIFO costing method and automated inventory valuation.
+        analytic_product_category = self.env['product.category'].create({
+            'name': 'Analytic Product Category',
+            'property_cost_method': 'fifo',
+            'property_valuation': 'real_time',
+        })
+        analytic_product = self.env['product.product'].create({
+            'name': 'Analytic Product',
+            'detailed_type': 'product',
+            'categ_id': analytic_product_category.id,
+            'lst_price': 100.0,
+            'standard_price': 25.0,
+        })
+
+        # Create and confirm a Purchase Order using aforementioned product and currency.
+        purchase_order = self.env['purchase.order'].create({
+            'date_order': fields.Date.from_string('2023-12-04'),
+            'currency_id': eur.id,
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': analytic_product.id,
+                    'product_qty': 10.0,
+                    'analytic_distribution': {analytic_account.id: 100},
+                }),
+            ],
+        })
+        purchase_order.button_confirm()
+
+        # Make sure a stock move has been created to replenish the product.
+        self.assertEqual(len(purchase_order.picking_ids.move_ids), 1)
+
+        stock_move = purchase_order.picking_ids.move_ids
+        stock_move.quantity = stock_move.product_uom_qty
+
+        purchase_order.picking_ids.button_validate()
+        purchase_order.action_create_invoice()
+
+        # Make sure a first Journal Entry has been created (to account for the stock move).
+        self.assertEqual(len(stock_move.account_move_ids), 1)
+        stock_account_move = stock_move.account_move_ids
+
+        # Make sure the Vendor Bill has been created,
+        # and confirm it at an earlier date (to generate the exchange difference).
+        self.assertEqual(len(purchase_order.invoice_ids), 1)
+
+        vendor_bill = purchase_order.invoice_ids
+        vendor_bill.invoice_date = fields.Date.from_string('2023-11-01')
+        vendor_bill.action_post()
+
+        # Make sure a second Journal Entry has been created (to account for the exchange difference).
+        self.assertEqual(len(stock_move.account_move_ids), 2)
+        exchange_account_move = stock_move.account_move_ids - stock_account_move
+
+        # Make sure both exchange Journal Items have the correct analytic distribution.
+        self.assertEqual(len(exchange_account_move.line_ids), 2)
+        for line in exchange_account_move.line_ids:
+            self.assertTrue(line.analytic_distribution)
+            self.assertEqual(line.analytic_distribution[str(analytic_account.id)], 100)

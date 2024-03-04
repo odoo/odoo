@@ -33,7 +33,9 @@ class Pricelist(models.Model):
     company_id = fields.Many2one(
         comodel_name='res.company',
         tracking=5,
+        default=lambda self: self.env.company,
     )
+
     country_group_ids = fields.Many2many(
         comodel_name='res.country.group',
         relation='res_country_group_pricelist_rel',
@@ -68,6 +70,16 @@ class Pricelist(models.Model):
     def _compute_display_name(self):
         for pricelist in self:
             pricelist.display_name = f'{pricelist.name} ({pricelist.currency_id.name})'
+
+    def write(self, values):
+        res = super().write(values)
+
+        # Make sure that there is no multi-company issue in the existing rules after the company
+        # change.
+        if 'company_id' in values and len(self) == 1:
+            self.item_ids._check_company()
+
+        return res
 
     def _get_products_price(self, products, *args, **kwargs):
         """Compute the pricelist prices for the specified products, quantity & uom.
@@ -219,12 +231,15 @@ class Pricelist(models.Model):
     # Split methods to ease (community) overrides
     def _get_applicable_rules(self, products, date, **kwargs):
         self and self.ensure_one()  # self is at most one record
+        if not self:
+            return self.env['product.pricelist.item']
+
         # Do not filter out archived pricelist items, since it means current pricelist is also archived
         # We do not want the computation of prices for archived pricelist to always fallback on the Sales price
         # because no rule was found (thanks to the automatic orm filtering on active field)
         return self.env['product.pricelist.item'].with_context(active_test=False).search(
             self._get_applicable_rules_domain(products=products, date=date, **kwargs)
-        )
+        ).with_context(self.env.context)
 
     def _get_applicable_rules_domain(self, products, date, **kwargs):
         self and self.ensure_one()  # self is at most one record

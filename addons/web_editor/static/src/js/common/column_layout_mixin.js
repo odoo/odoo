@@ -27,17 +27,19 @@ export const ColumnLayoutMixin = {
         return Math.floor((12 - offsetSize) / colSize);
     },
     /**
-     * Retrieves the mobile order class as a match array if there is one.
+     * TODO: remove in master
+     * Retrieves the mobile order as a match array if there is one.
      *
      * @private
      * @param {HTMLElement} el
      * @returns {Array|null} class match ["order-XX", "XX"]
      */
     _getItemMobileOrder(el) {
-        return el.className.match(/\border-([0-9]+)\b/);
+        const order = el.style.order;
+        return order ? [`order-${order}`, order.toString()] : null;
     },
     /**
-     * Gets the first item, whether it has a mobile order class or not.
+     * Gets the first item, whether it has a mobile order or not.
      *
      * @private
      * @param {HTMLCollection} columnEls - elements in the .row container
@@ -45,19 +47,30 @@ export const ColumnLayoutMixin = {
      * @returns {HTMLElement} first HTMLElement in order
      */
     _getFirstItem(columnEls, isMobile) {
-        return isMobile && [...columnEls].find(el => el.classList.contains("order-0"))
-            || columnEls[0];
+        return isMobile && [...columnEls].find(el => el.style.order === "0") || columnEls[0];
     },
     /**
-     * Adds the classes for mobile order.
+     * Adds mobile order and the reset class for large screens.
      *
      * @private
      * @param {HTMLCollection} columnEls - elements in the .row container
      */
     _addMobileOrders(columnEls) {
         for (let i = 0; i < columnEls.length; i++) {
-            const mobileOrderClass = `order-${i}`;
-            columnEls[i].classList.add(mobileOrderClass, "order-lg-0");
+            columnEls[i].style.order = i;
+            columnEls[i].classList.add("order-lg-0");
+        }
+    },
+    /**
+     * Removes mobile orders and the reset class for large screens.
+     *
+     * @private
+     * @param {HTMLCollection} columnEls - elements in the .row container
+     */
+    _removeMobileOrders(columnEls) {
+        for (const el of columnEls) {
+            el.style.order = "";
+            el.classList.remove("order-lg-0");
         }
     },
     /**
@@ -95,5 +108,19 @@ export const ColumnLayoutMixin = {
             return false;
         }
         return true;
+    },
+    /**
+     * Fill in the gap left by a removed item having a mobile order class.
+     *
+     * @param {HTMLElement} parentEl the removed item parent
+     * @param {Number} itemOrder the removed item mobile order
+     */
+    _fillRemovedItemGap(parentEl, itemOrder) {
+        [...parentEl.children].forEach(el => {
+            const elOrder = parseInt(el.style.order);
+            if (elOrder > itemOrder) {
+                el.style.order = elOrder - 1;
+            }
+        });
     },
 };

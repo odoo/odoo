@@ -3,15 +3,15 @@
 # 	* pos_restaurant
 # 
 # Translators:
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Wil Odoo, 2024
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:30+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -24,7 +24,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Floor Name: </strong>"
-msgstr "<strong/>"
+msgstr "<strong>Nombre de piso: </strong>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -54,7 +54,7 @@ msgstr "Activo"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 #, python-format
 msgid "Add"
-msgstr "Añadir"
+msgstr "Agregar"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -73,7 +73,7 @@ msgstr "Para empezar, agregue un nuevo piso."
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid "Add a new restaurant floor"
-msgstr "Añadir un nuevo piso del restaurante"
+msgstr "Agregar un nuevo piso del restaurante"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -87,7 +87,7 @@ msgstr "Para empezar, agregue una nueva mesa."
 #: code:addons/pos_restaurant/static/src/app/tip_screen/tip_screen.xml:0
 #, python-format
 msgid "Add a tip"
-msgstr "Añadir propina"
+msgstr "Agregar propina "
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -221,7 +221,7 @@ msgstr "Factura"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_printbill
 #, python-format
 msgid "Bill Printing"
-msgstr "Impresión de la cuenta"
+msgstr "Impresión de facturas"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -229,7 +229,7 @@ msgstr "Impresión de la cuenta"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_splitbill
 #, python-format
 msgid "Bill Splitting"
-msgstr "Separación de la cuenta"
+msgstr "División de facturas"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -247,6 +247,13 @@ msgstr "Acción bloqueada"
 #, python-format
 msgid "Blue"
 msgstr "Azul"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/product_screen/product_screen.xml:0
+#, python-format
+msgid "Book table"
+msgstr "Reservar mesa"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.burger_drink_combo_product_template
@@ -341,7 +348,7 @@ msgstr "Creado el"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/edit_bar.xml:0
 #, python-format
 msgid "Delete"
-msgstr "Suprimir"
+msgstr "Eliminar"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -658,6 +665,20 @@ msgstr "¿Número de asientos?"
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Odoo Point of Sale"
+msgstr "Odoo Punto de venta"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Odoo Restaurant"
+msgstr "Odoo Restaurante"
+
+#. module: pos_restaurant
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/bill_screen/bill_screen.xml:0
 #, python-format
 msgid "Ok"
@@ -740,7 +761,7 @@ msgstr "Pagar"
 #: code:addons/pos_restaurant/static/src/overrides/components/product_screen/product_screen.xml:0
 #, python-format
 msgid "Payment"
-msgstr "Pagos"
+msgstr "Pago"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_config
@@ -821,13 +842,6 @@ msgstr "Rojo"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/product_screen/product_screen.xml:0
-#, python-format
-msgid "Release table"
-msgstr "Liberar mesa"
-
-#. module: pos_restaurant
-#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Removing a floor cannot be undone. Do you still want to remove %s?"
@@ -875,7 +889,7 @@ msgstr "Pisos del Restaurante"
 #: model:ir.model,name:pos_restaurant.model_restaurant_table
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
 msgid "Restaurant Table"
-msgstr "Mesa del Restaurante"
+msgstr "Mesa del restaurante"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1028,7 +1042,7 @@ msgstr "Reserva de mesa"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__name
 msgid "Table Name"
-msgstr "Nombre de la Mesa"
+msgstr "Nombre de la mesa"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1184,7 +1198,7 @@ msgstr "Total:"
 #: code:addons/pos_restaurant/static/src/app/control_buttons/transfer_order_button/transfer_order_button.xml:0
 #, python-format
 msgid "Transfer"
-msgstr "Transferir"
+msgstr "Albarán"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1218,7 +1232,7 @@ msgstr "Vegetariano"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__position_v
 msgid "Vertical Position"
-msgstr "Posición Vertical"
+msgstr "Posición vertical"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.water_product_template
@@ -1338,3 +1352,10 @@ msgstr "cambios"
 #, python-format
 msgid "items"
 msgstr "artículos"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/components/order_widget/order_widget.js:0
+#, python-format
+msgid "or book the table for later"
+msgstr "o reservar una mesa para más tarde"

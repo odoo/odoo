@@ -22,7 +22,11 @@ class ResPartner(models.Model):
             ('07', '07 Penyerahan yang PPN-nya Tidak Dipungut (Kawasan Ekonomi Khusus/ Batam)'),
             ('08', '08 Penyerahan yang PPN-nya Dibebaskan (Impor Barang Tertentu)'),
             ('09', '09 Penyerahan Aktiva ( Pasal 16D UU PPN )'),
-        ], string='Kode Transaksi', help='Dua digit pertama nomor pajak')
+        ],
+        string='Kode Transaksi',
+        help='Dua digit pertama nomor pajak',
+        default='01',
+    )
 
     @api.depends('vat', 'country_code')
     def _compute_l10n_id_pkp(self):

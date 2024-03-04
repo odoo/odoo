@@ -3,15 +3,11 @@
 # 	* website_links
 # 
 # Translators:
-# Anishchuk Sergei <anishukserg@l-profit.ru>, 2023
 # Sergey Vilizhanin, 2023
-# Ivan Kropotkin <yelizariev@itpp.dev>, 2023
-# ILMIR <karamov@it-projects.info>, 2023
-# Collex100, 2023
+# Максим Дронь <dronmax@gmail.com>, 2023
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
 # Martin Trigaux, 2023
-# Irina Fedulova <istartlin@gmail.com>, 2023
-# Максим Дронь <dronmax@gmail.com>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Максим Дронь <dronmax@gmail.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,21 +28,21 @@ msgstr ""
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid " clicks"
-msgstr "клики"
+msgstr " клики"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid " countries"
-msgstr "страны"
+msgstr " страны"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "# of clicks"
-msgstr "количество кликов"
+msgstr "# кликов"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -56,7 +52,7 @@ msgstr "<strong>Кампания</strong>"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Medium</strong>"
-msgstr "<strong>Способ</strong>"
+msgstr "<strong>Средний</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -66,7 +62,7 @@ msgstr "<strong>Оригинальный URL</strong>"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Redirected URL</strong>"
-msgstr "<strong>Перенаправляемый URL</strong>"
+msgstr "<strong>Перенаправленный URL</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -76,12 +72,12 @@ msgstr "<strong>Источник</strong>"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Tracked Link</strong>"
-msgstr "<strong>Отслеженная ссылка</strong>"
+msgstr "<strong>Отслеживаемая ссылка</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "All Time"
-msgstr "Всегда"
+msgstr "За все время"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -91,13 +87,17 @@ msgid ""
 "the context of your link. It might be an event you want to promote or a "
 "special promotion.\"/>"
 msgstr ""
+"Кампания <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the context of your link. It might be an event you want to promote or a "
+"special promotion.\"/>"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "Copied"
-msgstr "Скопированный"
+msgstr "Скопировано"
 
 #. module: website_links
 #. odoo-javascript
@@ -114,14 +114,14 @@ msgstr "Копировать"
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "Edit code"
-msgstr "редактировать код"
+msgstr "Редактировать код"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "Generating link..."
-msgstr "Создание ссылки…"
+msgstr "Генерация ссылок..."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -138,12 +138,12 @@ msgstr "Иконка"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Last Month"
-msgstr "Прошлый месяц"
+msgstr "Последний месяц"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Last Week"
-msgstr "Прошлая неделя"
+msgstr "На прошлой неделе"
 
 #. module: website_links
 #: model:ir.model,name:website_links.model_link_tracker
@@ -161,16 +161,20 @@ msgid ""
 "the medium used to share your link. It might be an email, or a Facebook Ads "
 "for instance.\"/>"
 msgstr ""
+"Средний <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the medium used to share your link. It might be an email, or a Facebook Ads "
+"for instance.\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Most Clicked"
-msgstr "Самые нажимаемые"
+msgstr "Больше всего кликов"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Newest"
-msgstr "Последние"
+msgstr "Новые"
 
 #. module: website_links
 #. odoo-javascript
@@ -182,7 +186,7 @@ msgstr "Нет данных"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Recently Used"
-msgstr "Последние использованные"
+msgstr "Недавно использованные"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -190,8 +194,8 @@ msgid ""
 "Share this page with a <strong>short link</strong> that includes "
 "<strong>analytics trackers</strong>."
 msgstr ""
-"Распространить эту страницу с помощью <strong>короткой ссылки</strong>, "
-"которая включает <strong>аналитическое отслеживание</strong>."
+"Поделитесь этой страницей с помощью <strong>короткой ссылки</strong>, "
+"включающей <strong>трекеры аналитики</strong>."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -201,6 +205,10 @@ msgid ""
 "the source from which your traffic will come from, Facebook or Twitter for "
 "instance.\"/>"
 msgstr ""
+"Источник <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the source from which your traffic will come from, Facebook or Twitter for "
+"instance.\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -221,7 +229,7 @@ msgstr "Статистика"
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 #, python-format
 msgid "The code cannot be left empty"
-msgstr ""
+msgstr "Код нельзя оставлять пустым"
 
 #. module: website_links
 #. odoo-javascript
@@ -230,7 +238,7 @@ msgstr ""
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "There is no data to show"
-msgstr "Нет данных для отображения"
+msgstr "Нет никаких данных, свидетельствующих о том"
 
 #. module: website_links
 #. odoo-javascript
@@ -238,7 +246,7 @@ msgstr "Нет данных для отображения"
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 #, python-format
 msgid "This code is already taken"
-msgstr ""
+msgstr "Этот код уже взят"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -247,8 +255,8 @@ msgid ""
 " or in Odoo reports to track opportunities and related revenues."
 msgstr ""
 "Эти трекеры можно использовать в Google Analytics для отслеживания кликов и "
-"посетителей, либо в Odoo для отслеживания возможностей и связанных с ними "
-"поступлений."
+"посетителей или в отчетах Odoo для отслеживания возможностей и "
+"соответствующих доходов."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -260,7 +268,7 @@ msgstr "URL"
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "Unable to get recent links"
-msgstr "Не удалось получить последние ссылки"
+msgstr "Невозможно получить последние ссылки"
 
 #. module: website_links
 #. odoo-javascript
@@ -274,19 +282,19 @@ msgstr "Не определено"
 #: code:addons/website_links/models/link_tracker.py:0
 #, python-format
 msgid "Visit Webpage Statistics"
-msgstr ""
+msgstr "Статистика посещения веб-страниц"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "You don't have any recent links."
-msgstr "У вас нет каких-либо последних ссылок."
+msgstr "У вас нет ни одной свежей ссылки."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Your tracked links"
-msgstr "Отслеживаемые вами ссылки"
+msgstr "Ваши отслеживаемые ссылки"
 
 #. module: website_links
 #. odoo-javascript
@@ -294,14 +302,14 @@ msgstr "Отслеживаемые вами ссылки"
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "cancel"
-msgstr "отмены"
+msgstr "отмена"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "clicks"
-msgstr "кликов"
+msgstr "клики"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -313,26 +321,26 @@ msgstr "копировать"
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. InMails, Ads, Social, ..."
-msgstr ""
+msgstr "например, InMails, Ads, Social, ..."
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. June Sale, Paris Roadshow, ..."
-msgstr ""
+msgstr "например, июньская распродажа, Парижская выставка, ..."
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. LinkedIn, Facebook, Leads, ..."
-msgstr ""
+msgstr "например, LinkedIn, Facebook, Leads, ..."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "e.g. https://www.odoo.com/contactus"
-msgstr ""
+msgstr "например, https://www.odoo.com/contactus"
 
 #. module: website_links
 #. odoo-javascript

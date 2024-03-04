@@ -52,7 +52,7 @@
                                 <br/>
                                 <div class="mt32">
                                     <div class="text-center">
-                                        <img alt="Logo" t-att-src="'/logo?company=%d' % (o.program_id.company_id)" t-att-alt="'%s' % (o.program_id.company_id.name)" style="border:0px solid transparent; height: 50; width: 200px;" height="50"/>
+                                        <img alt="Logo" t-att-src="'/logo?company=%d' % (o.program_id.company_id)" t-att-alt="'%s' % (o.program_id.company_id.name)" style="border:0 solid transparent;" height="50"/>
                                     </div>
                                 </div>
                                 <div>
@@ -106,7 +106,7 @@
                     </p>
                 </div>
                 <div class="oe_structure"></div>
-                <div style="padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;">
+                <div t-if="o.expiration_date" style="padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;">
                     <h3 style="margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center">
                         Card expires <span t-field="o.expiration_date">2023-12-31</span>
                     </h3>

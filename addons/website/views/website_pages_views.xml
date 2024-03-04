@@ -79,7 +79,8 @@
             <field name="write_date" optional="hide"/>
             <field name="track" optional="hide"/>
 
-            <!-- website_id should be shown only in multi website environment
+            <!-- TODO: Remove in master, `PageRendererMixin` not needed anymore
+            website_id should be shown only in multi website environment
             when the group is enabled, but we need the field to be there all the
             time for `PageRendererMixin`'s `recordFilter' to be able to filter
             correctly. -->
@@ -190,6 +191,10 @@
             <field name="page_ids" invisible="1" />
             <field name="first_page_id" invisible="not page_ids" />
             <field name="visibility" invisible="type != 'qweb'" />
+            <span class="o_wrap_label" invisible="visibility != 'restricted_group'"/>
+            <div class="oe_edit_only alert alert-info" role="alert" invisible="visibility != 'restricted_group'">
+                Add groups in the "Access Rights" tab below.
+            </div>
             <field name="visibility_password_display" invisible="visibility != 'password'" password="True" string="Visibility Password" />
         </field>
         <sheet position="before">

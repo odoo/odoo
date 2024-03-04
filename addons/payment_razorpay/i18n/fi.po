@@ -27,6 +27,8 @@ msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
 "                        Enable recurring payments on Razorpay"
 msgstr ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
+"                        Ota toistuvat maksut käyttöön Razorpayn palvelussa"
 
 #. module: payment_razorpay
 #. odoo-python
@@ -34,7 +36,7 @@ msgstr ""
 #, python-format
 msgid ""
 "An error occurred during the processing of your payment. Please try again."
-msgstr ""
+msgstr "Maksun käsittelyssä tapahtui virhe. Yritä uudelleen."
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__code
@@ -51,12 +53,12 @@ msgstr "Yhteyttä API:han ei saatu muodostettua."
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "Key Id"
-msgstr ""
+msgstr "Avain Id"
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "Key Secret"
-msgstr ""
+msgstr "Avainsalaisuus"
 
 #. module: payment_razorpay
 #. odoo-python
@@ -90,24 +92,24 @@ msgstr "Razorpay"
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_key_id
 msgid "Razorpay Key Id"
-msgstr ""
+msgstr "Razorpay Key Id"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_key_secret
 msgid "Razorpay Key Secret"
-msgstr ""
+msgstr "Razorpay salainen avain"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_webhook_secret
 msgid "Razorpay Webhook Secret"
-msgstr ""
+msgstr "Razorpay Webhook salaisuus"
 
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_provider.py:0
 #, python-format
 msgid "Razorpay gave us the following information: '%s'"
-msgstr ""
+msgstr "Razorpay antoi seuraavat tiedot: \"%s\""
 
 #. module: payment_razorpay
 #. odoo-python
@@ -121,7 +123,7 @@ msgstr "Vastaanotettu data, jonka tila on virheellinen: %s"
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing entity id."
-msgstr ""
+msgstr "Vastaanotetut tiedot, joista puuttuu entiteetin tunniste."
 
 #. module: payment_razorpay
 #. odoo-python
@@ -142,31 +144,26 @@ msgstr "Vastaanotetut tiedot, joiden tila puuttuu."
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 #, python-format
 msgid "Received incomplete refund data."
-msgstr ""
-
-#. module: payment_razorpay
-#: model_terms:ir.ui.view,arch_db:payment_razorpay.redirect_form
-msgid "TODO: remove in master"
-msgstr ""
+msgstr "Saatu epätäydelliset tukitiedot."
 
 #. module: payment_razorpay
 #: model:ir.model.fields,help:payment_razorpay.field_payment_provider__razorpay_key_id
 msgid "The key solely used to identify the account with Razorpay."
-msgstr ""
+msgstr "Avain, jota käytetään ainoastaan Razorpay-tilin tunnistamiseen."
 
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 #, python-format
 msgid "The phone number is invalid."
-msgstr ""
+msgstr "Puhelinnumero on virheellinen."
 
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 #, python-format
 msgid "The phone number is missing."
-msgstr ""
+msgstr "Puhelinnumero puuttuu."
 
 #. module: payment_razorpay
 #: model:ir.model.fields,help:payment_razorpay.field_payment_provider__code
@@ -186,8 +183,9 @@ msgstr "Transaktio ei ole sidottu valtuutuskoodiin."
 #, python-format
 msgid "Transactions processed by Razorpay can't be manually voided from Odoo."
 msgstr ""
+"Razorpayn käsittelemiä tapahtumia ei voi mitätöidä manuaalisesti Odoosta."
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "Webhook Secret"
-msgstr ""
+msgstr "Webhookin salaisuus"

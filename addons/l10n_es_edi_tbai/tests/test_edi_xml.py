@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from base64 import b64encode
-from datetime import datetime
+from datetime import datetime, date
 
 from freezegun import freeze_time
 from lxml import etree
@@ -23,7 +23,7 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
         cls.out_invoice = cls.env['account.move'].create({
             'name': 'INV/01',
             'move_type': 'out_invoice',
-            'invoice_date': datetime.now(),
+            'invoice_date': date(2022, 1, 1),
             'partner_id': cls.partner_a.id,
             'invoice_line_ids': [(0, 0, {
                 'product_id': cls.product_a.id,
@@ -87,17 +87,17 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
                     <DetallesFactura>
                       <IDDetalleFactura>
                           <DescripcionDetalle>producta</DescripcionDetalle>
-                          <Cantidad>5.00</Cantidad>
-                          <ImporteUnitario>246.00</ImporteUnitario>
-                          <Descuento>246.00</Descuento>
-                          <ImporteTotal>1190.64</ImporteTotal>
+                          <Cantidad>5.00000000</Cantidad>
+                          <ImporteUnitario>246.00000000</ImporteUnitario>
+                          <Descuento>246.00000000</Descuento>
+                          <ImporteTotal>1190.64000000</ImporteTotal>
                       </IDDetalleFactura>
                       <IDDetalleFactura>
                           <DescripcionDetalle>producta</DescripcionDetalle>
-                          <Cantidad>5.00</Cantidad>
-                          <ImporteUnitario>246.00</ImporteUnitario>
-                          <Descuento>1230.00</Descuento>
-                          <ImporteTotal>0.00</ImporteTotal>
+                          <Cantidad>5.00000000</Cantidad>
+                          <ImporteUnitario>246.00000000</ImporteUnitario>
+                          <Descuento>1230.00000000</Descuento>
+                          <ImporteTotal>0.00000000</ImporteTotal>
                       </IDDetalleFactura>
                     </DetallesFactura>
                 </xpath>
@@ -113,6 +113,20 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
                         <OperacionEnRecargoDeEquivalenciaORegimenSimplificado>N</OperacionEnRecargoDeEquivalenciaORegimenSimplificado>
                       </DetalleIVA>
                     </DesgloseIVA>
+                </xpath>
+            """
+            xml_expected = self.with_applied_xpath(xml_expected_base, xpath)
+            self.assertXmlTreeEqual(xml_doc, xml_expected)
+
+    def test_xml_tree_post_retention(self):
+        self.out_invoice.invoice_line_ids.tax_ids = [(4, self._get_tax_by_xml_id('s_irpf15').id)]
+        with freeze_time(self.frozen_today):
+            xml_doc = self.edi_format._get_l10n_es_tbai_invoice_xml(self.out_invoice, cancel=False)[self.out_invoice]['xml_file']
+            xml_doc.remove(xml_doc.find("Signature", namespaces=NS_MAP))
+            xml_expected_base = etree.fromstring(super().L10N_ES_TBAI_SAMPLE_XML_POST)
+            xpath = """
+                <xpath expr="//ImporteTotalFactura" position="after">
+                    <RetencionSoportada>600.00</RetencionSoportada>
                 </xpath>
             """
             xml_expected = self.with_applied_xpath(xml_expected_base, xpath)

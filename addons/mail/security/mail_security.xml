@@ -46,9 +46,7 @@
                 [
                     ('is_self', '=', True),
                     "|",
-                        "&amp;",
-                            ("channel_id.channel_type", "!=", "channel"),
-                            ("channel_id.is_member", "=", True),
+                        ("channel_id.channel_type", "!=", "channel"),
                         "&amp;",
                             ("channel_id.channel_type", "=", "channel"),
                             '|',
@@ -61,6 +59,11 @@
                 its data, which means just using 'is_self' would allow any user to add themselves in any channel.
             -->
             <field name="perm_create" eval="False"/>
+            <!--
+                read() is controlled by other rules, in particular the current rule for reading self member is
+                "contained" within the rule for reading any member of accessible channel which is more generic.
+            -->
+            <field name="perm_read" eval="False"/>
         </record>
 
         <record id="ir_rule_discuss_channel_member_read_all" model="ir.rule">

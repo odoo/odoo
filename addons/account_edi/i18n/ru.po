@@ -3,14 +3,12 @@
 # 	* account_edi
 # 
 # Translators:
-# alenafairy, 2023
-# Alena Vlasova, 2023
 # ILMIR <karamov@it-projects.info>, 2023
+# Alena Vlasova, 2023
 # Irina Fedulova <istartlin@gmail.com>, 2023
-# Сергей Шебанин <sergey@shebanin.ru>, 2023
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
 # Martin Trigaux, 2023
-# GulShar Mungatova <mungatova@gmail.com>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: GulShar Mungatova <mungatova@gmail.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,40 +29,40 @@ msgstr ""
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing error(s)"
-msgstr ""
+msgstr " Ошибка(и) электронного выставления счетов"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing info(s)"
-msgstr ""
+msgstr " Информация(и) об электронном выставлении счетов"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing warning(s)"
-msgstr ""
+msgstr " Предупреждение(я) об электронном выставлении счетов"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid "A cancellation of the EDI has been requested."
-msgstr ""
+msgstr "Поступил запрос на отмену EDI."
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid "A request for cancellation of the EDI has been called off."
-msgstr ""
+msgstr "Запрос на отмену EDI был отозван."
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move_send
 msgid "Account Move Send"
-msgstr ""
+msgstr "Перемещение учетки отправка"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -75,7 +73,7 @@ msgstr "Вложение"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__blocking_level
 msgid "Blocking Level"
-msgstr ""
+msgstr "Уровень блокировки"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__blocking_level
@@ -85,17 +83,21 @@ msgid ""
 "  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
 "  * Error: there is an error that blocks the current Electronic Invoicing operation."
 msgstr ""
+"Блокирует текущую работу документа в зависимости от степени тяжести ошибки:\n"
+"  * Информация: документ не заблокирован и все работает как надо.\n"
+"  * Предупреждение: имеется ошибка, которая не препятствует успешному выполнению текущей операции Электронное выставление счетов-фактур.\n"
+"  * Ошибка: есть ошибка, которая блокирует текущую операцию Электронного счета-фактуры."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Call off EDI Cancellation"
-msgstr ""
+msgstr "Отзыв EDI Отмена"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__cancelled
 msgid "Cancelled"
-msgstr "Отменено"
+msgstr "Отменен"
 
 #. module: account_edi
 #. odoo-python
@@ -105,6 +107,8 @@ msgid ""
 "Cannot deactivate (%s) on this journal because not all documents are "
 "synchronized"
 msgstr ""
+"Невозможно деактивировать (%s) этот журнал, поскольку не все документы "
+"синхронизированы"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__code
@@ -114,7 +118,7 @@ msgstr "Код"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_journal__compatible_edi_ids
 msgid "Compatible Edi"
-msgstr "Совместимый Edi"
+msgstr "Совместимость Edi"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_uid
@@ -126,13 +130,13 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_date
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__create_date
 msgid "Created on"
-msgstr "Дата создания"
+msgstr "Создано"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__display_name
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__display_name
 msgid "Display Name"
-msgstr "Показывать название"
+msgstr "Отображаемое имя"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -142,60 +146,60 @@ msgstr "Скачать"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "EDI Documents"
-msgstr ""
+msgstr "Документы ЭДО"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_format
 msgid "EDI format"
-msgstr "EDI формат"
+msgstr "Формат EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
 msgid "EDI format that support moves in this journal"
-msgstr "Формат EDI, поддерживающий перемещения в этом журнале "
+msgstr "Формат EDI, поддерживающий перемещения в этом журнале"
 
 #. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
 msgid "EDI: Perform web services operations"
-msgstr ""
+msgstr "EDI: Выполнение операций с веб-службами"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_blocking_level
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_blocking_level
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_blocking_level
 msgid "Edi Blocking Level"
-msgstr ""
+msgstr "Уровень блокировки Edi"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_content
 msgid "Edi Content"
-msgstr ""
+msgstr "Edi Content"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_document_ids
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_document_ids
 msgid "Edi Document"
-msgstr "Edi документ"
+msgstr "Документ Edi"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_count
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_count
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_count
 msgid "Edi Error Count"
-msgstr ""
+msgstr "Счетчик ошибок Edi"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_message
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_message
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_message
 msgid "Edi Error Message"
-msgstr ""
+msgstr "Сообщение об ошибке Edi"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
 msgid "Edi Format"
-msgstr "Edi формат"
+msgstr "Формат Edi"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_abandon_cancel_button
@@ -209,19 +213,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_cancel_button
 msgid "Edi Show Cancel Button"
-msgstr ""
+msgstr "Кнопка отмены показа Edi"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_web_services_to_process
 msgid "Edi Web Services To Process"
-msgstr ""
+msgstr "Edi Web Services To Process"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_document
 msgid "Electronic Document for an account.move"
-msgstr ""
+msgstr "Электронный документ по account.move"
 
 #. module: account_edi
 #: model:ir.actions.act_window,name:account_edi.action_open_edi_documents
@@ -230,17 +234,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_state
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_state
 msgid "Electronic invoicing"
-msgstr "Электронное выставление актов"
+msgstr "Электронное выставление счетов"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing processing needed"
-msgstr ""
+msgstr "Необходима обработка электронных счетов-фактур"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing state"
-msgstr ""
+msgstr "Состояние электронного выставления счетов"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__error
@@ -252,20 +256,20 @@ msgstr "Ошибка"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
 msgid "Format Name"
-msgstr ""
+msgstr "Имя формата"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_error_count
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_error_count
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_error_count
 msgid "How many EDIs are in error for this move?"
-msgstr ""
+msgstr "Сколько EDI ошибок для этого перемещения?"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__id
 msgid "ID"
-msgstr "Идентификатор"
+msgstr "ID"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__info
@@ -282,6 +286,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Неверная конфигурация счета-фактуры:\n"
+"\n"
+"%s"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_journal
@@ -291,13 +298,13 @@ msgstr "Журнал"
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move
 msgid "Journal Entry"
-msgstr "Запись журнала"
+msgstr "Запись в журнале"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__write_uid
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновил"
+msgstr "Последнее обновление"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__write_date
@@ -308,33 +315,33 @@ msgstr "Последнее обновление"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__move_id
 msgid "Move"
-msgstr "Перемещение"
+msgstr "Переместить"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__name
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__name
 msgid "Name"
-msgstr "Название"
+msgstr "Имя"
 
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_document_unique_edi_document_by_move_by_format
 msgid "Only one edi document by move by format"
-msgstr ""
+msgstr "Только один документ edi в формате move by"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Process now"
-msgstr ""
+msgstr "Процесс сейчас"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
-msgstr "Отчет о действияx "
+msgstr "Отчет о действиях"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Request EDI Cancellation"
-msgstr ""
+msgstr "Запрос на отмену ЭДО"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -344,7 +351,7 @@ msgstr "Повторить"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_journal__edi_format_ids
 msgid "Send XML/EDI invoices"
-msgstr "Отправлять акты в формате XML/EDI"
+msgstr "Отправка счетов-фактур в формате XML/EDI"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__sent
@@ -355,14 +362,14 @@ msgstr "Отправлено"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__state
 msgid "State"
-msgstr "Статус"
+msgstr "Область"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_state
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_state
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_state
 msgid "The aggregated state of all the EDIs with web-service of this move"
-msgstr ""
+msgstr "Агрегированное состояние всех EDI с веб-сервисом этого хода"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
@@ -370,11 +377,13 @@ msgid ""
 "The file generated by edi_format_id when the invoice is posted (and this "
 "document is processed)."
 msgstr ""
+"Файл, создаваемый edi_format_id при проводке счета-фактуры (и обработке "
+"этого документа)."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "The invoice will soon be sent to"
-msgstr ""
+msgstr "Счет-фактура вскоре будет отправлен по адресу"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
@@ -382,6 +391,8 @@ msgid ""
 "The text of the last error that happened during Electronic Invoice "
 "operation."
 msgstr ""
+"Текст последней ошибки, произошедшей во время операции \"Электронный счет-"
+"фактура\"."
 
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
@@ -393,19 +404,19 @@ msgstr "Этот код уже существует"
 #: code:addons/account_edi/models/account_edi_document.py:0
 #, python-format
 msgid "This document is being sent by another process already. "
-msgstr ""
+msgstr "Этот документ уже отправлен другим процессом."
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_cancel
 msgid "To Cancel"
-msgstr ""
+msgstr "Отменить"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_send
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_send
 msgid "To Send"
-msgstr "К отправке"
+msgstr "Отправить"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__warning
@@ -422,6 +433,9 @@ msgid ""
 " has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
 msgstr ""
+"Вы не можете отредактировать следующую запись в журнале %s, потому что "
+"электронный документ уже отправлен. Вместо этого воспользуйтесь кнопкой "
+"\"Запросить отмену ЭДО\"."
 
 #. module: account_edi
 #. odoo-python
@@ -430,8 +444,10 @@ msgstr ""
 msgid ""
 "You can't unlink an attachment being an EDI document sent to the government."
 msgstr ""
+"Вы не можете отсоединить вложение от EDI-документа, отправленного в "
+"правительство."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "⇒ See errors"
-msgstr ""
+msgstr "⇒ См. ошибки"

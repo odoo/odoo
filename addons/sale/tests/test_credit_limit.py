@@ -93,12 +93,12 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         invoice.action_post()
 
         # Create a credit note reversing the invoice
-        self.env['account.move.reversal'].with_company(self.env.company).create(
-            {
-                'move_ids': [Command.set((invoice.id,))],
-                'journal_id': invoice.journal_id.id
-            }
-        ).reverse_moves()
+        self.env['account.move.reversal'].with_company(self.env.company).with_context(
+            active_model="account.move",
+            active_ids=invoice.ids,
+        ).create({
+            'journal_id': invoice.journal_id.id,
+        }).reverse_moves()
 
         credit_note = sale_order.invoice_ids[1]
         credit_note.action_post()

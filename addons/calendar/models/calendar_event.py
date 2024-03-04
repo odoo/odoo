@@ -365,6 +365,19 @@ class Meeting(models.Model):
             if event.allday:
                 event.stop -= timedelta(seconds=1)
 
+    @api.onchange('start_date', 'stop_date')
+    def _onchange_date(self):
+        """ This onchange is required for cases where the stop/start is False and we set an allday event.
+            The inverse method is not called in this case because start_date/stop_date are not used in any
+            compute/related, so we need an onchange to set the start/stop values in the form view
+        """
+        for event in self:
+            if event.stop_date and event.start_date:
+                event.with_context(is_calendar_event_new=True).write({
+                    'start': fields.Datetime.from_string(event.start_date).replace(hour=8),
+                    'stop': fields.Datetime.from_string(event.stop_date).replace(hour=18),
+                })
+
     def _inverse_dates(self):
         """ This method is used to set the start and stop values of all day events.
             The calendar view needs date_start and date_stop values to display correctly the allday events across
@@ -746,7 +759,7 @@ class Meeting(models.Model):
         # don't forget to update recurrences if there are some base events in the set to unlink,
         # but after having removed the events ;-)
         recurrences = self.env["calendar.recurrence"].search([
-            ('base_event_id.id', 'in', [e.id for e in self])
+            ('base_event_id', 'in', [e.id for e in self])
         ])
 
         result = super().unlink()
@@ -1004,6 +1017,19 @@ class Meeting(models.Model):
         if events_to_notify:
             self.env['calendar.alarm_manager']._notify_next_alarm(events_to_notify.partner_ids.ids)
         return triggers_by_events
+
+    def get_next_alarm_date(self, events_by_alarm):
+        self.ensure_one()
+        now = fields.datetime.now()
+        sorted_alarms = self.alarm_ids.sorted("duration_minutes")
+        triggered_alarms = sorted_alarms.filtered(lambda alarm: alarm.id in events_by_alarm)[0]
+        event_has_future_alarms = sorted_alarms[0] != triggered_alarms
+        next_date = None
+        if self.recurrence_id.trigger_id and self.recurrence_id.trigger_id.call_at <= now:
+            next_date = self.start - timedelta(minutes=sorted_alarms[0].duration_minutes) \
+                if event_has_future_alarms \
+                else self.start
+        return next_date
 
     # ------------------------------------------------------------
     # RECURRENCY

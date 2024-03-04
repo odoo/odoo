@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Junko Augias, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-01-29 10:46+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1482,6 +1482,15 @@ msgstr "ブーリアンアイコン"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
+#, python-format
+msgid ""
+"Boolean field from the model used in the relation, which indicates whether "
+"the state is folded or not."
+msgstr "リレーションで使用されるモデルのブール型フィールドで、ステータスが折りたたまれているかどうかを示します。"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
 #, python-format
 msgid ""
@@ -1645,7 +1654,7 @@ msgstr "値を編集可能"
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
 msgid "Cancel"
-msgstr "キャンセル"
+msgstr "取消"
 
 #. module: web
 #. odoo-javascript
@@ -1653,7 +1662,7 @@ msgstr "キャンセル"
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_bar.xml:0
 #, python-format
 msgid "Cancel Upload"
-msgstr "アップロードをキャンセル"
+msgstr "アップロードを取消"
 
 #. module: web
 #. odoo-javascript
@@ -2609,7 +2618,7 @@ msgstr "未来の日付が入力された場合は警告アイコンを表示し
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_bar.js:0
 #, python-format
 msgid "Do you really want to cancel the upload of %s?"
-msgstr "本当に%sのアップロードをキャンセルしますか？"
+msgstr "本当に%sのアップロードを取消しますか？"
 
 #. module: web
 #. odoo-javascript
@@ -3395,6 +3404,18 @@ msgstr "Handle"
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "全てのレポートの上部に表示されるヘッダーテキスト。"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/record.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
+msgstr ""
+"ご注意下さい！最近の変更が大きすぎるため、自動的に保存されません。今すぐ<i class=\"fa fa-cloud-upload fa-"
+"fw\"></i>ボタンをクリックして、このタブを閉じる前に作業が保存されていることを確認して下さい。"
 
 #. module: web
 #. odoo-javascript
@@ -4394,7 +4415,7 @@ msgstr "中"
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.js:0
 #, python-format
 msgid "Meeting Subject"
-msgstr "打ち合わせ議題"
+msgstr "ミーティング議題"
 
 #. module: web
 #. odoo-javascript
@@ -5716,6 +5737,13 @@ msgstr "進捗バー"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/view_components/column_progress.xml:0
+#, python-format
+msgid "Progress bar"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "Properties"
@@ -5868,6 +5896,10 @@ msgid ""
 "\n"
 "Think twice before you click that 'Delete' button!"
 msgstr ""
+"レコードを削除しますか？本当ですか？\n"
+"削除すると、戻すことはできません。\n"
+"\n"
+"'削除'ボタンをクリックする前に、よく考えて下さい！"
 
 #. module: web
 #. odoo-javascript
@@ -6982,6 +7014,17 @@ msgstr "選択されたフィールドは署名を事前入力するのに使用
 #, python-format
 msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
 msgstr "選択されたファイル (%sB)は許可されている最大ファイルサイズ(%sB)を超えています。"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/errors/scss_error_dialog.js:0
+#, python-format
+msgid ""
+"The style compilation failed. This is an administrator or developer error "
+"that must be fixed for the entire database before continuing working. See "
+"browser console or server logs for details."
+msgstr ""
+"スタイルのコンパイルに失敗しました。これは管理者または開発者のエラーで、作業を続行する前にデータベース全体を修正する必要があります。詳細については、ブラウザコンソールまたはサーバログを参照して下さい。"
 
 #. module: web
 #. odoo-javascript

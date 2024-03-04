@@ -8,6 +8,7 @@ from odoo import fields
 from odoo.addons.mail.models.mail_activity import MailActivity
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests.common import Form, tagged, HttpCase
+from odoo.tools.misc import format_date
 
 
 class ActivityScheduleCase(MailCommon):
@@ -89,6 +90,7 @@ class ActivityScheduleCase(MailCommon):
                     **{template.activity_type_id.delay_unit: template.activity_type_id.delay_count}))
             self.assertEqual(activity.note, template.note)
             self.assertEqual(activity.summary, template.summary)
+            self.assertFalse(activity.automated)
             if force_responsible_id:
                 self.assertEqual(activity.user_id, force_responsible_id)
             else:
@@ -116,7 +118,8 @@ class ActivityScheduleCase(MailCommon):
 
             self.assertIn(template.summary, message.body)
             self.assertIn(f'{template.summary or template.activity_type_id.name}, '
-                          f'assigned to {responsible_id.name}, due on the {date_deadline}', message.body)
+                          f'assigned to {responsible_id.name}, due on the '
+                          f'{format_date(self.env, date_deadline)}', message.body)
 
     def assertPlanExecution(self, plan, records, force_base_date_deadline=None, force_responsible_id=None):
         """ Check that the plan has created the right activities and send the

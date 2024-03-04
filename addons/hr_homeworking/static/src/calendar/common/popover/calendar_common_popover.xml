@@ -3,7 +3,13 @@
     <t t-name="homework.AttendeeCalendarCommonPopover">
         <t t-if="isWorkLocationEvent()">
         <Record resModel="'hr.employee.location'" fieldNames="fieldNames" fields="fields" activeFields="fields" values="values" mode="'readonly'" t-slot-scope="slot">
-            <div class="card-header d-flex justify-content-between py-2 pe-2">
+            <Dialog t-if="env.isSmall" title="props.record.title" contentClass="'o_calendar_color_'+ props.record.colorIndex">
+                <t t-call="{{ constructor.subTemplates.body }}"/>
+                <t t-set-slot="footer">
+                    <t t-call="calendar.AttendeeCalendarCommonPopover.footer"/>
+                </t>
+            </Dialog>
+            <div t-else="" class="card-header d-flex justify-content-between py-2 pe-2">
                 <span class="popover-header border-0">
                     <t t-if="slot.record.data.work_location_type === 'office'">
                         <i class="fa fa-fw fa-building me-2" role="img" t-att-class="`wl_color_${props.record.colorIndex}`"/>

@@ -5,11 +5,9 @@
 # Translators:
 # Alena Vlasova, 2023
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
-# alenafairy, 2023
-# Сергей Шебанин <sergey@shebanin.ru>, 2023
 # ILMIR <karamov@it-projects.info>, 2023
 # Martin Trigaux, 2023
-# Иван Дроздов <hiraetari@gmail.com>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Иван Дроздов <hiraetari@gmail.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,12 +26,12 @@ msgstr ""
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_city_extended_form
 msgid "<span class=\"o_stat_text\">Cities</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Города</span>"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "<span> - </span>"
-msgstr ""
+msgstr "<span> - </span>"
 
 #. module: base_address_extended
 #: model:ir.model.fields,help:base_address_extended.field_res_country__enforce_cities
@@ -43,14 +41,14 @@ msgid ""
 "Check this box to ensure every address created in that country has a 'City' "
 "chosen in the list of the country's cities."
 msgstr ""
-"Отметьте этот флаг, чтобы каждый адрес, созданный в этой стране, содержал "
-"'Город', выбранный из списка городов страны."
+"Установите этот флажок, чтобы каждый адрес, созданный в этой стране, имел "
+"«Город», выбранный в списке городов страны."
 
 #. module: base_address_extended
 #: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
 #: model:ir.ui.menu,name:base_address_extended.menu_res_city
 msgid "Cities"
-msgstr "города"
+msgstr "Города"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_city
@@ -65,12 +63,12 @@ msgstr "Город"
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__city_id
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__city_id
 msgid "City ID"
-msgstr ""
+msgstr "ID города"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_partner
 msgid "Contact"
-msgstr "Контакт"
+msgstr "Контакты"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_country
@@ -87,12 +85,12 @@ msgstr "Создано"
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_date
 msgid "Created on"
-msgstr "Дата создания"
+msgstr "Создано"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__display_name
 msgid "Display Name"
-msgstr "Показывать название"
+msgstr "Отображаемое имя"
 
 #. module: base_address_extended
 #: model_terms:ir.actions.act_window,help:base_address_extended.action_res_city_tree
@@ -101,9 +99,9 @@ msgid ""
 "                your partner records. Note that an option can be set on each country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
-"Показать и управлять списком всех городов, на которые можно назначить ваши "
-"партнерские записи. Заметьте, что опцию можно установить отдельно в каждой "
-"стране чтобы обеспечить любую его адрес, чтобы город в этом списке."
+"Отображение и управление списком всех городов, которые могут быть назначены\n"
+"                 для ваших партнерских записей. Обратите внимание, что опция может быть установлена в каждой стране отдельно\n"
+"                 для принудительного использования любого его адреса, чтобы иметь город в этом списке."
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
@@ -114,14 +112,14 @@ msgstr "Двери"
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Door #"
-msgstr ""
+msgstr "Дверь #"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country__enforce_cities
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__country_enforce_cities
 msgid "Enforce Cities"
-msgstr "Обеспечить применение городов"
+msgstr "Принудительно Города"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
@@ -132,17 +130,17 @@ msgstr "Дом"
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "House #"
-msgstr ""
+msgstr "Дом #"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__id
 msgid "ID"
-msgstr "Идентификатор"
+msgstr "ID"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновил"
+msgstr "Последнее обновление"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_date
@@ -152,7 +150,7 @@ msgstr "Последнее обновление"
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__name
 msgid "Name"
-msgstr "Название"
+msgstr "Имя"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_filter
@@ -163,12 +161,12 @@ msgstr "Поиск города"
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__state_id
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "State"
-msgstr "Статус"
+msgstr "Область"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Street"
-msgstr "Адрес"
+msgstr "Улица"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
@@ -179,7 +177,7 @@ msgstr "Улица 2..."
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_name
 msgid "Street Name"
-msgstr "Название улицы"
+msgstr "Улица"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
@@ -189,9 +187,9 @@ msgstr "Улица..."
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "ZIP"
-msgstr "Почтовый индекс"
+msgstr "ИНДЕКС"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__zipcode
 msgid "Zip"
-msgstr "Почтовый индекс"
+msgstr "Индекс"

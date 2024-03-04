@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="vat" model="account.report">
+        <field name="name">2550Q</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.ph"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_base" model="account.report.column">
+                <field name="name">Tax base</field>
+                <field name="expression_label">tax_base</field>
+            </record>
+            <record id="vat_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_payable" model="account.report.line">
+                <field name="name">Tax Payable</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="net_vat_payable_from_56" model="account.report.line">
+                        <field name="name">15 Net VAT Payable(Excess Input Tax)</field>
+                        <field name="code">15</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="aggregation_formula">56.balance</field>
+                    </record>
+                    <record id="creditable_vat_withheld" model="account.report.line">
+                        <field name="name">16 Creditable VAT Withheld</field>
+                        <field name="code">16</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="creditable_vat_withheld_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">16B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="advance_vat_payments" model="account.report.line">
+                        <field name="name">17 Advance VAT Payments</field>
+                        <field name="code">17</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="advance_vat_payments_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">17B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_paid_amended" model="account.report.line">
+                        <field name="name">18 VAT paid in return previously filed, if this is an amended return</field>
+                        <field name="code">18</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="vat_paid_amended_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">18B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="other" model="account.report.line">
+                        <field name="name">19 Other Credits/Payment</field>
+                        <field name="code">19</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="other_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">19B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="total_tax_cp" model="account.report.line">
+                        <field name="name">20 Total Tax Credits/Payment</field>
+                        <field name="code">20</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="aggregation_formula">16.balance + 17.balance + 18.balance + 19.balance</field>
+                    </record>
+                    <record id="tax_still_payable" model="account.report.line">
+                        <field name="name">21 Tax Still Payable/(Excess Credits)</field>
+                        <field name="code">21</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="aggregation_formula">15.balance - 20.balance</field>
+                    </record>
+                    <record id="penalties" model="account.report.line">
+                        <field name="name">Add: Penalties</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="surcharge" model="account.report.line">
+                                <field name="name">22 Surcharge</field>
+                                <field name="code">22</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="surcharge_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">22B</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="interest" model="account.report.line">
+                                <field name="name">23 Interest</field>
+                                <field name="code">23</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="interest_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">23B</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="compromise" model="account.report.line">
+                                <field name="name">24 Compromise</field>
+                                <field name="code">24</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="compromise_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">24B</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="total_penalties" model="account.report.line">
+                                <field name="name">25 Total Penalties</field>
+                                <field name="code">25</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="hierarchy_level">1</field>
+                                <field name="aggregation_formula">22.balance + 23.balance + 24.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="total_tax_payable" model="account.report.line">
+                        <field name="name">26 Total Amount Payable</field>
+                        <field name="code">26</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="aggregation_formula">21.balance + 25.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="vat_computation_detail" model="account.report.line">
+                <field name="name">Details of VAT Computation</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="sales_to_private" model="account.report.line">
+                        <field name="name">31 VATable-sales to Private individuals/Corporations</field>
+                        <field name="code">31</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="sales_to_private_base" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">31A</field>
+                            </record>
+                            <record id="sales_to_private_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">31B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sales_to_government" model="account.report.line">
+                        <field name="name">32 VATable-sales to Government</field>
+                        <field name="code">32</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="sales_to_government_base" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">32A</field>
+                            </record>
+                            <record id="sales_to_government_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">32B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="zero_rated" model="account.report.line">
+                        <field name="name">33 Zero-Rated Sales</field>
+                        <field name="code">33</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="zero_rated_base" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">33A</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="exempt" model="account.report.line">
+                        <field name="name">34 Exempt Sales</field>
+                        <field name="code">34</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="exempt_base" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">34A</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="total_sales_tax" model="account.report.line">
+                        <field name="name">35 Total Sales &amp; Output Tax Due</field>
+                        <field name="code">35</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="total_sales_tax_base" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">31.tax_base + 32.tax_base + 33.tax_base + 34.tax_base</field>
+                            </record>
+                            <record id="total_sales_tax_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">31.balance + 32.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="input_tax_carried_over" model="account.report.line">  <!-- todo this could be automated if we know where from -->
+                        <field name="name">36 Input Tax Carried Over from Previous Quarter</field>
+                        <field name="code">36</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="input_tax_carried_over_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">36B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="input_tax_deferred" model="account.report.line">
+                        <field name="name">37 Input Tax Deferred on Capital Goods Exceeding P1 Million from Previous Quarter</field>
+                        <field name="code">37</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="input_tax_deferred_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">37B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="transitional_input_tax" model="account.report.line">
+                        <field name="name">38 Transitional Input Tax</field>
+                        <field name="code">38</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="transitional_input_tax_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">38B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="presumptive_input_tax" model="account.report.line">
+                        <field name="name">39 Presumptive Input Tax</field>
+                        <field name="code">39</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="presumptive_input_tax_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">39B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="others_of_allowable_input_tax" model="account.report.line">
+                        <field name="name">40 Others</field>
+                        <field name="code">40</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="others_of_allowable_input_tax_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">40B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="total_of_allowable_input_tax" model="account.report.line">
+                        <field name="name">41 Total</field>
+                        <field name="code">41</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="total_of_allowable_input_tax_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">36.balance + 37.balance + 38.balance + 39.balance + 40.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="domestic_purchase" model="account.report.line">
+                        <field name="name">42 Domestic Purchases</field>
+                        <field name="code">42</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <!-- 42 -->
+                            <record id="domestic_purchase_formula_vat_base" model="account.report.expression">
+                                <field name="label">_vat_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">42A</field>
+                            </record>
+                            <record id="domestic_purchase_formula_vat_balance" model="account.report.expression">
+                                <field name="label">_vat_balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">42B</field>
+                            </record>
+                            <!-- 42 service -->
+                            <record id="domestic_purchase_formula_service_base" model="account.report.expression">
+                                <field name="label">_service_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">42SA</field>
+                            </record>
+                            <record id="domestic_purchase_formula_service_balance" model="account.report.expression">
+                                <field name="label">_service_balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">42SB</field>
+                            </record>
+                            <!-- 42 capital -->
+                            <record id="domestic_purchase_formula_capital_base" model="account.report.expression">
+                                <field name="label">_capital_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CAPA</field>
+                            </record>
+                            <record id="domestic_purchase_formula_capital_balance" model="account.report.expression">
+                                <field name="label">_capital_balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CAPB</field>
+                            </record>
+                            <!-- Aggregate -->
+                            <record id="domestic_purchase_base" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">42._vat_base + 42._service_base + 42._capital_base</field>
+                            </record>
+                            <record id="domestic_purchase_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">42._vat_balance + 42._service_balance + 42._capital_balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="service_by_non_residents" model="account.report.line">
+                        <field name="name">43 Services Rendered by Non-residents</field>
+                        <field name="code">43</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="service_by_non_residents_base" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">43A</field>
+                            </record>
+                            <record id="service_by_non_residents_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">43B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="importations" model="account.report.line">
+                        <field name="name">44 Importations</field>
+                        <field name="code">44</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="importations_base" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">44A</field>
+                            </record>
+                            <record id="importations_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">44B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="others_current_transaction" model="account.report.line">
+                        <field name="name">45 Others</field>
+                        <field name="code">45</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="others_current_transaction_base" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">45A</field>
+                            </record>
+                            <record id="others_current_transaction_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">45B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="domestic_purchase_untaxed" model="account.report.line">
+                        <field name="name">46 Domestic Purchase with No Input Tax</field>
+                        <field name="code">46</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <!-- 42 service -->
+                            <record id="domestic_purchase_untaxed_formula_ex_base" model="account.report.expression">
+                                <field name="label">_exempt_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">46E</field>
+                            </record>
+                            <record id="domestic_purchase_untaxed_formula_zr_base" model="account.report.expression">
+                                <field name="label">_zr_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">46ZR</field>
+                            </record>
+                            <!-- Aggregate -->
+                            <record id="domestic_purchase_untaxed_base" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">46._exempt_base + 46._zr_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_exempt_importations" model="account.report.line">
+                        <field name="name">47 VAT-Exempt Importations</field>
+                        <field name="code">47</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="vat_exempt_importations_base" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">47A</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="total_current_tax" model="account.report.line">
+                        <field name="name">48 Total Current Purchase/Input Tax</field>
+                        <field name="code">48</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="total_current_tax_base" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">42.tax_base + 43.tax_base + 44.tax_base + 45.tax_base + 46.tax_base + 47.tax_base</field>
+                            </record>
+                            <record id="total_current_tax_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">42.balance + 43.balance + 44.balance + 45.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="total_available_input_tax" model="account.report.line">
+                        <field name="name">49 Total Available Input Tax</field>
+                        <field name="code">49</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="total_available_input_tax_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">41.balance + 48.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="input_tax_exceeding_1_m" model="account.report.line">
+                        <field name="name">50 Input Tax on Purchases/Importation of Capital Goods exceeding P1 Million deferred for the succeeding period</field>
+                        <field name="code">50</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="input_tax_exceeding_1_m_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">50B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="input_tax_vat_exempt" model="account.report.line">
+                        <field name="name">51 Input Tax Attributable to VAT Exempt Sales</field>
+                        <field name="code">51</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="input_tax_vat_exempt_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">51B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_refund_ttc_claimed" model="account.report.line">
+                        <field name="name">52 VAT refund/TCC claimed</field>
+                        <field name="code">52</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="vat_refund_ttc_claimed_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">52B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="others_net_vay_payable" model="account.report.line">
+                        <field name="name">53 Others</field>
+                        <field name="code">53</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="others_net_vay_payable_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">53B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="total_deductions_from_input_tax" model="account.report.line">
+                        <field name="name">54 Total Deductions from Input Tax</field>
+                        <field name="code">54</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="total_deductions_from_input_tax_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">50.balance + 51.balance + 52.balance + 53.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="total_allowable_input_tax" model="account.report.line">
+                        <field name="name">55 Total Allowable Input Tax</field>
+                        <field name="code">55</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="total_allowable_input_tax_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">49.balance - 54.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="net_vat_payable" model="account.report.line">
+                        <field name="name">56 Net VAT Payable/(Excess Input Tax)</field>
+                        <field name="code">56</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="net_vat_payable_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">35.balance - 55.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

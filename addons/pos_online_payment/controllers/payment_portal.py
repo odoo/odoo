@@ -194,6 +194,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         # Avoid tokenization for the public user.
         kwargs.update({
             'partner_id': partner_sudo.id,
+            'partner_phone': partner_sudo.phone,
             'custom_create_values': {
                 'pos_order_id': pos_order_sudo.id,
             },

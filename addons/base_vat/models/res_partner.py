@@ -69,7 +69,7 @@ _ref_vat = {
     'ph': '123-456-789-123',
     'pl': 'PL1234567883',
     'pt': 'PT123456789',
-    'ro': 'RO1234567897',
+    'ro': 'RO1234567897 or 8001011234567 or 9000123456789',
     'rs': 'RS101134702',
     'ru': 'RU123456789047',
     'se': 'SE123456789701',
@@ -213,6 +213,8 @@ class ResPartner(models.Model):
                         msg = _("Connection with the VIES server failed. The VAT number %s could not be validated.", partner.vies_vat_to_check)
                     elif isinstance(e, InvalidComponent):
                         msg = _("The VAT number %s could not be interpreted by the VIES server.", partner.vies_vat_to_check)
+                    elif isinstance(e, zeep.exceptions.Fault):
+                        msg = _('The request for VAT validation was not processed. VIES service has responded with the following error: %s', e.message)
                     partner._origin.message_post(body=msg)
                 _logger.warning("The VAT number %s failed VIES check.", partner.vies_vat_to_check)
                 partner.vies_valid = False
@@ -291,6 +293,28 @@ class ResPartner(models.Model):
         if len(number) == 10 and self.__check_vat_al_re.match(number):
             return True
         return False
+
+    __check_tin1_ro_natural_persons = re.compile(r'[1-9]\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{6}')
+    __check_tin2_ro_natural_persons = re.compile(r'9000\d{9}')
+    def check_vat_ro(self, vat):
+        """
+            Check Romanian VAT number that can be for example 'RO1234567897 or 'xyyzzaabbxxxx' or '9000xxxxxxxx'.
+            - For xyyzzaabbxxxx, 'x' can be any number, 'y' is the two last digit of a year (in the range 00…99),
+              'a' is a month, b is a day of the month, the number 8 and 9 are Country or district code
+              (For those twos digits, we decided to let some flexibility  to avoid complexifying the regex and also
+              for maintainability)
+            - 9000xxxxxxxx, start with 9000 and then is filled by number In the range 0...9
+
+            Also stdum also checks the CUI or CIF (Romanian company identifier). So a number like '123456897' will pass.
+        """
+        tin1 = self.__check_tin1_ro_natural_persons.match(vat)
+        if tin1:
+            return True
+        tin2 = self.__check_tin1_ro_natural_persons.match(vat)
+        if tin2:
+            return True
+        # Check the vat number
+        return stdnum.util.get_cc_module('ro', 'vat').is_valid(vat)
 
     __check_tin_hu_individual_re = re.compile(r'^8\d{9}$')
     __check_tin_hu_companies_re = re.compile(r'^\d{8}-[1-5]-\d{2}$')

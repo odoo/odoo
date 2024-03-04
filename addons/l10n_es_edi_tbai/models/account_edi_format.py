@@ -24,7 +24,7 @@ from odoo.addons.l10n_es_edi_tbai.models.xml_utils import (
     cleanup_xml_signature, fill_signature, int_as_bytes)
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import get_lang
-from odoo.tools.float_utils import float_repr
+from odoo.tools.float_utils import float_repr, float_round
 from odoo.tools.xml_utils import cleanup_xml_node, validate_xml_from_attachment
 
 
@@ -228,6 +228,10 @@ class AccountEdiFormat(models.Model):
         return xml_str
 
     def _get_l10n_es_tbai_invoice_xml(self, invoice, cancel=False):
+        def format_float(value, precision_digits=2):
+            rounded_value = float_round(value, precision_digits=precision_digits)
+            return float_repr(rounded_value, precision_digits=precision_digits)
+
         # If previously generated XML was posted and not rejected (success or timeout), reuse it
         doc = invoice._get_l10n_es_tbai_submitted_xml(cancel)
         if doc is not None:
@@ -244,7 +248,7 @@ class AccountEdiFormat(models.Model):
             'datetime_now': datetime.now(tz=timezone('Europe/Madrid')),
             'format_date': lambda d: datetime.strftime(d, '%d-%m-%Y'),
             'format_time': lambda d: datetime.strftime(d, '%H:%M:%S'),
-            'format_float': lambda f: float_repr(f, precision_digits=2),
+            'format_float': format_float,
         }
         template_name = 'l10n_es_edi_tbai.template_invoice_main' + ('_cancel' if cancel else '_post')
         xml_str = self.env['ir.qweb']._render(template_name, values)
@@ -335,11 +339,12 @@ class AccountEdiFormat(models.Model):
             else:
                 balance_before_discount = line.balance / (1 - line.discount / 100)
             discount = (balance_before_discount - line.balance)
+            line_price_total = self._l10n_es_tbai_get_invoice_line_price_total(line)
 
             if not any([t.l10n_es_type == 'sujeto_isp' for t in line.tax_ids]):
-                total = line.price_total * abs(line.balance / line.amount_currency if line.amount_currency != 0 else 1) * -refund_sign
+                total = line_price_total * abs(line.balance / line.amount_currency if line.amount_currency != 0 else 1) * -refund_sign
             else:
-                total = abs(line.balance) * -refund_sign * (-1 if line.price_total < 0 else 1)
+                total = abs(line.balance) * -refund_sign * (-1 if line_price_total < 0 else 1)
             invoice_lines.append({
                 'line': line,
                 'discount': discount * refund_sign,
@@ -349,36 +354,51 @@ class AccountEdiFormat(models.Model):
             })
         values['invoice_lines'] = invoice_lines
         # Tax details (desglose)
-        importe_total, desglose = self._l10n_es_tbai_get_importe_desglose(invoice)
+        importe_total, desglose, amount_retention = self._l10n_es_tbai_get_importe_desglose(invoice)
         values['amount_total'] = importe_total
         values['invoice_info'] = desglose
+        values['amount_retention'] = amount_retention * refund_sign if amount_retention != 0.0 else 0.0
 
         # Regime codes (ClaveRegimenEspecialOTrascendencia)
         # NOTE there's 11 more codes to implement, also there can be up to 3 in total
         # See https://www.gipuzkoa.eus/documents/2456431/13761128/Anexo+I.pdf/2ab0116c-25b4-f16a-440e-c299952d683d
-        com_partner = invoice.commercial_partner_id
-        if not com_partner.country_id or com_partner.country_id.code in self.env.ref('base.europe').country_ids.mapped('code'):
-            values['regime_key'] = ['01']
-        else:
-            values['regime_key'] = ['02']
+        export_exempts = invoice.invoice_line_ids.tax_ids.filtered(lambda t: t.l10n_es_exempt_reason == 'E2')
+        values['regime_key'] = ['02'] if export_exempts else ['01']
 
         if invoice.l10n_es_is_simplified:
             values['regime_key'].append(52)  # code for simplified invoices
 
         return values
 
+    def _l10n_es_tbai_get_invoice_line_price_total(self, invoice_line):
+        price_total = invoice_line.price_total
+        retention_tax_lines = invoice_line.tax_ids.filtered(lambda t: t.l10n_es_type == "retencion")
+        if retention_tax_lines:
+            line_discount_price_unit = invoice_line.price_unit * (1 - (invoice_line.discount / 100.0))
+            tax_lines_no_retention = invoice_line.tax_ids - retention_tax_lines
+            if tax_lines_no_retention:
+                taxes_res = tax_lines_no_retention.compute_all(line_discount_price_unit,
+                                                               quantity=invoice_line.quantity,
+                                                               currency=invoice_line.currency_id,
+                                                               product=invoice_line.product_id,
+                                                               partner=invoice_line.move_id.partner_id,
+                                                               is_refund=invoice_line.is_refund)
+                price_total = taxes_res['total_included']
+        return price_total
+
     def _l10n_es_tbai_get_importe_desglose(self, invoice):
         com_partner = invoice.commercial_partner_id
         sign = -1 if invoice.move_type in ('out_refund', 'in_refund') else 1
         if com_partner.country_id.code in ('ES', False) and not (com_partner.vat or '').startswith("ESN"):
             tax_details_info_vals = self._l10n_es_edi_get_invoices_tax_details_info(invoice)
+            tax_amount_retention = tax_details_info_vals['tax_amount_retention']
             desglose = {'DesgloseFactura': tax_details_info_vals['tax_details_info']}
             desglose['DesgloseFactura'].update({'S1': tax_details_info_vals['S1_list'],
                                                 'S2': tax_details_info_vals['S2_list']})
             importe_total = round(sign * (
                 tax_details_info_vals['tax_details']['base_amount']
                 + tax_details_info_vals['tax_details']['tax_amount']
-                - tax_details_info_vals['tax_amount_retention']
+                - tax_amount_retention
             ), 2)
         else:
             tax_details_info_service_vals = self._l10n_es_edi_get_invoices_tax_details_info(
@@ -389,6 +409,8 @@ class AccountEdiFormat(models.Model):
                 invoice,
                 filter_invl_to_apply=lambda x: any(t.tax_scope == 'consu' for t in x.tax_ids)
             )
+            service_retention = tax_details_info_service_vals['tax_amount_retention']
+            consu_retention = tax_details_info_consu_vals['tax_amount_retention']
             desglose = {}
             if tax_details_info_service_vals['tax_details_info']:
                 desglose.setdefault('DesgloseTipoOperacion', {})
@@ -406,12 +428,13 @@ class AccountEdiFormat(models.Model):
             importe_total = round(sign * (
                 tax_details_info_service_vals['tax_details']['base_amount']
                 + tax_details_info_service_vals['tax_details']['tax_amount']
-                - tax_details_info_service_vals['tax_amount_retention']
+                - service_retention
                 + tax_details_info_consu_vals['tax_details']['base_amount']
                 + tax_details_info_consu_vals['tax_details']['tax_amount']
-                - tax_details_info_consu_vals['tax_amount_retention']
+                - consu_retention
             ), 2)
-        return importe_total, desglose
+            tax_amount_retention = service_retention + consu_retention
+        return importe_total, desglose, tax_amount_retention
 
     def _l10n_es_tbai_get_trail_values(self, invoice, cancel):
         prev_invoice = invoice.company_id._get_l10n_es_tbai_last_posted_invoice(invoice)

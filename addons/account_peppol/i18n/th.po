@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Rasareeyar Lappiam, 2023
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,6 +65,21 @@ msgstr ""
 "<span>\n"
 "                                    ฉันต้องการย้ายการเชื่อมต่อ Peppol ไปยัง Odoo (ไม่บังคับ):\n"
 "                                </span>"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"A participant with these details has already been registered on the network."
+" If you have previously registered to an alternative Peppol service, please "
+"deregister from that service, or request a migration key before trying "
+"again."
+msgstr ""
+"ผู้เข้าร่วมที่มีรายละเอียดเหล่านี้ได้ถูกลงทะเบียนบนเครือข่ายแล้ว "
+"หากคุณเคยลงทะเบียนกับบริการ Peppol อื่นมาก่อน "
+"โปรดยกเลิกการลงทะเบียนจากบริการนั้น "
+"หรือขอรหัสการย้ายข้อมูลก่อนที่จะลองอีกครั้ง"
 
 #. module: account_peppol
 #. odoo-python
@@ -215,6 +230,13 @@ msgstr "ตั้งค่าการกำหนดค่า"
 #, python-format
 msgid "Confirm"
 msgstr "ยืนยัน"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Connection error, please try again later."
+msgstr "การเชื่อมต่อเกิดข้อผิดพลาด โปรดลองอีกครั้งในภายหลัง"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_partner
@@ -617,6 +639,13 @@ msgid "SMS verification code"
 msgstr "รหัสยืนยันทาง SMS"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+#, python-format
+msgid "Send again"
+msgstr "ส่งอีกครั้ง"
+
+#. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_move_send__checkbox_send_peppol
 msgid "Send the invoice via PEPPOL"
 msgstr "ส่งใบแจ้งหนี้ผ่าน PEPPOL"
@@ -748,8 +777,29 @@ msgstr "รหัสเฉพาะที่ระบุผู้ใช้รา
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
+msgid "The verification code is not correct"
+msgstr "รหัสยืนยันไม่ถูกต้อง"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
 msgid "The verification code should contain six digits."
 msgstr "รหัสยืนยันควรมีตัวเลขหกหลัก"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "This verification code has expired. Please request a new one."
+msgstr "รหัสยืนยันนี้หมดอายุแล้ว กรุณาขอใหม่อีกครั้ง"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Too many attempts to request an SMS code. Please try again later."
+msgstr "พยายามขอรหัส SMS หลายครั้งเกินไป กรุณาลองใหม่อีกครั้งในภายหลัง"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
@@ -830,7 +880,9 @@ msgid "Verify partner's PEPPOL endpoint"
 msgstr "การยืนยันปลายทาง PEPPOL ของพาร์ทเนอร์"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+#, python-format
 msgid "Verify phone number"
 msgstr "ยืนยันหมายเลขโทรศัพท์"
 
@@ -878,3 +930,8 @@ msgstr "รหัสยืนยันของคุณคือ"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your migration key is:"
 msgstr "รหัสการย้ายข้อมูลของคุณคือ:"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Your registration should be activated within a day."
+msgstr "การลงทะเบียนของคุณควรเปิดใช้งานภายในหนึ่งวัน"

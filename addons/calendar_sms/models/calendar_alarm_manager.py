@@ -22,3 +22,6 @@ class AlarmManager(models.AbstractModel):
         for event in events:
             alarm = event.alarm_ids.filtered(lambda alarm: alarm.id in alarms.ids)
             event._do_sms_reminder(alarm)
+            if event.recurrence_id:
+                next_date = event.get_next_alarm_date(events_by_alarm)
+                event.recurrence_id.with_context(date=next_date)._setup_alarms()

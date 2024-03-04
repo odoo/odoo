@@ -102,18 +102,21 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
             'price_average': vals[0],
             'price_subtotal': vals[1],
             'quantity': vals[2],
+            'price_margin': vals[3],
+            'inventory_value': vals[4],
         } for vals in expected_values_list]
 
         self.assertRecordValues(reports, expected_values_dict)
 
     def test_invoice_report_multiple_types(self):
         self.assertInvoiceReportValues([
-            #price_average   price_subtotal  quantity
-            [2000, 2000, 1],
-            [1000, 1000, 1],
-            [250, 750, 3],
-            [6, 6, 1],
-            [20, -20, -1],
-            [20, -20, -1],
-            [600, -600, -1],
+            # pylint: disable=bad-whitespace
+            # price_average, price_subtotal, quantity, price_margin, inventory_value
+            [          2000,           2000,        1,         1200,            -800], # price_unit = 6000, currency.rate = 3.0
+            [          1000,           1000,        1,          200,            -800], # price_unit = 3000, currency.rate = 3.0
+            [           250,            750,        3,        -1650,           -2400], # price_unit = 750,  currency.rate = 2.0
+            [             6,              6,        1,            0,            -800], # price_unit = 12,   currency.rate = 2.0
+            [            20,            -20,       -1,            0,             800], # price_unit = 60,   currency.rate = 3.0
+            [            20,            -20,       -1,            0,             800], # price_unit = 60,   currency.rate = 3.0
+            [           600,           -600,       -1,            0,             800], # price_unit = 1200, currency.rate = 2.0
         ])

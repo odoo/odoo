@@ -3,14 +3,14 @@
 # 	* hr_expense
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -39,6 +39,13 @@ msgstr "$500.00"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "$600.00"
 msgstr "$600.00"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "%(date_from)s - %(date_to)s"
+msgstr "%(date_from)s - %(date_to)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -299,7 +306,7 @@ msgstr "ความแม่นยำในการวิเคราะห์
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 msgid "Apple App Store"
-msgstr "Apple App Store"
+msgstr "แอปสโตร์ของ Apple"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__approval_date
@@ -366,6 +373,11 @@ msgid "Attach a receipt - usually an image or a PDF file."
 msgstr "แนบใบเสร็จ - โดยปกติจะเป็นรูปภาพหรือไฟล์ PDF"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_ir_attachment
+msgid "Attachment"
+msgstr "การแนบ"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_attachment_count
 msgid "Attachment Count"
@@ -375,6 +387,16 @@ msgstr "จำนวนสิ่งที่แนบมา"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet_img
 msgid "Attachment Name"
 msgstr "ชื่อที่แนบมาด้วย"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_ids
+msgid "Attachments"
+msgstr "แนบ"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
+msgid "Attachments of expenses"
+msgstr "เอกสารแนบค่าใช้จ่าย"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
@@ -1048,7 +1070,7 @@ msgstr "ของขวัญให้กับลูกค้าหรือผ
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 msgid "Google Play Store"
-msgstr "Google Play Store"
+msgstr "เพลย์สโตร์ของ Google"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1363,14 +1385,15 @@ msgstr "ชื่อ"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid "New Expense Reports"
-msgstr "รายงานค่าใช้จ่ายใหม่"
+msgid "New Expense Report, paid by %(paid_by)s"
+msgstr "รายงานค่าใช้จ่ายใหม่ ชำระเป็น %(paid_by)s"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "ปฏิทินอีเวนต์กิจกรรมถัดไป"
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "New Expense Reports"
+msgstr "รายงานค่าใช้จ่ายใหม่"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
@@ -1657,12 +1680,6 @@ msgstr "ข้าราชการ"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Quantity"
 msgstr "ปริมาณ"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__rating_ids
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__rating_ids
-msgid "Ratings"
-msgstr "การให้คะแนน"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2040,11 +2057,6 @@ msgstr ""
 "โปรดตรวจสอบว่ารายงานนี้ไม่มีรายการที่ซ้ำกัน"
 
 #. module: hr_expense
-#: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
-msgid "The journal must be set on posted expense"
-msgstr "สมุดรายวันจะต้องตั้งค่าเป็นรายจ่ายที่ลงบันทึก"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__employee_journal_id
 msgid "The journal used when the expense is paid by employee."
 msgstr "สมุดรายวันที่ใช้เมื่อมีการชำระค่าใช้จ่ายโดยพนักงาน"
@@ -2080,12 +2092,10 @@ msgstr "อีเมลที่ทำงานของพนักงานบ
 #: code:addons/hr_expense/models/product_product.py:0
 #, python-format
 msgid ""
-"There are unposted expenses linked to this category. Updating the category "
-"cost will change expense amounts. Make sure it is what you want to do."
+"There are unsubmitted expenses linked to this category. Updating the "
+"category cost will change expense amounts. Make sure it is what you want to "
+"do."
 msgstr ""
-"มีค่าใช้จ่ายที่ยังไม่ได้ลงรายการบัญชีที่เชื่อมโยงกับหมวดหมู่นี้ "
-"การอัปเดตหมวดหมู่ของต้นทุนจะเปลี่ยนจำนวนค่าใช้จ่าย "
-"ตรวจสอบให้แน่ใจว่าเป็นสิ่งที่คุณต้องการดำเนินการ"
 
 #. module: hr_expense
 #. odoo-javascript

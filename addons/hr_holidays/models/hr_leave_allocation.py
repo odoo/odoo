@@ -321,27 +321,33 @@ class HolidaysAllocation(models.Model):
         )
         accruals_dict = {time_off_type.id: ids for time_off_type, ids in accruals_read_group}
         for allocation in self:
-            allocation.number_of_days = allocation.number_of_days_display
-            if allocation.type_request_unit == 'hour':
-                allocation.number_of_days = allocation.number_of_hours_display / \
-                    (allocation.employee_id.sudo().resource_calendar_id.hours_per_day \
-                    or allocation.holiday_status_id.company_id.resource_calendar_id.hours_per_day \
-                    or HOURS_PER_DAY)
+            allocation_unit = allocation._get_request_unit()
+            if allocation_unit != 'hour':
+                allocation.number_of_days = allocation.number_of_days_display
+            else:
+                hours_per_day = allocation.employee_id.sudo().resource_calendar_id.hours_per_day\
+                    or allocation.holiday_status_id.company_id.resource_calendar_id.hours_per_day\
+                    or HOURS_PER_DAY
+                allocation.number_of_days = allocation.number_of_hours_display / hours_per_day
             if allocation.accrual_plan_id.time_off_type_id.id not in (False, allocation.holiday_status_id.id):
                 allocation.accrual_plan_id = False
             if allocation.allocation_type == 'accrual' and not allocation.accrual_plan_id:
                 if allocation.holiday_status_id:
                     allocation.accrual_plan_id = accruals_dict.get(allocation.holiday_status_id.id, [False])[0]
 
+    def _get_request_unit(self):
+        self.ensure_one()
+        if self.allocation_type == "accrual" and self.accrual_plan_id:
+            return self.accrual_plan_id.sudo().added_value_type
+        elif self.allocation_type == "regular":
+            return self.holiday_status_id.request_unit
+        else:
+            return "day"
+
     @api.depends("allocation_type", "holiday_status_id", "accrual_plan_id")
     def _compute_type_request_unit(self):
         for allocation in self:
-            if allocation.allocation_type == "accrual" and allocation.accrual_plan_id:
-                allocation.type_request_unit = allocation.accrual_plan_id.added_value_type
-            elif allocation.allocation_type == "regular":
-                allocation.type_request_unit = allocation.holiday_status_id.request_unit
-            else:
-                allocation.type_request_unit = "day"
+            allocation.type_request_unit = allocation._get_request_unit()
 
     def _get_carryover_date(self, date_from):
         self.ensure_one()
@@ -562,6 +568,8 @@ class HolidaysAllocation(models.Model):
 
         fake_allocation = self.env['hr.leave.allocation'].new(origin=self)
         fake_allocation.sudo()._process_accrual_plans(accrual_date, log=False)
+        if self.type_request_unit in ['hour']:
+            return float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
         return round((fake_allocation.number_of_days - self.number_of_days), 2)
 
     ####################################################
@@ -708,12 +716,14 @@ class HolidaysAllocation(models.Model):
         } for employee in employees]
 
     def action_validate(self):
-        self.write({
-            'state': 'validate',
-            'approver_id': self.env.user.employee_id.id
-        })
-        self._action_validate_create_childs()
-        self.activity_update()
+        to_validate = self.filtered(lambda alloc: alloc.state != 'validate')
+        if to_validate:
+            to_validate.write({
+                'state': 'validate',
+                'approver_id': self.env.user.employee_id.id
+            })
+            to_validate._action_validate_create_childs()
+            to_validate.activity_update()
         return True
 
     def _action_validate_create_childs(self):
@@ -848,7 +858,8 @@ class HolidaysAllocation(models.Model):
                     to_do |= allocation
                 elif allocation.state == 'refuse':
                     to_clean |= allocation
-        self.env['mail.activity'].create(activity_vals)
+        if activity_vals:
+            self.env['mail.activity'].create(activity_vals)
         if to_clean:
             to_clean.activity_unlink(['hr_holidays.mail_act_leave_allocation_approval'])
         if to_do:

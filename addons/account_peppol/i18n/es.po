@@ -5,15 +5,15 @@
 # Translators:
 # Wil Odoo, 2023
 # Fernanda Alvarez, 2023
-# Larissa Manderfeld, 2023
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,6 +66,21 @@ msgstr ""
 "<span>\n"
 "                                    Quiero migrar mi conexión Peppol a Odoo (opcional):\n"
 "                                </span>"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"A participant with these details has already been registered on the network."
+" If you have previously registered to an alternative Peppol service, please "
+"deregister from that service, or request a migration key before trying "
+"again."
+msgstr ""
+"Un participante con estos datos ya se ha registrado en la red. Si se ha "
+"registrado previamente en un servicio Peppol alternativo, le rogamos que se "
+"dé de baja de ese servicio o solicite una clave de migración antes de volver"
+" a intentarlo."
 
 #. module: account_peppol
 #. odoo-python
@@ -218,6 +233,13 @@ msgid "Confirm"
 msgstr "Confirmar"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Connection error, please try again later."
+msgstr "Error de conexión, inténtelo de nuevo más tarde."
+
+#. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_partner
 msgid "Contact"
 msgstr "Contacto"
@@ -295,7 +317,7 @@ msgid ""
 "communication with the Peppol network."
 msgstr ""
 "El envío y recepción de facturas está simulado mientras se encuentra en modo"
-" demo. No habrá comunicación con la red Peppol."
+" de demostración. No habrá comunicación con la red Peppol."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -355,7 +377,7 @@ msgstr "No válido"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_verified
 msgid "Not verified"
-msgstr "No está verificado"
+msgstr "No verificado"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_verified
@@ -601,7 +623,7 @@ msgstr "Tipo de proxy"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
 msgid "Queued"
-msgstr "En espera"
+msgstr "En cola"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__ready
@@ -623,6 +645,13 @@ msgstr "Rechazada"
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_verification_code
 msgid "SMS verification code"
 msgstr "Código de verificación por SMS"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+#, python-format
+msgid "Send again"
+msgstr "Enviar de nuevo"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_move_send__checkbox_send_peppol
@@ -762,8 +791,32 @@ msgstr "El id único que identifica a este usuario, normalmente el iva"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
+msgid "The verification code is not correct"
+msgstr "El código de verificación no es correcto"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
 msgid "The verification code should contain six digits."
 msgstr "El código de verificación debe contener seis dígitos."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "This verification code has expired. Please request a new one."
+msgstr ""
+"Este código de verificación ha caducado. Por favor, solicite uno nuevo."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Too many attempts to request an SMS code. Please try again later."
+msgstr ""
+"Demasiados intentos para solicitar un código SMS. Vuelva a intentarlo más "
+"tarde."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
@@ -844,7 +897,9 @@ msgid "Verify partner's PEPPOL endpoint"
 msgstr "Verificar el punto de conexión PEPPOL del contacto"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+#, python-format
 msgid "Verify phone number"
 msgstr "Verifique el número de teléfono"
 
@@ -892,3 +947,8 @@ msgstr "Su código de confirmación es"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your migration key is:"
 msgstr "Su clave de migración es:"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Your registration should be activated within a day."
+msgstr "Su inscripción debería activarse en un día."

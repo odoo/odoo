@@ -23,8 +23,7 @@ class TestSaleInvoicing(TestSaleCouponCommon):
                 'discount_applicability': 'order',
             })]
         })
-        # Override the default invoice_policy on products
-        discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy = 'order'
+
         product = self.env['product.product'].create({
             'invoice_policy': 'delivery',
             'name': 'Product invoiced on delivery',
@@ -39,6 +38,9 @@ class TestSaleInvoicing(TestSaleCouponCommon):
                 })
             ]
         })
+
+        #Check default invoice_policy on discount product
+        self.assertEqual(discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, 'order')
 
         order._update_programs_and_rewards()
         self._claim_reward(order, discount_coupon_program)
@@ -79,8 +81,6 @@ class TestSaleInvoicing(TestSaleCouponCommon):
                 'discount_applicability': 'order',
             })]
         })
-        # Override the default invoice_policy on products
-        discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy = 'order'
 
         order = self.empty_order
 
@@ -94,6 +94,9 @@ class TestSaleInvoicing(TestSaleCouponCommon):
             'product_uom_qty': 1.0,
             'order_id': order.id,
         })
+
+        #Check default invoice_policy on discount product
+        self.assertEqual(discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, 'order')
 
         self._auto_rewards(order, discount_coupon_program)
 

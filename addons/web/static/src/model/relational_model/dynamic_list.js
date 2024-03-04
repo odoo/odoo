@@ -39,6 +39,10 @@ export class DynamicList extends DataPoint {
         return this.config.domain;
     }
 
+    /**
+     * Be careful that this getter is costly, as it iterates over the whole list
+     * of records. This property should not be accessed in a loop.
+     */
     get editedRecord() {
         return this.records.find((record) => record.isInEdition);
     }
@@ -51,6 +55,10 @@ export class DynamicList extends DataPoint {
         return this.config.offset;
     }
 
+    /**
+     * Be careful that this getter is costly, as it iterates over the whole list
+     * of records. This property should not be accessed in a loop.
+     */
     get selection() {
         return this.records.filter((record) => record.selected);
     }

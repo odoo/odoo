@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="l10n_in_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+    <template id="l10n_in_report_invoice_document_inherit" inherit_id="account.report_invoice_document" primary="True">
         <xpath expr="//address[@t-field='o.partner_id']" position="after">
             <span t-field="o.l10n_in_gstin" t-if="o.company_id.account_fiscal_country_id.code == 'IN'"/>
         </xpath>
@@ -58,6 +58,68 @@
             </h2>
         </xpath>
 
+        <xpath expr="//div[@id='payment_term']" position="before">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'IN'">
+                <t t-set="hsn_summary" t-value="o._l10n_in_get_hsn_summary_table()"/>
+                <t t-if="hsn_summary">
+                    <div name="l10n_in_hsn_summary" class="mt-3">
+                        <table class="table table-sm table-borderless col-6" style="page-break-inside: avoid;">
+                            <thead>
+                                <th t-att-colspan="hsn_summary['nb_columns']"><h3>HSN Summary</h3></th>
+                            </thead>
+                            <thead>
+                                <th>HSN/SAC</th>
+                                <th class="text-end">Quantity</th>
+                                <th class="text-end">Rate %</th>
+                                <th class="text-end">Taxable Value</th>
+                                <th class="text-end" t-if="hsn_summary['has_gst']">SGST</th>
+                                <th class="text-end" t-if="hsn_summary['has_gst']">CGST</th>
+                                <th class="text-end" t-if="hsn_summary['has_igst']">IGST</th>
+                                <th class="text-end" t-if="hsn_summary['has_cess']">CESS</th>
+                            </thead>
+                            <tr t-foreach="hsn_summary['items']" t-as="item">
+                                <td t-esc="item['l10n_in_hsn_code']"/>
+                                <td class="text-end">
+                                    <span t-esc="item['quantity']"/>
+                                    <span t-if="hsn_summary['display_uom']">(<t t-esc="item['uom'].name"/>)</span>
+                                </td>
+                                <td class="text-end" t-esc="item['rate']"/>
+                                <td class="text-end">
+                                    <span t-esc="item['amount_untaxed']"
+                                          t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </td>
+                                <td class="text-end" t-if="hsn_summary['has_gst']">
+                                    <span t-esc="item['tax_amount_sgst']"
+                                          t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </td>
+                                <td class="text-end" t-if="hsn_summary['has_gst']">
+                                    <span t-esc="item['tax_amount_cgst']"
+                                          t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </td>
+                                <td class="text-end" t-if="hsn_summary['has_igst']">
+                                    <span t-esc="item['tax_amount_igst']"
+                                          t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </td>
+                                <td class="text-end" t-if="hsn_summary['has_cess']">
+                                    <span t-esc="item['tax_amount_cess']"
+                                          t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+
+    </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_in.l10n_in_report_invoice_document_inherit'"
+               t-call="l10n_in.l10n_in_report_invoice_document_inherit"
+               t-lang="lang"/>
+        </xpath>
     </template>
 
 </odoo>

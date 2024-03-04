@@ -171,6 +171,28 @@ class AccountMove(models.Model):
             },
         }
 
+    def _l10n_es_edi_facturae_convert_payment_terms_to_installments(self):
+        """
+        Convert the payments terms to a list of <Installment> elements to be used in the
+        <PaymentDetails> node of the Facturae XML generation.
+
+        For now we only use the hardcoded '04' value (Credit Transfer).
+        """
+        self.ensure_one()
+        installments = []
+        if self.is_inbound() and self.partner_bank_id:
+            for payment_term in self.line_ids.filtered(lambda l: l.display_type == 'payment_term').sorted('date_maturity'):
+                installments.append({
+                    'InstallmentDueDate': payment_term.date_maturity,
+                    'InstallmentAmount': payment_term.amount_residual_currency,
+                    'PaymentMeans': '04',  # Credit Transfer
+                    'AccountToBeCredited': {
+                        'IBAN': self.partner_bank_id.sanitized_acc_number,
+                        'BIC': self.partner_bank_id.bank_bic,
+                    },
+                })
+        return installments
+
     def _l10n_es_edi_facturae_inv_lines_to_items(self, conversion_rate=None):
         """
         Convert the invoice lines to a list of items required for the Facturae xml generation
@@ -353,7 +375,7 @@ class AccountMove(models.Model):
                 } if totals['amounts_withheld'] else False,
                 'TotalExecutableAmount': total_exec_am_in_currency,
                 'Items': items,
-                'PaymentDetails': [],
+                'PaymentDetails': self._l10n_es_edi_facturae_convert_payment_terms_to_installments(),
                 'LegalLiterals': legal_literals,
             }],
         }

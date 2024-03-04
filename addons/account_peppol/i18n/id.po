@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -65,6 +65,20 @@ msgstr ""
 "<span>\n"
 "                                    Saya ingin memigrasi koneksi PEPPOL saya ke Odoo (opsional):\n"
 "                                </span>"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"A participant with these details has already been registered on the network."
+" If you have previously registered to an alternative Peppol service, please "
+"deregister from that service, or request a migration key before trying "
+"again."
+msgstr ""
+"Partisipan dengan detail ini sudah terdaftar di jaringan kami. Jika Anda "
+"sebelumnya mendaftar ke layanan Peppol alternatif, mohon hapus pendaftaran "
+"dari layanan tersebut, atau minta migration key sebelum mencoba lagi."
 
 #. module: account_peppol
 #. odoo-python
@@ -215,6 +229,13 @@ msgstr "Pengaturan Konfigurasi"
 #, python-format
 msgid "Confirm"
 msgstr "Konfirmasi"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Connection error, please try again later."
+msgstr "Koneksi gagal, silakan coba lagi nanti."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_partner
@@ -619,6 +640,13 @@ msgid "SMS verification code"
 msgstr "Kode verifikasi SMS"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+#, python-format
+msgid "Send again"
+msgstr "Kirim lagi"
+
+#. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_move_send__checkbox_send_peppol
 msgid "Send the invoice via PEPPOL"
 msgstr "Kirim faktur melalui PEPPOL"
@@ -752,8 +780,29 @@ msgstr "Id unik yang mengidentifikasi user ini, biasanya ppn"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
+msgid "The verification code is not correct"
+msgstr "Kode verifikasi tidak benar"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
 msgid "The verification code should contain six digits."
 msgstr "Kode verifikasi harusnya memiliki enam angka."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "This verification code has expired. Please request a new one."
+msgstr "Kode verifikasi sudah kadaluwarsa. Silakan minta kode baru."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Too many attempts to request an SMS code. Please try again later."
+msgstr "Terlalu banyak permintaan kode SMS. Silakan coba lagi nanti."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
@@ -834,7 +883,9 @@ msgid "Verify partner's PEPPOL endpoint"
 msgstr "Verifikasi endpoint PEPPOL mitra"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+#, python-format
 msgid "Verify phone number"
 msgstr "Verifikasi nomor telepon"
 
@@ -882,3 +933,8 @@ msgstr "Kode konfirmasi Anda adalah"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your migration key is:"
 msgstr "Migration key Anda adalah:"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Your registration should be activated within a day."
+msgstr "Pendaftaran Anda harusnya diaktifkan dalam waktu satu hari."

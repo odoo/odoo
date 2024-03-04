@@ -89,6 +89,19 @@ class ProductAttributesCommon(ProductCommon):
             cls.color_attribute_green,
         ) = cls.color_attribute.value_ids
 
+        cls.no_variant_attribute = cls.env['product.attribute'].create({
+            'name': 'No variant',
+            'create_variant': 'no_variant',
+            'value_ids': [
+                Command.create({'name': 'extra'}),
+                Command.create({'name': 'second'}),
+            ]
+        })
+        (
+            cls.no_variant_attribute_extra,
+            cls.no_variant_attribute_second,
+        ) = cls.no_variant_attribute.value_ids
+
 
 class ProductVariantsCommon(ProductAttributesCommon):
 

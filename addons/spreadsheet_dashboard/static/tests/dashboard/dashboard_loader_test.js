@@ -12,6 +12,7 @@ import { getDashboardServerData } from "../utils/data";
 
 import { waitForDataSourcesLoaded } from "@spreadsheet/../tests/utils/model";
 import { getCellValue } from "@spreadsheet/../tests/utils/getters";
+import { RPCError } from "@web/core/network/rpc_service";
 
 /**
  * @param {object} [params]
@@ -197,16 +198,19 @@ QUnit.test("load spreadsheet data with error", async (assert) => {
                 args.method === "get_readonly_dashboard" &&
                 args.model === "spreadsheet.dashboard"
             ) {
-                throw new Error("Bip");
+                const error = new RPCError();
+                error.data = { message: "Bip" };
+                throw error;
             }
         },
     });
     await loader.load();
     const result = loader.getDashboard(3);
     assert.strictEqual(result.status, Status.Loading);
-    await nextTick();
+    await result.promise.catch(() => assert.step("error"));
     assert.strictEqual(result.status, Status.Error);
-    assert.strictEqual(result.error.message, "Bip");
+    assert.strictEqual(result.error.data.message, "Bip");
+    assert.verifySteps(["error"], "error is thrown");
 });
 
 QUnit.test("async formulas are correctly evaluated", async (assert) => {
@@ -271,4 +275,35 @@ QUnit.test("Model is in dashboard mode", async (assert) => {
     loader.getDashboard(3);
     await nextTick();
     assert.verifySteps(["activate sheet"]);
+});
+
+QUnit.test("default currency format", async (assert) => {
+    const loader = await createDashboardLoader({
+        mockRPC: function (route, args) {
+            if (
+                args.model === "spreadsheet.dashboard" &&
+                args.method === "get_readonly_dashboard"
+            ) {
+                return {
+                    data: {},
+                    revisions: [],
+                    default_currency: {
+                        code: "Odoo",
+                        symbol: "θ",
+                        position: "after",
+                        decimalPlaces: 2,
+                    },
+                };
+            }
+            if (args.method === "get_company_currency_for_spreadsheet") {
+                throw new Error("Should not make any RPC");
+            }
+        },
+    });
+    await loader.load();
+    const result = loader.getDashboard(3);
+    assert.strictEqual(result.status, Status.Loading);
+    await nextTick();
+    const { model } = loader.getDashboard(3);
+    assert.strictEqual(model.getters.getCompanyCurrencyFormat(), "#,##0.00[$θ]");
 });

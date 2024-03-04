@@ -526,6 +526,37 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("Many2One 'Search more...' updates on resModel change", async function (assert) {
+
+        serverData.views = {
+            "product,false,list": '<tree><field name="display_name"/></tree>',
+            "product,false,search": '<search/>',
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="reference"/></form>',
+        });
+
+        // Selecting a relation
+        await editSelect(target.querySelector("div.o_field_reference"), "select.o_input", "partner_type");
+
+        // Selecting another relation
+        await editSelect(target.querySelector("div.o_field_reference"), "select.o_input", "product");
+
+        // Opening the Search More... option
+        await click(target.querySelector("div.o_field_reference"), "input.o_input");
+        await click(target.querySelector("div.o_field_reference"), ".o_m2o_dropdown_option_search_more");
+
+        assert.strictEqual(
+            target.querySelector("div.modal td.o_data_cell").innerText,
+            "xphone",
+            "The search more should lead to the values of product."
+        );
+    });
+
     QUnit.test(
         "computed reference field changed by onchange to 'False,0' value",
         async function (assert) {
@@ -811,6 +842,7 @@ QUnit.module("Fields", (hooks) => {
 
         await editInput(target, ".o_field_widget[name='model_id'] input", "Partner");
         await click(target, ".ui-autocomplete .ui-menu-item:first-child");
+        await nextTick();
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='reference'] input").value,
             "",
@@ -1028,6 +1060,7 @@ QUnit.module("Fields", (hooks) => {
             //Select the "Partner" option, different from original "Product"
             const dropdownItems = [...target.querySelectorAll(".o_list_table .o_list_many2one .o_input_dropdown .dropdown-item")];
             await click(dropdownItems.filter(item => item.text === "Partner")[0]);
+            await nextTick();
             assert.strictEqual(target.querySelector(".reference_field input").value, "");
             assert.strictEqual(target.querySelector(".o_list_many2one input").value, "Partner");
             //Void the associated, required, "reference" field and make sure the form marks the field as required

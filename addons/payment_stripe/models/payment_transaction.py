@@ -164,10 +164,10 @@ class PaymentTransaction(models.Model):
                 'mandate': self.token_id.stripe_mandate or None,
             })
         else:
+            customer = self._stripe_create_customer()
+            payment_intent_payload['customer'] = customer['id']
             if self.tokenize:
-                customer = self._stripe_create_customer()
                 payment_intent_payload.update(
-                    customer=customer['id'],
                     setup_future_usage='off_session',
                     **self._stripe_prepare_mandate_options(),
                 )
@@ -442,9 +442,14 @@ class PaymentTransaction(models.Model):
             )
             return
 
+        mandate = None
         # Extract the Stripe objects from the notification data.
         if self.operation == 'online_direct':
             customer_id = notification_data['payment_intent']['customer']
+            charges_data = notification_data['payment_intent']['charges']
+            payment_method_details = charges_data['data'][0].get('payment_method_details')
+            if payment_method_details:
+                mandate = payment_method_details[payment_method_details['type']].get("mandate")
         else:  # 'validation'
             customer_id = notification_data['setup_intent']['customer']
         # Another payment method (e.g., SEPA) might have been generated.
@@ -463,7 +468,7 @@ class PaymentTransaction(models.Model):
             'partner_id': self.partner_id.id,
             'provider_ref': customer_id,
             'stripe_payment_method': payment_method['id'],
-            'stripe_mandate': payment_method[payment_method['type']].get('mandate'),
+            'stripe_mandate': mandate,
         })
         self.write({
             'token_id': token,

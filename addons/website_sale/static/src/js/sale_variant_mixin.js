@@ -79,6 +79,9 @@ var VariantMixin = {
                     'context': this.context,
                     ...this._getOptionalCombinationInfoParam($currentOptionalProduct),
                 }).then((combinationData) => {
+                    if (this._shouldIgnoreRpcResult()) {
+                        return;
+                    }
                     this._onChangeCombination(ev, $currentOptionalProduct, combinationData);
                     this._checkExclusions($currentOptionalProduct, childCombination, combinationData.parent_exclusions);
                 });
@@ -98,6 +101,9 @@ var VariantMixin = {
             'context': this.context,
             ...this._getOptionalCombinationInfoParam($parent),
         }).then((combinationData) => {
+            if (this._shouldIgnoreRpcResult()) {
+                return;
+            }
             this._onChangeCombination(ev, $parent, combinationData);
             this._checkExclusions($parent, combination, combinationData.parent_exclusions);
         });
@@ -719,6 +725,17 @@ var VariantMixin = {
             .removeClass("active")
             .filter(':has(input:checked)')
             .addClass("active");
+    },
+
+    /**
+     * Return true if the current object has been destroyed.
+     * This function has been added as a fix to know if the result of a rpc
+     * should be handled.
+     *
+     * @private
+     */
+    _shouldIgnoreRpcResult() {
+        return (typeof this.isDestroyed === "function" && this.isDestroyed());
     },
 
     /**

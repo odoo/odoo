@@ -14,7 +14,7 @@
             <t t-set="show_cart" t-value="true"/>
             <li t-attf-class="#{_item_class} divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
             <li t-attf-class="o_wsale_my_cart #{not show_cart and 'd-none'} #{_item_class}">
-                <a href="/shop/cart" t-attf-class="#{_link_class}">
+                <a href="/shop/cart" t-attf-class="#{_link_class}" aria-label="eCommerce cart">
                     <div t-attf-class="#{_icon_wrap_class}">
                         <i t-if="_icon" class="fa fa-shopping-cart fa-stack"/>
                         <sup t-attf-class="my_cart_quantity badge text-bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-esc="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
@@ -318,7 +318,7 @@
                 <div class="container oe_website_sale pt-2">
                     <div class="row o_wsale_products_main_row align-items-start flex-nowrap">
                         <aside t-if="hasLeftColumn" id="products_grid_before" class="d-none d-lg-block position-sticky col-3 px-3 clearfix">
-                            <div class="o_wsale_products_grid_before_rail vh-100 ms-n2 mt-n2 pt-2 pe-lg-2 pb-lg-5 ps-2 overflow-y-auto">
+                            <div class="o_wsale_products_grid_before_rail vh-100 ms-n2 mt-n2 pt-2 pe-lg-2 pb-lg-5 ps-2 overflow-y-scroll">
                                 <div t-if="opt_wsale_categories" class="products_categories mb-3">
                                     <t t-call="website_sale.products_categories_list"/>
                                 </div>
@@ -938,7 +938,7 @@
         </xpath>
     </template>
 
-    <template id="filter_products_price" name="Filter by Prices">
+    <template id="filter_products_price" name="Filter by Prices" active="False">
         <t t-set="isDisabled" t-value="available_min_price == available_max_price"/>
         <div id="o_wsale_price_range_option"
              t-attf-class="position-relative {{_classes}} {{isDisabled and 'opacity-75 pe-none user-select-none'}}">
@@ -1136,13 +1136,13 @@
                                 </table>
                             </div>
                             <t t-set="product_documents" t-value="product.sudo().product_document_ids.filtered(lambda doc: doc.shown_on_product_page)"/>
-                            <div id="product_documents" t-if="product_documents" class="row">
-                                <u class="h5">Documents</u>
+                            <div id="product_documents" class="my-2" t-if="product_documents">
+                                <h5>Documents</h5>
                                 <t t-foreach="product_documents" t-as="document_sudo">
                                     <t t-set="attachment_sudo" t-value="document_sudo.ir_attachment_id"/>
                                     <t t-set="target" t-value="attachment_sudo.type == 'url' and '_blank' or '_self'"/>
                                     <t t-set="icon" t-value="attachment_sudo.type == 'url' and 'fa-link' or 'fa-download'"/>
-                                    <div class="d-flex mb-2 mt-2">
+                                    <div>
                                         <a t-att-href="'/shop/' + slug(product) + '/document/' + str(document_sudo.id)" t-att-target="target">
                                             <i t-att-class="'fa ' + icon"/>
                                             <t t-out="attachment_sudo.name"/>
@@ -1915,9 +1915,9 @@
                                     <h3 class="mb-3">Shipping address</h3>
                                 </t>
                                 <t t-if="partner_id == website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id">
-                                    <div class="alert alert-warning" role="alert" t-if="not only_services">
+                                    <div class="alert alert-warning" role="alert" t-if="not only_services" groups="account.group_delivery_invoice_address">
                                         <h4 class="alert-heading">Be aware!</h4>
-                                        <p  groups="account.group_delivery_invoice_address">
+                                        <p>
                                             You are editing your <b>billing and shipping</b> addresses at the same time!<br/>
                                             If you want to modify your shipping address, create a <a href='/shop/address'>new address</a>.
                                         </p>
@@ -2133,7 +2133,7 @@
                 </div>
                 <div t-if="payment_methods_sudo or tokens_sudo"
                         id="payment_method"
-                        class="mt-4">
+                        class="o_not_editable mt-4">
                     <t t-call="payment.form"/>
                 </div>
                 <div t-else="" class="alert alert-warning">
@@ -2347,11 +2347,11 @@
                 <div class="oe_structure" id="oe_structure_website_sale_confirmation_3"/>
             </t>
 
-            <div class="d-flex justify-content-between align-items-center">
+            <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
+            <div t-if="tx_sudo.state in ['pending', 'done']" class="d-flex justify-content-between align-items-center">
                 <h3>Thank you for your order.</h3>
                 <a role="button" class="d-none d-md-inline-block btn btn-primary ms-auto" href="/shop/print" target="_blank" aria-label="Print" title="Print"><i class="fa fa-print me-2"></i>Print</a>
             </div>
-            <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
             <t t-if="tx_sudo.state == 'done'">
                 <div class="mb-4">
                     <h5>

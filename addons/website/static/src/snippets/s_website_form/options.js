@@ -785,14 +785,14 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         if (modelId) {
             const oldFormKey = this.activeForm.website_form_key;
             if (oldFormKey) {
-                oldFormInfo = FormEditorRegistry.get(oldFormKey);
+                oldFormInfo = FormEditorRegistry.get(oldFormKey, null);
             }
             this.$target.find('.s_website_form_field').remove();
             this.activeForm = this.models.find(model => model.id === modelId);
             currentActionName = this.activeForm.website_form_label;
         }
         const formKey = this.activeForm.website_form_key;
-        const formInfo = FormEditorRegistry.get(formKey);
+        const formInfo = FormEditorRegistry.get(formKey, null);
         // Success page
         if (!this.$target[0].dataset.successMode) {
             this.$target[0].dataset.successMode = 'redirect';

@@ -9,6 +9,7 @@
 # Ivana Bartonkova, 2023
 # Wil Odoo, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Katerina Horylova, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Last-Translator: Katerina Horylova, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +38,13 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Nebyly nalezeny žádné milníky. Pojďme nějaký vytvořit!\n"
+"                </p><p>\n"
+"                    Sledujte hlavní body pokroku, kterých je třeba dosáhnout, abyste dosáhli úspěchu.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_project
 #. odoo-python
@@ -83,7 +91,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Prodejní objednávka</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -99,13 +107,18 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Podle konfigurace výrobku lze automaticky vypočítat dodané množství:\n"
+"  - Ručně: množství se nastavuje ručně na řádku.\n"
+"  - Analytický Z výdajů: množství je součtem množství ze zaúčtovaných výdajů.\n"
+"  - Timesheet: množství je součtem hodin zaznamenaných na úkolech spojených s touto prodejní položkou.\n"
+"  - Skladové pohyby: množství pochází z potvrzených vyskladnění\n"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Based on Delivered Quantity (Manual)"
-msgstr ""
+msgstr "Na základě dodaného množství (manuálně)"
 
 #. module: sale_project
 #. odoo-python
@@ -230,7 +243,7 @@ msgstr "Počet faktur"
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr ""
+msgstr "Objednané množství fakturujte, jakmile je tato služba prodána."
 
 #. module: sale_project
 #. odoo-python
@@ -241,6 +254,9 @@ msgid ""
 " for the order with a task for each sales order line to track the time "
 "spent."
 msgstr ""
+"Objednané množství fakturujte, jakmile je tato služba prodána. Vytvořte pro "
+"tuto zakázku projekt s úkolem pro každý řádek prodejní objednávky, abyste "
+"mohli sledovat vynaložený čas."
 
 #. module: sale_project
 #. odoo-python
@@ -250,6 +266,8 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold. Create a task in"
 " an existing project to track the time spent."
 msgstr ""
+"Objednané množství fakturujte, jakmile je tato služba prodána. Vytvořte úkol"
+" ve stávajícím projektu, abyste mohli sledovat strávený čas."
 
 #. module: sale_project
 #. odoo-python
@@ -259,6 +277,8 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold. Create an empty "
 "project for the order to track the time spent."
 msgstr ""
+"Objednané množství fakturujte, jakmile je tato služba prodána. Vytvořte "
+"prázdný projekt pro tuto zakázku, abyste mohli sledovat vynaložený čas."
 
 #. module: sale_project
 #. odoo-python
@@ -404,7 +424,7 @@ msgstr "Metoda aktualizace dodaného množství"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__milestone_count
 msgid "Milestone Count"
-msgstr ""
+msgstr "Počet milníků"
 
 #. module: sale_project
 #. odoo-python
@@ -432,12 +452,12 @@ msgstr "Žádná prodejní objednávka"
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "Non-billable"
-msgstr ""
+msgstr "Nefakturovatelné"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "Not Billed"
-msgstr ""
+msgstr "Neúčtováno"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
@@ -568,7 +588,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__sale_line_display_name
 msgid "Sale Line Display Name"
-msgstr ""
+msgstr "Zobrazení názvu prodejního řádku"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_count
@@ -578,7 +598,7 @@ msgstr "Počet prodejních objednávek"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_line_count
 msgid "Sale Order Line Count"
-msgstr ""
+msgstr "Počet řádků prodejní objednávky"
 
 #. module: sale_project
 #. odoo-javascript
@@ -590,7 +610,7 @@ msgstr "Prodej"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales & Invoicing"
-msgstr ""
+msgstr "Prodej a fakturace"
 
 #. module: sale_project
 #. odoo-python
@@ -622,6 +642,7 @@ msgstr "Položka objednávky"
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
 msgid "Sales Order Item that will be updated once the milestone is reached."
 msgstr ""
+"Položka objednávky prodeje, která bude aktualizována po dosažení milníku."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
@@ -682,14 +703,14 @@ msgstr "Zakázka odběratele, ke které je úkol propojen."
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr ""
+msgstr "Hledat ve faktuře"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "Hledat v objednávce prodeje"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -796,6 +817,8 @@ msgstr ""
 #, python-format
 msgid "This Sales Order must contain at least one product of type \"Service\"."
 msgstr ""
+"Tato objednávka prodeje musí obsahovat alespoň jeden produkt typu "
+"\"Služba\"."
 
 #. module: sale_project
 #. odoo-python
@@ -850,7 +873,7 @@ msgstr "Přijaté faktury"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
-msgstr ""
+msgstr "Zobrazit Prodejní Objednávku"
 
 #. module: sale_project
 #. odoo-python

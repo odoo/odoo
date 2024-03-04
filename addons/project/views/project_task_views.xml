@@ -293,7 +293,7 @@
                         </button>
                         <button name="%(project_task_action_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
                             invisible="not id or subtask_count == 0"
-                            context="{'default_user_ids': user_ids, 'default_project_id': project_id, 'default_milestone_id': milestone_id, 'subtask_action': True}">
+                            context="{'default_user_ids': user_ids, 'default_milestone_id': milestone_id, 'subtask_action': True}">
                             <div class="o_field_widget o_stat_info">
                                 <div class="d-flex align-items-baseline gap-1">
                                     <span class="o_stat_value order-1">
@@ -344,8 +344,7 @@
                             <field name="user_ids"
                                 class="o_task_user_field"
                                 options="{'no_open': True, 'no_quick_create': True}"
-                                widget="many2many_avatar_user"
-                                domain="[('share', '=', False), ('active', '=', True)]"/>
+                                widget="many2many_avatar_user"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" context="{'project_id': project_id}"/>
                         </group>
                         <group>
@@ -400,7 +399,7 @@
                                         column_invisible="not parent.allow_milestones"
                                         invisible="not allow_milestones"/>
                                     <field name="partner_id" optional="hide" widget="res_partner_many2one" invisible="not project_id"/>
-                                    <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('share', '=', False), ('active', '=', True)]"/>
+                                    <field name="user_ids" widget="many2many_avatar_user" optional="show"/>
                                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" optional="hide" decoration-danger="date_deadline &lt; current_date"/>
@@ -434,7 +433,7 @@
                                         invisible="not allow_milestones"/>
                                     <field name="partner_id" optional="hide" widget="res_partner_many2one" invisible="not project_id"/>
                                     <field name="parent_id" optional="hide" groups="base.group_no_one"/>
-                                    <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('share', '=', False), ('active', '=', True)]"/>
+                                    <field name="user_ids" widget="many2many_avatar_user" optional="show"/>
                                     <field name="company_id" optional="hide" groups="base.group_multi_company" />
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" optional="hide" decoration-danger="date_deadline &lt; current_date"/>
@@ -509,7 +508,7 @@
                                class="o_project_task_project_field"
                                domain="[('type_ids', 'in', context['default_stage_id'])] if context.get('default_stage_id') else []"
                         />
-                        <field name="user_ids" options="{'no_open': True, 'no_quick_create': True}" domain="[('share', '=', False), ('active', '=', True)]"
+                        <field name="user_ids" options="{'no_open': True, 'no_quick_create': True}"
                             widget="many2many_avatar_user"/>
                         <field name="company_id" invisible="1"/>
                         <field name="parent_id" invisible="1" groups="base.group_no_one"/>
@@ -681,7 +680,7 @@
                     <field name="project_id" widget="project" optional="show" options="{'no_open': 1}" readonly="1" column_invisible="context.get('default_project_id')"/>
                     <field name="milestone_id" invisible="not allow_milestones" context="{'default_project_id': project_id}" groups="project.group_project_milestone" optional="hide"/>
                     <field name="partner_id" optional="hide" widget="res_partner_many2one" invisible="not project_id" options="{'no_open': True}"/>
-                    <field name="user_ids" optional="show" widget="many2many_avatar_user" domain="[('share', '=', False), ('active', '=', True)]"/>
+                    <field name="user_ids" optional="show" widget="many2many_avatar_user"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show" column_invisible="context.get('default_project_id')"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" invisible="state in ['1_done', '1_canceled']"/>
@@ -760,7 +759,7 @@
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="not tag_ids"/>
                     <field name="stage_id" invisible="not project_id or not stage_id"/>
                     <field name="state" widget="project_task_state_selection" readonly="1"/>
-                    <field name="personal_stage_id" string="Personal Stage" invisible="project_id or not personal_stage_id"/>
+                    <field name="personal_stage_id" string="Personal Stage" options="{'no_open': True}" invisible="project_id or not personal_stage_id"/>
                     <field name="task_properties"/>
                 </calendar>
             </field>

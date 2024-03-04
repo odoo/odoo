@@ -78,6 +78,7 @@ class ViewCustom(models.Model):
     _description = 'Custom View'
     _order = 'create_date desc'  # search(limit=1) should return the last customization
     _rec_name = 'user_id'
+    _allow_sudo_commands = False
 
     ref_id = fields.Many2one('ir.ui.view', string='Original View', index=True, required=True, ondelete='cascade')
     user_id = fields.Many2one('res.users', string='User', index=True, required=True, ondelete='cascade')
@@ -153,6 +154,7 @@ class View(models.Model):
     _name = 'ir.ui.view'
     _description = 'View'
     _order = "priority,name,id"
+    _allow_sudo_commands = False
 
     name = fields.Char(string='View Name', required=True)
     model = fields.Char(index=True)
@@ -2696,6 +2698,28 @@ class Model(models.AbstractModel):
             'target': 'current',
             'res_id': self.id,
             'context': dict(self._context),
+        }
+
+    def _get_records_action(self, **kwargs):
+        """ Return an action to open given records.
+            If there's more than one record, it will be a List, otherwise it's a Form.
+            Given keyword arguments will overwrite default ones. """
+        if len(self) == 0:
+            length_dependent = {'views': [(False, 'form')]}
+        elif len(self) == 1:
+            length_dependent = {'views': [(False, 'form')], 'res_id': self.id}
+        else:
+            length_dependent = {
+                'views': [(False, 'list'), (False, 'form')],
+                'domain': [('id', 'in', self.ids)]
+            }
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'target': 'current',
+            'context': dict(self._context),
+            **length_dependent,
+            **kwargs
         }
 
     @api.model

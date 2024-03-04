@@ -53,6 +53,12 @@ class StockMoveLine(models.Model):
             self.env['stock.move'].browse(analytic_move_to_recompute)._account_analytic_entry_move()
         return res
 
+    def unlink(self):
+        analytic_move_to_recompute = self.move_id
+        res = super().unlink()
+        analytic_move_to_recompute._account_analytic_entry_move()
+        return res
+
     # -------------------------------------------------------------------------
     # SVL creation helpers
     # -------------------------------------------------------------------------

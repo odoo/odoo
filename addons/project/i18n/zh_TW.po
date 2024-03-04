@@ -3,17 +3,17 @@
 # 	* project
 # 
 # Translators:
-# Wil Odoo, 2023
 # Martin Trigaux, 2023
 # Tony Ng, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,14 +98,14 @@ msgstr "#{task.stage_id.name}"
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(closed_task_count)s / %(task_count)s"
-msgstr ""
+msgstr "%(closed_task_count)s / %(task_count)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
-msgstr ""
+msgstr "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
 
 #. module: project
 #. odoo-python
@@ -200,6 +200,7 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
 "<b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>記錄備註</b>，作為內部通訊方式（關注此任務的人，不會因為你記錄備註而收到通知，除非你特別標記他們）。使用「<b>@提及</b>」以特別指明某位同事，或使用「<b>#提及</b>」接觸整個團隊。"
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -417,6 +418,9 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Okay\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Dissatisfied\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible=\"rating_avg &lt; 3.66\" title=\"滿意\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"還可以\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"不滿意\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -458,12 +462,12 @@ msgstr "<small class=\"text-end\">階段：</small>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Assignees</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">受指派人</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Customer</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">客戶</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -485,22 +489,22 @@ msgstr "<span class=\"fa fa-user me-2\" aria-label=\"合作夥伴\" title=\"合�
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Done</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal\">已完成</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Tasks</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal\"> 任務</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text order-2\">Closed</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text order-2\">已關閉</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text order-2\">Sub-tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text order-2\">子任務</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -538,6 +542,11 @@ msgid ""
 "                                                    <span invisible=\"rating_status == 'stage'\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span invisible=\"rating_status == 'periodic'\">任務到達設有評分電郵範本的階段時，便會發送評分請求。</span>\n"
+"                                                    <span invisible=\"rating_status == 'stage'\">只要任務仍處於設有評分電郵範本的階段，便會定時發送評分請求。</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1229,6 +1238,7 @@ msgid ""
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
 msgstr ""
+"為你的專案命名一個<b>名稱</b>。<span>它可以是你想要的任何內容：客戶的名稱、產品的名稱、團隊的名稱、建築工地的名稱等皆可。</span>"
 
 #. module: project
 #. odoo-javascript
@@ -1259,12 +1269,12 @@ msgstr "已結束子任務數目"
 #: model:ir.model.fields,field_description:project.field_project_project__closed_task_count
 #: model:ir.model.fields,field_description:project.field_project_update__closed_task_count
 msgid "Closed Task Count"
-msgstr ""
+msgstr "已關閉任務數目"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__closed_task_percentage
 msgid "Closed Task Percentage"
-msgstr ""
+msgstr "已關閉任務百分比"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -1400,7 +1410,7 @@ msgstr "聯絡人"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
 msgid "Convert Task"
-msgstr ""
+msgstr "轉換任務"
 
 #. module: project
 #. odoo-python
@@ -1408,7 +1418,7 @@ msgstr ""
 #: model:ir.actions.server,name:project.action_server_convert_to_subtask
 #, python-format
 msgid "Convert to Task/Sub-Task"
-msgstr ""
+msgstr "轉換為任務/子任務"
 
 #. module: project
 #. odoo-javascript
@@ -1777,7 +1787,7 @@ msgid ""
 "Deleting a task will also delete its associated sub-tasks. If you wish to "
 "preserve the sub-tasks, make sure to unlink them from their parent task "
 "beforehand. Are you sure you want to proceed?"
-msgstr ""
+msgstr "刪除任務也會刪除其相關的子任務。如果想保留子任務，請確保事先取消它們與母項任務的連結。確定要繼續？"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__milestone_id
@@ -1950,7 +1960,7 @@ msgstr "草稿"
 msgid ""
 "Each user should have at least one personal stage. Create a new stage to "
 "which the tasks can be transferred after the selected ones are deleted."
-msgstr ""
+msgstr "每名使用者最少應有一個個人階段。請建立一個新階段，令刪除所選取任務後可將任務轉移至該階段。"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__edit
@@ -2088,12 +2098,12 @@ msgstr "在看板中摺疊"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow and comments tasks of your projects"
-msgstr ""
+msgstr "追蹤專案任務並發表評論"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow the evolution of your projects"
-msgstr ""
+msgstr "追蹤專案發展"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2498,7 +2508,7 @@ msgstr "里程碑已過期"
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #, python-format
 msgid "Is toggle mode"
-msgstr ""
+msgstr "是切換模式"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
@@ -2965,7 +2975,7 @@ msgstr "新訂單"
 #: code:addons/project/static/src/views/project_project_calendar/project_project_calendar_controller.js:0
 #, python-format
 msgid "New Project"
-msgstr ""
+msgstr "新專案"
 
 #. module: project
 #. odoo-javascript
@@ -2986,7 +2996,7 @@ msgstr "新增請求"
 #: code:addons/project/static/src/views/project_task_calendar/project_task_calendar_controller.js:0
 #, python-format
 msgid "New Task"
-msgstr ""
+msgstr "新任務"
 
 #. module: project
 #. odoo-python
@@ -3009,6 +3019,13 @@ msgstr "下一頁"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Next Activity"
 msgstr "下一個活動"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "下一個活動日曆事件"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
@@ -3224,6 +3241,11 @@ msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr "糟糕！出錯了。請嘗試重新加載頁面並登入。"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__open_task_count
+msgid "Open Task Count"
+msgstr "開放任務數目"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -3315,20 +3337,20 @@ msgstr ""
 #, python-format
 msgid ""
 "Partner company cannot be different from its assigned projects' company"
-msgstr ""
+msgstr "合作夥伴公司不可與它獲分配的專案的公司不同"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 #, python-format
 msgid "Partner company cannot be different from its assigned tasks' company"
-msgstr ""
+msgstr "合作夥伴公司不可與它獲分配的任務的公司不同"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
 msgid ""
 "People invited to collaborate on the project will have portal access rights."
-msgstr ""
+msgstr "受邀參與專案協作的人，將擁有門戶頁面存取權限。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -3386,7 +3408,7 @@ msgstr "個人階段狀態"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
 msgid "Personal Stages"
-msgstr ""
+msgstr "個人階段"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_stage_personal
@@ -3454,7 +3476,7 @@ msgstr "窗口網站使用者將會在專案及其任務的關注者中刪除。
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_pager.xml:0
 #, python-format
 msgid "Previous"
-msgstr "前一個"
+msgstr "上一頁"
 
 #. module: project
 #. odoo-javascript
@@ -4433,7 +4455,7 @@ msgstr "子任務"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_allocated_hours
 msgid "Sub-tasks Allocated Time"
-msgstr ""
+msgstr "子任務已分配時間"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -4551,7 +4573,7 @@ msgstr "任務紀錄"
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_task_plan
 msgid "Task Plans"
-msgstr ""
+msgstr "任務計劃"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_properties_definition
@@ -4865,6 +4887,7 @@ msgid ""
 "mode on your website. This includes leads/opportunities, quotations/sales "
 "orders, purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
+"他們可以編輯共享的專案任務，並在網站上以唯讀模式查看特定文件，包括潛在客戶/銷售機會、報價單/銷售訂單、採購訂單、發票及賬單、工時表以及票據。"
 
 #. module: project
 #. odoo-python
@@ -5005,7 +5028,7 @@ msgid ""
 "To transform a task into a sub-task, select a parent task. Alternatively, "
 "leave the parent task field blank to convert a sub-task into a standalone "
 "task."
-msgstr ""
+msgstr "要將任務轉換為子任務，請選擇父任務。或者, 將父任務字段留空，將子任務轉換為獨立任務。"
 
 #. module: project
 #. odoo-python
@@ -5055,7 +5078,7 @@ msgstr "追踪專案成功必須達到的主要進展點。"
 msgid ""
 "Track project costs, revenues, and margin by setting the analytic account "
 "associated with the project on relevant documents."
-msgstr ""
+msgstr "通過在相關文檔中設置與項目相關的分析賬戶, 跟蹤項目成本、收入和利潤率。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5239,19 +5262,28 @@ msgid ""
 "Use the chatter to <b>send emails</b> and communicate efficiently with your "
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
-msgstr ""
+msgstr "利用聊天工具<b>發送電子郵件</b> , 與客戶進行高效溝通。將新人添加到關注者列表中，讓他們瞭解有關這項任務的主要變化。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
-"            #tags Set tags on the task\n"
-"            @user Assign the task to a user\n"
-"            ! Set the task a high priority\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
 "\n"
-"            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"在新任務標題中，使用這些關鍵字進行設定：\n"
+"\n"
+"        30h：向任務分配 30 小時\n"
+"        #標籤名稱：對任務設定標籤\n"
+"        @用戶名稱：將任務指派給用戶\n"
+"        !：將任務設為高優先級別\n"
+"\n"
+"        記得使用正確格式和順序，例如：改進配置畫面 5h #特色功能 #v16 @志明 !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id
@@ -5347,6 +5379,8 @@ msgid ""
 "When sharing a project in edit mode, you are giving people access to the kanban and list views of your tasks.\n"
 "                    Collaborators will be able to view and modify part of the tasks' information."
 msgstr ""
+"在編輯模式下共享項目時,您將允許他人訪問任務的看板和列表檢視畫面。\n"
+"                    合作者可以查看和修改任務的部分資料。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -5354,6 +5388,8 @@ msgid ""
 "When sharing a project in read-only mode, you are giving people access to the tasks in their portal.\n"
 "                    These people will be able to view the tasks, but not edit them."
 msgstr ""
+"以只讀模式共享項目時，您將允許他人訪問其門戶中的任務。\n"
+"                    這些人可以查看任務, 但不能編輯任務。"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -5444,6 +5480,8 @@ msgid ""
 "%(project_company_name)s. Please ensure that this stage exclusively consists"
 " of projects linked to %(company_name)s."
 msgstr ""
+"你無法將此階段的公司切換至 %(company_name)s，因為它目前包括與 %(project_company_name)s "
+"相關的專案。請確保此階段完全只包括與 %(company_name)s 相關的專案項目。"
 
 #. module: project
 #. odoo-python
@@ -5511,7 +5549,7 @@ msgstr "您被指派到"
 msgid ""
 "You have full control and can revoke portal access anytime. Are you ready to"
 " proceed?"
-msgstr ""
+msgstr "您擁有完全控制權，可以隨時取消門戶訪問權。準備好繼續?"
 
 #. module: project
 #. odoo-python
@@ -5616,7 +5654,7 @@ msgstr "例：任務"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "e.g. To Do"
-msgstr ""
+msgstr "例如：待辦事項"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project

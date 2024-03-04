@@ -6,7 +6,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.parser import parse_res_ids
 from odoo.exceptions import ValidationError
-from odoo.tools.misc import clean_context
+from odoo.tools.misc import clean_context, format_date
 
 
 class MailActivitySchedule(models.TransientModel):
@@ -215,6 +215,7 @@ class MailActivitySchedule(models.TransientModel):
                     template.activity_type_id, force_base_date=self.plan_date_deadline)
                 record.activity_schedule(
                     activity_type_id=template.activity_type_id.id,
+                    automated=False,
                     summary=template.summary,
                     note=template.note,
                     user_id=responsible.id,
@@ -223,7 +224,7 @@ class MailActivitySchedule(models.TransientModel):
                 activity_descriptions.append(
                     _('%(activity)s, assigned to %(name)s, due on the %(deadline)s',
                       activity=template.summary or template.activity_type_id.name,
-                      name=responsible.name, deadline=date_deadline))
+                      name=responsible.name, deadline=format_date(self.env, date_deadline)))
 
             if activity_descriptions:
                 body += Markup('<ul>%s</ul>') % (
@@ -294,6 +295,7 @@ class MailActivitySchedule(models.TransientModel):
     def _action_schedule_activities(self):
         return self._get_applied_on_records().activity_schedule(
             activity_type_id=self.activity_type_id.id,
+            automated=False,
             summary=self.summary,
             note=self.note,
             user_id=self.activity_user_id.id,

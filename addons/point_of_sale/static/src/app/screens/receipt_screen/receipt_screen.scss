@@ -20,17 +20,12 @@
     .pos, .pos * {
         position: static !important;
     }
-    .pos .receipt-screen .pos-receipt-container {
-        position: absolute !important;
-        top: 0;
-        left: 0;
-    }
-    .pos .receipt-screen .pos-receipt-container, .pos .receipt-screen .pos-receipt-container  *, .render-container * {
+    .render-container .pos-receipt * {
         visibility: visible;
         background: white !important;
         color: black !important;
     }
-    .pos .pos-receipt {
+    .render-container .pos-receipt {
         margin: 0 !important;
         margin-left: auto !important;
         margin-right: auto !important;
@@ -42,5 +37,10 @@
         position: absolute !important;
         top: 10px;
         left: 10px;
+    }
+    .o-main-components-container  {
+        position: absolute !important;
+        top: 0;
+        left: 0;
     }
 }

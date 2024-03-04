@@ -13,4 +13,4 @@ class Website(models.Model):
     def _compute_picking_sites(self):
         delivery_carriers = self.env['delivery.carrier'].search([('delivery_type', '=', 'onsite')])
         for website in self:
-            website.picking_site_ids = delivery_carriers.filtered_domain([('website_id.id', '=', website.id)])
+            website.picking_site_ids = delivery_carriers.filtered_domain([('website_id', '=', website.id)])

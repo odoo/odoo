@@ -370,10 +370,16 @@ export class HtmlField extends Component {
      * @param {Object} position
      */
     positionDynamicPlaceholder(popover, position) {
-        let topPosition = this.wysiwygRangePosition.top;
+        // make sure the popover won't be out(below) of the page
+        const enoughSpaceBelow = window.innerHeight - popover.clientHeight - this.wysiwygRangePosition.top;
+        let topPosition = (enoughSpaceBelow > 0) ? this.wysiwygRangePosition.top : this.wysiwygRangePosition.top + enoughSpaceBelow;
+
         // Offset the popover to ensure the arrow is pointing at
         // the precise range location.
         let leftPosition = this.wysiwygRangePosition.left - 14;
+        // make sure the popover won't be out(right) of the page
+        const enoughSpaceRight = window.innerWidth - popover.clientWidth - leftPosition;
+        leftPosition = (enoughSpaceRight > 0) ? leftPosition : leftPosition + enoughSpaceRight;
 
         // Apply the position back to the element.
         popover.style.top = topPosition + 'px';
@@ -420,9 +426,29 @@ export class HtmlField extends Component {
         const strippedPropValue = stripHistoryIds(String(this.props.record.data[this.props.name]));
         const strippedEditingValue = stripHistoryIds(this.getEditingValue());
         const domParser = new DOMParser();
-        const parsedPropValue = domParser.parseFromString(strippedPropValue || '<p><br></p>', 'text/html').body;
-        const parsedEditingValue = domParser.parseFromString(strippedEditingValue, 'text/html').body;
-        return !this.props.readonly && parsedPropValue.innerHTML !== parsedEditingValue.innerHTML;
+        const codeViewEl = this._getCodeViewEl();
+        let parsedPreviousValue;
+        // If the wysiwyg is active, we need to clean the content of the
+        // initialValue as the editingValue will be cleaned.
+        if (!codeViewEl && this.wysiwyg) {
+            const editable = domParser.parseFromString(strippedPropValue || '<p><br></p>', 'text/html').body;
+            // Temporarily append the editable to the DOM because the
+            // wysiwyg.getValue can indirectly call methods that needs to have
+            // access the node.ownerDocument.defaultView.getComputedStyle.
+            // By appending the editable to the dom, the node.ownerDocument will
+            // have a `defaultView`.
+            const div = document.createElement('div');
+            div.style.display = 'none';
+            div.append(editable);
+            document.body.append(div);
+            const editableValue = stripHistoryIds(this.wysiwyg.getValue({ $layout: $(editable) }));
+            div.remove();
+            parsedPreviousValue = domParser.parseFromString(editableValue, 'text/html').body;
+        } else {
+            parsedPreviousValue = domParser.parseFromString(strippedPropValue || '<p><br></p>', 'text/html').body;
+        }
+        const parsedNewValue = domParser.parseFromString(strippedEditingValue, 'text/html').body;
+        return !this.props.readonly && parsedPreviousValue.innerHTML !== parsedNewValue.innerHTML;
     }
     _getCodeViewEl() {
         return this.state.showCodeView && this.codeViewRef.el;
@@ -574,7 +600,9 @@ export class HtmlField extends Component {
     }
     _onWysiwygBlur() {
         // Avoid save on blur if the html field is in inline mode.
-        if (!this.props.isInlineStyle) {
+        if (this.props.isInlineStyle) {
+            this.updateValue();
+        } else {
             this.commitChanges();
         }
     }

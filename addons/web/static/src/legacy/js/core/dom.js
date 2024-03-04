@@ -38,7 +38,7 @@ var dom = {
         // spaces should be a good-enough condition to use a simple find
         var multiParts = selector.indexOf(' ') >= 0;
         if (multiParts) {
-            $results = $from.find('*').filter(selector);
+            $results = $from.closest('body').find(selector).filter((i, $el) => $from.has($el).length);
         } else {
             $results = $from.find(selector);
         }

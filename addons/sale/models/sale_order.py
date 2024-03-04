@@ -179,7 +179,7 @@ class SaleOrder(models.Model):
     currency_rate = fields.Float(
         string="Currency Rate",
         compute='_compute_currency_rate',
-        digits=(12, 6),
+        digits=0,
         store=True, precompute=True)
     user_id = fields.Many2one(
         comodel_name='res.users',
@@ -435,7 +435,7 @@ class SaleOrder(models.Model):
     def _compute_team_id(self):
         cached_teams = {}
         for order in self:
-            default_team_id = self.env.context.get('default_team_id', False) or order.team_id.id or order.partner_id.team_id.id
+            default_team_id = self.env.context.get('default_team_id', False) or order.partner_id.team_id.id or order.team_id.id
             user_id = order.user_id.id
             company_id = order.company_id.id
             key = (default_team_id, user_id, company_id)
@@ -673,12 +673,13 @@ class SaleOrder(models.Model):
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
         for order in self:
-            companies = order.order_line.product_id.company_id
-            if companies and companies != order.company_id:
+            product_company = order.order_line.product_id.company_id
+            companies = product_company and product_company._accessible_branches()
+            if companies and order.company_id not in companies:
                 bad_products = order.order_line.product_id.filtered(lambda p: p.company_id and p.company_id != order.company_id)
                 raise ValidationError(_(
                     "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n Please change the company of your quotation or remove the products from other companies (%(bad_products)s).",
-                    product_company=', '.join(companies.mapped('display_name')),
+                    product_company=', '.join(companies.sudo().mapped('display_name')),
                     quote_company=order.company_id.display_name,
                     bad_products=', '.join(bad_products.mapped('display_name')),
                 ))
@@ -918,7 +919,8 @@ class SaleOrder(models.Model):
         context.pop('default_name', None)
 
         self.with_context(context)._action_confirm()
-        if self.create_uid.has_group('sale.group_auto_done_setting'):  # Public user can confirm SO
+        if self[:1].create_uid.has_group('sale.group_auto_done_setting'):
+            # Public user can confirm SO, so we check the group on any record creator.
             self.action_lock()
 
         return True
@@ -1809,7 +1811,14 @@ class SaleOrder(models.Model):
             date=self.date_order,
             **kwargs,
         )
-        return {product_id: {'price': price} for product_id, price in pricelist.items()}
+        res = {}
+        for product in products:
+            res[product.id] = {'price': pricelist.get(product.id)}
+            if product.sale_line_warn_msg:
+                res[product.id]['warning'] = product.sale_line_warn_msg
+            if product.sale_line_warn == "block":
+                res[product.id]['readOnly'] = True
+        return res
 
     def _get_product_catalog_record_lines(self, product_ids):
         grouped_lines = defaultdict(lambda: self.env['sale.order.line'])

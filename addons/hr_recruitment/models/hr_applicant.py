@@ -65,10 +65,10 @@ class Applicant(models.Model):
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working", tracking=True)
     partner_name = fields.Char("Applicant's Name")
     partner_phone = fields.Char("Phone", size=32, compute='_compute_partner_phone_email',
-        store=True, readonly=False, index='btree_not_null')
+        store=True, readonly=False, index='btree_not_null', inverse='_inverse_partner_email')
     partner_phone_sanitized = fields.Char(string='Sanitized Phone Number', compute='_compute_partner_phone_sanitized', store=True, index='btree_not_null')
     partner_mobile = fields.Char("Mobile", size=32, compute='_compute_partner_phone_email',
-        store=True, readonly=False, index='btree_not_null')
+        store=True, readonly=False, index='btree_not_null', inverse='_inverse_partner_email')
     partner_mobile_sanitized = fields.Char(string='Sanitized Mobile Number', compute='_compute_partner_mobile_sanitized', store=True, index='btree_not_null')
     type_id = fields.Many2one('hr.recruitment.degree', "Degree")
     department_id = fields.Many2one(
@@ -113,6 +113,17 @@ class Applicant(models.Model):
     ], compute="_compute_application_status")
     applicant_properties = fields.Properties('Properties', definition='job_id.applicant_properties_definition', copy=True)
 
+    def init(self):
+        self.env.cr.execute("""
+            CREATE INDEX IF NOT EXISTS hr_applicant_job_id_stage_id_idx
+            ON hr_applicant(job_id, stage_id)
+            WHERE active IS TRUE
+        """)
+        self.env.cr.execute("""
+            CREATE INDEX IF NOT EXISTS hr_applicant_email_partner_phone_mobile
+            ON hr_applicant(email_normalized, partner_mobile_sanitized, partner_phone_sanitized);
+        """)
+
     @api.onchange('job_id')
     def _onchange_job_id(self):
         for applicant in self:
@@ -143,19 +154,42 @@ class Applicant(models.Model):
             else:
                 applicant.delay_close = False
 
-    @api.depends('email_from', 'partner_phone', 'partner_mobile')
+    @api.depends('email_from', 'partner_mobile_sanitized', 'partner_phone_sanitized')
     def _compute_application_count(self):
         """
             The field application_count is only used on the form view.
             Thus, using ORM rather then querying, should not make much
             difference in terms of performance, while being more readable and secure.
         """
+        if not any(self._ids):
+            for applicant in self:
+                domain = applicant._get_similar_applicants_domain()
+                if domain:
+                    applicant.application_count = max(0, self.env["hr.applicant"].with_context(active_test=False).search_count(domain) - 1)
+                else:
+                    applicant.application_count = 0
+            return
+        self.flush_recordset(['email_normalized', 'partner_phone_sanitized', 'partner_mobile_sanitized'])
+        self.env.cr.execute("""
+            SELECT
+                id,
+                (
+                    SELECT COUNT(*)
+                    FROM hr_applicant AS sub
+                    WHERE a.id != sub.id
+                     AND ((a.email_normalized <> '' AND sub.email_normalized = a.email_normalized)
+                       OR (a.partner_mobile_sanitized <> '' AND a.partner_mobile_sanitized = sub.partner_mobile_sanitized)
+                       OR (a.partner_mobile_sanitized <> '' AND a.partner_mobile_sanitized = sub.partner_phone_sanitized)
+                       OR (a.partner_phone_sanitized <> '' AND a.partner_phone_sanitized = sub.partner_mobile_sanitized)
+                       OR (a.partner_phone_sanitized <> '' AND a.partner_phone_sanitized = sub.partner_phone_sanitized))
+                ) AS similar_applicants
+            FROM hr_applicant AS a
+            WHERE id IN %(ids)s
+        """, {'ids': tuple(self._origin.ids)})
+        query_results = self.env.cr.dictfetchall()
+        mapped_data = {result['id']: result['similar_applicants'] for result in query_results}
         for applicant in self:
-            domain = applicant._get_similar_applicants_domain()
-            if domain:
-                applicant.application_count = self.env["hr.applicant"].with_context(active_test=False).search_count(domain) - 1
-            else:
-                applicant.application_count = 0
+            applicant.application_count = mapped_data.get(applicant.id, 0)
 
     def _get_similar_applicants_domain(self):
         """
@@ -280,8 +314,23 @@ class Applicant(models.Model):
                 applicant.partner_mobile = applicant.partner_id.mobile
 
     def _inverse_partner_email(self):
-        for applicant in self.filtered(lambda a: a.partner_id and a.email_from):
-            applicant.partner_id.email = applicant.email_from
+        for applicant in self:
+            if not applicant.email_from:
+                continue
+            if not applicant.partner_id:
+                if not applicant.partner_name:
+                    raise UserError(_('You must define a Contact Name for this applicant.'))
+                applicant.partner_id = self.env['res.partner'].create({
+                    'is_company': False,
+                    'name': applicant.partner_name,
+                    'email': applicant.email_from,
+                    'mobile': applicant.partner_mobile,
+                    'phone': applicant.partner_phone,
+                })
+            else:
+                applicant.partner_id.email = applicant.email_from
+                applicant.partner_id.mobile = applicant.partner_mobile
+                applicant.partner_id.phone = applicant.partner_phone
 
     @api.depends('partner_phone')
     def _compute_partner_phone_sanitized(self):
@@ -451,7 +500,7 @@ class Applicant(models.Model):
             'res_model': 'ir.attachment',
             'name': _('Documents'),
             'context': {
-                'default_res_model': 'hr.job',
+                'default_res_model': 'hr.applicant',
                 'default_res_id': self.ids[0],
                 'show_partner_name': 1,
             },

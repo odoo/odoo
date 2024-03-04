@@ -298,7 +298,7 @@ class PosOrder(models.Model):
     is_total_cost_computed = fields.Boolean(compute='_compute_is_total_cost_computed',
         help="Allows to know if all the total cost of the order lines have already been computed")
     lines = fields.One2many('pos.order.line', 'order_id', string='Order Lines', copy=True)
-    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, index=True)
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index='btree_not_null')
@@ -325,7 +325,7 @@ class PosOrder(models.Model):
 
     note = fields.Text(string='Internal Notes')
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
-    pos_reference = fields.Char(string='Receipt Number', readonly=True, copy=False)
+    pos_reference = fields.Char(string='Receipt Number', readonly=True, copy=False, index=True)
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sales Journal', store=True, readonly=True, ondelete='restrict')
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position', string='Fiscal Position',
@@ -567,61 +567,54 @@ class PosOrder(models.Model):
 
         new_move.message_post(body=message)
         if self.config_id.cash_rounding:
-            rounding_applied = float_round(self.amount_paid - self.amount_total,
-                                           precision_rounding=new_move.currency_id.rounding)
-            rounding_line = new_move.line_ids.filtered(lambda line: line.display_type == 'rounding')
-            if rounding_line and rounding_line.debit > 0:
-                rounding_line_difference = rounding_line.debit + rounding_applied
-            elif rounding_line and rounding_line.credit > 0:
-                rounding_line_difference = -rounding_line.credit + rounding_applied
-            else:
-                rounding_line_difference = rounding_applied
-            if rounding_applied:
-                if rounding_applied > 0.0:
-                    account_id = new_move.invoice_cash_rounding_id.loss_account_id.id
+            with self.env['account.move']._check_balanced({'records': new_move}):
+                rounding_applied = float_round(self.amount_paid - self.amount_total,
+                                            precision_rounding=new_move.currency_id.rounding)
+                rounding_line = new_move.line_ids.filtered(lambda line: line.display_type == 'rounding')
+                if rounding_line and rounding_line.debit > 0:
+                    rounding_line_difference = rounding_line.debit + rounding_applied
+                elif rounding_line and rounding_line.credit > 0:
+                    rounding_line_difference = -rounding_line.credit + rounding_applied
                 else:
-                    account_id = new_move.invoice_cash_rounding_id.profit_account_id.id
-                if rounding_line:
-                    if rounding_line_difference:
-                        rounding_line.with_context(skip_invoice_sync=True, check_move_validity=False).write({
-                            'debit': rounding_applied < 0.0 and -rounding_applied or 0.0,
-                            'credit': rounding_applied > 0.0 and rounding_applied or 0.0,
-                            'account_id': account_id,
-                            'price_unit': rounding_applied,
-                        })
+                    rounding_line_difference = rounding_applied
+                if rounding_applied:
+                    if rounding_applied > 0.0:
+                        account_id = new_move.invoice_cash_rounding_id.loss_account_id.id
+                    else:
+                        account_id = new_move.invoice_cash_rounding_id.profit_account_id.id
+                    if rounding_line:
+                        if rounding_line_difference:
+                            rounding_line.with_context(skip_invoice_sync=True).write({
+                                'debit': rounding_applied < 0.0 and -rounding_applied or 0.0,
+                                'credit': rounding_applied > 0.0 and rounding_applied or 0.0,
+                                'account_id': account_id,
+                                'price_unit': rounding_applied,
+                            })
 
+                    else:
+                        self.env['account.move.line'].with_context(skip_invoice_sync=True).create({
+                            'balance': -rounding_applied,
+                            'quantity': 1.0,
+                            'partner_id': new_move.partner_id.id,
+                            'move_id': new_move.id,
+                            'currency_id': new_move.currency_id.id,
+                            'company_id': new_move.company_id.id,
+                            'company_currency_id': new_move.company_id.currency_id.id,
+                            'display_type': 'rounding',
+                            'sequence': 9999,
+                            'name': self.config_id.rounding_method.name,
+                            'account_id': account_id,
+                        })
                 else:
-                    self.env['account.move.line'].with_context(skip_invoice_sync=True, check_move_validity=False).create({
-                        'balance': -rounding_applied,
-                        'quantity': 1.0,
-                        'partner_id': new_move.partner_id.id,
-                        'move_id': new_move.id,
-                        'currency_id': new_move.currency_id.id,
-                        'company_id': new_move.company_id.id,
-                        'company_currency_id': new_move.company_id.currency_id.id,
-                        'display_type': 'rounding',
-                        'sequence': 9999,
-                        'name': self.config_id.rounding_method.name,
-                        'account_id': account_id,
-                    })
-            else:
-                if rounding_line:
-                    rounding_line.with_context(skip_invoice_sync=True, check_move_validity=False).unlink()
-            if rounding_line_difference:
-                existing_terms_line = new_move.line_ids.filtered(
-                    lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
-                if existing_terms_line.debit > 0:
+                    if rounding_line:
+                        rounding_line.with_context(skip_invoice_sync=True).unlink()
+                if rounding_line_difference:
+                    existing_terms_line = new_move.line_ids.filtered(
+                        lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
                     existing_terms_line_new_val = float_round(
-                        existing_terms_line.debit + rounding_line_difference,
+                        existing_terms_line.balance + rounding_line_difference,
                         precision_rounding=new_move.currency_id.rounding)
-                else:
-                    existing_terms_line_new_val = float_round(
-                        -existing_terms_line.credit + rounding_line_difference,
-                        precision_rounding=new_move.currency_id.rounding)
-                existing_terms_line.with_context(skip_invoice_sync=True).write({
-                    'debit': existing_terms_line_new_val > 0.0 and existing_terms_line_new_val or 0.0,
-                    'credit': existing_terms_line_new_val < 0.0 and -existing_terms_line_new_val or 0.0,
-                })
+                    existing_terms_line.with_context(skip_invoice_sync=True).balance = existing_terms_line_new_val
         return new_move
 
     def action_pos_order_paid(self):
@@ -884,8 +877,9 @@ class PosOrder(models.Model):
             new_move.sudo().with_company(order.company_id).with_context(skip_invoice_sync=True)._post()
 
             # Send and Print
-            template = self.env.ref(new_move._get_mail_template())
-            new_move.with_context(skip_invoice_sync=True)._generate_pdf_and_send_invoice(template)
+            if self.env.context.get('generate_pdf', True):
+                template = self.env.ref(new_move._get_mail_template())
+                new_move.with_context(skip_invoice_sync=True)._generate_pdf_and_send_invoice(template)
 
             moves += new_move
             payment_moves = order._apply_invoice_payments()
@@ -975,8 +969,8 @@ class PosOrder(models.Model):
         if len(data['lines']) != len(existing_order.lines):
             return False
 
-        received_lines = sorted([(l[2]['product_id'], l[2]['qty'], l[2]['price_unit']) for l in data['lines']])
-        existing_lines = sorted([(l.product_id.id, l.qty, l.price_unit) for l in existing_order.lines])
+        received_lines = sorted([(l[2]['product_id'], l[2]['price_unit']) for l in data['lines']])
+        existing_lines = sorted([(l.product_id.id, l.price_unit) for l in existing_order.lines])
 
         if received_lines != existing_lines:
             return False
@@ -1192,9 +1186,14 @@ class PosOrder(models.Model):
 
     @api.model
     def export_for_ui_shared_order(self, config_id):
+        orders = self._get_shared_orders(config_id)
+        return orders.export_for_ui()
+
+    @api.model
+    def _get_shared_orders(self, config_id):
         config = self.env['pos.config'].browse(config_id)
         orders = self.env['pos.order'].search(['&', ('state', '=', 'draft'), '|', ('config_id', '=', config_id), ('config_id', 'in', config.trusted_config_ids.ids)])
-        return orders.export_for_ui()
+        return orders
 
     def export_for_ui(self):
         """ Returns a list of dict with each item having similar signature as the return of
@@ -1487,7 +1486,7 @@ class PosOrderLine(models.Model):
         for line in self.filtered(lambda l: not l.is_total_cost_computed):
             product = line.product_id
             if line._is_product_storable_fifo_avco() and stock_moves:
-                product_cost = product._compute_average_price(0, line.qty, self._get_stock_moves_to_consider(stock_moves, product))
+                product_cost = product._compute_average_price(0, line.qty, line._get_stock_moves_to_consider(stock_moves, product))
             else:
                 product_cost = product.standard_price
             line.total_cost = line.qty * product.cost_currency_id._convert(
@@ -1500,6 +1499,7 @@ class PosOrderLine(models.Model):
             line.is_total_cost_computed = True
 
     def _get_stock_moves_to_consider(self, stock_moves, product):
+        self.ensure_one()
         return stock_moves.filtered(lambda ml: ml.product_id.id == product.id)
 
     @api.depends('price_subtotal', 'total_cost')
@@ -1519,7 +1519,7 @@ class PosOrderLine(models.Model):
             commercial_partner = self.order_id.partner_id.commercial_partner_id
             fiscal_position = self.order_id.fiscal_position_id
             line = line.with_company(self.order_id.company_id)
-            account = line.product_id._get_product_accounts()['income']
+            account = line.product_id._get_product_accounts()['income'] or self.order_id.config_id.journal_id.default_account_id
             if not account:
                 raise UserError(_(
                     "Please define income account for this product: '%s' (id:%d).",

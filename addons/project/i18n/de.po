@@ -3,16 +3,17 @@
 # 	* project
 # 
 # Translators:
-# Wil Odoo, 2023
+# Felix Schubert <felix.schubert@go-erp.com>, 2024
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -200,6 +201,11 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
 "<b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>Hinterlassen Sie Notizen</b> für die interne Kommunikation <i>(die "
+"Personen, die diese Aufgabe verfolgen, werden nicht über die von Ihnen "
+"hinterlassene Notiz benachrichtigt, es sei denn, Sie markieren sie "
+"ausdrücklich)</i>. Verwenden Sie @-<b>Erwähnungen</b>, um einen Kollegen zu "
+"markieren oder #-<b>Erwähnungen</b>, um ein ganzes Team zu erreichen."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -999,7 +1005,7 @@ msgstr "Montage"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Assign a responsible to your task"
-msgstr "Weisen Sie Ihrer Aufgabe einen Verantwortlichen zu."
+msgstr "Weisen Sie Ihrer Aufgabe einen Verantwortlichen zu"
 
 #. module: project
 #. odoo-javascript
@@ -1089,7 +1095,7 @@ msgstr "Autor"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Auto-generate tasks for regular activities"
-msgstr "Erstellen Sie automatisch Aufgaben für regelmäßige Aktivitäten."
+msgstr "Erstellen Sie automatisch Aufgaben für regelmäßige Aktivitäten"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_state
@@ -1261,6 +1267,8 @@ msgid ""
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
 msgstr ""
+"Wählen Sie einen <b>Namen</b> für Projekt. <i>Es liegt ganz bei Ihnen: der "
+"Name eines Kunden, eines Produkts, eines Teams, einer Baustelle usw.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -1341,7 +1349,7 @@ msgid ""
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
 "Sammeln Sie Feedback von Ihren Kunden, indem Sie ihnen eine Bewertungsanfrage senden, wenn eine Aufgabe eine bestimmte Phase erreicht. Definieren Sie dazu eine Bewertungs-E-Mail-Vorlage für die entsprechenden Phasen.\n"
-"Bewertung bei Phasenwechsel: Eine E-Mail wird automatisch gesendet, wenn die Aufgabe die Phase erreicht, für die die E-Mail-Vorlage zur Bewertung festgelegt wurde.\n"
+"Bewertung bei Stufenwechsel: Eine E-Mail wird automatisch gesendet, wenn die Aufgabe die Phase erreicht, für die die E-Mail-Vorlage zur Bewertung festgelegt wurde.\n"
 "Regelmäßige Bewertung: Eine E-Mail wird automatisch in regelmäßigen Abständen versendet, solange sich die Aufgabe in der Phase befindet, für die die E-Mail-Vorlage für die Bewertung festgelegt wurde."
 
 #. module: project
@@ -1795,7 +1803,7 @@ msgstr ""
 msgid "Define the steps your tasks move through from creation to completion."
 msgstr ""
 "Bestimmen Sie die Schritte, die Ihre Aufgaben durchlaufen: von der "
-"Erstellung bis zum Abschluss"
+"Erstellung bis zum Abschluss."
 
 #. module: project
 #. odoo-javascript
@@ -1909,7 +1917,7 @@ msgstr "Design"
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Determine the order in which to perform tasks"
 msgstr ""
-"Bestimmen Sie die Reihenfolge, in der Aufgaben bearbeitet werden sollen."
+"Bestimmen Sie die Reihenfolge, in der Aufgaben bearbeitet werden sollen"
 
 #. module: project
 #. odoo-javascript
@@ -1988,7 +1996,7 @@ msgstr "Schaltfläche „Übergeordnete Aufgabe“ anzeigen"
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
 "Keine Zugriffsberechtigung, überspringen dieser Daten für die E-Mail-"
-"Übersicht des Benutzers."
+"Übersicht des Benutzers"
 
 #. module: project
 #. odoo-javascript
@@ -3130,6 +3138,13 @@ msgid "Next Activity"
 msgstr "Nächste Aktivität"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Nächstes Aktivitätskalenderereignis"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__activity_date_deadline
@@ -3294,7 +3309,7 @@ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 #: model:ir.model.fields,help:project.field_project_task__message_has_error_counter
 #: model:ir.model.fields,help:project.field_project_update__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Anzahl der Nachrichten mit Zustellungsfehler."
+msgstr "Anzahl der Nachrichten mit Zustellungsfehler"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__off_track
@@ -3343,6 +3358,11 @@ msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
 "Ups! Es ist ein Fehler aufgetreten. Versuchen Sie, die Seite erneut zu laden"
 " und sich anzumelden."
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__open_task_count
+msgid "Open Task Count"
+msgstr "Anzahl offener Aufgaben"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -3443,7 +3463,7 @@ msgid ""
 "Partner company cannot be different from its assigned projects' company"
 msgstr ""
 "Das Partnerunternehmen darf sich nicht vom Unternehmen des zugewiesenen "
-"Projekts unterscheiden."
+"Projekts unterscheiden"
 
 #. module: project
 #. odoo-python
@@ -3452,7 +3472,7 @@ msgstr ""
 msgid "Partner company cannot be different from its assigned tasks' company"
 msgstr ""
 "Das Partnerunternehmen darf sich nicht vom Unternehmen der zugewiesenen "
-"Aufgaben unterscheiden."
+"Aufgaben unterscheiden"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -5007,7 +5027,7 @@ msgstr ""
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
 #, python-format
 msgid "The view must be grouped by date and by stage_id"
-msgstr "Die Ansicht muss nach Datum und stage_id gruppiert sein."
+msgstr "Die Ansicht muss nach Datum und Phase gruppiert sein"
 
 #. module: project
 #. odoo-javascript
@@ -5108,7 +5128,7 @@ msgstr ""
 "Dieses Projekt ist mit keinem Unternehmen verbunden, während die Phase %s "
 "zugeordnet ist. Es gibt mehrere Optionen: Entweder Sie ändern das "
 "Unternehmen des Projekts, um es an das Unternehmen der Phase anzupassen, "
-"oder Sie entfernen die Unternehmensbezeichnung aus der Phase."
+"oder Sie entfernen die Unternehmensbezeichnung aus der Phase"
 
 #. module: project
 #. odoo-javascript
@@ -5239,7 +5259,7 @@ msgstr "Gesamt"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
-msgstr "Verfolgen Sie die Kundenzufriedenheit bei Aufgaben."
+msgstr "Verfolgen Sie die Kundenzufriedenheit bei Aufgaben"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5247,7 +5267,7 @@ msgstr "Verfolgen Sie die Kundenzufriedenheit bei Aufgaben."
 msgid "Track major progress points that must be reached to achieve success"
 msgstr ""
 "Verfolgen Sie die wichtigsten Punkte, die erreicht werden müssen, um "
-"erfolgreich zu sein."
+"erfolgreich zu sein"
 
 #. module: project
 #. odoo-javascript
@@ -5293,12 +5313,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track the progress of your projects"
-msgstr "Verfolgen Sie den Fortschritt Ihrer Projekte."
+msgstr "Verfolgen Sie den Fortschritt Ihrer Projekte"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr "Verfolgen Sie die für Projekte und Aufgaben aufgewendete Zeit."
+msgstr "Verfolgen Sie die für Projekte und Aufgaben aufgewendete Zeit"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_tags__color
@@ -5460,18 +5480,31 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
+"Nutzen Sie den Chatter, um <b>E-Mails zu versenden</b> und effizient mit "
+"Ihren Kunden zu kommunizieren. Fügen Sie neue Personen zur Follower-Liste "
+"hinzu, um sie auf die wichtigsten Änderungen in dieser Aufgabe aufmerksam zu"
+" machen."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
-"            #tags Set tags on the task\n"
-"            @user Assign the task to a user\n"
-"            ! Set the task a high priority\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
 "\n"
-"            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Verwenden Sie diese Schlagwörter im Titel, um neue Aufgaben zu erstellen::\n"
+"\n"
+"        30 St. Der Aufgabe 30 Stunden zuteilen\n"
+"        #Stichwörter Stichwörter für Aufgabe festlegen\n"
+"        @Benutzer Die Aufgabe einem Benutzer zuweisen\n"
+"        ! Aufgabe als höchste Priorität einstellen\n"
+"\n"
+"        Stellen Sie sicher, dass Sie das richtige Format und die richtige Reihenfolge verwenden, z. B. Verbessern Sie den Konfigurationsbildschirm 5h #Funktion #v16 @Mitchell!"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id
@@ -5488,7 +5521,7 @@ msgstr "Ansicht"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "View Task"
-msgstr "Aufgabe anzeigen"
+msgstr "Aufgaben ansehen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_tree
@@ -5570,7 +5603,7 @@ msgid ""
 "                    Collaborators will be able to view and modify part of the tasks' information."
 msgstr ""
 "Wenn Sie ein Projekt im Bearbeitungsmodus freigeben, geben Sie anderen Personen Zugriff auf die Kanban- und Listenansicht Ihrer Aufgaben.\n"
-"                    Die Mitwirkenden können einen Teil der Informationen zu den Aufgaben einsehen und ändern"
+"                    Die Mitwirkenden können einen Teil der Informationen zu den Aufgaben einsehen und ändern."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form

@@ -82,8 +82,8 @@ registry.category("web_tour.tours").add('account_tour', {
         content: _t("Send the invoice to the customer and check what he'll receive."),
         position: "bottom",
     }, {
-        trigger: "button[name=action_open_partners_without_email]",
-        extra_trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
+        trigger: "div[name=partner_missing_email] a",
+        extra_trigger: "[name=move_type] [raw-value=out_invoice]",
         content: _t("Complete the partner data with email"),
     }, {
         trigger: ".o_field_widget[name=email] input, input[name=email]",

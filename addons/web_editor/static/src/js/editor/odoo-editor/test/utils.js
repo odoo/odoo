@@ -521,6 +521,10 @@ export async function insertParagraphBreak(editor) {
     editor.execCommand('oEnter');
 }
 
+export async function switchDirection(editor) {
+    editor.execCommand('switchDirection');
+}
+
 export async function insertLineBreak(editor) {
     editor.execCommand('oShiftEnter');
 }

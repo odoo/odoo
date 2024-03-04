@@ -3,9 +3,10 @@
 # 	* payment_custom
 # 
 # Translators:
-# Сергей Шебанин <sergey@shebanin.ru>, 2023
-# ILMIR <karamov@it-projects.info>, 2023
 # Martin Trigaux, 2023
+# ILMIR <karamov@it-projects.info>, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,11 +28,13 @@ msgid ""
 "<small class=\"text-center text-wrap lh-sm\">Scan me in your banking "
 "app</small>"
 msgstr ""
+"<small class=\"text-center text-wrap lh-sm\">Отсканируйте меня в своем "
+"банковском приложении</small>"
 
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
 msgid "<strong class=\"mt-auto\">Communication: </strong>"
-msgstr ""
+msgstr "<strong class=\"mt-auto\">Коммуникация: </strong>"
 
 #. module: payment_custom
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__code
@@ -46,22 +49,22 @@ msgstr "Пользовательский"
 #. module: payment_custom
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__custom_mode
 msgid "Custom Mode"
-msgstr ""
+msgstr "Пользовательский режим"
 
 #. module: payment_custom
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__qr_code
 msgid "Enable QR Codes"
-msgstr ""
+msgstr "Включить QR-коды"
 
 #. module: payment_custom
 #: model:ir.model.fields,help:payment_custom.field_payment_provider__qr_code
 msgid "Enable the use of QR-codes when paying by wire transfer."
-msgstr ""
+msgstr "Включите использование QR-кодов при оплате банковским переводом."
 
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
 msgid "Finalize your payment"
-msgstr ""
+msgstr "Завершите оплату"
 
 #. module: payment_custom
 #. odoo-python
@@ -79,35 +82,36 @@ msgstr "ИЛИ"
 #: model:ir.model.constraint,message:payment_custom.constraint_payment_provider_custom_providers_setup
 msgid "Only custom providers should have a custom mode."
 msgstr ""
+"Только пользовательские провайдеры должны иметь пользовательский режим."
 
 #. module: payment_custom
 #: model:ir.model,name:payment_custom.model_payment_provider
 msgid "Payment Provider"
-msgstr "Платежный провайдер"
+msgstr "Поставщик платежей"
 
 #. module: payment_custom
 #: model:ir.model,name:payment_custom.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Операция Оплаты"
+msgstr "платеж"
 
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.payment_provider_form
 msgid "Reload Pending Message"
-msgstr ""
+msgstr "Сообщение об ожидании перезагрузки"
 
 #. module: payment_custom
 #. odoo-python
 #: code:addons/payment_custom/models/payment_transaction.py:0
 #, python-format
 msgid "The customer has selected %(provider_name)s to make the payment."
-msgstr ""
+msgstr "Клиент выбрал %(provider_name)s для совершения платежа."
 
 #. module: payment_custom
 #: model:ir.model.fields,help:payment_custom.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr "Технический код этого платежного провайдера."
+msgstr "Технический код данного провайдера платежей."
 
 #. module: payment_custom
 #: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__custom_mode__wire_transfer
 msgid "Wire Transfer"
-msgstr "Банковский Перевод"
+msgstr "Банковский перевод"

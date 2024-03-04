@@ -6,7 +6,16 @@ from dateutil.relativedelta import relativedelta
 import os.path
 import pytz
 
-from odoo.tools import config, misc, date_utils, file_open, file_path, merge_sequences, remove_accents
+from odoo.tools import (
+    config,
+    date_utils,
+    file_open,
+    file_path,
+    merge_sequences,
+    misc,
+    remove_accents,
+    validate_url,
+)
 from odoo.tests.common import TransactionCase, BaseCase
 
 
@@ -507,3 +516,115 @@ class TestDictTools(BaseCase):
             d.update({'baz': 'xyz'})
         with self.assertRaises(TypeError):
             dict.update(d, {'baz': 'xyz'})
+
+
+class TestFormatLang(TransactionCase):
+    def test_value_and_digits(self):
+        self.assertEqual(misc.formatLang(self.env, 100.23, digits=1), '100.2')
+        self.assertEqual(misc.formatLang(self.env, 100.23, digits=3), '100.230')
+
+        self.assertEqual(misc.formatLang(self.env, ''), '', 'If value is an empty string, it should return an empty string (not 0)')
+
+        self.assertEqual(misc.formatLang(self.env, 100), '100.00', 'If digits is None (default value), it should default to 2')
+
+        # Default rounding is 'HALF_EVEN'
+        self.assertEqual(misc.formatLang(self.env, 100.205), '100.20')
+        self.assertEqual(misc.formatLang(self.env, 100.215), '100.22')
+
+    def test_grouping(self):
+        self.env["res.lang"].create({
+            "name": "formatLang Lang",
+            "code": "fLT",
+            "grouping": "[3,2,-1]",
+            "decimal_point": "!",
+            "thousands_sep": "?",
+        })
+
+        self.env['res.lang']._activate_lang('fLT')
+
+        self.assertEqual(misc.formatLang(self.env['res.lang'].with_context(lang='fLT').env, 1000000000, grouping=True), '10000?00?000!00')
+        self.assertEqual(misc.formatLang(self.env['res.lang'].with_context(lang='fLT').env, 1000000000, grouping=False), '1000000000.00')
+
+    def test_decimal_precision(self):
+        decimal_precision = self.env['decimal.precision'].create({
+            'name': 'formatLang Decimal Precision',
+            'digits': 3,  # We want .001 decimals to make sure the decimal precision parameter 'dp' is chosen.
+        })
+
+        self.assertEqual(misc.formatLang(self.env, 100, dp=decimal_precision.name), '100.000')
+
+    def test_currency_object(self):
+        currency_object = self.env['res.currency'].create({
+            'name': 'formatLang Currency',
+            'symbol': 'fL',
+            'rounding': 0.1,  # We want .1 decimals to make sure 'currency_obj' is chosen.
+            'position': 'after',
+        })
+
+        self.assertEqual(misc.formatLang(self.env, 100, currency_obj=currency_object), '100.0%sfL' % u'\N{NO-BREAK SPACE}')
+
+        currency_object.write({'position': 'before'})
+
+        self.assertEqual(misc.formatLang(self.env, 100, currency_obj=currency_object), 'fL%s100.0' % u'\N{NO-BREAK SPACE}')
+
+    def test_decimal_precision_and_currency_object(self):
+        decimal_precision = self.env['decimal.precision'].create({
+            'name': 'formatLang Decimal Precision',
+            'digits': 3,
+        })
+
+        currency_object = self.env['res.currency'].create({
+            'name': 'formatLang Currency',
+            'symbol': 'fL',
+            'rounding': 0.1,
+            'position': 'after',
+        })
+
+        # If we have a 'dp' and 'currency_obj', we use the decimal precision of 'dp' and the format of 'currency_obj'.
+        self.assertEqual(misc.formatLang(self.env, 100, dp=decimal_precision.name, currency_obj=currency_object), '100.000%sfL' % u'\N{NO-BREAK SPACE}')
+
+    def test_rounding_method(self):
+        self.assertEqual(misc.formatLang(self.env, 100.205), '100.20')  # Default is 'HALF-EVEN'
+        self.assertEqual(misc.formatLang(self.env, 100.215), '100.22')  # Default is 'HALF-EVEN'
+
+        self.assertEqual(misc.formatLang(self.env, 100.205, rounding_method='HALF-UP'), '100.21')
+        self.assertEqual(misc.formatLang(self.env, 100.215, rounding_method='HALF-UP'), '100.22')
+
+        self.assertEqual(misc.formatLang(self.env, 100.205, rounding_method='HALF-DOWN'), '100.20')
+        self.assertEqual(misc.formatLang(self.env, 100.215, rounding_method='HALF-DOWN'), '100.21')
+
+    def test_rounding_unit(self):
+        self.assertEqual(misc.formatLang(self.env, 1000000.00), '1,000,000.00')
+        self.assertEqual(misc.formatLang(self.env, 1000000.00, rounding_unit='units'), '1,000,000')
+        self.assertEqual(misc.formatLang(self.env, 1000000.00, rounding_unit='thousands'), '1,000')
+        self.assertEqual(misc.formatLang(self.env, 1000000.00, rounding_unit='lakhs'), '10')
+        self.assertEqual(misc.formatLang(self.env, 1000000.00, rounding_unit="millions"), '1')
+
+    def test_rounding_method_and_rounding_unit(self):
+        self.assertEqual(misc.formatLang(self.env, 1822060000, rounding_method='HALF-UP', rounding_unit='lakhs'), '18,221')
+        self.assertEqual(misc.formatLang(self.env, 1822050000, rounding_method='HALF-UP', rounding_unit='lakhs'), '18,221')
+        self.assertEqual(misc.formatLang(self.env, 1822049900, rounding_method='HALF-UP', rounding_unit='lakhs'), '18,220')
+
+
+class TestUrlValidate(BaseCase):
+    def test_url_validate(self):
+        for case, truth in [
+            # full URLs should be preserved
+            ('http://example.com', 'http://example.com'),
+            ('http://example.com/index.html', 'http://example.com/index.html'),
+            ('http://example.com?debug=1', 'http://example.com?debug=1'),
+            ('http://example.com#h3', 'http://example.com#h3'),
+
+            # URLs with a domain should get a http scheme
+            ('example.com', 'http://example.com'),
+            ('example.com/index.html', 'http://example.com/index.html'),
+            ('example.com?debug=1', 'http://example.com?debug=1'),
+            ('example.com#h3', 'http://example.com#h3'),
+        ]:
+            with self.subTest(case=case):
+                self.assertEqual(validate_url(case), truth)
+
+        # broken cases, do we really want that?
+        self.assertEqual(validate_url('/index.html'), 'http:///index.html')
+        self.assertEqual(validate_url('?debug=1'), 'http://?debug=1')
+        self.assertEqual(validate_url('#model=project.task&id=3603607'), 'http://#model=project.task&id=3603607')

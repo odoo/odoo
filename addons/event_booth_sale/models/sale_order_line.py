@@ -37,12 +37,22 @@ class SaleOrderLine(models.Model):
             so_line.event_booth_pending_ids = so_line.event_booth_registration_ids.event_booth_id
 
     def _inverse_event_booth_pending_ids(self):
+        """ This method will take care of creating the event.booth.registrations based on selected booths.
+        It will also unlink ones that are de-selected. """
+
         for so_line in self:
+            existing_booths = so_line.event_booth_registration_ids.event_booth_id or self.env[
+                'event.booth']
+            selected_booths = so_line.event_booth_pending_ids
+
+            so_line.event_booth_registration_ids.filtered(
+                lambda reg: reg.event_booth_id not in selected_booths).unlink()
+
             self.env['event.booth.registration'].create([{
                 'event_booth_id': booth.id,
                 'sale_order_line_id': so_line.id,
                 'partner_id': so_line.order_id.partner_id.id
-            } for booth in so_line.event_booth_pending_ids])
+            } for booth in selected_booths - existing_booths])
 
     def _search_event_booth_pending_ids(self, operator, value):
         return [('event_booth_registration_ids.event_booth_id', operator, value)]

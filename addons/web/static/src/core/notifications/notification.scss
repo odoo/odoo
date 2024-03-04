@@ -7,6 +7,7 @@
     z-index: $o-notification-zindex;
 
     .o_notification {
+        background-color: var(--Notification__background-color, #{$o-view-background-color}); // Needed to override the background in 'website.scss'
         border-left-width: $o-notification-border-left-width !important; // Overrides border-[x] utility classes
         box-shadow: $o-notification-shadow;
     }

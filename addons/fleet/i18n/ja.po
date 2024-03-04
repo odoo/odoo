@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Junko Augias, 2024
 # 
 msgid ""
@@ -87,7 +88,7 @@ msgstr "要アクション"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Activation Cost"
-msgstr "稼動費用"
+msgstr "初期費用"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__active
@@ -334,7 +335,7 @@ msgstr "種類の計算利益"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Cancel"
-msgstr "キャンセル"
+msgstr "取消"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__write_off_date
@@ -545,12 +546,12 @@ msgstr "契約"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__amount
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Cost"
-msgstr "原価"
+msgstr "費用"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__cost_type
 msgid "Cost Type"
-msgstr "コストタイプ"
+msgstr "費用タイプ"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -560,12 +561,12 @@ msgstr "契約時に1度だけ発生する費用"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__cost_subtype_id
 msgid "Cost type purchased with this cost"
-msgstr "この費用で購入された原価タイプ"
+msgstr "この費用で購入された費用タイプ"
 
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting_costs
 msgid "Costs"
-msgstr "経費"
+msgstr "費用"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_costs_reporting_action
@@ -691,7 +692,7 @@ msgstr "車両登録日"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__date
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__date
 msgid "Date when the cost has been executed"
-msgstr "原価が実行された日付"
+msgstr "費用が実行された日付"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__start_date
@@ -931,7 +932,7 @@ msgstr "最初の契約日"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Fiscality"
-msgstr "財政重視"
+msgstr "経済性"
 
 #. module: fleet
 #: model:ir.module.category,name:fleet.module_fleet_category
@@ -953,7 +954,7 @@ msgstr "フリート分析レポート"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_tree
 msgid "Fleet Costs Analysis"
-msgstr "フリートコスト分析"
+msgstr "フリート費用分析"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
@@ -975,7 +976,7 @@ msgstr "フリートサービスタイプ"
 #. module: fleet
 #: model:ir.actions.server,name:fleet.ir_cron_contract_costs_generator_ir_actions_server
 msgid "Fleet: Generate contracts costs based on costs frequency"
-msgstr "Fleet：コスト頻度に基づいて契約コストを生成する"
+msgstr "フリート：費用発生頻度に基づいて契約費用を生成する"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_follower_ids
@@ -1219,7 +1220,7 @@ msgstr "サービス料"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__futur
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__futur
 msgid "Incoming"
-msgstr "入荷"
+msgstr "新規作成"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -1348,15 +1349,12 @@ msgid ""
 "Manage all your contracts (leasing, insurances, etc.) with\n"
 "            their related services, costs. Odoo will automatically warn\n"
 "            you when some contracts have to be renewed."
-msgstr ""
-"Manage all your contracts (leasing, insurances, etc.) with\n"
-"            their related services, costs. Odoo will automatically warn\n"
-"            you when some contracts have to be renewed."
+msgstr "すべての契約（リース、保険など）を関連サービス、費用と共に管理できます。契約更新が必要な場合、Odooが自動的に警告します。"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
 msgid "Manage efficiently your different effective vehicles Costs with Odoo."
-msgstr "Odooで様々な効果的な車両コストを効率的に管理しましょう。"
+msgstr "Odooで様々な効果的な車両費用を効率的に管理しましょう。"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_10
@@ -1773,7 +1771,7 @@ msgstr "購入金額"
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
 msgid "Purchased"
-msgstr "購入した"
+msgstr "購入"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_37
@@ -1788,12 +1786,12 @@ msgstr "もっと効率的に車両を管理しますか？"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_generated
 msgid "Recurring Cost"
-msgstr "定期的コスト"
+msgstr "定期的費用"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_frequency
 msgid "Recurring Cost Frequency"
-msgstr "経費の頻度"
+msgstr "定期的費用の頻度"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__ins_ref
@@ -1955,7 +1953,7 @@ msgstr "サービス"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_graph
 msgid "Services Costs Per Month"
-msgstr "サービス月間コスト"
+msgstr "サービス月間費用"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_services
@@ -2023,7 +2021,7 @@ msgstr "スターター交換"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__state_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_state_view_tree
 msgid "State"
-msgstr "都道府県・州"
+msgstr "状態"
 
 #. module: fleet
 #: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_state_fleet_state_name_unique
@@ -2056,7 +2054,7 @@ msgstr ""
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_tree
 msgid "Sum of Cost"
-msgstr "コスト合計"
+msgstr "費用合計"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_5

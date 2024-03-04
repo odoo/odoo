@@ -33,8 +33,9 @@ class MrpProduction(models.Model):
     @api.depends('analytic_distribution')
     def _compute_analytic_account_ids(self):
         for record in self:
-            record.analytic_account_ids = list(
-                map(int, record.analytic_distribution.keys())) if record.analytic_distribution else []
+            record.analytic_account_ids = bool(record.analytic_distribution) and self.env['account.analytic.account'].browse(
+                list({int(account_id) for ids in record.analytic_distribution for account_id in ids.split(",")})
+            ).exists()
 
     @api.constrains('analytic_distribution')
     def _check_analytic(self):

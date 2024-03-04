@@ -126,10 +126,12 @@ class SupplierInfo(models.Model):
         orderpoint = self.env['stock.warehouse.orderpoint'].browse(orderpoint_id)
         if not orderpoint:
             return
-        orderpoint.route_id = self.env['stock.rule'].search([('action', '=', 'buy')], limit=1).route_id.id
+        if 'buy' not in orderpoint.route_id.rule_ids.mapped('action'):
+            orderpoint.route_id = self.env['stock.rule'].search([('action', '=', 'buy')], limit=1).route_id.id
         orderpoint.supplier_id = self
-        if orderpoint.qty_to_order < self.min_qty:
-            orderpoint.qty_to_order = self.min_qty
+        supplier_min_qty = self.product_uom._compute_quantity(self.min_qty, orderpoint.product_id.uom_id)
+        if orderpoint.qty_to_order < supplier_min_qty:
+            orderpoint.qty_to_order = supplier_min_qty
         if self._context.get('replenish_id'):
             replenish = self.env['product.replenish'].browse(self._context.get('replenish_id'))
             replenish.supplier_id = self

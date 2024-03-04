@@ -237,6 +237,17 @@
                 <Items>
                     <t t-foreach="invoice['Items']" t-as="line"><t t-call="l10n_es_edi_facturae.invoice_line_type"/></t>
                 </Items>
+                <PaymentDetails t-if="invoice['PaymentDetails']">
+                    <Installment t-foreach="invoice['PaymentDetails']" t-as="installment">
+                        <InstallmentDueDate t-out="installment['InstallmentDueDate']"/>
+                        <InstallmentAmount t-out="float_repr(installment['InstallmentAmount'], 2)"/>
+                        <PaymentMeans t-out="installment['PaymentMeans']"/>
+                        <AccountToBeCredited>
+                            <IBAN t-out="installment['AccountToBeCredited']['IBAN']"/>
+                            <BIC t-out="installment['AccountToBeCredited']['BIC']"/>
+                        </AccountToBeCredited>
+                    </Installment>
+                </PaymentDetails>
                 <LegalLiterals t-if="invoice.get('LegalLiterals')">
                     <t t-foreach="invoice['LegalLiterals']" t-as="reference"><LegalReference t-out="reference"/></t>
                 </LegalLiterals>

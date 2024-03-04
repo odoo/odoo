@@ -8,17 +8,18 @@
 # Martin Trigaux, 2023
 # Jiří Podhorecký, 2023
 # Ivana Bartonkova, 2023
-# Wil Odoo, 2023
 # Tomáš Píšek, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
 # Marek Záda, 2024
+# Katerina Horylova, 2024
+# Wil Odoo, 2024
 # Jakub Smolka, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Jakub Smolka, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
@@ -1683,7 +1684,7 @@ msgstr "Potvrdit"
 #: code:addons/point_of_sale/static/src/app/utils/input_popups/number_popup.js:0
 #, python-format
 msgid "Confirm?"
-msgstr ""
+msgstr "Potvrdit?"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3782,7 +3783,7 @@ msgstr "Nová objednávka"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "New Session"
-msgstr "Nové sezení"
+msgstr "Nová prodejní relace"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3795,6 +3796,11 @@ msgstr ""
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
 msgstr "Stojan na noviny"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Další aktivita z kalendáře"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -4024,6 +4030,13 @@ msgid "OK"
 msgstr "OK"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#, python-format
+msgid "Odoo Point of Sale"
+msgstr ""
+
+#. module: point_of_sale
 #: model:product.template,name:point_of_sale.office_combo_product_template
 msgid "Office combo"
 msgstr ""
@@ -4065,6 +4078,12 @@ msgid ""
 msgstr ""
 "Pro tuto položku refundace je povoleno pouze záporné množství. Kliknutím na "
 "+/- upravíte množství, které má být vráceno."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Only administrators can edit receipt headers and footers"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -4610,7 +4629,7 @@ msgstr "Platební metoda"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Payment methods available"
-msgstr "Dostupné platební podmínky"
+msgstr "Dostupné platební metody"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4654,7 +4673,7 @@ msgstr "Rozdíl plateb"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_payment_methods_tree
 msgid "Payments Methods"
-msgstr "Platební podmínky"
+msgstr "Platební metody"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5199,7 +5218,6 @@ msgstr "Běží na"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
-#: model:ir.ui.menu,name:point_of_sale.menu_pos_preparation_display
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation Display"
 msgstr ""
@@ -5575,13 +5593,6 @@ msgstr "Proxy odpojené"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__proxy_ip
 msgid "Proxy IP Address"
 msgstr "Proxy IP adresa"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_printer.py:0
-#, python-format
-msgid "Proxy IP cannot be empty."
-msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6559,6 +6570,13 @@ msgstr "Počáteční kategorie"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__start_date
 msgid "Start Date"
 msgstr "Počáteční datum"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/generic_components/order_widget/order_widget.js:0
+#, python-format
+msgid "Start adding products"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

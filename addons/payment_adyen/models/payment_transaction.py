@@ -40,6 +40,7 @@ class PaymentTransaction(models.Model):
             'access_token': payment_utils.generate_access_token(
                 processing_values['reference'],
                 converted_amount,
+                self.currency_id.id,
                 processing_values['partner_id']
             )
         }
@@ -96,7 +97,12 @@ class PaymentTransaction(models.Model):
         # Make the payment request to Adyen
         try:
             response_content = self.provider_id._adyen_make_request(
-                endpoint='/payments', payload=data, method='POST'
+                endpoint='/payments',
+                payload=data,
+                method='POST',
+                idempotency_key=payment_utils.generate_idempotency_key(
+                    self, scope='payment_request_token'
+                )
             )
         except ValidationError as e:
             if self.operation == 'offline':

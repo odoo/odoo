@@ -57,23 +57,18 @@ function updateAttr(record, fieldName, value) {
     const fieldDefinition = record.Model._fields.get(fieldName);
     // ensure each field write goes through the proxy exactly once to trigger reactives
     const targetRecord = record._proxyUsed.has(fieldName) ? record : record._proxy;
-    if (
-        fieldDefinition?.html &&
-        Record.trusted &&
-        typeof value === "string" &&
-        !(value instanceof Markup)
-    ) {
-        if (record[fieldName]?.toString() !== value) {
-            record._updateFields.add(fieldName);
-            targetRecord[fieldName] = markup(value);
-            record._updateFields.delete(fieldName);
-        }
-    } else {
-        if (record[fieldName] !== value) {
-            record._updateFields.add(fieldName);
-            targetRecord[fieldName] = value;
-            record._updateFields.delete(fieldName);
-        }
+    let shouldChange = record[fieldName] !== value;
+    let newValue = value;
+    if (fieldDefinition?.html && Record.trusted) {
+        shouldChange =
+            record[fieldName]?.toString() !== value?.toString() ||
+            !(record[fieldName] instanceof Markup);
+        newValue = typeof value === "string" ? markup(value) : value;
+    }
+    if (shouldChange) {
+        record._updateFields.add(fieldName);
+        targetRecord[fieldName] = newValue;
+        record._updateFields.delete(fieldName);
     }
 }
 
@@ -674,22 +669,31 @@ class RecordList extends Array {
         return Record.MAKE_UPDATE(function recordListAssign() {
             /** @type {Record[]|Set<Record>|RecordList<Record|any[]>} */
             const collection = Record.isRecord(data) ? [data] : data;
-            // l1 and collection could be same record list,
+            // data and collection could be same record list,
             // save before clear to not push mutated recordlist that is empty
             const vals = [...collection];
-            /** @type {R[]} */
-            const oldRecordsProxy = recordList._proxyInternal.slice.call(recordList._proxy);
-            for (const oldRecordProxy of oldRecordsProxy) {
-                toRaw(oldRecordProxy)._raw.__uses__.delete(recordList);
-            }
-            const recordsProxy = vals.map((val) =>
+            const oldRecords = recordList._proxyInternal.slice
+                .call(recordList._proxy)
+                .map((recordProxy) => toRaw(recordProxy)._raw);
+            const newRecords = vals.map((val) =>
                 recordList._insert(val, function recordListAssignInsert(record) {
-                    record.__uses__.add(recordList);
+                    if (record.notIn(oldRecords)) {
+                        record.__uses__.add(recordList);
+                        Record.ADD_QUEUE(recordList.field, "onAdd", record);
+                    }
                 })
             );
-            recordList._proxy.data = recordsProxy.map(
-                (recordProxy) => toRaw(recordProxy)._raw.localId
-            );
+            const inverse = recordList.fieldDefinition.inverse;
+            for (const oldRecord of oldRecords) {
+                if (oldRecord.notIn(newRecords)) {
+                    oldRecord.__uses__.delete(recordList);
+                    Record.ADD_QUEUE(recordList.field, "onDelete", oldRecord);
+                    if (inverse) {
+                        oldRecord._fields.get(inverse).value.delete(recordList.owner);
+                    }
+                }
+            }
+            recordList._proxy.data = newRecords.map((newRecord) => newRecord.localId);
         });
     }
     /** @param {R[]} records */

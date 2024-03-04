@@ -23,10 +23,10 @@ export function useMandatoryDays(props) {
                 `.fc-day[data-date="${info.el.dataset.date}"]`
             );
             if (dayNumberElTop) {
-                dayNumberElTop.classList.add(`hr_mandatory_day_top_${mandatoryDay}`);
+                dayNumberElTop.classList.add('hr_mandatory_day', `hr_mandatory_day_top_${mandatoryDay}`);
             }
             if (dayNumberEl) {
-                dayNumberEl.classList.add(`hr_mandatory_day_${mandatoryDay}`);
+                dayNumberEl.classList.add('hr_mandatory_day',`hr_mandatory_day_${mandatoryDay}`);
             }
         }
         return props.model.mandatoryDays;

@@ -19,14 +19,7 @@ echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
 locale-gen
 source ~/.bashrc
 
-# upgrade firmware-brcm80211 broke access point on rpi4
-apt-mark hold firmware-brcm80211
-# Installations from the current Debian Bookworm (12.0) on amd64 systems are experiencing the problem that prevents
-# the kernel from being upgraded (e.g. when trying to upgrade to kernel linux-image-6.1.0-10-amd64)
-# so we need to remove apt upgrade
-
-# we need to downgrade libssl3 to 3.0.9-1 to avoid error during installing packages
-apt -y --allow-downgrades install libssl3=3.0.9-1
+apt-get update
 
 # At the first start it is necessary to configure a password
 # This will be modified by a unique password on the first start of Odoo
@@ -75,14 +68,11 @@ PKGS_TO_INSTALL="
     python3-psutil \
     python3-psycopg2 \
     python3-pydot \
-    python3-pypdf2 \
     python3-qrcode \
     python3-reportlab \
     python3-requests \
     python3-serial \
     python3-tz \
-    python3-urllib3 \
-    python3-werkzeug \
     rsync \
     screen \
     swig \
@@ -122,7 +112,12 @@ PIP_TO_INSTALL="
     vcgencmd \
     RPi.GPIO \
     rjsmin==1.1.0 \
-    websocket-client==1.6.3"
+    websocket-client==1.6.3 \
+    PyPDF2==1.26.0 \
+    Werkzeug==2.0.2 \
+    urllib3==1.26.5 \
+    pyOpenssl==22.0.0 \
+    cryptography==36.0.2"
 
 pip3 install ${PIP_TO_INSTALL} --break-system-package
 

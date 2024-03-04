@@ -241,4 +241,7 @@ export class PivotRenderer extends Component {
 }
 PivotRenderer.template = "web.PivotRenderer";
 PivotRenderer.components = { Dropdown, DropdownItem, CheckBox, PivotGroupByMenu };
-PivotRenderer.props = ["model"];
+PivotRenderer.props = ["model", "buttonTemplate?"];
+PivotRenderer.defaultProps = {
+    buttonTemplate: "web.PivotView.Buttons",
+};

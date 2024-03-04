@@ -8,19 +8,28 @@ import {
     toggleClass,
     insertListAfter,
     getAdjacents,
+    closestElement,
 } from '../utils/utils.js';
 
 Text.prototype.oToggleList = function (offset, mode) {
-    this.parentElement.oToggleList(childNodeIndex(this), mode);
+    // Create a new list if textNode is inside a nav-item list
+    if (closestElement(this, 'li').classList.contains('nav-item')) {
+        const restoreCursor = preserveCursor(this.ownerDocument);
+        insertListAfter(this, mode, [this]);
+        restoreCursor();
+    } else {
+        this.parentElement.oToggleList(childNodeIndex(this), mode);
+    }
 };
 
 HTMLElement.prototype.oToggleList = function (offset, mode = 'UL') {
     if (!isBlock(this)) {
         return this.parentElement.oToggleList(childNodeIndex(this));
     }
-    const inLI = this.closest('li');
-    if (inLI) {
-        return inLI.oToggleList(0, mode);
+    const closestLi = this.closest('li');
+    // Do not toggle nav-item list as they don't behave like regular list items
+    if (closestLi && !closestLi.classList.contains('nav-item')) {
+        return closestLi.oToggleList(0, mode);
     }
     const restoreCursor = preserveCursor(this.ownerDocument);
     if (this.oid === 'root') {
@@ -30,12 +39,8 @@ HTMLElement.prototype.oToggleList = function (offset, mode = 'UL') {
         restoreCursor();
     } else {
         const list = insertListAfter(this, mode, [this]);
-        for (const attribute of this.attributes) {
-            if (attribute.name === 'class' && attribute.value && list.className) {
-                list.className = `${list.className} ${attribute.value}`;
-            } else {
-                list.setAttribute(attribute.name, attribute.value);
-            }
+        if (this.hasAttribute('dir')) {
+            list.setAttribute('dir', this.getAttribute('dir'));
         }
         restoreCursor(new Map([[this, list.firstElementChild]]));
     }

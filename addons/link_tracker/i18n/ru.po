@@ -4,21 +4,18 @@
 # 
 # Translators:
 # Alena Vlasova, 2023
-# alenafairy, 2023
-# Irina Fedulova <istartlin@gmail.com>, 2023
 # Collex100, 2023
-# ILMIR <karamov@it-projects.info>, 2023
 # Martin Trigaux, 2023
-# Ivan Kropotkin <yelizariev@itpp.dev>, 2023
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,24 +24,34 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: link_tracker
+#. odoo-python
+#: code:addons/link_tracker/models/link_tracker.py:0
+#: code:addons/link_tracker/models/link_tracker.py:0
+#, python-format
+msgid "%r is not a valid link, links cannot redirect to the current page."
+msgstr ""
+"%r не является правильной ссылкой, ссылки не могут перенаправлять на текущую"
+" страницу."
+
+#. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_kanban
 msgid "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\"/>"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "<span class=\"o_stat_text\">Visit Page</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Посетить страницу</span>"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__absolute_url
 msgid "Absolute URL"
-msgstr ""
+msgstr "Абсолютный URL"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__label
 msgid "Button label"
-msgstr ""
+msgstr "Метка кнопки"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__campaign_id
@@ -55,7 +62,7 @@ msgstr "Кампания"
 #. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.link_tracker_click_action_statistics
 msgid "Click Statistics"
-msgstr ""
+msgstr "Нажмите Статистика"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__link_click_ids
@@ -64,7 +71,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_kanban
 msgid "Clicks"
-msgstr "Переходы"
+msgstr "Клики"
 
 #. module: link_tracker
 #: model:ir.model.constraint,message:link_tracker.constraint_link_tracker_code_code
@@ -86,7 +93,7 @@ msgstr "Страна"
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_action
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_action_campaign
 msgid "Create a link tracker"
-msgstr ""
+msgstr "Создайте систему отслеживания ссылок"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__create_uid
@@ -100,7 +107,7 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__create_date
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__create_date
 msgid "Created on"
-msgstr "Дата создания"
+msgstr "Создано"
 
 #. module: link_tracker
 #. odoo-python
@@ -108,32 +115,32 @@ msgstr "Дата создания"
 #: code:addons/link_tracker/models/link_tracker.py:0
 #, python-format
 msgid "Creating a Link Tracker without URL is not possible"
-msgstr ""
+msgstr "Создание Link Tracker без URL невозможно"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__display_name
 msgid "Display Name"
-msgstr "Показывать название"
+msgstr "Отображаемое имя"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_search
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
 msgid "Group By"
-msgstr "Группировка"
+msgstr "Группировать по"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__short_url_host
 msgid "Host of the short URL"
-msgstr "Разместить короткий URL"
+msgstr "Хост короткого URL-адреса"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__id
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__id
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__id
 msgid "ID"
-msgstr "Идентификатор"
+msgstr "ID"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__ip
@@ -145,7 +152,7 @@ msgstr "Интернет-протокол"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__write_uid
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновил"
+msgstr "Последнее обновление"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__write_date
@@ -164,12 +171,12 @@ msgstr "Ссылка"
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_form
 msgid "Link Click"
-msgstr ""
+msgstr "Клик по ссылке"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_graph
 msgid "Link Clicks"
-msgstr ""
+msgstr "Клик на ссылки"
 
 #. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.link_tracker_action
@@ -181,12 +188,12 @@ msgstr "Трекер ссылок"
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_link_tracker_click
 msgid "Link Tracker Click"
-msgstr "Нажатие на ссылку отслеживания"
+msgstr "Отслеживание ссылок Нажмите"
 
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_link_tracker_code
 msgid "Link Tracker Code"
-msgstr "Код ссылки отслеживания"
+msgstr "Код отслеживания ссылок"
 
 #. module: link_tracker
 #. odoo-python
@@ -196,6 +203,8 @@ msgid ""
 "Link Tracker values (URL, campaign, medium and source) must be unique (%s, "
 "%s, %s, %s)."
 msgstr ""
+"Значения Link Tracker (URL, кампания, носитель и источник) должны быть "
+"уникальными (%s, %s, %s, %s)."
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_graph
@@ -207,33 +216,33 @@ msgstr "Ссылки"
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_tree
 msgid "Links Clicks"
-msgstr ""
+msgstr "Клики на ссылкам"
 
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_mail_render_mixin
 msgid "Mail Render Mixin"
-msgstr ""
+msgstr "Миксин почтового рендеринга"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__medium_id
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
 msgid "Medium"
-msgstr "Тип трафика"
+msgstr "Средний"
 
 #. module: link_tracker
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_click_action_statistics
 msgid "No data yet!"
-msgstr "Данных пока нет!"
+msgstr "Пока нет данных!"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__count
 msgid "Number of Clicks"
-msgstr "Число кликов"
+msgstr "Количество кликов"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_utm_campaign__click_count
 msgid "Number of clicks generated by the campaign"
-msgstr ""
+msgstr "Количество кликов, полученных в ходе кампании"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__title
@@ -248,12 +257,12 @@ msgstr "Перенаправленный URL"
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__code
 msgid "Short URL Code"
-msgstr "Короткий URL-код"
+msgstr "Короткий URL Код"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__code
 msgid "Short URL code"
-msgstr "Короткий URL-код"
+msgstr "Короткий URL код"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__source_id
@@ -278,15 +287,15 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
-"Это имя, которое помогает вам следить за различными усилиями кампании, eg "
-"Fall_Drive, Christmas_Special"
+"Это имя помогает вам отслеживать различные усилия кампании, например, "
+"Снижение_Цен, Рождество_Специальный"
 
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
 "Это способ доставки, например, открытка, электронная почта или баннерная "
-"реклама"
+"реклама."
 
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__source_id
@@ -295,7 +304,7 @@ msgid ""
 "of email list"
 msgstr ""
 "Это источник ссылки, например, поисковая система, другой домен или название "
-"списка писем"
+"списка адресов электронной почты."
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
@@ -314,6 +323,8 @@ msgid ""
 "Trackers are used to collect count stat about click on links and generate "
 "short URLs."
 msgstr ""
+"Трекеры используются для сбора статистики о кликах по ссылкам и генерации "
+"коротких URL."
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
@@ -323,13 +334,13 @@ msgstr "URL"
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "UTM"
-msgstr ""
+msgstr "UTM метки"
 
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_utm_campaign
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__campaign_id
 msgid "UTM Campaign"
-msgstr "UTM Кампания"
+msgstr "Кампания UTM"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
@@ -342,9 +353,9 @@ msgstr "Посетить страницу"
 #: code:addons/link_tracker/models/link_tracker.py:0
 #, python-format
 msgid "Visit Webpage"
-msgstr "Посетить страницу"
+msgstr "Посетите веб-страницу"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "Website Link"
-msgstr "Ссылка на веб-сайт"
+msgstr "Ссылка на сайт"

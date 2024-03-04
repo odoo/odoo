@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
+import { LivechatService, SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
 
 import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
@@ -77,5 +77,9 @@ patch(Thread.prototype, {
             return super.imgUrl;
         }
         return url(`/im_livechat/operator/${this.operator.id}/avatar`);
+    },
+
+    get isTransient() {
+        return super.isTransient || this.id === LivechatService.TEMPORARY_ID;
     },
 });

@@ -6,6 +6,7 @@
 # Ivana Bartonkova, 2023
 # Jakub Smolka, 2023
 # Wil Odoo, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +52,7 @@ msgstr "Při odesílání dopisu klasickou poštou došlo k chybě."
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "An error occurred when sending the document by post.<br>Error: %s"
-msgstr ""
+msgstr "Při odesílání dokumentu poštou došlo k chybě.<br>Chyba: %s"
 
 #. module: snailmail
 #. odoo-python
@@ -115,7 +116,7 @@ msgstr "Zrušit"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid "Cancel Letter"
-msgstr ""
+msgstr "Zrušit dopis"
 
 #. module: snailmail
 #. odoo-javascript
@@ -248,7 +249,7 @@ msgstr "FORMAT_ERROR"
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_missing_required_fields_action
 #, python-format
 msgid "Failed letter"
-msgstr ""
+msgstr "Selhání dopisu"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__failure_type
@@ -258,7 +259,7 @@ msgstr "Typ poruchy"
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_format_error_action
 msgid "Format Error"
-msgstr ""
+msgstr "Chyba formátu"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter_format_error
@@ -287,7 +288,7 @@ msgstr "Informace"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Invalid recipient name."
-msgstr ""
+msgstr "Neplatné jméno příjemce."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
@@ -353,7 +354,7 @@ msgstr "NO_PRICE_AVAILABLE"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Not enough credits for Snail Mail"
-msgstr ""
+msgstr "Nedostatek kreditů pro Snail Mail"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__notification_type
@@ -384,6 +385,9 @@ msgid ""
 "                Please modify the format of the template or update your settings\n"
 "                to automatically add a blank cover page to all letters."
 msgstr ""
+"Naše služba nemůže přečíst váš dopis kvůli jeho formátu.<br/>\n"
+"                Upravte prosím formát šablony nebo aktualizujte nastavení,\n"
+"                aby se ke všem dopisům automaticky přidala prázdná titulní strana."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__partner_id
@@ -395,7 +399,7 @@ msgstr "Partner"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Please use an A4 Paper format."
-msgstr ""
+msgstr "Použijte prosím formát papíru A4."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
@@ -422,7 +426,7 @@ msgstr "Adresát"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__reference
 msgid "Related Record"
-msgstr ""
+msgstr "Související záznam"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_actions_report
@@ -452,7 +456,7 @@ msgstr "Odesláno"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Snail Mails are successfully sent"
-msgstr ""
+msgstr "Snail Maily byly úspěšně odeslány"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_message__message_type__snailmail
@@ -468,7 +472,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
 msgid "Snailmail Credit Error"
-msgstr ""
+msgstr "Chyba kreditu Snailmail"
 
 #. module: snailmail
 #. odoo-javascript
@@ -480,7 +484,7 @@ msgstr "Selkání klasické pošty"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_format
 msgid "Snailmail Format Error"
-msgstr ""
+msgstr "Chyba formátu Snailmail"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter
@@ -502,28 +506,28 @@ msgstr "Snailmail chybí povinná pole"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_price
 msgid "Snailmail No Price Available"
-msgstr ""
+msgstr "Snailmail žádná cena dostupná"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__message_id
 msgid "Snailmail Status Message"
-msgstr ""
+msgstr "Stav zprávy Snailmail"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_trial
 msgid "Snailmail Trial Error"
-msgstr ""
+msgstr "Zkušební chyba Snailmail"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_error
 msgid "Snailmail Unknown Error"
-msgstr ""
+msgstr "Neznámá chyba Snailmail"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_error
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__snailmail_error
 msgid "Snailmail message in error"
-msgstr ""
+msgstr "Chybná zpráva Snailmail"
 
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
@@ -574,7 +578,7 @@ msgstr "TRIAL_ERROR"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The address of the recipient is not complete"
-msgstr ""
+msgstr "Adresa příjemce není kompletní"
 
 #. module: snailmail
 #. odoo-python
@@ -609,6 +613,8 @@ msgid ""
 "The customer address is not complete. Update the address here and re-send "
 "the letter."
 msgstr ""
+"Adresa příjemce není kompletní. Aktualizujte adresu zde a odešlete dopis "
+"znovu."
 
 #. module: snailmail
 #. odoo-python
@@ -673,6 +679,9 @@ msgid ""
 "If the letter is correctly sent, the status goes in 'Sent',\n"
 "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
 msgstr ""
+"Po vytvoření dopisu je stav „Čekající“.\n"
+"Pokud je dopis správně odeslán, stav se změní na „Odesláno“,\n"
+"Pokud ne, dostane se do stavu „Chyba“ a chybová zpráva se zobrazí v poli „Chybová zpráva“."
 
 #. module: snailmail
 #. odoo-python
@@ -682,6 +691,8 @@ msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
+"Pro tuto službu nemáte zaregistrovaný IAP účet.<br>Přejděte prosím na <a "
+"href=%s target=\"new\">iap.odoo.com</a> a vyzkoušejte své bezplatné kredity."
 
 #. module: snailmail
 #. odoo-python
@@ -691,6 +702,8 @@ msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
+"K provedení této operace nemáte dostatek kreditů.<br>Přejděte prosím na svůj"
+" <a href=%s target=\"new\">účet iap</a>."
 
 #. module: snailmail
 #. odoo-javascript

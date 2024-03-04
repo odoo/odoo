@@ -14,6 +14,7 @@ class IrRule(models.Model):
     _description = 'Record Rule'
     _order = 'model_id DESC,id'
     _MODES = ['read', 'write', 'create', 'unlink']
+    _allow_sudo_commands = False
 
     name = fields.Char(index=True)
     active = fields.Boolean(default=True, help="If you uncheck the active field, it will disable the record rule without deleting it (if you delete a native record rule, it may be re-created when you reload the module).")
@@ -58,6 +59,17 @@ class IrRule(models.Model):
         # Don't allow rules on rules records (this model).
         if any(rule.model_id.model == self._name for rule in self):
             raise ValidationError(_('Rules can not be applied on the Record Rules model.'))
+
+    @api.constrains('active', 'domain_force', 'model_id')
+    def _check_domain(self):
+        eval_context = self._eval_context()
+        for rule in self:
+            if rule.active and rule.domain_force:
+                try:
+                    domain = safe_eval(rule.domain_force, eval_context)
+                    expression.expression(domain, self.env[rule.model_id.model].sudo())
+                except Exception as e:
+                    raise ValidationError(_('Invalid domain: %s', e))
 
     def _compute_domain_keys(self):
         """ Return the list of context keys to use for caching ``_compute_domain``. """

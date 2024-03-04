@@ -268,6 +268,43 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
                 self.env.flush_all()
                 self.assertEqual(len(capt.records), 1)
 
+    def test_email_alarm_daily_recurrence(self):
+        # test email alarm is sent correctly on daily recurrence
+        alarm = self.env['calendar.alarm'].create({
+            'name': 'Alarm',
+            'alarm_type': 'email',
+            'interval': 'minutes',
+            'duration': 5,
+        })
+        cron = self.env.ref('calendar.ir_cron_scheduler_alarm')
+        cron.lastcall = False
+        with self.capture_triggers('calendar.ir_cron_scheduler_alarm') as capt:
+            with freeze_time('2022-04-13 10:00+0000'):
+                now = fields.Datetime.now()
+                self.env['calendar.event'].create({
+                    'name': "Recurring Event",
+                    'start': now + relativedelta(minutes=15),
+                    'stop': now + relativedelta(minutes=20),
+                    'recurrency': True,
+                    'rrule_type': 'daily',
+                    'count': 3,
+                    'alarm_ids': [fields.Command.link(alarm.id)],
+                }).with_context(mail_notrack=True)
+                self.env.flush_all()
+                self.assertEqual(len(capt.records), 1, "1 trigger should have been created for the whole recurrence (1)")
+                self.assertEqual(capt.records.call_at, datetime(2022, 4, 13, 10, 10))
+
+        with self.capture_triggers('calendar.ir_cron_scheduler_alarm') as capt:
+            with freeze_time('2022-04-13 10:11+0000'):
+                self.env['calendar.alarm_manager']._send_reminder()
+                self.assertEqual(len(capt.records), 1)
+
+        with self.capture_triggers('calendar.ir_cron_scheduler_alarm') as capt:
+            with freeze_time('2022-04-14 10:11+0000'):
+                self.env['calendar.alarm_manager']._send_reminder()
+                self.assertEqual(len(capt.records), 1, "1 trigger should have been created for the whole recurrence (2)")
+                self.assertEqual(capt.records.call_at, datetime(2022, 4, 15, 10, 10))
+
     def test_notification_event_timezone(self):
         """
             Check the domain that decides when calendar events should be notified to the user.

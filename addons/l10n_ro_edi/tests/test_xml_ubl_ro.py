@@ -97,35 +97,39 @@ class TestUBLRO(TestUBLCommon):
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_different_currency.xml')
         self.currency_data['currency'] = self.env.ref('base.RON')
 
-    def test_export_no_vat_but_have_company_id_without_prefix(self):
-        self.company_data['company'].write({
-            'vat': None,
-            'company_registry': '1234567897',
-        })
-        invoice = self.create_move("out_invoice", send=False)
-        with self.assertRaisesRegex(UserError, "doesn't have a country code prefix in their Company ID"):
-            invoice._generate_pdf_and_send_invoice(self.move_template, allow_fallback_pdf=False)
+    def test_export_invoice_without_country_code_prefix_in_vat(self):
+        self.company_data['company'].write({'vat': '1234567897'})
+        self.partner_a.write({'vat': '1234567897'})
+        invoice = self.create_move("out_invoice")
+        attachment = self.get_attachment(invoice)
+        self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_no_prefix_vat.xml')
 
-    def test_export_no_vat_but_have_company_id_with_prefix(self):
-        self.company_data['company'].write({
-            'vat': None,
-            'company_registry': 'RO1234567897',
-        })
+    def test_export_no_vat_but_have_company_registry(self):
+        self.company_data['company'].write({'vat': False, 'company_registry': 'RO1234567897'})
+        self.partner_a.write({'vat': False, 'company_registry': 'RO1234567897'})
         invoice = self.create_move("out_invoice")
         attachment = self.get_attachment(invoice)
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice.xml')
 
-    def test_export_vat_without_prefix(self):
-        self.company_data['company'].vat = '1234567897'
+    def test_export_no_vat_but_have_company_registry_without_prefix(self):
+        self.company_data['company'].write({'vat': False, 'company_registry': '1234567897'})
+        self.partner_a.write({'vat': False, 'company_registry': '1234567897'})
+        invoice = self.create_move("out_invoice")
+        attachment = self.get_attachment(invoice)
+        self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_no_prefix_vat.xml')
+
+    def test_export_no_vat_and_no_company_registry_raises_error(self):
+        self.company_data['company'].write({'vat': False, 'company_registry': False})
+        self.partner_a.write({'vat': False, 'company_registry': False})
         invoice = self.create_move("out_invoice", send=False)
-        with self.assertRaisesRegex(UserError, "doesn't have a country code prefix in their VAT"):
+        with self.assertRaisesRegex(UserError, "doesn't have a VAT nor Company ID"):
             invoice._generate_pdf_and_send_invoice(self.move_template, allow_fallback_pdf=False)
 
     def test_export_constraints(self):
-        self.company_data['company'].company_registry = None
+        self.company_data['company'].company_registry = False
         for required_field in ('city', 'street', 'state_id', 'vat'):
             prev_val = self.company_data["company"][required_field]
-            self.company_data["company"][required_field] = None
+            self.company_data["company"][required_field] = False
             invoice = self.create_move("out_invoice", send=False)
             with self.assertRaisesRegex(UserError, "required"):
                 invoice._generate_pdf_and_send_invoice(self.move_template, allow_fallback_pdf=False)

@@ -237,7 +237,7 @@ msgstr ""
 "                    <span style=\"font-size: 10px;\">Su cuenta</span><br>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.user_id.name or ''\">Marc Demo</span>\n"
 "                </td><td valign=\"middle\" align=\"right\" t-if=\"not object.user_id.company_id.uses_default_logo\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ object.user_id.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.user_id.company_id.name\">\n"
+"                    <img t-attf-src=\"/logotipo.png?company={{ object.user_id.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.user_id.company_id.name\">\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
 "                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
@@ -332,24 +332,24 @@ msgstr "Advertencia de acceso"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Account deleted!"
-msgstr "¡Se borró la cuenta!"
+msgstr "Cuenta eliminada"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add a note"
-msgstr "Agregar nota"
+msgstr "Agregar una nota"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Add attachment"
-msgstr "Añadir adjunto"
+msgstr "Agregar archivo adjunto"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add contacts to share the document..."
-msgstr "Agregar contactos para compartir el documento...."
+msgstr "Agregue contactos para compartir el documento...."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_share__note
@@ -359,7 +359,7 @@ msgstr "Agregar contenido adicional para mostrar en el correo electrónico"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Add, remove or modify your addresses"
-msgstr "Añadir, eliminar o modificar sus direcciones"
+msgstr "Agregar, eliminar o modificar sus direcciones"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -379,7 +379,7 @@ msgstr "Ya está registrado"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Are you sure you want to do this?"
-msgstr "¿Esta seguro de que quiere hacer esto?"
+msgstr "¿Esta seguro de que desea hacer esto?"
 
 #. module: portal
 #. odoo-javascript
@@ -397,7 +397,7 @@ msgstr "Cancelar"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Change Password"
-msgstr "Cambiar la contraseña"
+msgstr "Cambiar contraseña"
 
 #. module: portal
 #. odoo-python
@@ -450,7 +450,7 @@ msgstr "Ciudad"
 #: code:addons/portal/static/src/signature_form/signature_form.xml:0
 #, python-format
 msgid "Click here to see your document."
-msgstr "Clic aqui para ver sus documentos"
+msgstr "Haga clic aquí para ver su documento."
 
 #. module: portal
 #. odoo-javascript
@@ -566,7 +566,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
 msgid "Customer API Keys"
-msgstr "Claves API de los clientes"
+msgstr "Claves API del cliente"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -588,12 +588,12 @@ msgstr "Querido"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Delete"
-msgstr "Suprimir"
+msgstr "Eliminar"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Delete Account"
-msgstr "Borrar cuenta"
+msgstr "Eliminar cuenta"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -608,7 +608,7 @@ msgstr "Detalles"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Developer API Keys"
-msgstr "Clave API del desarrollador"
+msgstr "Claves API de desarrollador"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -665,7 +665,7 @@ msgstr "Esta dirección de correo ya la está usando otro usuario"
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr "Hilo de mensajes"
+msgstr "Hilo de correo electrónico"
 
 #. module: portal
 #. odoo-javascript
@@ -689,12 +689,12 @@ msgstr "Retroceder"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Access"
-msgstr "Otorgar Acceso"
+msgstr "Otorgar acceso"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard
 msgid "Grant Portal Access"
-msgstr "Otorgar Acceso al Portal "
+msgstr "Otorgar acceso al portal "
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
@@ -715,7 +715,7 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
-"Esta es su clave de API nueva,  úsela en lugar de la contraseña para ingresar al RPC.\n"
+"Esta es su clave de API nueva, úsela en lugar de la contraseña para ingresar al RPC.\n"
 "Para darle un uso interactivo, inicie sesión."
 
 #. module: portal
@@ -764,7 +764,7 @@ msgstr "Inválido"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Invalid Email Address"
-msgstr "Dirección de correo no válida"
+msgstr "Dirección de correo electrónico no válida"
 
 #. module: portal
 #. odoo-python
@@ -848,7 +848,7 @@ msgstr "Escriba un comentario"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
 msgid "Link"
-msgstr "Vínculo"
+msgstr "Enlace"
 
 #. module: portal
 #. odoo-javascript
@@ -911,7 +911,7 @@ msgstr "Nombra tu clave"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 #, python-format
 msgid "New API Key"
-msgstr "Nueva clave de API"
+msgstr "Nueva clave API"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -939,7 +939,7 @@ msgstr "Nota"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Odoo Logo"
-msgstr "Logo de Odoo"
+msgstr "Logotipo de Odoo"
 
 #. module: portal
 #. odoo-python
@@ -1004,7 +1004,7 @@ msgstr "URL de acceso al portal"
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
 msgid "Portal Mixin"
-msgstr "Portal Mixin"
+msgstr "Mixin del portal"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_share
@@ -1111,7 +1111,7 @@ msgstr "Alcance"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Search"
-msgstr "Búsqueda"
+msgstr "Buscar"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1385,7 +1385,7 @@ msgstr "Válido"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Valid Email Address"
-msgstr "Dirección de correo válida"
+msgstr "Dirección de correo electrónico válida"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security

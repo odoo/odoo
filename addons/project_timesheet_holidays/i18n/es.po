@@ -69,7 +69,7 @@ msgstr "Generar hojas de asistencia"
 msgid "Generate timesheets when validating time off requests of this type"
 msgstr ""
 "Genere hojas de asistencia al validar solicitudes con este tipo de tiempo "
-"personal."
+"personal"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__global_leave_id
@@ -82,8 +82,8 @@ msgid ""
 "If checked, when validating a time off, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
-"Si se marca, al validar una ausencia, se generará un parte de horas en el "
-"proyecto de ausencias de la empresa."
+"Si se marca, al validar una ausencia, se generará un hoja de asistencia en "
+"el proyecto de ausencias de la empresa."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -101,7 +101,7 @@ msgstr "Proyecto interno"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__is_timeoff_task
 msgid "Is Time off Task"
-msgstr "Es una tarea de tiempo libre"
+msgstr "Es tarea de tiempo personal"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -119,7 +119,7 @@ msgstr "Proyecto"
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr "Detalle de las ausencias del recurso"
+msgstr "Detalle del tiempo personal del recurso"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_project_task
@@ -166,23 +166,23 @@ msgstr "Ausencias"
 #: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
 #, python-format
 msgid "Time Off (%s/%s)"
-msgstr "Tiempo libre (%s/%s)"
+msgstr "Tiempo personal (%s/%s)"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__holiday_id
 msgid "Time Off Request"
-msgstr "Solicitud de ausencia"
+msgstr "Solicitud de tiempo personal"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr "Tarea de Tiempo Libre"
+msgstr "Tarea de tiempo personal"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
 msgid "Time Off Type"
-msgstr "Tipo de ausencia"
+msgstr "Tipo de tiempo personal"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
@@ -192,7 +192,7 @@ msgstr "Número de tipos de tiempo personal"
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
 msgid "Timesheets"
-msgstr "Partes de horas"
+msgstr "Hojas de asistencia"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -210,7 +210,7 @@ msgid ""
 "Please use the Time Off application to request new time off instead."
 msgstr ""
 "No puede crear hojas de asistencia para una tarea vinculada a un tipo de "
-"permiso. Le recomendamos que use la aplicación Tiempo personal para "
+"tiempo personal. Le recomendamos que use la aplicación Tiempo personal para "
 "solicitar uno nuevo."
 
 #. module: project_timesheet_holidays
@@ -221,7 +221,7 @@ msgid ""
 "You cannot delete timesheets linked to time off. Please, cancel the time off"
 " instead."
 msgstr ""
-"No puede eliminar líneas de las hojas de asistencia adjuntas a el tiempo "
+"No puede eliminar líneas de las hojas de asistencia vinculadas a el tiempo "
 "personal. Mejor cancele el tiempo personal."
 
 #. module: project_timesheet_holidays

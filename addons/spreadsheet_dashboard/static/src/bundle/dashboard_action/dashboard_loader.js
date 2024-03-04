@@ -3,6 +3,7 @@
 import { DataSources } from "@spreadsheet/data_sources/data_sources";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { Model } from "@odoo/o-spreadsheet";
+import { createDefaultCurrencyFormat } from "@spreadsheet/currency/helpers";
 
 /**
  * @type {{
@@ -103,7 +104,7 @@ export class DashboardLoader {
     getDashboard(dashboardId) {
         const dashboard = this._getDashboard(dashboardId);
         if (dashboard.status === Status.NotLoaded) {
-            this._loadDashboardData(dashboardId);
+            dashboard.promise = this._loadDashboardData(dashboardId);
         }
         return dashboard;
     }
@@ -144,11 +145,11 @@ export class DashboardLoader {
     /**
      * @private
      * @param {number} id
-     * @returns {Dashboard|undefined}
+     * @returns {Dashboard}
      */
     _getDashboard(id) {
         if (!this.dashboards[id]) {
-            throw new Error(`Dashboard ${id} does not exist`);
+            this.dashboards[id] = { status: Status.NotLoaded, id, displayName: "" };
         }
         return this.dashboards[id];
     }
@@ -161,16 +162,17 @@ export class DashboardLoader {
         const dashboard = this._getDashboard(dashboardId);
         dashboard.status = Status.Loading;
         try {
-            const { snapshot, revisions } = await this.orm.call(
+            const { snapshot, revisions, default_currency } = await this.orm.call(
                 "spreadsheet.dashboard",
                 "get_readonly_dashboard",
                 [dashboardId]
             );
-            dashboard.model = this._createSpreadsheetModel(snapshot, revisions);
+            dashboard.model = this._createSpreadsheetModel(snapshot, revisions, default_currency);
             dashboard.status = Status.Loaded;
         } catch (error) {
             dashboard.error = error;
             dashboard.status = Status.Error;
+            throw error;
         }
     }
 
@@ -194,15 +196,20 @@ export class DashboardLoader {
      * @private
      * @param {object} snapshot
      * @param {object[]} revisions
+     * @param {object} [defaultCurrency]
      * @returns {Model}
      */
-    _createSpreadsheetModel(snapshot, revisions = []) {
+    _createSpreadsheetModel(snapshot, revisions = [], defaultCurrency) {
         const dataSources = new DataSources(this.env);
+        const defaultCurrencyFormat = defaultCurrency
+            ? createDefaultCurrencyFormat(defaultCurrency)
+            : undefined;
         const model = new Model(
             migrate(snapshot),
             {
                 custom: { env: this.env, orm: this.orm, dataSources },
                 mode: "dashboard",
+                defaultCurrencyFormat,
             },
             revisions
         );

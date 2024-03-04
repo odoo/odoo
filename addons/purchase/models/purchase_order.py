@@ -152,12 +152,13 @@ class PurchaseOrder(models.Model):
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
         for order in self:
-            companies = order.order_line.product_id.company_id
-            if companies and companies != order.company_id:
+            product_company = order.order_line.product_id.company_id
+            companies = product_company and product_company._accessible_branches()
+            if companies and order.company_id not in companies:
                 bad_products = order.order_line.product_id.filtered(lambda p: p.company_id and p.company_id != order.company_id)
                 raise ValidationError(_(
                     "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n Please change the company of your quotation or remove the products from other companies (%(bad_products)s).",
-                    product_company=', '.join(companies.mapped('display_name')),
+                    product_company=', '.join(companies.sudo().mapped('display_name')),
                     quote_company=order.company_id.display_name,
                     bad_products=', '.join(bad_products.mapped('display_name')),
                 ))
@@ -642,7 +643,6 @@ class PurchaseOrder(models.Model):
             'move_type': move_type,
             'narration': self.notes,
             'currency_id': self.currency_id.id,
-            'invoice_user_id': self.user_id and self.user_id.id or self.env.user.id,
             'partner_id': partner_invoice.id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(partner_invoice)).id,
             'payment_reference': self.partner_ref or '',
@@ -869,6 +869,10 @@ class PurchaseOrder(models.Model):
                 'id': product.uom_id.id,
             },
         }
+        if product.purchase_line_warn_msg:
+            product_infos['warning'] = product.purchase_line_warn_msg
+        if product.purchase_line_warn == "block":
+            product_infos['readOnly'] = True
         if product.uom_id != product.uom_po_id:
             product_infos['purchase_uom'] = {
                 'display_name': product.uom_po_id.display_name,
