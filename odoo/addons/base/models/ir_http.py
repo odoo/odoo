@@ -168,7 +168,7 @@ class IrHttp(models.AbstractModel):
     def _serve_fallback(cls):
         model = request.env['ir.attachment']
         attach = model.sudo()._get_serve_attachment(request.httprequest.path)
-        if attach:
+        if attach and (attach.store_fname or attach.db_datas):
             return Stream.from_attachment(attach).get_response()
 
     @classmethod

@@ -7,7 +7,8 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//tree/field[@name='product_id']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="string">Product Variant</attribute>
+                <attribute name="optional">hide</attribute>
             </xpath>
             <xpath expr="//tree/field[@name='product_id']" position="after">
                 <field name="product_template_id"

@@ -522,11 +522,15 @@ class TestUBLBE(TestUBLCommon):
             self.partner_1,
             self.partner_2,
             move_type='out_invoice',
-            invoice_line_ids=[{'quantity': 3, 'price_unit': 102.15}],
+            invoice_line_ids=[
+                {'quantity': 3, 'price_unit': 102.15},
+                {'quantity': 3, 'price_unit': 83.60},
+            ],
         )
         attachment = invoice._get_edi_attachment(self.edi_format)
-        price_amount = etree.fromstring(attachment.raw).find('.//{*}InvoiceLine/{*}Price/{*}PriceAmount')
-        self.assertEqual(price_amount.text, '102.15')
+        price_amounts = etree.fromstring(attachment.raw).findall('.//{*}InvoiceLine/{*}Price/{*}PriceAmount')
+        self.assertEqual(price_amounts[0].text, '102.15')
+        self.assertEqual(price_amounts[1].text, '83.6')
 
     def test_export_tax_exempt(self):
         invoice = self._generate_move(

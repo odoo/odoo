@@ -20,6 +20,7 @@ $(function () {
             this.canvas = $viewer.find('canvas')[0];
 
             this.pdf_viewer = new PDFSlidesViewer(this.slide_url, this.canvas, true);
+            this.hasSuggestions = !!this.$(".oe_slides_suggestion_media").length;
             this.pdf_viewer.loadDocument().then(function () {
                 self.on_loaded_file();
             });
@@ -34,9 +35,6 @@ $(function () {
                 this.$('canvas').show();
                 this.$('#page_count').text(this.pdf_viewer.pdf_page_total);
                 this.$('#PDFViewerLoader').hide();
-                if (this.pdf_viewer.pdf_page_total > 1) {
-                    this.$('.o_slide_navigation_buttons').removeClass('hide');
-                }
                 // init first page to display
                 var initpage = this.defaultpage;
                 var pageNum = (initpage > 0 && initpage <= this.pdf_viewer.pdf_page_total) ? initpage : 1;
@@ -67,6 +65,13 @@ $(function () {
                 }
             },
             next: function () {
+                if (
+                    this.pdf_viewer.pdf_page_current >=
+                    this.pdf_viewer.pdf_page_total + this.hasSuggestions
+                ) {
+                    return;
+                }
+
                 var self = this;
                 this.pdf_viewer.nextPage().then(function (pageNum) {
                     if (pageNum) {
@@ -83,7 +88,10 @@ $(function () {
                 if (!slideSuggestOverlay.hasClass('d-none')) {
                     // Hide suggested slide overlay before changing page nb.
                     slideSuggestOverlay.addClass('d-none');
-                    this.$('#next, #last').removeClass('disabled');
+                    this.$("#next").removeClass("disabled");
+                    if (this.pdf_viewer.pdf_page_total <= 1) {
+                        this.$("#previous, #first").addClass("disabled");
+                    }
                     return;
                 }
                 var self = this;
@@ -121,11 +129,16 @@ $(function () {
                 }
             },
             navUpdate: function (pageNum) {
-                this.$('#first').toggleClass('disabled', pageNum < 3 );
-                this.$('#previous').toggleClass('disabled', pageNum < 2 );
-                this.$('#next, #last').removeClass('disabled');
-                this.$('#zoomout').toggleClass('disabled', this.pdf_viewer.pdf_zoom <= MIN_ZOOM);
-                this.$('#zoomin').toggleClass('disabled', this.pdf_viewer.pdf_zoom >= MAX_ZOOM);
+                const pagesCount = this.pdf_viewer.pdf_page_total + this.hasSuggestions;
+                this.$("#first").toggleClass("disabled", pagesCount < 2 || pageNum < 2);
+                this.$("#last").toggleClass(
+                    "disabled",
+                    pagesCount < 2 || pageNum >= this.pdf_viewer.pdf_page_total
+                );
+                this.$("#next").toggleClass("disabled", pageNum >= pagesCount);
+                this.$("#previous").toggleClass("disabled", pageNum <= 1);
+                this.$("#zoomout").toggleClass("disabled", this.pdf_viewer.pdf_zoom <= MIN_ZOOM);
+                this.$("#zoomin").toggleClass("disabled", this.pdf_viewer.pdf_zoom >= MAX_ZOOM);
             },
             // full screen mode
             fullscreen: function () {
@@ -138,8 +151,9 @@ $(function () {
             },
             // display suggestion displayed after last slide
             display_suggested_slides: function () {
-                this.$("#slide_suggest").removeClass('d-none');
-                this.$('#next, #last').addClass('disabled');
+                this.$("#slide_suggest").removeClass("d-none");
+                this.$("#next, #last").addClass("disabled");
+                this.$("#previous, #first").removeClass("disabled");
             },
         };
 
