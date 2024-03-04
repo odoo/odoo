@@ -190,6 +190,55 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
             'taxes_id': [(6, 0, [])],
         })
 
+        # desk organizer (variant product)
+        cls.desk_organizer = cls.env['product.product'].create({
+            'name': 'Desk Organizer',
+            'available_in_pos': True,
+            'list_price': 5.10,
+            'pos_categ_ids': [(4, drinks_category.id)],  # will put it as a drink for convenience
+        })
+        desk_size_attribute = cls.env['product.attribute'].create({
+            'name': 'Size',
+            'display_type': 'radio',
+            'create_variant': 'no_variant',
+        })
+        desk_size_s = cls.env['product.attribute.value'].create({
+            'name': 'S',
+            'attribute_id': desk_size_attribute.id,
+        })
+        desk_size_m = cls.env['product.attribute.value'].create({
+            'name': 'M',
+            'attribute_id': desk_size_attribute.id,
+        })
+        desk_size_l = cls.env['product.attribute.value'].create({
+            'name': 'L',
+            'attribute_id': desk_size_attribute.id,
+        })
+        cls.env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.desk_organizer.product_tmpl_id.id,
+            'attribute_id': desk_size_attribute.id,
+            'value_ids': [(6, 0, [desk_size_s.id, desk_size_m.id, desk_size_l.id])]
+        })
+        desk_fabrics_attribute = cls.env['product.attribute'].create({
+            'name': 'Fabric',
+            'display_type': 'select',
+            'create_variant': 'no_variant',
+        })
+        desk_fabrics_leather = cls.env['product.attribute.value'].create({
+            'name': 'Leather',
+            'attribute_id': desk_fabrics_attribute.id,
+        })
+        desk_fabrics_other = cls.env['product.attribute.value'].create({
+            'name': 'Custom',
+            'attribute_id': desk_fabrics_attribute.id,
+            'is_custom': True,
+        })
+        cls.env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.desk_organizer.product_tmpl_id.id,
+            'attribute_id': desk_fabrics_attribute.id,
+            'value_ids': [(6, 0, [desk_fabrics_leather.id, desk_fabrics_other.id])]
+        })
+
         pricelist = cls.env['product.pricelist'].create({'name': 'Restaurant Pricelist'})
         pos_config.write({'pricelist_id': pricelist.id})
 
