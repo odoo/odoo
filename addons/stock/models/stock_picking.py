@@ -1463,7 +1463,10 @@ class Picking(models.Model):
             return {}
 
     def _put_in_pack(self, move_line_ids):
-        package = self.env['stock.quant.package'].create({})
+        package_data = {}
+        if self.location_dest_id.usage == 'internal':
+            package_data['package_use'] = 'reusable'
+        package = self.env['stock.quant.package'].create(package_data)
         package_type = move_line_ids.move_id.product_packaging_id.package_type_id
         if len(package_type) == 1:
             package.package_type_id = package_type

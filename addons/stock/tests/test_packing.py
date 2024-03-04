@@ -1639,3 +1639,26 @@ class TestPacking(TestPackingCommon):
         (picking1 | picking2).with_context(default_picking_type_id=self.ref('stock.picking_type_out'))._compute_hide_picking_type()
         self.assertTrue(picking1.hide_picking_type)
         self.assertFalse(picking2.hide_picking_type)
+
+    def test_put_in_pack_with_internal_transfer(self):
+        """
+        Test that the 'put in pack' function creates a package with the appropriate usage type.
+        """
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.ship_location.id,
+            'picking_type_id': self.picking_type_in.id,
+        })
+        move = self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.ship_location.id,
+        })
+        picking.action_confirm()
+        move.write({'quantity': 10, 'picked': True})
+        picking.action_put_in_pack()
+        self.assertEqual(move.move_line_ids.result_package_id.package_use, 'reusable')
