@@ -26,6 +26,44 @@ function isSyncStatusConnected() {
         },
     ];
 }
+function checkOrderChanges(expected_changes) {
+    return [
+        {
+            content: `Check order changes with expected changes ${JSON.stringify(
+                expected_changes
+            )}`,
+            trigger: ".pos", // dummy trigger
+            run: function () {
+                const orderChanges = window.posmodel.getOrderChanges();
+                const orderChangesKeys = Object.keys(orderChanges.orderlines);
+                const orderChangesNbr = orderChangesKeys.length;
+                // Quick check for lenght
+                if (expected_changes.length !== orderChangesNbr) {
+                    console.error(
+                        `Was expecting ${expected_changes.length} order changes, got ${orderChangesNbr}`
+                    );
+                }
+                for (const expected_change of expected_changes) {
+                    const order_change_line = orderChangesKeys.find((key) => {
+                        const change = orderChanges.orderlines[key];
+                        return (
+                            change.name === expected_change.name &&
+                            change.quantity === expected_change.quantity
+                        );
+                    });
+                    if (order_change_line === undefined) {
+                        console.error(
+                            `Was expecting product "${expected_change.name}" with quantity ${
+                                expected_change.quantity
+                            } as order change, inside ${JSON.stringify(orderChanges.orderlines)}`
+                        );
+                    }
+                }
+            },
+        },
+    ];
+}
+
 registry.category("web_tour.tours").add("pos_restaurant_sync", {
     test: true,
     steps: () =>
@@ -40,6 +78,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickDisplayedProduct("Water", true),
             ProductScreen.orderlineIsToOrder("Water"),
             ProductScreen.orderlineIsToSkip("Coca-Cola"),
+            checkOrderChanges([{ name: "Water", quantity: 1 }]),
             ProductScreen.clickOrderButton(),
             {
                 ...Dialog.confirm(),
@@ -47,6 +86,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
             ProductScreen.orderlinesHaveNoChange(),
+            checkOrderChanges([]),
             ProductScreen.totalAmountIs("4.40"),
 
             // Create 2nd order (paid)
@@ -56,6 +96,10 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             ProductScreen.totalAmountIs("4.40"),
+            checkOrderChanges([
+                { name: "Coca-Cola", quantity: 1 },
+                { name: "Minute Maid", quantity: 1 },
+            ]),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
@@ -64,6 +108,32 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                 content:
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
+            ReceiptScreen.clickNextOrder(),
+
+            // order on another table with a product variant
+            FloorScreen.orderCountSyncedInTableIs("5", "1"),
+            FloorScreen.clickTable("4"),
+            ProductScreen.orderBtnIsPresent(),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", false),
+            {
+                ...Dialog.confirm(),
+                content: "validate the variant dialog (with default values)",
+            },
+            ProductScreen.selectedOrderlineHas("Desk Organizer"),
+            checkOrderChanges([{ name: "Desk Organizer (S, Leather)", quantity: 1 }]),
+            ProductScreen.clickOrderButton(),
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
+            ProductScreen.orderlinesHaveNoChange(),
+            checkOrderChanges([]),
+            ProductScreen.totalAmountIs("5.87"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            // No "acknowledge printing error" this time as the printer order is already sent and no changes were made
             ReceiptScreen.clickNextOrder(),
 
             // After clicking next order, floor screen is shown.
@@ -96,7 +166,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
             isSyncStatusConnected(),
-            TicketScreen.selectOrder("-0003"),
+            TicketScreen.selectOrder("-0004"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
             FloorScreen.backToFloor(),
