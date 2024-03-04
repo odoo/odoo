@@ -773,8 +773,9 @@ export class MockServer {
     }
 
     /**
-     * @param {string} route
-     * @param {OrmCallback | RouteCallback} callback
+     * @template {string} R
+     * @param {R} route
+     * @param {R extends `/${string}` ? RouteCallback : OrmCallback} callback
      * @param {RpcOptions} options
      */
     onRpc(route, callback, options) {

@@ -87,23 +87,8 @@ const now = () => performance.now() + timeOffset;
  */
 const parseDateParams = (dateSpecs) => {
     /** @type {DateSpecs} */
-    const specs = {};
-    if (typeof dateSpecs === "string") {
-        [
-            ,
-            specs.year,
-            specs.month,
-            specs.day,
-            ,
-            specs.hour,
-            specs.minute,
-            specs.second,
-            ,
-            specs.millisecond,
-        ] = dateSpecs.match(DATE_REGEX) || [];
-    } else {
-        Object.assign(specs, dateSpecs);
-    }
+    const specs =
+        (typeof dateSpecs === "string" ? dateSpecs.match(DATE_REGEX)?.groups : dateSpecs) || {};
     return [
         specs.year ?? DEFAULT_DATE[0],
         (specs.month ?? DEFAULT_DATE[1]) - 1,
@@ -134,7 +119,8 @@ const ID_PREFIX = {
     interval: "i_",
     timeout: "t_",
 };
-const DATE_REGEX = /(\d{4})[/-](\d{2})[/-](\d{2})([\sT]+(\d{2}):(\d{2}):(\d{2})(\.(\d{3}))?)?/;
+const DATE_REGEX =
+    /(?<year>\d{4})[/-](?<month>\d{2})[/-](?<day>\d{2})([\sT]+(?<hour>\d{2}):(?<minute>\d{2}):(?<second>\d{2})(\.(?<millisecond>\d{3}))?)?/;
 const DEFAULT_DATE = [2019, 2, 11, 9, 30, 0, 0];
 const DEFAULT_TIMEZONE = +1;
 
