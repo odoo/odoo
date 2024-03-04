@@ -125,7 +125,7 @@ export class SuggestionService {
                 return this.searchPartnerSuggestions(cleanedSearchTerm, thread, sort);
             }
             case "#":
-                return this.searchChannelSuggestions(cleanedSearchTerm, thread, sort);
+                return this.searchChannelSuggestions(cleanedSearchTerm, sort);
             case ":":
                 return this.searchCannedResponseSuggestions(cleanedSearchTerm, sort);
         }
@@ -210,24 +210,8 @@ export class SuggestionService {
         });
     }
 
-    searchChannelSuggestions(cleanedSearchTerm, thread, sort) {
-        let threads;
-        if (
-            thread &&
-            (thread.channel_type === "group" ||
-                thread.channel_type === "chat" ||
-                (thread.channel_type === "channel" && thread.authorizedGroupFullName))
-        ) {
-            // Only return the current channel when in the context of a
-            // group restricted channel or group or chat. Indeed, the message with the mention
-            // would appear in the target channel, so this prevents from
-            // inadvertently leaking the private message into the mentioned
-            // channel.
-            threads = [thread];
-        } else {
-            threads = Object.values(this.store.Thread.records);
-        }
-        const suggestionList = threads.filter(
+    searchChannelSuggestions(cleanedSearchTerm, sort) {
+        const suggestionList = Object.values(this.store.Thread.records).filter(
             (thread) =>
                 thread.channel_type === "channel" &&
                 thread.displayName &&
