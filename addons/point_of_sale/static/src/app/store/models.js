@@ -623,7 +623,7 @@ export class Orderline extends PosModel {
             taxes = this.pos.getTaxesAfterFiscalPosition(taxes, order.fiscal_position);
         }
 
-        const taxesData = this.pos.getTaxesValues(taxes, priceUnit, 1);
+        const taxesData = this.pos.getTaxesValues(taxes, priceUnit, 1, product);
         if (this.pos.config.iface_tax_included === "total") {
             return taxesData.total_included;
         } else {
@@ -694,8 +694,8 @@ export class Orderline extends PosModel {
             taxes = this.pos.getTaxesAfterFiscalPosition(taxes, fiscalPosition);
         }
 
-        const taxesData = this.pos.getTaxesValues(taxes, priceUnitAfterDiscount, qty);
-        const taxesDataBeforeDiscount = this.pos.getTaxesValues(taxes, priceUnit, qty);
+        const taxesData = this.pos.getTaxesValues(taxes, priceUnitAfterDiscount, qty, product);
+        const taxesDataBeforeDiscount = this.pos.getTaxesValues(taxes, priceUnit, qty, product);
 
         // Tax details.
         const taxDetails = {};
@@ -726,7 +726,12 @@ export class Orderline extends PosModel {
         // Fiscal position.
         const order = this.pos.get_order();
         if (order && order.fiscal_position) {
-            price = this.pos.getPriceUnitAfterFiscalPosition(taxes, price, order.fiscal_position);
+            price = this.pos.getPriceUnitAfterFiscalPosition(
+                taxes,
+                price,
+                product,
+                order.fiscal_position
+            );
         }
         return price;
     }

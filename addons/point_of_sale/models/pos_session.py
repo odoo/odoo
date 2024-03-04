@@ -287,6 +287,16 @@ class PosSession(models.Model):
             taxes = self.env['account.tax'].search(params['account.tax']['domain'])
             self._load_account_tax(response, taxes)
 
+            product_fields = taxes._eval_taxes_computation_prepare_product_fields(
+                list(response['custom']['account.tax'].values()),
+            )
+            response['custom']['product_default_values'] = taxes._eval_taxes_computation_prepare_product_default_values(
+                product_fields,
+            )
+            session_product_fields = set(params['product.product']['fields'])
+            session_product_fields.update(product_fields)
+            params['product.product']['fields'] = list(session_product_fields)
+
             # Fiscal positions.
             fiscal_positions = self.env['account.fiscal.position'].search(params['account.fiscal.position']['domain'])
             self._load_account_fiscal_position(response, fiscal_positions)
