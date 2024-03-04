@@ -397,17 +397,14 @@ class HrContract(models.Model):
             # For each contract, we found each interval we must generate
             # In some cases we do not want to set the generated dates beforehand, since attendance based work entries
             #  is more dynamic, we want to update the dates within the _get_work_entries_values function
-            is_static_work_entries = contract.has_static_work_entries()
             last_generated_from = min(contract.date_generated_from, contract_stop)
             if last_generated_from > date_start_work_entries:
-                if is_static_work_entries:
-                    contract.date_generated_from = date_start_work_entries
+                contract.date_generated_from = date_start_work_entries
                 intervals_to_generate[(date_start_work_entries, last_generated_from)] |= contract
 
             last_generated_to = max(contract.date_generated_to, contract_start)
             if last_generated_to < date_stop_work_entries:
-                if is_static_work_entries:
-                    contract.date_generated_to = date_stop_work_entries
+                contract.date_generated_to = date_stop_work_entries
                 intervals_to_generate[(last_generated_to, date_stop_work_entries)] |= contract
 
         for interval, contracts in intervals_to_generate.items():
