@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { debounce } from "@web/core/utils/timing";
-import { isVisible } from "@web/core/utils/ui";
+import { _legacyIsVisible, isVisible } from "@web/core/utils/ui";
 import { tourState } from "./tour_state";
 import {
     callWithUnloadCheck,
@@ -98,7 +98,7 @@ function describeStep(step) {
 /**
  * @param {TourStep} step
  */
-function describeFailedStepSimple(step, tour) {
+function describeFailedStepSimple(tour, step) {
     return `Tour ${tour.name} failed at step ${describeStep(step)}`;
 }
 
@@ -124,6 +124,24 @@ function describeFailedStepDetailed(tour, step) {
         result += `\n${highlight ? "----- FAILING STEP -----\n" : ""}${stepString},${highlight ? "\n-----------------------" : ""}`;
     }
     return `${describeFailedStepSimple(step, tour)}\n\n${result.trim()}`;
+}
+
+function describeWhyStepFailed(step) {
+    const stepState = step.state || {};
+    if (!stepState.stepElFound) {
+        return `The error appears to be that one or more elements in the following list cannot be found in DOM.\n ${JSON.stringify(
+            pick(step, "trigger", "extra_trigger", "alt_trigger", "skip_trigger")
+        )}`;
+    } else if (!stepState.isDisplayed) {
+        return "Element has been found but isn't displayed";
+    } else if (!stepState.isEnabled) {
+        return "Element has been found but is disabled. (Use step.isCheck if you just want to check if element is present in DOM)";
+    } else if (stepState.isBlocked) {
+        return "Element has been found but DOM is blocked.";
+    } else if (!stepState.hasRun) {
+        return `Element has been found. The error seems to be in run()`;
+    }
+    return "";
 }
 
 /**
@@ -238,25 +256,15 @@ function setupListeners({
  */
 function throwError(tour, step, errors = []) {
     const debugMode = tourState.get(tour.name, "debug");
-    const triggersFound = tourState.get(tour.name, "triggersFound");
     // The logged text shows the relative position of the failed step.
     // Useful for finding the failed step.
     console.warn(describeFailedStepDetailed(tour, step));
     // console.error notifies the test runner that the tour failed.
     console.error(describeFailedStepSimple(tour, step));
-    if (triggersFound) {
-        console.error(`Triggers have been found. The error seems to be in run()`);
-    } else {
-        console.error(
-            `The error appears to be that one or more items in the following list cannot be found in DOM. : ${JSON.stringify(
-                pick(step, "trigger", "extra_trigger", "alt_trigger", "skip_trigger")
-            )}`
-        );
-    }
+    console.error(describeWhyStepFailed(step));
     if (errors.length) {
         console.error(errors.join(", "));
     }
-    tourState.set(tour.name, "hasError", true);
     if (debugMode !== false) {
         // eslint-disable-next-line no-debugger
         debugger;
@@ -347,15 +355,16 @@ export class MacroedTour {
             }
             yield* compile(tourStep);
         }
+
         yield { action: () => {
-            if (!tourState.get(this.name, "hasError")) {
-                tourState.clear(this.name);
-                this.options.pointer.stop();
-                this.options.onTourEnd(this);
-            } else {
-                console.error("tour not succeeded");
-            }
-        } }
+                if (tourState.get(this.name, "stepState") === "succeeded") {
+                    tourState.clear(this.name);
+                    this.options.onTourEnd(this);
+                } else {
+                    console.error("tour not succeeded");
+                }
+            } 
+        }
     }
 
     resetRun(params = {}) {
@@ -371,6 +380,7 @@ export class MacroedTour {
     async tryToDoAction(action, step) {
         try {
             await action();
+            step.state.hasRun = true;
         } catch (error) {
             throwError(this, step, [error.message]);
         }
@@ -395,8 +405,9 @@ export class MacroedTour {
 
     _markStepComplete(step) {
         step.completed = true;
+        step.state.hasRun = true;
         tourState.set(this.name, "currentIndex", step.index + 1);
-        tourState.set(tour.name, "stepState", getStepState(step));
+        tourState.set(this.name, "stepState", getStepState(step));
         this.options.onStepConsummed(this, step);
     }
 
@@ -412,9 +423,9 @@ export class MacroedTour {
         let enteredCount = 0;
         let shouldDoAction = false;
         const trigger = () => {
+            step.state = step.state || {};
             if (!enteredCount) {
                 console.log(`Tour ${this.name} on step: '${describeStep(step)}'`);
-                tourState.set(this.name, "triggersFound", false);
                 if (step.break && debugMode !== false) {
                     // eslint-disable-next-line no-debugger
                     debugger;
@@ -433,19 +444,20 @@ export class MacroedTour {
         }
 
         const action = async (stepEl) => {
-            if (!shouldDoAction) {
-                return "stay at this step";
-            }
             clearTimeout(timeout);
-            tourState.set(this.name, "triggersFound", true);
+            if (!shouldDoAction) {
+                this._markStepComplete(step);
+                return;
+            }
             if (showPointerDuration > 0) {
                 // Useful in watch mode.
                 pointer.pointTo(stepEl, step);
                 await new Promise((r) => browser.setTimeout(r, showPointerDuration));
                 pointer.hide();
             }
-            await this._autoRunStep(step, stepEl);
+            const result = await this._autoRunStep(step, stepEl);
             this._markStepComplete(step);
+            return result;
         }
         yield { trigger, action };
 
