@@ -64,10 +64,15 @@ def domain_fields(domain):
 
 
 def pivot_measure_fields(pivot):
-    return [
-        measure["field"]
+    measures = [
+        measure if isinstance(measure, str)
+        else measure["field"]
         for measure in pivot["measures"]
-        if measure["field"] != "__count"
+    ]
+    return [
+        measure
+        for measure in measures
+        if measure != "__count"
     ]
 
 
