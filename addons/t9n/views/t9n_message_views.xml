@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="t9n.message_view_list" model="ir.ui.view">
+        <field name="name">t9n.message.list</field>
+        <field name="model">t9n.message</field>
+        <field name="arch" type="xml">
+            <tree create="false">
+                <field name="body"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="t9n.message_view_form" model="ir.ui.view">
+        <field name="name">t9n.message.form</field>
+        <field name="model">t9n.message</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="body"/>
+                    <group>
+                        <field name="extracted_comments"/>
+                        <field name="translator_comments"/>
+                    </group>
+                    <group>
+                        <field name="context"/>
+                    </group>
+                    <notebook>
+                        <page string="References">
+                            <field name="references"/>
+                        </page>
+                        <page string="Translations">
+                            <field name="translation_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

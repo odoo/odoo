@@ -16,6 +16,8 @@
         "views/t9n_project_views.xml",
         "views/t9n_menu_views.xml",
         "views/t9n_language_views.xml",
+        "views/t9n_resource_views.xml",
+        "views/t9n_message_views.xml",
     ],
     "license": "LGPL-3",
 }

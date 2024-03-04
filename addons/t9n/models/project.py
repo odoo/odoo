@@ -31,6 +31,4 @@ class Project(models.Model):
     def _check_source_and_target_languages(self):
         for record in self:
             if record.src_lang_id in record.target_lang_ids:
-                raise ValidationError(
-                    _("Target languages must be different from source language.")
-                )
+                raise ValidationError(_("A project's target languages must be different from its source language."))
