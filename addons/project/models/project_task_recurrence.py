@@ -82,7 +82,7 @@ class ProjectTaskRecurrence(models.Model):
     def _create_next_occurrence(self, occurrence_from):
         self.ensure_one()
         if occurrence_from.allow_recurring_tasks:
-            self.env['project.task'].sudo().create(
+            self.env['project.task'].sudo().with_context(mail_create_nosubscribe=True).create(
                 self._create_next_occurrence_values(occurrence_from)
             )
 

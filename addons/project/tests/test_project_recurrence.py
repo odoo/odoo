@@ -132,3 +132,25 @@ class TestProjectRecurrence(TransactionCase):
 
         self.assertFalse(any((task_a + task_b + task_c).mapped('recurring_task')),
                          "All tasks in the recurrence should have their recurrence disabled")
+
+    def test_recurring_task_in_closed_state(self):
+        """
+            The purpose is to test whether it is possible to change
+            the state of a recurring task to a closed state without triggering
+            the sql constraint named `mail_followers_res_partner_res_model_id_uniq`.
+        """
+        admin_user = self.env.ref('base.user_admin')
+        with freeze_time(self.date_01_01):
+            task = self.env['project.task'].with_user(admin_user).create({
+                'name': 'test recurring task',
+                'project_id': self.project_recurring.id,
+                'recurring_task': True,
+                'repeat_interval': 5,
+                'repeat_unit': 'month',
+                'repeat_type': 'until',
+                'repeat_until': self.date_01_01 + relativedelta(months=1),
+            })
+            task.with_user(admin_user).write({
+                'state': '1_done'
+            })
+            self.assertEqual((task.recurrence_id.task_ids - task).message_partner_ids, admin_user.partner_id)
