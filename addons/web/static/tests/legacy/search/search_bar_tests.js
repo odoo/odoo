@@ -1720,4 +1720,30 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getFacetTexts(target), ["Bar is in ( First record )"]);
         assert.verifySteps([`/web/domain/validate`]);
     });
+
+    QUnit.test("clicking on search input trigger the search menu", async function (assert) {
+        await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: SearchBar,
+        });
+        await click(target, ".o_searchview_input");
+        assert.containsOnce(target, ".o_search_bar_menu");
+    });
+
+    QUnit.test("clicking on the searchview icon trigger the search", async function (assert) {
+        await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: SearchBar,
+            searchViewId: false,
+        });
+        await editSearch(target, "a");
+        await click(target, ".o_searchview button");
+        assert.strictEqual(
+            target.querySelector(".o_searchview_input_container .o_facet_values").innerText.trim(),
+            "a",
+            "There should be a field facet with label 'a'"
+        );
+    });
 });

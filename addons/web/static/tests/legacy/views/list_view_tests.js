@@ -1042,6 +1042,7 @@ QUnit.module("Views", (hooks) => {
                 [
                     "New",
                     "display",
+                    "", // magnifying glass btn
                     "", // cog dropdown
                     "", // search btn
                 ]
@@ -1065,6 +1066,7 @@ QUnit.module("Views", (hooks) => {
                 [
                     "New",
                     "display",
+                    "", // magnifying glass btn
                     "", // cog dropdown
                     "", // search btn
                 ]

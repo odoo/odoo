@@ -9,6 +9,8 @@ import { _t } from "@web/core/l10n/translation";
 import { SearchBarMenu } from "../search_bar_menu/search_bar_menu";
 
 import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { hasTouch } from "@web/core/browser/feature_detection";
 const parsers = registry.category("parsers");
 
 const CHAR_FIELDS = ["char", "html", "many2many", "many2one", "one2many", "text", "properties"];
@@ -53,6 +55,8 @@ export class SearchBar extends Component {
         // derived state
         this.items = useState([]);
         this.subItems = {};
+
+        this.searchBarDropdownState = useDropdownState();
 
         this.orm = useService("orm");
 
@@ -562,15 +566,33 @@ export class SearchBar extends Component {
         }
     }
 
+    onSearchClick() {
+        if (!hasTouch() && !this.inputRef.el.value.length) {
+            this.searchBarDropdownState.open();
+        }
+    }
+
     /**
      * @param {InputEvent} ev
      */
     onSearchInput(ev) {
+        if (!hasTouch()) {
+            this.searchBarDropdownState.close();
+        }
         const query = ev.target.value;
         if (query.trim()) {
             this.computeState({ query, expanded: [], focusedIndex: 0, subItems: [] });
         } else if (this.items.length) {
             this.resetState();
+        }
+    }
+
+    onClickSearchIcon() {
+        const focusedItem = this.items[this.state.focusedIndex];
+        if (!this.state.query.length) {
+            this.env.searchModel.search();
+        } else if (focusedItem) {
+            this.selectItem(focusedItem);
         }
     }
 
