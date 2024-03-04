@@ -8,7 +8,7 @@ from odoo.tests.common import users
 from odoo.tools import mute_logger, email_normalize
 
 
-@tagged('mass_mailing')
+@tagged('mass_mailing', 'coincoin')
 class TestMassMailing(TestMassMailCommon):
 
     @classmethod
@@ -196,7 +196,12 @@ class TestMassMailing(TestMassMailCommon):
                     record_case + recod_weird + record_weird_2
                 )
                 mailing = self.env['mailing.mailing'].create({
-                    'body_html': """<div><p>Hello ${object.name}</p>""",
+                    'body_html': """
+<div>
+    <p>Hello <t t-out="object.name"/></p>
+    <a id="url_view" href="/view"/>View link</a>
+    <a id="url_unsub" role="button" href="/unsubscribe_from_list">Unsub</a>
+</div>""",
                     'mailing_domain': [('id', 'in', test_records.ids)],
                     'mailing_model_id': self.env['ir.model']._get_id(dst_model),
                     'mailing_type': 'mail',
@@ -282,6 +287,44 @@ class TestMassMailing(TestMassMailCommon):
                     test_records,
                     check_mail=True,
                 )
+
+                recipient_emails_map = [
+                    (
+                        record_p_mult,
+                        [f'"{customer_mult.name}" <customer.multi.1@example.com>', f'"{customer_mult.name}" <customer.multi.2@example.com>'],
+                    ),
+                    (record_p_fmt, []),
+                    (record_p_unic, []),
+                    (record_p_case, []),
+                    (record_p_weird, []),
+                    (record_p_weird_2, []),
+                    (record_mult, []),
+                    (record_fmt, []),
+                    (record_unic, []),
+                    (record_case, []),
+                    (recod_weird, []),
+                    (record_weird_2, []),
+                ]
+                # check for unsubscribe / view links, specific to each recipient
+                for recipient, email_to in recipient_emails_map:
+                    email = self._find_sent_mail_wemails(email_to)
+                    print(email['body'])
+                    print('--------------------')
+                    print(email['body_alternative'])
+                    # links are already tested notably in 'test_mailing_gateway_update'
+                    # but here we test specifically for unsubscribe and view links
+                    unsubscribe_link = f'{mailing.get_base_url()}/mailing/{mailing.id}/unsubscribe'
+                    unsubscribe_params = {
+                        'document_id': recipient.id,
+                        'email': recipient.email_normalized,
+                        'hash_token': 'prout',
+                    }
+                    view_link = f'{mailing.get_base_url()}/mailing/{mailing.id}/view'
+                    view_params = {
+                        'document_id': recipient.id,
+                        'email': recipient.email_normalized,
+                        'hash_token': 'prout',
+                    }
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -596,3 +639,109 @@ class TestMassMailing(TestMassMailCommon):
             check_mail=True
         )
         self.assertEqual(mailing.canceled, 2)
+
+
+# @tagged('mass_mailing', 'coincoin')
+# class TestMassMailingContent(TestMassMailCommon):
+
+#     @classmethod
+#     def setUpClass(cls):
+#         super(TestMassMailingContent, cls).setUpClass()
+#         cls.recipients = cls._create_mailing_test_records(
+#             model='mailing.test.blacklist',
+#             count=5,
+#         )
+#         cls.recipients += cls.env['mailing.test.blacklist'].create([
+#             {
+#                 'email_from': '"Formatted Multi Name" <formatted.multi.customer@example.com>, formatted.multi.other@example.com',
+#                 'name': 'Formatted Multi',
+#             },
+#         ])
+#         cls.mailing_bl.write({
+#             'mailing_domain': [('id', 'in', cls.recipients.ids)],
+#         })
+
+#     @users('user_marketing')
+#     def test_mailing_content_unsubscribe(self):
+#         """ Test unsubscribe links """
+#         mailing = self.mailing_bl.with_env(self.env)
+#         recipients = self.recipients.with_env(self.env)
+#         mailing.action_put_in_queue()
+#         with self.mock_mail_gateway(mail_unlink_sent=False):
+#             mailing.action_send_mail()
+
+#         for recipient in recipients:
+#             recipient_info = {
+#                 'email': recipient.email_normalized,
+#                 'content': 'Hello %s' % recipient.name,
+#             }
+#             email = self._find_sent_mail_wemail(recipient.email_normalized)
+#             # links are already tested notably in 'test_mailing_gateway_update'
+#             # but here we test specifically for unsubscribe and view links
+#             unsubscribe_link = f'{mailing.get_base_url()}/mailing/{mailing.id}/unsubscribe'
+#             unsubscribe_params = {
+#                 'document_id': recipient.id,
+#                 'email': recipient.email_normalized,
+#                 'hash_token': 'prout',
+#             }
+#             view_link = f'{mailing.get_base_url()}/mailing/{mailing.id}/view'
+#             view_params = {
+#                 'document_id': recipient.id,
+#                 'email': recipient.email_normalized,
+#                 'hash_token': 'prout',
+#             }
+#             print(email['body'])
+#             print('--------------')
+#             print(email['body_alternative'])
+
+# span>Internal2: <a id="url6" href="http://localhost:8069/mailing/6/view?document_id=10&email=test.record.04%40test.example.com&hash_token=c43d9ab27d2e9e57a59395b10c39979b69f2e7ed174e94631d61afa0a447a77dcc7e6e9988c797693a15cc5b3e0159d8594b50e2c2cc47e0d0950c08fbf3232d"></a>View link</span>
+# <span>Email: <a id="url7" href="mailto:test@odoo.com">test@odoo.com</a></span>
+# <p>Stop spam ? <a id="url8" role="button" href="http://localhost:8069/mailing/6/unsubscribe?document_id=10&email=test.record.04%40test.example.com&hash_token=c43d9ab27d2e9e57a59395b10c39979b69f2e7ed174e94631d61afa0a447a77dcc7e6e9988c797693a15cc5b3e0159d8594b50e2c2cc47e0d0950c08fbf3232d">Ok</a></p>
+
+
+
+# External1: Youpie [5]
+# Internal1: Internal link [6]
+# Internal2: None [7] View link
+# Email: test@odoo.com [8]
+# Stop spam ? Ok [9]
+
+
+
+
+# [1] http://localhost:8069/r/RG2/m/30
+# [2] http://localhost:8069/r/Or1/m/30
+# [3] http://localhost:8069/r/Kpl/m/30
+# [4] http://localhost:8069/r/5tm/m/30
+# [5] http://localhost:8069/r/aaN/m/30
+# [6] http://localhost:8069/r/YSE/m/30
+# [7] http://localhost:8069/view
+# [8] mailto:test@odoo.com
+# [9] http://localhost:8069/unsubscribe_from_list
+
+
+
+#             self.assertIn(
+#                 'Hi %s :)' % recipient.name,
+#                 email['body'])
+#             # rendered unsubscribe
+#             self.assertIn(
+#                 '%s/mailing/%s/unsubscribe' % (mailing.get_base_url(), mailing.id),
+#                 email['body'])
+
+
+
+#             mail_links_info=[[
+#                 ('url0', 'https://www.odoo.tz/my/%s' % record.name, True, {}),
+#                 ('url1', 'https://www.odoo.be', True, {}),
+#                 ('url2', 'https://www.odoo.com', True, {}),
+#                 ('url3', 'https://www.odoo.eu', True, {}),
+#                 ('url4', 'https://www.example.com/foo/bar?baz=qux', True, {'baz': 'qux'}),
+#                 ('url5', '%s/event/dummy-event-0' % mailing.get_base_url(), True, {}),
+#                 # view is not shortened and parsed at sending
+#                 ('url6', '%s/view' % mailing.get_base_url(), False, {}),
+#                 ('url7', 'mailto:test@odoo.com', False, {}),
+#                 # unsubscribe is not shortened and parsed at sending
+#                 ('url8', '%s/unsubscribe_from_list' % mailing.get_base_url(), False, {}),
+#             ] for record in recipients],
+#             check_mail=True

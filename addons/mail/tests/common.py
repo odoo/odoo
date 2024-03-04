@@ -282,17 +282,33 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         """ Find a sent email with a given list of recipients. Email should match
         exactly the recipients.
 
-        :param email-to: a list of emails that will be compared to email_to
+        :param email_to: an email that will be compared to email_to of sent emails
+          (as a list of emails);
+
+        :return email: an email which is a dictionary mapping values given to
+          ``build_email``;
+        """
+        return self._find_sent_mail_wemails([email_to])
+
+    def _find_sent_mail_wemails(self, emails_to):
+        """ Find a sent email with a given list of recipients. Emails should match
+        exactly the email_to of outgoing email formatted as a list.
+
+        :param emails_to: a list of emails that will be compared to email_to
           of sent emails (also a list of emails);
 
         :return email: an email which is a dictionary mapping values given to
           ``build_email``;
         """
         for sent_email in self._mails:
-            if set(sent_email['email_to']) == set([email_to]):
+            if set(sent_email['email_to']) == set(emails_to):
                 break
         else:
-            raise AssertionError('sent mail not found for email_to %s' % (email_to))
+            debug_info = '\n'.join(
+                f"From: {sent_email['email_from']} - To {sent_email['email_to']}"
+                for sent_email in self._mails
+            )
+            raise AssertionError(f'sent mail not found for email_to {emails_to}\n{debug_info}')
         return sent_email
 
     def _filter_mail(self, status=None, mail_message=None, author=None, email_from=None):
