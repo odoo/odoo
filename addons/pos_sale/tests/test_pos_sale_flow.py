@@ -389,3 +389,39 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         pos_order = self.env['pos.order'].search([], order='id desc', limit=1)
         self.assertTrue(pos_order.account_move.line_ids[0].analytic_distribution, "Analytic distribution should be set on the invoice line")
         self.assertEqual(pos_order.account_move.line_ids[0].analytic_distribution.get(str(self.analytic_account_partner_a_1.id)), 100)
+
+    def test_order_sales_count(self):
+        self.main_pos_config.open_ui()
+        current_session = self.main_pos_config.current_session_id
+        partner_1 = self.env['res.partner'].create({'name': 'Test Partner'})
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': partner_1.id,
+            'pricelist_id': partner_1.property_product_pricelist.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.desk_pad.id,
+                'price_unit': self.desk_pad.lst_price,
+                'discount': 0.0,
+                'qty': 1.0,
+                'tax_ids': [],
+                'price_subtotal': self.desk_pad.lst_price,
+                'price_subtotal_incl': self.desk_pad.lst_price,
+            })],
+            'amount_total': self.desk_pad.lst_price,
+            'amount_tax': 0.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+            'last_order_preparation_change': '{}'
+        })
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': current_session.payment_method_ids[0].id,
+        })
+        order_payment.with_context(**payment_context).check()
+
+        current_session.close_session_from_ui()
+        self.env.flush_all()
+        self.assertEqual(self.desk_pad.sales_count, 1)
