@@ -84,7 +84,12 @@ export function computeViewClassName(viewType, rootNode, additionalClassList = [
  * @param {string[]} activeMeasures
  * @returns {Object}
  */
-export const computeReportMeasures = (fields, fieldAttrs, activeMeasures) => {
+export const computeReportMeasures = (
+    fields,
+    fieldAttrs,
+    activeMeasures,
+    { sumAggregatorOnly = false } = {}
+) => {
     const measures = {
         __count: { name: "__count", string: _t("Count"), type: "integer" },
     };
@@ -98,7 +103,8 @@ export const computeReportMeasures = (fields, fieldAttrs, activeMeasures) => {
         }
         if (
             ["integer", "float", "monetary"].includes(field.type) &&
-            field.aggregator
+            ((sumAggregatorOnly && field.aggregator === "sum") ||
+                (!sumAggregatorOnly && field.aggregator))
         ) {
             measures[fieldName] = field;
         }
