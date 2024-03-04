@@ -123,7 +123,7 @@ function describeFailedStepDetailed(tour, step) {
         );
         result += `\n${highlight ? "----- FAILING STEP -----\n" : ""}${stepString},${highlight ? "\n-----------------------" : ""}`;
     }
-    return `${describeFailedStepSimple(step, tour)}\n\n${result.trim()}`;
+    return `${describeFailedStepSimple(tour, step)}\n\n${result.trim()}`;
 }
 
 function describeWhyStepFailed(step) {
