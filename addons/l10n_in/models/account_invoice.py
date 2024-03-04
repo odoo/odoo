@@ -131,14 +131,20 @@ class AccountMove(models.Model):
         self.ensure_one()
         display_uom = self.env.user.has_group('uom.group_uom')
 
-        base_lines = [
-            {
+        base_lines = []
+        for line in self.invoice_line_ids.filtered(lambda x: x.display_type == 'product'):
+            tax_values_list = line.tax_ids._convert_to_dict_for_taxes_computation()
+            product_values = self.env['account.tax']._eval_taxes_computation_turn_to_product_values(
+                tax_values_list,
+                product=line.product_id,
+            )
+
+            base_lines.append({
                 'l10n_in_hsn_code': line.l10n_in_hsn_code,
                 'quantity': line.quantity,
                 'price_unit': line.price_unit,
+                'product_values': product_values,
                 'uom': {'id': line.product_uom_id.id, 'name': line.product_uom_id.name},
-                'tax_values_list': line.tax_ids._convert_to_dict_for_taxes_computation(),
-            }
-            for line in self.invoice_line_ids.filtered(lambda x: x.display_type == 'product')
-        ]
+                'tax_values_list': tax_values_list,
+            })
         return self.env['account.tax']._l10n_in_get_hsn_summary_table(base_lines, display_uom)

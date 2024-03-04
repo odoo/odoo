@@ -151,6 +151,13 @@ class PosSession(models.Model):
                 ]),
                 'fields': ['id', 'name', 'value']
             },
+            'account.tax': {
+                'domain': [('company_id', '=', config_id.company_id.id)],
+                'fields': [
+                    'id', 'name', 'price_include', 'include_base_amount', 'is_base_affected',
+                    'amount_type', 'children_tax_ids', 'amount', 'repartition_line_ids', 'id'
+                ],
+            },
             'product.product': {
                 'domain': config_id._get_available_product_domain(),
                 'fields': [
@@ -249,13 +256,6 @@ class PosSession(models.Model):
             'product.category': {
                 'domain': [],
                 'fields': ['id', 'name', 'parent_id'],
-            },
-            'account.tax': {
-                'domain': [('company_id', '=', config_id.company_id.id)],
-                'fields': [
-                    'id', 'name', 'price_include', 'include_base_amount', 'is_base_affected',
-                    'amount_type', 'children_tax_ids', 'amount', 'repartition_line_ids', 'id'
-                ],
             },
             'account.cash.rounding': {
                 'domain': [('id', '=', config_id.rounding_method.id)],
@@ -383,6 +383,25 @@ class PosSession(models.Model):
                 response['fields']['account.tax'],
                 response['relations']['account.tax']
             )
+            AccountTax = self.env['account.tax']
+            product_fields = AccountTax._eval_taxes_computation_prepare_product_fields(
+                response['data']['account.tax'],
+            )
+
+            company_data = next(x for x in response['data']['res.company'] if x['id'] == self.config_id.company_id.id)
+            fake_field = {
+                'name': '_product_default_values',
+                'type': 'string',
+            }
+            company_data[fake_field['name']] = AccountTax._eval_taxes_computation_prepare_product_default_values(
+                product_fields,
+            )
+            response['fields']['res.company'].append(fake_field['name'])
+            response['relations']['res.company'][fake_field['name']] = fake_field
+
+            session_product_fields = set(response['fields']['product.product'])
+            session_product_fields.update(product_fields)
+            response['fields']['product.product'] = list(session_product_fields)
 
         # account_fiscal_position adaptation
         if len(models_to_load) == 0 or 'account.fiscal.position' in models_to_load:

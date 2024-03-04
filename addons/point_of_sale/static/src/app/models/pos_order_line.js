@@ -400,7 +400,15 @@ export class PosOrderline extends Base {
             taxes = getTaxesAfterFiscalPosition(taxes, order.fiscal_position_id, this.models);
         }
 
-        const taxesData = getTaxesValues(taxes, priceUnit, 1, product, this.company, this.currency);
+        const taxesData = getTaxesValues(
+            taxes,
+            priceUnit,
+            1,
+            product,
+            this.company._product_default_values,
+            this.company,
+            this.currency
+        );
         if (this.config.iface_tax_included === "total") {
             return taxesData.total_included;
         } else {
@@ -473,6 +481,7 @@ export class PosOrderline extends Base {
             priceUnitAfterDiscount,
             qty,
             product,
+            this.company._product_default_values,
             this.company,
             this.currency
         );
@@ -481,6 +490,7 @@ export class PosOrderline extends Base {
             priceUnit,
             qty,
             product,
+            this.company._product_default_values,
             this.company,
             this.currency
         );
@@ -515,6 +525,8 @@ export class PosOrderline extends Base {
             price = getPriceUnitAfterFiscalPosition(
                 taxes,
                 price,
+                product,
+                this.company._product_default_values,
                 order.fiscal_position_id,
                 this.models
             );
