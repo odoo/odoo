@@ -270,6 +270,7 @@ def init_logger():
 DEFAULT_LOG_CONFIGURATION = [
     'odoo.http.rpc.request:INFO',
     'odoo.http.rpc.response:INFO',
+    'odoo.tools.lru:INFO',
     ':INFO',
 ]
 PSEUDOCONFIG_MAPPER = {

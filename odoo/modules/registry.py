@@ -85,7 +85,7 @@ class Registry(Mapping):
                 # 10Mb (registry) + 5Mb (working memory) per registry
                 avgsz = 15 * 1024 * 1024
                 size = int(config['limit_memory_soft'] / avgsz)
-        return LRU(size)
+        return LRU(size, tag="registries")
 
     def __new__(cls, db_name):
         """ Return the registry for the given database name."""
@@ -148,7 +148,7 @@ class Registry(Mapping):
         self._fields_by_model = None
         self._ordinary_tables = None
         self._constraint_queue = deque()
-        self.__caches = {cache_name: LRU(cache_size) for cache_name, cache_size in _REGISTRY_CACHES.items()}
+        self.__caches = {cache_name: LRU(cache_size, tag=cache_name) for cache_name, cache_size in _REGISTRY_CACHES.items()}
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()

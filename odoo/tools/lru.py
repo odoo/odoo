@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 import collections
+import logging
 import threading
 
 from .func import locked
 
 __all__ = ['LRU']
+
+logger = logging.getLogger(__name__)
+
 
 class LRU(object):
     """
@@ -12,10 +16,13 @@ class LRU(object):
 
     Original Copyright 2003 Josiah Carlson, later rebuilt on OrderedDict.
     """
-    def __init__(self, count, pairs=()):
+    def __init__(self, count, pairs=(), tag=None):
         self._lock = threading.RLock()
         self.count = max(count, 1)
         self.d = collections.OrderedDict()
+        self.logger = logger.getChild(tag) if tag else logger
+        self.logger.debug("INIT")
+
         for key, value in pairs:
             self[key] = value
 
@@ -31,6 +38,7 @@ class LRU(object):
 
     @locked
     def __getitem__(self, obj):
+        self.logger.debug("ACCESS %s", obj)
         a = self.d[obj]
         self.d.move_to_end(obj, last=False)
         return a
@@ -56,4 +64,5 @@ class LRU(object):
 
     @locked
     def clear(self):
+        self.logger.debug("CLEAR")
         self.d.clear()

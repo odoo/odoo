@@ -22,7 +22,7 @@ except ImportError:
 FTYPES = ['docx', 'pptx', 'xlsx', 'opendoc', 'pdf']
 
 
-index_content_cache = LRU(1)
+index_content_cache = LRU(1, tag="attachment_indexing")
 
 def textToString(element):
     buff = u""
