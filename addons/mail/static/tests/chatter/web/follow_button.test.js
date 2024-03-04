@@ -51,9 +51,7 @@ test('Click on "follow" button should save draft record', async () => {
                 <sheet>
                     <field name="name" required="1"/>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                </div>
+                <chatter/>
             </form>`,
     });
     await contains("button", { text: "Follow" });

@@ -29,7 +29,7 @@ function compileChatter(node, params) {
 }
 
 registry.category("form_compilers").add("portal_chatter_compiler", {
-    selector: "div.oe_chatter",
+    selector: "chatter",
     fn: (node) =>
         compileChatter(node, {
             resId: "__comp__.props.record.resId or undefined",
