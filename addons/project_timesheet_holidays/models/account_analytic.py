@@ -2,7 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+<<<<<<< HEAD
 from odoo.exceptions import RedirectWarning, UserError
+||||||| parent of 56cbf57e926a (temp)
+from odoo.exceptions import UserError
+=======
+from odoo.exceptions import UserError
+from odoo.osv import expression
+>>>>>>> 56cbf57e926a (temp)
 
 
 class AccountAnalyticLine(models.Model):
@@ -39,9 +46,21 @@ class AccountAnalyticLine(models.Model):
     def _check_can_write(self, values):
         if not self.env.su and self.holiday_id:
             raise UserError(_('You cannot modify timesheets that are linked to time off requests. Please use the Time Off application to modify your time off requests instead.'))
+<<<<<<< HEAD
         return super()._check_can_write(values)
 
     def _check_can_create(self):
         if not self.env.su and any(task.is_timeoff_task for task in self.task_id):
             raise UserError(_('You cannot create timesheets for a task that is linked to a time off type. Please use the Time Off application to request new time off instead.'))
         return  super()._check_can_create()
+||||||| parent of 56cbf57e926a (temp)
+        return super().write(vals)
+=======
+        return super().write(vals)
+
+    def _get_favorite_project_id_domain(self, employee_id=False):
+        return expression.AND([
+            super()._get_favorite_project_id_domain(employee_id),
+            [('holiday_id', '=', False), ('global_leave_id', '=', False)],
+        ])
+>>>>>>> 56cbf57e926a (temp)
