@@ -24,10 +24,12 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox', {
     {
         content: 'click on the third option to select it',
         trigger: 'input[data-attribute_name="Options"][data-value_name="Option 3"]',
+        extra_trigger: ':checkbox:checked',
     },
     {
         content: 'check combination is not possible',
-        trigger: '.js_main_product.css_not_available .css_not_available_msg:contains("This combination does not exist.")'
+        trigger: '.js_main_product.css_not_available .css_not_available_msg:contains("This combination does not exist.")',
+        isCheck: true,
     },
     {
         content: "check add to cart not possible",
@@ -41,6 +43,7 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox', {
     {
         content: 'click on the second option to select it',
         trigger: 'input[data-attribute_name="Options"][data-value_name="Option 2"]',
+        extra_trigger: '#add_to_cart:not(:disabled)',
     },
     {
         content: "check price of options is correct",
@@ -52,6 +55,7 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox', {
         trigger: 'a:contains(Add to cart)',
     },
         tourUtils.goToCart(),
+        tourUtils.assertCartContains({productName: 'Product Multi'}),
     {
         content: "check price is correct",
         trigger: '#cart_products div div.text-muted>span:contains("Options: Option 1, Option 2")',
