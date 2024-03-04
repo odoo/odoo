@@ -419,7 +419,7 @@ actual arch.
 
         return True
 
-    @api.constrains('type', 'group_ids', 'inherit_id')
+    @api.constrains('group_ids', 'inherit_id', 'mode')
     def _check_groups(self):
         for view in self:
             if (view.group_ids and
