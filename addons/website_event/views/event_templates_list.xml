@@ -21,7 +21,6 @@
             <!-- Content -->
             <div class="o_wevent_events_list">
                 <div class="container">
-                    <t t-call="website_event.searched_tags"/>
                     <div class="row">
                         <div id="o_wevent_index_main_col" t-attf-class="col-md mb-3 #{opt_events_list_columns and 'opt_events_list_columns' or 'opt_events_list_rows'}">
                             <div class="row g-4 g-lg-3 g-xxl-4">
@@ -77,6 +76,9 @@
                     </button>
                 </div>
             </div>
+
+            <t t-if="search_tags" t-call="website_event.searched_tags"/>
+
             <!-- Off canvas filters on mobile-->
             <div id="o_wevent_index_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible mw-75">
                 <div class="offcanvas-header">
@@ -125,11 +127,13 @@
 </template>
 
 <template id="searched_tags" name="Searched tags">
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center flex-wrap gap-2 mt-2">
         <t t-foreach="search_tags" t-as="tag">
-            <span t-attf-class="d-inline-flex align-items-baseline rounded border ps-2 me-2 mb-2 #{'o_tag_color_%s' % tag.color if tag.color else ''}">
+            <span t-attf-class="d-inline-flex align-items-baseline rounded border ps-2 #{'o_tag_color_%s' % tag.color if tag.color else ''}">
                 <t t-out="tag.display_name"/>
-                <a t-att-href="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids))" class="btn border-0 py-1 text-white">&#215;</a>
+                <a t-att-href="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids))" class="btn border-0 py-1 px-2 text-reset opacity-75-hover">
+                    <i class="oi oi-close" role="img"/>
+                </a>
             </span>
         </t>
     </div>
@@ -331,7 +335,7 @@
                             <div class="d-flex flex-wrap gap-1 small">
                                 <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.website_id == website or not tag.category_id.website_id)" t-as="tag">
                                     <span t-if="tag.color"
-                                        t-attf-class="badge mt-3 mt-sm-0 rounded-pill px-2 p-1 #{'o_tag_color_%s' % tag.color if tag.color else 'text-bg-light'}">
+                                        t-attf-class="badge rounded-pill px-2 p-1 #{'o_tag_color_%s' % tag.color if tag.color else 'text-bg-light'}">
                                         <t t-out="tag.name"/>
                                     </span>
                                 </t>
