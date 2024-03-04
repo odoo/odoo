@@ -50,7 +50,7 @@ _DEFAULT_MANIFEST = {
     'new_page_templates': {},  # website themes
     #name, mandatory
     'post_init_hook': '',
-    'post_load': None,
+    'post_load': '',
     'pre_init_hook': '',
     'sequence': 100,
     'summary': '',
