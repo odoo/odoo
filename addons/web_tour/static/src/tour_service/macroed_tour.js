@@ -7,16 +7,17 @@ import { tourState } from "./tour_state";
 import {
     callWithUnloadCheck,
     getConsumeEventType,
-    getFirstVisibleElement,
-    getJQueryElementFromSelector,
+    getNodesFromSelector,
     getScrollParent,
     RunningTourActionHelper,
 } from "./tour_utils";
 import { iter } from "@web/core/utils/functions";
 import { session } from "@web/session";
 import { utils } from "@web/core/ui/ui_service";
-import { Deferred, delay, KeepLast } from "@web/core/utils/concurrency";
+import { Deferred, delay } from "@web/core/utils/concurrency";
 import { rangeAround } from "@web/core/utils/arrays";
+import { queryAll } from "@odoo/hoot-dom";
+import { pick } from "@web/core/utils/objects";
 
 /**
  * @typedef {import("@web/core/macro").MacroDescriptor} MacroDescriptor
@@ -36,43 +37,54 @@ import { rangeAround } from "@web/core/utils/arrays";
  */
 
 /**
- * @param {string} selector - any valid jquery selector
- * @param {boolean} inModal
+ * @param {string} selector - any valid Hoot selector
  * @param {string|undefined} shadowDOM - selector of the shadow root host
- * @returns {Element | undefined}
+ * @param {boolean} inModal
+ * @returns {Array<Element>}
  */
-function findTrigger(selector, inModal, shadowDOM) {
-    const $target = $(shadowDOM ? document.querySelector(shadowDOM)?.shadowRoot : document);
-    const $visibleModal = $target.find(".modal:visible").last();
-    let $el;
-    if (inModal !== false && $visibleModal.length) {
-        $el = $visibleModal.find(selector);
-    } else {
-        $el = getJQueryElementFromSelector(selector, $target);
+function findTrigger(selector, shadowDOM, inModal) {
+    const target = shadowDOM ? document.querySelector(shadowDOM)?.shadowRoot : document;
+    let nodes;
+    if (inModal !== false) {
+        const visibleModal = queryAll(".modal", { root: target, visible: true }).at(-1);
+        if (visibleModal) {
+            nodes = queryAll(selector, { root: visibleModal });
+        }
     }
-    return getFirstVisibleElement($el).get(0);
+    if (!nodes) {
+        nodes = getNodesFromSelector(selector, target);
+    }
+    return nodes;
 }
 
 /**
- * @param {string|undefined} shadowDOM - selector of the shadow root host
+ * @param {Tour} tour
+ * @param {TourStep} step
+ * @param {"trigger"|"extra_trigger"|"alt_trigger"|"skip_trigger"} elKey
+ * @returns {HTMLElement|null}
  */
-function findExtraTrigger(selector, shadowDOM) {
-    const $target = $(shadowDOM ? document.querySelector(shadowDOM)?.shadowRoot : document);
-    const $el = getJQueryElementFromSelector(selector, $target);
-    return getFirstVisibleElement($el).get(0);
+function tryFindTrigger(tour, step, elKey) {
+    const selector = step[elKey];
+    const in_modal = elKey === "extra_trigger" ? false : step.in_modal;
+    try {
+        const nodes = findTrigger(selector, step.shadow_dom, in_modal);
+        //TODO : change _legacyIsVisible by isVisible (hoot lib)
+        //Failed with tour test_snippet_popup_with_scrollbar_and_animations > snippet_popup_and_animations
+        return !step.allowInvisible && !step.isCheck ? nodes.find(_legacyIsVisible) : nodes.at(0);
+    } catch (error) {
+        throwError(tour, step, [`Trigger was not found : ${selector} : ${error.message}`]);
+    }
 }
 
-function findStepTriggers(step) {
-    const triggerEl = findTrigger(step.trigger, step.in_modal, step.shadow_dom);
-    const altEl = findTrigger(step.alt_trigger, step.in_modal, step.shadow_dom);
-    const skipEl = findTrigger(step.skip_trigger, step.in_modal, step.shadow_dom);
-
+function findStepTriggers(tour, step) {
+    const triggerEl = tryFindTrigger(tour, step, "trigger");
+    const altEl = tryFindTrigger(tour, step, "alt_trigger");
+    const skipEl = tryFindTrigger(tour, step, "skip_trigger");
     // `extraTriggerOkay` should be true when `step.extra_trigger` is undefined.
     // No need for it to be in the modal.
     const extraTriggerOkay = step.extra_trigger
-        ? findExtraTrigger(step.extra_trigger, step.shadow_dom)
+        ? tryFindTrigger(tour, step, "extra_trigger")
         : true;
-
     return { triggerEl, altEl, extraTriggerOkay, skipEl };
 }
 
@@ -143,20 +155,37 @@ function getAnchorEl(el, consumeEvent) {
  * @param {TourStep} step
  */
 function canContinue(el, step) {
+    step.state = step.state || {};
+    const state = step.state;
+    state.stepElFound = true;
     const rootNode = el.getRootNode();
-    const isInDoc =
+    state.isInDoc =
         rootNode instanceof ShadowRoot
             ? el.ownerDocument.contains(rootNode.host)
             : el.ownerDocument.contains(el);
-    const isElement = el instanceof el.ownerDocument.defaultView.Element || el instanceof Element;
-    const isBlocked = document.body.classList.contains("o_ui_blocked") || document.querySelector(".o_blockUI");
-    return (
-        isInDoc &&
-        isElement &&
-        !isBlocked &&
-        (!step.allowInvisible ? isVisible(el) : true) &&
-        (!el.disabled || step.isCheck)
+    state.isElement = el instanceof el.ownerDocument.defaultView.Element || el instanceof Element;
+    state.isDisplayed = !step.allowInvisible && !step.isCheck ? isVisible(el) : true;
+    const isBlocked =
+        document.body.classList.contains("o_ui_blocked") || document.querySelector(".o_blockUI");
+    state.isBlocked = !!isBlocked;
+    state.isEnabled = !el.disabled || !!step.isCheck;
+    state.canContinue = !!(
+        state.isInDoc &&
+        state.isElement &&
+        state.isDisplayed &&
+        state.isEnabled &&
+        !state.isBlocked
     );
+    return state.canContinue;
+}
+
+function getStepState(step) {
+    const checkRun =
+        (["string", "function"].includes(typeof step.run) && step.state.hasRun) ||
+        !step.run ||
+        step.isCheck;
+    const check = checkRun && step.state.canContinue;
+    return check ? "succeeded" : "errored";
 }
 
 /**
@@ -251,8 +280,8 @@ function shouldOmit(step, mode) {
 }
 
 export class MacroedTour {
-    #tourSteps = [];
-    #startIndex = 0;
+    _tourSteps = [];
+    _startIndex = 0;
     constructor(tour, options={}) {
         if (typeof tour.steps !== "function") {
             throw new Error(`tour.steps has to be a function that returns TourStep[]`);
@@ -267,26 +296,34 @@ export class MacroedTour {
     }
 
     computeSteps() {
-        if (this.#tourSteps) {
-            return this.#tourSteps;
+        if (this._tourSteps) {
+            return this._tourSteps;
         }
-
         let index = 0;
         this.shadowSelectors = new Set();
-        this.#tourSteps = this.getTourSteps().map((step, definitionIndex) => {
+
+        const allSteps = [];
+        const tourSteps = [];
+        this.getTourSteps().forEach((step, definitionIndex) => {
             const omitted = shouldOmit(step, this.mode);
-            const localIndex = !omitted ? index++ : index;
-            const completed = localIndex < this.#startIndex;
-            step = { ...step, omitted, completed, definitionIndex, index: localIndex };
-            if (!omitted && !completed) {
-                step.shadow_dom = step.shadow_dom ?? this.shadow_dom;
-                if (step.shadow_dom) {
-                    this.shadowSelectors.add(step.shadow_dom);
+            step = { ...step };
+            allSteps.push(step);
+            if (!omitted) {
+                step.index = index;
+                step.completed = index < this._startIndex;
+                if (!step.completed) {
+                    step.shadow_dom = step.shadow_dom ?? this.shadow_dom;
+                    if (step.shadow_dom) {
+                        this.shadowSelectors.add(step.shadow_dom);
+                    }
                 }
+                tourSteps.push(step)
+                index++;
             }
-            return step;
         });
-        return this.#tourSteps;
+        this._allSteps = allSteps;
+        this._tourSteps = tourSteps;
+        return this._tourSteps;
     }
 
     get tourSteps() {
@@ -305,7 +342,7 @@ export class MacroedTour {
             compile = this._compileStepAuto.bind(this)
         }
         for (const tourStep of this.tourSteps) {
-            if (tourStep.omitted || tourStep.completed) {
+            if (tourStep.completed) {
                 continue;
             }
             yield* compile(tourStep);
@@ -323,9 +360,9 @@ export class MacroedTour {
 
     resetRun(params = {}) {
         Object.assign(this.options, params);
-        this.#tourSteps = null;
+        this._tourSteps = null;
         if ("startIndex" in params) {
-            this.#startIndex = params.startIndex || 0;
+            this._startIndex = params.startIndex || 0;
         }
         this.computeSteps();
         this.mode = params.mode || this.mode || "auto";
@@ -339,39 +376,28 @@ export class MacroedTour {
         }
     }
 
-    _stepExecute(step, onTriggerEnter=() => {}, onAction=() => {}) {
-        let skipAction;
-        let enteredCount = 0;
-        const trigger = () => {
-            onTriggerEnter({ enteredCount });
-            enteredCount++;
-            skipAction = false;
-            const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(step);
+    _stepTriggered(step) {
+        const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(this, step);
+        const stepEl = extraTriggerOkay && (triggerEl || altEl);
 
-            let stepEl = extraTriggerOkay && (triggerEl || altEl);
-
-            if (skipEl) {
-                skipAction = true;
-                stepEl = skipEl;
-            }
-
-            if (!stepEl) {
-                return false;
-            }
-
-            return canContinue(stepEl, step) && stepEl;
+        if (skipEl) {
+            return {
+                element: skipEl,
+                shouldSkipAction: true,
+            };
         }
-        const action = async (stepEl) => {
-            let result;
-            if (!skipAction) {
-                result = await onAction(stepEl);
-            }
-            step.completed = true;
-            tourState.set(this.name, "currentIndex", step.index + 1);
-            this.options.onStepConsummed(this, step);
-            return result;
+
+        if (!stepEl || !canContinue(stepEl, step)) {
+            return { element: null };
         }
-        return { trigger, action };
+        return { element: stepEl };
+    }
+
+    _markStepComplete(step) {
+        step.completed = true;
+        tourState.set(this.name, "currentIndex", step.index + 1);
+        tourState.set(tour.name, "stepState", getStepState(step));
+        this.options.onStepConsummed(this, step);
     }
 
     /** @type {TourStepCompiler} */
@@ -382,7 +408,10 @@ export class MacroedTour {
 
         const delayToAction = (step.timeout || 10000) + stepDelay;
         let timeout;
-        const onTriggerEnter = ({enteredCount}) => {
+
+        let enteredCount = 0;
+        let shouldDoAction = false;
+        const trigger = () => {
             if (!enteredCount) {
                 console.log(`Tour ${this.name} on step: '${describeStep(step)}'`);
                 tourState.set(this.name, "triggersFound", false);
@@ -396,8 +425,17 @@ export class MacroedTour {
                     throwError(this, step)
                 }, delayToAction)
             }
+            const { element, shouldSkipAction } = this._stepTriggered(step);
+            shouldDoAction = !shouldSkipAction;
+
+            enteredCount++;
+            return element;
         }
-        const onAction = async (stepEl) => {
+
+        const action = async (stepEl) => {
+            if (!shouldDoAction) {
+                return "stay at this step";
+            }
             clearTimeout(timeout);
             tourState.set(this.name, "triggersFound", true);
             if (showPointerDuration > 0) {
@@ -406,10 +444,11 @@ export class MacroedTour {
                 await new Promise((r) => browser.setTimeout(r, showPointerDuration));
                 pointer.hide();
             }
-            return this._autoRunStep(step, stepEl);
+            await this._autoRunStep(step, stepEl);
+            this._markStepComplete(step);
         }
+        yield { trigger, action };
 
-        yield this._stepExecute(step, onTriggerEnter, onAction);
         if (step.pause && debugMode !== false) {
             yield { action: this._actionPause.bind(this) }
         }
