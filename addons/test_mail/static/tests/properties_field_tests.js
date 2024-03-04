@@ -20,9 +20,7 @@ async function testPropertyFieldAvatarOpenChat(propertyType) {
                 <field name="parent_id"/>
                 <field name="properties"/>
             </sheet>
-            <div class="oe_chatter">
-                <field name="message_ids"/>
-            </div>
+            <chatter/>
         </form>`;
 
     await start({

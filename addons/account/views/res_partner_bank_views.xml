@@ -9,10 +9,7 @@
             <field name="priority">14</field>
             <field name="arch" type="xml">
                 <xpath expr="//form[@name='bank_account_form']/sheet[1]" position="after">
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="message_ids"/>
-                    </div>
+                    <chatter/>
                 </xpath>
 
                 <xpath expr="//field[@name='acc_number']" position="attributes">

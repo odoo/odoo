@@ -331,10 +331,7 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="message_ids" options="{'post_refresh': 'recipients'}"/>
-                    </div>
+                    <chatter reload_on_post="True"/>
                 </form>
             </field>
         </record>

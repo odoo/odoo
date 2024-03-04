@@ -343,10 +343,7 @@
                 </div>
             </sheet>
             <div class="o_attachment_preview"/>
-            <div class="oe_chatter">
-                <field name="message_follower_ids"/>
-                <field name="message_ids" options="{'post_refresh': 'always'}"/>
-            </div>
+            <chatter reload_on_post="True" reload_on_attachment="True"/>
             </form>
         </field>
     </record>

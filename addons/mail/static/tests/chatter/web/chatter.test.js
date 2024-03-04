@@ -446,7 +446,7 @@ test("basic chatter rendering", async () => {
                 <sheet>
                     <field name="name"/>
                 </sheet>
-                <div class="oe_chatter"></div>
+                <chatter/>
             </form>`,
     });
     await contains(".o-mail-Chatter");
@@ -455,18 +455,17 @@ test("basic chatter rendering", async () => {
 test('chatter just contains "creating a new record" message during the creation of a new record after having displayed a chatter for an existing record', async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    await start();
-    await openFormView("res.partner", partnerId, {
-        arch: `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
-            </form>`,
-    });
+    const views = {
+        "res.partner,false,form": `
+                <form string="Partners">
+                    <sheet>
+                        <field name="name"/>
+                    </sheet>
+                    <chatter/>
+                </form>`,
+    };
+    await start({ serverData: { views } });
+    await openFormView("res.partner", partnerId);
     await click(".o_control_panel_collapsed_create .o_form_button_create");
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-body", { text: "Creating a new record..." });
@@ -522,52 +521,6 @@ test("should not display subject when subject is the same as the thread name wit
     });
 });
 
-test("basic chatter rendering without followers", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ display_name: "second partner" });
-    await start();
-    await openFormView("res.partner", partnerId, {
-        arch: `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
-            </form>`,
-    });
-    await contains(".o-mail-Chatter");
-    await contains(".o-mail-Chatter-topbar");
-    await contains("button[aria-label='Attach files']");
-    await contains("button", { text: "Activities" });
-    await contains(".o-mail-Chatter .o-mail-Thread");
-    await contains(".o-mail-Followers", { count: 0 });
-});
-
-test("basic chatter rendering without messages", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ display_name: "second partner" });
-    await start();
-    await openFormView("res.partner", partnerId, {
-        arch: `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                </div>
-            </form>`,
-    });
-    await contains(".o-mail-Chatter");
-    await contains(".o-mail-Chatter-topbar");
-    await contains("button[aria-label='Attach files']");
-    await contains("button", { text: "Activities" });
-    await contains(".o-mail-Followers");
-    await contains(".o-mail-Chatter .o-mail-Thread", { count: 0 });
-});
-
 test("chatter updating", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
@@ -586,9 +539,7 @@ test("chatter updating", async () => {
                 <sheet>
                     <field name="name"/>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>`,
         resIds: [partnerId_1, partnerId_2],
     });
@@ -604,9 +555,7 @@ test("post message on draft record", async () => {
                 <sheet>
                     <field name="name"/>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>`,
     });
     await click("button", { text: "Send message" });
@@ -644,8 +593,7 @@ test("schedule activities on draft record should prompt with scheduling an activ
                 <sheet>
                     <field name="name"/>
                 </sheet>
-                <div class="oe_chatter">
-                </div>
+                <chatter/>
             </form>`,
     });
     await click("button", { text: "Activities" });
@@ -661,9 +609,7 @@ test("upload attachment on draft record", async () => {
                 <sheet>
                     <field name="name"/>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>`,
     });
     await contains("button[aria-label='Attach files']");

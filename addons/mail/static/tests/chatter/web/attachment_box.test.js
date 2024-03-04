@@ -36,9 +36,7 @@ test("base non-empty rendering", async () => {
         arch: `
             <form>
                 <sheet></sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"  options="{'open_attachments': True}"/>
-                </div>
+                <chatter open_attachments="True"/>
             </form>`,
     });
     await contains(".o-mail-AttachmentBox");
@@ -61,9 +59,7 @@ test("remove attachment should ask for confirmation", async () => {
         arch: `
             <form>
                 <sheet></sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"  options="{'open_attachments': True}"/>
-                </div>
+                <chatter open_attachments="True"/>
             </form>`,
     });
     await contains(".o-mail-AttachmentCard");
@@ -97,9 +93,7 @@ test("view attachments", async () => {
         arch: `
             <form>
                 <sheet></sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"  options="{'open_attachments': True}"/>
-                </div>
+                <chatter open_attachments="True"/>
             </form>`,
     });
     await click('.o-mail-AttachmentCard[aria-label="Blah.txt"] .o-mail-AttachmentCard-image');
@@ -160,9 +154,7 @@ test("do not auto-scroll to attachment box when initially open", async () => {
         arch: `
             <form>
                 ${`<sheet><field name="name"/></sheet>`.repeat(100)}
-                <div class="oe_chatter">
-                    <field name="message_ids"  options="{'open_attachments': True}"/>
-                </div>
+                <chatter open_attachments="True"/>
             </form>`,
     });
     await contains(".o-mail-Message");
@@ -207,9 +199,7 @@ test("attachment box auto-closed on switch to record wih no attachments", async 
         arch: `
             <form>
                 <sheet></sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"  options="{'open_attachments': True}"/>
-                </div>
+                <chatter open_attachments="True"/>
             </form>`,
         resIds: [partnerId_1, partnerId_2],
     });
