@@ -7,7 +7,6 @@ import lxml
 import os
 import requests
 import sys
-import tempfile
 import zipfile
 from collections import defaultdict
 from io import BytesIO
@@ -437,11 +436,9 @@ class IrModule(models.Model):
                 description += "- " + mod.shortdesc + "\n"
         return description, unavailable_modules
 
-    def _get_missing_dependencies_modules(self, zip_data):
-        dependencies_to_install = self.env['ir.module.module']
-        known_mods = self.search([('to_buy', '=', False)])
-        installed_mods = [m.name for m in known_mods if m.state == 'installed']
-        not_found_modules = set()
+    def _get_dependencies_modules(self, zip_data):
+        dependencies = set()
+        maintenance_loc = 0
         with zipfile.ZipFile(BytesIO(zip_data), "r") as z:
             manifest_files = [
                 file
@@ -457,11 +454,19 @@ class IrModule(models.Model):
                         terp = ast.literal_eval(manifest.read().decode())
                 except Exception:
                     continue
-                unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
-                dependencies_to_install |= known_mods.filtered(lambda m: m.name in unmet_dependencies)
-                not_found_modules |= set(
-                    mod for mod in unmet_dependencies if mod not in dependencies_to_install.mapped('name')
-                )
+                dependencies |= set(terp.get('depends', []))
+                maintenance_loc += terp.get('maintenance_loc', 0)
+        return dependencies, maintenance_loc
+
+    def _get_missing_dependencies_modules(self, zip_data):
+        dependencies, _loc = self._get_dependencies_modules(zip_data)
+        known_mods = self.search([('to_buy', '=', False)])
+        installed_mods = [m.name for m in known_mods if m.state == 'installed']
+        unmet_dependencies = dependencies.difference(installed_mods)
+        dependencies_to_install = known_mods.filtered(lambda m: m.name in unmet_dependencies)
+        not_found_modules = set(
+            mod for mod in unmet_dependencies if mod not in dependencies_to_install.mapped('name')
+        )
         return dependencies_to_install, not_found_modules
 
     @api.model
