@@ -48,10 +48,10 @@ export function constructFullProductName(line) {
         }
 
         attributeString = attributeString.slice(0, -2);
-        attributeString = `(${attributeString})`;
+        attributeString = ` (${attributeString})`;
     }
 
-    return `${line?.product_id?.display_name} ${attributeString}`;
+    return `${line?.product_id?.display_name}${attributeString}`;
 }
 /**
  * Returns a random 5 digits alphanumeric code
