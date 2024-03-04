@@ -28,8 +28,8 @@
 <!-- Main topbar -->
 <template id="session_topbar" name="Tracks Tools">
     <div>
-        <div class="o_wesession_topbar_filters o_wevent_index_topbar_filters d-print-none d-flex flex-wrap align-items-center justify-content-end gap-2 w-100 mb-3">
-            <h3 class="mt-3 mb-3 me-auto pe-sm-4">Talks</h3>
+        <div class="o_wesession_topbar_filters o_wevent_index_topbar_filters d-print-none d-flex flex-wrap align-items-center justify-content-end gap-2 w-100 mt-1 mt-lg-3 mb-3">
+            <h3 class="my-0 me-auto pe-sm-4">Talks</h3>
             <!-- Optional wishlist filter -->
             <div t-if="option_track_wishlist" class="dropdown d-none d-lg-block">
                 <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
@@ -154,7 +154,7 @@
     active="True">
     <xpath expr="//div[hasclass('o_wevent_search')]" position="before">
         <t t-foreach="tag_categories" t-as="tag_category">
-            <div t-if="tag_category.tag_ids and any(tag.color for tag in tag_category.tag_ids)" class="dropdown d-none d-lg-block me-2 my-1">
+            <div t-if="tag_category.tag_ids and any(tag.color for tag in tag_category.tag_ids)" class="dropdown d-none d-lg-block my-1">
                 <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
                     <t t-out="tag_category.name"/>
                 </a>
@@ -230,9 +230,9 @@
 
 <!-- Tracks: List-based display -->
 <template id="tracks_display_list" name="Tracks: List Display">
-    <div t-if="tracks">
-        <h4>Book your talks</h4>
-        <p class="mb-3">Plan your experience by adding your favorites talks to your wishlist</p>
+    <div t-if="tracks" class="pt24">
+        <h5>Book your talks</h5>
+        <p>Plan your experience by adding your favorites talks to your wishlist</p>
     </div>
     <div t-if="tracks" class="o_wesession_list mb-3">
         <ul class="list-unstyled">
@@ -242,15 +242,14 @@
                 <t t-set="tracks" t-value="tracks_info['tracks']"/>
                 <!-- DAY HEADER -->
                 <div class="o_we_track_day_header d-flex align-items-center position-relative py-3">
-                    <div class="d-flex flex-grow-1 flex-column" t-if="tracks_date">
-                        <span class="m-0 fw-bold" t-out="tracks_date"
-                            t-options="{'widget': 'date', 'format': 'EEEE '}"/>
-                        <div class="d-flex align-items-center justify-content-start">
-                            <span class="h3 mb-0 fw-bold" t-out="tracks_date"
-                                t-options="{'widget': 'date', 'format': 'dd MMMM YYYY'}"/>
-                                <span class="small ms-2 fw-light">(<t t-out="event.date_tz"/>)</span>
+                   <time class="d-flex flex-grow-1 align-items-end gap-2" t-if="tracks_date" t-att-datetime="tracks_date">
+                        <span class="o_wevent_day_header_number lh-1" t-out="tracks_date" t-options="{'widget': 'date', 'format': 'dd'}"/>
+                        <div class="small">
+                            <div class="lh-1 fw-bold" t-out="tracks_date" t-options="{'widget': 'date', 'format': 'MMMM YYYY'}"/>
+                            <span class="lh-1" t-out="tracks_date" t-options="{'widget': 'date', 'format': 'EEEE '}"/>
+                            <span class="d-none d-md-inline small lh-1 text-muted">(timezone: <t t-out="event.date_tz"/>)</span>
                         </div>
-                    </div>
+                    </time>
                     <div class="d-flex flex-grow-1" t-elif="tracks_header_name">
                         <span class="h4 m-0"
                             t-out="tracks_header_name"/>
@@ -306,13 +305,12 @@
                                     <t t-else="">
                                         <span class="text-reset me-2" t-field="track.name"/>
                                     </t>
-                                    <span t-if="not track.website_published and is_event_user"
-                                        class="badge text-bg-danger o_wevent_online_badge_unpublished">
-                                        Unpublished
-                                    </span>
+                                </span>
+                                <span t-if="not track.website_published and is_event_user" class="alert alert-danger px-2 py-1 align-top small">
+                                    Unpublished
                                 </span>
                             </div>
-                            
+
                             <div class="col-12 d-flex justify-content-between align-items-end">
                                 <div class="d-flex align-items-center w-100 gap-2 text-muted">
                                     <span class="text-muted" t-out="track.partner_tag_line"/>
