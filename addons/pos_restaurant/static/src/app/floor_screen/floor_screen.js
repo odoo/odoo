@@ -267,14 +267,14 @@ export class FloorScreen extends Component {
     selectFloor(floor) {
         this.pos.currentFloor = floor;
         this.state.selectedFloorId = floor.id;
-        this.state.selectedTableIds = [];
+        this.unselectTables();
     }
     async onSelectTable(table, ev) {
         if (this.pos.isEditMode) {
             if (ev.ctrlKey || ev.metaKey) {
                 this.state.selectedTableIds.push(table.id);
             } else {
-                this.state.selectedTableIds = [];
+                this.unselectTables();
                 this.state.selectedTableIds.push(table.id);
             }
             return;
@@ -301,9 +301,15 @@ export class FloorScreen extends Component {
             this.pos.showScreen(order.get_screen_data().name);
         }
     }
+    unselectTables() {
+        if (this.selectedTables.length) {
+            this.pos.updateTables(...this.selectedTables);
+        }
+        this.state.selectedTableIds = [];
+    }
     closeEditMode() {
         this.pos.isEditMode = false;
-        this.state.selectedTableIds = [];
+        this.unselectTables();
     }
     async addFloor() {
         this.dialog.add(TextInputPopup, {
