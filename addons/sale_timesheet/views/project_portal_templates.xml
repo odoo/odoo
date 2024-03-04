@@ -18,10 +18,16 @@
 	    </td>
         </xpath>
         <xpath expr="//div[@name='allocated_time']" position="after">
-            <span t-if="task.allow_billable and task.sale_line_id and task.sale_line_id.remaining_hours_available" t-attf-class="{{task.remaining_hours_so &lt; 0 and 'text-danger' or ''}}">
-                <div t-if="is_uom_day">Remaining Days on SO: <span t-esc="timesheets._convert_hours_to_days(task.remaining_hours_so)" t-options='{"widget": "timesheet_uom"}'/></div>
-                <div t-else="">Remaining Hours on SO: <span t-esc="task.remaining_hours_so" t-options='{"widget": "float_time"}'/></div>
-            </span>
+            <tr t-if="task.allow_billable and task.sale_line_id and task.sale_line_id.remaining_hours_available" t-attf-class="{{task.remaining_hours_so &lt; 0 and 'text-danger'}}">
+                <t t-if="is_uom_day">
+                    <td><strong>Remaining Days on SO: </strong></td>
+                    <td class="text-end" t-esc="timesheets._convert_hours_to_days(task.remaining_hours_so)" t-options='{"widget": "timesheet_uom"}'/>
+                </t>
+                <t t-else="">
+                    <td><strong>Remaining Hours on SO: </strong></td>
+                    <td class="text-end" t-esc="task.remaining_hours_so" t-options='{"widget": "float_time"}'/>
+                </t>
+            </tr>
         </xpath>
     </template>
 
