@@ -10,6 +10,7 @@ export class PaymentRazorpay extends PaymentInterface {
     setup() {
         super.setup(...arguments);
         this.pollingTimeout = null;
+        this.inactivityTimeout = null;
         this.queued = false;
         this.payment_stopped = false;
     }
@@ -61,7 +62,6 @@ export class PaymentRazorpay extends PaymentInterface {
         if (response.error) {
             line.set_payment_status('force_done');
             this.payment_stopped ? this._showError(_t("Transaction failed due to inactivity")) : this._showError(response.error);
-            this.pollingTimeout ? clearTimeout(this.pollingTimeout) : '';
             this._removePaymentHandler(['p2pRequestId', 'referenceId']);
             return Promise.resolve(false);
         }
@@ -171,14 +171,16 @@ export class PaymentRazorpay extends PaymentInterface {
     }
 
     _stop_pending_payment() {
-        return new Promise(resolve => setTimeout(resolve, 90000));
+        return new Promise(resolve => this.inactivityTimeout = setTimeout(resolve, 90000));
     }
 
     _removePaymentHandler(payment_data) {
         payment_data.forEach((data) => {
             localStorage.removeItem(data);
         })
-        this.queued = false;
+        clearTimeout(this.pollingTimeout);
+        clearTimeout(this.inactivityTimeout);
+        this.queued = this.payment_stopped = false;
     }
 
     _showError(error_msg, title) {
