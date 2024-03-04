@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError
+from odoo.osv import expression
 
 
 class AccountAnalyticLine(models.Model):
@@ -44,3 +45,9 @@ class AccountAnalyticLine(models.Model):
         if not self.env.su and any(task.is_timeoff_task for task in self.task_id):
             raise UserError(_('You cannot create timesheets for a task that is linked to a time off type. Please use the Time Off application to request new time off instead.'))
         return  super()._check_can_create()
+
+    def _get_favorite_project_id_domain(self, employee_id=False):
+        return expression.AND([
+            super()._get_favorite_project_id_domain(employee_id),
+            [('holiday_id', '=', False), ('global_leave_id', '=', False)],
+        ])
