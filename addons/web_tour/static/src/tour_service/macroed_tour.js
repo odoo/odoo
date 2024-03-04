@@ -349,6 +349,9 @@ export class MacroedTour {
         } else {
             compile = this._compileStepAuto.bind(this)
         }
+        if (this.mode === "auto") {
+            yield { action: () => new Promise(r => delay(0).then(() => requestAnimationFrame(r)))}
+        }
         for (const tourStep of this.tourSteps) {
             if (tourStep.completed) {
                 continue;
@@ -519,8 +522,6 @@ export class MacroedTour {
     /** @type {TourStepCompiler} */
     *_compileStepManual(step) {
         let removeListeners;
-        let actionResolve;
-        let actionDeferred;
 
         const { pointer } = this.options;
         const debouncedToggleOpen = debounce(pointer.showContent, 50, true);
@@ -535,46 +536,42 @@ export class MacroedTour {
         const onConsume = () => {
             pointer.hide();
             removeListeners();
-            actionResolve(false); // API of macro.advance => to next step
         }
 
-        const onTriggerEnter = ({ enteredCount }) => {
-            actionDeferred = new Deferred();
+        let enteredCount = 0;
+        const trigger = () => {
+            removeListeners && removeListeners();
             if (!enteredCount) {
                 console.log(step.trigger);
             }
-            if (enteredCount) {
-                if (removeListeners) {
-                    removeListeners();
-                    removeListeners = undefined;
-                }
-                if (actionDeferred) {
-                    actionDeferred.resolve("stay on step");
-                    actionDeferred = undefined;
-                }
+            enteredCount++;
+
+            const { element, shouldSkipAction } = this._stepTriggered(step);
+            if (!element || shouldSkipAction) {
                 pointer.hide();
+                return shouldSkipAction && element;
             }
-        }
-        const onAction = (stepEl) => {
+            const stepEl = element;
             const consumeEvent = step.consumeEvent || getConsumeEventType(stepEl, step.run);
             const anchorEl = getAnchorEl(stepEl, consumeEvent);
-            const prom = new Promise(resolve => {
-                actionResolve = resolve;
-            })
+
+            let consumed = false; 
             removeListeners = setupListeners({
                 anchorEl,
                 consumeEvent,
                 onMouseEnter: () => pointer.showContent(true),
                 onMouseLeave: () => pointer.showContent(false),
                 onScroll: () => updatePointer(anchorEl),
-                onConsume,
+                onConsume: () => {
+                    consumed = true;
+                    onConsume();
+                },
             });
-
-            updatePointer(anchorEl);
-            return prom;
+            updatePointer(stepEl);
+            return consumed && stepEl;
         }
 
-        yield this._stepExecute(step, onTriggerEnter, onAction);
+        yield { trigger, action: this._markStepComplete.bind(this, step)}
     }
 }
 
