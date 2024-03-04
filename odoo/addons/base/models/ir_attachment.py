@@ -109,7 +109,7 @@ class IrAttachment(models.Model):
         full_path = self._full_path(fname)
         dirname = os.path.dirname(full_path)
         if not os.path.isdir(dirname):
-            os.makedirs(dirname)
+            os.makedirs(dirname, exist_ok=True)
         # prevent sha-1 collision
         if os.path.isfile(full_path) and not self._same_content(bin_data, full_path):
             raise UserError(_("The attachment collides with an existing file."))
