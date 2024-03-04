@@ -28,7 +28,7 @@ class AccountAnalyticLine(models.Model):
     so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False,
         domain="""[
             ('qty_delivered_method', 'in', ['analytic', 'timesheet']),
-            ('order_partner_id', '=', commercial_partner_id),
+            ('order_partner_id.commercial_partner_id', '=', commercial_partner_id),
             ('is_service', '=', True),
             ('is_expense', '=', False),
             ('state', '=', 'sale')
