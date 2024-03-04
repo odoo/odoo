@@ -341,7 +341,7 @@ def load_information_from_description_file(module, mod_path=None):
             'description': '',
             'icon': get_module_icon(module),
             'installable': True,
-            'post_load': None,
+            'post_load': '',
             'version': '1.0',
             'web': False,
             'sequence': 100,
