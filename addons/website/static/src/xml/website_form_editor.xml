@@ -228,7 +228,7 @@
                     value="Yes"
                     class="s_website_form_input form-check-input"
                     t-att-name="field.name"
-                    t-att-checked="field.value and 'checked' or None"
+                    t-att="{checked: field.value and 'checked' or None}"
                     t-att-required="field.required || field.modelRequired || None"
                     t-att-id="field.id"
                 />
@@ -267,7 +267,7 @@
                     class="s_website_form_input form-check-input"
                     t-att-id="recordId"
                     t-att-name="field.name"
-                    t-att-checked="record.selected and 'checked' or None"
+                    t-att="{checked: record.selected and 'checked' or None}"
                     t-att-value="record.id"
                     t-att-required="field.required || field.modelRequired || None"
                 />
