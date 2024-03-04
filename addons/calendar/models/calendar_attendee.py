@@ -8,6 +8,7 @@ from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
+from odoo.tools import clean_context
 
 _logger = logging.getLogger(__name__)
 
@@ -115,7 +116,7 @@ class Attendee(models.Model):
 
                 attachment_ids = mail_template.attachment_ids.ids
                 if ics_file:
-                    attachment_ids += self.env['ir.attachment'].create({
+                    attachment_ids += self.env['ir.attachment'].with_context(clean_context(self.env.context)).create({
                         'datas': base64.b64encode(ics_file),
                         'description': 'invitation.ics',
                         'mimetype': 'text/calendar',
