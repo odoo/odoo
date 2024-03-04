@@ -17,7 +17,8 @@ registry.category("web_tour.tours").add("PosLoyaltyValidity1", {
             // Not valid -> date
             ProductScreen.addOrderline("Whiteboard Pen", "5"),
             PosLoyalty.isRewardButtonHighlighted(false),
-            PosLoyalty.finalizeOrder("Cash", "20"),
+            PosLoyalty.orderTotalIs("16.00"),
+            PosLoyalty.finalizeOrder("Cash", "16"),
         ].flat(),
 });
 
@@ -35,6 +36,7 @@ registry.category("web_tour.tours").add("PosLoyaltyValidity2", {
             // Not valid -> usage
             ProductScreen.addOrderline("Whiteboard Pen", "5"),
             PosLoyalty.isRewardButtonHighlighted(false),
-            PosLoyalty.finalizeOrder("Cash", "20"),
+            PosLoyalty.orderTotalIs("16.00"),
+            PosLoyalty.finalizeOrder("Cash", "16.00"),
         ].flat(),
 });
