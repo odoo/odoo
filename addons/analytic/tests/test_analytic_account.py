@@ -70,7 +70,6 @@ class TestAnalyticAccount(TransactionCase):
         })
 
     def test_aggregates(self):
-        self.env.user.groups_id += self.env.ref('account.group_account_readonly')
         model = self.env['account.analytic.account']
         self.assertEqual(
             model.fields_get(['balance', 'debit', 'credit'], ['aggregator']),
