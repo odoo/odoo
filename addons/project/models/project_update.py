@@ -70,7 +70,7 @@ class ProjectUpdate(models.Model):
     @api.depends('name')
     def _compute_name_cropped(self):
         for u in self:
-            u.name_cropped = (u.name[:57] + '...') if len(u.name) > 60 else u.name
+            u.name_cropped = (u.name[:40] + '...') if len(u.name) > 43 else u.name
 
     # ---------------------------------
     # ORM Override
