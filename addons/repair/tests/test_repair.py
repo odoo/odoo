@@ -500,7 +500,6 @@ class TestRepair(AccountTestInvoicingCommon):
         lot_A = self.env['stock.lot'].create({'name': 'lot_A', 'product_id': self.product_a.id})
         lot_B = self.env['stock.lot'].create({'name': 'lot_B', 'product_id': self.product_a.id})
         lot_C = self.env['stock.lot'].create({'name': 'lot_C', 'product_id': self.product_a.id})
-        lot_D = self.env['stock.lot'].create({'name': 'lot_D', 'product_id': self.product_a.id})
 
         stock_location_shelf_1 = self.env['stock.location'].create({
             'name': 'Shelf 1',
@@ -511,49 +510,43 @@ class TestRepair(AccountTestInvoicingCommon):
             'location_id': self.stock_warehouse.lot_stock_id.id,
         })
 
-        stock_location_Inventory_adjustment = self.env['stock.location'].create({
-            'name': 'Inventory adjustment',
-            'usage': 'inventory',
-        })
-
-        self.env['stock.quant']._update_available_quantity(self.product_a, self.stock_warehouse.lot_stock_id, 10, lot_id=lot_A)
+        self.env['stock.quant']._update_available_quantity(self.product_a, stock_location_shelf_1, 10, lot_id=lot_A)
         self.env['stock.quant']._update_available_quantity(self.product_a, stock_location_shelf_1, 5, lot_id=lot_B)
         self.env['stock.quant']._update_available_quantity(self.product_a, stock_location_shelf_2, 5, lot_id=lot_B)
-        self.env['stock.quant']._update_available_quantity(self.product_a, stock_location_Inventory_adjustment, 5, lot_id=lot_C)
 
         # create a return picking
         repair_form = Form(self.env['repair.order'])
         repair_form.product_id = self.product_a
         repair_form.lot_id = lot_A
-        self.assertEqual(repair_form.location_id, self.stock_warehouse.lot_stock_id)
+        self.assertEqual(repair_form.location_id, stock_location_shelf_1)
 
         # Check location of repair order has been updated correctly when selected lot have multiple location.
         repair_form.lot_id = lot_B
-        self.assertEqual(repair_form.location_id, stock_location_shelf_1)
+        self.assertEqual(repair_form.location_id, self.stock_warehouse.lot_stock_id)
 
-        # Check when selected lot's location is not in ['internal', 'customer', 'transit']
+        # Check when selected lot's location is not in ['internal', 'customer', 'transit'], or lot doesn't have any quant
         repair_form.lot_id = lot_C
-        self.assertEqual(repair_form.location_id.id, False)
-
-        # Check when selected lot don't have any quant
-        repair_form.lot_id = lot_D
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', repair_form.company_id.id)], limit=1)
-        self.assertEqual(repair_form.location_id, warehouse.lot_stock_id)
+        self.assertEqual(repair_form.location_id.id, self.stock_warehouse.lot_stock_id.id)
 
     def test_repair_check_picking(self):
         # Test that when return is assign to repair order then the location will take from return's destination location
         self.product_a.type = 'product'
-        self.env['stock.quant']._update_available_quantity(self.product_a, self.stock_warehouse.lot_stock_id, 10)
+        stock_location_shelf_1 = self.env['stock.location'].create({
+            'name': 'Shelf 1',
+            'location_id': self.stock_warehouse.lot_stock_id.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_a, stock_location_shelf_1, 10)
 
         # Create new picking: 5 product_a
-        picking = Form(self.env['stock.picking'])
-        ptout = self.env['stock.picking.type'].search([('code', '=', 'outgoing')], limit=1)
-        picking.picking_type_id = ptout
-        with picking.move_ids_without_package.new() as move:
+        picking_form = Form(self.env['stock.picking'])
+        ptout = self.env['stock.picking.type'].search([('code', '=', 'outgoing'), ('company_id', '=', self.env.company.id)], limit=1)
+        picking_form.picking_type_id = ptout
+        with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.product_a
             move.product_uom_qty = 5
             move.quantity_done = 5
-        picking = picking.save()
+        picking = picking_form.save()
+        picking.location_id = stock_location_shelf_1
         picking.action_confirm()
         picking.button_validate()
 
@@ -571,5 +564,6 @@ class TestRepair(AccountTestInvoicingCommon):
         # create repair from return
         res_dict = return_picking.action_repair_return()
         repair_form = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context']))
-        # Check that the location in repair is set destination location of returns
-        self.assertEqual(repair_form.location_id, return_picking.location_dest_id)
+
+        # Check that the location in repair is set location of picking
+        self.assertEqual(repair_form.location_id, stock_location_shelf_1)

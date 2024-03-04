@@ -239,16 +239,18 @@ class Repair(models.Model):
     @api.depends('company_id', 'picking_id', 'lot_id')
     def _compute_location_id(self):
         for order in self:
+            default_location = self.env['stock.warehouse'].search([('company_id', '=', order.company_id.id)], limit=1).lot_stock_id
             if order.lot_id and order.lot_id.quant_ids:
-                quants = order.lot_id.quant_ids.filtered(lambda q: q.quantity > 0 and q.location_id.usage in ['internal', 'customer', 'transit'])
-                order.location_id = quants.location_id[:1]
+                quants = order.lot_id.quant_ids.filtered(
+                    lambda q: q.quantity > 0 and q.location_id.usage in ['internal', 'customer', 'transit'])
+                if len(quants.location_id) == 1:
+                    order.location_id = quants.location_id
+                else:
+                    order.location_id = default_location
             elif order.picking_id:
                 order.location_id = order.picking_id.location_dest_id
-            elif order.company_id:
-                warehouse = self.env['stock.warehouse'].search([('company_id', '=', order.company_id.id)], limit=1)
-                order.location_id = warehouse.lot_stock_id
             else:
-                order.location_id = False
+                order.location_id = default_location
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_confirmed(self):
