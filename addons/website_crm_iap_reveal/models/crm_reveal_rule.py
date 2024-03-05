@@ -214,6 +214,7 @@ class CRMRevealRule(models.Model):
             view_count += len(reveal_views)
             server_payload = self._prepare_iap_payload(dict(reveal_views))
             enough_credit = self._perform_reveal_service(server_payload)
+            self.env['ir.cron']._log_progress(len(reveal_views))
             if autocommit:
                 # auto-commit for batch processing
                 self._cr.commit()

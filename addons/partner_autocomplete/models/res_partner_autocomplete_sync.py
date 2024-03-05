@@ -14,8 +14,11 @@ class ResPartnerAutocompleteSync(models.Model):
     synched = fields.Boolean('Is synched', default=False)
 
     @api.model
-    def start_sync(self):
-        to_sync_items = self.search([('synched', '=', False)])
+    def start_sync(self, batch_size=1000):
+        to_sync_count = self.search_count([('synched', '=', False)])
+        to_sync_items = self.search([('synched', '=', False)], limit=batch_size)
+        self.env['ir.cron']._log_progress(0, to_sync_count)
+
         for to_sync_item in to_sync_items:
             partner = to_sync_item.partner_id
 
@@ -30,6 +33,7 @@ class ResPartnerAutocompleteSync(models.Model):
                     _logger.warning('Send Partner to sync failed: %s', str(error))
 
             to_sync_item.write({'synched': True})
+        self.env['ir.cron']._log_progress(len(to_sync_items))
 
     def add_to_queue(self, partner_id):
         to_sync = self.search([('partner_id', '=', partner_id)])

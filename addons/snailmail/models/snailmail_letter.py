@@ -433,21 +433,22 @@ class SnailmailLetter(models.Model):
         self.message_id._notify_message_notification_update()
 
     @api.model
-    def _snailmail_cron(self, autocommit=True):
-        letters_send = self.search([
+    def _snailmail_cron(self, autocommit=True, batch_size=1000):
+        domain = [
             '|',
             ('state', '=', 'pending'),
             '&',
             ('state', '=', 'error'),
             ('error_code', 'in', ['TRIAL_ERROR', 'CREDIT_ERROR', 'ATTACHMENT_ERROR', 'MISSING_REQUIRED_FIELDS'])
-        ])
+        ]
+        letters_send = self.search(domain, limit=batch_size)
+        letters_count = len(letters_send) if len(letters_send) < batch_size else self.search_count(domain)
+        self.env['ir.cron']._log_progress(0, letters_count)
         for letter in letters_send:
-            letter._snailmail_print()
+            self.env['ir.cron']._log_progress(1)
+            letter._snailmail_print()   # _snailmail_print will commit
             if letter.error_code == 'CREDIT_ERROR':
                 break  # avoid spam
-            # Commit after every letter sent to avoid to send it again in case of a rollback
-            if autocommit:
-                self.env.cr.commit()
 
     @api.model
     def _is_valid_address(self, record):

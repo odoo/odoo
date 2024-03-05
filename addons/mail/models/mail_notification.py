@@ -92,14 +92,17 @@ class MailNotification(models.Model):
         return super(MailNotification, self).write(vals)
 
     @api.model
-    def _gc_notifications(self, max_age_days=180):
+    def _gc_notifications(self, max_age_days=180, batch_size=10000):
         domain = [
             ('is_read', '=', True),
             ('read_date', '<', fields.Datetime.now() - relativedelta(days=max_age_days)),
             ('res_partner_id.partner_share', '=', False),
             ('notification_status', 'in', ('sent', 'canceled'))
         ]
-        return self.search(domain).unlink()
+        records = self.search(domain)
+        records_count = len(records) if len(records) < batch_size else self.search_count(domain)
+        self.env['ir.cron']._log_progress(len(records), records_count - len(records))
+        return records.unlink()
 
     # ------------------------------------------------------------
     # TOOLS

@@ -105,6 +105,7 @@ class SmsSms(models.Model):
             self.browse(batch_ids)._send(unlink_failed=unlink_failed, unlink_sent=unlink_sent, raise_exception=raise_exception)
             # auto-commit if asked except in testing mode
             if auto_commit is True and not getattr(threading.current_thread(), 'testing', False):
+                self.env['ir.cron']._log_progress(len(batch_ids))
                 self._cr.commit()
 
     def resend_failed(self):
@@ -135,19 +136,21 @@ class SmsSms(models.Model):
         }
 
     @api.model
-    def _process_queue(self, ids=None):
+    def _process_queue(self, ids=None, batch_size=10000):
         """ Send immediately queued messages, committing after each message is sent.
         This is not transactional and should not be called during another transaction!
 
-       :param list ids: optional list of emails ids to send. If passed no search
+       :param list ids: optional list of sms ids to send. If passed no search
          is performed, and these ids are used instead.
         """
         domain = [('state', '=', 'outgoing'), ('to_delete', '!=', True)]
 
-        filtered_ids = self.search(domain, limit=10000).ids  # TDE note: arbitrary limit we might have to update
+        filtered_ids = self.search(domain, limit=batch_size).ids  # TDE note: arbitrary limit we might have to update
         if ids:
             ids = list(set(filtered_ids) & set(ids))
         else:
+            ids_count = len(filtered_ids) if len(filtered_ids) < batch_size else self.search_count(domain)
+            self.env['ir.cron']._log_progress(0, ids_count)
             ids = filtered_ids
         ids.sort()
 
