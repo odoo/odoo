@@ -166,7 +166,7 @@ wTourUtils.dragNDrop({
     run: function () {}, // it's a check
 }, {
     content: "check: content with special char is translated",
-    trigger: "iframe #wrap input + p:contains(<{translated}><b></b> is an HTML\xa0tag & )",
+    trigger: "iframe #wrap input + p:contains(<{translated}><b></b> is an HTML tag & )",
     run: function () {}, // it's a check
 
 }, {
