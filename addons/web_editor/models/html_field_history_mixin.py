@@ -49,13 +49,6 @@ class HtmlFieldHistory(models.AbstractModel):
         if vals_contain_versioned_fields:
             self.ensure_one()
             db_contents = dict([(f, self[f]) for f in versioned_fields])
-            fields_data = self.env[self._name]._fields
-
-            if any(f in vals and not fields_data[f].sanitize for f in versioned_fields):
-                raise ValidationError(
-                    "Ensure all versioned fields ( %s ) in model %s are declared as sanitize=True"
-                    % (str(versioned_fields), self._name)
-                )
 
         # Call super().write before generating the patch to be sure we perform
         # the diff on sanitized data
