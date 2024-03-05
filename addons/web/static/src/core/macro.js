@@ -1,7 +1,6 @@
 import { browser } from "@web/core/browser/browser";
 import { isVisible } from "@web/core/utils/ui";
 import { Mutex } from "@web/core/utils/concurrency";
-import { iter, next } from "./utils/functions";
 
 /**
  * @typedef MacroStep
@@ -42,18 +41,32 @@ class Macro {
         this.timeout = null;
         this.checkDelay = descr.checkDelay || 0;
         this.isComplete = false;
-        this.steps = iter(descr.steps);
+        this.steps = descr.steps;
         this.onStep = descr.onStep || (() => {});
         this.onError = descr.onError;
         this.onTimeout = descr.onTimeout;
         this.setTimer();
     }
 
+    nextStep() {
+        if (!this._stepIter) {
+            this._stepIter = this.steps[Symbol.iterator]();
+        }
+        const { done, value } = this._stepIter.next();
+        if (done) {
+            this._stepIter = null;
+            this.currentStep = undefined;
+            return;
+        }
+        this.currentStep = value;
+        return this.currentStep;
+    }
+
     async advance() {
         if (this.isComplete) {
             return;
         }
-        const step = this.steps.current || next(this.steps);
+        const step = this.currentStep || this.nextStep();
         const [proceedToAction, el] = this.checkTrigger(step);
         if (proceedToAction) {
             this.safeCall(this.onStep, el, step);
@@ -61,8 +74,7 @@ class Macro {
             if (!actionResult) {
                 // If falsy action result, it means the action worked properly.
                 // So we can proceed to the next step.
-                next(this.steps);
-                if (this.steps.current === undefined) {
+                if (this.nextStep() === undefined) {
                     this.isComplete = true;
                     browser.clearTimeout(this.timeout);
                 } else {
@@ -133,7 +145,7 @@ class Macro {
             browser.clearTimeout(this.timeout);
             this.timeout = browser.setTimeout(() => {
                 if (this.onTimeout) {
-                    this.safeCall(this.onTimeout, this.steps.current);
+                    this.safeCall(this.onTimeout, this.currentStep);
                 } else {
                     const error = new TimeoutError("Step timeout");
                     this.handleError(error);
@@ -148,7 +160,7 @@ class Macro {
         this.isComplete = true;
         browser.clearTimeout(this.timeout);
         if (this.onError) {
-            this.onError(error, this.steps.current);
+            this.onError(error, this.currentStep);
         } else {
             console.error(error);
         }
