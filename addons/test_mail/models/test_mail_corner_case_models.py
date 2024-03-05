@@ -152,6 +152,16 @@ class MailTestTrackCompute(models.Model):
     partner_phone = fields.Char(related='partner_id.phone', tracking=True)
 
 
+class MailTestTrackGroups(models.Model):
+    _name = 'mail.test.track.groups'
+    _description = "Test tracking with groups"
+    _inherit = ['mail.thread']
+
+    name = fields.Char(tracking=1)
+    partner_id = fields.Many2one('res.partner', tracking=2, groups="base.group_user")
+    secret = fields.Char(tracking=3, groups="base.group_user")
+
+
 class MailTestTrackMonetary(models.Model):
     _name = 'mail.test.track.monetary'
     _description = 'Test tracking monetary field'
