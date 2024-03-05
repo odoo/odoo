@@ -198,7 +198,7 @@ QUnit.module('MrpDocumentsKanbanView', {
                 </kanban>`
         };
         const { openView } = await start({ serverData: { views } });
-        openView({
+        await openView({
             res_model: "mrp.document",
             views: [[false, "kanban"]],
         });

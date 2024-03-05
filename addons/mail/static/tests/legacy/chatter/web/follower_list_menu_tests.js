@@ -11,7 +11,7 @@ QUnit.module("follower list menu");
 
 QUnit.test("base rendering not editable", async () => {
     const { openView } = await start();
-    openView(
+    await openView(
         {
             res_model: "res.partner",
             views: [[false, "form"]],
@@ -38,7 +38,7 @@ QUnit.test("base rendering editable", async (assert) => {
             }
         },
     });
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -77,7 +77,7 @@ QUnit.test('click on "add followers" button', async (assert) => {
             }
         },
     });
-    openView({
+    await openView({
         res_id: partnerId_1,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -142,7 +142,7 @@ QUnit.test("click on remove follower", async (assert) => {
             }
         },
     });
-    openView({
+    await openView({
         res_id: partnerId_1,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -189,7 +189,7 @@ QUnit.test(
                 }
             },
         });
-        openView({
+        await openView({
             res_id: partnerId_1,
             res_model: "res.partner",
             views: [[false, "form"]],
@@ -311,7 +311,7 @@ QUnit.test(
                 }
             },
         });
-        openView({
+        await openView({
             res_id: partnerId_1,
             res_model: "res.partner",
             views: [[false, "form"]],
@@ -349,7 +349,7 @@ QUnit.test(
                 }
             },
         });
-        openView({
+        await openView({
             res_id: partnerId,
             res_model: "res.partner",
             views: [[false, "form"]],

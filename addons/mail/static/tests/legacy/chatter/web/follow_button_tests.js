@@ -10,7 +10,7 @@ QUnit.module("follow button");
 
 QUnit.test("base rendering not editable", async () => {
     const { openView, pyEnv } = await start();
-    openView({
+    await openView({
         res_id: pyEnv.currentPartnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -28,7 +28,7 @@ QUnit.test("hover following button", async () => {
         res_model: "res.partner",
     });
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: threadId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -76,7 +76,7 @@ QUnit.test('click on "unfollow" button', async () => {
         res_model: "res.partner",
     });
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: threadId,
         res_model: "res.partner",
         views: [[false, "form"]],

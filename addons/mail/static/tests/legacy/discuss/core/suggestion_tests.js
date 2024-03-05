@@ -27,7 +27,7 @@ QUnit.test('display command suggestions on typing "/"', async () => {
         channel_type: "channel",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await insertText(".o-mail-Composer-input", "/");
@@ -38,7 +38,7 @@ QUnit.test("use a command for a specific channel type", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await contains(".o-mail-Composer-input", { value: "" });
@@ -54,7 +54,7 @@ QUnit.test("command suggestion should only open if command is the first characte
         channel_type: "channel",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await contains(".o-mail-Composer-input", { value: "" });
@@ -120,7 +120,7 @@ QUnit.test("Sort partner suggestions by recent chats", async () => {
         },
     ]);
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "User 2" });
     await insertText(".o-mail-Composer-input", "This is a test");
     await click(".o-mail-Composer-send:enabled");
@@ -170,7 +170,7 @@ QUnit.test("command suggestion are shown after deleting a character", async () =
         ],
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/he");
     await contains(".o-mail-Composer-suggestion strong", { text: "help" });
     await insertText(".o-mail-Composer-input", "e");

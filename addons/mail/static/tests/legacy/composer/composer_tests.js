@@ -39,7 +39,7 @@ QUnit.module("composer", {
 QUnit.test("composer text input: basic rendering when posting a message", async () => {
     const pyEnv = await startServer();
     const { openFormView } = await start();
-    openFormView("res.partner", pyEnv.currentPartnerId);
+    await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button", { text: "Send message" });
     await contains("textarea.o-mail-Composer-input[placeholder='Send a message to followers…']");
 });
@@ -47,7 +47,7 @@ QUnit.test("composer text input: basic rendering when posting a message", async 
 QUnit.test("composer text input: basic rendering when logging note", async () => {
     const pyEnv = await startServer();
     const { openFormView } = await start();
-    openFormView("res.partner", pyEnv.currentPartnerId);
+    await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button", { text: "Log note" });
     await contains("textarea.o-mail-Composer-input[placeholder='Log an internal note…']");
 });
@@ -58,7 +58,7 @@ QUnit.test(
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "dofus-disco" });
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await contains(".o-mail-Composer");
         await contains("textarea.o-mail-Composer-input");
     }
@@ -73,7 +73,7 @@ QUnit.test(
             name: "General",
         });
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await contains("textarea.o-mail-Composer-input[placeholder='Message #General…']");
     }
 );
@@ -82,7 +82,7 @@ QUnit.test("add an emoji", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "swamp-safari" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji", { text: "😤" });
     await contains(".o-mail-Composer-input", { value: "😤" });
@@ -94,7 +94,7 @@ QUnit.test(
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "" });
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await click("button[aria-label='Emojis']");
         await contains(".o-mail-Composer-input:not(:focus)");
         triggerHotkey("Escape");
@@ -106,7 +106,7 @@ QUnit.test("add an emoji after some text", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "beyblade-room" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Blabla");
     await contains(".o-mail-Composer-input", { value: "Blabla" });
 
@@ -119,7 +119,7 @@ QUnit.test("add emoji replaces (keyboard) text selection [REQUIRE FOCUS]", async
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "pétanque-tournament-14" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Blabla");
     await contains(".o-mail-Composer-input", { value: "Blabla" });
     // simulate selection of all the content by keyboard
@@ -135,7 +135,7 @@ QUnit.test("Cursor is positioned after emoji after adding it", async (assert) =>
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "pétanque-tournament-14" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Blabla");
     const textarea = document.querySelector(".o-mail-Composer-input");
     textarea.setSelectionRange(2, 2);
@@ -150,7 +150,7 @@ QUnit.test("selected text is not replaced after cancelling the selection", async
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "pétanque-tournament-14" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Blabla");
     await contains(".o-mail-Composer-input", { value: "Blabla" });
     // simulate selection of all the content by keyboard
@@ -172,7 +172,7 @@ QUnit.test(
             { name: "channel2" },
         ]);
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "Foo");
         // simulate selection of all the content by keyboard
         const textarea = $(".o-mail-Composer-input")[0];
@@ -190,7 +190,7 @@ QUnit.test(
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "roblox-skateboarding" });
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await click("button[aria-label='Emojis']");
         await click(".o-Emoji", { text: "👺" });
         await click("button[aria-label='Emojis']");
@@ -202,7 +202,7 @@ QUnit.test("keep emoji picker scroll value when re-opening it", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "roblox-carsurfing" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await scroll(".o-EmojiPicker-content", 150);
     await click("button[aria-label='Emojis']");
@@ -214,7 +214,7 @@ QUnit.test("reset emoji picker scroll value after an emoji is picked", async () 
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "roblox-fingerskating" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await scroll(".o-EmojiPicker-content", 150);
     await click(".o-Emoji", { text: "😎" });
@@ -236,7 +236,7 @@ QUnit.test(
             model: "discuss.channel",
             res_id: channelId,
         });
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await click("[title='Add a Reaction']");
         await contains(".o-EmojiPicker-content", { scroll: 0 });
         await scroll(".o-EmojiPicker-content", 150);
@@ -254,7 +254,7 @@ QUnit.test("composer text input cleared on message post", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "au-secours-aidez-moi" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test message");
     await contains(".o-mail-Composer-input", { value: "test message" });
 
@@ -267,7 +267,7 @@ QUnit.test("send message only once when button send is clicked twice quickly", a
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "nether-picnic" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test message");
     await click(".o-mail-Composer-send:enabled");
     await click(".o-mail-Composer-send:enabled");
@@ -278,7 +278,7 @@ QUnit.test('send button on discuss.channel should have "Send" as label', async (
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "minecraft-wii-u" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Composer-send:disabled", { text: "Send" });
 });
 
@@ -304,7 +304,7 @@ QUnit.test(
             { name: "epic-shrek-lovers" },
         ]);
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "According to all known laws of aviation,");
         await click("span", { text: "epic-shrek-lovers" });
         await contains("textarea.o-mail-Composer-input[placeholder='Message #epic-shrek-lovers…']");
@@ -331,7 +331,7 @@ QUnit.test("add an emoji after a partner mention", async () => {
         ],
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "@Te");
     await click(".o-mail-Composer-suggestion");
@@ -348,7 +348,7 @@ QUnit.test("mention a channel after some text", async () => {
         channel_type: "channel",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "bluhbluh ");
     await contains(".o-mail-Composer-input", { value: "bluhbluh " });
@@ -364,7 +364,7 @@ QUnit.test("add an emoji after a channel mention", async () => {
         channel_type: "channel",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
@@ -377,7 +377,7 @@ QUnit.test("add an emoji after a channel mention", async () => {
 QUnit.test("pending mentions are kept when toggling composer", async () => {
     const pyEnv = await startServer();
     const { openFormView } = await start();
-    openFormView("res.partner", pyEnv.currentPartnerId);
+    await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@");
     await click(".o-mail-Composer-suggestion strong", { text: "Mitchell Admin" });
@@ -403,7 +403,7 @@ QUnit.test("composer suggestion should match with input selection", async () => 
         ],
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "#");
     await contains(".o-mail-Composer-suggestion", { text: "#Mario Party" });
@@ -422,7 +422,7 @@ QUnit.test('do not post message on channel with "SHIFT-Enter" keyboard shortcut'
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Test");
     await contains(".o-mail-Message", { count: 0 });
     triggerHotkey("shift+Enter");
@@ -434,7 +434,7 @@ QUnit.test('post message on channel with "Enter" keyboard shortcut', async () =>
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Test");
     await contains(".o-mail-Message", { count: 0 });
     triggerHotkey("Enter");
@@ -445,7 +445,7 @@ QUnit.test("leave command on channel", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "general" });
     await insertText(".o-mail-Composer-input", "/leave");
     await contains(".o-mail-Composer-suggestion strong", { count: 1 });
@@ -470,7 +470,7 @@ QUnit.test("Can handle leave notification from unknown member", async () => {
         ],
     });
     const { env, openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await pyEnv.withUser(userId, () =>
         env.services.orm.call("discuss.channel", "action_unfollow", [channelId])
     );
@@ -490,7 +490,7 @@ QUnit.test("leave command on chat", async () => {
         channel_type: "chat",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Chuck Norris" });
     await insertText(".o-mail-Composer-input", "/leave");
     await contains(".o-mail-Composer-suggestion strong", { count: 1 });
@@ -507,7 +507,7 @@ QUnit.test("Can post suggestions", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#general");
     await contains(".o-mail-Composer-suggestion strong", { count: 1 });
     triggerHotkey("Enter");
@@ -529,7 +529,7 @@ QUnit.test(
             channel_type: "chat",
         });
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await contains("textarea.o-mail-Composer-input[placeholder='Message Marc Demo…']");
     }
 );
@@ -546,7 +546,7 @@ QUnit.test("quick edit last self-message from UP arrow", async () => {
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Message-content", { text: "Test" });
     await contains(".o-mail-Message .o-mail-Composer", { count: 0 });
 
@@ -582,7 +582,7 @@ QUnit.test("Select composer suggestion via Enter does not send the message", asy
         ],
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@Shrek");
     await contains(".o-mail-Composer-suggestion");
     triggerHotkey("Enter");
@@ -595,7 +595,7 @@ QUnit.test("composer: drop attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
     await contains(".o-mail-Dropzone", { count: 0 });
     await contains(".o-mail-AttachmentCard", { count: 0 });
@@ -633,7 +633,7 @@ QUnit.test("composer: add an attachment", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
         await createFile({
             content: "hello, world",
@@ -662,7 +662,7 @@ QUnit.test("composer: add an attachment in reply to message in history", async (
         is_read: true,
     });
     const { openDiscuss } = await start();
-    openDiscuss("mail.box_history");
+    await openDiscuss("mail.box_history");
     await click("[title='Reply']");
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
         await createFile({
@@ -687,7 +687,7 @@ QUnit.test("composer: send button is disabled if attachment upload is not finish
             }
         },
     });
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
         await createFile({
             content: "hello, world",
@@ -708,7 +708,7 @@ QUnit.test("remove an attachment from composer does not need any confirmation", 
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
         await createFile({
             content: "hello, world",
@@ -727,7 +727,7 @@ QUnit.test("composer: paste attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     const files = [
         await createFile({
             content: "hello, world",
@@ -754,7 +754,7 @@ QUnit.test("Replying on a channel should focus composer initially", async () => 
         model: "discuss.channel",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("[title='Reply']");
     await contains(".o-mail-Composer-input:focus");
 });
@@ -770,7 +770,7 @@ QUnit.test("remove an uploading attachment", async () => {
             }
         },
     });
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
         await createFile({
             content: "hello, world",
@@ -802,7 +802,7 @@ QUnit.test("Show recipient list when there is more than 5 followers.", async () 
         });
     }
     const { openFormView } = await start();
-    openFormView("res.partner", partnerIds[0]);
+    await openFormView("res.partner", partnerIds[0]);
     await click("button", { text: "Send message" });
     await click("button[title='Show all recipients']");
     await contains("li", { text: "test1@odoo.com" });
@@ -837,7 +837,7 @@ QUnit.test(
                 }
             },
         });
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
             await createFile({
                 name: "text1.txt",
@@ -873,7 +873,7 @@ QUnit.test(
                 }
             },
         });
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
             await createFile({
                 name: "text1.txt",
@@ -901,7 +901,7 @@ QUnit.test("Message is sent only once when pressing enter twice in a row", async
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
     triggerHotkey("Enter");
