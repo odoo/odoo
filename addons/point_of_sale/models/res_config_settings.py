@@ -38,7 +38,7 @@ class ResConfigSettings(models.TransientModel):
     module_pos_paytm = fields.Boolean(string="PayTM Payment Terminal", help="The transactions are processed by PayTM. Set your PayTM credentials on the related payment method.")
     module_pos_preparation_display = fields.Boolean(string="Preparation Display", help="Show orders on the preparation display screen.")
     update_stock_quantities = fields.Selection(related="company_id.point_of_sale_update_stock_quantities", readonly=False)
-    account_default_pos_receivable_account_id = fields.Many2one(string='Default Account Receivable (PoS)', related='company_id.account_default_pos_receivable_account_id', readonly=False)
+    account_default_pos_receivable_account_id = fields.Many2one(string='Default Account Receivable (PoS)', related='company_id.account_default_pos_receivable_account_id', readonly=False, check_company=True)
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', related='company_id.nomenclature_id', readonly=False)
     is_kiosk_mode = fields.Boolean(string="Is Kiosk Mode", default=False)
 
