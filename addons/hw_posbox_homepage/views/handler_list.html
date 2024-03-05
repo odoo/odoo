@@ -25,6 +25,8 @@
 {% block content %}
     <h2 class="text-center text-green">Logging</h2>
     <form method="post">
+        <input type="checkbox" id="log-to-server" name="log-to-server" {{ "checked" if is_log_to_server_activated }} />
+        <label for="log-to-server">IoT logs automatically send to server logs</label>
         <div style="text-align: left;display:block;">
             <label for="iot-logging-root">Root log level (Current value: {{root_logger_log_level}}):</label>
             <select name="iot-logging-root" id="iot-logging-root">
@@ -111,7 +113,7 @@
             {% if server %}
                 <a id="load_handler_btn" class="btn" href='/load_iot_handlers'>Load handlers</a>
             {% endif %}
-            <input class="btn" type="submit" value="Update Logs Level Value"/>
+            <input class="btn" type="submit" value="Update Logs Configuration"/>
         </div>
     </form>
     {% if server %}
