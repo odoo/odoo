@@ -320,6 +320,10 @@ class HolidaysType(models.Model):
             return leaves._as_query()
         return super()._search(domain, offset, limit, order, access_rights_uid)
 
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=_("%s (copy)", leave_type.name)) for leave_type, vals in zip(self, vals_list)]
+
     def action_see_days_allocated(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.hr_leave_allocation_action_all")
