@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Domain } from "@web/core/domain";
 import { groupBy, sortBy, unique } from "@web/core/utils/arrays";
 import { deserializeDate, serializeDate, today } from "@web/core/l10n/dates";

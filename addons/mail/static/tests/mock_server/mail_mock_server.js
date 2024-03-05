@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { constants } from "@web/../tests/web_test_helpers";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
