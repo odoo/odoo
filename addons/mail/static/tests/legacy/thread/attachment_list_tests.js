@@ -27,7 +27,7 @@ QUnit.test("simplest layout", async (assert) => {
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Message .o-mail-AttachmentList");
     assert.hasAttrValue($(".o-mail-AttachmentCard"), "title", "test.txt");
     await contains(".o-mail-AttachmentCard-image");
@@ -56,7 +56,7 @@ QUnit.test("layout with card details and filename and extension", async () => {
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-AttachmentCard", { text: "test.txt" });
     await contains(".o-mail-AttachmentCard small", { text: "txt" });
 });
@@ -87,7 +87,7 @@ QUnit.test(
                 }
             },
         });
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await click(".o-mail-AttachmentCard-unlink");
         await click(".modal-footer .btn-primary");
         await click(".modal-footer .btn-primary");
@@ -115,7 +115,7 @@ QUnit.test("view attachment", async () => {
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-AttachmentImage img");
     await click(".o-mail-AttachmentImage");
     await contains(".o-FileViewer");
@@ -139,7 +139,7 @@ QUnit.test("close attachment viewer", async () => {
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-AttachmentImage img");
 
     await click(".o-mail-AttachmentImage");
@@ -178,7 +178,7 @@ QUnit.test(
             message_type: "comment",
         });
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await click(".o-mail-AttachmentImage");
         await contains(".o-FileViewer-viewImage");
         await click(".o-FileViewer div[aria-label='Close']");
@@ -215,7 +215,7 @@ QUnit.test("plain text file is viewable", async () => {
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-AttachmentCard.o-viewable");
 });
 
@@ -237,7 +237,7 @@ QUnit.test("HTML file is viewable", async () => {
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-AttachmentCard.o-viewable");
 });
 
@@ -259,7 +259,7 @@ QUnit.test("ODT file is not viewable", async () => {
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-AttachmentCard:not(.o-viewable)");
 });
 
@@ -281,7 +281,7 @@ QUnit.test("DOCX file is not viewable", async () => {
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-AttachmentCard:not(.o-viewable)");
 });
 
@@ -311,7 +311,7 @@ QUnit.test(
             message_type: "comment",
         });
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await contains(".o-mail-AttachmentImage[title='test.png'] img.o-viewable");
         await contains(".o-mail-AttachmentCard:not(.o-viewable)", { text: "test.odt" });
         await click(".o-mail-AttachmentCard", { text: "test.odt" });
@@ -342,7 +342,7 @@ QUnit.test("img file has proper src in discuss.channel", async () => {
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(
         `.o-mail-AttachmentImage[title='test.png'] img[data-src='${getOrigin()}/discuss/channel/${channelId}/image/${attachmentId}?filename=test.png&width=1920&height=300']`
     );

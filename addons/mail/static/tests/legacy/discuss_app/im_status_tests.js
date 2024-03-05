@@ -22,7 +22,7 @@ QUnit.test("initially online", async () => {
         channel_type: "chat",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-ImStatus i[title='Online']");
 });
 
@@ -37,7 +37,7 @@ QUnit.test("initially offline", async () => {
         channel_type: "chat",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-ImStatus i[title='Offline']");
 });
 
@@ -52,7 +52,7 @@ QUnit.test("initially away", async () => {
         channel_type: "chat",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-ImStatus i[title='Idle']");
 });
 

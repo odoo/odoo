@@ -43,7 +43,7 @@ QUnit.test("Form view not scrolled when switching record", async () => {
     };
     patchUiSize({ size: SIZES.LG });
     const { openView } = await start({ serverData: { views } });
-    openView(
+    await openView(
         {
             res_model: "res.partner",
             res_id: partnerId_1,
@@ -98,7 +98,7 @@ QUnit.test(
                 </form>`,
         };
         const { openView } = await start({ serverData: { views } });
-        openView(
+        await openView(
             {
                 res_model: "res.partner",
                 res_id: partnerId_1,
@@ -160,7 +160,7 @@ QUnit.test(
             res_id: partnerId,
             views: [[false, "form"]],
         };
-        openView(openViewAction);
+        await openView(openViewAction);
         await contains(".o-mail-Chatter");
         await contains(".o-mail-Message");
         await contains(".o-mail-read-more-less");
@@ -206,7 +206,7 @@ QUnit.test("read more links becomes read less after being clicked", async (asser
         res_id: partnerId,
         views: [[false, "form"]],
     };
-    openView(openViewAction);
+    await openView(openViewAction);
     await contains(".o-mail-Chatter");
     await contains(".o-mail-Message");
     await contains(".o-mail-read-more-less", { text: "Read More" });
@@ -258,7 +258,7 @@ QUnit.test(
                 </form>`,
         };
         const { openView } = await start({ serverData: { views } });
-        openView({
+        await openView({
             res_model: "res.partner",
             res_id: partnerId,
             views: [[false, "form"]],
@@ -311,6 +311,6 @@ QUnit.test("read more/less links on message of type notification", async () => {
         res_id: partnerId,
         views: [[false, "form"]],
     };
-    openView(openViewAction);
+    await openView(openViewAction);
     await contains(".o-mail-Message a", { text: "Read More" });
 });

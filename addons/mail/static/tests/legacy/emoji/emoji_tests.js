@@ -14,7 +14,7 @@ QUnit.test("search emoji from keywords", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "mexican");
     await contains(".o-Emoji", { text: "🌮" });
@@ -24,7 +24,7 @@ QUnit.test("search emoji from keywords should be case insensitive", async () => 
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "ok");
     await contains(".o-Emoji", { text: "🆗" }); // all search terms are uppercase OK
@@ -34,7 +34,7 @@ QUnit.test("search emoji from keywords with special regex character", async () =
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "(blood");
     await contains(".o-Emoji", { text: "🆎" });
@@ -56,7 +56,7 @@ QUnit.test("Press Escape in emoji picker closes the emoji picker", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     triggerHotkey("Escape");
     await contains(".o-EmojiPicker", { count: 0 });
@@ -66,7 +66,7 @@ QUnit.test("Basic keyboard navigation", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await contains(".o-EmojiPicker-content .o-Emoji[data-index='0'].o-active");
     triggerHotkey("ArrowRight");
@@ -89,7 +89,7 @@ QUnit.test("recent category (basic)", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await contains(".o-EmojiPicker-navbar [title='Frequently used']", { count: 0 });
     await click(".o-EmojiPicker-content .o-Emoji", { text: "😀" });
@@ -106,7 +106,7 @@ QUnit.test("emoji usage amount orders frequent emojis", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await click(".o-EmojiPicker-content .o-Emoji", { text: "😀" });
     await click("button[aria-label='Emojis']");
@@ -132,7 +132,7 @@ QUnit.test("first category should be highlighted by default", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await contains(".o-EmojiPicker-navbar :nth-child(1 of .o-Emoji).o-active");
 });
@@ -143,7 +143,7 @@ QUnit.test(
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "" });
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await click("button[aria-label='Emojis']");
         await click(".o-EmojiPicker-content .o-Emoji", { shiftKey: true, text: "👺" });
         await contains(".o-EmojiPicker-navbar [title='Frequently used']");

@@ -41,7 +41,7 @@ QUnit.module("Views", {}, function () {
                 }
             },
         });
-        openFormView("account.move", accountMove);
+        await openFormView("account.move", accountMove);
         await insertText("[name='name'] input", "somebody save me!");
         triggerHotkey("Enter");
 

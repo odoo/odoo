@@ -15,7 +15,7 @@ QUnit.test("Add member to channel", async () => {
     const userId = pyEnv["res.users"].create({ name: "Harry" });
     pyEnv["res.partner"].create({ name: "Harry", user_ids: [userId] });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { text: "Mitchell Admin" });
     await click("[title='Add Users']");
@@ -41,7 +41,7 @@ QUnit.test("Remove member from channel", async () => {
         ],
     });
     const { env, openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { text: "Harry" });
     pyEnv.withUser(userId, () =>

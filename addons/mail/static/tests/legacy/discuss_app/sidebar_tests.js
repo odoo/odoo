@@ -38,7 +38,7 @@ QUnit.test("toggling category button does not hide active category items", async
         { name: "def", channel_type: "channel" },
     ]);
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
     await contains(".o-mail-DiscussSidebarChannel.o-active");
 
@@ -740,7 +740,7 @@ QUnit.test("channel - avatar: should update avatar url from bus", async (assert)
         name: "test",
     });
     const { env, openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(
         `img[data-src='${getOrigin()}/web/image/discuss.channel/${channelId}/avatar_128?unique=notaDateCache']`,
         { count: 2 }
@@ -1136,7 +1136,7 @@ QUnit.test("Can leave channel", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
     await click("[title='Leave this channel']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });

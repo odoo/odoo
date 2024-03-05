@@ -878,7 +878,7 @@ QUnit.test(
             "should not have enough space to open 3 chat windows simultaneously"
         );
         const { openDiscuss } = await start();
-        openDiscuss();
+        await openDiscuss();
         // open, from systray menu, chat windows of channels with id 1, 2, 3
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem", { text: "Channel-1" });
@@ -918,9 +918,9 @@ QUnit.test("chat window: composer state conservation on toggle discuss", async (
         }),
     ]);
     await contains(".o-mail-AttachmentCard .fa-check", { count: 2 });
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-ChatWindow", { count: 0 });
-    openView({
+    await openView({
         res_id: channelId,
         res_model: "discuss.channel",
         views: [[false, "form"]],
@@ -999,9 +999,9 @@ QUnit.test("chat window: scroll conservation on toggle discuss", async () => {
     await contains(".o-mail-Message", { count: 30 });
     await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-ChatWindow .o-mail-Thread", 142);
-    openDiscuss(null);
+    await openDiscuss(null);
     await contains(".o-mail-ChatWindow", { count: 0 });
-    openView({
+    await openView({
         res_id: channelId,
         res_model: "discuss.channel",
         views: [[false, "list"]],
@@ -1059,9 +1059,9 @@ QUnit.test(
         await scroll(".o-mail-ChatWindow .o-mail-Thread", 142);
         // fold chat window
         await click(".o-mail-ChatWindow-command[title='Fold']");
-        openDiscuss(null);
+        await openDiscuss(null);
         await contains(".o-mail-ChatWindow", { count: 0 });
-        openView({
+        await openView({
             res_id: channelId,
             res_model: "discuss.channel",
             views: [[false, "list"]],

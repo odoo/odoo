@@ -14,7 +14,7 @@ QUnit.test("Member list and settings menu are exclusive", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMemberList");
     await click("[title='Show Call Settings']");
