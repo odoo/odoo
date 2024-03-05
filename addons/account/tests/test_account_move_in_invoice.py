@@ -2499,3 +2499,53 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         with Form(self.invoice) as move_form:
             move_form.payment_reference = False
         self.assertEqual(payment_term_line.name, '', 'Payment term line was not changed')
+
+    def test_taxes_onchange_product_uom_and_price_unit(self):
+        """
+        Ensure that taxes are recomputed correctly when product uom and
+        price unit are changed for users without 'uom.group_uom' group
+        """
+        self.env.user.groups_id -= self.env.ref('uom.group_uom')
+        tax = self.company_data['default_tax_purchase']
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'standard_price': 0.0,
+            'supplier_taxes_id': [Command.set(tax.ids)],
+        })
+        expected_values = [
+            {
+                'tax_line_id': False,
+                'debit': 100.0,
+                'credit': 0.0,
+            },
+            {
+                'tax_line_id': tax.id,
+                'debit': 15.0,
+                'credit': 0.0,
+            },
+            {
+                'tax_line_id': False,
+                'debit': 0.0,
+                'credit': 115.0,
+            },
+        ]
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.partner_id = self.partner_a
+        move_form.invoice_date = fields.Date.from_string('2024-03-01')
+        # add a line (without product) with a price of 100.0 and a 15% tax
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.name = 'no product'
+            line_form.price_unit = 100.0
+            line_form.tax_ids.add(tax)
+        invoice = move_form.save()
+        self.assertRecordValues(invoice.line_ids, expected_values)
+
+        move_form = Form(invoice)
+        # edit line to add a product and set price to 100.0 manually
+        # that should recompute the taxes
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.product_id = product
+            line_form.price_unit = 100.0
+        invoice = move_form.save()
+        self.assertRecordValues(invoice.line_ids, expected_values)
