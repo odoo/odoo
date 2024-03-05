@@ -68,6 +68,7 @@ export class FloorScreen extends Component {
         await this.pos.unsetTable();
     }
     onClickFloorMap() {
+        this.pos.updateTables(...this.selectedTables);
         this.state.selectedTableIds = this.getTablesSelectedByDefault();
         this.state.isColorPicker = false;
     }
@@ -267,14 +268,18 @@ export class FloorScreen extends Component {
     selectFloor(floor) {
         this.pos.currentFloor = floor;
         this.state.selectedFloorId = floor.id;
+        this.deselectTable();
+    }
+    deselectTable() {
+        this.pos.updateTables(...this.selectedTables);
         this.state.selectedTableIds = [];
     }
     async onSelectTable(table, ev) {
         if (this.pos.isEditMode) {
             if (ev.ctrlKey || ev.metaKey) {
                 this.state.selectedTableIds.push(table.id);
-            } else {
-                this.state.selectedTableIds = [];
+            } else if (this.state.selectedTableIds.length > 1 || !this.state.selectedTableIds.includes(table.id)) {
+                this.deselectTable();
                 this.state.selectedTableIds.push(table.id);
             }
             return;
@@ -314,7 +319,7 @@ export class FloorScreen extends Component {
     }
     closeEditMode() {
         this.pos.isEditMode = false;
-        this.state.selectedTableIds = [];
+        this.deselectTable();
     }
     async addFloor() {
         this.dialog.add(TextInputPopup, {
@@ -370,7 +375,7 @@ export class FloorScreen extends Component {
             return;
         }
         const selectedTables = this.selectedTables;
-        this.state.selectedTableIds = [];
+        this.deselectTable();
 
         for (const table of selectedTables) {
             const newTable = await this._createTableHelper(table);
