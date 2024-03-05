@@ -93,7 +93,7 @@ export class OdooPivot extends OdooViewsDataSource {
      * @returns {string | number | boolean}
      */
     computePivotHeaderValue(domainArgs) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         if (domainArgs.length === 0) {
             return _t("Total");
         }
@@ -129,12 +129,12 @@ export class OdooPivot extends OdooViewsDataSource {
      * @returns {string | number | boolean}
      */
     getLastPivotGroupValue(domainArgs) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.getLastPivotGroupValue(domainArgs);
     }
 
     getTableStructure() {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.getTableStructure();
     }
 
@@ -175,7 +175,7 @@ export class OdooPivot extends OdooViewsDataSource {
      * @returns {string | number | boolean}
      */
     getPivotCellValue(measure, domain) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.getPivotCellValue(measure, domain);
     }
 
@@ -183,7 +183,7 @@ export class OdooPivot extends OdooViewsDataSource {
      * @param {string} groupFieldString
      */
     parseGroupField(groupFieldString) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.parseGroupField(groupFieldString);
     }
 
@@ -191,7 +191,7 @@ export class OdooPivot extends OdooViewsDataSource {
      * @param {string[]}
      */
     getPivotCellDomain(domain) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.getPivotCellDomain(domain);
     }
 
@@ -200,7 +200,7 @@ export class OdooPivot extends OdooViewsDataSource {
      * @returns {{ value: string | number | boolean, label: string }[]}
      */
     getPossibleFieldValues(fieldName) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.getPossibleFieldValues(fieldName);
     }
 
