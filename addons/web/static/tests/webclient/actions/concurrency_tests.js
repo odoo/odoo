@@ -597,6 +597,32 @@ QUnit.module("ActionManager", (hooks) => {
         assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "Second record"]);
     });
 
+    QUnit.test(
+        "dialog will only open once for two rapid actions with the target new",
+        async function (assert) {
+            assert.expect(3)
+            const def = makeDeferred();
+            const mockRPC = async (route, args) => {
+                if (args.method === "onchange") {
+                   return def;
+                }
+            };
+
+            const webClient = await createWebClient({ serverData, mockRPC });
+            doAction(webClient, 5);
+            await nextTick();
+            assert.containsNone(target, ".o_dialog .o_form_view");
+
+            doAction(webClient, 5);
+            await nextTick();
+            assert.containsNone(target, ".o_dialog .o_form_view");
+
+            def.resolve();
+            await nextTick();
+            assert.containsOnce(target, ".o_dialog .o_form_view", "dialog should open only once");
+        }
+    );
+
     QUnit.test("local state, global state, and race conditions", async function (assert) {
         serverData.views = {
             "partner,false,toy": `<toy/>`,
