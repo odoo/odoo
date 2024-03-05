@@ -159,7 +159,8 @@ class AccountAnalyticLine(models.Model):
                     user_ids.append(user_id)
 
         # 2/ Search all employees related to user_ids and employee_ids, in the selected companies
-        employees = self.env['hr.employee'].sudo().search([
+        HrEmployee_sudo = self.env['hr.employee'].sudo()
+        employees = HrEmployee_sudo.search([
             '&', '|', ('user_id', 'in', user_ids), ('id', 'in', employee_ids), ('company_id', 'in', self.env.companies.ids)
         ])
 
@@ -186,7 +187,7 @@ class AccountAnalyticLine(models.Model):
             if employee_in_id:
                 company = False
                 if not vals.get('company_id'):
-                    company = self.env['hr.employee'].browse(employee_in_id).company_id
+                    company = HrEmployee_sudo.browse(employee_in_id).company_id
                     vals['company_id'] = company.id
                 if not vals.get('product_uom_id'):
                     vals['product_uom_id'] = company.project_time_mode_id.id if company else self.env['res.company'].browse(vals.get('company_id', self.env.company.id)).project_time_mode_id.id
@@ -211,7 +212,7 @@ class AccountAnalyticLine(models.Model):
                 vals['user_id'] = user_id
                 company = False
                 if not vals.get('company_id'):
-                    company = self.env['hr.employee'].browse(employee_out_id).company_id
+                    company = HrEmployee_sudo.browse(employee_out_id).company_id
                     vals['company_id'] = company.id
                 if not vals.get('product_uom_id'):
                     vals['product_uom_id'] = company.project_time_mode_id.id if company else self.env['res.company'].browse(vals.get('company_id', self.env.company.id)).project_time_mode_id.id
