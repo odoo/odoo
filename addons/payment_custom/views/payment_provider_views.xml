@@ -5,6 +5,8 @@
         <field name="name">Custom Provider Form</field>
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <!-- Load after account_payment for the invisible attr. of the payment_followup group. -->
+        <field name="priority">32</field>
         <field name="arch" type="xml">
             <field name="code" invisible="1" position="after">
                 <field name="custom_mode" invisible="1"/>
