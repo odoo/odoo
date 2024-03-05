@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { models } from "@web/../tests/web_test_helpers";
 import { capitalize } from "@web/core/utils/strings";
 

@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_livechat_login_after_chat_start", {

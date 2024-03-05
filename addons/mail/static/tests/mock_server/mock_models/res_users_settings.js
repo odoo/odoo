@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { fields, models } from "@web/../tests/web_test_helpers";
 import { ensureArray } from "@web/core/utils/arrays";
 

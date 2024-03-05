@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Command, constants, fields, models } from "@web/../tests/web_test_helpers";
 
 /**

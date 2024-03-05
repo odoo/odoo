@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { busModels } from "@bus/../tests/bus_test_helpers";
 import { isIterable } from "@web/core/utils/arrays";
 

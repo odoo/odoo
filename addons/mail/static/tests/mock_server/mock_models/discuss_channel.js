@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { assignDefined } from "@mail/utils/common/misc";
 import { Command, constants, fields, models } from "@web/../tests/web_test_helpers";
 import { serializeDateTime, today } from "@web/core/l10n/dates";
