@@ -185,6 +185,7 @@ class StockPicking(models.Model):
                     'picking_ids': [Command.link(self.id), Command.link(picking.id)],
                     'company_id': self.company_id.id if self.company_id else False,
                     'picking_type_id': self.picking_type_id.id,
+                    'description': self._get_auto_batch_description()
                 })
                 if picking.picking_type_id.batch_auto_confirm:
                     new_batch.action_confirm()
@@ -245,6 +246,20 @@ class StockPicking(models.Model):
             domain = expression.AND([domain, [('picking_ids.location_dest_id', '=', self.location_dest_id.id)]])
 
         return domain
+
+    def _get_auto_batch_description(self):
+        """ Get the description of the automatically created batch based on the grouped pickings and grouping criteria """
+        self.ensure_one()
+        description_items = []
+        if self.picking_type_id.batch_group_by_partner and self.partner_id:
+            description_items.append(self.partner_id.name)
+        if self.picking_type_id.batch_group_by_destination and self.partner_id.country_id:
+            description_items.append(self.partner_id.country_id.name)
+        if self.picking_type_id.batch_group_by_src_loc and self.location_id:
+            description_items.append(self.location_id.display_name)
+        if self.picking_type_id.batch_group_by_dest_loc and self.location_dest_id:
+            description_items.append(self.location_dest_id.display_name)
+        return ', '.join(description_items)
 
     def _package_move_lines(self, batch_pack=False, move_lines_to_pack=False):
         if batch_pack:

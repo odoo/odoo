@@ -13,6 +13,7 @@ class StockPickingToBatch(models.TransientModel):
     mode = fields.Selection([('existing', 'an existing batch transfer'), ('new', 'a new batch transfer')], default='new')
     user_id = fields.Many2one('res.users', string='Responsible')
     is_create_draft = fields.Boolean(string="Draft", help='When checked, create the batch in draft status')
+    description = fields.Char('Description')
 
     def attach_pickings(self):
         self.ensure_one()
@@ -25,6 +26,7 @@ class StockPickingToBatch(models.TransientModel):
                 'user_id': self.user_id.id,
                 'company_id': company.id,
                 'picking_type_id': pickings[0].picking_type_id.id,
+                'description': self.description,
             })
         else:
             batch = self.batch_id
