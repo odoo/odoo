@@ -3,7 +3,7 @@
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { RPCError } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { EvaluationError } from "@odoo/o-spreadsheet";
+import { CellErrorType, EvaluationError } from "@odoo/o-spreadsheet";
 
 /**
  * DataSource is an abstract class that contains the logic of fetching and
@@ -34,6 +34,7 @@ export class LoadableDataSource {
         this._loadPromise = undefined;
         this._isFullyLoaded = false;
         this._isValid = true;
+        /** @type {string} */
         this._loadErrorMessage = "";
     }
 
@@ -79,16 +80,19 @@ export class LoadableDataSource {
         return this._isFullyLoaded;
     }
 
-    /**
-     * @protected
-     */
-    _assertDataIsLoaded() {
+    assertIsValid({ throwOnError } = { throwOnError: true }) {
         if (!this._isFullyLoaded) {
             this.load();
-            throw LOADING_ERROR;
+            if (throwOnError) {
+                throw LOADING_ERROR;
+            }
+            return LOADING_ERROR;
         }
         if (!this._isValid) {
-            throw new EvaluationError(this._loadErrorMessage);
+            if (throwOnError) {
+                throw new EvaluationError(this._loadErrorMessage);
+            }
+            return { value: CellErrorType.GenericError, message: this._loadErrorMessage };
         }
     }
 
