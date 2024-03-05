@@ -15,7 +15,7 @@ from odoo.tests import new_test_user
 from unittest.mock import patch
 
 from odoo import release
-from odoo.addons import __path__ as __addons_path__
+from odoo.addons import web, __path__ as __addons_path__
 from odoo.tools import mute_logger
 
 
@@ -325,12 +325,18 @@ class TestImportModule(odoo.tests.TransactionCase):
 
 
 class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
+    def setUp(self):
+        super().setUp()
+        dir_path = os.path.dirname(os.path.realpath(web.__file__))
+        with open(os.path.join(dir_path, 'static/img/logo.png'), 'rb') as logo:
+            self.logo = logo.read()
+
     def test_import_module_icon(self):
         """Assert import a module with an icon result in the module displaying the icon in the apps menu,
         and with the base module icon if module without icon"""
         files = [
             ('foo/__manifest__.py', b"{'name': 'foo'}"),
-            ('foo/static/description/icon.png', b"foo_icon"),
+            ('foo/static/description/icon.png', self.logo),
             ('bar/__manifest__.py', b"{'name': 'bar'}"),
         ]
         self.import_zipfile(files)
@@ -353,7 +359,7 @@ class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
                     </record>
                 </data>
             """),
-            ('foo/static/src/img/content/logo.png', b"foo_logo"),
+            ('foo/static/src/img/content/logo.png', self.logo),
         ]
         self.import_zipfile(files)
         logo_path, logo_data = files[2]

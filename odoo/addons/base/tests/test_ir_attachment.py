@@ -8,7 +8,8 @@ import os
 
 from PIL import Image
 
-from odoo.exceptions import AccessError
+from odoo.addons import web
+from odoo.exceptions import AccessError, UserError
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tools import image_to_base64
 
@@ -91,8 +92,11 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         Tests the consistency of documents' mimetypes
         """
 
+        dir_path = os.path.dirname(os.path.realpath(web.__file__))
+        with open(os.path.join(dir_path, 'static/img/logo.png'), 'rb') as logo:
+            blob_b64 = logo.read()
         Attachment = self.Attachment.with_user(self.user_demo.id)
-        a2 = Attachment.create({'name': 'a2', 'datas': self.blob1_b64, 'mimetype': 'image/png'})
+        a2 = Attachment.create({'name': 'a2', 'datas': base64.b64encode(blob_b64), 'mimetype': 'image/png'})
         self.assertEqual(a2.mimetype, 'image/png', "the new mimetype should be the one given on write")
         a3 = Attachment.create({'name': 'a3', 'datas': self.blob1_b64, 'mimetype': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'})
         self.assertEqual(a3.mimetype, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', "should preserve office mime type")
@@ -231,6 +235,18 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         self.assertEqual(document3.db_datas, False)
         self.assertEqual(document3.store_fname, self.blob1_fname)
         self.assertEqual(document3.checksum, self.blob1_hash)
+
+    def test_12_corrupt_image(self):
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        with open(os.path.join(dir_path, 'corrupt_logo.jpeg'), 'rb') as logo:
+            img_data = logo.read()
+
+        with self.assertRaises(UserError):
+            self.Attachment.with_context().create({
+                'name': 'image',
+                'datas': img_data,
+                'mimetype': 'image/jpeg',
+            })
 
 
 class TestPermissions(TransactionCaseWithUserDemo):
