@@ -1045,6 +1045,9 @@
                                         <field name="quantity" optional="show"/>
                                         <field name="product_uom_category_id" column_invisible="True"/>
                                         <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
+                                        <!-- /l10n_in_edi.test_edi_json -->
+                                        <!-- required for @api.onchange('product_id') -->
+                                        <field name="product_uom_id" column_invisible="True"/>
                                         <field name="price_unit" string="Price"/>
                                         <field name="discount" string="Disc.%" optional="hide"/>
                                         <field name="tax_ids" widget="many2many_tags"
@@ -1065,9 +1068,6 @@
                                         <field name="company_id" column_invisible="True"/>
                                         <field name="company_currency_id" column_invisible="True"/>
                                         <field name="display_type" force_save="1" column_invisible="True"/>
-                                        <!-- /l10n_in_edi.test_edi_json -->
-                                        <!-- required for @api.onchange('product_id') -->
-                                        <field name="product_uom_id" column_invisible="True"/>
                                     </tree>
                                     <kanban class="o_kanban_mobile">
                                         <!-- Displayed fields -->
