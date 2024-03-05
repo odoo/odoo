@@ -9,7 +9,7 @@
         <field name="body_html" type="html">
             <div>
                 <p>Hello <t t-out="object.partner_id.name or ''"></t>,</p>
-                <p>Please find below the guidelines of the {{ object.mail_group_id.name }} mailing list.</p>
+                <p>Please find below the guidelines of the <t t-out="object.mail_group_id.name"></t> mailing list.</p>
                 <p><t t-out="object.mail_group_id.moderation_guidelines_msg or ''"></t></p>
             </div>
         </field>
