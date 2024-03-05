@@ -43,6 +43,12 @@ class StockPicking(models.Model):
 
         return domain
 
+    def _get_auto_batch_description(self):
+        description = super()._get_auto_batch_description()
+        if self.picking_type_id.batch_group_by_carrier and self.carrier_id:
+            description = f"{description}, {self.carrier_id.name}" if description else self.carrier_id.name
+        return description
+
     def _is_auto_batchable(self, picking=None):
         """ Verifies if a picking can be put in a batch with another picking without violating auto_batch constrains.
         """
