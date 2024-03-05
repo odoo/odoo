@@ -500,7 +500,7 @@ export class MacroedTour {
                 await this.tryToDoAction(() => actionHelper.auto(), step);
             }
         }
-        await animationFrame();
+        await delay(0);
         return result;
     }
 
