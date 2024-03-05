@@ -767,6 +767,8 @@ class Survey(http.Controller):
             'search_finished': post.get('finished') == 'true',
             'search_failed': post.get('failed') == 'true',
             'search_passed': post.get('passed') == 'true',
+            # survey right
+            'user_can_manage': request.env.user.has_group('survey.group_survey_manager') or request.env.user == survey.user_id
         }
 
         if survey.session_show_leaderboard:

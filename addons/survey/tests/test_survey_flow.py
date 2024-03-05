@@ -136,5 +136,11 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
         # --------------------------------------------------
         with self.with_user('survey_manager'):
             results_url = survey.action_result_survey()['url']
+            # hide the first question's answers
+            page0_q0.hide_result = True
         r = self.url_open(results_url)
         self.assertTrue(r)
+        # first question's answers should be hidden to the customer
+        self.assertFalse(page0_q0.title in r.text)
+        # second question's answers should be visible to the customer
+        self.assertTrue(page0_q1.title in r.text)

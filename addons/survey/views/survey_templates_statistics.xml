@@ -85,7 +85,7 @@
                 <div t-field="question.description" class="oe_no_empty" />
                 <hr class="mt-2 mb-2"/>
             </div>
-            <div t-else="" class="ms-4 mt-5 o_survey_results_question_wrapper" t-call="survey.survey_page_statistics_question" />
+            <div t-elif="user_can_manage or not question.hide_result" class="ms-4 mt-5 o_survey_results_question_wrapper" t-call="survey.survey_page_statistics_question" />
         </div>
     </template>
 
@@ -102,13 +102,15 @@
         <div class="o_survey_results_question pb-5 border-bottom">
             <div class="d-flex mb-3 o_survey_results_question_header">
                 <div class="d-flex flex-wrap mb-1">
-                    <button class="btn btn-link ps-0 pt-2 d-print-none" type="button" data-bs-toggle="collapse" t-attf-data-bs-target=".o_survey_results_question_#{question.id}">
-                        <i class="fa fa-eye" aria-hidden="true"/>
+                    <button class="o_survey_toggle_question_visibility btn btn-link ps-0 pt-2 d-print-none" type="button" data-bs-toggle="collapse" t-attf-data-bs-target=".o_survey_results_question_#{question.id}" t-att-data-user-can-manage="user_can_manage" t-att-data-is-hidden="question.hide_result">
+                        <t t-set="user_hide_description">Hide the answers when printing the page</t>
+                        <t t-set="manager_hide_description">Hide the answers when printing and when sharing the page</t>
+                        <i class="fa fa-eye" aria-hidden="true" t-att-title="manager_hide_description if user_can_manage else user_hide_description"/>
                     </button>
                     <h5 t-field="question.title" class="pt-2 mb-0 me-1"/>
                 </div>
                 <!-- Question info -->
-                <div t-attf-class="d-flex flex-fill justify-content-end align-items-end mb-1 collapse show o_survey_results_question_#{question.id}">
+                <div t-attf-class="d-flex flex-fill justify-content-end align-items-end mb-1 collapse #{'' if question.hide_result else 'show'} o_survey_results_question_#{question.id}">
                     <!-- Scoring info -->
                     <t t-if="survey.scoring_type != 'no_scoring' and question.question_type in ['numerical_box', 'date', 'datetime']">
                         <span class="badge ms-0 ms-sm-1 me-1 me-sm-0">
@@ -133,7 +135,7 @@
                     </span>
                 </div>
             </div>
-            <div t-attf-class="collapse show o_survey_results_question_#{question.id}">
+            <div t-attf-class="collapse #{'' if question.hide_result else 'show'} o_survey_results_question_#{question.id}">
                 <!-- Question Description -->
                 <div class="o_survey_question_description ms-3 text-muted" t-field="question.description"/>
     
