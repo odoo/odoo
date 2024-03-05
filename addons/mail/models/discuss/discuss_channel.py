@@ -1045,6 +1045,8 @@ class Channel(models.Model):
             ])
         ])
         member = self.env['discuss.channel.member'].search(channel_member_domain)
+        if not member:
+            return
         member.write({
             'fetched_message_id': max(member.fetched_message_id.id, last_message.id),
             'seen_message_id': last_message.id,
