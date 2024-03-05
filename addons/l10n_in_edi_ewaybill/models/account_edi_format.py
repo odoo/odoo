@@ -4,6 +4,7 @@
 import re
 import json
 from datetime import timedelta
+from markupsafe import Markup
 
 from odoo import models, fields, api, _
 from odoo.tools import html_escape
@@ -249,6 +250,21 @@ class AccountEdiFormat(models.Model):
             })
             inv_res = {"success": True, "attachment": attachment}
             res[invoices] = inv_res
+            body = Markup("""
+                <b>{}</b><br/>
+                <ul>
+                    <li>{}<i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"></i>{}</li>
+                    <li>{}<i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"></i>{}</li>
+                </ul>
+            """).format(
+                _('E-wayBill Sent'),
+                _('Number'),
+                str(response.get("data", {}).get('ewayBillNo', 0)) or str(response.get("data", {}).get('EwbNo', 0)),
+                _('Validity'),
+                str(response.get("data", {}).get('EwbValidTill'))
+            )
+
+            invoices.message_post(body=body)
         return res
 
     def _l10n_in_edi_irn_ewaybill_generate_json(self, invoice):
@@ -333,6 +349,20 @@ class AccountEdiFormat(models.Model):
             })
             inv_res = {"success": True, "attachment": attachment}
             res[invoices] = inv_res
+            body = Markup("""
+                <b>{}</b><br/>
+                <ul>
+                    <li>{}<i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"></i>{}</li>
+                    <li>{}<i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"></i>{}</li>
+                </ul>
+            """).format(
+                _('E-wayBill Sent'),
+                _('Number'),
+                str(response.get("data", {}).get('ewayBillNo', 0)) or str(response.get("data", {}).get('EwbNo', 0)),
+                _('Validity'),
+                str(response.get("data", {}).get('EwbValidTill'))
+            )
+            invoices.message_post(body=body)
         return res
 
     def _l10n_in_edi_ewaybill_get_error_message(self, code):
