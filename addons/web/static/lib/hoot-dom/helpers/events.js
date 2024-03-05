@@ -74,7 +74,7 @@ const { console, DataTransfer, document, Math, Object, String, Touch, TypeError 
 
 /**
  * @param {EventTarget} target
- * @param {string[]} eventSequence
+ * @param {EventType[]} eventSequence
  * @param {EventInit} eventInit
  */
 const dispatchEventSequence = (target, eventSequence, eventInit) => {
@@ -88,6 +88,20 @@ const dispatchEventSequence = (target, eventSequence, eventInit) => {
         }
     }
     return false;
+};
+
+/**
+ * @param {Iterable<Event>} events
+ * @param {EventType} eventType
+ * @param {EventInit} eventInit
+ */
+const dispatchRelatedEvents = (events, eventType, eventInit) => {
+    for (const event of events) {
+        if (!event.target || isPrevented(event)) {
+            break;
+        }
+        dispatch(event.target, eventType, eventInit);
+    }
 };
 
 /**
@@ -761,12 +775,11 @@ const _hover = (target, options) => {
                 ["pointerout", !hasTouch() && "mouseout"],
                 leaveEventInit
             );
-            for (const element of getDifferentParents(current, previous)) {
-                dispatchEventSequence(
-                    element,
-                    ["pointerleave", !hasTouch() && "mouseleave"],
-                    leaveEventInit
-                );
+            const leaveEvents = getDifferentParents(current, previous).map((element) =>
+                dispatch(element, "pointerleave", leaveEventInit)
+            );
+            if (!hasTouch()) {
+                dispatchRelatedEvents(leaveEvents, "mouseleave", leaveEventInit);
             }
         }
     }
@@ -790,12 +803,11 @@ const _hover = (target, options) => {
                     ["pointerover", !hasTouch() && "mouseover"],
                     enterEventInit
                 );
-                for (const element of getDifferentParents(previous, current)) {
-                    dispatchEventSequence(
-                        element,
-                        ["pointerenter", !hasTouch() && "mouseenter"],
-                        enterEventInit
-                    );
+                const enterEvents = getDifferentParents(previous, current).map((element) =>
+                    dispatch(element, "pointerenter", enterEventInit)
+                );
+                if (!hasTouch()) {
+                    dispatchRelatedEvents(enterEvents, "mouseenter", enterEventInit);
                 }
             }
             dispatchEventSequence(
