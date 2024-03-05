@@ -631,7 +631,12 @@ export async function editSelectMenu(el, selector, value) {
  * @param {boolean} addOverlayModParts
  * @param {KeyboardEventInit} eventAttrs
  */
-export async function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {}) {
+export async function triggerHotkey(
+    hotkey,
+    addOverlayModParts = false,
+    target = document.activeElement,
+    eventAttrs = {}
+) {
     eventAttrs.key = hotkey.split("+").pop();
 
     if (/shift/i.test(hotkey)) {
@@ -659,7 +664,7 @@ export async function triggerHotkey(hotkey, addOverlayModParts = false, eventAtt
     }
 
     const [keydownEvent, keyupEvent] = await triggerEvents(
-        document.activeElement,
+        target,
         null,
         [
             ["keydown", eventAttrs],

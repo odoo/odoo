@@ -823,6 +823,45 @@ QUnit.test("replace the overlayModifier for MacOs", async (assert) => {
     assert.verifySteps([]);
 });
 
+QUnit.debug("POC", async (assert) => {
+    class MyChild extends Component {
+        static template = xml`
+            <div class="child">
+                <button t-on-click="onClick" data-hotkey="b" class="plop"/>
+            </div>
+        `;
+
+        onClick() {
+            assert.step("click: child");
+        }
+    }
+    class MyComponent extends Component {
+        static template = xml`
+            <div>
+                <button t-on-click="onClick" data-hotkey="b"/>
+                <div data-hotkey-area="" ><MyChild/></div>
+            </div>
+        `;
+        static props = ["*"];
+        static components = { MyChild };
+        onClick() {
+            assert.step("click: main");
+        }
+    }
+    await mount(MyComponent, target, { env });
+
+    const key = "b";
+    triggerHotkey(`alt+${key}`);
+
+    await nextTick();
+    assert.verifySteps(["click: main"]);
+
+    triggerHotkey(`alt+${key}`, false, target.querySelector(".child"));
+    await nextTick();
+
+    assert.verifySteps(["click: child"]);
+});
+
 QUnit.test("protects editable elements", async (assert) => {
     assert.expect(4);
     class Comp extends Component {
