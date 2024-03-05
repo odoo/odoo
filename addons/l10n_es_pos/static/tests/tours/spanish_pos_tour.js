@@ -49,5 +49,11 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
             ProductScreen.addOrderline("Desk Pad", "1"),
             pay(),
             checkSimplifiedInvoiceNumber("0003"),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.addOrderline("Desk Pad", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Customer Account"),
+            PaymentScreen.clickValidate(),
+            Dialog.is({ title: "Customer Required" }),
         ].flat(),
 });
