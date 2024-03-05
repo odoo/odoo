@@ -173,7 +173,7 @@
                 },
                 "A45": {
                     "style": 1,
-                    "content": "[Late Receipts](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":[\"&\",[\"picking_type_code\",\"=\",\"incoming\"],\"&\",[\"state\",\"in\",[\"assigned\",\"waiting\",\"confirmed\"]],\"|\",\"|\",[\"has_deadline_issue\",\"=\",true],[\"date_deadline\",\"<\",\"2022-09-15\"],[\"scheduled_date\",\"<\",\"2022-09-15\"]],\"context\":{\"group_by\":[]},\"modelName\":\"stock.picking\",\"views\":[[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"calendar\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Late Receipts\"})",
+                    "content": "[Late Receipts](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":\"['&',['picking_type_code','=','incoming'],'&',['state','in',['assigned','waiting','confirmed']],'|','|',['has_deadline_issue','=',true],['date_deadline','<',context_today().strftime('%Y-%m-%d')],['scheduled_date','<',context_today().strftime('%Y-%m-%d')]]\",\"context\":{\"group_by\":[]},\"modelName\":\"stock.picking\",\"views\":[[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"calendar\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Late Receipts\"})",
                     "border": 1
                 },
                 "A46": {
@@ -2166,41 +2166,7 @@
                 "activity_exception_decoration",
                 "json_popover"
             ],
-            "domain": [
-                "&",
-                [
-                    "picking_type_code",
-                    "=",
-                    "incoming"
-                ],
-                "&",
-                [
-                    "state",
-                    "in",
-                    [
-                        "assigned",
-                        "waiting",
-                        "confirmed"
-                    ]
-                ],
-                "|",
-                "|",
-                [
-                    "has_deadline_issue",
-                    "=",
-                    true
-                ],
-                [
-                    "date_deadline",
-                    "<",
-                    "2022-09-15"
-                ],
-                [
-                    "scheduled_date",
-                    "<",
-                    "2022-09-15"
-                ]
-            ],
+            "domain": "[\"&\", (\"picking_type_code\", \"=\", \"incoming\"), \"&\", (\"state\", \"in\", [\"assigned\", \"waiting\", \"confirmed\"]), \"|\", \"|\", (\"has_deadline_issue\", \"=\", True), (\"date_deadline\", \"<\", context_today().strftime(\"%Y-%m-%d\")), (\"scheduled_date\", \"<\", context_today().strftime(\"%Y-%m-%d\"))]",
             "model": "stock.picking",
             "context": {
                 "params": {
