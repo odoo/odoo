@@ -11,7 +11,6 @@ import {
     getScrollParent,
     RunningTourActionHelper,
 } from "./tour_utils";
-import { iter } from "@web/core/utils/functions";
 import { session } from "@web/session";
 import { utils } from "@web/core/ui/ui_service";
 import { Deferred, delay } from "@web/core/utils/concurrency";
@@ -287,6 +286,11 @@ function shouldOmit(step, mode) {
     );
 }
 
+export async function animationFrame() {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await delay(0);
+}
+
 export class MacroedTour {
     _tourSteps = [];
     _startIndex = 0;
@@ -339,7 +343,7 @@ export class MacroedTour {
     }
 
     get steps() {
-        return iter(this)
+        return this[Symbol.iterator]();
     }
 
     *[Symbol.iterator]() {
@@ -349,9 +353,7 @@ export class MacroedTour {
         } else {
             compile = this._compileStepAuto.bind(this)
         }
-        if (this.mode === "auto") {
-            yield { action: () => new Promise(r => delay(0).then(() => requestAnimationFrame(r)))}
-        }
+
         for (const tourStep of this.tourSteps) {
             if (tourStep.completed) {
                 continue;
@@ -425,7 +427,9 @@ export class MacroedTour {
 
         let enteredCount = 0;
         let shouldDoAction = false;
+        debugger;
         const trigger = () => {
+            debugger;
             step.state = step.state || {};
             if (!enteredCount) {
                 console.log(`Tour ${this.name} on step: '${describeStep(step)}'`);
@@ -496,7 +500,7 @@ export class MacroedTour {
                 await this.tryToDoAction(() => actionHelper.auto(), step);
             }
         }
-        await new Promise(r => delay(0).then(() => requestAnimationFrame(r)));
+        await animationFrame();
         return result;
     }
 

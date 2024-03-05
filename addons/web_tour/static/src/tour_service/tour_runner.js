@@ -23,6 +23,7 @@ export class TourRunner {
     }
 
     startTour(tourName, options = {}) {
+        debugger;
         if (!options.force && this.runningTours.has(tourName) && options.mode === "manual") {
             return;
         }
