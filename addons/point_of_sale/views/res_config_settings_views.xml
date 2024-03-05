@@ -162,7 +162,7 @@
                                 <div class="text-muted">
                                     Intermediary account used for unidentified customers.
                                 </div>
-                                <field name="account_default_pos_receivable_account_id" colspan="4" nolabel="1" domain="[('reconcile', '=', True), ('account_type', '=', 'asset_receivable'), ('company_id', '=', company_id)]"/>
+                                <field name="account_default_pos_receivable_account_id" colspan="4" nolabel="1" domain="[('reconcile', '=', True), ('account_type', '=', 'asset_receivable')]"/>
                             </setting>
                             <setting id="flexible_taxes" title="Choose a specific fiscal position at the order depending on the kind of customer (tax exempt, onsite vs. takeaway, etc.)." string="Flexible Taxes" help="Use fiscal positions to get different taxes by order">
                                 <field name="pos_tax_regime_selection"/>
