@@ -10,6 +10,10 @@ from odoo.addons.portal.controllers.web import Home
 from odoo.exceptions import UserError, ValidationError, AccessError, MissingError, AccessDenied
 
 
+def bad_ro_callback(request, env):
+    raise ValueError
+
+
 class WebsiteTest(Home):
 
     @http.route('/test_view', type='http', auth='public', website=True, sitemap=False)
@@ -123,6 +127,10 @@ class WebsiteTest(Home):
     @http.route(['/get_post_nomultilang'], type='http', auth="public", methods=['GET', 'POST'], website=True, multilang=False, sitemap=False)
     def get_post_method_no_multilang(self, **kw):
         return request.make_response('get_post_nomultilang')
+
+    @http.route(['/test_bad_ro_callback'], type='http', auth="public", website=True, sitemap=False, readonly=bad_ro_callback)
+    def get_test_bad_ro_callback(self, **kw):
+        return "pass"
 
     # Test Perfs
 
