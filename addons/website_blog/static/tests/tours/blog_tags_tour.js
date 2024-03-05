@@ -10,8 +10,8 @@ wTourUtils.registerWebsitePreviewTour('blog_tags', {
     test: true,
     url: '/blog',
 }, () => [{
-        content: "Go to first blog",
-        trigger: "iframe article[name=blog_post] a",
+        content: "Go to the 'Post Test' blog",
+        trigger: "iframe article[name=blog_post] a:contains('Post Test')",
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     wTourUtils.clickOnSnippet('#o_wblog_post_top .o_wblog_post_page_cover'),
