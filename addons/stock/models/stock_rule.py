@@ -391,6 +391,30 @@ class StockRule(models.Model):
             delay_description.append((_('Global Visibility Days'), _('+ %d day(s)', int(global_visibility_days))))
         return delays, delay_description
 
+    def _search_rule(self, route_ids, packaging_id, product_id, warehouse_id, domain):
+        """ First find a rule among the ones defined on the procurement
+        group, then try on the routes defined for the product, finally fallback
+        on the default behavior
+        """
+        if warehouse_id:
+            domain = expression.AND([['|', ('warehouse_id', '=', warehouse_id.id), ('warehouse_id', '=', False)], domain])
+        res = self.env['stock.rule']
+        if route_ids:
+            res = self.filtered_domain(expression.AND([[('route_id', 'in', route_ids.ids)], domain]))[:-1]
+        if not res and packaging_id:
+            packaging_routes = packaging_id.route_ids
+            if packaging_routes:
+                res = self.filtered_domain(expression.AND([[('route_id', 'in', packaging_routes.ids)], domain]))[:-1]
+        if not res:
+            product_routes = product_id.route_ids | product_id.categ_id.total_route_ids
+            if product_routes:
+                res = self.filtered_domain(expression.AND([[('route_id', 'in', product_routes.ids)], domain]))[:-1]
+        if not res and warehouse_id:
+            warehouse_routes = warehouse_id.route_ids
+            if warehouse_routes:
+                res = self.filtered_domain(expression.AND([[('route_id', 'in', warehouse_routes.ids)], domain]))[:-1]
+        return res
+
 
 class ProcurementGroup(models.Model):
     """
@@ -496,32 +520,6 @@ class ProcurementGroup(models.Model):
         return True
 
     @api.model
-    def _search_rule(self, route_ids, packaging_id, product_id, warehouse_id, domain):
-        """ First find a rule among the ones defined on the procurement
-        group, then try on the routes defined for the product, finally fallback
-        on the default behavior
-        """
-        if warehouse_id:
-            domain = expression.AND([['|', ('warehouse_id', '=', warehouse_id.id), ('warehouse_id', '=', False)], domain])
-        Rule = self.env['stock.rule']
-        res = self.env['stock.rule']
-        if route_ids:
-            res = Rule.search(expression.AND([[('route_id', 'in', route_ids.ids)], domain]), order='route_sequence, sequence', limit=1)
-        if not res and packaging_id:
-            packaging_routes = packaging_id.route_ids
-            if packaging_routes:
-                res = Rule.search(expression.AND([[('route_id', 'in', packaging_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
-        if not res:
-            product_routes = product_id.route_ids | product_id.categ_id.total_route_ids
-            if product_routes:
-                res = Rule.search(expression.AND([[('route_id', 'in', product_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
-        if not res and warehouse_id:
-            warehouse_routes = warehouse_id.route_ids
-            if warehouse_routes:
-                res = Rule.search(expression.AND([[('route_id', 'in', warehouse_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
-        return res
-
-    @api.model
     def _get_rule(self, product_id, location_id, values):
         """ Find a pull rule for the location_id, fallback on the parent
         locations if it could not be found.
@@ -529,14 +527,14 @@ class ProcurementGroup(models.Model):
         result = self.env['stock.rule']
         location = location_id
         while (not result) and location:
-            domain = self._get_rule_domain(location, values)
-            result = self._search_rule(values.get('route_ids', False), values.get('product_packaging_id', False), product_id, values.get('warehouse_id', location.warehouse_id), domain)
+            domain = self._get_rule_domain(values)
+            result = location.rule_dest_ids._search_rule(values.get('route_ids', False), values.get('product_packaging_id', False), product_id, values.get('warehouse_id', location.warehouse_id), domain)
             location = location.location_id
         return result
 
     @api.model
-    def _get_rule_domain(self, location, values):
-        domain = ['&', ('location_dest_id', '=', location.id), ('action', '!=', 'push')]
+    def _get_rule_domain(self, values):
+        domain = [('action', '!=', 'push')]
         # In case the method is called by the superuser, we need to restrict the rules to the
         # ones of the company. This is not useful as a regular user since there is a record
         # rule to filter out the rules based on the company.
