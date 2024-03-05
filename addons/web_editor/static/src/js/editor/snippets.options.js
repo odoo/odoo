@@ -4641,8 +4641,8 @@ registry.sizing = SnippetOptionWidget.extend({
             self.options.wysiwyg.odooEditor.automaticStepUnactive('resizing');
 
             const cursor = $handle.css('cursor') + '-important';
-            const $body = $(this.ownerDocument.body);
-            $body.addClass(cursor);
+            const $iframeWindow = $(this.ownerDocument.defaultView);
+            $iframeWindow[0].document.body.classList.add(cursor);
             self.$overlay.removeClass('o_handlers_idle');
 
             const bodyMouseMove = function (ev) {
@@ -4688,9 +4688,9 @@ registry.sizing = SnippetOptionWidget.extend({
                 }
             };
             const bodyMouseUp = function () {
-                $body.off('mousemove', bodyMouseMove);
-                $body.off('mouseup', bodyMouseUp);
-                $body.removeClass(cursor);
+                $iframeWindow.off("mousemove", bodyMouseMove);
+                $iframeWindow.off("mouseup", bodyMouseUp);
+                $iframeWindow[0].document.body.classList.remove(cursor);
                 self.$overlay.addClass('o_handlers_idle');
                 $handle.removeClass('o_active');
 
@@ -4729,8 +4729,8 @@ registry.sizing = SnippetOptionWidget.extend({
                     }});
                 }, 0);
             };
-            $body.on('mousemove', bodyMouseMove);
-            $body.on('mouseup', bodyMouseUp);
+            $iframeWindow.on("mousemove", bodyMouseMove);
+            $iframeWindow.on("mouseup", bodyMouseUp);
         });
 
         for (const [key, value] of Object.entries(resizeValues)) {
