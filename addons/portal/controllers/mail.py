@@ -115,6 +115,8 @@ class PortalChatter(http.Controller):
     @http.route('/mail/avatar/mail.message/<int:res_id>/author_avatar/<int:width>x<int:height>', type='http', auth='public')
     def portal_avatar(self, res_id=None, height=50, width=50, access_token=None, _hash=None, pid=None):
         """ Get the avatar image in the chatter of the portal """
+        # TODO adapt the code in master as the route is never called without an
+        # "access_token" or without a "_hash" and a "pid".
         if access_token or (_hash and pid):
             message = request.env['mail.message'].browse(int(res_id)).exists().filtered(
                 lambda msg: _check_special_access(msg.model, msg.res_id, access_token, _hash, pid and int(pid))
