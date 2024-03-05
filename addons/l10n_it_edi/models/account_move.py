@@ -632,7 +632,7 @@ class AccountMove(models.Model):
             # then try and fill it with the content imported from the attachment.
             # Should the import fail, thanks to try..except and savepoint,
             # we will anyway end up with an empty `in_invoice` with the attachment posted on it.
-            if move := self.with_company(self.company_id)._l10n_it_edi_create_move_with_attachment(
+            if move := self.with_company(proxy_user.company_id)._l10n_it_edi_create_move_with_attachment(
                 invoice_data['filename'],
                 invoice_data['file'],
                 invoice_data['key'],
