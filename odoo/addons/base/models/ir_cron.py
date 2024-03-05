@@ -99,13 +99,13 @@ class ir_cron(models.Model):
         return super(ir_cron, self).default_get(fields_list)
 
     def method_direct_trigger(self):
+        self.ensure_one()
         self.check_access_rights('write')
-        for cron in self:
-            cron._try_lock()
-            _logger.info('Manually starting job `%s`.', cron.name)
-            cron.with_user(cron.user_id).with_context({'lastcall': cron.lastcall}).ir_actions_server_id.run()
-            _logger.info('Job `%s` done.', cron.name)
-            cron.lastcall = fields.Datetime.now()
+        self._try_lock()
+        _logger.info('Manually starting job `%s`.', self.name)
+        self.with_user(self.user_id).with_context({'lastcall': self.lastcall}).ir_actions_server_id.run()
+        _logger.info('Job `%s` done.', self.name)
+        self.lastcall = fields.Datetime.now()
         return True
 
     @classmethod
