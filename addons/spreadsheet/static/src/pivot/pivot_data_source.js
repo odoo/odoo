@@ -71,7 +71,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {string | number}
      */
     computeOdooPivotHeaderValue(domainArgs) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         if (domainArgs.length === 0) {
             return _t("Total");
         }
@@ -103,7 +103,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @param {(string | number)[]} domainArgs
      */
     getLastPivotGroupValue(domainArgs) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.getLastPivotGroupValue(domainArgs);
     }
 
@@ -132,7 +132,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {boolean}
      */
     isUsedValue(measure, domain) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.isUsedValue(measure, domain);
     }
 
@@ -141,7 +141,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {boolean}
      */
     isUsedHeader(domain) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.isUsedHeader(domain);
     }
 
@@ -152,7 +152,7 @@ export class PivotDataSource extends OdooViewsDataSource {
     }
 
     getTableStructure() {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.getTableStructure();
     }
 
@@ -161,7 +161,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @param {string[]} domain
      */
     getPivotCellValue(measure, domain) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.getPivotCellValue(measure, domain);
     }
 
@@ -169,7 +169,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @param {string[]}
      */
     getPivotCellDomain(domain) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.getPivotCellDomain(domain);
     }
 
@@ -178,7 +178,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {string}
      */
     getFormattedGroupBy(fieldName) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.getFormattedGroupBy(fieldName);
     }
 
@@ -186,7 +186,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @param {string} groupFieldString
      */
     parseGroupField(groupFieldString) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.parseGroupField(groupFieldString);
     }
 
@@ -195,7 +195,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {boolean}
      */
     isGroupedOnlyByOneDate(dimension) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.isGroupedOnlyByOneDate(dimension);
     }
 
@@ -204,7 +204,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {string}
      */
     getGroupOfFirstDate(dimension) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.getGroupOfFirstDate(dimension);
     }
 
@@ -214,7 +214,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {string}
      */
     getGroupByAtIndex(dimension, index) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.getGroupByAtIndex(dimension, index);
     }
 
@@ -223,7 +223,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {boolean}
      */
     isColumnGroupBy(fieldName) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.isColumnGroupBy(fieldName);
     }
 
@@ -232,7 +232,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {boolean}
      */
     isRowGroupBy(fieldName) {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.isRowGroupBy(fieldName);
     }
 
@@ -240,12 +240,12 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {number}
      */
     getNumberOfColGroupBys() {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         return this._model.getNumberOfColGroupBys();
     }
 
     async prepareForTemplateGeneration() {
-        this._assertDataIsLoaded();
+        this.assertIsValid();
         await this._model.prepareForTemplateGeneration();
     }
 }

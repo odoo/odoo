@@ -72,6 +72,11 @@ const ODOO_PIVOT = {
         assertPivotsExists(pivotId, this.getters);
         assertMeasureExist(pivotId, measure, this.getters);
         assertDomainLength(domainArgs);
+        const dataSource = this.getters.getPivotDataSource(pivotId);
+        const error = dataSource.assertIsValid({ throwOnError: false });
+        if (error) {
+            return error;
+        }
         const value = this.getters.getPivotCellValue(pivotId, measure, domainArgs);
         if (measure === "__count") {
             return { value, format: "0" };
@@ -95,6 +100,11 @@ const ODOO_PIVOT_HEADER = {
         const domainArgs = domain.map(toString);
         assertPivotsExists(pivotId, this.getters);
         assertDomainLength(domainArgs);
+        const dataSource = this.getters.getPivotDataSource(pivotId);
+        const error = dataSource.assertIsValid({ throwOnError: false });
+        if (error) {
+            return error;
+        }
         const fieldName = domainArgs.at(-2);
         const value = domainArgs.at(-1);
         const format =
@@ -148,6 +158,11 @@ const ODOO_PIVOT_TABLE = {
     ) {
         const _pivotId = toString(pivotId);
         assertPivotsExists(_pivotId, this.getters);
+        const dataSource = this.getters.getPivotDataSource(_pivotId);
+        const error = dataSource.assertIsValid({ throwOnError: false });
+        if (error) {
+            return error;
+        }
         /** @type {SpreadsheetPivotTable} */
         const table = this.getters.getPivotTableStructure(_pivotId);
         const _includeColumnHeaders = toBoolean(includeColumnHeaders);
