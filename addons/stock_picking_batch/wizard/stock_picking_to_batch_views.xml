@@ -11,7 +11,8 @@
                     <group>
                         <label for="mode" string="Add to"/>
                         <field name="mode" widget="radio" nolabel="1"/>
-                        <field name="batch_id" options="{'no_create': True, 'no_open': True}" invisible="mode == 'new'" required="mode == 'existing'"/>
+                        <field name="description" invisible="mode == 'existing'"/>
+                        <field name="batch_id" context="{'add_to_existing_batch': True}" options="{'no_create': True, 'no_open': True}" invisible="mode == 'new'" required="mode == 'existing'"/>
                         <field name="user_id" options="{'no_create': True}" invisible="mode == 'existing'"/>
                         <field name="is_create_draft"  invisible="mode != 'new'"/>
                     </group>

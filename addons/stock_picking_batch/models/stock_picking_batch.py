@@ -17,6 +17,7 @@ class StockPickingBatch(models.Model):
     name = fields.Char(
         string='Batch Transfer', default='New',
         copy=False, required=True, readonly=True)
+    description = fields.Char(size=35)
     user_id = fields.Many2one(
         'res.users', string='Responsible', tracking=True, check_company=True)
     company_id = fields.Many2one(
@@ -58,6 +59,13 @@ class StockPickingBatch(models.Model):
                 but this scheduled date will not be set for all transfers in batch.""")
     is_wave = fields.Boolean('This batch is a wave')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
+
+    @api.depends('description')
+    def _compute_display_name(self):
+        if not 'add_to_existing_batch' in self.env.context:
+            return super()._compute_display_name()
+        for batch in self:
+            batch.display_name = f"{batch.name}: {batch.description}" if batch.description else batch.name
 
     @api.depends('picking_type_id')
     def _compute_show_lots_text(self):

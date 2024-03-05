@@ -107,6 +107,7 @@
                         </group>
                         <group>
                             <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
+                            <field name="description"/>
                         </group>
                     </group>
                     <notebook>
@@ -138,6 +139,7 @@
             <tree string="Stock Batch Transfer" multi_edit="1" sample="1">
                 <field name="company_id" column_invisible="True"/>
                 <field name="name" decoration-bf="1"/>
+                <field name="description"/>
                 <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
                 <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
                 <field name="picking_type_id" readonly="state != 'draft'"/>
@@ -161,6 +163,9 @@
                             <div class="o_kanban_record_top mb16">
                                 <div class="o_kanban_record_headings">
                                     <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                    <div>
+                                        <span class="o_kanban_record_subtitle"><field name="description" /></span>
+                                    </div>
                                 </div>
                                 <field name="state" widget="label_selection"/>
                             </div>
