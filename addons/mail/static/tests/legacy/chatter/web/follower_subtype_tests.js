@@ -33,7 +33,7 @@ QUnit.test("simplest layout of a followed subtype", async () => {
             }
         },
     });
-    openView({
+    await openView({
         res_model: "res.partner",
         res_id: pyEnv.currentPartnerId,
         views: [[false, "form"]],
@@ -73,7 +73,7 @@ QUnit.test("simplest layout of a not followed subtype", async () => {
             }
         },
     });
-    openView({
+    await openView({
         res_model: "res.partner",
         res_id: pyEnv.currentPartnerId,
         views: [[false, "form"]],
@@ -109,7 +109,7 @@ QUnit.test("toggle follower subtype checkbox", async () => {
             }
         },
     });
-    openView({
+    await openView({
         res_model: "res.partner",
         res_id: pyEnv.currentPartnerId,
         views: [[false, "form"]],
@@ -152,7 +152,7 @@ QUnit.test("follower subtype apply", async () => {
     });
     pyEnv["res.partner"].write([pyEnv.currentPartnerId], { message_follower_ids: [followerId] });
     const { openView } = await start();
-    openView({
+    await openView({
         res_model: "res.partner",
         res_id: pyEnv.currentPartnerId,
         views: [[false, "form"]],

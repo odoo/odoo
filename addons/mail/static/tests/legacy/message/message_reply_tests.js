@@ -28,7 +28,7 @@ QUnit.test("click on message in reply to highlight the parent message", async ()
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click(".o-mail-MessageInReply-message", {
         parent: [".o-mail-Message", { text: "Reply to Hey" }],
     });
@@ -62,7 +62,7 @@ QUnit.test("click on message in reply to scroll to the parent message", async ()
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click(".o-mail-MessageInReply-message", {
         parent: [".o-mail-Message", { text: "Response to first message" }],
     });

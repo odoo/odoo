@@ -30,7 +30,7 @@ QUnit.test("auto layout with link preview list", async () => {
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Message .o-mail-LinkPreviewList");
 });
 
@@ -53,7 +53,7 @@ QUnit.test("auto layout with link preview as gif", async () => {
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewImage");
 });
 
@@ -74,7 +74,7 @@ QUnit.test("simplest card layout", async () => {
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewCard");
     await contains(".o-mail-LinkPreviewCard h6", { text: "Article title" });
     await contains(".o-mail-LinkPreviewCard p", { text: "Description" });
@@ -98,7 +98,7 @@ QUnit.test("simplest card layout with image", async () => {
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewCard");
     await contains(".o-mail-LinkPreviewCard h6", { text: "Article title" });
     await contains(".o-mail-LinkPreviewCard p", { text: "Description" });
@@ -123,7 +123,7 @@ QUnit.test("Link preview video layout", async () => {
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewVideo");
     await contains(".o-mail-LinkPreviewVideo h6", { text: "video title" });
     await contains(".o-mail-LinkPreviewVideo p", { text: "Description" });
@@ -146,7 +146,7 @@ QUnit.test("Link preview image layout", async () => {
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewImage");
 });
 
@@ -169,7 +169,7 @@ QUnit.test("Remove link preview Gif", async () => {
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewImage button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
     await click(".modal-footer button", { text: "Delete" });
@@ -193,7 +193,7 @@ QUnit.test("Remove link preview card", async () => {
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewCard button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
     await click(".modal-footer button", { text: "Delete" });
@@ -218,7 +218,7 @@ QUnit.test("Remove link preview video", async () => {
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewVideo button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
     await click(".modal-footer button", { text: "Delete" });
@@ -241,7 +241,7 @@ QUnit.test("Remove link preview image", async () => {
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewImage button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
     await click(".modal-footer button", { text: "Delete" });
@@ -264,7 +264,7 @@ QUnit.test("No crash on receiving link preview of non-known message", async (ass
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     rpc("/mail/link_preview", { message_id: messageId });
     assert.ok(true);
     rpc("/mail/link_preview/hide", { link_preview_ids: [linkPreviewId] });
@@ -289,7 +289,7 @@ QUnit.test(
             res_id: channelId,
         });
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await contains(".o-mail-LinkPreviewImage");
         await contains(".o-mail-Message-bubble", { count: 0 });
     }
@@ -314,7 +314,7 @@ QUnit.test(
             res_id: channelId,
         });
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await contains(".o-mail-Message-bubble");
     }
 );
@@ -337,7 +337,7 @@ QUnit.test(
             res_id: channelId,
         });
         const { openDiscuss } = await start();
-        openDiscuss(channelId);
+        await openDiscuss(channelId);
         await contains(".o-mail-Message-bubble");
     }
 );
@@ -346,7 +346,7 @@ QUnit.test("Sending message with link preview URL should show a link preview car
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "https://make-link-preview.com");
     await click("button:not([disabled])", { text: "Send" });
     await contains(".o-mail-LinkPreviewCard");
@@ -376,7 +376,7 @@ QUnit.test("Delete all link previews at once", async () => {
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewCard button[aria-label='Remove']");
     await click(".modal-footer button", { text: "Delete all previews" });
     await contains(".o-mail-LinkPreviewCard", { count: 0 });

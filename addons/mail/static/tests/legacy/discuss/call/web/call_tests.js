@@ -14,7 +14,7 @@ QUnit.test("no default rtc after joining a chat conversation", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
     pyEnv["res.users"].create({ partner_id: partnerId });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await insertText(".o-discuss-ChannelSelector input", "mario");
@@ -34,7 +34,7 @@ QUnit.test("no default rtc after joining a group conversation", async () => {
     ]);
     pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await insertText(".o-discuss-ChannelSelector input", "mario");

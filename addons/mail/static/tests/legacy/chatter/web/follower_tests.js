@@ -28,7 +28,7 @@ QUnit.test("base rendering not editable", async () => {
             }
         },
     });
-    openView({
+    await openView({
         res_id: threadId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -50,7 +50,7 @@ QUnit.test("base rendering editable", async () => {
         res_model: "res.partner",
     });
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: threadId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -75,7 +75,7 @@ QUnit.test("click on partner follower details", async (assert) => {
     });
     const openFormDef = makeDeferred();
     const { env, openView } = await start();
-    openView({
+    await openView({
         res_id: threadId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -114,7 +114,7 @@ QUnit.test("click on edit follower", async (assert) => {
             }
         },
     });
-    openView({
+    await openView({
         res_id: threadId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -145,7 +145,7 @@ QUnit.test("edit follower and close subtype dialog", async (assert) => {
             }
         },
     });
-    openView({
+    await openView({
         res_id: threadId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -184,7 +184,7 @@ QUnit.test("remove a follower in a dirty form view", async (assert) => {
             </form>`,
     };
     const { openFormView } = await start({ serverData: { views } });
-    openFormView("res.partner", threadId);
+    await openFormView("res.partner", threadId);
     await click(".o_field_many2many_tags[name='channel_ids'] input");
     await click(".dropdown-item", { text: "General" });
     await contains(".o_tag", { text: "General" });
@@ -213,7 +213,7 @@ QUnit.test("removing a follower should reload form view", async function (assert
             }
         },
     });
-    openFormView("res.partner", threadId);
+    await openFormView("res.partner", threadId);
     await contains(".o-mail-Followers-button");
     assert.verifySteps([`read ${threadId}`]);
     await click(".o-mail-Followers-button");

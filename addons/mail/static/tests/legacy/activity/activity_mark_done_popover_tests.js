@@ -19,7 +19,7 @@ QUnit.test("activity mark done popover simplest layout", async () => {
         res_model: "res.partner",
     });
     const { openView } = await start();
-    openView({
+    await openView({
         res_model: "res.partner",
         res_id: partnerId,
         views: [[false, "form"]],
@@ -43,7 +43,7 @@ QUnit.test("activity with force next mark done popover simplest layout", async (
         res_model: "res.partner",
     });
     const { openView } = await start();
-    openView({
+    await openView({
         res_model: "res.partner",
         res_id: partnerId,
         views: [[false, "form"]],
@@ -124,7 +124,7 @@ QUnit.test("activity mark done popover mark done with feedback", async (assert) 
             }
         },
     });
-    openView({
+    await openView({
         res_model: "res.partner",
         res_id: partnerId,
         views: [[false, "form"]],
@@ -165,7 +165,7 @@ QUnit.test("activity mark done popover mark done and schedule next", async (asse
             }
         },
     });
-    openView({
+    await openView({
         res_model: "res.partner",
         res_id: partnerId,
         views: [[false, "form"]],
@@ -203,7 +203,7 @@ QUnit.test("[technical] activity mark done & schedule next with new action", asy
             }
         },
     });
-    openView({
+    await openView({
         res_model: "res.partner",
         res_id: partnerId,
         views: [[false, "form"]],

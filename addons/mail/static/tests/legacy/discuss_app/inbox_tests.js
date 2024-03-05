@@ -26,7 +26,7 @@ QUnit.test("reply: discard on reply button toggle", async () => {
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-Message");
 
     await click("[title='Expand']");
@@ -57,7 +57,7 @@ QUnit.test("reply: discard on pressing escape", async () => {
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Reply']");
@@ -110,7 +110,7 @@ QUnit.test(
                 }
             },
         });
-        openDiscuss();
+        await openDiscuss();
         await contains(".o-mail-Message");
         await click("[title='Expand']");
         await click("[title='Reply']");
@@ -150,7 +150,7 @@ QUnit.test(
                 }
             },
         });
-        openDiscuss();
+        await openDiscuss();
         await contains(".o-mail-Message");
         await click("[title='Expand']");
         await click("[title='Reply']");
@@ -178,7 +178,7 @@ QUnit.test("show subject of message in Inbox", async () => {
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-Message", { text: "Subject: Salutations, voyageurnot empty" });
 });
 
@@ -198,7 +198,7 @@ QUnit.test("show subject of message in history", async () => {
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss("mail.box_history");
+    await openDiscuss("mail.box_history");
     await contains(".o-mail-Message", { text: "Subject: Salutations, voyageurnot empty" });
 });
 
@@ -219,7 +219,7 @@ QUnit.test("subject should not be shown when subject is the same as the thread n
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss("mail.box_inbox");
+    await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
     await contains(".o-mail-Message", {
         count: 0,
@@ -246,7 +246,7 @@ QUnit.test(
             res_partner_id: pyEnv.currentPartnerId,
         });
         const { openDiscuss } = await start();
-        openDiscuss("mail.box_inbox");
+        await openDiscuss("mail.box_inbox");
         await contains(".o-mail-Message");
         await contains(".o-mail-Message", {
             count: 0,
@@ -274,7 +274,7 @@ QUnit.test(
             res_partner_id: pyEnv.currentPartnerId,
         });
         const { openDiscuss } = await start();
-        openDiscuss("mail.box_inbox");
+        await openDiscuss("mail.box_inbox");
         await contains(".o-mail-Message");
         await contains(".o-mail-Message", {
             count: 0,
@@ -302,7 +302,7 @@ QUnit.test(
             res_partner_id: pyEnv.currentPartnerId,
         });
         const { openDiscuss } = await start();
-        openDiscuss("mail.box_inbox");
+        await openDiscuss("mail.box_inbox");
         await contains(".o-mail-Message");
         await contains(".o-mail-Message", {
             count: 0,
@@ -330,7 +330,7 @@ QUnit.test(
             res_partner_id: pyEnv.currentPartnerId,
         });
         const { openDiscuss } = await start();
-        openDiscuss("mail.box_inbox");
+        await openDiscuss("mail.box_inbox");
         await contains(".o-mail-Message");
         await contains(".o-mail-Message", {
             count: 0,
@@ -358,7 +358,7 @@ QUnit.test(
             res_partner_id: pyEnv.currentPartnerId,
         });
         const { openDiscuss } = await start();
-        openDiscuss("mail.box_inbox");
+        await openDiscuss("mail.box_inbox");
         await contains(".o-mail-Message");
         await contains(".o-mail-Message", {
             count: 0,
@@ -386,7 +386,7 @@ QUnit.test(
             res_partner_id: pyEnv.currentPartnerId,
         });
         const { openDiscuss } = await start();
-        openDiscuss("mail.box_inbox");
+        await openDiscuss("mail.box_inbox");
         await contains(".o-mail-Message");
         await contains(".o-mail-Message", {
             count: 0,
@@ -425,7 +425,7 @@ QUnit.test("inbox: mark all messages as read", async (assert) => {
         },
     ]);
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });
     await contains(".o-mail-DiscussSidebarChannel", {
         contains: [
@@ -465,7 +465,7 @@ QUnit.test(
             res_partner_id: pyEnv.currentPartnerId,
         });
         const { env, openDiscuss } = await start();
-        openDiscuss();
+        await openDiscuss();
         const def = makeDeferred();
         patchWithCleanup(env.services.action, {
             doAction(action) {
@@ -529,7 +529,7 @@ QUnit.test("inbox messages are never squashed", async () => {
         },
     ]);
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-Message", { count: 2 });
     await contains(".o-mail-Message:not(.o-squashed)", { text: "body1" });
     await contains(".o-mail-Message:not(.o-squashed)", { text: "body2" });
@@ -554,7 +554,7 @@ QUnit.test("reply: stop replying button click", async () => {
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-Message");
 
     await click("[title='Expand']");
@@ -583,7 +583,7 @@ QUnit.test("error notifications should not be shown in Inbox", async () => {
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-header small", { text: "on Demo User" });
     await contains(`.o-mail-Message-header a[href*='/web#model=res.partner&id=${partnerId}']`, {
@@ -611,7 +611,7 @@ QUnit.test("emptying inbox displays rainbow man in inbox", async () => {
         },
     ]);
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-Message");
     await click("button:enabled", { text: "Mark all read" });
     await contains(".o_reward_rainbow");
@@ -636,7 +636,7 @@ QUnit.test("emptying inbox doesn't display rainbow man in another thread", async
         },
     ]);
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/mark_as_read", {
         message_ids: [messageId],

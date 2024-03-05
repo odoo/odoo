@@ -181,7 +181,7 @@ QUnit.test("Message delete notification", async () => {
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await click("[title='Expand']");
     await click("[title='Mark as Todo']");
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });

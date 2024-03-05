@@ -19,7 +19,7 @@ QUnit.test("no conflicts between file uploads", async () => {
     });
     const { openView } = await start();
     // Uploading file in the first thread: res.partner chatter.
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
