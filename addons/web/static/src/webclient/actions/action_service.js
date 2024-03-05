@@ -128,6 +128,7 @@ export function makeActionManager(env, router = _router) {
     let dialogCloseProm;
     let actionCache = {};
     let dialog = null;
+    let nextDialog = null;
 
     // The state action (or default user action if none) is loaded as soon as possible
     // so that the next "doAction" will have its action ready when needed.
@@ -760,7 +761,6 @@ export function makeActionManager(env, router = _router) {
                 return componentProps;
             }
         }
-        let nextDialog = null;
         if (action.target === "new") {
             const actionDialogProps = {
                 ActionComponent: ControllerComponent,
@@ -784,6 +784,9 @@ export function makeActionManager(env, router = _router) {
                     }
                 },
             });
+            if (nextDialog) {
+                nextDialog.remove();
+            }
             nextDialog = {
                 remove: removeDialogFn,
                 onClose: onClose || options.onClose,
