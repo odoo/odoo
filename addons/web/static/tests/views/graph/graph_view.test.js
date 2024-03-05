@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryOne } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockDate } from "@odoo/hoot-mock";
+import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import { onRendered } from "@odoo/owl";
 
 import {
@@ -16,6 +16,7 @@ import {
     mountView,
     mountWithCleanup,
     onRpc,
+    patchDate,
     patchWithCleanup,
     saveFavorite,
     switchView,
@@ -3719,7 +3720,7 @@ test("fill_temporal can be changed throught the context", async () => {
 });
 
 test("fake data in line chart", async () => {
-    mockDate("2020-05-19 01:00:00");
+    patchDate("2020-05-19 01:00:00");
 
     Foo._records = [];
 
@@ -3748,7 +3749,7 @@ test("fake data in line chart", async () => {
 });
 
 test("no filling color for period of comparison", async () => {
-    mockDate("2020-05-19 01:00:00");
+    patchDate("2020-05-19 01:00:00");
 
     for (const record of Foo._records) {
         record.date = record.date?.replace(/^\d{4}/, "2019");
@@ -3886,7 +3887,7 @@ test("renders banner_route", async () => {
 });
 
 test("In the middle of a year, a graph view grouped by a date field with granularity 'year' should have a single group of SampleServer.MAIN_RECORDSET_SIZE records", async () => {
-    mockDate("2023-06-15 08:00:00");
+    patchDate("2023-06-15 08:00:00");
 
     const view = await mountView({
         type: "graph",

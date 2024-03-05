@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryOne, scroll } from "@odoo/hoot-dom";
-import { animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
+import { animationFrame, mockTimeZone } from "@odoo/hoot-mock";
+import { getPickerCell, zoomOut } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickSave,
     contains,
@@ -11,9 +12,9 @@ import {
     models,
     mountView,
     onRpc,
+    patchDate,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { getPickerCell, zoomOut } from "@web/../tests/core/datetime/datetime_test_helpers";
 
 class Partner extends models.Model {
     _name = "res.partner";
@@ -368,7 +369,7 @@ test("hit enter should update value", async () => {
 });
 
 test("allow to use compute dates (+5d for instance)", async () => {
-    mockDate({ year: 2021, month: 2, day: 15 });
+    patchDate({ year: 2021, month: 2, day: 15 });
     Partner._fields.date = fields.Date({
         string: "Date",
         default: "2019-09-15",
