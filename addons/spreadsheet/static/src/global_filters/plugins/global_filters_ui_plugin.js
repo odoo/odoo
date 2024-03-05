@@ -49,6 +49,7 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
     constructor(config) {
         super(config);
         this.orm = config.custom.env?.services.orm;
+        this.dataSources = config.custom.dataSources;
         this.user = config.custom.env?.services.user;
         /**
          * Cache record display names for relation filters.
@@ -271,15 +272,13 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
                     return [[{ value: "" }]];
                 }
                 if (!this.recordsDisplayName[filter.id]) {
-                    this.orm
+                    const promise = this.orm
                         .call(filter.modelName, "read", [value, ["display_name"]])
                         .then((result) => {
                             const names = result.map(({ display_name }) => display_name);
                             this.recordsDisplayName[filter.id] = names;
-                            this.dispatch("EVALUATE_CELLS", {
-                                sheetId: this.getters.getActiveSheetId(),
-                            });
                         });
+                    this.dataSources.notifyWhenPromiseResolves(promise);
                     return [[{ value: "" }]];
                 }
                 return [[{ value: this.recordsDisplayName[filter.id].join(", ") }]];
