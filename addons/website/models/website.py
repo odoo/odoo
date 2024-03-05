@@ -8,6 +8,7 @@ import logging
 import operator
 import re
 import requests
+import threading
 
 from collections import defaultdict
 from functools import reduce
@@ -977,7 +978,9 @@ class Website(models.Model):
         # there is one on request) or return a random one.
 
         # The format of `httprequest.host` is `domain:port`
-        domain_name = request and request.httprequest.host or ''
+        domain_name = (request and request.httprequest.host
+            or hasattr(threading.current_thread(), 'url') and threading.current_thread().url
+            or '')
         website_id = self._get_current_website_id(domain_name, fallback=fallback)
         return self.browse(website_id)
 
