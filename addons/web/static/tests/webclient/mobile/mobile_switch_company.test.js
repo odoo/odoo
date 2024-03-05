@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { Deferred } from "@odoo/hoot-mock";
+import { Deferred, runAllTimers } from "@odoo/hoot-mock";
 import {
     contains,
     getService,
@@ -153,6 +153,8 @@ test("single company selected: toggling it off will keep it", async () => {
      *   [ ] Company 3
      */
     await contains(".toggle_company:eq(0)").click();
+    await runAllTimers();
+
     expect(router.current).toEqual({
         cids: 1,
         _company_switching: 1,
