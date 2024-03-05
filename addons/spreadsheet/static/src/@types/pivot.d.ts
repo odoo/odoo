@@ -20,6 +20,7 @@ declare module "@spreadsheet" {
         getTableStructure(): SpreadsheetPivotTable;
         getPivotCellValue(measure: string, domain: Array<string | number>): string | boolean | number;
         getPivotFieldFormat(name: string): string;
+        assertIsValid({ throwOnError }: { throwOnError: boolean }): boolean;
     }
 
     export interface CommonPivotDefinition {
