@@ -7,6 +7,7 @@ import { sprintf } from "@web/core/utils/strings";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { range } from "@web/core/utils/numbers";
 import { EvaluationError } from "@odoo/o-spreadsheet";
+import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
 
 const { arg, toBoolean, toString, toNumber } = spreadsheet.helpers;
 const { functionRegistry } = spreadsheet.registries;
@@ -101,6 +102,11 @@ const ODOO_PIVOT = /** @satisfies {CustomFunctionDescription} */ ({
         assertMeasureExist(pivotId, measure, this.getters);
         assertDomainLength(domainArgs);
         const pivot = this.getters.getPivot(pivotId);
+        if (pivot.isLoading()) {
+            return LOADING_ERROR;
+        } else if (pivot.hasLoadingFailed()) {
+            return { value: CellErrorType.GenericError, message: pivot.loadingErrorMessage };
+        }
         const value = pivot.getPivotCellValue(measure, domainArgs);
         if (!value && !this.getters.areDomainArgsFieldsValid(pivotId, domainArgs)) {
             return {
@@ -134,9 +140,14 @@ const ODOO_PIVOT_HEADER = /** @satisfies {CustomFunctionDescription} */ ({
         const domainArgs = domain.map(toString);
         const _pivotId = getPivotId(_pivotFormulaId, this.getters);
         assertDomainLength(domainArgs);
+        const pivot = this.getters.getPivot(_pivotId);
+        if (pivot.isLoading()) {
+            return LOADING_ERROR;
+        } else if (pivot.hasLoadingFailed()) {
+            return { value: CellErrorType.GenericError, message: pivot.loadingErrorMessage };
+        }
         const fieldName = domainArgs.at(-2);
         const valueArg = domainArgs.at(-1);
-        const pivot = this.getters.getPivot(_pivotId);
         const format =
             !fieldName || fieldName === "measure" || valueArg === "false"
                 ? undefined
@@ -206,6 +217,11 @@ const ODOO_PIVOT_TABLE = /** @satisfies {CustomFunctionDescription} */ ({
         const _pivotFormulaId = toString(pivotId);
         const _pivotId = getPivotId(_pivotFormulaId, this.getters);
         const pivot = this.getters.getPivot(_pivotId);
+        if (pivot.isLoading()) {
+            return LOADING_ERROR;
+        } else if (pivot.hasLoadingFailed()) {
+            return { value: CellErrorType.GenericError, message: pivot.loadingErrorMessage };
+        }
         const table = pivot.getTableStructure();
         const _includeColumnHeaders = toBoolean(includeColumnHeaders);
         const cells = table.getPivotCells(toBoolean(includeTotal), _includeColumnHeaders);
