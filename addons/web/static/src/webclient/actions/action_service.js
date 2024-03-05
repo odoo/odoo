@@ -86,6 +86,7 @@ function makeActionManager(env) {
     let dialogCloseProm;
     let actionCache = {};
     let dialog = null;
+    let ongoingNewAction = false;
 
     // The state action (or default user action if none) is loaded as soon as possible
     // so that the next "doAction" will have its action ready when needed.
@@ -603,6 +604,7 @@ function makeActionManager(env) {
                     }).then(() => {
                         dialogCloseProm = undefined;
                     });
+                    ongoingNewAction = false;
                     dialog = nextDialog;
                 } else {
                     controller.getGlobalState = () => {
@@ -1122,6 +1124,10 @@ function makeActionManager(env) {
             case "ir.actions.act_window":
                 if (action.target !== "new") {
                     await clearUncommittedChanges(env);
+                }
+                else{
+                    if (ongoingNewAction) return;
+                    ongoingNewAction = true;
                 }
                 return _executeActWindowAction(action, options);
             case "ir.actions.act_window_close":
