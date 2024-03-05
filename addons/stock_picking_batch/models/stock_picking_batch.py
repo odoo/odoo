@@ -17,6 +17,7 @@ class StockPickingBatch(models.Model):
     name = fields.Char(
         string='Batch Transfer', default='New',
         copy=False, required=True, readonly=True)
+    description = fields.Char('Description')
     user_id = fields.Many2one(
         'res.users', string='Responsible', tracking=True, check_company=True)
     company_id = fields.Many2one(
@@ -63,6 +64,14 @@ class StockPickingBatch(models.Model):
     estimated_shipping_volume = fields.Float(
         "shipping_volume", compute='_compute_estimated_shipping_capacity', digits='Product Unit of Measure')
     properties = fields.Properties('Properties', definition='picking_type_id.batch_properties_definition', copy=True)
+
+    @api.depends('description')
+    @api.depends_context('add_to_existing_batch')
+    def _compute_display_name(self):
+        if not self.env.context.get('add_to_existing_batch'):
+            return super()._compute_display_name()
+        for batch in self:
+            batch.display_name = f"{batch.display_name}: {batch.description}" if batch.description else batch.display_name
 
     @api.depends('picking_type_id')
     def _compute_show_lots_text(self):
