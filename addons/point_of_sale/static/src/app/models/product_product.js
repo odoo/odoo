@@ -183,7 +183,7 @@ export class ProductProduct extends Base {
     }
 
     get searchString() {
-        const fields = ["display_name", "description_sale", "barcode"];
+        const fields = ["display_name", "description_sale"];
         return fields
             .map((field) => this[field] || "")
             .filter(Boolean)
