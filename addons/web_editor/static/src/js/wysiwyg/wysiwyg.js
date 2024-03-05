@@ -190,7 +190,8 @@ export class Wysiwyg extends Component {
             selectedTab: 'theme-colors',
             withGradients: true,
             onColorLeave: () => {
-                this.odooEditor.historyRevertCurrentStep();
+                // We need to prevent rollback in case the seclection is in unremovable
+                this.odooEditor.withoutRollback(() => this.odooEditor.historyRevertCurrentStep());
                 // Compute the selection to ensure it's preserved between
                 // selectionchange events in case this gets triggered multiple
                 // times quickly.
