@@ -18,7 +18,7 @@ QUnit.test("sidebar find shows channels matching search term", async () => {
         name: "test",
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await click(
         ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-add"
     );
@@ -42,7 +42,7 @@ QUnit.test(
             name: "test",
         });
         const { openDiscuss } = await start();
-        openDiscuss();
+        await openDiscuss();
         await click(
             ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-add"
         );

@@ -14,7 +14,7 @@ QUnit.test("base rendering", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -47,7 +47,7 @@ QUnit.test("rendering with multiple partner followers", async () => {
         },
     ]);
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId_3,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -65,7 +65,7 @@ QUnit.test("log note toggling", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -86,7 +86,7 @@ QUnit.test("send message toggling", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -107,7 +107,7 @@ QUnit.test("log note/send message switching", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -131,7 +131,7 @@ QUnit.test("attachment counter without attachments", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -158,7 +158,7 @@ QUnit.test("attachment counter with attachments", async () => {
         },
     ]);
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -177,7 +177,7 @@ QUnit.test("attachment counter while loading attachments", async () => {
             }
         },
     });
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -200,7 +200,7 @@ QUnit.test("attachment counter transition when attachments become loaded", async
             }
         },
     });
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -218,7 +218,7 @@ QUnit.test(
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({});
         const { openView } = await start();
-        openView({
+        await openView({
             res_id: partnerId,
             res_model: "res.partner",
             views: [[false, "form"]],
@@ -242,7 +242,7 @@ QUnit.test(
             },
         ]);
         const { openView } = await start();
-        openView({
+        await openView({
             res_id: partnerId,
             res_model: "res.partner",
             views: [[false, "form"]],
