@@ -1382,11 +1382,15 @@ export class TestRunner {
                 }
             }
 
+            const { lastResults } = this.state.currentTest;
+            if (!lastResults) {
+                return;
+            }
+
             ev.preventDefault();
             ev.stopPropagation();
             ev.stopImmediatePropagation();
 
-            const { lastResults } = this.state.currentTest;
             lastResults.errors.push(error);
             lastResults.caughtErrors++;
             if (lastResults.expectedErrors >= lastResults.caughtErrors) {
