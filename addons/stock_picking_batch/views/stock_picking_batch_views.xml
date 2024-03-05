@@ -105,6 +105,7 @@
                             <field name="picking_type_id" readonly="state != 'draft'"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="picking_ids" force_save="1"/>
                             <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
+                            <field name="description"/>
                         </group>
                         <field name="properties" nolabel="1" columns="2" hideAddButton="1"/>
                     </group>
@@ -135,6 +136,7 @@
             <list string="Stock Batch Transfer" multi_edit="1" sample="1">
                 <field name="company_id" column_invisible="True"/>
                 <field name="name" decoration-bf="1"/>
+                <field name="description"/>
                 <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
                 <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
                 <field name="picking_type_id" readonly="state != 'draft'"/>
@@ -153,10 +155,11 @@
                 <field name="company_id"/>
                 <templates>
                     <t t-name="kanban-card">
-                        <div class="d-flex mb-4">
+                        <div class="d-flex">
                             <field name="name" class="fw-bolder fs-5"/>
                             <field name="state" widget="label_selection" class="ms-auto"/>
                         </div>
+                        <field name="description" class="fw-bold mb-2"/>
                         <footer class="fs-6 pt-0">
                             <field name="picking_type_id" readonly="state != 'draft'"/>
                             <div class="d-flex">
