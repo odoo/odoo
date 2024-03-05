@@ -307,8 +307,8 @@ export class MacroedTour {
 
     }
 
-    computeSteps() {
-        if (this._tourSteps) {
+    computeSteps(reset=false) {
+        if (this._tourSteps && !reset) {
             return this._tourSteps;
         }
         let index = 0;
@@ -318,18 +318,18 @@ export class MacroedTour {
         const tourSteps = [];
         this.getTourSteps().forEach((step, definitionIndex) => {
             const omitted = shouldOmit(step, this.mode);
-            step = { ...step };
+            step = { ...step, definitionIndex };
             allSteps.push(step);
             if (!omitted) {
                 step.index = index;
-                step.completed = index < this._startIndex;
-                if (!step.completed) {
+                const completed = index < this._startIndex;
+                if (!completed) {
                     step.shadow_dom = step.shadow_dom ?? this.shadow_dom;
                     if (step.shadow_dom) {
                         this.shadowSelectors.add(step.shadow_dom);
                     }
+                    tourSteps.push(step);
                 }
-                tourSteps.push(step)
                 index++;
             }
         });
@@ -370,15 +370,15 @@ export class MacroedTour {
                 }
             } 
         }
+        this._tourSteps = null;
     }
 
     resetRun(params = {}) {
         Object.assign(this.options, params);
-        this._tourSteps = null;
         if ("startIndex" in params) {
             this._startIndex = params.startIndex || 0;
         }
-        this.computeSteps();
+        this.computeSteps(true);
         this.mode = params.mode || this.mode || "auto";
     }
 
@@ -464,6 +464,7 @@ export class MacroedTour {
             }
             const result = await this._autoRunStep(step, stepEl);
             this._markStepComplete(step);
+            await animationFrame();
             return result;
         }
         yield { trigger, action };
