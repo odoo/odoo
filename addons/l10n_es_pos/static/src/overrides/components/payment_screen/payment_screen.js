@@ -23,7 +23,10 @@ patch(PaymentScreen.prototype, {
                 order.to_invoice = Boolean(
                     this.pos.config.raw.l10n_es_simplified_invoice_journal_id
                 );
-                order.partner = this.pos.config.simplified_partner_id;
+                if ((await this._askForCustomerIfRequired()) === false) {
+                    return false;
+                }
+                order.partner ||= this.pos.config.simplified_partner_id;
             }
         }
         return await super.validateOrder(...arguments);

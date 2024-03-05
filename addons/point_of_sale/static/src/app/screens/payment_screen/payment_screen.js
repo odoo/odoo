@@ -392,17 +392,7 @@ export class PaymentScreen extends Component {
             return "/point_of_sale/static/src/img/card-bank.png";
         }
     }
-    async _isOrderValid(isForceValidate) {
-        if (this.currentOrder.get_orderlines().length === 0 && this.currentOrder.is_to_invoice()) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Empty Order"),
-                body: _t(
-                    "There must be at least one product in your order before it can be validated and invoiced."
-                ),
-            });
-            return false;
-        }
-
+    async _askForCustomerIfRequired() {
         const splitPayments = this.paymentLines.filter(
             (payment) => payment.payment_method.split_transactions
         );
@@ -415,6 +405,22 @@ export class PaymentScreen extends Component {
             if (confirmed) {
                 this.pos.selectPartner();
             }
+            return false;
+        }
+    }
+
+    async _isOrderValid(isForceValidate) {
+        if (this.currentOrder.get_orderlines().length === 0 && this.currentOrder.is_to_invoice()) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Empty Order"),
+                body: _t(
+                    "There must be at least one product in your order before it can be validated and invoiced."
+                ),
+            });
+            return false;
+        }
+
+        if ((await this._askForCustomerIfRequired()) === false) {
             return false;
         }
 
