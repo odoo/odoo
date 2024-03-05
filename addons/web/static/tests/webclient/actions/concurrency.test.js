@@ -105,6 +105,15 @@ defineActions([
         ],
     },
     {
+        id: 5,
+        xml_id: "action_5",
+        name: "Create a Partner",
+        res_model: "partner",
+        target: "new",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    },
+    {
         id: 8,
         xml_id: "action_8",
         name: "Favorite Ponies",
@@ -644,6 +653,24 @@ test.tags("desktop")("click multiple times to open a record", async () => {
         "Partners",
         "Second record",
     ]);
+});
+
+test("dialog will only open once for two rapid actions with the target new", async () => {
+    const def = new Deferred();
+    onRpc("onchange", () => def);
+
+    await mountWithCleanup(WebClient);
+    getService("action").doAction(5);
+    await animationFrame();
+    expect(".o_dialog .o_form_view").toHaveCount(0);
+
+    getService("action").doAction(5);
+    await animationFrame();
+    expect(".o_dialog .o_form_view").toHaveCount(0);
+
+    def.resolve();
+    await animationFrame();
+    expect(".o_dialog .o_form_view").toHaveCount(1);
 });
 
 test.tags("desktop")("local state, global state, and race conditions", async () => {
