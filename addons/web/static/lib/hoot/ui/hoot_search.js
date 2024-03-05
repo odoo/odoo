@@ -6,7 +6,7 @@ import { isRegExpFilter, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils
 import { Suite } from "../core/suite";
 import { Tag } from "../core/tag";
 import { Test } from "../core/test";
-import { EXCLUDE_PREFIX, refresh, setParams, subscribeToURLParams } from "../core/url";
+import { EXCLUDE_PREFIX, refresh, setParams } from "../core/url";
 import { debounce, lookup, normalize, title, useWindowListener } from "../hoot_utils";
 import { HootTagButton } from "./hoot_tag_button";
 
@@ -67,7 +67,7 @@ const templateIncludeWidget = (tagName) => /* xml */ `
                 'opacity-50': readonly,
             }"
             t-att-title="readonly and 'Cannot change because it depends on a tag modifier in the code'"
-            t-on-click.stop="focusSearchInput"
+            t-on-pointerup="focusSearchInput"
             t-on-change="(ev) => this.onIncludeChange(category, job.id, ev.target.value)"
         >
             <input
