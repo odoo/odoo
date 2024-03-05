@@ -38,8 +38,10 @@ class MailTracking(models.Model):
     @api.depends('mail_message_id', 'field_id')
     def _compute_field_groups(self):
         for tracking in self:
-            model = self.env[tracking.field_id.model]
-            field = model._fields.get(tracking.field_id.name)
+            field = None
+            if tracking.field_id:
+                model = self.env[tracking.field_id.model]
+                field = model._fields.get(tracking.field_id.name)
             tracking.field_groups = field.groups if field else 'base.group_system'
 
     @api.model
