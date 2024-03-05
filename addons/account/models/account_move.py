@@ -3413,7 +3413,6 @@ class AccountMove(models.Model):
                     'name': _("Early Payment Discount (%s)", tax.name),
                     'amount_currency': payment_term_line.currency_id.round(tax_detail['amount_currency'] * percentage_paid),
                     'balance': payment_term_line.company_currency_id.round(tax_detail['balance'] * percentage_paid),
-                    'tax_tag_invert': True,
                 }
 
             for grouping_dict, base_detail in bases_details.items():
