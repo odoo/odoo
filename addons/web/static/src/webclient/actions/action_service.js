@@ -131,6 +131,7 @@ export function makeActionManager(env, router = _router) {
     let dialogCloseProm;
     let actionCache = {};
     let dialog = null;
+    let nextDialog = null;
 
     env.bus.addEventListener("CLEAR-CACHES", () => {
         actionCache = {};
@@ -928,7 +929,6 @@ export function makeActionManager(env, router = _router) {
                 return componentProps;
             }
         }
-        let nextDialog = null;
         if (action.target === "new") {
             const actionDialogProps = {
                 ActionComponent: ControllerComponent,
@@ -952,6 +952,9 @@ export function makeActionManager(env, router = _router) {
                     }
                 },
             });
+            if (nextDialog) {
+                nextDialog.remove();
+            }
             nextDialog = {
                 remove: removeDialogFn,
                 onClose: onClose || options.onClose,
