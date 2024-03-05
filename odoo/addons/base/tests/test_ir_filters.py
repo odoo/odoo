@@ -328,3 +328,15 @@ class TestAllFilters(TransactionCase):
                     order=','.join(ast.literal_eval(filter_.sort)),
                     context=context,
                 )
+
+    def test_filters_dont_have_action_on_action_delete(self):
+        res_partner_model = self.env.ref('base.model_res_partner')
+        action = self.env['ir.actions.server'].create({
+            'name': 'test_action',
+            'model_id': res_partner_model.id,
+            'state': 'object_write',
+        })
+        Filters = self.env['ir.filters']
+        filter = Filters.create(dict(name="Test Filter", model_id="ir.filters", action_id=action.id))
+        action.unlink()
+        self.assertFalse(filter.action_id, "We should set the action_id to False/None when action is deleted.")
