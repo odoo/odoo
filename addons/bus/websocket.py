@@ -614,7 +614,8 @@ class Websocket:
         if not self.__event_callbacks[event_type]:
             return
         with closing(acquire_cursor(self._db)) as cr:
-            env = api.Environment(cr, self._session.uid, self._session.context)
+            lang = api.Environment(cr, self._session.uid, {})['res.lang']._get_code(self._session.context.get('lang'))
+            env = api.Environment(cr, self._session.uid, dict(self._session.context, lang=lang))
             for callback in self.__event_callbacks[event_type]:
                 try:
                     service_model.retrying(functools.partial(callback, env, self), env)
@@ -763,7 +764,8 @@ class WebsocketRequest:
             raise InvalidDatabaseException() from exc
 
         with closing(acquire_cursor(self.db)) as cr:
-            self.env = api.Environment(cr, self.session.uid, self.session.context)
+            lang = api.Environment(cr, self.session.uid, {})['res.lang']._get_code(self.session.context.get('lang'))
+            self.env = api.Environment(cr, self.session.uid, dict(self.session.context, lang=lang))
             threading.current_thread().uid = self.env.uid
             service_model.retrying(
                 functools.partial(self._serve_ir_websocket, event_name, data),
