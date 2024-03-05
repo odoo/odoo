@@ -1,19 +1,13 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllAttributes, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { animationFrame, mockDate, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 
 import {
-    contains,
-    defineModels,
-    fields,
-    makeMockServer,
-    models,
-    mountWithCleanup,
-    onRpc,
-} from "@web/../tests/web_test_helpers";
+    getPickerApplyButton,
+    getPickerCell,
+} from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
-    SELECTORS as treeEditorSELECTORS,
     Partner,
     Product,
     addNewRule,
@@ -35,11 +29,18 @@ import {
     selectOperator,
     selectValue,
     toggleArchive,
+    SELECTORS as treeEditorSELECTORS,
 } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
-    getPickerCell,
-    getPickerApplyButton,
-} from "@web/../tests/core/datetime/datetime_test_helpers";
+    contains,
+    defineModels,
+    fields,
+    makeMockServer,
+    models,
+    mountWithCleanup,
+    onRpc,
+    patchDate,
+} from "@web/../tests/web_test_helpers";
 
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
 
@@ -265,7 +266,7 @@ test("building a domain with an invalid operator", async () => {
 });
 
 test("building a domain with an expression for value", async () => {
-    mockDate("2023-04-20 17:00:00", 0);
+    patchDate("2023-04-20 17:00:00", 0);
     await makeDomainSelector({
         domain: `[("datetime", ">=", context_today())]`,
         update(domain) {
@@ -688,7 +689,7 @@ test("between operator (5)", async () => {
 });
 
 test("expressions in between operator", async () => {
-    mockDate("2023-01-01 00:00:00", 0);
+    patchDate("2023-01-01 00:00:00", 0);
     await makeDomainSelector({
         domain: `["&", ("datetime", ">=", context_today()), ("datetime", "<=", "2023-01-10 00:00:00")]`,
         update(domain) {
@@ -949,7 +950,7 @@ test("support of connector '!' (debug mode)", async () => {
 
 test("support properties", async () => {
     expect.assertions(25);
-    mockDate("2023-10-05 15:00:00", 0);
+    patchDate("2023-10-05 15:00:00", 0);
 
     Partner._fields.properties = fields.Properties({
         string: "Properties",
