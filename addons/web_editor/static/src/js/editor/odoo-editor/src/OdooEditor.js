@@ -3764,15 +3764,21 @@ export class OdooEditor extends EventTarget {
             } else if (['insertText', 'insertCompositionText'].includes(ev.inputType)) {
                 // insertCompositionText, courtesy of Samsung keyboard.
                 const selection = this.document.getSelection();
-                // Detect that text was selected and change behavior only if it is the case,
-                // since it is the only text insertion case that may cause problems.
-                const wasTextSelected = anchorNodeOid !== focusNodeOid || anchorOffset !== focusOffset;
+                // Detect a prior selection across different blocks and change
+                // the behavior only in that case, since it is the only text
+                // insertion case that may cause problems.
+                const anchorNode = this.idFind(anchorNodeOid);
+                const focusNode = this.idFind(focusNodeOid);
+                const wasSelectingAcrossDifferentBlocks =
+                    anchorNode &&
+                    focusNode &&
+                    closestBlock(anchorNode) !== closestBlock(focusNode);
                 // Unit tests events are not trusted by the browser,
                 // the insertText has to be done manualy.
                 const isUnitTests = !ev.isTrusted && this.testMode;
                 // we cannot trust the browser to keep the selection inside empty tags.
                 const latestSelectionInsideEmptyTag = this._isLatestComputedSelectionInsideEmptyInlineTag();
-                if (wasTextSelected || isUnitTests || latestSelectionInsideEmptyTag) {
+                if (wasSelectingAcrossDifferentBlocks || isUnitTests || latestSelectionInsideEmptyTag) {
                     ev.preventDefault();
                     if (!isUnitTests) {
                         // First we need to undo the character inserted by the browser.
@@ -4896,7 +4902,7 @@ export class OdooEditor extends EventTarget {
             selection.anchorNode.parentNode.normalize();
             const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
             const textNodeSplitted = textSliced.split(/\s/);
-            const potentialUrl = textNodeSplitted.pop();
+            const potentialUrl = textNodeSplitted.pop() || '';
             // In case of multiple matches, only the last one will be converted.
             const match = [...potentialUrl.matchAll(new RegExp(URL_REGEX, 'g'))].pop();
 
