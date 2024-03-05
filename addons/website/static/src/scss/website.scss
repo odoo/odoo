@@ -1422,6 +1422,20 @@ header {
             vertical-align: middle;
         }
     }
+
+    @if index(
+        ('default', 'slogan', 'Contact', 'centered_logo', 'image'),
+        o-website-value('header-template')
+    ) != null {
+        @include media-breakpoint-down(md) {
+            .dropdown-toggle {
+                display: block;
+            }
+            .dropdown-menu {
+                position: static;
+            }
+        }
+    }
 }
 .o_lang_flag {
     width: 1em;
