@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { constants, fields, models } from "@web/../tests/web_test_helpers";
 
 export class DiscussChannelMember extends models.ServerModel {

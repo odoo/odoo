@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { queryAll } from "@odoo/hoot-dom";
 import { endDiscussion, okRating, feedback, transcript, close } from "./website_livechat_common";
 import { registry } from "@web/core/registry";

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("activity");
@@ -14,9 +12,7 @@ QUnit.test(
         });
         const o_view_controller = document.querySelector(".o_view_controller");
         const o_content = o_view_controller.querySelector(".o_content");
-        const o_cp_item = o_view_controller.querySelector(
-            ".o_control_panel .o_breadcrumb .active"
-        );
+        const o_cp_item = o_view_controller.querySelector(".o_control_panel .o_breadcrumb .active");
         const initialXCpItem = o_cp_item.getBoundingClientRect().x;
         const o_header_cell = o_content.querySelector(".o_activity_type_cell");
         const initialXHeaderCell = o_header_cell.getBoundingClientRect().x;

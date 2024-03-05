@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { rpc } from "@web/core/network/rpc";
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";

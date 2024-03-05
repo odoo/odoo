@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { queryAll } from "@odoo/hoot-dom";
 
 /*******************************
