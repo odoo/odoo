@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { registry } from "@web/core/registry";
 import { click, contains, createFile, inputFiles } from "@web/../tests/utils";
 

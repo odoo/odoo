@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { models } from "@web/../tests/web_test_helpers";
 
 export class ResUsersSettingsVolumes extends models.ServerModel {

@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import "@mail/../tests/helpers/mock_server/models/res_partner"; // ensure mail overrides are applied first
 
 import { patch } from "@web/core/utils/patch";

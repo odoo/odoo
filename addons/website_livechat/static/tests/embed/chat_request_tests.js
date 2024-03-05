@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start, loadDefaultConfig } from "@im_livechat/../tests/embed/helper/test_utils";

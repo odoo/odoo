@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Command } from "@mail/../tests/helpers/command";
 
 import { patch } from "@web/core/utils/patch";
