@@ -3,6 +3,7 @@
 /**
  * @typedef {import("./helpers/dom").Position} Position
  * @typedef {import("./helpers/dom").QueryOptions} QueryOptions
+ * @typedef {import("./helpers/dom").QueryTextOptions} QueryTextOptions
  * @typedef {import("./helpers/dom").Target} Target
  *
  * @typedef {import("./helpers/events").DragHelpers} DragHelpers

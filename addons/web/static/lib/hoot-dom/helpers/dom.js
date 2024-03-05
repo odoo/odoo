@@ -38,6 +38,10 @@ import { HootDomError, getTag, isFirefox, isIterable, parseRegExp } from "../hoo
  *  visible?: boolean;
  * }} QueryOptions
  *
+ * @typedef {{
+ *  raw?: boolean;
+ * }} QueryTextOptions
+ *
  * @typedef {MaybeIterable<Node> | string | null | undefined | false} Target
  *
  * @typedef {{
@@ -265,7 +269,7 @@ const isWindow = (object) => object?.window === object && object.constructor.nam
 /**
  * @param {string} [char]
  */
-const isWhiteSpace = (char) => Boolean(char) && R_WHITESPACE.test(char);
+const isWhiteSpace = (char) => Boolean(char) && R_HORIZONTAL_WHITESPACE.test(char);
 
 /**
  * @param {string} pseudoClass
@@ -618,7 +622,11 @@ const selectorError = (pseudoClass, message) =>
 const R_CHAR = /[\w-]/;
 const R_QUOTE_CONTENT = /^\s*(['"])?([^]*?)\1\s*$/;
 const R_ROOT_ELEMENT = /^(HTML|HEAD|BODY)$/;
-const R_WHITESPACE = /\s/;
+/**
+ * \s without \n and \v
+ */
+const R_HORIZONTAL_WHITESPACE =
+    /[\r\t\f \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+/g;
 
 // Following selector is based on this spec:
 // https://html.spec.whatwg.org/multipage/interaction.html#dom-tabindex
@@ -932,14 +940,20 @@ export function getNodeValue(node) {
 
 /**
  * @param {Node} node
+ * @param {QueryTextOptions} [options]
  * @returns {string}
  */
-export function getNodeText(node) {
+export function getNodeText(node, options) {
+    let content;
     if (typeof node.innerText === "string") {
-        return node.innerText.trim();
+        content = node.innerText;
     } else {
-        return node.textContent.trim();
+        content = node.textContent;
     }
+    if (options?.raw) {
+        return content;
+    }
+    return content.replace(R_HORIZONTAL_WHITESPACE, " ").trim();
 }
 
 /**
@@ -1544,11 +1558,11 @@ export function queryAllProperties(target, property, options) {
  * *texts* of the matching nodes.
  *
  * @param {Target} target
- * @param {QueryOptions} [options]
+ * @param {QueryOptions & QueryTextOptions} [options]
  * @returns {string[]}
  */
 export function queryAllTexts(target, options) {
-    return queryAll(target, options).map(getNodeText);
+    return queryAll(target, options).map((node) => getNodeText(node, options));
 }
 
 /**
@@ -1614,11 +1628,11 @@ export function queryOne(target, options) {
  * the matching node.
  *
  * @param {Target} target
- * @param {QueryOptions} [options]
+ * @param {QueryOptions & QueryTextOptions} [options]
  * @returns {string}
  */
 export function queryText(target, options) {
-    return getNodeText(queryOne(target, options));
+    return getNodeText(queryOne(target, options), options);
 }
 
 /**

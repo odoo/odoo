@@ -36,6 +36,7 @@ import { Test } from "./test";
  *  message?: string;
  * }} ExpectOptions
  *
+ * @typedef {import("@odoo/hoot-dom").QueryTextOptions} QueryTextOptions
  * @typedef {import("@odoo/hoot-dom").Target} Target
  */
 
@@ -1499,7 +1500,7 @@ export class Matchers {
      * - match a given regular expression;
      *
      * @param {string | RegExp} [text]
-     * @param {ExpectOptions} [options]
+     * @param {ExpectOptions & QueryTextOptions} [options]
      * @example
      *  expect("p").toHaveText("lorem ipsum dolor sit amet");
      * @example
@@ -1520,7 +1521,7 @@ export class Matchers {
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
             predicate: each((node) => {
-                const nodeText = getNodeText(node);
+                const nodeText = getNodeText(node, options);
                 if (!expectsText) {
                     return nodeText.length > 0;
                 }

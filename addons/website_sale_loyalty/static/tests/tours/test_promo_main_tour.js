@@ -90,7 +90,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
         {
             content: "check reduction amount got recomputed when changing qty",
-            trigger: '.oe_currency_value:contains("-﻿106.00")',
+            trigger: '.oe_currency_value:contains("- 106.00")',
             run: function () {}, // it's a check
         },
         {

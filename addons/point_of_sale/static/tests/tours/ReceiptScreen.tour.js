@@ -8,7 +8,6 @@ import * as NumberPopup from "@point_of_sale/../tests/tours/helpers/NumberPopupT
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import { registry } from "@web/core/registry";
-import { nbsp } from "@web/core/utils/strings";
 import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
 
 registry.category("web_tour.tours").add("ReceiptScreenTour", {
@@ -61,7 +60,7 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.receiptIsThere(),
-            ReceiptScreen.totalAmountContains(`$${nbsp}30.00 + $${nbsp}1.00 tip`),
+            ReceiptScreen.totalAmountContains(`$ 30.00 + $ 1.00 tip`),
             ReceiptScreen.clickNextOrder(),
 
             // Test customer note in receipt

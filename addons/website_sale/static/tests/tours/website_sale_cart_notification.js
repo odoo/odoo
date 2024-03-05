@@ -2,7 +2,6 @@
 
 import { registry } from "@web/core/registry";
 import tourUtils from "@website_sale/js/tours/tour_utils";
-import { nbsp } from "@web/core/utils/strings";
 
 registry.category("web_tour.tours").add('website_sale_cart_notification', {
     test: true,
@@ -15,7 +14,7 @@ registry.category("web_tour.tours").add('website_sale_cart_notification', {
         },
         {
             content: "check the price of 1 website_sale_cart_notification_product_1",
-            trigger: '.toast-body div:contains("$'+nbsp+'1,000.00")',
+            trigger: '.toast-body div:contains("$ 1,000.00")',
         },
         {
             content: "close the notification",
@@ -60,7 +59,7 @@ registry.category("web_tour.tours").add('website_sale_cart_notification', {
         },
         {
             content: "check the price of 1 website_sale_cart_notification_product_2",
-            trigger: '.toast-body div:contains("$'+nbsp+'15,000.00")',
+            trigger: '.toast-body div:contains("$ 15,000.00")',
         },
         {
             content: "Go To Cart",
