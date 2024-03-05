@@ -351,6 +351,9 @@ export class ProductScreen extends Component {
             const product = this.pos.selectedCategoryId
                 ? this.getProductsByCategory(this.pos.selectedCategoryId)
                 : this.pos.models["product.product"].getAll();
+            if (!product) {
+                return list;
+            }
             list = fuzzyLookup(
                 unaccent(this.searchWord, false),
                 product,
