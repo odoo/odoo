@@ -103,7 +103,8 @@ const PopupWidget = publicWidget.Widget.extend({
      */
     start: function () {
         this._popupAlreadyShown = !!utils.get_cookie(this.$el.attr('id'));
-        if (!this._popupAlreadyShown) {
+        this._visibilitySelector = this.$target[0].dataset.visibilitySelectors;
+        if (!this._popupAlreadyShown && !this.$target[0].matches(this._visibilitySelector)) {
             this._bindPopup();
         }
         return this._super(...arguments);

@@ -1636,8 +1636,9 @@ var SnippetsMenu = Widget.extend({
             .removeProp('contentEditable');
         this.getEditableArea().find('.o_we_selected_image')
             .removeClass('o_we_selected_image');
+        // s_popup manages is always invisible at the start of edit mode
         [...this.getEditableArea()].forEach(editableAreaEl => {
-            editableAreaEl.querySelectorAll("[data-visibility='conditional']")
+            editableAreaEl.querySelectorAll("[data-visibility='conditional']:not(.s_popup)")
                             .forEach(invisibleEl => delete invisibleEl.dataset.invisible);
         });
     },
@@ -2356,6 +2357,12 @@ var SnippetsMenu = Widget.extend({
                 el.setAttribute('string', '⌙ ' + el.getAttribute('string'));
             }
             $logoHeightOptions.insertAfter($logoTypeSelector);
+        }
+
+        // TODO: in master, update the data-selector of ConditionalVisibility
+        const $conditionalVisibilityOption = $html.find("[data-js='ConditionalVisibility']");
+        if ($conditionalVisibilityOption.length) {
+            $conditionalVisibilityOption[0].dataset.selector += ', .s_popup';
         }
 
         this.templateOptions = [];

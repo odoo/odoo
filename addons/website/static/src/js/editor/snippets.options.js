@@ -3146,12 +3146,18 @@ options.registry.ConditionalVisibility = options.Class.extend({
      * @override
      */
     async onTargetHide() {
+        if (this.$target[0].dataset.visibility !== "conditional") {
+            return;
+        }
         this.$target[0].classList.add('o_conditional_hidden');
     },
     /**
      * @override
      */
     async onTargetShow() {
+        if (this.$target[0].dataset.visibility !== "conditional") {
+            return;
+        }
         this.$target[0].classList.remove('o_conditional_hidden');
     },
     // Todo: remove me in master.
