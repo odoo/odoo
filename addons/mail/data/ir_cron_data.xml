@@ -21,9 +21,7 @@
             <field name="user_id" ref="base.user_root" />
             <field name="interval_number">1</field>
             <field name="interval_type">weeks</field>
-            <field name="numbercall">-1</field>
             <field name="nextcall" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')" />
-            <field eval="False" name="doall" />
             <field name="priority">1000</field>
         </record>
 
@@ -35,8 +33,6 @@
             <field name="name">Notification: Delete Notifications older than 6 Month</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field name="doall" eval="False"/>
             <field name="model_id" ref="model_mail_notification"/>
             <field name="code">model._gc_notifications(max_age_days=180)</field>
             <field name="state">code</field>
@@ -49,8 +45,6 @@
             <field name="code">model._fetch_mails()</field>
             <field name="interval_number">5</field>
             <field name="interval_type">minutes</field>
-            <field name="numbercall">-1</field>
-            <field name="doall" eval="False"/>
             <!-- Active flag is set on fetchmail_server.create/write -->
             <field name="active" eval="False"/>
         </record>
@@ -59,8 +53,6 @@
             <field name="name">Notification: Send scheduled message notifications</field>
             <field name="interval_number">1</field>
             <field name="interval_type">hours</field>
-            <field name="numbercall">-1</field>
-            <field name="doall" eval="False"/>
             <field name="model_id" ref="model_mail_message_schedule"/>
             <field name="code">model._send_notifications_cron()</field>
             <field name="state">code</field>
@@ -74,16 +66,12 @@
             <field name="active" eval="True"/>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field name="doall" eval="True"/>
         </record>
 
         <record id="ir_cron_discuss_channel_member_unmute" model="ir.cron">
             <field name="name">Discuss: channel member unmute</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field name="doall" eval="False"/>
             <field name="model_id" ref="model_discuss_channel_member"/>
             <field name="code">model._unmute()</field>
             <field name="state">code</field>

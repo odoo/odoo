@@ -8,8 +8,6 @@
         <field name="code">model._update_accrual()</field>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
-        <field name="numbercall">-1</field>
-        <field name="doall" eval="True"/>
     </record>
 
     <record id="hr_leave_cron_cancel_invalid" model="ir.cron">
@@ -19,7 +17,5 @@
         <field name="code">model._cancel_invalid_leaves()</field>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
-        <field name="numbercall">-1</field>
-        <field name="doall" eval="True"/>
     </record>
 </odoo>
