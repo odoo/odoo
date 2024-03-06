@@ -4091,8 +4091,15 @@ options.registry.GalleryElement = options.Class.extend({
 });
 
 options.registry.Button = options.Class.extend({
-    forceDuplicateButton: true,
-
+    /**
+     * @override
+     */
+    init() {
+        this._super(...arguments);
+        const isUnremovableButton = this.$target[0].classList.contains("oe_unremovable");
+        this.forceDuplicateButton = !isUnremovableButton;
+        this.forceNoDeleteButton = isUnremovableButton;
+    },
     /**
      * @override
      */
