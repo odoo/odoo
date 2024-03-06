@@ -249,7 +249,7 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
      */
     setPpr: function (previewMode, widgetValue, params) {
         this.ppr = parseInt(widgetValue);
-        this._rpc({
+        return this._rpc({
             route: '/shop/config/website',
             params: {
                 'shop_ppr': this.ppr,
@@ -261,7 +261,7 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
      */
     setDefaultSort: function (previewMode, widgetValue, params) {
         this.default_sort = widgetValue;
-        this._rpc({
+        return this._rpc({
             route: '/shop/config/website',
             params: {
                 'shop_default_sort': this.default_sort,
@@ -700,7 +700,9 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
     },
 
     _updateWebsiteConfig(params) {
-        this._rpc({
+        // TODO: Remove the request_save in master, it's already done by the
+        // data-page-options set to true in the template.
+        return this._rpc({
             route: '/shop/config/website',
             params,
         }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
@@ -719,11 +721,11 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         const zoomOption = this._getZoomOptionData();
         const updateWidth = this._updateWebsiteConfig.bind(this, { product_page_image_width: widgetValue });
         if (!zoomOption || widgetValue !== "100_pc") {
-            updateWidth();
+            await updateWidth();
         } else {
             const defaultZoomOption = "website_sale.product_picture_magnify_click";
             await this._customizeWebsiteData(defaultZoomOption, { possibleValues: zoomOption._methodsParams.optionsPossibleValues["customizeWebsiteViews"] }, true);
-            updateWidth();
+            await updateWidth();
         }
     },
 
@@ -734,7 +736,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         const zoomOption = this._getZoomOptionData();
         const updateLayout = this._updateWebsiteConfig.bind(this, { product_page_image_layout: widgetValue });
         if (!zoomOption) {
-            updateLayout();
+            await updateLayout();
         } else {
             const imageWidthOption = this.productDetailMain.dataset.image_width;
             let defaultZoomOption = widgetValue === "grid" ? "website_sale.product_picture_magnify_click" : "website_sale.product_picture_magnify_hover";
@@ -742,7 +744,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
                 defaultZoomOption = "website_sale.product_picture_magnify_click";
             }
             await this._customizeWebsiteData(defaultZoomOption, { possibleValues: zoomOption._methodsParams.optionsPossibleValues["customizeWebsiteViews"] }, true);
-            updateLayout();
+            await updateLayout();
         }
     },
 
@@ -832,23 +834,27 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             2: 'medium',
             3: 'big',
         }[widgetValue];
-        this._rpc({
+        this.productPageGrid.dataset.image_spacing = spacing;
+        // TODO: Remove the request_save in master, it's already done by the
+        // data-page-options set to true in the template.
+        return this._rpc({
             route: '/shop/config/website',
             params: {
                 'product_page_image_spacing': spacing,
             },
         }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
-        this.productPageGrid.dataset.image_spacing = spacing;
     },
 
     setColumns(previewMode, widgetValue, params) {
-        this._rpc({
+        this.productPageGrid.dataset.grid_columns = widgetValue;
+        // TODO: Remove the request_save in master, it's already done by the
+        // data-page-options set to true in the template.
+        return this._rpc({
             route: '/shop/config/website',
             params: {
                 'product_page_grid_columns': widgetValue,
             },
         }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
-        this.productPageGrid.dataset.grid_columns = widgetValue;
     },
 
     /**
