@@ -7,11 +7,26 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 
 function rpcErrorHandler(env, error, originalError) {
+<<<<<<< HEAD
     if (originalError instanceof RPCError) {
         const { data } = originalError;
         if (odooExceptionTitleMap.has(originalError.exceptionName)) {
             const title = odooExceptionTitleMap.get(originalError.exceptionName).toString();
             env.services.dialog.add(AlertDialog, { title, body: data.message });
+||||||| parent of 412b363af287 (temp)
+    if (error instanceof RPCError) {
+        const { message, data } = error;
+        if (odooExceptionTitleMap.has(error.exceptionName)) {
+            const title = odooExceptionTitleMap.get(error.exceptionName).toString();
+            env.services.popup.add(ErrorPopup, { title, body: data.message });
+=======
+    const rpcError = error instanceof RPCError ? error : (originalError instanceof RPCError ? originalError : null);
+    if (rpcError) {
+        const { message, data } = rpcError;
+        if (odooExceptionTitleMap.has(rpcError.exceptionName)) {
+            const title = odooExceptionTitleMap.get(rpcError.exceptionName).toString();
+            env.services.popup.add(ErrorPopup, { title, body: data.message });
+>>>>>>> 412b363af287 (temp)
         } else {
             env.services.dialog.add(ErrorDialog, {
                 traceback: data.message + "\n" + data.debug + "\n",
