@@ -299,6 +299,11 @@ class Repair(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
+        if vals.get('picking_type_id'):
+            picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
+            for repair in self:
+                if picking_type != repair.picking_type_id:
+                    repair.name = picking_type.sequence_id.next_by_id()
         res = super().write(vals)
         if 'product_id' in vals and self.tracking == 'serial':
             self.write({'product_qty': 1.0})
