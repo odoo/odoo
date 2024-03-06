@@ -36,7 +36,7 @@
                     </div>
                 </span>
             </div>
-            <div class="d-flex align-items-center gap-1" t-if="phone and 'phone' in fields">
+            <div class="d-flex align-items-center gap-1" t-if="phone and 'phone' in fields" style="white-space: nowrap">
                 <i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-phone fa-fw' role="img" aria-label="Phone" title="Phone"/> <span class="o_force_ltr" itemprop="telephone" t-esc="phone"/>
             </div>
             <div class="d-flex align-items-center gap-1" t-if="mobile and 'mobile' in fields">
