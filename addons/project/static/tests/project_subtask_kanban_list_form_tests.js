@@ -3,7 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { addModelNamesToFetch } from "@bus/../tests/helpers/model_definitions_helpers";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import {
     editInput,
@@ -171,14 +171,10 @@ QUnit.module('Subtask Kanban List tests', {
 
     QUnit.test("Check that the sub task of another project can be added", async function (assert) {
         assert.expect(1);
-        const { openView } = await start({
+        await start({
             serverData: { views: this.views },
         });
-        await openView({
-            res_model: "project.task",
-            views: [[false, "form"]],
-            res_id: this.task,
-        });
+        await openFormView("project.task", this.task);
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
         await clickDropdown(target, 'project_id');
         await clickOpenedDropdownItem(target, 'project_id', 'Project One');
@@ -189,12 +185,8 @@ QUnit.module('Subtask Kanban List tests', {
 
     QUnit.test("focus new subtask's name", async function (assert) {
         const views = this.views;
-        const { openView } = await start({ serverData: { views } });
-        await openView({
-            res_model: "project.task",
-            views: [[false, "form"]],
-        });
-
+        await start({ serverData: { views } });
+        await openFormView("project.task");
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
 
         assert.strictEqual(

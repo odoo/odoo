@@ -3,7 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains, scroll } from "@web/../tests/utils";
 
@@ -42,15 +42,10 @@ QUnit.test("Form view not scrolled when switching record", async () => {
             </form>`,
     };
     patchUiSize({ size: SIZES.LG });
-    const { openView } = await start({ serverData: { views } });
-    await openView(
-        {
-            res_model: "res.partner",
-            res_id: partnerId_1,
-            views: [[false, "form"]],
-        },
-        { resIds: [partnerId_1, partnerId_2] }
-    );
+    await start({ serverData: { views } });
+    await openFormView("res.partner", partnerId_1, {
+        props: { resIds: [partnerId_1, partnerId_2] },
+    });
     await contains(".o-mail-Message", { count: 29 });
     await contains(".o_content", { scroll: 0 });
     await scroll(".o_content", 150);
@@ -97,18 +92,13 @@ QUnit.test(
                     </div>
                 </form>`,
         };
-        const { openView } = await start({ serverData: { views } });
-        await openView(
-            {
-                res_model: "res.partner",
-                res_id: partnerId_1,
-                views: [[false, "form"]],
-            },
-            {
+        await start({ serverData: { views } });
+        await openFormView("res.partner", partnerId_1, {
+            props: {
                 resId: partnerId_1,
                 resIds: [partnerId_1, partnerId_2],
-            }
-        );
+            },
+        });
         await contains("button[aria-label='Attach files']", { text: "2" });
         // The attachment links are updated on (re)load,
         // so using pager is a way to reload the record "Partner1".
@@ -154,20 +144,15 @@ QUnit.test(
                     </div>
                 </form>`,
         };
-        const { openView } = await start({ serverData: { views } });
-        const openViewAction = {
-            res_model: "res.partner",
-            res_id: partnerId,
-            views: [[false, "form"]],
-        };
-        await openView(openViewAction);
+        await start({ serverData: { views } });
+        await openFormView("res.partner", partnerId);
         await contains(".o-mail-Chatter");
         await contains(".o-mail-Message");
         await contains(".o-mail-read-more-less");
     }
 );
 
-QUnit.test("read more links becomes read less after being clicked", async (assert) => {
+QUnit.test("read more links becomes read less after being clicked", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.message"].create([
@@ -200,13 +185,8 @@ QUnit.test("read more links becomes read less after being clicked", async (asser
                 </div>
             </form>`,
     };
-    const { openView } = await start({ serverData: { views } });
-    const openViewAction = {
-        res_model: "res.partner",
-        res_id: partnerId,
-        views: [[false, "form"]],
-    };
-    await openView(openViewAction);
+    await start({ serverData: { views } });
+    await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter");
     await contains(".o-mail-Message");
     await contains(".o-mail-read-more-less", { text: "Read More" });
@@ -257,12 +237,8 @@ QUnit.test(
                     </div>
                 </form>`,
         };
-        const { openView } = await start({ serverData: { views } });
-        await openView({
-            res_model: "res.partner",
-            res_id: partnerId,
-            views: [[false, "form"]],
-        });
+        await start({ serverData: { views } });
+        await openFormView("res.partner", partnerId);
         await contains(".o-mail-read-more-less", { text: "Read More" });
 
         await click(".o-mail-read-more-less");
@@ -305,12 +281,7 @@ QUnit.test("read more/less links on message of type notification", async () => {
                 </div>
             </form>`,
     };
-    const { openView } = await start({ serverData: { views } });
-    const openViewAction = {
-        res_model: "res.partner",
-        res_id: partnerId,
-        views: [[false, "form"]],
-    };
-    await openView(openViewAction);
+    await start({ serverData: { views } });
+    await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message a", { text: "Read More" });
 });

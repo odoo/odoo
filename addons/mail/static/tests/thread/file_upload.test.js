@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains, createFile, inputFiles } from "@web/../tests/utils";
 
@@ -17,13 +17,9 @@ QUnit.test("no conflicts between file uploads", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openView } = await start();
+    await start();
     // Uploading file in the first thread: res.partner chatter.
-    await openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner", partnerId);
     await click("button", { text: "Send message" });
     await inputFiles(".o-mail-Chatter .o-mail-Composer input[type=file]", [
         await createFile({

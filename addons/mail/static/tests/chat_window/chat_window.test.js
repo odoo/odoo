@@ -11,7 +11,7 @@ import {
 } from "@mail/core/common/chat_window_service";
 import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 import {
@@ -896,7 +896,7 @@ QUnit.test(
 QUnit.test("chat window: composer state conservation on toggle discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
-    const { openView } = await start();
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     // Set content of the composer of the chat window
@@ -920,11 +920,7 @@ QUnit.test("chat window: composer state conservation on toggle discuss", async (
     await contains(".o-mail-AttachmentCard .fa-check", { count: 2 });
     await openDiscuss();
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await openView({
-        res_id: channelId,
-        res_model: "discuss.channel",
-        views: [[false, "form"]],
-    });
+    await openFormView("discuss.channel", channelId);
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard", {
         count: 2,
     });
