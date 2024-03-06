@@ -293,6 +293,10 @@ describe("callables", () => {
         expect(() => evaluateExpr("foo()", { foo: () => 3 })).toThrow();
         expect(() => evaluateExpr("1 + foo()", { foo: () => 3 })).toThrow();
     });
+    test("min/max", () => {
+        expect(evaluateExpr("max(3, 5)")).toBe(5);
+        expect(evaluateExpr("min(3, 5, 2, 7)")).toBe(2);
+    });
 });
 
 describe("dicts", () => {

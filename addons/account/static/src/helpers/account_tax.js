@@ -442,7 +442,7 @@ export const accountTaxHelpers = {
                     ...tax_data.evaluation_context,
                     extra_base: extra_base,
                 });
-                if (tax_amount === undefined) {
+                if (tax_amount === null) {
                     skipped.add(tax_data.id);
                     tax_amount = 0.0;
                 }

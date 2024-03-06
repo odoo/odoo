@@ -66,6 +66,16 @@ export const BUILTINS = {
         });
     },
 
+    max(...args) {
+        // kwargs are not supported by Math.max.
+        return Math.max(...args.slice(0, -1));
+    },
+
+    min(...args) {
+        // kwargs are not supported by Math.min.
+        return Math.min(...args.slice(0, -1));
+    },
+
     time: {
         strftime(format) {
             return PyDateTime.now().strftime(format);

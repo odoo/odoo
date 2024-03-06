@@ -8,10 +8,7 @@
                  <xpath expr="//field[@name='children_tax_ids']" position="before">
                     <group invisible="amount_type != 'code'">
                         <group>
-                            <field name="python_compute" required="amount_type == 'code'" />
-                        </group>
-                        <group>
-                            <field name="python_applicable" required="amount_type == 'code'" />
+                            <field name="formula" required="amount_type == 'code'" />
                         </group>
                     </group>
                 </xpath>
