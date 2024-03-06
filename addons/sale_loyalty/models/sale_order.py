@@ -165,15 +165,23 @@ class SaleOrder(models.Model):
             # Ignore lines from this reward
             if not line.product_uom_qty or not line.price_unit:
                 continue
-            tax_data = line._convert_to_tax_base_line_dict()
-            # To compute the discountable amount we get the fixed tax amount and
-            # subtract it from the order total. This way fixed taxes will not be discounted
-            tax_data['taxes'] = tax_data['taxes'].filtered(lambda t: t.amount_type == 'fixed')
-            tax_results = self.env['account.tax']._compute_taxes([tax_data])
-            totals = list(tax_results['totals'].values())[0]
-            discountable += line.price_total - totals['amount_tax']
+            tax_data = line.tax_id.compute_all(
+                line.price_unit,
+                quantity=line.product_uom_qty,
+                product=line.product_id,
+                partner=line.order_partner_id,
+            )
+            # To compute the discountable amount we get the subtotal and add
+            # non-fixed tax totals. This way fixed taxes will not be discounted
             taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
-            discountable_per_tax[taxes] += totals['amount_untaxed']
+            discountable += tax_data['total_excluded'] + sum(
+                tax['amount'] for tax in tax_data['taxes'] if tax['id'] in taxes.ids
+            )
+            line_price = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100)
+            discountable_per_tax[taxes] += line_price - sum(
+                tax['amount'] for tax in tax_data['taxes']
+                if tax['price_include'] and tax['id'] not in taxes.ids
+            )
         return discountable, discountable_per_tax
 
     def _cheapest_line(self):
