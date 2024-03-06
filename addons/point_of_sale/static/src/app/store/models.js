@@ -1165,6 +1165,7 @@ export class Order extends PosModel {
         let partner;
         if (json.state && ["done", "invoiced", "paid"].includes(json.state)) {
             this.sequence_number = json.sequence_number;
+            this.pos_session_id = json.pos_session_id;
         } else if (json.pos_session_id !== this.pos.session.id) {
             this.sequence_number = this.pos.session.sequence_number++;
         } else {
