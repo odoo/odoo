@@ -169,11 +169,11 @@
                                 <div class="content-group mt16" invisible="not pos_tax_regime_selection">
                                     <div class="row">
                                         <label string="Default" for="pos_default_fiscal_position_id" class="col-lg-3 o_light_label"/>
-                                        <field name="pos_default_fiscal_position_id" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
+                                        <field name="pos_default_fiscal_position_id"/>
                                     </div>
                                     <div class="row">
                                         <label string="Allowed" for="pos_fiscal_position_ids" class="col-lg-3 o_light_label"/>
-                                        <field name="pos_fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
+                                        <field name="pos_fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}"/>
                                     </div>
                                     <div>
                                         <button name="%(account.action_account_fiscal_position_form)d" icon="oi-arrow-right" type="action" string="Fiscal Positions" class="btn-link"/>
