@@ -83,11 +83,6 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
             if(confirmed){
               let currentPOSOrder = this.env.pos.get_order();
               let sale_order = await this._getSaleOrder(clickedOrder.id);
-              try {
-                await this.env.pos.load_new_partners();
-              }
-              catch (error){
-              }
               let order_partner = this.env.pos.db.get_partner_by_id(sale_order.partner_id[0])
               if(order_partner){
                 currentPOSOrder.set_client(order_partner);
