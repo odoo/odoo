@@ -4,3 +4,4 @@
 from . import calendar_event
 from . import calendar_timeslot
 from . import calendar_attendee
+from . import calendar_event_tag

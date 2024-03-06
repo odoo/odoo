@@ -41,6 +41,7 @@ class CalendarTimeslot(models.Model):
         # Private fields
     name = fields.Char(compute='_compute_name', inverse='_inverse_name', required=True)
     note = fields.Char(compute='_compute_note', inverse='_inverse_note')
+    tag_ids = fields.Many2many('calendar.event_bis.tag', compute='_compute_tag_ids', inverse='_inverse_tag_ids', string="Tags")
 
     # Recurrence Related Fields
     # /!\ These fields must be computed and inverse in the same method,
@@ -236,6 +237,16 @@ class CalendarTimeslot(models.Model):
     def _inverse_note(self):
         for slot in self:
             slot.event_id.note = slot.note
+
+    @api.depends('event_id.tag_ids')
+    @api.depends_context('uid')
+    def _compute_tag_ids(self):
+        for slot in self:
+            slot.tag_ids = slot.can_read_private and slot.event_id.tag_ids
+
+    def _inverse_tag_ids(self):
+        for slot in self:
+            slot.event_id.tag_ids = slot.tag_ids
 
     def mass_delete(self, update_policy):
         self.ensure_one()

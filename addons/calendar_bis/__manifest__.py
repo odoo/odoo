@@ -23,6 +23,7 @@ If you need to manage your meetings, you should install the CRM module.
         'security/ir.model.access.csv',
         'security/calendar_security.xml',
         'views/calendar_timeslot_views.xml',
+        'views/calendar_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

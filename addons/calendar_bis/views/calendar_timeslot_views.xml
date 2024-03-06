@@ -32,6 +32,7 @@
                     <field name="can_read_private" invisible="1"/>
                     <field name="event_id" invisible="1"/>
                     <h1><field name="name" string="Subject" decoration-bf="1" readonly="not can_write" placeholder="Subject"/></h1>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <group>
                         <group string="Public" readonly="not can_write">
                             <field name="partner_id" required="1" domain="[('user_id', '=', uid)]"/>
@@ -96,6 +97,7 @@
                     <field name="can_read_private" invisible="1"/>
                     <field name="event_id" invisible="1"/>
                     <h1><field name="name" string="Subject" decoration-bf="1" readonly="not can_write" placeholder="Subject"/></h1>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <group>
                         <group string="Public" readonly="not can_write">
                             <field name="partner_id" required="1" domain="[('user_id', '=', uid)]"/>
@@ -128,6 +130,7 @@
                     <field name="name" string="Subject" decoration-bf="1" readonly="1"/>
                     <field name="partner_id" widget="many2one_avatar_user" readonly="1"/>
                     <field name="attendee_ids" widget="many2many_tags" readonly="1"/>
+                    <field name="tag_ids" invisible="not tag_ids" options="{'icon': 'fa fa-tag', 'color_field': 'color'}"/>
                     <field name="is_recurring" invisible="1"/>
             </calendar>
         </field>
@@ -188,17 +191,4 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="calendar_bis_timeslot_form"/>
     </record>
-
-    <menuitem id="mail_menu_calendar_bis"
-              name="Calendar"
-              sequence="10"
-              groups="base.group_user"
-              web_icon="calendar_bis,static/description/icon.png"/>
-
-    <menuitem id="calendar_bis_timeslot_menu"
-              name="Calendar"
-              sequence="10"
-              action="action_calendar_timeslot"
-              parent="mail_menu_calendar_bis"
-              groups="base.group_user"/>
 </odoo>

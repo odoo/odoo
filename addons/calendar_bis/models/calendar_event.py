@@ -23,6 +23,7 @@ class CalendarEventPrivate(models.Model):
 
     name = fields.Char(public_default="Busy")
     note = fields.Char()
+    tag_ids = fields.Many2many('calendar.event_bis.tag', string="Tags")
 
     # Recurrence
     is_recurring = fields.Boolean(default=False, public=True)

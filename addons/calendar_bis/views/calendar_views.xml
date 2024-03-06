@@ -1,0 +1,38 @@
+<odoo>
+    <!-- Calendar Events Types : Views and Actions -->
+    <record id="view_calendar_event_bis_tag_tree" model="ir.ui.view">
+        <field name="name">calendar.event_bis.tag</field>
+        <field name="model">calendar.event_bis.tag</field>
+        <field name="arch" type="xml">
+            <tree string="Meeting Types" sample="1" editable="bottom">
+                <field name="name"/>
+                <field name="color"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_calendar_event_bis_tag" model="ir.actions.act_window">
+        <field name="name">Meeting Tags</field>
+        <field name="res_model">calendar.event_bis.tag</field>
+        <field name="view_id" ref="view_calendar_event_bis_tag_tree"/>
+    </record>
+
+    <menuitem id="mail_menu_calendar_bis"
+              name="Calendar"
+              sequence="10"
+              groups="base.group_user"
+              web_icon="calendar_bis,static/description/icon.png"/>
+
+    <menuitem id="calendar_bis_timeslot_menu"
+              name="Calendar"
+              sequence="10"
+              action="action_calendar_timeslot"
+              parent="mail_menu_calendar_bis"
+              groups="base.group_user"/>
+
+    <menuitem id="calendar_bis_event_tag_menu"
+              sequence="20"
+              parent="mail_menu_calendar_bis"
+              action="action_calendar_event_bis_tag"
+              groups="base.group_no_one"/>
+</odoo>
