@@ -244,11 +244,11 @@ class WebsiteBlog(http.Controller):
         return r
 
     @http.route([
-        '''/blog/<model("blog.blog"):blog>/post/<model("blog.post", "[('blog_id','=',blog.id)]"):blog_post>''',
+        '''/blog/<model("blog.blog"):blog>/post/<model("blog.post"):blog_post>''',
     ], type='http', auth="public", website=True, sitemap=False)
-    def old_blog_post(self, blog, blog_post, tag_id=None, page=1, enable_editor=None, **post):
+    def old_blog_post(self, blog, blog_post, **post):
         # Compatibility pre-v14
-        return request.redirect(_build_url_w_params("/blog/%s/%s" % (slug(blog), slug(blog_post)), request.params), code=301)
+        return request.redirect("/blog/%s/%s" % (slug(blog), slug(blog_post)), code=301)
 
     @http.route([
         '''/blog/<model("blog.blog"):blog>/<model("blog.post", "[('blog_id','=',blog.id)]"):blog_post>''',
