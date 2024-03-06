@@ -423,10 +423,7 @@ export function compileStepAuto(stepIndex, step, options) {
                 }
 
                 // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
-                const actionHelper = new RunningTourActionHelper({
-                    consume_event: consumeEvent,
-                    anchor: stepEl,
-                });
+                const actionHelper = new RunningTourActionHelper(stepEl, consumeEvent);
 
                 let result;
                 if (typeof step.run === "function") {
