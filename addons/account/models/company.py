@@ -628,6 +628,22 @@ class ResCompany(models.Model):
             raise RedirectWarning(msg, action.id, _("Go to the configuration panel"))
         return account
 
+    def install_l10n_modules(self):
+        if res := super().install_l10n_modules():
+            self.env.flush_all()
+            self.env.reset()     # clear the set of environments
+            env = self.env()     # get an environment that refers to the new registry
+            for company in self.filtered(lambda c: c.country_id and not c.chart_template):
+                template_code = self.env['account.chart.template']._guess_chart_template(company.country_id)
+                if template_code != 'generic_coa':
+                    @self.env.cr.precommit.add
+                    def try_loading(template_code=template_code, company=company):
+                        env['account.chart.template'].try_loading(
+                            template_code,
+                            env['res.company'].browse(company.id),
+                        )
+        return res
+
     def _existing_accounting(self) -> bool:
         """Return True iff some accounting entries have already been made for the current company."""
         self.ensure_one()
