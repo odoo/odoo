@@ -1139,6 +1139,21 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'MultiProductOptionsTour', login="pos_user")
 
+    def test_translate_product_name(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.pos_user.write({'lang': 'fr_FR'})
+
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 100,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+        product.update_field_translations('name', {'fr_FR': 'Testez le produit'})
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'TranslateProductNameTour', login="pos_user")
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'
