@@ -141,7 +141,7 @@ class ProductFetchImageWizard(models.TransientModel):
             }
         }
 
-    def _cron_fetch_image(self):
+    def _cron_fetch_image(self, batch_size=100):
         """ Fetch images of a list of products using their barcode.
 
         This method is called from a cron job. If the daily request limit is reached, the cron job
@@ -151,11 +151,8 @@ class ProductFetchImageWizard(models.TransientModel):
         """
         # Retrieve 100 products at a time to limit the run time and avoid reaching Google's default
         # rate limit.
-        self._process_products(self._get_products_to_process(100))
-        if self._get_products_to_process(1):
-            self.with_context(automatically_triggered=True)._trigger_fetch_images_cron(
-                fields.Datetime.now() + timedelta(minutes=1.0)
-            )
+        done = self._process_products(self._get_products_to_process(batch_size))
+        self.env['ir.cron']._log_progress(done, 1 if self._get_products_to_process(1) else 0)  # Re-trigger if there is still product to process
 
     def _get_products_to_process(self, limit=10000):
         """ Get the products that need to be processed and meet the criteria.
@@ -311,19 +308,3 @@ class ProductFetchImageWizard(models.TransientModel):
                 and 'image/' in response.headers.get('Content-Type', ''):  # Ignore non-image results
                 image = base64.b64encode(response.content)
         return image
-
-    def _trigger_fetch_images_cron(self, at=None):
-        """ Create a trigger for the con `ir_cron_fetch_image`.
-
-        By default the cron is scheduled to be executed as soon as possible but
-        the optional `at` argument may be given to delay the execution later
-        with a precision down to 1 minute.
-
-        :param Optional[datetime.datetime] at:
-            When to execute the cron, at one moments in time instead of as soon as possible.
-        """
-        self.env.ref('product_images.ir_cron_fetch_image')._trigger(at)
-        # If two `ir_cron_fetch_image` are triggered automatically, and the first one is not
-        # committed, the constrains will return a ValidationError and roll back to the last commit,
-        # leaving no `ir_cron_fetch_image` in the schedule.
-        self.env.cr.commit()

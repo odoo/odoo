@@ -5,12 +5,12 @@
         <field name="name">automatic invoicing: send ready invoice</field>
         <field name="model_id" ref="payment.model_payment_transaction"/>
         <field name="state">code</field>
-        <field name="code">model._cron_send_invoice()</field>
+        <field name="code">model._cron_send_invoice(batch_size=1000)</field>
         <field name="user_id" ref="base.user_root"/>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
-        <field name="numbercall">-1</field>
         <field name="active">False</field>
+        <field name="priority">3</field>
     </record>
 
 </odoo>
