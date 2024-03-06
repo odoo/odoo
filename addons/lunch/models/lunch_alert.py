@@ -127,8 +127,6 @@ class LunchAlert(models.Model):
                 'active': False,
                 'interval_type': 'days',
                 'interval_number': 1,
-                'numbercall': -1,
-                'doall': False,
                 'name': "Lunch: alert chat notification",
                 'model_id': self.env['ir.model']._get_id(self._name),
                 'state': 'code',

@@ -4,10 +4,8 @@
         <field name="name">IT EDI: Receive invoices from the SdI</field>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
-        <field name="numbercall">-1</field>
         <field name="model_id" ref="account.model_account_move"/>
         <field name="code">model.cron_l10n_it_edi_download_and_update()</field>
-        <field name="doall" eval="False"/>
         <field name="state">code</field>
     </record>
 </odoo>

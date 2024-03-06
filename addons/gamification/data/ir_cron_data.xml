@@ -8,8 +8,6 @@
             <field name="code">model._cron_update()</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field eval="False" name="doall" />
         </record>
 
         <record id="ir_cron_consolidate" model="ir.cron">
@@ -20,7 +18,6 @@
             <field name="active" eval="True"/>
             <field name="interval_number">1</field>
             <field name="interval_type">months</field>
-            <field name="numbercall">-1</field>
             <field name="nextcall" eval="(DateTime.now() + relativedelta(day=1, months=1)).strftime('%Y-%m-%d 04:00:00')" />
         </record>
     </data>
