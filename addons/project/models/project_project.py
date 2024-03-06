@@ -639,7 +639,9 @@ class Project(models.Model):
     def action_project_sharing(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('project.project_sharing_project_task_action')
+        action_context = ast.literal_eval(action['context']) if action['context'] else {}
         action['context'] = {
+            **action_context,
             'default_project_id': self.id,
             'delete': False,
             'search_default_open_tasks': True,

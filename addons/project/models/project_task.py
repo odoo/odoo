@@ -845,6 +845,8 @@ class Task(models.Model):
             user_ids = vals.get('user_ids', [])
             user_ids.append(Command.link(self.env.user.id))
             vals['user_ids'] = user_ids
+        if self.env.context.get("set_default_user") and 'user_ids' in vals and 'default_user_ids' not in vals:
+            vals['user_ids'] = self.env['project.task'].sudo().browse(self.env.context.get('default_parent_id')).user_ids.ids
 
         return vals
 
@@ -1012,6 +1014,15 @@ class Task(models.Model):
         was_in_sudo = self.env.su
         if is_portal_user:
             vals_list_no_sudo, vals_list = zip(*(self._get_portal_sudo_vals(vals, defaults=True) for vals in vals_list))
+            if self.env.context.get("set_default_user") and project_id and not "user_ids" in vals_list:
+                task_search_read = self.env["project.task"].sudo().search_read([
+                    ('id', 'in', [vals.get("parent_id") for vals in vals_list]),
+                ], ["id", "user_ids"])
+                user_ids_per_task = {task_data["id"]: task_data["user_ids"] for task_data in task_search_read}
+                for vals in vals_list:
+                    parent_id = vals.get('parent_id')
+                    if user_ids_per_task.get(parent_id):
+                        vals["user_ids"] = user_ids_per_task[parent_id]
             self_no_sudo, self = self, self.sudo().with_context(self._get_portal_sudo_context())
         tasks = super(Task, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         if is_portal_user:
