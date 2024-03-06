@@ -64,7 +64,7 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         # Check the creation of stock.valuation.layer
         new_layer = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)], order="create_date desc, id desc", limit=1)
         self.assertEqual(new_layer.value, 20)
-        self.assertEqual(new_layer.description, f"Manual Stock Valuation: unit_test_avco. Product cost updated from 3.0 to 4.0.")
+        self.assertEqual(new_layer.description, "Manual Stock Valuation: unit_test_avco. Product cost updated from 3.0 to 4.0.")
 
         # Check the remaing value of current layers
         self.assertEqual(old_layers[0].remaining_value, 50)
@@ -120,7 +120,7 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         # Check the creation of stock.valuation.layer
         new_layer = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)], order="create_date desc, id desc", limit=1)
         self.assertEqual(new_layer.value, 1)
-        self.assertEqual(new_layer.description, f"Manual Stock Valuation: unit_test_avco_rounding. Product cost updated from 1.0 to 1.33.")
+        self.assertEqual(new_layer.description, "Manual Stock Valuation: unit_test_avco_rounding. Product cost updated from 1.0 to 1.33.")
 
         # Check the remaing value of current layers
         self.assertEqual(sum(slv.remaining_value for slv in old_layers), 4)
@@ -243,7 +243,7 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         # Check the creation of stock.valuation.layer
         new_layer = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)], order="create_date desc, id desc", limit=1)
         self.assertEqual(new_layer.value, 20)
-        self.assertEqual(new_layer.description, f"Manual Stock Valuation: unit_test_fifo. Product cost updated from 2.0 to 3.0.")
+        self.assertEqual(new_layer.description, "Manual Stock Valuation: unit_test_fifo. Product cost updated from 2.0 to 3.0.")
 
         # Check the remaing value of current layers
         self.assertEqual(old_layers[0].remaining_value, 50)
@@ -296,7 +296,7 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         # Check the creation of stock.valuation.layer
         new_layer = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)], order="create_date desc, id desc", limit=1)
         self.assertEqual(new_layer.value, -20)
-        self.assertEqual(new_layer.description, f"Manual Stock Valuation: unit_test_fifo_devaluation_valid. Product cost updated from 2.0 to 1.0.")
+        self.assertEqual(new_layer.description, "Manual Stock Valuation: unit_test_fifo_devaluation_valid. Product cost updated from 2.0 to 1.0.")
 
         # Check the remaing value of current layers
         self.assertEqual(old_layers[0].remaining_value, 30)
@@ -348,7 +348,7 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         # Check the creation of stock.valuation.layer
         new_layer = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)], order="create_date desc, id desc", limit=1)
         self.assertEqual(new_layer.value, -20)
-        self.assertEqual(new_layer.description, f"Manual Stock Valuation: unit_test_fifo_devaluation_valid. Product cost updated from 3.0 to 2.0.")
+        self.assertEqual(new_layer.description, "Manual Stock Valuation: unit_test_fifo_devaluation_valid. Product cost updated from 3.0 to 2.0.")
 
         # Check the remaing value of current layers
         self.assertEqual(old_layers[0].remaining_value, 30)
@@ -471,7 +471,7 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         # Check the creation of stock.valuation.layer
         new_layer = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)], order="create_date desc, id desc", limit=1)
         self.assertEqual(new_layer.value, -80)
-        self.assertEqual(new_layer.description, f"Manual Stock Valuation: unit_test_fifo_distribute_by_value. Product cost updated from 0.79 to 0.12.")
+        self.assertEqual(new_layer.description, "Manual Stock Valuation: unit_test_fifo_distribute_by_value. Product cost updated from 0.79 to 0.12.")
 
         # Check the remaing value of current layers
         self.assertEqual(float_compare(sum(slv.remaining_value for slv in old_layers), 14.2100, precision_digits=4), 0)
@@ -528,7 +528,7 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         # Check the creation of stock.valuation.layer
         new_layer = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)], order="create_date desc, id desc", limit=1)
         self.assertEqual(new_layer.value, -80)
-        self.assertEqual(new_layer.description, f"Manual Stock Valuation: unit_test_avco_distribute_by_value. Product cost updated from 3.04 to 0.46.")
+        self.assertEqual(new_layer.description, "Manual Stock Valuation: unit_test_avco_distribute_by_value. Product cost updated from 3.04 to 0.46.")
 
         # Check the remaing value of current layers
         self.assertEqual(float_compare(sum(slv.remaining_value for slv in old_layers), 14.2100, precision_digits=4), 0)
