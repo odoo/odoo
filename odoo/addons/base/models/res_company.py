@@ -223,7 +223,14 @@ class Company(models.Model):
             company.uninstalled_l10n_module_ids = self.env['ir.module.module'].browse(mapping.get(company.country_id.id))
 
     def install_l10n_modules(self):
-        return self.uninstalled_l10n_module_ids.button_immediate_install()
+        uninstalled_modules = self.uninstalled_l10n_module_ids
+        is_ready_and_not_test = (
+            not tools.config['test_enable']
+            and (self.env.registry.ready or not self.env.registry._init)
+        )
+        if uninstalled_modules and is_ready_and_not_test:
+            return uninstalled_modules.button_immediate_install()
+        return is_ready_and_not_test
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
@@ -311,6 +318,10 @@ class Company(models.Model):
         # Make sure that the selected currencies are enabled
         companies.currency_id.sudo().filtered(lambda c: not c.active).active = True
 
+        companies_needs_l10n = companies.filtered('country_id')
+        if companies_needs_l10n:
+            companies_needs_l10n.install_l10n_modules()
+
         return companies
 
     def cache_invalidation_fields(self):
@@ -323,6 +334,12 @@ class Company(models.Model):
     def write(self, values):
         invalidation_fields = self.cache_invalidation_fields()
         asset_invalidation_fields = {'font', 'primary_color', 'secondary_color', 'external_report_layout_id'}
+
+        companies_needs_l10n = (
+            values.get('country_id')
+            and self.filtered(lambda company: not company.country_id)
+            or self.browse()
+        )
         if not invalidation_fields.isdisjoint(values):
             self.env.registry.clear_cache()
 
@@ -354,6 +371,9 @@ class Company(models.Model):
                 ])
                 for fname in sorted(changed):
                     branches[fname] = company[fname]
+
+        if companies_needs_l10n:
+            companies_needs_l10n.install_l10n_modules()
 
         # invalidate company cache to recompute address based on updated partner
         company_address_fields = self._get_company_address_field_names()
