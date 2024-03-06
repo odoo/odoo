@@ -1,29 +1,57 @@
 import { models } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
+import { parseModelParams } from "../mail_mock_server";
+
+patch(models.ServerModel.prototype, {
+    /**
+     * @override
+     * @type {typeof import("@web/../tests/_framework/mock_server/mock_model").Model["prototype"]["get_views"]}
+     */
+    get_views() {
+        const result = super.get_views(...arguments);
+        for (const modelName of Object.keys(result.models)) {
+            if (this.has_activities) {
+                result.models[modelName].has_activities = true;
+            }
+        }
+        return result;
+    },
+});
 
 export class Base extends models.ServerModel {
     _name = "base";
 
     /**
-     * Simulates `_mail_track` on `base`
-     *
-     * @param {string} model
      * @param {Object} trackedFieldNamesToField
      * @param {Object} initialTrackedFieldValues
      * @param {Object} record
      */
-    _mailTrack(model, trackedFieldNamesToField, initialTrackedFieldValues, record) {
+    _mail_track(trackedFieldNamesToField, initialTrackedFieldValues, record) {
+        const kwargs = parseModelParams(
+            arguments,
+            "trackedFieldNamesToField",
+            "initialTrackedFieldValues",
+            "record"
+        );
+        trackedFieldNamesToField = kwargs.trackedFieldNamesToField;
+        initialTrackedFieldValues = kwargs.initialTrackedFieldValues;
+        record = kwargs.record;
+
+        /** @type {import("mock_models").MailTrackingValue} */
+        const MailTrackingValue = this.env["mail.tracking.value"];
+
         const trackingValueIds = [];
         const changedFieldNames = [];
         for (const fname in trackedFieldNamesToField) {
             const initialValue = initialTrackedFieldValues[fname];
             const newValue = record[fname];
             if (initialValue !== newValue) {
-                const tracking = this.env["mail.tracking.value"]._createTrackingValues(
+                const tracking = MailTrackingValue._create_tracking_values(
                     initialValue,
                     newValue,
                     fname,
                     trackedFieldNamesToField[fname],
-                    model
+                    this
                 );
                 if (tracking) {
                     trackingValueIds.push(tracking);

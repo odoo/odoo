@@ -1,21 +1,18 @@
 import { webModels } from "@web/../tests/web_test_helpers";
-
-/**
- * @template T
- * @typedef {import("@web/../tests/web_test_helpers").KwArgs<T>} KwArgs
- */
+import { parseModelParams } from "../mail_mock_server";
 
 export class IrAttachment extends webModels.IrAttachment {
     /**
-     * Simulates `register_as_main_attachment` on `ir.attachment`.
-     *
      * @param {number} ids
      * @param {boolean} [force]
-     * @param {KwArgs<{ force: boolean }>} [kwargs]
      */
-    register_as_main_attachment(ids, force, kwargs = {}) {
-        force = kwargs.force ?? force ?? true;
-        const [attachment] = this.env["ir.attachment"]._filter([["id", "in", ids]]);
+    register_as_main_attachment(ids, force) {
+        const kwargs = parseModelParams(arguments, "ids", "force");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        force = kwargs.force ?? true;
+
+        const [attachment] = this._filter([["id", "in", ids]]);
         if (!attachment.res_model) {
             return true; // dummy value for mock server
         }
@@ -33,13 +30,11 @@ export class IrAttachment extends webModels.IrAttachment {
         return true; // dummy value for mock server
     }
 
-    /**
-     * Simulates `_attachment_format` on `ir.attachment`.
-     *
-     * @param {number} ids
-     * @returns {Object}
-     */
-    _attachmentFormat(ids) {
+    /** @param {number} ids */
+    _attachment_format(ids) {
+        /** @type {import("mock_models").DiscussVoiceMetadata} */
+        const DiscussVoiceMetadata = this.env["discuss.voice.metadata"];
+
         return this.read(ids).map((attachment) => {
             const res = {
                 create_date: attachment.create_date,
@@ -51,9 +46,7 @@ export class IrAttachment extends webModels.IrAttachment {
                 size: attachment.file_size,
             };
             res["thread"] = [["ADD", { id: attachment.res_id, model: attachment.res_model }]];
-            const voice = this.env["discuss.voice.metadata"]._filter([
-                ["attachment_id", "=", attachment.id],
-            ])[0];
+            const voice = DiscussVoiceMetadata._filter([["attachment_id", "=", attachment.id]])[0];
             if (voice) {
                 res.voice = true;
             }

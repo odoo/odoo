@@ -1,116 +1,126 @@
-import { constants, fields, models } from "@web/../tests/web_test_helpers";
+import { fields, models } from "@web/../tests/web_test_helpers";
+import { serializeDateTime, today } from "@web/core/l10n/dates";
+import { parseModelParams } from "../mail_mock_server";
 
 export class DiscussChannelMember extends models.ServerModel {
     _name = "discuss.channel.member";
 
-    fold_state = fields.Generic({ default: "open" });
+    fold_state = fields.Generic({ default: "closed" });
     is_pinned = fields.Generic({ default: true });
     message_unread_counter = fields.Generic({ default: 0 });
+    last_interest_dt = fields.Datetime({ default: () => serializeDateTime(today()) });
 
     /**
-     * Simulates `notify_typing` on `discuss.channel.member`.
-     *
      * @param {number[]} ids
-     * @param {boolean} isTyping
+     * @param {boolean} is_typing
      */
-    notify_typing(ids, isTyping) {
+    notify_typing(ids, is_typing) {
+        const kwargs = parseModelParams(arguments, "ids", "is_typing");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        is_typing = kwargs.is_typing;
+
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+
         const members = this._filter([["id", "in", ids]]);
         const notifications = [];
         for (const member of members) {
-            const [channel] = this.env["discuss.channel"]._filter([["id", "=", member.channel_id]]);
-            const [data] = this._discussChannelMemberFormat([member.id]);
-            Object.assign(data, { isTyping });
+            const [channel] = DiscussChannel._filter([["id", "=", member.channel_id]]);
+            const [data] = this._discuss_channel_member_format([member.id]);
+            Object.assign(data, { isTyping: is_typing });
             notifications.push([channel, "discuss.channel.member/typing_status", data]);
             notifications.push([channel.uuid, "discuss.channel.member/typing_status", data]);
         }
-        this.env["bus.bus"]._sendmany(notifications);
+        BusBus._sendmany(notifications);
     }
 
     /**
-     * Simulates the '_channelFold' route on `discuss.channel.member`.
-     *
-     * @param {number} ids
+     * @param {number} id
      * @param {string} [state]
      * @param {number} [state_count]
-     * @param {KwArgs} [kwargs]
      */
-    _channelFold(ids, state, state_count, kwargs = {}) {
-        state = kwargs.state || state;
-        state_count = kwargs.state_count || state_count;
-        const channels = this.env["discuss.channel"]._filter([["id", "in", ids]]);
-        for (const channel of channels) {
-            const memberOfCurrentUser = this._getAsSudoFromContext(channel.id);
-            const foldState = state
-                ? state
-                : memberOfCurrentUser.fold_state === "open"
-                ? "folded"
-                : "open";
-            const vals = {
-                fold_state: foldState,
-                is_minimized: foldState !== "closed",
-            };
-            this.write([memberOfCurrentUser.id], vals);
-            const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
-            this.env["bus.bus"]._sendone(partner, "discuss.Thread/fold_state", {
-                foldStateCount: state_count,
-                id: channel.id,
-                model: "discuss.channel",
-                fold_state: foldState,
-            });
+    _channel_fold(id, state, state_count) {
+        const kwargs = parseModelParams(arguments, "id", "state", "state_count");
+        id = kwargs.id;
+        delete kwargs.id;
+        state = kwargs.state;
+        state_count = kwargs.state_count;
+
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        const [member] = this.search_read([["id", "=", id]]);
+        if (member.fold_state === state) {
+            return;
         }
+        this.write([id], { fold_state: state });
+        let target;
+        if (member.partner_id) {
+            [target] = ResPartner.search_read([["id", "=", member.partner_id[0]]]);
+        } else {
+            [target] = MailGuest.search_read([["id", "=", member.guest_id[0]]]);
+        }
+        BusBus._sendone(target, "discuss.Thread/fold_state", {
+            foldStateCount: state_count,
+            id: member.channel_id[0],
+            model: "discuss.channel",
+            fold_state: state,
+        });
     }
 
-    /**
-     * Simulates `_discuss_channel_member_format` on `discuss.channel.member`.
-     *
-     * @param {number[]} ids
-     */
-    _discussChannelMemberFormat(ids) {
+    /** @param {number[]} ids */
+    _discuss_channel_member_format(ids) {
+        const kwargs = parseModelParams(arguments, "ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
+
         const members = this._filter([["id", "in", ids]]);
         /** @type {Record<string, { thread: any; id: number; persona: any }>[]} */
         const dataList = [];
         for (const member of members) {
             let persona;
             if (member.partner_id) {
-                persona = this._getPartnerData([member.id]);
-                persona.type = "partner";
+                persona = this._get_partner_data([member.id]);
             }
             if (member.guest_id) {
-                const [guest] = this.env["mail.guest"]._filter([["id", "=", member.guest_id]]);
-                persona = {
-                    id: guest.id,
-                    im_status: guest.im_status,
-                    name: guest.name,
-                    type: "guest",
-                };
+                const [guest] = MailGuest._filter([["id", "=", member.guest_id]]);
+                persona = MailGuest._guest_format([guest.id])[guest.id];
             }
-            dataList.push({
+            const data = {
+                create_date: member.create_date,
                 thread: { id: member.channel_id, model: "discuss.channel" },
                 id: member.id,
                 persona,
-            });
+                seen_message_id: member.seen_message_id ? { id: member.seen_message_id } : false,
+                fetched_message_id: member.fetched_message_id
+                    ? { id: member.fetched_message_id }
+                    : false,
+            };
+            dataList.push(data);
         }
         return dataList;
     }
 
-    /**
-     * Simulates `_get_partner_data` on `discuss.channel.member`.
-     *
-     * @param {number[]} ids
-     */
-    _getPartnerData(ids) {
-        const [member] = this._filter([["id", "in", ids]]);
-        return this.env["res.partner"].mail_partner_format([member.partner_id])[member.partner_id];
-    }
+    /** @param {number[]} ids */
+    _get_partner_data(ids) {
+        const kwargs = parseModelParams(arguments, "ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
 
-    /**
-     * @param {number} channelId
-     */
-    _getAsSudoFromContext(channelId) {
-        const guest = this.env["mail.guest"]._getGuestFromContext();
-        return this.search_read([
-            ["channel_id", "=", channelId],
-            guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", constants.PARTNER_ID],
-        ])[0];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        const [member] = this._filter([["id", "in", ids]]);
+        return ResPartner.mail_partner_format([member.partner_id])[member.partner_id];
     }
 }

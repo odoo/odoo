@@ -43,6 +43,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
         ],
         'web.qunit_suite_tests': [
             'website_livechat/static/tests/**/*',
+            ('remove', 'website_livechat/static/tests/mock_server/**/*'),
             ('remove', 'website_livechat/static/tests/tours/**/*'),
             ('remove', 'website_livechat/static/tests/helpers/**/*.js'),
             ('remove', 'website_livechat/static/tests/embed/**/*'),

@@ -1,8 +1,9 @@
-import { models } from "@web/../tests/web_test_helpers";
+import { fields, models } from "@web/../tests/web_test_helpers";
 
 export class MailActivityType extends models.ServerModel {
     _name = "mail.activity.type";
 
+    chaining_type = fields.Generic({ default: "suggest" });
     _records = [
         {
             id: 1,
