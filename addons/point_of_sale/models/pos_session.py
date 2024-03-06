@@ -151,7 +151,7 @@ class PosSession(models.Model):
                 ],
                 'order': 'sequence,default_code,name',
                 'limit': config_id.get_limited_product_count(),
-                'context': {'display_default_code': False},
+                'context': {**self.env.context, 'display_default_code': False},
             },
             'product.attribute': {
                 'domain': [('create_variant', '=', 'no_variant')],

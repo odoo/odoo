@@ -223,3 +223,18 @@ registry.category("web_tour.tours").add("MultiProductOptionsTour", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("TranslateProductNameTour", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Ouvrir la session"),
+
+            ProductScreen.clickShowProductsMobile(),
+
+            ProductScreen.clickDisplayedProduct("Testez le produit"),
+
+            Chrome.endTour(),
+        ].flat(),
+});
