@@ -150,3 +150,29 @@ class TestMailTools(MailCommon):
         self.user_employee.sudo().write({'email': '"Alfred Astaire" <%s>' % self.env.user.partner_id.email_normalized})
         found = self.env['res.partner']._mail_find_partner_from_emails([self.env.user.partner_id.email_formatted])
         self.assertEqual(found, [self.env.user.partner_id])
+
+
+@tagged('mail_tools', 'mail_init')
+class TestMailUtils(MailCommon):
+
+    def test_migrate_icp_to_domain(self):
+        """ Test ICP to alias domain migration """
+        self.env["ir.config_parameter"].set_param("mail.catchall.domain", "test.migration.com")
+        self.env["ir.config_parameter"].set_param("mail.bounce.alias", "migrate+bounce")
+        self.env["ir.config_parameter"].set_param("mail.catchall.alias", "migrate+catchall")
+        self.env["ir.config_parameter"].set_param("mail.default.from", "migrate+default_from")
+
+        existing = self.env["mail.alias.domain"].search([('name', '=', 'test.migration.com')])
+        self.assertFalse(existing)
+
+        new = self.env["mail.alias.domain"]._migrate_icp_to_domain()
+        self.assertEqual(new.name, "test.migration.com")
+        self.assertEqual(new.bounce_alias, "migrate+bounce")
+        self.assertEqual(new.catchall_alias, "migrate+catchall")
+        self.assertEqual(new.default_from, "migrate+default_from")
+
+        again = self.env["mail.alias.domain"]._migrate_icp_to_domain()
+        self.assertEqual(again.name, "test.migration.com")
+
+        existing = self.env["mail.alias.domain"].search([('name', '=', 'test.migration.com')])
+        self.assertEqual(len(existing), 1, 'Should not migrate twice')
