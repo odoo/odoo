@@ -1,47 +1,59 @@
 import { assignDefined } from "@mail/utils/common/misc";
-import { Command, constants, fields, models } from "@web/../tests/web_test_helpers";
+import { Command, fields, models, serverState } from "@web/../tests/web_test_helpers";
 import { serializeDateTime, today } from "@web/core/l10n/dates";
 import { ensureArray } from "@web/core/utils/arrays";
 import { uniqueId } from "@web/core/utils/functions";
-
-/**
- * @template T
- * @typedef {import("@web/../tests/web_test_helpers").KwArgs<T>} KwArgs
- */
+import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
+import { parseModelParams } from "../mail_mock_server";
+import { Kwargs } from "@web/../tests/_framework/mock_server/mock_server_utils";
 
 const { DateTime } = luxon;
 
 export class DiscussChannel extends models.ServerModel {
     _name = "discuss.channel";
+    _inherit = ["mail.thread"];
+
+    _views = {
+        [`search,${DEFAULT_MAIL_SEARCH_ID}`]: `<search/>`,
+        [`form,${DEFAULT_MAIL_VIEW_ID}`]: `<form/>`,
+    };
 
     author_id = fields.Many2one({
         relation: "res.partner",
-        default: () => constants.PARTNER_ID,
+        default: () => serverState.partnerId,
     });
-    avatarCacheKey = fields.Datetime({ string: "Avatar Cache Key" });
-    channel_member_ids = fields.Generic({
-        default: () => [Command.create({ partner_id: constants.PARTNER_ID })],
+    avatarCacheKey = fields.Char({ string: "Avatar Cache Key" });
+    channel_member_ids = fields.One2many({
+        relation: "discuss.channel.member",
+        relation_field: "channel_id",
+        string: "Members",
+        default: () => [Command.create({ partner_id: serverState.partnerId })],
     });
     channel_type = fields.Generic({ default: "channel" });
-    group_based_subscription = fields.Boolean();
     group_public_id = fields.Generic({
-        default: () => constants.GROUP_ID,
+        default: () => serverState.groupId,
     });
     uuid = fields.Generic({
         default: () => uniqueId("discuss.channel_uuid-"),
     });
 
-    /**
-     * Simulates `action_unfollow` on `discuss.channel`.
-     *
-     * @param {number[]} ids
-     * @param {KwArgs} [kwargs]
-     */
-    action_unfollow(ids, kwargs = {}) {
+    /** @param {number[]} ids */
+    action_unfollow(ids) {
+        const kwargs = parseModelParams(arguments, "ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
         const channel = this._filter([["id", "in", ids]])[0];
-        const [channelMember] = this.env["discuss.channel.member"]._filter([
+        const [channelMember] = DiscussChannelMember._filter([
             ["channel_id", "in", ids],
-            ["partner_id", "=", constants.PARTNER_ID],
+            ["partner_id", "=", this.env.user.partner_id],
         ]);
         if (!channelMember) {
             return true;
@@ -49,96 +61,95 @@ export class DiscussChannel extends models.ServerModel {
         this.write([channel.id], {
             channel_member_ids: [Command.delete(channelMember.id)],
         });
-        const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
-        this.env["bus.bus"]._sendone(partner, "discuss.channel/leave", {
-            id: channel.id,
-        });
-        this.env["bus.bus"]._sendone(channel, "mail.record/insert", {
+        this.message_post(
+            channel.id,
+            Kwargs({
+                author_id: serverState.partnerId,
+                body: '<div class="o_mail_notification">left the channel</div>',
+                subtype_xmlid: "mail.mt_comment",
+            })
+        );
+        const [partner] = ResPartner.read(this.env.user.partner_id);
+        BusBus._sendone(partner, "discuss.channel/leave", { id: channel.id });
+        BusBus._sendone(channel, "mail.record/insert", {
             Thread: {
                 id: channel.id,
                 channelMembers: [["DELETE", { id: channelMember.id }]],
-                memberCount: this.env["discuss.channel.member"].search_count([
-                    ["channel_id", "=", channel.id],
-                ]),
+                memberCount: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
                 model: "discuss.channel",
             },
         });
-
-        /**
-         * Leave message not posted here because it would send the new message
-         * notification on a separate bus notification list from the unsubscribe
-         * itself which would lead to the channel being pinned again (handler
-         * for unsubscribe is weak and is relying on both of them to be sent
-         * together on the bus).
-         */
-        // this.message_post(channel.id, {
-        //     author_id: constants.PARTNER_ID,
-        //     body: '<div class="o_mail_notification">left the channel</div>',
-        //     subtype_xmlid: "mail.mt_comment",
-        // });
         return true;
     }
 
     /**
-     * Simulates `add_members` on `discuss.channel`.
-     *
      * @param {number[]} ids
-     * @param {number[]} partnerIds
-     * @param {KwArgs<{ partner_ids: number[] }>} [kwargs]
+     * @param {number[]} partner_ids
      */
-    add_members(ids, partnerIds, kwargs = {}) {
-        partnerIds = kwargs.partner_ids || partnerIds || [];
+    add_members(ids, partner_ids) {
+        const kwargs = parseModelParams(arguments, "ids", "partner_ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        partner_ids = kwargs.partner_ids || [];
+
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
         const [channel] = this._filter([["id", "in", ids]]);
-        const partners = this.env["res.partner"]._filter([["id", "in", partnerIds]]);
+        const partners = ResPartner._filter([["id", "in", partner_ids]]);
         for (const partner of partners) {
-            if (partner.id === constants.PARTNER_ID) {
+            if (partner.id === this.env.user.partner_id) {
                 continue; // adding 'yourself' to the conversation is handled below
             }
             const body = `<div class="o_mail_notification">invited ${partner.name} to the channel</div>`;
             const message_type = "notification";
             const subtype_xmlid = "mail.mt_comment";
-            this.message_post(channel.id, { body, message_type, subtype_xmlid });
+            this.message_post(channel.id, Kwargs({ body, message_type, subtype_xmlid }));
         }
         const insertedChannelMembers = [];
         for (const partner of partners) {
             insertedChannelMembers.push(
-                this.env["discuss.channel.member"].create({
+                DiscussChannelMember.create({
                     channel_id: channel.id,
                     partner_id: partner.id,
                     create_uid: this.env.uid,
                 })
             );
-            this.env["bus.bus"]._sendone(partner, "discuss.channel/joined", {
-                channel: this.channel_info([channel.id])[0],
+            BusBus._sendone(partner, "discuss.channel/joined", {
+                channel: { ...this.channel_basic_info([channel.id]), is_pinned: true },
                 invited_by_user_id: this.env.uid,
             });
         }
-        const selfPartner = partners.find((partner) => partner.id === constants.PARTNER_ID);
+        const selfPartner = partners.find((partner) => partner.id === this.env.user.parter_id);
         if (selfPartner) {
             // needs to be done after adding 'self' as a member
             const body = `<div class="o_mail_notification">${selfPartner.name} joined the channel</div>`;
             const message_type = "notification";
             const subtype_xmlid = "mail.mt_comment";
-            this.message_post(channel.id, { body, message_type, subtype_xmlid });
+            this.message_post(channel.id, Kwargs({ body, message_type, subtype_xmlid }));
         }
         const isSelfMember =
-            this.env["discuss.channel.member"].search_count([
-                ["partner_id", "=", constants.PARTNER_ID],
+            DiscussChannelMember.search_count([
+                ["partner_id", "=", this.env.user.partner_id],
                 ["channel_id", "=", channel.id],
             ]) > 0;
         if (isSelfMember) {
-            this.env["bus.bus"]._sendone(channel, "mail.record/insert", {
+            BusBus._sendone(channel, "mail.record/insert", {
                 Thread: {
                     id: channel.id,
                     channelMembers: [
                         [
                             "ADD",
-                            this.env["discuss.channel.member"]._discussChannelMemberFormat(
+                            DiscussChannelMember._discuss_channel_member_format(
                                 insertedChannelMembers
                             ),
                         ],
                     ],
-                    memberCount: this.env["discuss.channel.member"].search_count([
+                    memberCount: DiscussChannelMember.search_count([
                         ["channel_id", "=", channel.id],
                     ]),
                     model: "discuss.channel",
@@ -148,52 +159,113 @@ export class DiscussChannel extends models.ServerModel {
     }
 
     /**
-     * Simulates `channel_change_description` on `discuss.channel`.
-     *
      * @param {number[]} ids
      * @param {string} description
-     * @param {KwArgs<{ description: string }>} [kwargs]
      */
-    channel_change_description(ids, description, kwargs = {}) {
-        description = kwargs.description || description || "";
+    channel_change_description(ids, description) {
+        const kwargs = parseModelParams(arguments, "ids", "description");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        description = kwargs.description || "";
+
         const channel = this._filter([["id", "in", ids]])[0];
         this.write([channel.id], { description });
     }
 
     /**
-     * Simulates 'channel_create' on 'discuss.channel'.
-     *
      * @param {string} name
      * @param {string} [group_id]
      */
     channel_create(name, group_id) {
+        const kwargs = parseModelParams(arguments, "name", "group_id");
+        name = kwargs.name;
+        group_id = kwargs.group_id;
+
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
         const id = this.create({
-            channel_member_ids: [Command.create({ partner_id: constants.PARTNER_ID })],
+            channel_member_ids: [Command.create({ partner_id: this.env.user.partner_id })],
             channel_type: "channel",
             name,
             group_public_id: group_id,
         });
-        this.write([id], {
-            group_public_id: group_id,
-        });
-        this.message_post(id, {
-            body: `<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="${id}">#${name}</a></div>`,
-            message_type: "notification",
-        });
-        const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
+        this.write([id], { group_public_id: group_id });
+        this.message_post(
+            id,
+            Kwargs({
+                body: `<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="${id}">#${name}</a></div>`,
+                message_type: "notification",
+            })
+        );
+        const [partner] = ResPartner.read(this.env.user.partner_id);
         this._broadcast(id, [partner]);
-        return this.channel_info([id])[0];
+        return this._channel_info([id])[0];
     }
 
-    /**
-     * Simulates `channel_fetched` on `discuss.channel`.
-     *
-     * @param {number[]} ids
-     */
+    /** @param {number[]} ids */
+    channel_basic_info(ids) {
+        const kwargs = parseModelParams(arguments, "ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").ResGroups} */
+        const ResGroups = this.env["res.groups"];
+
+        const [channel] = this._filter([["id", "in", ids]]);
+        const res = assignDefined({}, channel, [
+            "allow_public_upload",
+            "avatarCacheKey", // mock server simplification
+            "channel_type",
+            "create_uid",
+            "description",
+            "id",
+            "name",
+            "uuid",
+        ]);
+        const [group_public_id] = ResGroups._filter([["id", "=", channel.group_public_id]]);
+        const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
+        Object.assign(res, {
+            authorizedGroupFullName: group_public_id ? group_public_id.name : false,
+            defaultDisplayMode: channel.default_display_mode,
+            group_based_subscription: channel.group_ids.length > 0,
+            is_editable: (() => {
+                switch (channel.channel_type) {
+                    case "channel":
+                        return channel.create_uid === this.env.uid;
+                    case "group":
+                        return memberOfCurrentUser;
+                    default:
+                        return false;
+                }
+            })(),
+            memberCount: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
+            model: "discuss.channel",
+        });
+        return res;
+    }
+
+    /** @param {number[]} ids */
     channel_fetched(ids) {
+        const kwargs = parseModelParams(arguments, "ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+
         const channels = this._filter([["id", "in", ids]]);
         for (const channel of channels) {
-            const channelMessages = this.env["mail.message"]._filter([
+            if (!["chat", "whatsapp"].includes(channel.channel_type)) {
+                continue;
+            }
+            const channelMessages = MailMessage._filter([
                 ["model", "=", "discuss.channel"],
                 ["res_id", "=", channel.id],
             ]);
@@ -206,31 +278,32 @@ export class DiscussChannel extends models.ServerModel {
             if (!lastMessage) {
                 continue;
             }
-            const memberOfCurrentUser = this.env["discuss.channel.member"]._getAsSudoFromContext(
-                channel.id
-            );
-            this.env["discuss.channel.member"].write([memberOfCurrentUser.id], {
+            const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
+            DiscussChannelMember.write([memberOfCurrentUser.id], {
                 fetched_message_id: lastMessage.id,
             });
-            this.env["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
+            BusBus._sendone(channel, "discuss.channel.member/fetched", {
                 channel_id: channel.id,
                 id: memberOfCurrentUser.id,
                 last_message_id: lastMessage.id,
-                partner_id: constants.PARTNER_ID,
+                partner_id: this.env.user.partner_id,
             });
         }
     }
 
-    /**
-     * Simulates `channel_fetch_preview` on `discuss.channel`.
-     *
-     * @param {number[]} ids
-     */
+    /** @param {number[]} ids */
     channel_fetch_preview(ids) {
+        const kwargs = parseModelParams(arguments, "ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+
         const channels = this._filter([["id", "in", ids]]);
         return channels
             .map((channel) => {
-                const channelMessages = this.env["mail.message"]._filter([
+                const channelMessages = MailMessage._filter([
                     ["model", "=", "discuss.channel"],
                     ["res_id", "=", channel.id],
                 ]);
@@ -243,7 +316,7 @@ export class DiscussChannel extends models.ServerModel {
                 return {
                     id: channel.id,
                     last_message: lastMessage
-                        ? this.env["mail.message"].message_format([lastMessage.id])[0]
+                        ? MailMessage.message_format([lastMessage.id])[0]
                         : false,
                 };
             })
@@ -251,33 +324,37 @@ export class DiscussChannel extends models.ServerModel {
     }
 
     /**
-     * Simulates 'channel_get' on 'discuss.channel'.
-     *
-     * @param {number[]} [partnersTo=[]]
-     * @param {boolean} [pin]
-     * @param {boolean} [force_open=false]
-     * @param {KwArgs<{ partners_to: number[]; pin: boolean }>} [kwargs]
+     * @param {number[]} partners_to
+     * @param {boolean} [pin=true]
      */
-    channel_get(partnersTo, pin, force_open = false, kwargs = {}) {
-        partnersTo = kwargs.partners_to || partnersTo || [];
-        if (partnersTo.length === 0) {
+    channel_get(partners_to, pin) {
+        const kwargs = parseModelParams(arguments, "partners_to", "pin");
+        partners_to = kwargs.partners_to || [];
+        pin = kwargs.pin ?? true;
+
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        if (partners_to.length === 0) {
             return false;
         }
-        if (!partnersTo.includes(constants.PARTNER_ID)) {
-            partnersTo.push(constants.PARTNER_ID);
+        if (!partners_to.includes(this.env.user.partner_id)) {
+            partners_to.push(this.env.user.partner_id);
         }
-        const partners = this.env["res.partner"]._filter([["id", "in", partnersTo]]);
+        const partners = ResPartner._filter([["id", "in", partners_to]], { active_test: false });
         const channels = this.search_read([["channel_type", "=", "chat"]]);
         for (const channel of channels) {
-            const channelMemberIds = this.env["discuss.channel.member"].search([
+            const channelMemberIds = DiscussChannelMember.search([
                 ["channel_id", "=", channel.id],
-                ["partner_id", "in", partnersTo],
+                ["partner_id", "in", partners_to],
             ]);
             if (
                 channelMemberIds.length === partners.length &&
                 channel.channel_member_ids.length === partners.length
             ) {
-                return this.channel_info([channel.id])[0];
+                return this._channel_info([channel.id])[0];
             }
         }
         const id = this.create({
@@ -291,61 +368,50 @@ export class DiscussChannel extends models.ServerModel {
             id,
             partners.map(({ id }) => id)
         );
-        return this.channel_info([id])[0];
+        return this._channel_info([id])[0];
     }
 
-    /**
-     * Simulates `channel_info` on `discuss.channel`.
-     *
-     * @param {number[]} ids
-     */
-    channel_info(ids) {
+    /** @param {number[]} ids */
+    _channel_info(ids) {
+        const kwargs = parseModelParams(arguments, "ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").DiscussChannelRtcSession} */
+        const DiscussChannelRtcSession = this.env["discuss.channel.rtc.session"];
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+        /** @type {import("mock_models").MailNotification} */
+        const MailNotification = this.env["mail.notification"];
+
         const channels = this._filter([["id", "in", ids]]);
         return channels.map((channel) => {
-            const members = this.env["discuss.channel.member"]._filter([
+            const members = DiscussChannelMember._filter([
                 ["id", "in", channel.channel_member_ids],
             ]);
-            const messages = this.env["mail.message"]._filter([
+            const messages = MailMessage._filter([
                 ["model", "=", "discuss.channel"],
                 ["res_id", "=", channel.id],
             ]);
-            const [group_public_id] = this.env["res.groups"]._filter([
-                ["id", "=", channel.group_public_id],
-            ]);
-            const messageNeedactionCounter = this.env["mail.notification"]._filter([
-                ["res_partner_id", "=", constants.PARTNER_ID],
+            const message_needaction_counter = MailNotification._filter([
+                ["res_partner_id", "=", this.env.user.partner_id],
                 ["is_read", "=", false],
                 ["mail_message_id", "in", messages.map((message) => message.id)],
             ]).length;
-            const res = assignDefined({}, channel, [
-                "id",
-                "name",
-                "defaultDisplayMode",
-                "description",
-                "uuid",
-                "create_uid",
-                "group_based_subscription",
-                "avatarCacheKey",
-            ]);
+            const res = this.channel_basic_info([channel.id]);
             Object.assign(res, {
-                channel_type: channel.channel_type,
-                memberCount: this.env["discuss.channel.member"].search_count([
-                    ["channel_id", "=", channel.id],
-                ]),
-                message_needaction_counter: messageNeedactionCounter,
-                authorizedGroupFullName: group_public_id ? group_public_id.name : false,
-                model: "discuss.channel",
+                fetchChannelInfoState: "fetched",
+                message_needaction_counter,
             });
-            const memberOfCurrentUser = this.env["discuss.channel.member"]._getAsSudoFromContext(
-                channel.id
-            );
+            const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
             if (memberOfCurrentUser) {
                 Object.assign(res, {
-                    is_minimized: memberOfCurrentUser.is_minimized,
                     is_pinned: memberOfCurrentUser.is_pinned,
                     last_interest_dt: memberOfCurrentUser.last_interest_dt,
                     message_unread_counter: memberOfCurrentUser.message_unread_counter,
-                    state: memberOfCurrentUser.fold_state || "open",
+                    state: memberOfCurrentUser.fold_state || "closed",
                     seen_message_id: Array.isArray(memberOfCurrentUser.seen_message_id)
                         ? memberOfCurrentUser.seen_message_id[0]
                         : memberOfCurrentUser.seen_message_id,
@@ -362,49 +428,32 @@ export class DiscussChannel extends models.ServerModel {
                 res.channelMembers = [
                     [
                         "ADD",
-                        this.env["discuss.channel.member"]._discussChannelMemberFormat([
+                        DiscussChannelMember._discuss_channel_member_format([
                             memberOfCurrentUser.id,
                         ]),
                     ],
                 ];
             }
             if (channel.channel_type !== "channel") {
-                res.seenInfos = members
-                    .filter((member) => member.partner_id)
-                    .map((member) => {
-                        return {
-                            partner_id: member.partner_id,
-                            seen_message_id: member.seen_message_id,
-                            fetched_message_id: member.fetched_message_id,
-                        };
-                    });
                 res.channelMembers = [
                     [
                         "ADD",
-                        this.env["discuss.channel.member"]._discussChannelMemberFormat(
+                        DiscussChannelMember._discuss_channel_member_format(
                             members.map((member) => member.id)
                         ),
                     ],
                 ];
             }
-            let is_editable;
-            switch (channel.channel_type) {
-                case "channel":
-                    is_editable = channel.create_uid === this.env.uid;
-                    break;
-                case "group":
-                    is_editable = memberOfCurrentUser;
-                    break;
-                default:
-                    is_editable = false;
-                    break;
-            }
-            res.is_editable = is_editable;
             res.rtcSessions = [
                 [
                     "ADD",
                     (channel.rtc_session_ids || []).map((rtcSessionId) =>
-                        this._mailRtcSessionFormat(rtcSessionId, { extra: true })
+                        DiscussChannelRtcSession._mail_rtc_session_format(
+                            rtcSessionId,
+                            Kwargs({
+                                extra: true,
+                            })
+                        )
                     ),
                 ],
             ];
@@ -414,67 +463,82 @@ export class DiscussChannel extends models.ServerModel {
     }
 
     /**
-     * Simulates the `channel_pin` method of `discuss.channel`.
-     *
      * @param {number[]} ids
      * @param {boolean} [pinned=false]
-     * @param {KwArgs<{ pinned: boolean }>} [kwargs]
      */
-    channel_pin(ids, pinned, kwargs = {}) {
-        pinned = kwargs.pinned ?? pinned ?? false;
+    channel_pin(ids, pinned) {
+        const kwargs = parseModelParams(arguments, "ids", "pinned");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        pinned = kwargs.pinned ?? false;
+
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
         const [channel] = this._filter([["id", "in", ids]]);
-        const memberOfCurrentUser = this.env["discuss.channel.member"]._getAsSudoFromContext(
-            channel.id
-        );
+        const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
         if (memberOfCurrentUser && memberOfCurrentUser.is_pinned !== pinned) {
-            this.env["discuss.channel.member"].write([memberOfCurrentUser.id], {
+            DiscussChannelMember.write([memberOfCurrentUser.id], {
                 is_pinned: pinned,
             });
         }
-        const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
+        const [partner] = ResPartner.read(this.env.user.partner_id);
         if (!pinned) {
-            this.env["bus.bus"]._sendone(partner, "discuss.channel/unpin", {
+            BusBus._sendone(partner, "discuss.channel/unpin", {
                 id: channel.id,
             });
         } else {
-            this.env["bus.bus"]._sendone(partner, "mail.record/insert", {
-                Thread: this.channel_info([channel.id])[0],
+            BusBus._sendone(partner, "mail.record/insert", {
+                Thread: this._channel_info([channel.id])[0],
             });
         }
     }
 
     /**
-     * Simulates `channel_rename` on `discuss.channel`.
-     *
      * @param {number[]} ids
      * @param {string} name
-     * @param {KwArgs<{ name: string }>} [kwargs]
      */
-    channel_rename(ids, name, kwargs = {}) {
-        name = kwargs.name || name || "";
+    channel_rename(ids, name) {
+        const kwargs = parseModelParams(arguments, "ids", "name");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        name = kwargs.name || "";
+
         const channel = this._filter([["id", "in", ids]])[0];
         this.write([channel.id], { name });
     }
 
     /**
-     * Simulates `channel_set_custom_name` on `discuss.channel`.
-     *
      * @param {number[]} ids
      * @param {string} name
-     * @param {KwArgs<{ name: string }>} [kwargs]
      */
-    channel_set_custom_name(ids, name, kwargs = {}) {
-        name = kwargs.name || name || "";
+    channel_set_custom_name(ids, name) {
+        const kwargs = parseModelParams(arguments, "ids", "name");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        name = kwargs.name || "";
+
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
         const channelId = ids[0]; // simulate ensure_one.
-        const [memberIdOfCurrentUser] = this.env["discuss.channel.member"].search([
-            ["partner_id", "=", constants.PARTNER_ID],
+        const [memberIdOfCurrentUser] = DiscussChannelMember.search([
+            ["partner_id", "=", this.env.user.partner_id],
             ["channel_id", "=", channelId],
         ]);
-        this.env["discuss.channel.member"].write([memberIdOfCurrentUser], {
+        DiscussChannelMember.write([memberIdOfCurrentUser], {
             custom_channel_name: name,
         });
-        const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
-        this.env["bus.bus"]._sendone(partner, "mail.record/insert", {
+        const [partner] = ResPartner.read(this.env.user.partner_id);
+        BusBus._sendone(partner, "mail.record/insert", {
             Thread: {
                 custom_channel_name: name,
                 id: channelId,
@@ -483,15 +547,15 @@ export class DiscussChannel extends models.ServerModel {
         });
     }
 
-    /**
-     * Simulates the `create_group` on `discuss.channel`.
-     *
-     * @param {number[]} partnersTo
-     * @param {KwArgs<{ partners_to: number[] }>} [kwargs]
-     */
-    create_group(partnersTo, kwargs = {}) {
-        partnersTo = kwargs.partners_to || partnersTo || [];
-        const partners = this.env["res.partner"]._filter([["id", "in", partnersTo]]);
+    /** @param {number[]} partners_to */
+    create_group(partners_to) {
+        const kwargs = parseModelParams(arguments, "partners_to");
+        partners_to = kwargs.partners_to || [];
+
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        const partners = ResPartner._filter([["id", "in", partners_to]], { active_test: false });
         const id = this.create({
             channel_type: "group",
             channel_member_ids: partners.map((partner) =>
@@ -503,15 +567,22 @@ export class DiscussChannel extends models.ServerModel {
             id,
             partners.map((partner) => partner.id)
         );
-        return this.channel_info([id])[0];
+        return this._channel_info([id])[0];
     }
 
-    /**
-     * Simulates `execute_command_help` on `discuss.channel`.
-     *
-     * @param {number} id
-     */
+    /** @param {number} id */
     execute_command_help(ids) {
+        const kwargs = parseModelParams(arguments, "ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
         const id = ids[0];
         const [channel] = this.search_read([["id", "=", id]]);
         const notifBody = /* html */ `
@@ -522,9 +593,7 @@ export class DiscussChannel extends models.ServerModel {
                 channel.channel_type === "channel"
                     ? `#${channel.name}`
                     : channel.channel_member_ids.map(
-                          (id) =>
-                              this.env["discuss.channel.member"].search_read([["id", "=", id]])[0]
-                                  .name
+                          (id) => DiscussChannelMember.search_read([["id", "=", id]])[0].name
                       )
             }</b>.<br><br>
 
@@ -532,67 +601,77 @@ export class DiscussChannel extends models.ServerModel {
             Type <b>#channel</b> to mention a channel.<br>
             Type <b>/command</b> to execute a command.<br></span>
         `;
-        const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
-        this.env["bus.bus"]._sendone(partner, "discuss.channel/transient_message", {
+        const [partner] = ResPartner.read(this.env.user.partner_id);
+        BusBus._sendone(partner, "discuss.channel/transient_message", {
             body: notifBody,
             thread: { model: "discuss.channel", id: channel.id },
         });
         return true;
     }
 
-    /**
-     * Simulates `execute_command_leave` on `discuss.channel`.
-     *
-     * @param {number[]} ids
-     * @param {KwArgs} kwargs
-     */
-    execute_command_leave(ids, kwargs = {}) {
+    /** @param {number[]} ids */
+    execute_command_leave(ids) {
+        const kwargs = parseModelParams(arguments, "ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+
         const channel = this._filter([["id", "in", ids]])[0];
         if (channel.channel_type === "channel") {
-            this.action_unfollow([channel.id], kwargs);
+            this.action_unfollow([channel.id]);
         } else {
             this.channel_pin([channel.id], false);
         }
     }
 
-    /**
-     * Simulates `execute_command_who` on `discuss.channel`.
-     *
-     * @param {number[]} ids
-     */
+    /** @param {number[]} ids */
     execute_command_who(ids) {
+        const kwargs = parseModelParams(arguments, "ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
         const channels = this._filter([["id", "in", ids]]);
         for (const channel of channels) {
-            const members = this.env["discuss.channel.member"]._filter([
+            const members = DiscussChannelMember._filter([
                 ["id", "in", channel.channel_member_ids],
             ]);
             const otherPartnerIds = members
-                .filter((member) => member.partner_id && member.partner_id !== constants.PARTNER_ID)
+                .filter(
+                    (member) => member.partner_id && member.partner_id !== this.env.user.partner_id
+                )
                 .map((member) => member.partner_id);
-            const otherPartners = this.env["res.partner"]._filter([["id", "in", otherPartnerIds]]);
+            const otherPartners = ResPartner._filter([["id", "in", otherPartnerIds]]);
             let message = "You are alone in this channel.";
             if (otherPartners.length > 0) {
                 message = `Users in this channel: ${otherPartners
                     .map((partner) => partner.name)
                     .join(", ")} and you`;
             }
-            const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
-            this.env["bus.bus"]._sendone(partner, "discuss.channel/transient_message", {
+            const [partner] = ResPartner.read(this.env.user.partner_id);
+            BusBus._sendone(partner, "discuss.channel/transient_message", {
                 body: `<span class="o_mail_notification">${message}</span>`,
                 thread: { model: "discuss.channel", id: channel.id },
             });
         }
     }
 
-    /**
-     * Simulates the `get_channels_as_member` method on `discuss.channel`.
-     */
     get_channels_as_member() {
-        const guest = this.env["mail.guest"]._getGuestFromContext();
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
+
+        const guest = MailGuest._get_guest_from_context();
         const memberDomain = guest
             ? [["guest_id", "=", guest.id]]
-            : [["partner_id", "=", constants.PARTNER_ID]];
-        const members = this.env["discuss.channel.member"]._filter(memberDomain);
+            : [["partner_id", "=", this.env.user.partner_id]];
+        const members = DiscussChannelMember._filter(memberDomain);
         const pinnedMembers = members.filter((member) => member.is_pinned);
         const channels = this._filter([
             ["channel_type", "in", ["channel", "group"]],
@@ -606,15 +685,13 @@ export class DiscussChannel extends models.ServerModel {
     }
 
     /**
-     * Simulates `get_mention_suggestions` on `discuss.channel`.
-     *
      * @param {string} search
      * @param {limit} number
-     * @param {KwArgs<{ search: string; limit: number }>} [kwargs]
      */
-    get_mention_suggestions(search, limit, kwargs = {}) {
-        search = kwargs.search || search || "";
-        limit = kwargs.limit || limit || 8;
+    get_mention_suggestions(search, limit) {
+        const kwargs = parseModelParams(arguments, "search", "limit");
+        search = kwargs.search || "";
+        limit = kwargs.limit || 8;
 
         /**
          * Returns the given list of channels after filtering it according to
@@ -622,7 +699,7 @@ export class DiscussChannel extends models.ServerModel {
          * given search term. The result is truncated to the given limit and
          * formatted as expected by the original method.
          *
-         * @param {models.Model} channels
+         * @param {this[]} channels
          * @param {string} search
          * @param {number} limit
          * @returns {Object[]}
@@ -656,84 +733,73 @@ export class DiscussChannel extends models.ServerModel {
             matchingChannels.length = Math.min(matchingChannels.length, limit);
             return matchingChannels;
         };
-
         const mentionSuggestions = mentionSuggestionsFilter(this, search, limit);
-
         return mentionSuggestions;
     }
 
     /**
-     * Simulates `load_more_members` on `discuss.channel`.
-     *
-     * @param {number[]} channelIds
-     * @param {number[]} knownMemberIds
-     * @param {KwArgs<{ channel_ids: number[]; known_member_ids: number[] }>} [kwargs]
+     * @param {number[]} ids
+     * @param {number[]} known_member_ids
      */
-    load_more_members(channelIds, knownMemberIds, kwargs = {}) {
-        channelIds = kwargs.channel_ids || channelIds || [];
-        knownMemberIds = kwargs.known_member_ids || knownMemberIds || [];
-        const members = this.env["discuss.channel.member"].search_read(
+    load_more_members(ids, known_member_ids) {
+        const kwargs = parseModelParams(arguments, "ids", "known_member_ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        known_member_ids = kwargs.known_member_ids || [];
+
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+
+        const members = DiscussChannelMember.search_read(
             [
-                ["id", "not in", knownMemberIds],
-                ["channel_id", "in", channelIds],
+                ["id", "not in", known_member_ids],
+                ["channel_id", "in", ids],
             ],
-            { limit: 100 }
+            undefined,
+            100
         );
-        const memberCount = this.env["discuss.channel.member"].search_count([
-            ["channel_id", "in", channelIds],
-        ]);
+        const memberCount = DiscussChannelMember.search_count([["channel_id", "in", ids]]);
         return {
             channelMembers: [
                 [
                     "ADD",
-                    this.env["discuss.channel.member"]._discussChannelMemberFormat(
-                        members.map((m) => m.id)
-                    ),
+                    DiscussChannelMember._discuss_channel_member_format(members.map((m) => m.id)),
                 ],
             ],
             memberCount,
         };
     }
 
-    /**
-     * Simulates `message_post` on `discuss.channel`.
-     *
-     * @param {number} id
-     * @param {string} message_type
-     * @param {KwArgs<{ message_type: string }>} kwargs
-     */
-    message_post(id, message_type, kwargs = {}) {
-        message_type = kwargs.message_type || message_type || "notification";
+    /** @param {number} id */
+    message_post(id) {
+        const kwargs = parseModelParams(arguments, "id");
+        id = kwargs.id;
+        delete kwargs.id;
+
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").MailThread} */
+        const MailThread = this.env["mail.thread"];
+
+        kwargs.message_type ||= "notification";
         const channel = this._filter([["id", "=", id]])[0];
-        if (channel.channel_type !== "channel") {
-            const memberOfCurrentUser = this.env["discuss.channel.member"]._getAsSudoFromContext(
-                channel.id
-            );
-            if (memberOfCurrentUser) {
-                this.env["discuss.channel.member"].write([memberOfCurrentUser.id], {
-                    last_interest_dt: serializeDateTime(today()),
-                    is_pinned: true,
-                });
-            }
-        }
-        const messageData = this.env["mail.thread"].message_post([id], {
-            ...kwargs,
-            message_type,
-            model: "discuss.channel",
+        const members = DiscussChannelMember.search([["channel_id", "=", channel.id]]);
+        DiscussChannelMember.write(members, {
+            last_interest_dt: serializeDateTime(today()),
+            is_pinned: true,
         });
-        if (kwargs.author_id === constants.PARTNER_ID) {
-            this._setLastSeenMessage([channel.id], messageData.id);
+        const messageData = MailThread.message_post.call(this, [id], kwargs);
+        if (kwargs.author_id === this.env.user?.partner_id) {
+            this._set_last_seen_message([channel.id], messageData.id);
         }
         // simulate compute of message_unread_counter
-        const memberOfCurrentUser = this.env["discuss.channel.member"]._getAsSudoFromContext(
-            channel.id
-        );
-        const otherMembers = this.env["discuss.channel.member"]._filter([
+        const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
+        const otherMembers = DiscussChannelMember._filter([
             ["channel_id", "=", channel.id],
             ["id", "!=", memberOfCurrentUser?.id || false],
         ]);
         for (const member of otherMembers) {
-            this.env["discuss.channel.member"].write([member.id], {
+            DiscussChannelMember.write([member.id], {
                 message_unread_counter: member.message_unread_counter + 1,
             });
         }
@@ -741,27 +807,42 @@ export class DiscussChannel extends models.ServerModel {
     }
 
     /**
-     * Simulates `set_message_pin` on `discuss.channel`.
-     *
      * @param {number} id
-     * @param {KwArgs<{ message_id: number; pinned: boolean }>} [kwargs]
+     * @param {number} message_id
+     * @param {boolean} pinned
      */
-    set_message_pin(id, { message_id, pinned } = {}) {
+    set_message_pin(id, message_id, pinned) {
+        const kwargs = parseModelParams(arguments, "id", "message_id", "pinned");
+        id = kwargs.id;
+        delete kwargs.id;
+        message_id = kwargs.message_id;
+        pinned = kwargs.pinned;
+
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
         const pinnedAt = pinned && serializeDateTime(DateTime.now());
-        this.env["mail.message"].write([message_id], { pinned_at: pinnedAt });
-        const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
+        MailMessage.write([message_id], { pinned_at: pinnedAt });
+        const [partner] = ResPartner.read(this.env.user.partner_id);
         const notification = `<div data-oe-type="pin" class="o_mail_notification">
                 ${partner.display_name} pinned a
                 <a href="#" data-oe-type="highlight" data-oe-id='${message_id}'>message</a> to this channel.
                 <a href="#" data-oe-type="pin-menu">See all pinned messages</a>
             </div>`;
-        this.message_post(id, {
-            body: notification,
-            message_type: "notification",
-            subtype_xmlid: "mail.mt_comment",
-        });
-        const [channel] = this.search_read([["id", "=", id]]);
-        this.env["bus.bus"]._sendone(channel, "mail.record/insert", {
+        this.message_post(
+            id,
+            Kwargs({
+                body: notification,
+                message_type: "notification",
+                subtype_xmlid: "mail.mt_comment",
+            })
+        );
+        const [channel] = this.read(id);
+        BusBus._sendone(channel, "mail.record/insert", {
             Message: {
                 id: message_id,
                 pinned_at: pinnedAt,
@@ -769,32 +850,31 @@ export class DiscussChannel extends models.ServerModel {
         });
     }
 
-    /**
-     * @override
-     * @type {typeof models.Model["prototype"]["write"]}
-     */
+    /** @type {typeof models.Model["prototype"]["write"]} */
     write(idOrIds, values, kwargs) {
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+
         const [firstId] = ensureArray(idOrIds);
         if ("image_128" in values) {
             super.write(firstId, {
                 avatarCacheKey: DateTime.utc().toFormat("yyyyMMddHHmmss"),
             });
             const channel = this.search_read([["id", "=", firstId]])[0];
-            return this.env["bus.bus"]._sendone(channel, "mail.record/insert", {
+            return BusBus._sendone(channel, "mail.record/insert", {
                 Thread: {
                     avatarCacheKey: channel.avatarCacheKey,
-                    firstId,
+                    id: firstId,
                     model: "discuss.channel",
                 },
             });
         }
-
         const notifications = [];
         const [channel] = this._filter([["id", "=", firstId]]);
         if (channel) {
             const diff = {};
             for (const key in values) {
-                if (channel[key] != values[key] && key !== "image_128") {
+                if (channel[key] !== values[key] && key !== "image_128") {
                     diff[key] = values[key];
                 }
             }
@@ -812,39 +892,53 @@ export class DiscussChannel extends models.ServerModel {
         }
         const result = super.write(idOrIds, values, kwargs);
         if (notifications.length) {
-            this.env["bus.bus"]._sendmany(notifications);
+            BusBus._sendmany(notifications);
         }
         return result;
     }
 
     /**
-     * Simulates `_broadcast` on `discuss.channel`.
-     *
      * @param {number} id
      * @param {number[]} partner_ids
      */
     _broadcast(ids, partner_ids) {
-        const notifications = this._channelChannelNotifications(ids, partner_ids);
-        this.env["bus.bus"]._sendmany(notifications);
+        const kwargs = parseModelParams(arguments, "ids", "partner_ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        partner_ids = kwargs.partner_ids;
+
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+
+        const notifications = this._channel_channel_notifications(ids, partner_ids);
+        BusBus._sendmany(notifications);
     }
 
     /**
-     * Simulates `_channel_channel_notifications` on `discuss.channel`.
-     *
      * @param {number} id
      * @param {number[]} partner_ids
      */
-    _channelChannelNotifications(ids, partner_ids) {
+    _channel_channel_notifications(ids, partner_ids) {
+        const kwargs = parseModelParams(arguments, "ids", "partner_ids");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        partner_ids = kwargs.partner_ids;
+
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+
         const notifications = [];
         for (const partner_id of partner_ids) {
-            const user = this.env["res.users"]._filter([["partner_id", "in", partner_id]])[0];
+            const user = ResUsers._filter([["partner_id", "in", partner_id]])[0];
             if (!user) {
                 continue;
             }
-            // Note: `channel_info` on the server is supposed to be called with
+            // Note: `_channel_info` on the server is supposed to be called with
             // the proper user context but this is not done here for simplicity.
-            const channelInfos = this.channel_info(ids);
-            const [relatedPartner] = this.env["res.partner"].search_read([["id", "=", partner_id]]);
+            const channelInfos = this._channel_info(ids);
+            const [relatedPartner] = ResPartner.search_read([["id", "=", partner_id]]);
             for (const channelInfo of channelInfos) {
                 notifications.push([relatedPartner, "mail.record/insert", { Thread: channelInfo }]);
             }
@@ -853,69 +947,133 @@ export class DiscussChannel extends models.ServerModel {
     }
 
     /**
-     * Simulates the `_channel_seen` method of `discuss.channel`.
-     *
      * @param {number[]} ids
      * @param {number} last_message_id
      */
-    _channelSeen(ids, last_message_id) {
+    _channel_seen(ids, last_message_id) {
+        const kwargs = parseModelParams(arguments, "ids", "last_message_id");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        last_message_id = kwargs.last_message_id;
+
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+
         // Update record
         const channel_id = ids[0];
         if (!channel_id) {
             throw new Error("Should only be one channel in channel_seen mock params");
         }
-        const channel = this._filter([["id", "=", channel_id]])[0];
-        const messages = this.env["mail.message"]._filter([
+        const [channel] = this._filter([["id", "=", channel_id]]);
+        const messages = MailMessage._filter([
             ["model", "=", "discuss.channel"],
             ["res_id", "=", channel.id],
         ]);
-        if (!messages || messages.length === 0) {
+        if (!messages || messages.length === 0 || !channel) {
             return;
         }
-        if (!channel) {
-            return;
-        }
-        this._setLastSeenMessage([channel.id], last_message_id);
-        const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
-        this.env["bus.bus"]._sendone(
-            channel.channel_type === "chat" ? channel : partner,
-            "discuss.channel.member/seen",
-            {
-                channel_id: channel.id,
-                last_message_id: last_message_id,
-                partner_id: constants.PARTNER_ID,
-            }
-        );
+        this._set_last_seen_message([channel.id], last_message_id);
     }
 
     /**
-     * Simulates the `_set_last_seen_message` method of `discuss.channel`.
-     *
      * @param {number[]} ids
-     * @param {number} messageId
+     * @param {number} message_id
      */
-    _setLastSeenMessage(ids, messageId) {
-        const memberOfCurrentUser = this.env["discuss.channel.member"]._getAsSudoFromContext(
-            ids[0]
-        );
+    _set_last_seen_message(ids, message_id) {
+        const kwargs = parseModelParams(arguments, "ids", "message_id");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        message_id = kwargs.message_id;
+
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        const memberOfCurrentUser = this._find_or_create_member_for_self(ids[0]);
         if (memberOfCurrentUser) {
-            this.env["discuss.channel.member"].write([memberOfCurrentUser.id], {
-                fetched_message_id: messageId,
-                seen_message_id: messageId,
+            DiscussChannelMember.write([memberOfCurrentUser.id], {
+                fetched_message_id: message_id,
+                seen_message_id: message_id,
             });
         }
+        const [channel] = this.search_read([["id", "in", ids]]);
+        const [partner, guest] = ResPartner._get_current_persona();
+        let target = guest ?? partner;
+        if (this._types_allowing_seen_infos().includes(channel.channel_type)) {
+            target = channel;
+        }
+        BusBus._sendone(target, "discuss.channel.member/seen", {
+            channel_id: channel.id,
+            id: memberOfCurrentUser?.id,
+            last_message_id: message_id,
+            [guest ? "guest_id" : "partner_id"]: guest?.id ?? partner?.id,
+        });
     }
 
-    /**
-     * Simulates the `_get_init_channels` method on `discuss.channel`.
-     */
-    _getInitChannels(user) {
-        const members = this.env["discuss.channel.member"]._filter([
-            ["partner_id", "=", user.partner_id],
-            "|",
-            ["fold_state", "in", ["open", "folded"]],
-            ["rtc_inviting_session_id", "!=", false],
+    _types_allowing_seen_infos() {
+        return ["chat", "group"];
+    }
+
+    _get_channels_as_member() {
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
+
+        const guest = MailGuest._get_guest_from_context();
+        const memberDomain = guest
+            ? [["guest_id", "=", guest.id]]
+            : [["partner_id", "=", this.env.user.partner_id]];
+        const members = DiscussChannelMember._filter(memberDomain);
+        const pinnedMembers = members.filter((member) => member.is_pinned);
+        const channels = this._filter([
+            ["channel_type", "in", ["channel", "group"]],
+            ["channel_member_ids", "in", members.map((member) => member.id)],
         ]);
-        return this._filter([["id", "in", members.map((m) => m.channel_id)]]);
+        const pinnedChannels = this._filter([
+            ["channel_type", "not in", ["channel", "group"]],
+            ["channel_member_ids", "in", pinnedMembers.map((member) => member.id)],
+        ]);
+        return channels.concat(pinnedChannels);
+    }
+
+    /** @param {number} id */
+    _find_or_create_member_for_self(id) {
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        const [partner, guest] = ResPartner._get_current_persona();
+        if (!partner && !guest) {
+            return;
+        }
+        return DiscussChannelMember.search_read([
+            ["channel_id", "=", id],
+            guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", partner.id],
+        ])[0];
+    }
+
+    _find_or_create_persona_for_channel(id, guest_name) {
+        const kwargs = parseModelParams(arguments, "id", "guest_name");
+        id = kwargs.id;
+        delete kwargs.id;
+        guest_name = kwargs.guest_name;
+
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
+
+        if (DiscussChannel._find_or_create_member_for_self(id)) {
+            return;
+        }
+        const guestId =
+            MailGuest._get_guest_from_context()?.id ?? MailGuest.create({ name: guest_name });
+        DiscussChannel.write([id], {
+            channel_member_ids: [Command.create({ guest_id: guestId })],
+        });
+        MailGuest._set_auth_cookie(guestId);
     }
 }

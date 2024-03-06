@@ -1,54 +1,92 @@
+import { parseEmail } from "@mail/utils/common/format";
 import { fields, models } from "@web/../tests/web_test_helpers";
+import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
+import { Kwargs } from "@web/../tests/_framework/mock_server/mock_server_utils";
 
 export class ResFake extends models.Model {
     _name = "res.fake";
 
+    _views = {
+        [`search,${DEFAULT_MAIL_SEARCH_ID}`]: /* xml */ `<search/>`,
+        [`form,${DEFAULT_MAIL_VIEW_ID}`]: /* xml */ `
+            <form>
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>`,
+    };
+
+    name = fields.Char({ string: "Name" });
     activity_ids = fields.One2many({ relation: "mail.activity", string: "Activities" });
     email_cc = fields.Char();
     message_ids = fields.One2many({ relation: "mail.message" });
-    message_follower_ids = fields.Char({ string: "Followers" });
+    message_follower_ids = fields.Many2many({ relation: "mail.followers", string: "Followers" });
     partner_ids = fields.One2many({ relation: "res.partner", string: "Related partners" });
+    phone = fields.Char({ string: "Phone number" });
 
     /**
-     * Simulates `_message_get_suggested_recipients` on `res.fake`.
-     *
-     * @param {string} model
-     * @param {number[]} ids
+     * @param {integer[]} ids
+     * @returns {Object}
      */
-    _messageGetSuggestedRecipients(model, ids) {
-        const result = {};
-        const records = this.env[model]._filter([["id", "in", ids]]);
+    _get_customer_information(ids) {
+        const record = this._filter([["id", "in", ids]])[0];
+        const [name, email] = parseEmail(record.email_cc);
+        return {
+            name,
+            email,
+            phone: record.phone,
+        };
+    }
 
-        for (const record of records) {
-            result[record.id] = [];
+    /** @param {number[]} ids */
+    _message_get_suggested_recipients(ids) {
+        /** @type {import("mock_models").MailThread} */
+        const MailThread = this.env["mail.thread"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        const result = [];
+        const records = this._filter([["id", "in", ids]]);
+        for (const id of ids) {
+            const record = records.find((record) => record.id === id);
             if (record.email_cc) {
-                result[record.id].push([false, record.email_cc, undefined, "CC email"]);
+                MailThread._message_add_suggested_recipient.call(
+                    this,
+                    id,
+                    result,
+                    Kwargs({
+                        name: record.email_cc,
+                        email: record.email_cc,
+                        partner: undefined,
+                        reason: "CC email",
+                    })
+                );
             }
-            const partners = this.env["res.partner"]._filter([["id", "in", record.partner_ids]]);
+            const partners = ResPartner._filter([["id", "in", record.partner_ids]]);
             if (partners.length) {
                 for (const partner of partners) {
-                    result[record.id].push([
-                        partner.id,
-                        partner.display_name,
-                        undefined,
-                        "Email partner",
-                    ]);
+                    MailThread._message_add_suggested_recipient.call(
+                        this,
+                        id,
+                        result,
+                        Kwargs({
+                            email: partner.email,
+                            partner,
+                            reason: "Email partner",
+                        })
+                    );
                 }
             }
         }
         return result;
     }
 
-    /**
-     * Simulates `_message_compute_subject` on `res.fake`.
-     *
-     * @param {string} model
-     * @param {number[]} ids
-     */
-    _messageComputeSubject(model, ids) {
-        if (model === "res.fake") {
-            return new Map(ids.map((id) => [id, "Custom Default Subject"]));
-        }
-        return super.env["mail.thread"]._messageComputeSubject(model, ids);
+    /** @param {number[]} ids */
+    _message_compute_subject(ids) {
+        return new Map(ids.map((id) => [id, "Custom Default Subject"]));
     }
 }
