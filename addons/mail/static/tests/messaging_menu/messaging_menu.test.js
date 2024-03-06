@@ -8,7 +8,7 @@ import { deserializeDateTime } from "@web/core/l10n/dates";
 import { Command } from "@mail/../tests/helpers/command";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
 import { getOrigin } from "@web/core/utils/urls";
@@ -270,7 +270,7 @@ QUnit.test("Is closed after clicking on new message", async () => {
 });
 
 QUnit.test("no 'New Message' button when discuss is open", async () => {
-    const { openDiscuss, openView } = await start();
+    const { openView } = await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains("button", { text: "New Message" });
 
@@ -589,7 +589,7 @@ QUnit.test("open chat window from preview", async () => {
 
 QUnit.test('"Start a conversation" in mobile shows channel selector (+ click away)', async () => {
     patchUiSize({ height: 360, width: 640 });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Chat" });
@@ -607,7 +607,7 @@ QUnit.test('"Start a conversation" in mobile shows channel selector (+ click awa
 });
 QUnit.test('"New Channel" in mobile shows channel selector (+ click away)', async () => {
     patchUiSize({ height: 360, width: 640 });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Channel" });
@@ -649,7 +649,7 @@ QUnit.test("Counter is updated when receiving new message", async () => {
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss();
     pyEnv.withUser(userId, () =>
         rpc("/mail/message/post", {

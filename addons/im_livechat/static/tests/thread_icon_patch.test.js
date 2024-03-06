@@ -3,7 +3,7 @@ import { rpc } from "@web/core/network/rpc";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { contains } from "@web/../tests/utils";
 
@@ -21,7 +21,7 @@ QUnit.test("Public website visitor is typing", async () => {
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-ThreadIcon .fa.fa-comments");
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];

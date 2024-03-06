@@ -7,7 +7,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { Command } from "@mail/../tests/helpers/command";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
@@ -19,7 +19,7 @@ QUnit.test('"Start a conversation" item selection opens chat', async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Gandalf" });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Chat" });
@@ -35,7 +35,7 @@ QUnit.test('"New channel" item selection opens channel (existing)', async () => 
     patchUiSize({ height: 360, width: 640 });
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "Gryffindors" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Channel" });
@@ -48,7 +48,7 @@ QUnit.test('"New channel" item selection opens channel (existing)', async () => 
 
 QUnit.test('"New channel" item selection opens channel (new)', async () => {
     patchUiSize({ height: 360, width: 640 });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Channel" });
@@ -84,7 +84,7 @@ QUnit.test("channel preview ignores empty message", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { text: "before last" });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
@@ -103,7 +103,7 @@ QUnit.test("channel preview ignores transient message", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/who");
     await click(".o-mail-Composer-send:enabled");
@@ -142,7 +142,7 @@ QUnit.test("channel preview ignores messages from the past", async () => {
         parent_id: messageId,
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await contains(".o-mail-Message-content", { text: "last message" });

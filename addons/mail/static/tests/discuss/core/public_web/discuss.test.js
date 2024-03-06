@@ -4,8 +4,8 @@ import {
     waitUntilSubscribe,
 } from "@bus/../tests/helpers/websocket_event_deferred";
 
-import { start } from "@mail/../tests/helpers/test_utils";
 import { Command } from "@mail/../tests/helpers/command";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains } from "@web/../tests/utils";
 import { nextTick } from "@web/../tests/helpers/utils";
@@ -21,7 +21,7 @@ QUnit.test("bus subscription updated when joining/leaving thread as non member",
         channel_member_ids: [Command.create({ partner_id: johnPartner })],
         name: "General",
     });
-    const { openDiscuss } = await start();
+    await start();
     await Promise.all([openDiscuss(channelId), waitForChannels([`discuss.channel_${channelId}`])]);
     await click("[title='Leave this channel']");
     await waitForChannels([`discuss.channel_${channelId}`], { operation: "delete" });
@@ -33,7 +33,7 @@ QUnit.test("bus subscription updated when joining locally pinned thread", async 
         channel_member_ids: [],
         name: "General",
     });
-    const { openDiscuss } = await start();
+    await start();
     await Promise.all([openDiscuss(channelId), waitForChannels([`discuss.channel_${channelId}`])]);
     await click("[title='Add Users']");
     await click(".o-discuss-ChannelInvitation-selectable", {
@@ -51,7 +51,7 @@ QUnit.test("bus subscription kept after receiving a message as non member", asyn
         channel_member_ids: [Command.create({ partner_id: johnPartner })],
         name: "General",
     });
-    const { openDiscuss } = await start();
+    await start();
     await Promise.all([openDiscuss(channelId), waitUntilSubscribe(`discuss.channel_${channelId}`)]);
     await pyEnv.withUser(johnUser, () =>
         rpc("/mail/message/post", {

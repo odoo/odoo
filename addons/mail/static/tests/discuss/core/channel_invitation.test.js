@@ -3,7 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains, insertText } from "@web/../tests/utils";
 
@@ -26,7 +26,7 @@ QUnit.test(
             ],
             channel_type: "channel",
         });
-        const { openDiscuss } = await start();
+        await start();
         await openDiscuss(channelId);
         await click(".o-mail-Discuss-header button[title='Add Users']");
         await contains(".o-discuss-ChannelInvitation");
@@ -79,7 +79,7 @@ QUnit.test("should be able to search for a new user to invite from an existing c
         ],
         channel_type: "channel",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
@@ -102,7 +102,7 @@ QUnit.test("Invitation form should display channel group restriction", async () 
         channel_type: "channel",
         group_public_id: groupId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
     await contains(".o-discuss-ChannelInvitation div", {
@@ -131,7 +131,7 @@ QUnit.test("should be able to create a new group chat from an existing chat", as
         ],
         channel_type: "chat",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
@@ -156,7 +156,7 @@ QUnit.test("unnamed group chat should display correct name just after being invi
             channel_type: "group",
         },
     ]);
-    const { env, openDiscuss } = await start();
+    const { env } = await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Jane and Mitchell Admin" });

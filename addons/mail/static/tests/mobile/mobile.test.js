@@ -3,7 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains } from "@web/../tests/utils";
 
@@ -14,7 +14,7 @@ QUnit.test("auto-select 'Inbox' when discuss had channel as active thread", asyn
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
 
     patchUiSize({ height: 360, width: 640 });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-MessagingMenu-tab.text-primary.fw-bolder", { text: "Channel" });
 

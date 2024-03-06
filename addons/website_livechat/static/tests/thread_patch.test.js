@@ -1,7 +1,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { url } from "@web/core/utils/urls";
 import { contains } from "@web/../tests/utils";
@@ -33,7 +33,7 @@ QUnit.test("Rendering of visitor banner", async () => {
         livechat_operator_id: pyEnv.currentPartnerId,
         livechat_visitor_id: visitorId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains("img.o-website_livechat-VisitorBanner-avatar");
     const guest = pyEnv["mail.guest"].searchRead([["id", "=", guestId]])[0];
@@ -74,7 +74,7 @@ QUnit.test("Livechat with non-logged visitor should show visitor banner", async 
         livechat_operator_id: pyEnv.currentPartnerId,
         livechat_visitor_id: visitorId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-website_livechat-VisitorBanner");
 });
@@ -101,7 +101,7 @@ QUnit.test("Livechat with logged visitor should show visitor banner", async () =
         livechat_operator_id: pyEnv.currentPartnerId,
         livechat_visitor_id: visitorId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-website_livechat-VisitorBanner");
     await contains(".o-website_livechat-VisitorBanner", { text: "Partner Visitor" });
@@ -119,7 +119,7 @@ QUnit.test("Livechat without visitor should not show visitor banner", async () =
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Thread");
     await contains(".o-website_livechat-VisitorBanner", { count: 0 });
@@ -128,7 +128,7 @@ QUnit.test("Livechat without visitor should not show visitor banner", async () =
 QUnit.test("Non-livechat channel should not show visitor banner", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Thread");
     await contains(".o-website_livechat-VisitorBanner", { count: 0 });

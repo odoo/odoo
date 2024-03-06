@@ -4,7 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Composer } from "@mail/core/common/composer";
 import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
@@ -39,7 +39,7 @@ QUnit.test('display partner mention suggestions on typing "@"', async () => {
             Command.create({ partner_id: partnerId_2 }),
         ],
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion strong", { count: 3 });
@@ -66,7 +66,7 @@ QUnit.test(
                 Command.create({ partner_id: partnerId_2 }),
             ],
         });
-        const { openDiscuss } = await start();
+        await start();
         await openDiscuss(channelId);
         await contains(".o-mail-Composer-input");
         await insertText(".o-mail-Composer-input", "first message");
@@ -99,7 +99,7 @@ QUnit.test("show other channel member in @ mention", async () => {
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
@@ -118,7 +118,7 @@ QUnit.test("select @ mention insert mention text in composer", async () => {
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
@@ -138,7 +138,7 @@ QUnit.test("select @ mention closes suggestions", async () => {
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
@@ -151,7 +151,7 @@ QUnit.test('display channel mention suggestions on typing "#"', async () => {
         name: "General",
         channel_type: "channel",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
@@ -165,7 +165,7 @@ QUnit.test("mention a channel", async () => {
         name: "General",
         channel_type: "channel",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
@@ -179,7 +179,7 @@ QUnit.test("Channel suggestions do not crash after rpc returns", async (assert) 
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const deferred = makeDeferred();
-    const { openDiscuss } = await start({
+    await start({
         async mockRPC(args, params, originalFn) {
             if (params.method === "get_mention_suggestions") {
                 const res = await originalFn(args, params);
@@ -202,7 +202,7 @@ QUnit.test("Channel suggestions do not crash after rpc returns", async (assert) 
 QUnit.test("Suggestions are shown after delimiter was used in text (@)", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion");
@@ -215,7 +215,7 @@ QUnit.test("Suggestions are shown after delimiter was used in text (@)", async (
 QUnit.test("Suggestions are shown after delimiter was used in text (#)", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#");
     await contains(".o-mail-Composer-suggestion");

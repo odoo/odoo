@@ -3,7 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { PRESENT_THRESHOLD } from "@mail/core/common/thread";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains, insertText, scroll } from "@web/../tests/utils";
 import { SIZES, patchUiSize } from "../helpers/patch_ui_size";
@@ -21,7 +21,7 @@ QUnit.test("Basic jump to present when scrolling to outdated messages", async (a
             res_id: channelId,
         });
     }
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 20 });
     await contains(".o-mail-Thread");
@@ -103,7 +103,7 @@ QUnit.test("Jump to old reply should prompt jump to present", async () => {
         res_id: channelId,
         parent_id: oldestMessageId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");
@@ -146,7 +146,7 @@ QUnit.test("Jump to old reply should prompt jump to present (RPC small delay)", 
         res_id: channelId,
         parent_id: oldestMessageId,
     });
-    const { openDiscuss } = await start({
+    await start({
         async mockRPC(route, args) {
             if (route === "/discuss/channel/messages") {
                 await new Promise(setTimeout); // small delay
@@ -191,7 +191,7 @@ QUnit.test("Post message when seeing old message should jump to present", async 
         res_id: channelId,
         parent_id: oldestMessageId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");

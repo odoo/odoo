@@ -1,7 +1,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains } from "@web/../tests/utils";
 
@@ -25,7 +25,7 @@ QUnit.test("Can invite a partner to a livechat channel", async () => {
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("button[title='Add Users']");
     await click("input", {
@@ -62,7 +62,7 @@ QUnit.test("Available operators come first", async () => {
         channel_type: "livechat",
     });
 
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("button[title='Add Users']");
     await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });
@@ -103,7 +103,7 @@ QUnit.test("Partners invited most frequently by the current user come first", as
         livechat_operator_id: pyEnv.currentPartnerId,
     });
 
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "Visitor #1" });
     await click("button[title='Add Users']");

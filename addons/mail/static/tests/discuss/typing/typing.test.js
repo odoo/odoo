@@ -8,7 +8,7 @@ import { Store } from "@mail/core/common/store_service";
 import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/common/composer_patch";
 import { OTHER_LONG_TYPING } from "@mail/discuss/typing/common/typing_service";
 import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains, insertText } from "@web/../tests/utils";
 
@@ -25,7 +25,7 @@ QUnit.test('receive other member typing status "is typing"', async () => {
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing");
     await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
@@ -52,7 +52,7 @@ QUnit.test(
                 Command.create({ partner_id: partnerId }),
             ],
         });
-        const { openDiscuss } = await start();
+        await start();
         await openDiscuss(channelId);
         await contains(".o-discuss-Typing");
         await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
@@ -89,7 +89,7 @@ QUnit.test(
                 Command.create({ partner_id: partnerId }),
             ],
         });
-        const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+        const { advanceTime } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
         await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
         await contains(".o-discuss-Typing");
@@ -120,7 +120,7 @@ QUnit.test(
                 Command.create({ partner_id: partnerId }),
             ],
         });
-        const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+        const { advanceTime } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
         await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
         await contains(".o-discuss-Typing");
@@ -169,7 +169,7 @@ QUnit.test('receive several other members typing status "is typing"', async () =
             Command.create({ partner_id: partnerId_3 }),
         ],
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing");
     await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
@@ -218,7 +218,7 @@ QUnit.test('receive several other members typing status "is typing"', async () =
 QUnit.test("current partner notify is typing to other thread members", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    const { openDiscuss } = await start({
+    await start({
         async mockRPC(route, args) {
             if (route === "/discuss/channel/notify_typing") {
                 assert.step(`notify_typing:${args.is_typing}`);
@@ -235,7 +235,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-        const { advanceTime, openDiscuss } = await start({
+        const { advanceTime } = await start({
             hasTimeControl: true,
             async mockRPC(route, args) {
                 if (route === "/discuss/channel/notify_typing") {
@@ -265,7 +265,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-        const { advanceTime, openDiscuss } = await start({
+        const { advanceTime } = await start({
             hasTimeControl: true,
             async mockRPC(route, args) {
                 if (route === "/discuss/channel/notify_typing") {
@@ -288,7 +288,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-        const { openDiscuss } = await start({
+        await start({
             async mockRPC(route, args) {
                 if (route === "/discuss/channel/notify_typing") {
                     assert.step(`notify_typing:${args.is_typing}`);
@@ -318,7 +318,7 @@ QUnit.test("chat: correspondent is typing", async () => {
         ],
         channel_type: "chat",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-threadIcon");
     await contains(".fa-circle.text-success");

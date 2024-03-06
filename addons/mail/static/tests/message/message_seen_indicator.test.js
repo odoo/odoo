@@ -3,7 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { contains } from "@web/../tests/utils";
 
@@ -36,7 +36,7 @@ QUnit.test("rendering when just one has received the message", async (assert) =>
         fetched_message_id: messageId,
         seen_message_id: false,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-MessageSeenIndicator");
     assert.doesNotHaveClass($(".o-mail-MessageSeenIndicator"), "o-all-seen");
@@ -67,7 +67,7 @@ QUnit.test("rendering when everyone have received the message", async (assert) =
         fetched_message_id: messageId,
         seen_message_id: false,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-MessageSeenIndicator");
     assert.doesNotHaveClass($(".o-mail-MessageSeenIndicator"), "o-all-seen");
@@ -105,7 +105,7 @@ QUnit.test("rendering when just one has seen the message", async (assert) => {
     pyEnv["discuss.channel.member"].write([memberId_1], {
         seen_message_id: messageId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-MessageSeenIndicator");
     assert.doesNotHaveClass($(".o-mail-MessageSeenIndicator"), "o-all-seen");
@@ -139,7 +139,7 @@ QUnit.test("rendering when just one has seen & received the message", async (ass
         seen_message_id: mesageId,
         fetched_message_id: mesageId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-MessageSeenIndicator");
     assert.doesNotHaveClass($(".o-mail-MessageSeenIndicator"), "o-all-seen");
@@ -170,7 +170,7 @@ QUnit.test("rendering when just everyone has seen the message", async (assert) =
         fetched_message_id: messageId,
         seen_message_id: messageId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-MessageSeenIndicator");
     assert.hasClass($(".o-mail-MessageSeenIndicator"), "o-all-seen");
@@ -194,7 +194,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async (
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await contains(".o-mail-MessageSeenIndicator i", { count: 0 });
@@ -230,7 +230,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async ()
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await contains(".o-mail-MessageSeenIndicator i", { count: 0 });
@@ -268,7 +268,7 @@ QUnit.test(
             model: "discuss.channel",
             res_id: channelId,
         });
-        const { openDiscuss } = await start();
+        await start();
         await openDiscuss(channelId);
         await contains(".o-mail-Message");
         await contains(".o-mail-MessageSeenIndicator i", { count: 0 });
@@ -321,7 +321,7 @@ QUnit.test(
         });
         const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
         pyEnv["discuss.channel.member"].write(memberIds, { seen_message_id: messageId });
-        const { openDiscuss } = await start();
+        await start();
         await openDiscuss(channelId);
         await contains(".o-mail-Message");
         await contains(".o-mail-MessageSeenIndicator", { count: 0 });
@@ -357,7 +357,7 @@ QUnit.test(
         ]);
         const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
         pyEnv["discuss.channel.member"].write(memberIds, { seen_message_id: messageId_2 });
-        const { openDiscuss } = await start();
+        await start();
         await openDiscuss(channelId);
         await contains(".o-mail-Message", {
             text: "Message before last seen",
@@ -390,7 +390,7 @@ QUnit.test(
             fetched_message_id: messageId,
             seen_message_id: messageId - 1,
         });
-        const { openDiscuss } = await start();
+        await start();
         await openDiscuss(channelId);
         await contains(".o-mail-Message");
         await contains(".o-mail-MessageSeenIndicator");

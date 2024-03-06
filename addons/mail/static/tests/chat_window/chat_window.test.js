@@ -11,7 +11,7 @@ import {
 } from "@mail/core/common/chat_window_service";
 import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 import {
@@ -877,7 +877,7 @@ QUnit.test(
                 900,
             "should not have enough space to open 3 chat windows simultaneously"
         );
-        const { openDiscuss } = await start();
+        await start();
         await openDiscuss();
         // open, from systray menu, chat windows of channels with id 1, 2, 3
         await click(".o_menu_systray i[aria-label='Messages']");
@@ -896,7 +896,7 @@ QUnit.test(
 QUnit.test("chat window: composer state conservation on toggle discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
-    const { openDiscuss, openView } = await start();
+    const { openView } = await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     // Set content of the composer of the chat window
@@ -993,7 +993,7 @@ QUnit.test("chat window: scroll conservation on toggle discuss", async () => {
             res_id: channelId,
         });
     }
-    const { openDiscuss, openView } = await start();
+    const { openView } = await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 30 });
@@ -1051,7 +1051,7 @@ QUnit.test(
                 res_id: channelId,
             });
         }
-        const { openDiscuss, openView } = await start();
+        const { openView } = await start();
         await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
         await click(".o-mail-NotificationItem");
         await contains(".o-mail-Message", { count: 30 });

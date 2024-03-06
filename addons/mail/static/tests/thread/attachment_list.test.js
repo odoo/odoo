@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { getOrigin } from "@web/core/utils/urls";
 import { click, contains } from "@web/../tests/utils";
@@ -26,7 +26,7 @@ QUnit.test("simplest layout", async (assert) => {
         res_id: channelId,
         message_type: "comment",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message .o-mail-AttachmentList");
     assert.hasAttrValue($(".o-mail-AttachmentCard"), "title", "test.txt");
@@ -55,7 +55,7 @@ QUnit.test("layout with card details and filename and extension", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentCard", { text: "test.txt" });
     await contains(".o-mail-AttachmentCard small", { text: "txt" });
@@ -80,7 +80,7 @@ QUnit.test(
             res_id: channelId,
             message_type: "comment",
         });
-        const { openDiscuss } = await start({
+        await start({
             async mockRPC(route, args) {
                 if (route === "/mail/attachment/delete") {
                     assert.step("attachment_unlink");
@@ -114,7 +114,7 @@ QUnit.test("view attachment", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentImage img");
     await click(".o-mail-AttachmentImage");
@@ -138,7 +138,7 @@ QUnit.test("close attachment viewer", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentImage img");
 
@@ -177,7 +177,7 @@ QUnit.test(
             res_id: channelId,
             message_type: "comment",
         });
-        const { openDiscuss } = await start();
+        await start();
         await openDiscuss(channelId);
         await click(".o-mail-AttachmentImage");
         await contains(".o-FileViewer-viewImage");
@@ -214,7 +214,7 @@ QUnit.test("plain text file is viewable", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentCard.o-viewable");
 });
@@ -236,7 +236,7 @@ QUnit.test("HTML file is viewable", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentCard.o-viewable");
 });
@@ -258,7 +258,7 @@ QUnit.test("ODT file is not viewable", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentCard:not(.o-viewable)");
 });
@@ -280,7 +280,7 @@ QUnit.test("DOCX file is not viewable", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentCard:not(.o-viewable)");
 });
@@ -310,7 +310,7 @@ QUnit.test(
             res_id: channelId,
             message_type: "comment",
         });
-        const { openDiscuss } = await start();
+        await start();
         await openDiscuss(channelId);
         await contains(".o-mail-AttachmentImage[title='test.png'] img.o-viewable");
         await contains(".o-mail-AttachmentCard:not(.o-viewable)", { text: "test.odt" });
@@ -341,7 +341,7 @@ QUnit.test("img file has proper src in discuss.channel", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(
         `.o-mail-AttachmentImage[title='test.png'] img[data-src='${getOrigin()}/discuss/channel/${channelId}/image/${attachmentId}?filename=test.png&width=1920&height=300']`
