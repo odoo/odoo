@@ -541,7 +541,7 @@ class AccountMoveSend(models.TransientModel):
         """ Helper to know if we can commit the current transaction or not.
         :return: True if commit is accepted, False otherwise.
         """
-        return not tools.config['test_enable'] and not modules.module.current_test
+        return not modules.module.current_test
 
     @api.model
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):

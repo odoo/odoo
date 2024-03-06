@@ -170,7 +170,7 @@ class ResConfigSettings(models.TransientModel):
         # the client side is rolled back and the edi user is deleted on the client side
         # but remains on the proxy side.
         # it is important to keep these two in sync, so commit before activating.
-        if not tools.config['test_enable'] and not modules.module.current_test:
+        if not modules.module.current_test:
             self.env.cr.commit()
 
         company_details = {
@@ -270,7 +270,7 @@ class ResConfigSettings(models.TransientModel):
         self.ensure_one()
         # check if the participant has been already registered
         self.account_peppol_edi_user._peppol_get_participant_status()
-        if not tools.config['test_enable'] and not modules.module.current_test:
+        if not modules.module.current_test:
             self.env.cr.commit()
 
         if self.account_peppol_proxy_state == 'active':
@@ -318,7 +318,7 @@ class ResConfigSettings(models.TransientModel):
         # so that the invoices are acknowledged
         self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
         self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
-        if not tools.config['test_enable'] and not modules.module.current_test:
+        if not modules.module.current_test:
             self.env.cr.commit()
 
         self._call_peppol_proxy(endpoint='/api/peppol/1/cancel_peppol_registration')
