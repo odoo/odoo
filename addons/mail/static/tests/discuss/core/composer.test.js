@@ -3,7 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Composer } from "@mail/core/common/composer";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
@@ -22,7 +22,7 @@ QUnit.module("composer", {
 QUnit.test('do not send typing notification on typing "/" command', async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "channel" });
-    const { openDiscuss } = await start({
+    await start({
         async mockRPC(route, args) {
             if (route === "/discuss/channel/notify_typing") {
                 assert.step(`notify_typing:${args.is_typing}`);
@@ -39,7 +39,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "channel" });
-        const { openDiscuss } = await start({
+        await start({
             async mockRPC(route, args) {
                 if (route === "/discuss/channel/notify_typing") {
                     assert.step(`notify_typing:${args.is_typing}`);
@@ -61,7 +61,7 @@ QUnit.test("add an emoji after a command", async () => {
         name: "General",
         channel_type: "channel",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "/");

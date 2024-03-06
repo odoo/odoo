@@ -2,9 +2,9 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { start } from "@mail/../tests/helpers/test_utils";
 import { GifPicker } from "@mail/discuss/gif_picker/common/gif_picker";
+import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains, insertText, scroll } from "@web/../tests/utils";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -79,7 +79,7 @@ QUnit.module("GIF picker");
 QUnit.test("composer should display a GIF button", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains("button[aria-label='GIFs']");
 });
@@ -87,7 +87,7 @@ QUnit.test("composer should display a GIF button", async () => {
 QUnit.test("Composer GIF button should open the GIF picker", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
     await contains(".o-discuss-GifPicker");
@@ -96,7 +96,7 @@ QUnit.test("Composer GIF button should open the GIF picker", async () => {
 QUnit.test("Searching for a GIF", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    const { openDiscuss } = await start({
+    await start({
         mockRPC(route) {
             if (route === "/discuss/gif/search") {
                 return rpc.search;
@@ -113,7 +113,7 @@ QUnit.test("Searching for a GIF", async () => {
 QUnit.test("Open a GIF category trigger the search for the category", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    const { openDiscuss } = await start({
+    await start({
         mockRPC(route) {
             if (route === "/discuss/gif/categories") {
                 return rpc.categories;
@@ -133,7 +133,7 @@ QUnit.test("Open a GIF category trigger the search for the category", async () =
 QUnit.test("Reopen GIF category list when going back", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    const { openDiscuss } = await start({
+    await start({
         mockRPC(route) {
             if (route === "/discuss/gif/search") {
                 return rpc.search;
@@ -153,7 +153,7 @@ QUnit.test("Reopen GIF category list when going back", async () => {
 QUnit.test("Add GIF to favorite", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    const { openDiscuss } = await start({
+    await start({
         mockRPC(route) {
             if (route === "/discuss/gif/search") {
                 return rpc.search;
@@ -187,7 +187,7 @@ QUnit.test(
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "General" });
         patchUiSize({ size: SIZES.SM });
-        const { openDiscuss } = await start();
+        await start();
         await openDiscuss(channelId);
         await click("span", { text: "General" });
         await click("button[aria-label='Emojis']");
@@ -201,7 +201,7 @@ QUnit.test(
 QUnit.test("Searching for a GIF with a failling RPC should display an error", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    const { openDiscuss } = await start({
+    await start({
         mockRPC(route) {
             if (route === "/discuss/gif/search") {
                 throw new Error("Rpc failed");
@@ -228,7 +228,7 @@ QUnit.test(
 
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "" });
-        const { openDiscuss } = await start({
+        await start({
             mockRPC(route) {
                 if (route === "/discuss/gif/search") {
                     const _rpc = rpc.search;

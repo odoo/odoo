@@ -1,7 +1,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { contains, insertText } from "@web/../tests/utils";
 
@@ -21,7 +21,7 @@ QUnit.test("Suggestions are shown after delimiter was used in text (:)", async (
             Command.create({ partner_id: pyEnv.publicPartnerId }),
         ],
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", ":");
     await contains(".o-mail-Composer-suggestion strong", { text: "hello" });
@@ -48,7 +48,7 @@ QUnit.test("Cannot mention other channels in a livechat", async () => {
             name: "Link and Zelda",
         },
     ]);
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#");
     await contains(".o-mail-Composer-suggestion", { count: 0 });

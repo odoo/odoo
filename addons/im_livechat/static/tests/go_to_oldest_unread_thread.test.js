@@ -4,8 +4,7 @@ import { insertText, contains, focus } from "@web/../tests/utils";
 import { Command } from "@mail/../tests/helpers/command";
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("go to oldest unread livechat");
 
@@ -69,7 +68,7 @@ QUnit.test("tab on discuss composer goes to oldest unread livechat", async () =>
         },
     ]);
 
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelIds[0]);
 
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 11" });
@@ -214,7 +213,7 @@ QUnit.test("tab on composer doesn't switch thread if user is typing", async () =
         },
     ]);
 
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelIds[0]);
     await insertText(".o-mail-Composer-input", "Hello, ");
     triggerHotkey("Tab");
@@ -248,7 +247,7 @@ QUnit.test("tab on composer doesn't switch thread if no unread thread", async ()
         },
     ]);
 
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelIds[0]);
     await focus(".o-mail-Composer-input");
     triggerHotkey("Tab");
