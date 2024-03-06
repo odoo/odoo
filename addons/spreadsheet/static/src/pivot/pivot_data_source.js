@@ -70,6 +70,7 @@ export class OdooPivot extends OdooViewsDataSource {
             },
             {
                 orm: this._orm,
+                serverData: this.odooDataProvider.serverData,
                 metadataRepository: this.metadataRepository,
             }
         );

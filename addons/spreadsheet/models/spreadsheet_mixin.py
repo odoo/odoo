@@ -5,6 +5,9 @@ import zipfile
 import base64
 import json
 import re
+
+from collections import defaultdict
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, MissingError
 
@@ -78,6 +81,23 @@ class SpreadsheetMixin(models.AbstractModel):
     @api.onchange('spreadsheet_binary_data')
     def _onchange_data_(self):
         self._check_spreadsheet_data()
+
+    @api.model
+    def get_display_names_for_spreadsheet(self, args):
+        ids_per_model = defaultdict(list)
+        for arg in args:
+            ids_per_model[arg["model"]].append(arg["id"])
+        display_names = defaultdict(dict)
+        for model, ids in ids_per_model.items():
+            records = self.env[model].with_context(active_test=False).search([("id", "in", ids)])
+            for record in records:
+                display_names[model][record.id] = record.display_name
+
+        # return the display names in the same order as the input
+        return [
+            display_names[arg["model"]].get(arg["id"])
+            for arg in args
+        ]
 
     def _empty_spreadsheet_data_base64(self):
         """Create an empty spreadsheet workbook.
