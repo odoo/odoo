@@ -17,20 +17,25 @@ patch(Thread, {
             return thread.fetchChannelInfoDeferred;
         }
         thread.fetchChannelInfoState = "fetching";
-        thread.fetchChannelInfoDeferred = new Deferred();
+        const def = new Deferred();
+        thread.fetchChannelInfoDeferred = def;
         thread.fetchChannelInfo().then(
             (result) => {
-                thread.fetchChannelInfoState = "fetched";
-                thread.fetchChannelInfoDeferred.resolve(result);
-                thread.fetchChannelInfoDeferred = undefined;
+                if (thread.exists()) {
+                    thread.fetchChannelInfoState = "fetched";
+                    thread.fetchChannelInfoDeferred = undefined;
+                }
+                def.resolve(result);
             },
             (error) => {
-                thread.fetchChannelInfoState = "not_fetched";
-                thread.fetchChannelInfoDeferred.reject(error);
-                thread.fetchChannelInfoDeferred = undefined;
+                if (thread.exists()) {
+                    thread.fetchChannelInfoState = "not_fetched";
+                    thread.fetchChannelInfoDeferred = undefined;
+                }
+                def.reject(error);
             }
         );
-        return thread.fetchChannelInfoDeferred;
+        return def;
     },
 });
 
