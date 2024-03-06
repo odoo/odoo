@@ -2465,11 +2465,7 @@
                         <i class="fa fa-pencil"></i>
                     </a>
                     <t t-if="tx_sudo.state == 'pending'">
-                        <t t-if="tx_sudo.last_state_change.date() &lt; datetime.datetime.now().date()">
-                            <t t-set="converted_datetime" t-value="tx_sudo._datetime_to_string(tx_sudo.last_state_change)"/>
-                            Your payment made on <t t-out="converted_datetime[0]"/> at <t t-out="converted_datetime[1]"/> is still pending; we will send you an email once it is confirmed.
-                        </t>
-                        <t t-else="" t-out="tx_sudo.provider_id.sudo().pending_msg"/>
+                        <t t-out="tx_sudo._get_pending_message()"/>
                     </t>
                     <t t-if="tx_sudo.state == 'done'">
                         <span t-if='tx_sudo.provider_id.sudo().done_msg' t-out="tx_sudo.provider_id.sudo().done_msg"/>

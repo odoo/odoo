@@ -15,7 +15,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 from odoo.tools import consteq, format_amount, ustr
-from odoo.tools.misc import format_date, format_time, hmac as hmac_tool
+from odoo.tools.misc import hmac as hmac_tool, format_date, format_time
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -912,19 +912,6 @@ class PaymentTransaction(models.Model):
 
     #=== BUSINESS METHODS - POST-PROCESSING ===#
 
-    def _datetime_to_string(self, value):
-        """ Return a last state change value in user timezone.
-        `value`: Last state change value in UTC timezone
-
-        :return: last state change date and time value in user timezone
-        :rtype: str
-        """
-        user_tz = request and pytz.timezone(request.httprequest.cookies.get('tz')) or pytz.UTC
-        dt_time = value.astimezone(user_tz).replace(tzinfo=None)
-        parsed_date = format_date(self.env, dt_time.date())
-        parsed_time = format_time(self.env, dt_time.time())
-        return parsed_date, parsed_time
-
     def _get_post_processing_values(self):
         """ Return a dict of values used to display the status of the transaction.
 
@@ -956,14 +943,7 @@ class PaymentTransaction(models.Model):
 
         display_message = None
         if self.state == 'pending':
-            if self.last_state_change.date() < datetime.now().date():
-                converted_date, converted_time = self._datetime_to_string(self.last_state_change)
-                display_message = (
-                    _("Your payment made on {} at {} is still pending; "
-                      "we will send you an email once it is confirmed.").format(converted_date, converted_time)
-                )
-            else:
-                display_message = self.provider_id.pending_msg
+            display_message = self._get_pending_message()
         elif self.state == 'done':
             display_message = self.provider_id.done_msg
         elif self.state == 'cancel':
@@ -1169,3 +1149,22 @@ class PaymentTransaction(models.Model):
         :rtype: recordset of `payment.transaction`
         """
         return self.filtered(lambda t: t.state != 'draft').sorted()[:1]
+
+    def _get_pending_message(self):
+        """ Return pending message according to last date transaction moved to pending state.
+
+        :return: The pending message with date and time when tx moved in pending state.
+        :rtype: str
+        """
+        self.ensure_one()
+        if self.last_state_change.date() == datetime.now().date():
+            return self.provider_id.sudo().pending_msg
+        tz = request.httprequest.cookies.get('tz') if request else self.partner_id.tz
+        locale_datetime = self.last_state_change.astimezone(pytz.timezone(tz or 'UTC'))
+        formatted_date = format_date(self.env, locale_datetime.date())
+        formatted_time = format_time(self.env, locale_datetime.time(), time_format='short')
+        return _(
+            "Your payment made on %(formatted_date)s at %(formatted_time)s is still pending; "
+            "we will send you an email once it is confirmed.",
+            formatted_date=formatted_date, formatted_time=formatted_time
+        )

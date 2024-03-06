@@ -281,11 +281,7 @@
         </t>
         <t t-elif="tx.state == 'pending'">
             <t t-set="alert_style">warning</t>
-            <t t-if="tx.last_state_change.date() &lt; datetime.datetime.now().date()">
-                <t t-set="converted_datetime" t-value="tx._datetime_to_string(tx.last_state_change)"/>
-                <t t-set="status_message" t-value="'Your payment made on %s at %s is still pending; we will send you an email once it is confirmed.' % (converted_datetime[0], converted_datetime[1])"/>
-            </t>
-            <t t-else="" t-set="status_message" t-value="tx.provider_id.sudo().pending_msg"/>
+            <t t-set="status_message" t-value="tx._get_pending_message()"/>
         </t>
         <t t-elif="tx.state == 'authorized'">
             <t t-set="alert_style">success</t>
