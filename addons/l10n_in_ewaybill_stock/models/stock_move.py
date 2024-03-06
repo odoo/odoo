@@ -2,6 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class StockMove(models.Model):
@@ -15,76 +18,46 @@ class StockMove(models.Model):
         comodel_name='res.currency',
         related='company_id.currency_id')
 
+    # Need to store values because we send it to the ewaybill and we need to keep the same value
     ewaybill_price_unit = fields.Float(
         compute='_compute_ewaybill_price_unit',
-        digits='Product Price')
-
+        digits='Product Price',
+        store=True)
     ewaybill_tax_ids = fields.Many2many(
         comodel_name='account.tax',
         string="Taxes",
-        compute='_compute_tax_ids')
+        compute='_compute_tax_ids',
+        store=True)
 
-    ewaybill_price_subtotal = fields.Monetary(
-        string="Subtotal",
-        compute='_compute_amount',
-        currency_field='ewaybill_company_currency_id')
-
-    ewaybill_price_total = fields.Monetary(
-        string="Total",
-        compute='_compute_amount',
-        currency_field='ewaybill_company_currency_id')
-
-    @api.depends('product_id', 'product_uom', 'quantity')
+    @api.depends('product_id.uom_id', 'product_id.standard_price', 'ewaybill_id')
     def _compute_ewaybill_price_unit(self):
         for line in self:
-            line.ewaybill_price_unit = line.product_id.uom_id._compute_price(line.product_id.with_company(line.company_id).standard_price, line.product_uom)
+            if line.ewaybill_id:
+                if line.ewaybill_id.state == 'pending':
+                    line.ewaybill_price_unit = line.product_id.uom_id._compute_price(line.product_id.with_company(line.company_id).standard_price, line.product_uom)
+            else:
+                line.ewaybill_price_unit = 0
 
-    @api.depends('product_id', 'product_uom')
+    @api.depends('product_id.supplier_taxes_id', 'product_id.taxes_id', 'ewaybill_id')
     def _compute_tax_ids(self):
         for line in self:
-            company_domain = self.env['account.tax']._check_company_domain(self.company_id)
-            if line.product_id or not line.ewaybill_tax_ids:
-                if line.picking_code == "incoming":
-                    line.ewaybill_tax_ids = line._get_fiscal_position(line.product_id.supplier_taxes_id.filtered_domain(company_domain))
-                else:
-                    line.ewaybill_tax_ids = line._get_fiscal_position(line.product_id.taxes_id.filtered_domain(company_domain))
+            if line.ewaybill_id:
+                if line.ewaybill_id.state == 'pending':
+                    company_domain = self.env['account.tax']._check_company_domain(self.company_id)
+                    if line.picking_code == "incoming":
+                        line.ewaybill_tax_ids = line._get_l10n_in_fiscal_position(line.product_id.supplier_taxes_id.filtered_domain(company_domain))
+                    else:
+                        line.ewaybill_tax_ids = line._get_l10n_in_fiscal_position(line.product_id.taxes_id.filtered_domain(company_domain))
+            else:
+                line.ewaybill_tax_ids = False
 
-    @api.depends('quantity', 'ewaybill_price_unit', 'ewaybill_tax_ids')
-    def _compute_amount(self):
-        for line in self:
-            tax_results = self.env['account.tax']._compute_taxes([
-                line._convert_to_tax_base_line_dict()
-            ])
-            totals = next(iter(tax_results['totals'].values()))
-            amount_untaxed = totals['amount_untaxed']
-            amount_tax = totals['amount_tax']
-
-            line.update({
-                'ewaybill_price_subtotal': amount_untaxed,
-                'ewaybill_price_total': amount_untaxed + amount_tax,
-            })
-
-    def _get_fiscal_position(self, tax):
+    def _get_l10n_in_fiscal_position(self, taxes):
         fiscal_position = self.env['account.chart.template'].ref('fiscal_position_in_inter_state', raise_if_not_found=False)
+        if not fiscal_position:
+            _logger.warning("""
+                Fiscal position with ID fiscal_position_in_inter_state is not found in the system.
+                In case of inter state transaction tax is not auto changed to IGST""")
         if fiscal_position and self.ewaybill_id.transaction_type == "inter_state":
-            return fiscal_position.map_tax(tax)
+            return fiscal_position.map_tax(taxes)
         else:
-            return tax
-
-    def _convert_to_tax_base_line_dict(self, **kwargs):
-        """ Convert the current record to a dictionary in order to use the generic taxes computation method
-        defined on account.tax.
-
-        :return: A python dictionary.
-        """
-        self.ensure_one()
-        return self.env['account.tax']._convert_to_tax_base_line_dict(
-            self,
-            currency=self.ewaybill_company_currency_id,
-            product=self.product_id,
-            taxes=self.ewaybill_tax_ids,
-            price_unit=self.ewaybill_price_unit,
-            quantity=self.quantity,
-            price_subtotal=self.ewaybill_price_subtotal,
-            **kwargs,
-        )
+            return taxes

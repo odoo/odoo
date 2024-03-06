@@ -6,16 +6,15 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header/field[@name='state']" position="before">
-                <button string="Create e-Waybill" type="object" name="action_open_ewaybill_form" invisible="country_code != 'IN' or ewaybill_id != False or state != 'done'"/>
+                <button string="Create e-Waybill" type="object" name="action_l10n_in_ewaybill_create" invisible="country_code != 'IN' or ewaybill_id or state != 'done'" data-hotkey="e"/>
             </xpath>
             <xpath expr="//sheet/div[hasclass('oe_button_box')]" position="inside">
                 <field name="ewaybill_id" invisible="1" />
-                <field name="country_code" invisible="1"/>
-                <button name="action_open_ewaybill"
+                <button name="action_open_l10n_in_ewaybill"
                         class="oe_stat_button"
                         icon="fa-truck"
                         type="object"
-                        invisible="ewaybill_id == False">
+                        invisible="not ewaybill_id">
                         <div class="o_stat_info">
                             <span class="o_stat_text">e-Waybill</span>
                         </div>

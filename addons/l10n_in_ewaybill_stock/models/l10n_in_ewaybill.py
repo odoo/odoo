@@ -17,34 +17,39 @@ from odoo.addons.l10n_in_ewaybill_stock.tools.ewaybill_api import EWayBillApi
 
 class Ewaybill(models.Model):
     _name = "l10n.in.ewaybill"
-    _description = "Ewaybill for stock"
+    _description = "e-Waybill"
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
 
+    # Ewaybill details generated from the API
     name = fields.Char("e-Way bill Number", copy=False, readonly=True)
     ewaybill_date = fields.Date("e-Way bill Date", copy=False, readonly=True)
     ewaybill_expiry_date = fields.Date("e-Way bill Valid Upto", copy=False, readonly=True)
-    cancel_reason = fields.Selection(selection=[
-        ("1", "Duplicate"),
-        ("2", "Data Entry Mistake"),
-        ("3", "Order Cancelled"),
-        ("4", "Others"),
-    ], string="Cancel reason", copy=False, tracking=True)
-    cancel_remarks = fields.Char("Cancel remarks", copy=False, tracking=True)
 
-    document_date = fields.Datetime("Document Date", compute="_compute_document_details")
-    document_number = fields.Char("Document", compute="_compute_document_details")
-    company_id = fields.Many2one("res.company", compute="_compute_document_details")
-    is_overseas = fields.Boolean("Is Overseas", compute="_compute_document_details")
+    state = fields.Selection(string='Status', selection=[
+        ('pending', 'Pending'),
+        ('generated', 'Generated'),
+        ('cancel', 'Cancelled'),
+    ], required=True, readonly=True, copy=False, tracking=True, default='pending')
 
+    # Stock picking details
+    stock_picking_id = fields.Many2one("stock.picking", "Stock Transfer", copy=False)
+    move_ids = fields.One2many(comodel_name='stock.move', related="stock_picking_id.move_ids", inverse_name='ewaybill_id', store=True)
+    picking_type_code = fields.Selection(related='stock_picking_id.picking_type_id.code')
+
+    # Document details
+    document_date = fields.Datetime("Document Date", compute="_compute_document_details", store=True)
+    document_number = fields.Char("Document", compute="_compute_document_details", store=True)
+    company_id = fields.Many2one("res.company", compute="_compute_document_details", store=True)
     supply_type = fields.Selection(string="Supply Type", selection=[
         ("O", "Outward"),
         ("I", "Inward")
     ], compute="_compute_supply_type")
-
     partner_bill_to_id = fields.Many2one("res.partner", string='Bill To', compute="_compute_document_partners_details", store=True, readonly=False)
     partner_bill_from_id = fields.Many2one("res.partner", string='Bill From', compute="_compute_document_partners_details", store=True, readonly=False)
     partner_ship_to_id = fields.Many2one('res.partner', string='Ship To', compute='_compute_document_partners_details', store=True, readonly=False)
     partner_ship_from_id = fields.Many2one("res.partner", string='Ship From', compute="_compute_document_partners_details", store=True, readonly=False)
+
+    # Fields to determine which partner details are editable
     is_bill_to_editable = fields.Boolean(compute="_compute_is_editable")
     is_bill_from_editable = fields.Boolean(compute="_compute_is_editable")
     is_ship_to_editable = fields.Boolean(compute="_compute_is_editable")
@@ -60,19 +65,13 @@ class Ewaybill(models.Model):
         readonly=False,
         required=True
     )
-    state = fields.Selection(string='Status', selection=[
-        ('pending', 'Pending'),
-        ('to_generate', 'To Generate'),
-        ('generated', 'Generated'),
-        ('to_cancel', 'To Cancel'),
-        ('cancel', 'Cancelled'),
-    ], required=True, readonly=True, copy=False, tracking=True, default='pending')
-    # Transaction Details
-    type_id = fields.Many2one("l10n.in.ewaybill.type", "E-waybill Document Type", tracking=True, required=True)
-    type_description = fields.Char(string="Description")
-    sub_type_code = fields.Char(related="type_id.sub_type_code")
 
-    # transportation details
+    # E-waybill Document Type
+    type_id = fields.Many2one("l10n.in.ewaybill.type", "E-waybill Document Type", tracking=True, required=True)
+    sub_type_code = fields.Char(related="type_id.sub_type_code")
+    type_description = fields.Char(string="Description")
+
+    # Transportation details
     distance = fields.Integer("Distance", tracking=True)
     mode = fields.Selection([
         ("0", "Managed by Transporter"),
@@ -100,7 +99,6 @@ class Ewaybill(models.Model):
         copy=False,
         tracking=True)
 
-    # transporter id required when transportation done by other party.
     transporter_id = fields.Many2one("res.partner", "Transporter", copy=False, tracking=True)
 
     error_message = fields.Html(readonly=True)
@@ -110,58 +108,25 @@ class Ewaybill(models.Model):
         string="Blocking Level", readonly=True)
 
     content = fields.Binary(compute='_compute_content', compute_sudo=True)
-
-    # fields for stock picking ewaybill generation
-    stock_picking_id = fields.Many2one("stock.picking", "Stock Transfer", copy=False)
-    move_ids = fields.One2many(comodel_name='stock.move', related="stock_picking_id.move_ids", inverse_name='ewaybill_id', store=True)
-    picking_type_code = fields.Selection(related='stock_picking_id.picking_type_id.code')
-
-    # Fields for ewaybill amount calculation
-    amount_untaxed = fields.Monetary(string="Untaxed Amount", compute='_compute_amounts', tracking=True)
-    amount_total = fields.Monetary(string="Total", compute='_compute_amounts', tracking=True)
-    tax_totals = fields.Binary(compute='_compute_tax_totals')
-
-    currency_id = fields.Many2one(
-        'res.currency',
-        string='Currency',
-        tracking=True,
-        compute='_compute_currency_id', store=True)
-
-    @api.depends('move_ids.ewaybill_price_subtotal', 'move_ids.ewaybill_price_total')
-    def _compute_amounts(self):
-        for ewaybill in self:
-            ewaybill.amount_untaxed = sum(ewaybill.move_ids.mapped('ewaybill_price_subtotal'))
-            ewaybill.amount_total = sum(ewaybill.move_ids.mapped('ewaybill_price_total'))
-
-    @api.depends('stock_picking_id')
-    def _compute_currency_id(self):
-        for ewaybill in self:
-            ewaybill.currency_id = ewaybill.stock_picking_id.company_id.currency_id
+    cancel_reason = fields.Selection(selection=[
+        ("1", "Duplicate"),
+        ("2", "Data Entry Mistake"),
+        ("3", "Order Cancelled"),
+        ("4", "Others"),
+    ], string="Cancel reason", copy=False, tracking=True)
+    cancel_remarks = fields.Char("Cancel remarks", copy=False, tracking=True)
 
     def _compute_supply_type(self):
         for ewaybill in self:
             ewaybill.supply_type = 'I' if ewaybill.picking_type_code == 'incoming' else 'O'
 
-    @api.depends('move_ids')
-    def _compute_tax_totals(self):
-        for ewaybill in self:
-            ewaybill.tax_totals = self.env['account.tax']._prepare_tax_totals(
-                [move._convert_to_tax_base_line_dict() for move in ewaybill.move_ids],
-                ewaybill.currency_id or ewaybill.company_id.currency_id,
-            )
-
     @api.depends('partner_bill_to_id', 'partner_bill_from_id')
     def _compute_document_details(self):
         for ewaybill in self:
-            ewaybill.is_overseas = False
             stock_picking_id = ewaybill.stock_picking_id
             ewaybill.document_number = stock_picking_id.name
             ewaybill.company_id = stock_picking_id.company_id.id
             ewaybill.document_date = stock_picking_id.date_done or stock_picking_id.scheduled_date
-
-            gst_treatment = ewaybill._get_gst_treatment()
-            if gst_treatment in ('overseas', 'special_economic_zone'):
-                ewaybill.is_overseas = True
 
     @api.depends('stock_picking_id')
     def _compute_document_partners_details(self):
@@ -192,8 +157,8 @@ class Ewaybill(models.Model):
             is_incoming = ewaybill.picking_type_code == "incoming"
             ewaybill.is_bill_to_editable = not is_incoming
             ewaybill.is_bill_from_editable = is_incoming
-            ewaybill.is_ship_from_editable = is_incoming and ewaybill.is_overseas
-            ewaybill.is_ship_to_editable = not is_incoming and not ewaybill.is_overseas
+            ewaybill.is_ship_from_editable = is_incoming and ewaybill._is_overseas()
+            ewaybill.is_ship_to_editable = not is_incoming and not ewaybill._is_overseas()
 
     def _compute_content(self):
         for ewaybill in self:
@@ -216,7 +181,6 @@ class Ewaybill(models.Model):
             errors = ewaybill._check_ewaybill_configuration()
             if errors:
                 raise UserError('\n'.join(errors))
-            ewaybill.state = 'to_generate'
             ewaybill._generate_ewaybill_direct()
 
     def cancel_ewaybill(self):
@@ -232,12 +196,12 @@ class Ewaybill(models.Model):
             'type': 'ir.actions.act_window',
         }
 
-    def process_now(self):
+    def _is_overseas(self):
         self.ensure_one()
-        if self.state == "to_generate":
-            self._generate_ewaybill_direct()
-        elif self.state == "to_cancel":
-            self._ewaybill_cancel()
+        gst_treatment = self._get_gst_treatment()
+        if gst_treatment in ('overseas', 'special_economic_zone'):
+            return True
+        return False
 
     def _check_ewaybill_configuration(self):
         error_message = []
@@ -359,7 +323,8 @@ class Ewaybill(models.Model):
                 if "404" in error_codes:
                     blocking_level = "warning"
                 self._write_error(error_message, blocking_level)
-        else:
+        # Not use else because we re-send request in case of invalid token error
+        if not response.get("error"):
             self._write_successfully_response({'state': 'cancel'})
 
     def _generate_ewaybill_direct(self):
@@ -403,11 +368,9 @@ class Ewaybill(models.Model):
                 if "404" in error_codes:
                     blocking_level = "warning"
                 self._write_error(error_message, blocking_level)
-        else:
+        # Not use else because we re-send request in case of invalid token error
+        if not response.get("error"):
             self.state = 'generated'
-            self.stock_picking_id.write({
-                'ewaybill_id': self.id,
-            })
             response_data = response.get("data")
             self._write_successfully_response({
                 'name': response_data.get("ewayBillNo"),
@@ -471,19 +434,22 @@ class Ewaybill(models.Model):
 
     @api.model
     def _l10n_in_tax_details(self, ewaybill):
-        total_taxes = defaultdict(float)
+        tax_details = {'line_tax_details': defaultdict(dict), 'tax_details':defaultdict(float)}
         for move in ewaybill.move_ids:
             line_tax_vals = self._l10n_in_tax_details_by_line(move)
-
+            tax_details['line_tax_details'][move.id] = line_tax_vals
+            tax_details['tax_details']['total_excluded'] += line_tax_vals['total_excluded']
+            tax_details['tax_details']['total_included'] += line_tax_vals['total_included']
+            tax_details['tax_details']['total_void'] += line_tax_vals['total_void']
             for tax in ['igst', 'cgst', 'sgst', 'cess_non_advol', 'cess', 'other']:
-                rate_key = "%s_rate" % (tax)
-                amount_key = "%s_amount" % (tax)
-
-                if rate_key in line_tax_vals:
-                    total_taxes[rate_key] += line_tax_vals[rate_key]
-                if amount_key in line_tax_vals:
-                    total_taxes[amount_key] += line_tax_vals[amount_key]
-        return total_taxes
+                for taxes in line_tax_vals['taxes']:
+                    rate_key = "%s_rate" % (tax)
+                    amount_key = "%s_amount" % (tax)
+                    if rate_key in taxes:
+                        tax_details['tax_details'][rate_key] += taxes[rate_key]
+                    if amount_key in taxes:
+                        tax_details['tax_details'][amount_key] += taxes[amount_key]
+        return tax_details
 
     def _l10n_in_tax_details_by_line(self, move):
         taxes = move.ewaybill_tax_ids.compute_all(price_unit=move.ewaybill_price_unit, quantity=move.quantity)
@@ -498,15 +464,14 @@ class Ewaybill(models.Model):
                 tax_name = tax_id.amount_type != "percent" and "cess_non_advol" or "cess"
             rate_key = "%s_rate" % (tax_name)
             amount_key = "%s_amount" % (tax_name)
-            tax_vals.setdefault(rate_key, 0)
-            tax_vals.setdefault(amount_key, 0)
-            tax_vals[rate_key] += tax_id.amount
-            tax_vals[amount_key] += tax['amount']
-        return tax_vals
+            tax.setdefault(rate_key, 0)
+            tax.setdefault(amount_key, 0)
+            tax[rate_key] += tax_id.amount
+            tax[amount_key] += tax['amount']
+        return taxes
 
-    def _get_l10n_in_ewaybill_line_details(self, line):
+    def _get_l10n_in_ewaybill_line_details(self, line, tax_details):
         round_value = self._l10n_in_round_value
-        tax_details_by_line = self._l10n_in_tax_details_by_line(line)
         line_details = {
             "productName": line.product_id.name,
             "hsnCode": self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code),
@@ -516,15 +481,15 @@ class Ewaybill(models.Model):
                 0] or "OTH",
             "taxableAmount": round_value(line.ewaybill_price_unit),
         }
-        if tax_details_by_line.get('igst_rate'):
-            line_details.update({"igstRate": round_value(tax_details_by_line.get("igst_rate", 0.00))})
+        if tax_details.get('igst_rate'):
+            line_details.update({"igstRate": round_value(tax_details.get("igst_rate", 0.00))})
         else:
             line_details.update({
-                "cgstRate": round_value(tax_details_by_line.get("cgst_rate", 0.00)),
-                "sgstRate": round_value(tax_details_by_line.get("sgst_rate", 0.00)),
+                "cgstRate": round_value(tax_details.get("cgst_rate", 0.00)),
+                "sgstRate": round_value(tax_details.get("sgst_rate", 0.00)),
             })
-        if tax_details_by_line.get("cess_rate"):
-            line_details.update({"cessRate": round_value(tax_details_by_line.get("cess_rate", 0.00))})
+        if tax_details.get("cess_rate"):
+            line_details.update({"cessRate": round_value(tax_details.get("cess_rate", 0.00))})
         return line_details
 
     def _ewaybill_generate_direct_json(self):
@@ -604,16 +569,22 @@ class Ewaybill(models.Model):
             round_value = self._l10n_in_round_value
             json_payload.update({
                 "itemList": [
-                    self._get_l10n_in_ewaybill_line_details(line)
+                    self._get_l10n_in_ewaybill_line_details(line, tax_details['line_tax_details'][line.id])
                     for line in ewaybill.move_ids
                 ],
-                "totalValue": round_value(ewaybill.amount_untaxed),
+                "totalValue": round_value(tax_details['tax_details'].get('total_excluded', 0.00)),
                 "cgstValue": round_value(tax_details.get('cgst_amount', 0.00)),
                 "sgstValue": round_value(tax_details.get('sgst_amount', 0.00)),
                 "igstValue": round_value(tax_details.get('igst_amount', 0.00)),
                 "cessValue": round_value(tax_details.get('cess_amount', 0.00)),
                 "cessNonAdvolValue": round_value(tax_details.get('cess_non_advol_amount', 0.00)),
                 "otherValue": round_value(tax_details.get('other_amount', 0.00)),
-                "totInvValue": round_value(ewaybill.amount_total),
+                "totInvValue": round_value(tax_details['tax_details'].get('total_included', 0.00)),
             })
             return json_payload
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_l10n_in_ewaybill_prevent(self):
+        for ewaybill in self:
+            if ewaybill.state != 'pending':
+                raise UserError(_("You cannot delete a generated E-waybill. Instead, you should cancel it."))
