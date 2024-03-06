@@ -38,7 +38,7 @@ class AccountEdiProxyClientUser(models.Model):
                     'account_peppol_migration_key': False,
                 })
                 # commit the above changes before raising below
-                if not tools.config['test_enable'] and not modules.module.current_test:
+                if not modules.module.current_test:
                     self.env.cr.commit()
             raise AccountEdiProxyError(e.code, e.message)
         return result
