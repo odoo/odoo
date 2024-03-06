@@ -222,14 +222,25 @@
         <field name="context">{'search_default_draft': True, 'search_default_in_progress': True}</field>
         <field name="search_view_id" ref="stock_picking_batch_filter"/>
         <field name="help" type="html">
-          <p class="o_view_nocontent_smiling_face">
-            Create a new batch transfer
-          </p><p>
-            The goal of the batch transfer is to group operations that may
-            (needs to) be done together in order to increase their efficiency.
-            It may also be useful to assign jobs (one person = one batch) or
-            help the timing management of operations (tasks to be done at 1pm).
-          </p>
+            <div class="container mt-5">
+                <div class="row g-5">
+                    <div class="col-lg-4" style="opacity: 0.5;">
+                        <img src="/stock_picking_batch/static/shapes/wave-picking.svg" class="shadow rounded-3 w-100 mb-4"/>
+                        <h5>Wave transfers</h5>
+                        <p class="small">Launch picking orders by aisle or area and regroup at packing zone. Ideal for large warehouses.</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <img src="/stock_picking_batch/static/shapes/batch-picking.svg" class="shadow rounded-3 w-100 mb-4"/>
+                        <h5>Batch transfers</h5>
+                        <p class="small">Regroup multiple orders into one picking and consolidate at the packing zone.</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <img src="/stock_picking_batch/static/shapes/cluster-picking.svg" class="shadow rounded-3 w-100 mb-4"/>
+                        <h5>Cluster transfers</h5>
+                        <p class="small">Pick multiple orders in one trip and prepare orders as you pick. This reduces packing time and is ideal for small products.</p>
+                    </div>
+                </div>
+            </div>
         </field>
     </record>
     <menuitem action="stock_picking_batch_action" id="stock_picking_batch_menu" parent="stock.menu_stock_transfers" sequence="30"/>
