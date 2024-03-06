@@ -133,6 +133,7 @@ export const mockNavigator = createMock(navigator, {
     clipboard: { value: mockClipboard },
     permissions: { value: mockPermissions },
     userAgent: { get: () => currentUserAgent },
+    serviceWorker: { get: () => undefined },
 });
 
 /** @type {Record<PermissionName, { name: string; state: PermissionState }>} */
@@ -202,9 +203,12 @@ export const PERMISSIONS = {
         name: "push",
     },
 };
+let OG_PERMISSIONS = JSON.parse(JSON.stringify(PERMISSIONS));
 
 export function cleanupNavigator() {
     permissionStatuses.clear();
+    Object.assign(PERMISSIONS, OG_PERMISSIONS);
+    OG_PERMISSIONS = JSON.parse(JSON.stringify(PERMISSIONS));
     currentUserAgent = DEFAULT_USER_AGENT;
 }
 

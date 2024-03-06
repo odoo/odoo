@@ -87,13 +87,27 @@ export function useBus(bus, eventName, callback) {
     );
 }
 
+// In an object so that it can be patched in tests (prevent error on blocking RPCs after tests)
+export const useServiceProtectMethodHandling = {
+    fn() {
+        return this.original();
+    },
+    mocked() {
+        // Keep them unresolved so that no crash in test due to triggered RPCs by services
+        return new Promise(() => {});
+    },
+    original() {
+        return Promise.reject(new Error("Component is destroyed"));
+    },
+};
+
 // -----------------------------------------------------------------------------
 // useService
 // -----------------------------------------------------------------------------
 function _protectMethod(component, fn) {
     return function (...args) {
         if (status(component) === "destroyed") {
-            return Promise.reject(new Error("Component is destroyed"));
+            return useServiceProtectMethodHandling.fn();
         }
 
         const prom = Promise.resolve(fn.call(this, ...args));

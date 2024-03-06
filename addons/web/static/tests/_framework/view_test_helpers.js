@@ -69,7 +69,7 @@ const buildSelector = (base, params) => {
  * @param {MountViewParams} params
  * @returns {typeof View.props}
  */
-const parseViewProps = (params) => {
+export const parseViewProps = (params) => {
     const viewProps = { ...params };
 
     // View & search view arch

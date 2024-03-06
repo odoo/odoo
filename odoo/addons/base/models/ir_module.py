@@ -999,6 +999,27 @@ class ModuleDependency(models.Model):
         for dependency in self:
             dependency.state = dependency.depend_id.state or 'unknown'
 
+    @api.model
+    def all_dependencies(self, module_names):
+        to_search = {key: True for key in module_names}
+        res = {}
+        def search_direct_deps(to_search, res):
+            to_search_list = list(to_search.keys())
+            dependencies = self.web_search_read(domain=[("module_id.name", "in", to_search_list)], specification={"module_id":{"fields":{"name":{}}}, "name": {}, })["records"]
+            to_search.clear()
+            for dependency in dependencies:
+                dep_name = dependency["name"]
+                mod_name = dependency["module_id"]["name"]
+                if dep_name not in res and dep_name not in to_search and dep_name not in to_search_list:
+                    to_search[dep_name] = True
+                if mod_name not in res:
+                    res[mod_name] = list()
+                res[mod_name].append(dep_name)
+        search_direct_deps(to_search, res)
+        while to_search:
+            search_direct_deps(to_search, res)
+        return res
+
 
 class ModuleExclusion(models.Model):
     _name = "ir.module.module.exclusion"
