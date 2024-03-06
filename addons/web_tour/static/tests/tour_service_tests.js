@@ -611,4 +611,17 @@ QUnit.module("Tour service", (hooks) => {
             assert.containsNone(target, ".o_tour_pointer");
         }
     );
+
+    QUnit.test("debug mode is kept when a tour has a start url", async (assert) => {
+        browser.location.href = "http://myserver.com/web?debug=assets";
+        registry.category("web_tour.tours").add("Tour 1", {
+            sequence: 10,
+            url: "/tour?debug=tests",
+            steps: [{ trigger: "body" }],
+        });
+
+        const env = await makeTestEnv({});
+        env.services.tour_service.startTour("Tour 1");
+        assert.strictEqual(browser.location.href, "http://myserver.com/tour?debug=assets%2Ctests");
+    });
 });
