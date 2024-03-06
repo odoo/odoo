@@ -931,8 +931,8 @@ class MailCase(MockEmail):
             self.assertEqual(
                 self._new_bus_notifs,
                 found_bus_notifs,
-                f"\n{self._new_bus_notifs.mapped(lambda bus: (bus.channel, json.loads(bus.message).get('type')))}"
-                f"\n{found_bus_notifs.mapped(lambda bus: (bus.channel, json.loads(bus.message).get('type')))}"
+                f"\n{self._new_bus_notifs.mapped(lambda bus: (bus.channel, json.loads(bus.message).get('type')) if bus.message else None)}"
+                f"\n{found_bus_notifs.mapped(lambda bus: (bus.channel, json.loads(bus.message).get('type')) if bus.message else None)}"
             )
 
     @contextmanager
