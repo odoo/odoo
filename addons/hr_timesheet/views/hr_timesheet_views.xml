@@ -211,6 +211,17 @@
                     <filter name="mine" string="My Timesheets" domain="[('user_id', '=', uid)]"/>
                     <separator/>
                 </xpath>
+                <filter name="month" position="inside">
+                    <filter name="date_this_week" string="This Week" domain="[
+                        ('date', '&gt;=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1,weekday=0), datetime.time(0,0,0)).to_utc())),
+                        ('date', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(weekday=0), datetime.time(0,0,0)).to_utc())),
+                    ]"/>
+                    <filter name="date_today" string="Today" domain="[('date', '&gt;', datetime.datetime.combine(context_today() - relativedelta(days=1), datetime.time(23, 59, 59)).to_utc())]"/>
+                    <filter name="date_last_week" string="Last Week" domain="[
+                        ('date', '&gt;=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-2,weekday=0), datetime.time(0,0,0)).to_utc())),
+                        ('date', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1,weekday=0), datetime.time(0,0,0)).to_utc())),
+                    ]"/>
+                </filter>
                 <xpath expr="//group[@name='groupby']" position="before">
                     <field name="employee_id"/>
                     <field name="project_id"/>
