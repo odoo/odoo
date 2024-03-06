@@ -29,12 +29,7 @@ import { makeAwaitable, ask } from "@point_of_sale/app/store/make_awaitable_dial
 const { DateTime } = luxon;
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
-import {
-    computeSingleLineTaxes,
-    eval_taxes_computation_prepare_context,
-    eval_taxes_computation_prepare_product,
-    adapt_price_unit_to_another_taxes,
-} from "@account/helpers/account_tax";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 /* Returns an array containing all elements of the given
  * array corresponding to the rule function {agg} and without duplicates
@@ -1354,9 +1349,9 @@ export class PosStore extends Reactive {
         }
 
         const newTaxes = this.getTaxesAfterFiscalPosition(taxes, fiscalPosition);
-        return adapt_price_unit_to_another_taxes(
+        return accountTaxHelpers.adapt_price_unit_to_another_taxes(
             priceUnit,
-            eval_taxes_computation_prepare_product_values(
+            accountTaxHelpers.eval_taxes_computation_prepare_product_values(
                 this.data.custom.product_default_values,
                 product
             ),
@@ -1366,10 +1361,10 @@ export class PosStore extends Reactive {
     }
 
     getTaxesValues(taxes, priceUnit, quantity, product) {
-        const evalContext = eval_taxes_computation_prepare_context(
+        const evalContext = accountTaxHelpers.eval_taxes_computation_prepare_context(
             priceUnit,
             quantity,
-            eval_taxes_computation_prepare_product_values(
+            accountTaxHelpers.eval_taxes_computation_prepare_product_values(
                 this.data.custom.product_default_values,
                 product
             ),
@@ -1378,7 +1373,7 @@ export class PosStore extends Reactive {
                 precision_rounding: this.currency.rounding,
             }
         );
-        return computeSingleLineTaxes(this.mapTaxValues(taxes), evalContext);
+        return accountTaxHelpers.computeSingleLineTaxes(this.mapTaxValues(taxes), evalContext);
     }
 
     /**
