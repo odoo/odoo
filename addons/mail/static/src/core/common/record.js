@@ -20,6 +20,7 @@ const OR_SYM = Symbol("or");
 const AND_SYM = Symbol("and");
 const IS_RECORD_SYM = Symbol("isRecord");
 const IS_FIELD_SYM = Symbol("isField");
+const IS_DELETED_SYM = Symbol("isDeleted");
 
 export function AND(...args) {
     return [AND_SYM, ...args];
@@ -1119,7 +1120,6 @@ export class Record {
                 }
                 while (RD_QUEUE.length > 0) {
                     const record = RD_QUEUE.pop();
-                    // effectively delete the record
                     for (const name of record._fields.keys()) {
                         record[name] = undefined;
                     }
@@ -1148,6 +1148,7 @@ export class Record {
                 }
                 while (RHD_QUEUE.length > 0) {
                     const record = RHD_QUEUE.pop();
+                    record[IS_DELETED_SYM] = true;
                     delete record.Model.records[record.localId];
                     record.Model._rawStore.recordByLocalId.delete(record.localId);
                 }
@@ -1645,6 +1646,10 @@ export class Record {
         return Record.MAKE_UPDATE(function recordDelete() {
             Record.ADD_QUEUE(record, "delete");
         });
+    }
+
+    exists() {
+        return !this[IS_DELETED_SYM];
     }
 
     /** @param {Record} record */
