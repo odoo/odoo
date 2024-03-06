@@ -5,7 +5,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Store } from "@mail/core/common/store_service";
 import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains } from "@web/../tests/utils";
 
@@ -21,7 +21,7 @@ QUnit.test("initially online", async () => {
         ],
         channel_type: "chat",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-ImStatus i[title='Online']");
 });
@@ -36,7 +36,7 @@ QUnit.test("initially offline", async () => {
         ],
         channel_type: "chat",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-ImStatus i[title='Offline']");
 });
@@ -51,7 +51,7 @@ QUnit.test("initially away", async () => {
         ],
         channel_type: "chat",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-ImStatus i[title='Idle']");
 });
@@ -66,7 +66,7 @@ QUnit.test("change icon on change partner im_status", async () => {
         ],
         channel_type: "chat",
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { advanceTime } = await start({ hasTimeControl: true });
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
     await contains(".o-mail-ImStatus i[title='Online']");

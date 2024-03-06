@@ -4,7 +4,7 @@ import { rpc } from "@web/core/network/rpc";
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { patchDate, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
@@ -100,7 +100,7 @@ QUnit.test("Channel subscription is renewed when channel is added from invite", 
     // when the client starts.
     const later = luxon.DateTime.now().plus({ seconds: 2 });
     patchDate(later.year, later.month, later.day, later.hour, later.minute, later.second);
-    const { env, openDiscuss } = await start();
+    const { env } = await start();
     patchWithCleanup(env.services["bus_service"], {
         forceUpdateChannels() {
             step("update-channels");
@@ -180,7 +180,7 @@ QUnit.test("Message delete notification", async () => {
         notification_status: "sent",
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss();
     await click("[title='Expand']");
     await click("[title='Mark as Todo']");

@@ -3,7 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains, insertText } from "@web/../tests/utils";
 
@@ -17,7 +17,7 @@ QUnit.test("sidebar find shows channels matching search term", async () => {
         group_public_id: false,
         name: "test",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss();
     await click(
         ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-add"
@@ -41,7 +41,7 @@ QUnit.test(
             group_public_id: false,
             name: "test",
         });
-        const { openDiscuss } = await start();
+        await start();
         await openDiscuss();
         await click(
             ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-add"
@@ -64,7 +64,7 @@ QUnit.test("unknown channel can be displayed and interacted with", async () => {
         channel_type: "channel",
         name: "Not So Secret",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss();
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });

@@ -1,8 +1,9 @@
 /** @odoo-module alias=@mail/../tests/discuss/search_discuss_tests default=false */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { start } from "@mail/../tests/helpers/test_utils";
 import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_hook";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+
 import { nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains, insertText, scroll } from "@web/../tests/utils";
 
@@ -11,7 +12,7 @@ QUnit.module("discuss search");
 QUnit.test("Should have a search button", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains("[title='Search Messages']");
 });
@@ -19,7 +20,7 @@ QUnit.test("Should have a search button", async () => {
 QUnit.test("Should open the search panel when search button is clicked", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("[title='Search Messages']");
     await contains(".o-mail-SearchMessagesPanel");
@@ -38,7 +39,7 @@ QUnit.test("Search a message", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("button[title='Search Messages']");
     await insertText(".o_searchview_input", "message");
@@ -57,7 +58,7 @@ QUnit.test("Search should be hightlighted", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "message");
@@ -77,7 +78,7 @@ QUnit.test("Search a starred message", async () => {
         res_id: channelId,
         starred_partner_ids: [pyEnv.currentPartnerId],
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss("mail.box_starred");
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "message");
@@ -97,7 +98,7 @@ QUnit.test("Search a message in inbox", async () => {
         res_id: channelId,
         needaction: true,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss("mail.box_inbox");
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "message");
@@ -124,7 +125,7 @@ QUnit.test("Search a message in history", async () => {
         notification_type: "inbox",
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss("mail.box_history");
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "message");
@@ -135,7 +136,7 @@ QUnit.test("Search a message in history", async () => {
 QUnit.test("Should close the search panel when search button is clicked again", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("[title='Search Messages']");
     await click("[title='Close Search']");
@@ -155,7 +156,7 @@ QUnit.test("Search a message in 60 messages should return 30 message first", asy
             res_id: channelId,
         });
     }
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "message");
@@ -179,7 +180,7 @@ QUnit.test("Scrolling to the bottom should load more searched message", async ()
             res_id: channelId,
         });
     }
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "message");
@@ -207,7 +208,7 @@ QUnit.test(
                 res_id: channelId,
             });
         }
-        const { openDiscuss } = await start({
+        await start({
             async mockRPC(route, args) {
                 if (route === "/discuss/channel/messages" && args.search_term) {
                     const { search_term } = args;

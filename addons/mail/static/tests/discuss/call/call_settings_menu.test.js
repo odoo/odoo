@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -33,7 +33,7 @@ QUnit.test("Renders the call settings", async () => {
     });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header .fa-gear");
     await contains(".o-discuss-CallSettings");
@@ -57,7 +57,7 @@ QUnit.test("activate push to talk", async () => {
     });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header .fa-gear");
     await click("input[title='toggle push-to-talk']");
@@ -77,7 +77,7 @@ QUnit.test("activate blur", async () => {
     });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header .fa-gear");
     await click("input[title='Blur video background']");
@@ -87,7 +87,7 @@ QUnit.test("activate blur", async () => {
 
 QUnit.test("Inbox should not have any call settings menu", async () => {
     await startServer();
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Thread");
     await contains("button[title='Show Call Settings']", { count: 0 });
@@ -106,7 +106,7 @@ QUnit.test(
         });
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-        const { openDiscuss } = await start();
+        await start();
         await openDiscuss(channelId);
         await click("button[title='Show Call Settings']");
         await click("button", { text: "Inbox" });

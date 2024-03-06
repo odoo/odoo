@@ -3,7 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains } from "@web/../tests/utils";
 
@@ -22,7 +22,7 @@ QUnit.test(
             ],
             channel_type: "channel",
         });
-        const { openDiscuss } = await start();
+        await start();
         await openDiscuss(channelId);
         await contains("[title='Show Member List']");
     }
@@ -41,7 +41,7 @@ QUnit.test(
             ],
             channel_type: "channel",
         });
-        const { openDiscuss } = await start();
+        await start();
         await openDiscuss(channelId);
         await click("[title='Show Member List']");
         await contains(".o-discuss-ChannelMemberList");
@@ -59,7 +59,7 @@ QUnit.test("should have correct members in member list", async () => {
         ],
         channel_type: "channel",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { count: 2 });
@@ -80,7 +80,7 @@ QUnit.test(
             ],
             channel_type: "channel",
         });
-        const { openDiscuss } = await start();
+        await start();
         await openDiscuss(channelId);
         await click("[title='Show Member List']");
         await contains("[title='Hide Member List']");
@@ -99,7 +99,7 @@ QUnit.test("chat with member should be opened after clicking on channel member",
         ],
         channel_type: "channel",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await click(".o-discuss-ChannelMember.cursor-pointer");
@@ -118,7 +118,7 @@ QUnit.test("should show a button to load more members if they are not all loaded
         name: "TestChanel",
         channel_type: "channel",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     pyEnv["discuss.channel"].write([channelId], { channel_member_ids });
     await click("[title='Show Member List']");
@@ -137,7 +137,7 @@ QUnit.test("Load more button should load more members", async () => {
         name: "TestChanel",
         channel_type: "channel",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     pyEnv["discuss.channel"].write([channelId], { channel_member_ids });
     await click("[title='Show Member List']");
@@ -150,7 +150,7 @@ QUnit.test("Channel member count update after user joined", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const userId = pyEnv["res.users"].create({ name: "Harry" });
     pyEnv["res.partner"].create({ name: "Harry", user_ids: [userId] });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMemberList h6", { text: "Offline - 1" });
@@ -173,7 +173,7 @@ QUnit.test("Channel member count update after user left", async () => {
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { env, openDiscuss } = await start();
+    const { env } = await start();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { count: 2 });

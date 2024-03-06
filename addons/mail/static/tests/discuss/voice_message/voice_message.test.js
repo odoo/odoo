@@ -5,7 +5,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { VoicePlayer } from "@mail/discuss/voice_message/common/voice_player";
 import { VoiceRecorder } from "@mail/discuss/voice_message/common/voice_recorder";
 import { Command } from "@mail/../tests/helpers/command";
-import { mockGetMedia, start } from "@mail/../tests/helpers/test_utils";
+import { mockGetMedia, openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -152,7 +152,7 @@ QUnit.test("make voice message in chat", async () => {
         ],
         channel_type: "chat",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains("button[title='Voice Message']");
     patchDate(2023, 6, 31, 13, 0, 0, 0);

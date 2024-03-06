@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { contains } from "@web/../tests/utils";
 
@@ -21,7 +21,7 @@ QUnit.test("thread icon of a chat when correspondent is on leave & online", asyn
         ],
         channel_type: "chat",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", {
         contains: [".o-mail-ThreadIcon .fa-plane[title='Online']"],
@@ -42,7 +42,7 @@ QUnit.test("thread icon of a chat when correspondent is on leave & away", async 
         ],
         channel_type: "chat",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", {
         contains: [".o-mail-ThreadIcon .fa-plane[title='Away']"],
@@ -63,7 +63,7 @@ QUnit.test("thread icon of a chat when correspondent is on leave & offline", asy
         ],
         channel_type: "chat",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", {
         contains: [".o-mail-ThreadIcon .fa-plane[title='Out of office']"],

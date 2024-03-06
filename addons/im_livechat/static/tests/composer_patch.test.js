@@ -1,7 +1,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { rpc } from "@web/core/network/rpc";
 import { click, contains, insertText } from "@web/../tests/utils";
@@ -20,7 +20,7 @@ QUnit.test("Can execute help command on livechat channels", async (assert) => {
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { openDiscuss } = await start({
+    await start({
         mockRPC(route, args, originalMockRPC) {
             if (args.method === "execute_command_help") {
                 assert.step("execute_command_help");
@@ -47,7 +47,7 @@ QUnit.test('Receives visitor typing status "is typing"', async () => {
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing", { text: "" });
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
@@ -77,7 +77,7 @@ QUnit.test('display canned response suggestions on typing ":"', async () => {
         source: "hello",
         substitution: "Hello! How are you?",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
@@ -101,7 +101,7 @@ QUnit.test("use a canned response", async () => {
         source: "hello",
         substitution: "Hello! How are you?",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
@@ -127,7 +127,7 @@ QUnit.test("use a canned response some text", async () => {
         source: "hello",
         substitution: "Hello! How are you?",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-input", { value: "" });
@@ -154,7 +154,7 @@ QUnit.test("add an emoji after a canned response", async () => {
         source: "hello",
         substitution: "Hello! How are you?",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-input", { value: "" });
