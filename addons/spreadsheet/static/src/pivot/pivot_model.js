@@ -83,13 +83,21 @@ export function toNormalizedPivotValue(field, groupValue, aggregateOperator) {
  */
 export class OdooPivotModel extends PivotModel {
     /**
-     * @param {Object} env
-     * @param {_t} env._t
+     * @param {import("@web/env").OdooEnv} env
      * @param {import("@spreadsheet").OdooPivotModelParams} params
      * @param {import("@spreadsheet").PivotModelServices} services
      */
     constructor(env, params, services) {
         super(env, params, services);
+        /**
+         * @private
+         */
+        this._displayNames = {};
+        /**
+         * @private
+         * @type {import("@spreadsheet/data_sources/server_data").ServerData}
+         */
+        this.serverData = services.serverData;
     }
 
     /**
@@ -156,11 +164,10 @@ export class OdooPivotModel extends PivotModel {
             return adapter.toCellValue(value);
         }
         if (field.relation) {
-            const label = this.metadataRepository.getRecordDisplayName(field.relation, value);
-            if (!label) {
+            if (value === false) {
                 return undef;
             }
-            return label;
+            return this._getRelationalDisplayName(field.relation, value);
         }
         const label = this.metadataRepository.getLabel(this.metaData.resModel, field.name, value);
         if (!label) {
@@ -259,11 +266,9 @@ export class OdooPivotModel extends PivotModel {
                             group.labels[i]
                         );
                     } else {
-                        metadataRepository.setDisplayName(
-                            field.relation,
-                            group.values[i],
-                            group.labels[i]
-                        );
+                        const id = group.values[i];
+                        const displayName = group.labels[i];
+                        this._registerDisplayName(field.relation, id, displayName);
                     }
                 }
             }
@@ -274,6 +279,28 @@ export class OdooPivotModel extends PivotModel {
 
         registerLabels(this.data.colGroupTree, this.metaData.fullColGroupBys);
         registerLabels(this.data.rowGroupTree, this.metaData.fullRowGroupBys);
+    }
+
+    _registerDisplayName(resModel, resId, displayName) {
+        if (!this._displayNames[resModel]) {
+            this._displayNames[resModel] = {};
+        }
+        this._displayNames[resModel][resId] = displayName;
+    }
+
+    _getRelationalDisplayName(resModel, resId) {
+        const displayName =
+            this._displayNames[resModel]?.[resId] ||
+            this.serverData.batch.get("spreadsheet.mixin", "get_display_names_for_spreadsheet", {
+                model: resModel,
+                id: resId,
+            });
+        if (!displayName) {
+            throw new EvaluationError(
+                _t("Unable to fetch the label of %s of model %s", resId, resModel)
+            );
+        }
+        return displayName;
     }
 
     /**

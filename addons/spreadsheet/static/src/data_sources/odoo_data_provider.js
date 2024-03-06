@@ -9,7 +9,7 @@ export class OdooDataProvider extends EventBus {
         this.serverData = new ServerData(this.orm, {
             whenDataStartLoading: (promise) => this.notifyWhenPromiseResolves(promise),
         });
-        this.metadataRepository = new MetadataRepository(env);
+        this.metadataRepository = new MetadataRepository();
         this.metadataRepository.addEventListener("labels-fetched", () => this.notify());
         this.pendingPromises = new Set();
     }
