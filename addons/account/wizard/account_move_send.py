@@ -77,6 +77,7 @@ class AccountMoveSend(models.TransientModel):
         store=True,
         readonly=False,
     )
+    sequence_gap_warning = fields.Boolean(compute='_compute_sequence_gap_warning')
 
     @api.model
     def default_get(self, fields_list):
@@ -302,6 +303,16 @@ class AccountMoveSend(models.TransientModel):
                 )
             else:
                 wizard.mail_attachments_widget = []
+
+    @api.depends('move_ids')
+    def _compute_sequence_gap_warning(self):
+        for wizard in self:
+            moves = wizard.move_ids
+            restricted_journals = moves.mapped('journal_id').filtered(lambda j: j.restrict_mode_hash_table)
+            if restricted_journals:
+                wizard.sequence_gap_warning = not moves.check_move_sequence_chain()
+            else:
+                wizard.sequence_gap_warning = False
 
     @api.model
     def _format_error_text(self, error):
