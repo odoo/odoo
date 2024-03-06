@@ -10,14 +10,8 @@ import { click, contains, scroll } from "@web/../tests/utils";
 QUnit.module("follower list menu");
 
 QUnit.test("base rendering not editable", async () => {
-    const { openView } = await start();
-    await openView(
-        {
-            res_model: "res.partner",
-            views: [[false, "form"]],
-        },
-        { mode: "edit" }
-    );
+    await start();
+    await openFormView("res.partner", undefined, { mode: "edit" });
     await contains(".o-mail-Followers");
     await contains(".o-mail-Followers-button:disabled");
     await contains(".o-mail-Followers-dropdown", { count: 0 });
@@ -28,7 +22,7 @@ QUnit.test("base rendering not editable", async () => {
 QUnit.test("base rendering editable", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const { openView } = await start({
+    await start({
         async mockRPC(route, args, performRPC) {
             if (route === "/mail/thread/data") {
                 // mimic user with write access
@@ -38,11 +32,7 @@ QUnit.test("base rendering editable", async (assert) => {
             }
         },
     });
-    await openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner", partnerId);
     await contains(".o-mail-Followers");
     await contains(".o-mail-Followers-button");
     assert.notOk($(".o-mail-Followers-button")[0].disabled);
@@ -67,7 +57,7 @@ QUnit.test('click on "add followers" button', async (assert) => {
         res_model: "res.partner",
     });
 
-    const { env, openView } = await start({
+    const { env } = await start({
         async mockRPC(route, args, performRPC) {
             if (route === "/mail/thread/data") {
                 // mimic user with write access
@@ -77,11 +67,7 @@ QUnit.test('click on "add followers" button', async (assert) => {
             }
         },
     });
-    await openView({
-        res_id: partnerId_1,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner", partnerId_1);
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
             assert.step("action:open_view");
@@ -128,7 +114,7 @@ QUnit.test("click on remove follower", async (assert) => {
         res_id: partnerId_1,
         res_model: "res.partner",
     });
-    const { openView } = await start({
+    await start({
         async mockRPC(route, args, performRPC) {
             if (route === "/mail/thread/data") {
                 // mimic user with write access
@@ -142,11 +128,7 @@ QUnit.test("click on remove follower", async (assert) => {
             }
         },
     });
-    await openView({
-        res_id: partnerId_1,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner", partnerId_1);
 
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
@@ -179,7 +161,7 @@ QUnit.test(
                 res_model: "res.partner",
             },
         ]);
-        const { openView } = await start({
+        await start({
             async mockRPC(route, args, performRPC) {
                 if (route === "/mail/thread/data") {
                     // mimic user with no write access
@@ -189,11 +171,7 @@ QUnit.test(
                 }
             },
         });
-        await openView({
-            res_id: partnerId_1,
-            res_model: "res.partner",
-            views: [[false, "form"]],
-        });
+        await openFormView("res.partner", partnerId_1);
         await click(".o-mail-Followers-button");
         await contains("a", { count: 0, text: "Add Followers" });
         await contains(":nth-child(1 of .o-mail-Follower)", {
@@ -301,7 +279,7 @@ QUnit.test(
                 res_model: "res.partner",
             },
         ]);
-        const { openView } = await start({
+        await start({
             async mockRPC(route, args, performRPC) {
                 if (route === "/mail/thread/data") {
                     // mimic user with write access
@@ -311,11 +289,7 @@ QUnit.test(
                 }
             },
         });
-        await openView({
-            res_id: partnerId_1,
-            res_model: "res.partner",
-            views: [[false, "form"]],
-        });
+        await openFormView("res.partner", partnerId_1);
 
         await click(".o-mail-Followers-button");
         await contains("a", { text: "Add Followers" });
@@ -339,7 +313,7 @@ QUnit.test(
     async () => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({});
-        const { openView } = await start({
+        await start({
             async mockRPC(route, args, performRPC) {
                 if (route === "/mail/thread/data") {
                     // mimic user without write access
@@ -349,11 +323,7 @@ QUnit.test(
                 }
             },
         });
-        await openView({
-            res_id: partnerId,
-            res_model: "res.partner",
-            views: [[false, "form"]],
-        });
+        await openFormView("res.partner", partnerId);
 
         await click(".o-mail-Followers-button");
         await contains("div.disabled", { text: "No Followers" });

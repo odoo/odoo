@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { selectDropdownItem } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
@@ -30,7 +30,7 @@ QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
                 <field name="email"/>
             </form>`,
     };
-    const { openView } = await start({
+    await start({
         serverData: { views },
         mockRPC(route, args) {
             if (args.method === "web_read" && args.model === "res.partner") {
@@ -41,15 +41,7 @@ QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
             }
         },
     });
-    await openView(
-        {
-            res_id: messageId,
-            res_model: "mail.message",
-            views: [[false, "form"]],
-        },
-        { mode: "edit" }
-    );
-
+    await openFormView("mail.message", messageId, { props: { mode: "edit" } });
     assert.verifySteps([]);
     await contains('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0');
 
@@ -88,13 +80,8 @@ QUnit.test("many2many_tags_email widget can load more than 40 records", async ()
         "mail.message,false,form":
             '<form><field name="partner_ids" widget="many2many_tags"/></form>',
     };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_id: messageId,
-        res_model: "mail.message",
-        views: [[false, "form"]],
-    });
-
+    await start({ serverData: { views } });
+    await openFormView("mail.message", messageId);
     await contains('.o_field_widget[name="partner_ids"] .badge', { count: 100 });
     await contains(".o_form_editable");
 

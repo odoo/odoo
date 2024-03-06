@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains } from "@web/../tests/utils";
 
@@ -18,7 +18,7 @@ QUnit.test("grant course access", async (assert) => {
         request_partner_id: partnerId,
         res_model: "slide.channel",
     });
-    const { openView } = await start({
+    await start({
         async mockRPC(route, args) {
             if (args.method === "action_grant_access") {
                 assert.strictEqual(args.args.length, 1);
@@ -31,11 +31,7 @@ QUnit.test("grant course access", async (assert) => {
             }
         },
     });
-    await openView({
-        res_id: channelId,
-        res_model: "slide.channel",
-        views: [[false, "form"]],
-    });
+    await openFormView("slide.channel", channelId);
     await contains(".o-mail-Activity");
     await click("button", { text: "Grant Access" });
     assert.verifySteps(["access_grant"]);
@@ -51,7 +47,7 @@ QUnit.test("refuse course access", async (assert) => {
         request_partner_id: partnerId,
         res_model: "slide.channel",
     });
-    const { openView } = await start({
+    await start({
         async mockRPC(route, args) {
             if (args.method === "action_refuse_access") {
                 assert.strictEqual(args.args.length, 1);
@@ -64,11 +60,7 @@ QUnit.test("refuse course access", async (assert) => {
             }
         },
     });
-    await openView({
-        res_id: channelId,
-        res_model: "slide.channel",
-        views: [[false, "form"]],
-    });
+    await openFormView("slide.channel", channelId);
     await contains(".o-mail-Activity");
     await click("button", { text: "Refuse Access" });
     assert.verifySteps(["access_refuse"]);
