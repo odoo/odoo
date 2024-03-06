@@ -13,12 +13,8 @@ QUnit.module("chatter topbar");
 QUnit.test("base rendering", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const { openView } = await start();
-    await openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter-topbar");
     await contains("button", { text: "Send message" });
     await contains("button", { text: "Log note" });
@@ -46,12 +42,8 @@ QUnit.test("rendering with multiple partner followers", async () => {
             res_model: "res.partner",
         },
     ]);
-    const { openView } = await start();
-    await openView({
-        res_id: partnerId_3,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", partnerId_3);
     await contains(".o-mail-Followers");
     await contains(".o-mail-Followers-button");
     await click(".o-mail-Followers-button");
@@ -64,12 +56,8 @@ QUnit.test("rendering with multiple partner followers", async () => {
 QUnit.test("log note toggling", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const { openView } = await start();
-    await openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", partnerId);
     await contains("button:not(.active)", { text: "Log note" });
     await contains(".o-mail-Composer", { count: 0 });
 
@@ -85,12 +73,8 @@ QUnit.test("log note toggling", async () => {
 QUnit.test("send message toggling", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const { openView } = await start();
-    await openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", partnerId);
     await contains("button:not(.active)", { text: "Send message" });
     await contains(".o-mail-Composer", { count: 0 });
 
@@ -106,12 +90,8 @@ QUnit.test("send message toggling", async () => {
 QUnit.test("log note/send message switching", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const { openView } = await start();
-    await openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", partnerId);
     await contains("button:not(.active)", { text: "Send message" });
     await contains("button:not(.active)", { text: "Log note" });
     await contains(".o-mail-Composer", { count: 0 });
@@ -130,12 +110,8 @@ QUnit.test("log note/send message switching", async () => {
 QUnit.test("attachment counter without attachments", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const { openView } = await start();
-    await openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", partnerId);
     await contains("button[aria-label='Attach files']");
     await contains("button[aria-label='Attach files']", { count: 0, text: "0" });
 });
@@ -157,19 +133,15 @@ QUnit.test("attachment counter with attachments", async () => {
             res_model: "res.partner",
         },
     ]);
-    const { openView } = await start();
-    await openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", partnerId);
     await contains("button[aria-label='Attach files']", { text: "2" });
 });
 
 QUnit.test("attachment counter while loading attachments", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const { advanceTime, openView } = await start({
+    const { advanceTime } = await start({
         hasTimeControl: true,
         async mockRPC(route) {
             if (route.includes("/mail/thread/data")) {
@@ -177,11 +149,7 @@ QUnit.test("attachment counter while loading attachments", async () => {
             }
         },
     });
-    await openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner", partnerId);
     await contains("button[aria-label='Attach files']");
     await advanceTime(DELAY_FOR_SPINNER);
     await contains("button[aria-label='Attach files'] .fa-spin");
@@ -192,7 +160,7 @@ QUnit.test("attachment counter transition when attachments become loaded", async
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const deferred = makeDeferred();
-    const { advanceTime, openView } = await start({
+    const { advanceTime } = await start({
         hasTimeControl: true,
         async mockRPC(route) {
             if (route.includes("/mail/thread/data")) {
@@ -200,11 +168,7 @@ QUnit.test("attachment counter transition when attachments become loaded", async
             }
         },
     });
-    await openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner", partnerId);
     await contains("button[aria-label='Attach files']");
     await advanceTime(DELAY_FOR_SPINNER);
     await contains("button[aria-label='Attach files'] .fa-spin");
@@ -217,12 +181,8 @@ QUnit.test(
     async () => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({});
-        const { openView } = await start();
-        await openView({
-            res_id: partnerId,
-            res_model: "res.partner",
-            views: [[false, "form"]],
-        });
+        await start();
+        await openFormView("res.partner", partnerId);
         await contains(".o-mail-Chatter-fileUploader");
         await contains(".o-mail-AttachmentBox", { count: 0 });
     }
@@ -241,12 +201,8 @@ QUnit.test(
                 res_model: "res.partner",
             },
         ]);
-        const { openView } = await start();
-        await openView({
-            res_id: partnerId,
-            res_model: "res.partner",
-            views: [[false, "form"]],
-        });
+        await start();
+        await openFormView("res.partner", partnerId);
         await contains("button[aria-label='Attach files']");
         await contains(".o-mail-AttachmentBox", { count: 0 });
         await contains(".o-mail-Chatter-fileUploader", { count: 0 });

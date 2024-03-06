@@ -924,12 +924,8 @@ QUnit.test("Notification Sent", async (assert) => {
         notification_type: "email",
         res_partner_id: partnerId,
     });
-    const { openView } = await start();
-    await openView({
-        res_id: threadId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", threadId);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-notification");
     await contains(".o-mail-Message-notification i");
@@ -961,12 +957,8 @@ QUnit.test("Notification Error", async (assert) => {
         res_partner_id: partnerId,
     });
     const openResendActionDef = makeDeferred();
-    const { env, openView } = await start();
-    await openView({
-        res_id: threadId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    const { env } = await start();
+    await openFormView("res.partner", threadId);
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
             assert.step("do_action");
@@ -986,7 +978,7 @@ QUnit.test("Notification Error", async (assert) => {
 
 QUnit.test(
     'Quick edit (edit from Composer with ArrowUp) ignores empty ("deleted") messages.',
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({
             name: "general",

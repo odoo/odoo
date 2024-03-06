@@ -3,7 +3,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { ActivityController } from "@mail/views/web/activity/activity_controller";
 import { ActivityModel } from "@mail/views/web/activity/activity_model";
 import { ActivityRenderer } from "@mail/views/web/activity/activity_renderer";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { Domain } from "@web/core/domain";
@@ -1095,11 +1095,7 @@ QUnit.module("test_mail", {}, function () {
             views: [[false, "activity"]],
         });
         // force the unmounting of the activity view by opening another one
-        await openView({
-            res_model: "mail.test.activity",
-            views: [[false, "form"]],
-        });
-
+        await openFormView("mail.test.activity");
         assert.verifySteps(["mounted", "willUnmount"]);
     });
 

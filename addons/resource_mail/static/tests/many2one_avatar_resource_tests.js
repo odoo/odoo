@@ -1,7 +1,5 @@
-/** @odoo-module **/
-
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 import { click } from "@web/../tests/helpers/utils";
 import { contains } from "@web/../tests/utils";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
@@ -85,12 +83,8 @@ QUnit.module("M2OAvatarResourceWidgetTests", {
                     <field name="resource_id" widget="many2one_avatar_resource"/>
                 </form>`,
         };
-        const { openView } = await start({ serverData: this.serverData });
-        await openView({
-            res_model: "resource.task",
-            res_id: this.data.taskComputerId,
-            views: [[false, "form"]],
-        });
+        await start({ serverData: this.serverData });
+        await openFormView("resource.task", this.data.taskComputerId);
 
         assert.hasClass(
             document.querySelector(".o_material_resource"),

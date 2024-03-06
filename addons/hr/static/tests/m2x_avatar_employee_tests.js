@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 import { contains } from "@web/../tests/utils";
 import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup, click, selectDropdownItem } from "@web/../tests/helpers/utils";
@@ -186,7 +186,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 "m2x.avatar.employee,false,form":
                     '<form><field name="employee_id" widget="many2one_avatar_employee"/></form>',
             };
-            const { openView } = await start({
+            await start({
                 mockRPC(route, args) {
                     if (args.method === "web_read") {
                         assert.step(`web_read ${args.model} ${args.args[0]}`);
@@ -202,11 +202,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 },
                 serverData: { views },
             });
-            await openView({
-                res_model: "m2x.avatar.employee",
-                res_id: avatarId,
-                views: [[false, "form"]],
-            });
+            await openFormView("m2x.avatar.employee", avatarId);
             await contains(".o_field_widget[name=employee_id] input", { value: "Mario" });
             await click(document.querySelector(".o_m2o_avatar > img"));
             assert.verifySteps([`web_read m2x.avatar.employee ${avatarId}`]);
@@ -311,7 +307,9 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                     "m2x.avatar.employee": {
                         fields: {
                             employee_id: {
-                                string: "employee", type: "one2many", relation: "hr.employee"
+                                string: "employee",
+                                type: "one2many",
+                                relation: "hr.employee",
                             },
                         },
                         records: [],
@@ -320,17 +318,13 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                         fields: {
                             display_name: { string: "Displayed name", type: "char" },
                         },
-                        records: [
-                            { display_name: "babar" },
-                        ],
+                        records: [{ display_name: "babar" }],
                     },
                     "hr.employee.public": {
                         fields: {
                             display_name: { string: "Displayed name", type: "char" },
                         },
-                        records: [
-                            { display_name: "babar" },
-                        ],
+                        records: [{ display_name: "babar" }],
                     },
                 },
                 views: {
@@ -338,14 +332,14 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                     "hr.employee.public,false,search": `<search></search>`,
                     "hr.employee,false,list": `<tree><field name="display_name"/></tree>`,
                     "hr.employee,false,search": `<search></search>`,
-                }
+                },
             },
             arch: `<form><field name="employee_id" widget="many2one_avatar_employee"/></form>`,
             mockRPC: function (_, { model, method }) {
                 if (method === "name_search" || method === "web_search_read") {
                     assert.strictEqual(model, "hr.employee.public");
                 }
-            }
+            },
         });
         await selectDropdownItem(document, "employee_id", "Search More...");
     });
@@ -381,14 +375,10 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             "m2x.avatar.employee,false,form":
                 '<form><field name="employee_ids" widget="many2many_avatar_employee"/></form>',
         };
-        const { openView } = await start({
+        await start({
             serverData: { views },
         });
-        await openView({
-            res_model: "m2x.avatar.employee",
-            res_id: avatarId_1,
-            views: [[false, "form"]],
-        });
+        await openFormView("m2x.avatar.employee", avatarId_1);
         assert.containsN(
             document.body,
             ".o_field_many2many_avatar_employee .o_tag",
@@ -478,7 +468,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             // (reminder: if the user doesn't have access to hr.group_hr_user, the employee field should show the public employee, else the hr.employee record)
             patchUserWithCleanup({ hasGroup: () => Promise.resolve(true) });
 
-            const { openView } = await start({
+            await start({
                 mockRPC(route, args) {
                     if (args.method === "web_read") {
                         assert.step(`web_read ${args.model} ${args.args[0]}`);
@@ -489,11 +479,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 },
                 serverData: { views },
             });
-            await openView({
-                res_model: "m2x.avatar.employee",
-                res_id: avatarId_1,
-                views: [[false, "form"]],
-            });
+            await openFormView("m2x.avatar.employee", avatarId_1);
             assert.containsN(
                 document.body,
                 ".o_field_many2many_avatar_employee .o_tag",
@@ -748,14 +734,8 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 "m2x.avatar.employee,false,form":
                     '<form><field name="employee_ids" widget="many2many_avatar_employee"/></form>',
             };
-            const { openView } = await start({
-                serverData: { views },
-            });
-            await openView({
-                res_model: "m2x.avatar.employee",
-                res_id: avatarId,
-                views: [[false, "form"]],
-            });
+            await start({ serverData: { views } });
+            await openFormView("m2x.avatar.employee", avatarId);
             await contains(".o_field_many2many_avatar_employee .o_tag", { count: 2 });
             assert.strictEqual(
                 document
