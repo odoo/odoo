@@ -114,7 +114,7 @@ export class WebClient extends Component {
     }
 
     registerServiceWorker() {
-        if ("serviceWorker" in navigator) {
+        if (navigator.serviceWorker) {
             navigator.serviceWorker
                 .register("/web/service-worker.js", { scope: "/web" })
                 .catch((error) => {
