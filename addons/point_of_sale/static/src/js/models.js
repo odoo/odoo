@@ -846,7 +846,111 @@ class PosGlobalState extends PosModel {
                 }
             });
         });
+<<<<<<< HEAD
     }
+||||||| parent of b0af31fc5d9f (temp)
+    },
+
+    // saves the order locally and try to send it to the backend and make an invoice
+    // returns a promise that succeeds when the order has been posted and successfully generated
+    // an invoice. This method can fail in various ways:
+    // error-no-client: the order must have an associated partner_id. You can retry to make an invoice once
+    //     this error is solved
+    // error-transfer: there was a connection error during the transfer. You can retry to make the invoice once
+    //     the network connection is up
+
+    push_and_invoice_order: function (order) {
+        var self = this;
+        return new Promise((resolve, reject) => {
+            if (!order.get_client()) {
+                reject({ code: 400, message: 'Missing Customer', data: {} });
+            } else {
+                var order_id = self.db.add_order(order.export_as_JSON());
+                self.flush_mutex.exec(async () => {
+                    try {
+                        const server_ids = await self._flush_orders([self.db.get_order(order_id)], {
+                            timeout: 30000,
+                            to_invoice: true,
+                        });
+                        if (server_ids.length) {
+                            const [orderWithInvoice] = await self.rpc({
+                                method: 'read',
+                                model: 'pos.order',
+                                args: [server_ids, ['account_move']],
+                                kwargs: { load: false },
+                            });
+                            await self
+                                .do_action('account.account_invoices', {
+                                    additional_context: {
+                                        active_ids: [orderWithInvoice.account_move],
+                                    },
+                                })
+                                .catch(() => {
+                                    reject({ code: 401, message: 'Backend Invoice', data: { order: order } });
+                                });
+                        } else {
+                            reject({ code: 401, message: 'Backend Invoice', data: { order: order } });
+                        }
+                        resolve(server_ids);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            }
+        });
+    },
+=======
+    },
+
+    // saves the order locally and try to send it to the backend and make an invoice
+    // returns a promise that succeeds when the order has been posted and successfully generated
+    // an invoice. This method can fail in various ways:
+    // error-no-client: the order must have an associated partner_id. You can retry to make an invoice once
+    //     this error is solved
+    // error-transfer: there was a connection error during the transfer. You can retry to make the invoice once
+    //     the network connection is up
+
+    push_and_invoice_order: function (order) {
+        var self = this;
+        return new Promise((resolve, reject) => {
+            if (!order.get_client()) {
+                reject({ code: 400, message: 'Missing Customer', data: {} });
+            } else {
+                var order_id = self.db.add_order(order.export_as_JSON());
+                self.flush_mutex.exec(async () => {
+                    try {
+                        const server_ids = await self._flush_orders([self.db.get_order(order_id)], {
+                            timeout: 30000,
+                            to_invoice: true,
+                        });
+                        if (server_ids.length) {
+                            const [orderWithInvoice] = await self.rpc({
+                                method: 'read',
+                                model: 'pos.order',
+                                args: [server_ids, ['account_move']],
+                                kwargs: { load: false },
+                            });
+                            await self
+                                .do_action('account.account_invoices', {
+                                    additional_context: {
+                                        active_ids: [orderWithInvoice.account_move],
+                                    },
+                                })
+                                .catch(() => {
+                                    reject({ code: 401, message: 'Backend Invoice', data: { order: order }, server_ids: server_ids });
+                                });
+                        } else {
+                            reject({ code: 401, message: 'Backend Invoice', data: { order: order } });
+                        }
+                        resolve(server_ids);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            }
+        });
+    },
+>>>>>>> b0af31fc5d9f (temp)
 
     // wrapper around the _save_to_server that updates the synch status widget
     // Resolves to the backend ids of the synced orders.
