@@ -10,10 +10,9 @@
             <xpath expr="//filter[@name='rating_text']" position="after">
                 <filter string="Course" name="groupby_course" context="{'group_by': 'res_name'}"/>
             </xpath>
-            <xpath expr="/search" position="inside">
-                <filter string="Creation Date" name="rating_last_30_days" date="create_date" default_period="last_30_days"/>
-                <separator/>
-            </xpath>
+            <filter name="filter_create_date" position="attributes">
+                <attribute name="default_period">custom_create_date_last_30_days</attribute>
+            </filter>
             <xpath expr="//filter[@name='my_ratings']" position="replace"/>
             <xpath expr="//filter[@name='responsible']" position="replace"/>
             <xpath expr="//filter[@name='resource']" position="replace"/>

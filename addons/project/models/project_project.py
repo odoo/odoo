@@ -678,7 +678,7 @@ class Project(models.Model):
         action['display_name'] = _("%(name)s's Rating", name=self.name)
         action_context = ast.literal_eval(action['context']) if action['context'] else {}
         action_context.update(self._context)
-        action_context['search_default_rating_last_30_days'] = 1
+        action_context['search_default_filter_write_date'] = 'custom_create_date_last_30_days'
         action_context.pop('group_by', None)
         action['domain'] = [('consumed', '=', True), ('parent_res_model', '=', 'project.project'), ('parent_res_id', '=', self.id)]
         if self.rating_count == 1:

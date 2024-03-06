@@ -138,19 +138,14 @@
                 <attribute name="string">Assigned to</attribute>
             </xpath>
             <xpath expr="//filter[@name='filter_create_date']" position="replace">
-                <filter name="filter_write_date" string="Submitted On" date="write_date"/>
+                <filter name="filter_write_date" string="Submitted On" date="write_date" default_period="custom_write_date_last_30_days">
+                    <filter name="write_date_last_7_days" string="Last 7 Days" domain="[('write_date', '&gt;', datetime.datetime.combine(context_today() - datetime.timedelta(days=7), datetime.time(23, 59, 59)).to_utc())]"/>
+                    <filter name="write_date_last_30_days" string="Last 30 Days" domain="[('write_date', '&gt;', datetime.datetime.combine(context_today() - datetime.timedelta(days=30), datetime.time(23, 59, 59)).to_utc())]"/>
+                    <filter name="write_date_last_365_days" string="Last 365 Days" domain="[('write_date', '&gt;', datetime.datetime.combine(context_today() - datetime.timedelta(days=365), datetime.time(23, 59, 59)).to_utc())]"/>
+                </filter>
             </xpath>
             <xpath expr="//filter[@name='month']" position="attributes">
                 <attribute name="context">{'group_by':'write_date:month'}</attribute>
-            </xpath>
-            <xpath expr="//filter[@name='today']" position="attributes">
-                <attribute name="domain">[('write_date', '&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]</attribute>
-            </xpath>
-            <xpath expr="//filter[@name='last_7days']" position="attributes">
-                <attribute name="domain">[('write_date','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]</attribute>
-            </xpath>
-            <xpath expr="//filter[@name='last_month']" position="attributes">
-                <attribute name="domain">[('write_date','&gt;', (context_today() - relativedelta(months=1)).strftime('%Y-%m-%d'))]</attribute>
             </xpath>
         </field>
     </record>
@@ -269,7 +264,7 @@
             </p>
         </field>
         <field name="context">{
-            'search_default_last_month': 1,
+            'search_default_filter_write_date': 1,
             'graph_groupbys': ['rated_partner_id'],
         }</field>
     </record>
