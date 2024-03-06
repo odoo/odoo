@@ -26,4 +26,8 @@ export class ResUsers extends ServerModel {
     has_group() {
         return true;
     }
+
+    _is_public(id) {
+        return id === serverState.publicUserId;
+    }
 }
