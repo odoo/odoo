@@ -12,7 +12,7 @@ patch(SuggestionService.prototype, {
             : super.getSupportedDelimiters(...arguments);
     },
     async fetchSuggestions({ delimiter, term }, { thread } = {}) {
-        if (thread.type === "livechat" && delimiter === "#") {
+        if (thread?.type === "livechat" && delimiter === "#") {
             return;
         }
         return super.fetchSuggestions(...arguments);
@@ -30,7 +30,7 @@ patch(SuggestionService.prototype, {
      * @returns {[mainSuggestion[], extraSuggestion[]]}
      */
     searchSuggestions({ delimiter, term }, { thread } = {}, sort = false) {
-        if (thread.type === "livechat" && delimiter === "#") {
+        if (thread?.type === "livechat" && delimiter === "#") {
             return {
                 type: undefined,
                 mainSuggestions: [],
