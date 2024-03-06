@@ -50,6 +50,8 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
         readonly=False,
     )
     amount = fields.Monetary()
+    split_move_line_id = fields.Many2one('account.move.line')
+
     # check_state = fields.Selection([
     #         ('on_hand', 'on hand')
     #     ],

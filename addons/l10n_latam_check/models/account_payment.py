@@ -1,6 +1,6 @@
 import stdnum
 
-from odoo import fields, models, _, api
+from odoo import fields, models, api, Command,  _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date
 
@@ -33,22 +33,80 @@ class AccountPayment(models.Model):
 
     def action_post(self):
         super().action_post()
+        self._l10n_latam_check_split_move()
         # TODO : to look for another alternative.
         (self.l10n_latam_check_ids or self.l10n_latam_new_check_ids)._compute_check_info()
 
     def action_cancel(self):
         super().action_cancel()
+        # TODO: Move to account.move
+        self._l10n_latam_check_unlink_split_move()
         # TODO : to look for another alternative.
         (self.l10n_latam_check_ids or self.l10n_latam_new_check_ids)._compute_check_info()
 
     def action_draft(self):
         super().action_draft()
+        # TODO: Move to account.move
+        self._l10n_latam_check_unlink_split_move()
         # TODO : to look for another alternative.
         (self.l10n_latam_check_ids or self.l10n_latam_new_check_ids)._compute_check_info()
 
+    def _l10n_latam_check_split_move(self):
+        for payment in self.filtered(lambda x: x.payment_method_code == 'own_checks' and x.payment_type == 'outbound'):
+            # _prepare_move_line_default_vals
+            move_line_vals = []
+            move_id = self.env['account.move'].create({
+                'journal_id': payment.journal_id.id,
+            })
+            liquidity_line, dummie, dummie = payment._seek_for_lines()
+
+            for check in payment.l10n_latam_new_check_ids:
+
+
+                liquidity_amount_currency = -check.amount
+                liquidity_balance = payment.currency_id._convert(
+                    liquidity_amount_currency,
+                    payment.company_id.currency_id,
+                    payment.company_id,
+                    payment.date, #TODO por ahora
+                )
+                # Checks liquidity line
+                move_line = self.env['account.move.line'].with_context(check_move_validity=False).create({
+                    'name': check.name,
+                    'date_maturity': check.l10n_latam_check_payment_date,
+                    'amount_currency': liquidity_amount_currency,
+                    'currency_id': check.currency_id.id,
+                    'debit': liquidity_balance if liquidity_balance > 0.0 else 0.0,
+                    'credit': -liquidity_balance if liquidity_balance < 0.0 else 0.0,
+                    'partner_id': payment.partner_id.id,
+                    'account_id': payment.outstanding_account_id.id,
+                    'move_id' : move_id.id,
+                })
+                check.split_move_line_id = move_line.id
+
+            # inverse liquidity line
+            self.env['account.move.line'].with_context(check_move_validity=False).create({
+                    'name': liquidity_line.name,
+                    'date_maturity': liquidity_line.date_maturity,
+                    'amount_currency': -liquidity_line.amount_currency,
+                    'currency_id': liquidity_line.currency_id.id,
+                    'debit': -liquidity_line.debit,
+                    'credit': -liquidity_line.credit,
+                    'partner_id': payment.partner_id.id,
+                    'account_id': payment.outstanding_account_id.id,
+                    'move_id' : move_id.id,
+                })
+            move_id.action_post()
+            (move_id.line_ids + liquidity_line).reconcile()
+
+    def _l10n_latam_check_unlink_split_move(self):
+        split_move_ids = self.mapped('check_ids.split_move_line_id.move_id')
+        split_move_ids.button_draft()
+        split_move_ids.unlink()
+
     # @api.depends('payment_method_line_id', 'l10n_latam_check_issuer_vat', 'l10n_latam_check_bank_id', 'company_id',
     #              'l10n_latam_check_number', 'l10n_latam_check_id', 'state', 'date', 'is_internal_transfer', 'amount', 'currency_id')
-    # def _compute_l10n_latam_check_warning_msg(self):
+    # def _compute|_warning_msg(self):
     #     """
     #     Compute warning message for latam checks checks
     #     We use l10n_latam_check_number as de dependency because on the interface this is the field the user is using.
