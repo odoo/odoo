@@ -24,6 +24,7 @@ class CalendarTimeslot(models.Model):
     start = fields.Datetime(default=fields.Datetime.now, required=True)
     stop = fields.Datetime(default=fields.Datetime.now() + relativedelta(minutes=15), required=True, compute='_compute_stop', readonly=False, store=True)
     duration = fields.Float('Duration', compute='_compute_duration', store=True, readonly=False)
+    allday = fields.Boolean('All Day', default=False)
 
     # Attendee Fields
     attendee_ids = fields.One2many('calendar.attendee_bis', 'timeslot_id', copy=True)

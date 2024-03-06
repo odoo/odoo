@@ -38,6 +38,7 @@
                             <field name="start" string="Start Date" required="1"/>
                             <field name="stop" string="End Date" required="1"/>
                             <field name="duration" string="Duration (H)" widget="float_time"/>
+                            <field name="allday"/>
                             <field name="is_public"/>
                             <field name="is_recurring"/>
                         </group>
@@ -100,6 +101,7 @@
                             <field name="partner_id" required="1" domain="[('user_id', '=', uid)]"/>
                             <field name="start" string="Start Date" required="1"/>
                             <field name="stop" string="End Date" required="1"/>
+                            <field name="allday"/>
                             <field name="duration" string="Duration (H)" widget="float_time"/>
                             <field name="is_public"/>
                         </group>
@@ -118,11 +120,11 @@
         <field name="name">calendar_bis.calendar.timeslot.calendar</field>
         <field name="model">calendar.timeslot</field>
         <field name="arch" type="xml">
-            <calendar js_class="calendar_bis" string="Meetings" mode="month" date_start="start" date_stop="stop"
-                date_delay="duration"
-                color="partner_id"
-                quick_create="1"
-                quick_create_view_id="%(calendar_bis_timeslot_form_quick_create)d">
+            <calendar js_class="calendar_bis"
+                      string="Meetings" mode="month"
+                      date_start="start" date_stop="stop" date_delay="duration"
+                      color="partner_id" all_day="allday"
+                      quick_create="1" quick_create_view_id="%(calendar_bis_timeslot_form_quick_create)d">
                     <field name="name" string="Subject" decoration-bf="1" readonly="1"/>
                     <field name="partner_id" widget="many2one_avatar_user" readonly="1"/>
                     <field name="attendee_ids" widget="many2many_tags" readonly="1"/>
