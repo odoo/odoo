@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, exceptions, fields, models, _
 
 
 class MailActivityType(models.Model):
@@ -125,3 +125,51 @@ class MailActivityType(models.Model):
                 activity_type.chaining_type = 'trigger'
             else:
                 activity_type.chaining_type = 'suggest'
+
+    def write(self, values):
+        """ Protect some master types against deletiong or modification when they
+        are used as default in apps, in critical flows, plans, ... """
+        if values.get('res_model'):
+            xmlid_to_model = self._get_xmlid_model_link()
+            modified = self.browse()
+            for xml_id, model in xmlid_to_model.items():
+                activity_type = self.env.ref(xml_id, raise_if_not_found=False)
+                if activity_type and values['res_model'] != model:
+                    modified |= activity_type
+            modified = modified & self
+            if modified:
+                raise exceptions.UserError(
+                    _('You cannot modify %(activities_names)s target model as those are required in various apps.',
+                      activities_names=', '.join(act.name for act in modified),
+                ))
+        return super().write(values)
+
+    @api.model
+    def _get_xmlid_model_link(self):
+        """ Force a model for some xml ids of activity types. """
+        return {
+            'mail.mail_activity_data_call': False,  # generic call, used notably in VOIP, ...
+            'mail.mail_activity_data_meeting': False,  # generic meeting, used in calendar, hr, ...
+            'mail.mail_activity_data_todo': False,  # generic todo, used in plans, ...
+            'mail.mail_activity_data_upload_document': False,  # generic upload, used in documents, accounting, ...
+            'mail.mail_activity_data_warning': False,  # generic warning, used in plans, business flows, ...
+        }
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_master_data(self):
+        master_data = self.browse()
+        for xml_id in self._get_master_xmlids():
+            activity_type = self.env.ref(xml_id, raise_if_not_found=False)
+            if activity_type:
+                master_data |= activity_type
+        master_data = master_data & self
+        if master_data:
+            raise exceptions.UserError(
+                _('You cannot delete %(activity_names)s as those are required in various apps.',
+                  activity_names=', '.join(act.name for act in master_data),
+            ))
+
+    @api.model
+    def _get_master_xmlids(self):
+        """ Master XML Ids cannot be unlinked. """
+        return {'mail.mail_activity_data_todo', 'mail.mail_activity_data_call'}
