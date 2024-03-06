@@ -62,6 +62,20 @@ const dragEffectDelay = async () => {
     await animationFrame();
 };
 
+/**
+ * These params are used to move the pointer from an arbitrary distance in the
+ * element to trigger a drag sequence (the distance required to trigger a drag
+ * is defined by the `tolerance` option in the draggable hook builder).
+ * @see {draggable_hook_builder.js}
+ */
+const DRAG_TOLERANCE_PARAMS = {
+    position: {
+        x: 100,
+        y: 100,
+    },
+    relative: true,
+};
+
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
@@ -146,13 +160,7 @@ export function contains(target, options) {
             const { cancel, drop, moveTo } = drag(node, options);
             await dragEffectDelay();
 
-            hover(node, {
-                position: {
-                    x: 100,
-                    y: 100,
-                },
-                relative: true,
-            });
+            hover(node, DRAG_TOLERANCE_PARAMS);
             await dragEffectDelay();
 
             return {
@@ -166,7 +174,11 @@ export function contains(target, options) {
          * @param {PointerOptions} [options]
          */
         dragAndDrop: async (target, options) => {
-            const { drop, moveTo } = drag(await nodePromise);
+            const from = await nodePromise;
+            const { drop, moveTo } = drag(from);
+            await dragEffectDelay();
+
+            hover(from, DRAG_TOLERANCE_PARAMS);
             await dragEffectDelay();
 
             moveTo(target, options);
