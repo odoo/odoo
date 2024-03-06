@@ -203,10 +203,11 @@ export function contains(target, options) {
         },
         /**
          * @param {KeyStrokes} keyStrokes
+         * @param {KeyboardEventInit} [options]
          */
-        press: async (keyStrokes) => {
+        press: async (keyStrokes, options) => {
             await focusCurrent();
-            press(keyStrokes);
+            press(keyStrokes, options);
             await animationFrame();
         },
         /**

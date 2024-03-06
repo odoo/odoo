@@ -1,15 +1,15 @@
 import { beforeEach, expect, getFixture, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent, press } from "@odoo/hoot-dom";
+import { press } from "@odoo/hoot-dom";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import { contains, makeMockEnv, mountWithCleanup, patchWithCleanup } from "../../web_test_helpers";
 
 import { Component, reactive, xml } from "@odoo/owl";
 
+import { browser } from "@web/core/browser/browser";
 import { useCommand } from "@web/core/commands/command_hook";
+import { HotkeyCommandItem } from "@web/core/commands/default_providers";
 import { registry } from "@web/core/registry";
 import { useActiveElement } from "@web/core/ui/ui_service";
-import { HotkeyCommandItem } from "@web/core/commands/default_providers";
-import { browser } from "@web/core/browser/browser";
 
 class TestComponent extends Component {
     static template = xml`<div />`;
@@ -252,14 +252,9 @@ test("useCommand hook with hotkey and hotkeyOptions", async () => {
     expect([allowRepeatKey, disallowRepeatKey, defaultBehaviourKey]).toVerifySteps();
 
     // Dispatch the three keys with repeat:
-    const fixture = getFixture();
-    manuallyDispatchProgrammaticEvent(fixture, "keydown", { repeat: true, key: allowRepeatKey });
-    manuallyDispatchProgrammaticEvent(fixture, "keydown", { repeat: true, key: disallowRepeatKey });
-    manuallyDispatchProgrammaticEvent(fixture, "keydown", {
-        repeat: true,
-        key: defaultBehaviourKey,
-    });
-
+    press(allowRepeatKey, { repeat: true });
+    press(disallowRepeatKey, { repeat: true });
+    press(defaultBehaviourKey, { repeat: true });
     await animationFrame();
 
     expect([allowRepeatKey]).toVerifySteps();
