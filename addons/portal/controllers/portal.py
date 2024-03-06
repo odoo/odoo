@@ -293,13 +293,11 @@ class CustomerPortal(Controller):
             raise UserError(_("The document does not exist or you do not have the rights to access it."))
 
         IrAttachment = request.env['ir.attachment']
-        access_token = False
 
-        # Avoid using sudo or creating access_token when not necessary: internal
-        # users can create attachments, as opposed to public and portal users.
+        # Avoid using sudo when not necessary: internal users can create attachments,
+        # as opposed to public and portal users.
         if not request.env.user.has_group('base.group_user'):
             IrAttachment = IrAttachment.sudo().with_context(binary_field_real_user=IrAttachment.env.user)
-            access_token = IrAttachment._generate_access_token()
 
         # At this point the related message does not exist yet, so we assign
         # those specific res_model and res_is. They will be correctly set
@@ -310,7 +308,7 @@ class CustomerPortal(Controller):
             'datas': base64.b64encode(file.read()),
             'res_model': 'mail.compose.message',
             'res_id': 0,
-            'access_token': access_token,
+            'access_token': IrAttachment._generate_access_token(),
         })
         return request.make_response(
             data=json.dumps(attachment.read(['id', 'name', 'mimetype', 'file_size', 'access_token'])[0]),
