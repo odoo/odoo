@@ -4,7 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { makeDeferred, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import {
@@ -22,7 +22,7 @@ import {
 QUnit.module("chatter");
 
 QUnit.test("simple chatter on a record", async () => {
-    const { openFormView, pyEnv } = await start({
+    const { pyEnv } = await start({
         mockRPC(route, args) {
             if (route.startsWith("/mail") || route.startsWith("/discuss")) {
                 step(`${route} - ${JSON.stringify(args)}`);
@@ -50,7 +50,7 @@ QUnit.test("simple chatter on a record", async () => {
 QUnit.test("can post a message on a record thread", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-    const { openFormView } = await start({
+    await start({
         mockRPC(route, args) {
             if (route === "/mail/message/post") {
                 step(route);
@@ -92,7 +92,7 @@ QUnit.test("can post a message on a record thread", async (assert) => {
 QUnit.test("can post a note on a record thread", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-    const { openFormView } = await start({
+    await start({
         mockRPC(route, args) {
             if (route === "/mail/message/post") {
                 step(route);
@@ -132,7 +132,7 @@ QUnit.test("can post a note on a record thread", async (assert) => {
 });
 
 QUnit.test("No attachment loading spinner when creating records", async () => {
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner");
     await contains("button[aria-label='Attach files']");
     await contains("button[aria-label='Attach files'] .fa-spin", { count: 0 });
@@ -141,7 +141,7 @@ QUnit.test("No attachment loading spinner when creating records", async () => {
 QUnit.test(
     "No attachment loading spinner when switching from loading record to creation of record",
     async () => {
-        const { advanceTime, openFormView, pyEnv } = await start({
+        const { advanceTime, pyEnv } = await start({
             hasTimeControl: true,
             async mockRPC(route) {
                 if (route === "/mail/thread/data") {
@@ -161,7 +161,7 @@ QUnit.test(
 
 QUnit.test("Composer toggle state is kept when switching from aside to bottom", async () => {
     patchUiSize({ size: SIZES.XXL });
-    const { openFormView, pyEnv } = await start();
+    const { pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await click("button", { text: "Send message" });
@@ -173,7 +173,7 @@ QUnit.test("Composer toggle state is kept when switching from aside to bottom", 
 
 QUnit.test("Textarea content is kept when switching from aside to bottom", async () => {
     patchUiSize({ size: SIZES.XXL });
-    const { openFormView, pyEnv } = await start();
+    const { pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await click("button", { text: "Send message" });
@@ -187,7 +187,7 @@ QUnit.test("Textarea content is kept when switching from aside to bottom", async
 
 QUnit.test("Composer type is kept when switching from aside to bottom", async () => {
     patchUiSize({ size: SIZES.XXL });
-    const { openFormView, pyEnv } = await start();
+    const { pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await click("button", { text: "Log note" });
@@ -477,7 +477,7 @@ QUnit.test("scroll position is kept when navigating from one record to another",
                 res_id: index < 20 ? partnerId_1 : partnerId_2,
             }))
     );
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Message", { count: 20 });
     const scrollValue1 = $(".o-mail-Chatter")[0].scrollHeight / 2;
@@ -555,7 +555,7 @@ QUnit.test(
             res_id: fakeId,
             subject: "Another Subject",
         });
-        const { openFormView } = await start();
+        await start();
         await openFormView("res.fake", fakeId);
         await contains(".o-mail-Message", { text: "Subject: Another Subjectnot empty" });
     }
@@ -572,7 +572,7 @@ QUnit.test(
             res_id: fakeId,
             subject: "Custom Default Subject",
         });
-        const { openFormView } = await start();
+        await start();
         await openFormView("res.fake", fakeId);
         await contains(".o-mail-Message", { text: "not empty" });
         await contains(".o-mail-Message", {
@@ -593,7 +593,7 @@ QUnit.test(
             res_id: fakeId,
             subject: "Salutations, voyageur",
         });
-        const { openFormView } = await start();
+        await start();
         await openFormView("res.fake", fakeId);
         await contains(".o-mail-Message", { text: "not empty" });
         await contains(".o-mail-Message", {
@@ -683,7 +683,7 @@ QUnit.test("chatter updating", async () => {
                 </div>
             </form>`,
     };
-    const { openFormView } = await start({ serverData: { views } });
+    await start({ serverData: { views } });
     await openFormView("res.partner", partnerId_1, {
         props: { resIds: [partnerId_1, partnerId_2] },
     });
@@ -727,7 +727,7 @@ QUnit.test(
                     <div class="oe_chatter"/>
                 </form>`,
         };
-        const { env, openFormView } = await start({ serverData: { views } });
+        const { env } = await start({ serverData: { views } });
         const wizardOpened = makeDeferred();
         patchWithCleanup(env.services.action, {
             doAction(action, options) {

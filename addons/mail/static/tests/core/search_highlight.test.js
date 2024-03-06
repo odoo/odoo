@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/core/search_highlight_test default=false */
 
 import { HIGHLIGHT_CLASS, searchHighlight } from "@mail/core/common/message_search_hook";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
@@ -108,7 +108,7 @@ QUnit.test("Display highligthed search in chatter", async () => {
         model: "res.partner",
         res_id: partnerId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "empty");
@@ -125,7 +125,7 @@ QUnit.test("Display multiple highligthed search in chatter", async () => {
         model: "res.partner",
         res_id: partnerId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "not empty");
@@ -182,7 +182,7 @@ QUnit.test("Display highligthed with escaped character must ignore them", async 
         model: "res.partner",
         res_id: partnerId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "test hello");

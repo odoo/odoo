@@ -5,7 +5,7 @@ import { rpc } from "@web/core/network/rpc";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
@@ -1201,7 +1201,7 @@ QUnit.test("Group unread counter up to date after mention is marked as seen", as
 QUnit.test("Unpinning channel closes its chat window", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "Sales" });
-    const { openFormView } = await start();
+    await start();
     await openFormView("discuss.channel");
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
