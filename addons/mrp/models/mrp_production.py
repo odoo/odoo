@@ -860,6 +860,12 @@ class MrpProduction(models.Model):
                 if not field_values.get('warehouse_id', False):
                     field_values['warehouse_id'] = warehouse_id
 
+        if vals.get('picking_type_id'):
+            picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
+            for production in self:
+                if production.state == 'draft' and picking_type != production.picking_type_id:
+                    production.name = picking_type.sequence_id.next_by_id()
+
         res = super(MrpProduction, self).write(vals)
 
         for production in self:
