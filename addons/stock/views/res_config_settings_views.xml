@@ -13,16 +13,9 @@
                             <setting id="product_packs_tracking" documentation="/applications/inventory_and_mrp/inventory/product_management/product_tracking/package.html" title="Put your products in packs (e.g. parcels, boxes) and track them" help="Put your products in packs (e.g. parcels, boxes) and track them">
                                 <field name="group_stock_tracking_lot"/>
                             </setting>
-                            <setting id="process_transfers" help="Process transfers in batch per worker"
+                            <setting id="process_transfers" help="Optimize your transfers by grouping operations together and assigning jobs to workers"
                                      documentation="/applications/inventory_and_mrp/inventory/management/misc/batch_transfers.html">
                                 <field name="module_stock_picking_batch"/>
-                                <div class="row mt-2" invisible="not module_stock_picking_batch">
-                                    <field name="group_stock_picking_wave" class="col flex-grow-0 ml16 mr0 pe-2"/>
-                                    <div class="col ps-0">
-                                        <label for="group_stock_picking_wave"/>
-                                        <div class="text-muted">Process operations in wave transfers</div>
-                                    </div>
-                                </div>
                             </setting>
                             <setting id="warning_info" string="Warnings" help="Get informative or blocking warnings on partners">
                                 <field name="group_warning_stock"/>
