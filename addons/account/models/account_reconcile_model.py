@@ -732,14 +732,14 @@ class AccountReconcileModel(models.Model):
         :param st_line: A statement line.
         :param partner: The partner associated to the statement line.
         """
+        def get_order_by_clause(alias=None):
+            direction = 'DESC' if self.matching_order == 'new_first' else 'ASC'
+            dotted_alias = f'{alias}.' if alias else ''
+            return f'{dotted_alias}date_maturity {direction}, {dotted_alias}date {direction}, {dotted_alias}id {direction}'
+
         assert self.rule_type == 'invoice_matching'
         self.env['account.move'].flush_model()
         self.env['account.move.line'].flush_model()
-
-        if self.matching_order == 'new_first':
-            order_by = 'sub.date_maturity DESC, sub.date DESC, sub.id DESC'
-        else:
-            order_by = 'sub.date_maturity ASC, sub.date ASC, sub.id ASC'
 
         aml_domain = self._get_invoice_matching_amls_domain(st_line, partner)
         query = self.env['account.move.line']._where_calc(aml_domain)
@@ -793,6 +793,7 @@ class AccountReconcileModel(models.Model):
                 all_params += where_params
 
         if sub_queries:
+            order_by = get_order_by_clause(alias='sub')
             self._cr.execute(
                 '''
                     SELECT
@@ -813,23 +814,35 @@ class AccountReconcileModel(models.Model):
                     'amls': self.env['account.move.line'].browse(candidate_ids),
                 }
 
-        # Search without any matching based on textual information.
-        if self.matching_order == 'new_first':
-            order = 'date_maturity DESC, date DESC, id DESC'
-        else:
-            order = 'date_maturity ASC, date ASC, id ASC'
-
         if not partner:
             st_line_currency = st_line.foreign_currency_id or st_line.journal_id.currency_id or st_line.company_currency_id
             if st_line_currency == self.company_id.currency_id:
                 aml_amount_field = 'amount_residual'
             else:
                 aml_amount_field = 'amount_residual_currency'
-            aml_domain += [
-                ('currency_id', '=', st_line_currency.id),
-                (aml_amount_field, '=', -st_line.amount_residual),
-            ]
-        amls = self.env['account.move.line'].search(aml_domain, order=order)
+
+            order_by = get_order_by_clause(alias='account_move_line')
+            self._cr.execute(
+                f'''
+                    SELECT account_move_line.id
+                    FROM {tables}
+                    WHERE
+                        {where_clause}
+                        AND account_move_line.currency_id = %s
+                        AND ROUND(account_move_line.{aml_amount_field}, %s) = ROUND(%s, %s)
+                    ORDER BY {order_by}
+                ''',
+                where_params + [
+                    st_line_currency.id,
+                    st_line_currency.decimal_places,
+                    -st_line.amount_residual,
+                    st_line_currency.decimal_places,
+                ],
+            )
+            amls = self.env['account.move.line'].browse([row[0] for row in self._cr.fetchall()])
+        else:
+            amls = self.env['account.move.line'].search(aml_domain, order=get_order_by_clause())
+
         if amls:
             return {
                 'allow_auto_reconcile': False,
