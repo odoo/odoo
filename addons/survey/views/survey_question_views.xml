@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <form string="Survey Question" create="false" class="o_survey_question_view_form">
                 <field name="is_placed_before_trigger" invisible="1"/>
-                <div class="alert alert-warning mb-0 text-center" role="alert" invisible="not is_placed_before_trigger">
+                <div class="alert alert-warning text-center" role="alert" invisible="not is_placed_before_trigger">
                     ⚠️ This question is positioned before some or all of its triggers and could be skipped.
                 </div>
                 <field name="is_page" invisible="1"/>

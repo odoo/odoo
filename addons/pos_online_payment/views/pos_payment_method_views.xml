@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//form/sheet" position="before">
                 <field name="has_an_online_payment_provider" invisible="1"/>
-                <div class="alert alert-danger mb-0" role="alert" invisible="not is_online_payment or has_an_online_payment_provider">
+                <div class="alert alert-danger" role="alert" invisible="not is_online_payment or has_an_online_payment_provider">
                     You have not activated any <bold><a type="action" name="%(payment.action_payment_provider)d" class="alert-link" role="button">payment provider</a></bold> to allow online payments.
                 </div>
             </xpath>
