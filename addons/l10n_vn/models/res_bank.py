@@ -22,7 +22,7 @@ class ResPartnerBank(models.Model):
     @api.depends('country_code')
     def _compute_display_qr_setting(self):
         bank_vn = self.filtered(lambda b: b.country_code == 'VN')
-        bank_vn.display_qr_setting = self.env.company.qr_code
+        bank_vn.display_qr_setting = True
         super(ResPartnerBank, self - bank_vn)._compute_display_qr_setting()
 
     def _get_merchant_account_info(self):
