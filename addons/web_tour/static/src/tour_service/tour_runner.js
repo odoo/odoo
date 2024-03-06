@@ -53,7 +53,7 @@ export class TourRunner {
         runOptions.pointer = pointer;
         tour.resetRun(runOptions)
         const willUnload = callWithUnloadCheck(() => {
-            if (tour.url && tour.url !== options.startUrl && options.redirect) {
+            if (tour.url && tour.url !== runOptions.startUrl && runOptions.redirect) {
                 const search = new URLSearchParams(window.location.search);
                 const toUrl = new URL(window.location.origin + tour.url);
                 toUrl.searchParams.set("debug", search.get("debug"))
