@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
@@ -27,7 +27,7 @@ QUnit.test("Sent", async () => {
         notification_type: "snail",
         res_partner_id: partnerId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await contains(".o-snailmail-SnailmailNotificationPopover i.fa-check");
@@ -52,7 +52,7 @@ QUnit.test("Cancelled", async () => {
         notification_type: "snail",
         res_partner_id: partnerId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await contains(".o-snailmail-SnailmailNotificationPopover i.fa-trash-o");
@@ -77,7 +77,7 @@ QUnit.test("Pending", async () => {
         notification_type: "snail",
         res_partner_id: partnerId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await contains(".o-snailmail-SnailmailNotificationPopover i.fa-clock-o");
@@ -104,7 +104,7 @@ QUnit.test("No Price Available", async (assert) => {
         res_partner_id: partnerId,
     });
     const def = makeDeferred();
-    const { openFormView } = await start({
+    await start({
         async mockRPC(route, args) {
             if (
                 args.method === "cancel_letter" &&
@@ -147,7 +147,7 @@ QUnit.test("Credit Error", async (assert) => {
         res_partner_id: partnerId,
     });
     const def = makeDeferred();
-    const { openFormView } = await start({
+    await start({
         async mockRPC(route, args) {
             if (
                 args.method === "send_letter" &&
@@ -191,7 +191,7 @@ QUnit.test("Trial Error", async (assert) => {
         res_partner_id: partnerId,
     });
     const def = makeDeferred();
-    const { openFormView } = await start({
+    await start({
         async mockRPC(route, args) {
             if (
                 args.method === "send_letter" &&
@@ -234,7 +234,7 @@ QUnit.test("Format Error", async (assert) => {
         notification_type: "snail",
         res_partner_id: partnerId,
     });
-    const { env, openFormView } = await start();
+    const { env } = await start();
     await openFormView("res.partner", partnerId);
     const def = makeDeferred();
     patchWithCleanup(env.services.action, {
@@ -268,7 +268,7 @@ QUnit.test("Missing Required Fields", async (assert) => {
     const snailMailLetterId1 = pyEnv["snailmail.letter"].create({
         message_id: messageId,
     });
-    const { env, openFormView } = await start();
+    const { env } = await start();
     await openFormView("res.partner", partnerId);
     const def = makeDeferred();
     patchWithCleanup(env.services.action, {

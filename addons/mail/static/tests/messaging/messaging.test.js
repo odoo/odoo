@@ -5,7 +5,7 @@ import { rpc } from "@web/core/network/rpc";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 
@@ -64,7 +64,7 @@ QUnit.test(
             ],
             channel_type: "chat",
         });
-        const { openFormView } = await start({
+        await start({
             async mockRPC(route, args, originalRpc) {
                 if (route === "/mail/action" && args.init_messaging) {
                     const res = await originalRpc(...arguments);
@@ -109,7 +109,7 @@ QUnit.test(
             ],
             channel_type: "chat",
         });
-        const { openFormView } = await start();
+        await start();
         await openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "test https://www.odoo.com/");
         await click(".o-mail-Composer-send:enabled");

@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { editInput, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
@@ -183,7 +183,7 @@ QUnit.test("remove a follower in a dirty form view", async (assert) => {
                 </div>
             </form>`,
     };
-    const { openFormView } = await start({ serverData: { views } });
+    await start({ serverData: { views } });
     await openFormView("res.partner", threadId);
     await click(".o_field_many2many_tags[name='channel_ids'] input");
     await click(".dropdown-item", { text: "General" });
@@ -206,7 +206,7 @@ QUnit.test("removing a follower should reload form view", async function (assert
         res_id: threadId,
         res_model: "res.partner",
     });
-    const { openFormView } = await start({
+    await start({
         async mockRPC(route, args) {
             if (args.method === "web_read") {
                 assert.step(`read ${args.args[0][0]}`);

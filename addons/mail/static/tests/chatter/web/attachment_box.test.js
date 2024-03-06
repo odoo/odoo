@@ -3,7 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains, scroll } from "@web/../tests/utils";
 
@@ -184,7 +184,7 @@ QUnit.test("do not auto-scroll to attachment box when initially open", async () 
             </form>
         `,
     };
-    const { openFormView } = await start({ serverData: { views } });
+    await start({ serverData: { views } });
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message");
     // weak test, no guarantee that we waited long enough for the potential scroll to happen
@@ -237,7 +237,7 @@ QUnit.test("attachment box auto-closed on switch to record wih no attachments", 
             </form>
         `,
     };
-    const { openFormView } = await start({ serverData: { views } });
+    await start({ serverData: { views } });
     await openFormView("res.partner", partnerId_1, {
         props: { resIds: [partnerId_1, partnerId_2] },
     });

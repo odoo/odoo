@@ -4,7 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { GifPicker } from "@mail/discuss/gif_picker/common/gif_picker";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains, insertText, scroll } from "@web/../tests/utils";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -174,7 +174,7 @@ QUnit.test("Add GIF to favorite", async () => {
 });
 
 QUnit.test("Chatter should not have the GIF button", async () => {
-    const { openFormView, pyEnv } = await start();
+    const { pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await click("button", { text: "Log note" });

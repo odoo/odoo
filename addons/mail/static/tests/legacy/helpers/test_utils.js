@@ -32,7 +32,6 @@ registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
 // Public: test lifecycle
 //------------------------------------------------------------------------------
 
-/** @type {OdooEnv | null} */
 let currentEnv = null;
 
 export async function openDiscuss(activeId, { target } = {}) {
@@ -45,15 +44,17 @@ export async function openDiscuss(activeId, { target } = {}) {
     });
 }
 
-function getOpenFormView(openView) {
-    return async function openFormView(res_model, res_id, { props } = {}) {
-        const action = {
-            res_model,
-            res_id,
+export async function openFormView(resModel, resId, { props = {}, target } = {}) {
+    const env = target ?? currentEnv;
+    await env.services.action.doAction(
+        {
+            res_model: resModel,
+            res_id: resId,
+            type: "ir.actions.act_window",
             views: [[false, "form"]],
-        };
-        await openView(action, props);
-    };
+        },
+        { props }
+    );
 }
 
 //------------------------------------------------------------------------------
@@ -203,7 +204,7 @@ export async function start(param0 = {}) {
         env: webClient.env,
         openDiscuss: (activeId) => openDiscuss(activeId, { target: webClient.env }),
         openView,
-        openFormView: getOpenFormView(openView),
+        openFormView: (resModel, resId) => openFormView(resModel, resId, { target: webClient.env }),
         pyEnv,
         target,
         webClient,

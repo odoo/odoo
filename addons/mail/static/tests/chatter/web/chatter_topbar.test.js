@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
 
 import { makeDeferred } from "@web/../tests/helpers/utils";
@@ -259,7 +259,7 @@ QUnit.test(
 QUnit.test("composer state conserved when clicking on another topbar button", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter-topbar");
     await contains("button", { text: "Send message" });

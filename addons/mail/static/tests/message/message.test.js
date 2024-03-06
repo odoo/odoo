@@ -3,7 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
@@ -85,7 +85,7 @@ QUnit.test("Can edit message comment in chatter", async () => {
         model: "res.partner",
         res_id: partnerId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
@@ -1314,7 +1314,7 @@ QUnit.test(
             model: "res.partner",
             res_id: partnerId_1,
         });
-        const { openFormView } = await start();
+        await start();
         await openFormView("res.partner", partnerId_1);
         await contains(".o-mail-Message-avatar");
         assert.hasClass($(".o-mail-Message-avatarContainer"), "cursor-pointer");
@@ -1341,7 +1341,7 @@ QUnit.test("avatar card from author should be opened after clicking on their nam
         model: "res.partner",
         res_id: partnerId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-author", { text: "Demo" });
     await contains(".o_avatar_card");
@@ -1360,7 +1360,7 @@ QUnit.test("subtype description should be displayed if it is different than body
         res_id: threadId,
         subtype_id: subtypeId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", threadId);
     await contains(".o-mail-Message-body", { text: "HelloBonjour" });
 });
@@ -1375,7 +1375,7 @@ QUnit.test("subtype description should not be displayed if it is similar to body
         res_id: threadId,
         subtype_id: subtypeId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", threadId);
     await contains(".o-mail-Message-body", { text: "Hello" });
 });
@@ -1388,7 +1388,7 @@ QUnit.test("data-oe-id & data-oe-model link redirection on click", async (assert
         model: "res.partner",
         res_id: partnerId,
     });
-    const { env, openFormView } = await start();
+    const { env } = await start();
     await openFormView("res.partner", partnerId);
     patchWithCleanup(env.services.action, {
         doAction(action) {
@@ -1409,7 +1409,7 @@ QUnit.test("Chat with partner should be opened after clicking on their mention",
         email: "testpartner@odoo.com",
     });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@Te");
@@ -1425,7 +1425,7 @@ QUnit.test("Channel should be opened after clicking on its mention", async () =>
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["discuss.channel"].create({ name: "my-channel" });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "#");
@@ -1636,7 +1636,7 @@ QUnit.test("Avatar of unknown author for email message", async () => {
         res_id: pyEnv.currentPartnerId,
         author_id: null,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await contains(".o-mail-Message-avatar[data-src*='mail/static/src/img/email_icon.png']");
 });
@@ -1652,7 +1652,7 @@ QUnit.test("Show email_from of message without author for email message", async 
         model: "res.partner",
         res_id: pyEnv.currentPartnerId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await contains(".o-mail-Message-author", { text: "md@oilcompany.fr" });
 });
@@ -1668,7 +1668,7 @@ QUnit.test("Avatar of unknown author for not email message", async () => {
         res_id: pyEnv.currentPartnerId,
         author_id: null,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await contains(".o-mail-Message-avatar[data-src*='/mail/static/src/img/smiley/avatar.jpg']");
 });
@@ -1684,7 +1684,7 @@ QUnit.test("Show email_from of message without author for not email message", as
         model: "res.partner",
         res_id: pyEnv.currentPartnerId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await contains(".o-mail-Message-author", { text: "md@oilcompany.fr" });
 });
@@ -1784,7 +1784,7 @@ QUnit.test("discuss - bigger font size when there is only emoji", async (assert)
 
 QUnit.test("chatter - font size unchanged when there is only emoji", async (assert) => {
     const pyEnv = await startServer();
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await click(".o-mail-Chatter-sendMessage");
     await insertText(".o-mail-Composer-input", "🥳");

@@ -4,7 +4,7 @@ import { accountMove as accountMoveService } from "@account/components/account_m
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { makeDeferred, triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, insertText } from "@web/../tests/utils";
@@ -29,7 +29,7 @@ QUnit.module("Views", {}, function () {
                      </form>`,
         };
         const def = makeDeferred();
-        const { openFormView } = await start({
+        await start({
             serverData: { views },
             services: {
                 account_move: accountMoveService,

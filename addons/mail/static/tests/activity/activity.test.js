@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { deserializeDateTime, serializeDate, today } from "@web/core/l10n/dates";
 import {
@@ -38,7 +38,7 @@ QUnit.test("activity upload document is available", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity .btn", { text: "Upload Document" });
     await contains(".btn .fa-upload");
@@ -56,7 +56,7 @@ QUnit.test("activity can upload a document", async () => {
         res_id: fakeId,
         res_model: "res.partner",
     });
-    const { openFormView } = await start({ serverData: { views } });
+    await start({ serverData: { views } });
     await openFormView("res.partner", fakeId);
     await contains(".o-mail-Activity .btn", { text: "Upload Document" });
     await inputFiles(".o-mail-Activity .o_input_file", [
@@ -77,7 +77,7 @@ QUnit.test("activity simplest layout", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity");
     await contains(".o-mail-Activity-sidebar");
@@ -99,7 +99,7 @@ QUnit.test("activity with note layout", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity");
     await contains(".o-mail-Activity-note", { text: "There is no good or bad note" });
@@ -115,7 +115,7 @@ QUnit.test("activity info layout when planned after tomorrow", async () => {
         res_model: "res.partner",
         state: "planned",
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity span.text-success", { text: "Due in 5 days:" });
 });
@@ -131,7 +131,7 @@ QUnit.test("activity info layout when planned tomorrow", async () => {
         res_model: "res.partner",
         state: "planned",
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity span.text-success", { text: "Tomorrow:" });
 });
@@ -146,7 +146,7 @@ QUnit.test("activity info layout when planned today", async () => {
         res_model: "res.partner",
         state: "today",
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity span.text-warning", { text: "Today:" });
 });
@@ -162,7 +162,7 @@ QUnit.test("activity info layout when planned yesterday", async () => {
         res_model: "res.partner",
         state: "overdue",
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity span.text-danger", { text: "Yesterday:" });
 });
@@ -177,7 +177,7 @@ QUnit.test("activity info layout when planned before yesterday", async () => {
         res_model: "res.partner",
         state: "overdue",
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity span.text-danger", { text: "5 days overdue:" });
 });
@@ -196,7 +196,7 @@ QUnit.skip("activity info layout change at midnight", async () => {
         res_model: "res.partner",
         state: "planned",
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity span.text-success", { text: "Tomorrow:" });
 
@@ -213,7 +213,7 @@ QUnit.test("activity with a summary layout", async () => {
         res_model: "res.partner",
         summary: "test summary",
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity", { text: "“test summary”" });
 });
@@ -226,7 +226,7 @@ QUnit.test("activity without summary layout", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity", { text: "Email" });
 });
@@ -244,7 +244,7 @@ QUnit.test("activity details toggle", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity");
     await contains(".o-mail-Activity-details", { count: 0 });
@@ -268,7 +268,7 @@ QUnit.test("activity with mail template layout", async (assert) => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity");
     await contains(".o-mail-Activity-sidebar");
@@ -289,7 +289,7 @@ QUnit.test("activity with mail template: preview mail", async (assert) => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { env, openFormView } = await start();
+    const { env } = await start();
     await openFormView("res.partner", partnerId);
     patchWithCleanup(env.services.action, {
         doAction(action) {
@@ -319,7 +319,7 @@ QUnit.test("activity with mail template: send mail", async (assert) => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openFormView } = await start({
+    await start({
         async mockRPC(route, args) {
             if (args.method === "activity_send_mail") {
                 assert.step("activity_send_mail");
@@ -350,7 +350,7 @@ QUnit.test("activity click on mark as done", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity");
     await click(".btn", { text: "Mark Done" });
@@ -372,7 +372,7 @@ QUnit.test(
             res_id: partnerId,
             res_model: "res.partner",
         });
-        const { openFormView } = await start();
+        await start();
         await openFormView("res.partner", partnerId);
         await contains(".o-mail-Activity");
         await click(".btn", { text: "Mark Done" });
@@ -392,7 +392,7 @@ QUnit.test("activity click on edit", async (assert) => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { env, openFormView } = await start();
+    const { env } = await start();
     await openFormView("res.partner", partnerId);
     patchWithCleanup(env.services.action, {
         doAction(action) {
@@ -417,7 +417,7 @@ QUnit.test("activity click on cancel", async (assert) => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openFormView } = await start({
+    await start({
         async mockRPC(route, args) {
             if (route === "/web/dataset/call_kw/mail.activity/unlink") {
                 assert.step("unlink");
@@ -443,7 +443,7 @@ QUnit.test("activity mark done popover close on ESCAPE", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
 
     await click(".btn", { text: "Mark Done" });
@@ -464,7 +464,7 @@ QUnit.test("activity mark done popover click on discard", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click(".btn", { text: "Mark Done" });
     await click(".o-mail-ActivityMarkAsDone button", { text: "Discard" });
@@ -495,7 +495,7 @@ QUnit.test("Activity are sorted by deadline", async () => {
         res_model: "res.partner",
         state: "overdue",
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(":nth-child(1 of .o-mail-Activity)", { text: "5 days overdue:" });
     await contains(":nth-child(2 of .o-mail-Activity)", { text: "Today:" });
@@ -505,7 +505,7 @@ QUnit.test("Activity are sorted by deadline", async () => {
 QUnit.test("chatter 'activities' button open the activity schedule wizard", async (assert) => {
     const pyEnv = await startServer();
     const fakeId = pyEnv["res.partner"].create({});
-    const { env, openFormView } = await start({ serverData: { views } });
+    const { env } = await start({ serverData: { views } });
     await openFormView("res.partner", fakeId);
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
@@ -543,7 +543,7 @@ QUnit.test("Activity avatar should have a unique timestamp", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openFormView } = await start();
+    await start();
     const partner = pyEnv["res.partner"].searchRead([["id", "=", pyEnv.currentPartnerId]])[0];
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity");

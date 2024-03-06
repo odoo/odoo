@@ -2,7 +2,7 @@
 
 import { click, editInput, nextTick } from "@web/../tests/helpers/utils";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 import { addFakeModel } from "@bus/../tests/helpers/model_definitions_helpers";
 
 let serverData;
@@ -32,7 +32,7 @@ QUnit.module("mail", {}, () => {
             "emojis_char_field_tests widget: insert emoji at end of word",
             async function (assert) {
                 assert.expect(2);
-                const { openFormView } = await start({ serverData });
+                await start({ serverData });
                 await openFormView("mailing.mailing");
 
                 const inputName = document.querySelector("input#subject_0");
@@ -50,7 +50,7 @@ QUnit.module("mail", {}, () => {
             "emojis_char_field_tests widget: insert emoji as new word",
             async function (assert) {
                 assert.expect(2);
-                const { openFormView } = await start({ serverData });
+                await start({ serverData });
                 await openFormView("mailing.mailing");
 
                 const inputName = document.querySelector("input#subject_0");

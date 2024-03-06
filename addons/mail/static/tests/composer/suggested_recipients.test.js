@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
@@ -38,7 +38,7 @@ QUnit.test("with 3 or less suggested recipients: no 'show more' button", async (
         email_cc: "john@test.be",
         partner_ids: [partnerId],
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await contains(".o-mail-SuggestedRecipient", { count: 2 });
@@ -58,7 +58,7 @@ QUnit.test(
             phone: "123456789",
             partner_ids: [partnerId],
         });
-        const { env, openFormView } = await start();
+        const { env } = await start();
         await openFormView("res.fake", fakeId);
         const def = makeDeferred();
         patchWithCleanup(env.services.action, {
@@ -106,7 +106,7 @@ QUnit.test(
             email_cc: "john@test.be",
             partner_ids: [partnerId],
         });
-        const { env, openFormView } = await start();
+        const { env } = await start();
         await openFormView("res.fake", fakeId);
         const def = makeDeferred();
         patchWithCleanup(env.services.action, {
@@ -146,7 +146,7 @@ QUnit.test("more than 3 suggested recipients: display only 3 and 'show more' but
     const fakeId = pyEnv["res.fake"].create({
         partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
     });
-    const { openFormView } = await start({ serverData: { views } });
+    await start({ serverData: { views } });
     await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await contains("button", { text: "Show more" });
@@ -165,7 +165,7 @@ QUnit.test(
         const fakeId = pyEnv["res.fake"].create({
             partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
         });
-        const { openFormView } = await start({ serverData: { views } });
+        await start({ serverData: { views } });
         await openFormView("res.fake", fakeId);
         await click("button", { text: "Send message" });
         await click("button", { text: "Show more" });
@@ -186,7 +186,7 @@ QUnit.test(
         const fakeId = pyEnv["res.fake"].create({
             partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
         });
-        const { openFormView } = await start({ serverData: { views } });
+        await start({ serverData: { views } });
         await openFormView("res.fake", fakeId);
         await click("button", { text: "Send message" });
         await click("button", { text: "Show more" });
@@ -207,7 +207,7 @@ QUnit.test(
         const fakeId = pyEnv["res.fake"].create({
             partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
         });
-        const { openFormView } = await start({ serverData: { views } });
+        await start({ serverData: { views } });
         await openFormView("res.fake", fakeId);
         await click("button", { text: "Send message" });
         await click("button", { text: "Show more" });
@@ -230,7 +230,7 @@ QUnit.test(
             partner_ids: [partnerId],
             phone: "123456789",
         });
-        const { openFormView } = await start({ serverData: { views } });
+        await start({ serverData: { views } });
         await openFormView("res.fake", fakeId);
         await click("button", { text: "Send message" });
         await contains(".o-mail-SuggestedRecipient input:checked", { count: 2 });
@@ -267,7 +267,7 @@ QUnit.test(
             email_cc: "john@test.be",
             phone: "123456789",
         });
-        const { openFormView } = await start({ serverData: { views } });
+        await start({ serverData: { views } });
         await openFormView("res.fake", fakeId);
         await click("button", { text: "Send message" });
         await contains(".o-mail-SuggestedRecipient input:checked", { count: 1 });
@@ -298,7 +298,7 @@ QUnit.test("display reason for suggested recipient on mouse over", async () => {
         email: "john@jane.be",
     });
     const fakeId = pyEnv["res.fake"].create({ partner_ids: [partnerId] });
-    const { openFormView } = await start({ serverData: { views } });
+    await start({ serverData: { views } });
     await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await contains(
@@ -315,7 +315,7 @@ QUnit.test(
             email: "john@jane.be",
         });
         const fakeId = pyEnv["res.fake"].create({ partner_ids: [partnerId] });
-        const { openFormView } = await start({
+        await start({
             serverData: { views },
             async mockRPC(route, args) {
                 if (route === "/mail/message/post") {
@@ -338,7 +338,7 @@ QUnit.test("suggested recipients should be added as follower when posting a mess
         email: "john@jane.be",
     });
     const fakeId = pyEnv["res.fake"].create({ partner_ids: [partnerId] });
-    const { openFormView } = await start({
+    await start({
         serverData: { views },
     });
     await openFormView("res.fake", fakeId);

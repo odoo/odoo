@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains } from "@web/../tests/utils";
 
@@ -30,7 +30,7 @@ QUnit.test("activity click on Reschedule", async () => {
         res_model: "res.partner",
         calendar_event_id: calendaMeetingId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", resPartnerId);
     await click(".btn", { text: "Reschedule" });
     await contains(".o_calendar_view");
@@ -60,7 +60,7 @@ QUnit.test("Can cancel activity linked to an event", async () => {
         res_model: "res.partner",
         calendar_event_id: calendaMeetingId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Activity .btn", { text: "Cancel" });
     await contains(".o-mail-Activity", { count: 0 });

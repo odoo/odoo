@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/chatter/web/chatter_search_tests default=false */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 import { SIZES, patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains, insertText, scroll } from "@web/../tests/utils";
@@ -11,7 +11,7 @@ QUnit.module("chatter search");
 
 QUnit.test("Chatter should display search icon", async () => {
     patchUiSize({ size: SIZES.XXL });
-    const { openFormView, pyEnv } = await start();
+    const { pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await contains("[title='Search Messages']");
@@ -19,7 +19,7 @@ QUnit.test("Chatter should display search icon", async () => {
 
 QUnit.test("Click on the search icon should open the search form", async () => {
     patchUiSize({ size: SIZES.XXL });
-    const { openFormView, pyEnv } = await start();
+    const { pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
@@ -36,7 +36,7 @@ QUnit.test("Click again on the search icon should close the search form", async 
         model: "res.partner",
         res_id: partnerId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Chatter-topbar [title='Search Messages']");
     await contains(".o_searchview");
@@ -54,7 +54,7 @@ QUnit.test("Search in chatter", async () => {
         model: "res.partner",
         res_id: partnerId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "empty");
@@ -71,7 +71,7 @@ QUnit.test("Close button should close the search panel", async () => {
         model: "res.partner",
         res_id: partnerId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Chatter-topbar [title='Search Messages']");
     await insertText(".o_searchview_input", "empty");
@@ -90,7 +90,7 @@ QUnit.test("Search in chatter should be hightligted", async () => {
         model: "res.partner",
         res_id: partnerId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "empty");
@@ -112,7 +112,7 @@ QUnit.test("Scrolling bottom in non-aside chatter should load more searched mess
             res_id: partnerId,
         });
     }
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "message");

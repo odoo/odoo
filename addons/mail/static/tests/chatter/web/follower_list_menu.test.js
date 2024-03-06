@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains, scroll } from "@web/../tests/utils";
@@ -226,7 +226,7 @@ QUnit.test("Load 100 followers at once", async () => {
             };
         })
     );
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerIds[0]);
     await contains("button[title='Show Followers']", { text: "210" });
     await click("button[title='Show Followers']");
@@ -260,7 +260,7 @@ QUnit.test("Load 100 recipients at once", async () => {
             };
         })
     );
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerIds[0]);
     await contains("button[title='Show Followers']", { text: "210" });
     await click("button", { text: "Send message" });
