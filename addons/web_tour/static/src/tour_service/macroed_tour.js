@@ -292,7 +292,7 @@ export async function animationFrame() {
 }
 
 export class MacroedTour {
-    _tourSteps = [];
+    _tourSteps = null;
     _startIndex = 0;
     constructor(tour, options={}) {
         if (typeof tour.steps !== "function") {
@@ -300,11 +300,16 @@ export class MacroedTour {
         }
         this.getTourSteps = tour.steps;
         tour = { ...tour };
+        this._checkDelay = tour.checkDelay;
+        delete tour.checkDelay;
         delete tour.steps;
         Object.assign(this, tour);
         this.options = {};
         this.resetRun(options);
+    }
 
+    get checkDelay() {
+        return this.mode === "auto" ? this._checkDelay :100;
     }
 
     computeSteps(reset=false) {
@@ -355,9 +360,6 @@ export class MacroedTour {
         }
 
         for (const tourStep of this.tourSteps) {
-            if (tourStep.completed) {
-                continue;
-            }
             yield* compile(tourStep);
         }
 
@@ -375,10 +377,13 @@ export class MacroedTour {
 
     resetRun(params = {}) {
         Object.assign(this.options, params);
-        if ("startIndex" in params) {
-            this._startIndex = params.startIndex || 0;
+        if (params.startIndex !== undefined) {
+            const startIndex = Math.max(params.startIndex, 0);
+            if (startIndex !== this._startIndex) {
+                this._startIndex = startIndex;
+                this._tourSteps = null;
+            }
         }
-        this.computeSteps(true);
         this.mode = params.mode || this.mode || "auto";
     }
 
@@ -491,7 +496,7 @@ export class MacroedTour {
                 );
             });
             result = willUnload && "will unload";
-        } else if (step.run !== undefined) {
+        } else if (typeof step.run === "string") {
             const m = step.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
             await this.tryToDoAction(() => actionHelper[m[1]](m[2]), step);
         } else if (!step.isCheck) {
