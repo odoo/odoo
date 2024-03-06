@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { EventBus } from "@odoo/owl";
 
@@ -103,15 +103,8 @@ QUnit.test('many2one_avatar_user widget edited by the smart action "Assign to...
         "m2x.avatar.user,false,form":
             '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
     };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_id: avatarUserId_1,
-        type: "ir.actions.act_window",
-        target: "current",
-        res_model: "m2x.avatar.user",
-        view_mode: "form",
-        views: [[false, "form"]],
-    });
+    await start({ serverData: { views } });
+    await openFormView("m2x.avatar.user", avatarUserId_1);
     await contains(".o_field_many2one_avatar_user input", { value: "Mario" });
     triggerHotkey("control+k");
     await click(".o_command", { text: "Assign to ...ALT + I" });
@@ -134,15 +127,8 @@ QUnit.test('many2one_avatar_user widget edited by the smart action "Assign to me
         "m2x.avatar.user,false,form":
             '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
     };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_id: avatarUserId_1,
-        type: "ir.actions.act_window",
-        target: "current",
-        res_model: "m2x.avatar.user",
-        view_mode: "form",
-        views: [[false, "form"]],
-    });
+    await start({ serverData: { views } });
+    await openFormView("m2x.avatar.user", avatarUserId_1);
     await contains(".o_field_many2one_avatar_user input", { value: "Mario" });
     triggerHotkey("control+k");
     await contains(".o_command", { text: "Assign to meALT + SHIFT + I" });
@@ -171,15 +157,8 @@ QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to..
         "m2x.avatar.user,false,form":
             '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
     };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_id: m2xAvatarUserId1,
-        type: "ir.actions.act_window",
-        target: "current",
-        res_model: "m2x.avatar.user",
-        view_mode: "form",
-        views: [[false, "form"]],
-    });
+    await start({ serverData: { views } });
+    await openFormView("m2x.avatar.user", m2xAvatarUserId1);
     await contains(".o_tag_badge_text", { count: 2 });
     await contains(":nth-child(1 of .o_tag) .o_tag_badge_text", { text: "Mario" });
     await contains(":nth-child(2 of .o_tag) .o_tag_badge_text", { text: "Yoshi" });
@@ -216,15 +195,8 @@ QUnit.test(
                 '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
         };
         await pyEnv.withUser(userId_2, async () => {
-            const { openView } = await start({ serverData: { views } });
-            await openView({
-                res_id: avatarUserId_1,
-                type: "ir.actions.act_window",
-                target: "current",
-                res_model: "m2x.avatar.user",
-                view_mode: "form",
-                views: [[false, "form"]],
-            });
+            await start({ serverData: { views } });
+            await openFormView("m2x.avatar.user", avatarUserId_1);
             await contains(".o_field_many2one_avatar_user input", { value: "Mario" });
             await triggerHotkey("control+k");
             await contains(".o_command", { text: "Assign to meALT + SHIFT + I" });
@@ -332,15 +304,8 @@ QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to m
         "m2x.avatar.user,false,form":
             '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
     };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_id: m2xAvatarUserId1,
-        type: "ir.actions.act_window",
-        target: "current",
-        res_model: "m2x.avatar.user",
-        view_mode: "form",
-        views: [[false, "form"]],
-    });
+    await start({ serverData: { views } });
+    await openFormView("m2x.avatar.user", m2xAvatarUserId1);
     await contains(".o_tag_badge_text", { count: 2 });
     await contains(":nth-child(1 of .o_tag) .o_tag_badge_text", { text: "Mario" });
     await contains(":nth-child(2 of .o_tag) .o_tag_badge_text", { text: "Yoshi" });
@@ -465,14 +430,8 @@ QUnit.test("avatar_user widget displays the appropriate user image in form view"
         "m2x.avatar.user,false,form":
             '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
     };
-    const { openView } = await start({
-        serverData: { views },
-    });
-    await openView({
-        res_model: "m2x.avatar.user",
-        res_id: avatarUserId,
-        views: [[false, "form"]],
-    });
+    await start({ serverData: { views } });
+    await openFormView("m2x.avatar.user", avatarUserId);
     await contains(
         `.o_field_many2many_avatar_user.o_field_widget .o_avatar img[data-src="${getOrigin()}/web/image/res.users/${userId}/avatar_128"]`
     );
@@ -520,12 +479,8 @@ QUnit.test("many2many_avatar_user widget in form view", async () => {
                 <field name="user_ids" widget="many2many_avatar_user"/>
             </form>`,
     };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_model: "m2x.avatar.user",
-        res_id: avatarUserId,
-        views: [[false, "form"]],
-    });
+    await start({ serverData: { views } });
+    await openFormView("m2x.avatar.user", avatarUserId);
     await click(".o_field_many2many_avatar_user .o_avatar img");
     await contains(".o_avatar_card");
     await contains(".o_card_user_infos > span", { text: "Mario" });

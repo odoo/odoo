@@ -2,7 +2,7 @@
 
 import { DELAY } from "@base_iban/components/iban_widget/iban_widget";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("Fields", {}, function () {
@@ -31,7 +31,7 @@ QUnit.module("Fields", {}, function () {
                     </sheet>
                 </form>`,
         };
-        const { advanceTime, openView } = await start({
+        const { advanceTime } = await start({
             serverData: { views },
             hasTimeControl: true,
             mockRPC: function (route, args) {
@@ -41,11 +41,7 @@ QUnit.module("Fields", {}, function () {
                 }
             },
         });
-        await openView({
-            res_id: partnerId,
-            res_model: "res.partner",
-            views: [[false, "form"]],
-        });
+        await openFormView("res.partner", partnerId);
         return { advanceTime };
     };
 

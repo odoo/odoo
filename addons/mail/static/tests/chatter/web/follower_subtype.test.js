@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains } from "@web/../tests/utils";
 
@@ -22,7 +22,7 @@ QUnit.test("simplest layout of a followed subtype", async () => {
         subtype_ids: [subtypeId],
     });
     pyEnv["res.partner"].write([pyEnv.currentPartnerId], { message_follower_ids: [followerId] });
-    const { openView } = await start({
+    await start({
         // FIXME: should adapt mock server code to provide "hasWriteAccess"
         async mockRPC(route, args, performRPC) {
             if (route === "/mail/thread/data") {
@@ -33,11 +33,7 @@ QUnit.test("simplest layout of a followed subtype", async () => {
             }
         },
     });
-    await openView({
-        res_model: "res.partner",
-        res_id: pyEnv.currentPartnerId,
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner", pyEnv.currentPartnerId);
     await click(".o-mail-Followers-button");
     await click("button[title='Edit subscription']");
     await contains(
@@ -62,7 +58,7 @@ QUnit.test("simplest layout of a not followed subtype", async () => {
         res_id: pyEnv.currentPartnerId,
     });
     pyEnv["res.partner"].write([pyEnv.currentPartnerId], { message_follower_ids: [followerId] });
-    const { openView } = await start({
+    await start({
         // FIXME: should adapt mock server code to provide "hasWriteAccess"
         async mockRPC(route, args, performRPC) {
             if (route === "/mail/thread/data") {
@@ -73,11 +69,7 @@ QUnit.test("simplest layout of a not followed subtype", async () => {
             }
         },
     });
-    await openView({
-        res_model: "res.partner",
-        res_id: pyEnv.currentPartnerId,
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner", pyEnv.currentPartnerId);
     await click(".o-mail-Followers-button");
     await click("button[title='Edit subscription']");
     await contains(
@@ -98,7 +90,7 @@ QUnit.test("toggle follower subtype checkbox", async () => {
         res_id: pyEnv.currentPartnerId,
     });
     pyEnv["res.partner"].write([pyEnv.currentPartnerId], { message_follower_ids: [followerId] });
-    const { openView } = await start({
+    await start({
         // FIXME: should adapt mock server code to provide "hasWriteAccess"
         async mockRPC(route, args, performRPC) {
             if (route === "/mail/thread/data") {
@@ -109,11 +101,7 @@ QUnit.test("toggle follower subtype checkbox", async () => {
             }
         },
     });
-    await openView({
-        res_model: "res.partner",
-        res_id: pyEnv.currentPartnerId,
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner", pyEnv.currentPartnerId);
     await click(".o-mail-Followers-button");
     await click("button[title='Edit subscription']");
     await contains(
@@ -151,12 +139,8 @@ QUnit.test("follower subtype apply", async () => {
         subtype_ids: [subtypeId1],
     });
     pyEnv["res.partner"].write([pyEnv.currentPartnerId], { message_follower_ids: [followerId] });
-    const { openView } = await start();
-    await openView({
-        res_model: "res.partner",
-        res_id: pyEnv.currentPartnerId,
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", pyEnv.currentPartnerId);
     await click(".o-mail-Followers-button");
     await click("button[title='Edit subscription']");
 

@@ -1,6 +1,6 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { contains } from "@web/../tests/utils";
 
@@ -18,7 +18,7 @@ QUnit.test("Send message button activation (access rights dependent)", async fun
             </div>
         </form>`;
     let userAccess = {};
-    const { openView } = await start({
+    await start({
         serverData: {
             views: {
                 "mail.test.multi.company,false,form": view,
@@ -49,11 +49,7 @@ QUnit.test("Send message button activation (access rights dependent)", async fun
         hasWriteAccess = false
     ) {
         userAccess = { hasReadAccess, hasWriteAccess };
-        await openView({
-            res_id: resId,
-            res_model: model,
-            views: [[false, "form"]],
-        });
+        await openFormView(model, resId);
         if (enabled) {
             await contains(".o-mail-Chatter-topbar button:enabled", { text: "Send message" });
         } else {
@@ -112,12 +108,8 @@ QUnit.test("basic chatter rendering with a model without activities", async () =
                 </div>
             </form>`,
     };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_model: "mail.test.simple",
-        res_id: recordId,
-        views: [[false, "form"]],
-    });
+    await start({ serverData: { views } });
+    await openFormView("mail.test.simple", recordId);
     await contains(".o-mail-Chatter");
     await contains(".o-mail-Chatter-topbar");
     await contains("button[aria-label='Attach files']");

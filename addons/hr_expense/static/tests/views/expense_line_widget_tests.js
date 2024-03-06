@@ -6,7 +6,7 @@ import { getOrigin } from "@web/core/utils/urls";
 import { assertSteps, click, contains, step } from "@web/../tests/utils";
 import { nextTick } from "@web/../tests/helpers/utils";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { ROUTES_TO_IGNORE as MAIL_ROUTES_TO_IGNORE } from "@mail/../tests/helpers/webclient_setup";
 
@@ -44,7 +44,7 @@ QUnit.module("Views", {}, function () {
                 </form>`,
         };
         patchUiSize({ size: size });
-        const { openView } = await start({
+        await start({
             serverData: { views },
             mockRPC: function (route, args) {
                 if (ROUTES_TO_IGNORE.includes(route)) {
@@ -64,11 +64,7 @@ QUnit.module("Views", {}, function () {
                 context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
             })}`,
         ]);
-        await openView({
-            res_model: "hr.expense.sheet",
-            res_id: sheet,
-            views: [[false, "form"]],
-        });
+        await openFormView("hr.expense.sheet", sheet);
     };
 
     QUnit.test("ExpenseLineWidget test attachments change on expense line click", async () => {

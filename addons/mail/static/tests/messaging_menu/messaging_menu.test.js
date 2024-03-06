@@ -8,7 +8,7 @@ import { deserializeDateTime } from "@web/core/l10n/dates";
 import { Command } from "@mail/../tests/helpers/command";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
 import { getOrigin } from "@web/core/utils/urls";
@@ -270,17 +270,14 @@ QUnit.test("Is closed after clicking on new message", async () => {
 });
 
 QUnit.test("no 'New Message' button when discuss is open", async () => {
-    const { openView } = await start();
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains("button", { text: "New Message" });
 
     await openDiscuss();
     await contains("button", { count: 0, text: "New Message" });
 
-    await openView({
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner");
     await contains("button", { text: "New Message" });
 
     await openDiscuss();

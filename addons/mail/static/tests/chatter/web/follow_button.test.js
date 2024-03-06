@@ -9,12 +9,8 @@ import { click, contains, triggerEvents } from "@web/../tests/utils";
 QUnit.module("follow button");
 
 QUnit.test("base rendering not editable", async () => {
-    const { openView, pyEnv } = await start();
-    await openView({
-        res_id: pyEnv.currentPartnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    const { pyEnv } = await start();
+    await openFormView("res.partner", pyEnv.currentPartnerId);
     await contains(".o-mail-Chatter-follow", { text: "Follow" });
 });
 
@@ -27,12 +23,8 @@ QUnit.test("hover following button", async () => {
         res_id: threadId,
         res_model: "res.partner",
     });
-    const { openView } = await start();
-    await openView({
-        res_id: threadId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", threadId);
     await contains(".o-mail-Chatter-follow", { text: "Following" });
     await triggerEvents(".o-mail-Chatter-follow", ["mouseenter"], { text: "Following" });
     await contains(".o-mail-Chatter-follow", { text: "Unfollow" });
@@ -75,12 +67,8 @@ QUnit.test('click on "unfollow" button', async () => {
         res_id: threadId,
         res_model: "res.partner",
     });
-    const { openView } = await start();
-    await openView({
-        res_id: threadId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", threadId);
     await click(".o-mail-Chatter-follow", { text: "Following" });
     await contains("button", { text: "Follow" });
 });

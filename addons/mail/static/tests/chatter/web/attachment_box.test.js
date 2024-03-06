@@ -36,12 +36,8 @@ QUnit.test("base non-empty rendering", async () => {
             </form>
         `,
     };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start({ serverData: { views } });
+    await openFormView("res.partner", partnerId);
     await contains(".o-mail-AttachmentBox");
     await contains("button", { text: "Attach files" });
     await contains(".o-mail-Chatter input[type='file']");
@@ -67,12 +63,8 @@ QUnit.test("remove attachment should ask for confirmation", async () => {
             </form>
         `,
     };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start({ serverData: { views } });
+    await openFormView("res.partner", partnerId);
     await contains(".o-mail-AttachmentCard");
     await contains("button[title='Remove']");
 
@@ -109,12 +101,8 @@ QUnit.test("view attachments", async () => {
             </div>
         </form>`,
     };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start({ serverData: { views } });
+    await openFormView("res.partner", partnerId);
     await click('.o-mail-AttachmentCard[aria-label="Blah.txt"] .o-mail-AttachmentCard-image');
     await contains(".o-FileViewer");
     await contains(".o-FileViewer-header", { text: "Blah.txt" });
@@ -145,12 +133,8 @@ QUnit.test("scroll to attachment box when toggling on", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openView } = await start();
-    await openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message", { count: 30 });
     await scroll(".o-mail-Chatter", "bottom");
     await click("button[aria-label='Attach files']");
@@ -200,12 +184,8 @@ QUnit.test("attachment box should order attachments from newest to oldest", asyn
         { name: "B.txt", mimetype: "text/plain", ...resData },
         { name: "C.txt", mimetype: "text/plain", ...resData },
     ]);
-    const { openView } = await start();
-    await openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter [aria-label='Attach files']", { text: "3" });
     await click(".o-mail-Chatter [aria-label='Attach files']"); // open attachment box
     await contains(":nth-child(1 of .o-mail-AttachmentCard)", { text: "C.txt" });

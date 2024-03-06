@@ -1,6 +1,6 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains } from "@web/../tests/utils";
 
@@ -23,7 +23,7 @@ async function testPropertyFieldAvatarOpenChat(assert, propertyType) {
             </div>
         </form>`;
 
-    const { openView } = await start({
+    await start({
         serverData: {
             views: {
                 "mail.test.properties,false,form": view,
@@ -53,12 +53,7 @@ async function testPropertyFieldAvatarOpenChat(assert, propertyType) {
         ],
     });
 
-    await openView({
-        res_id: childId,
-        res_model: "mail.test.properties",
-        views: [[false, "form"]],
-    });
-
+    await openFormView("mail.test.properties", childId);
     assert.verifySteps([]);
     await click(
         propertyType === "many2one" ? ".o_field_property_many2one_value img" : ".o_m2m_avatar"

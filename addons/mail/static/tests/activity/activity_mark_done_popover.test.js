@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
@@ -18,12 +18,8 @@ QUnit.test("activity mark done popover simplest layout", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openView } = await start();
-    await openView({
-        res_model: "res.partner",
-        res_id: partnerId,
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", partnerId);
     await click(".btn", { text: "Mark Done" });
     await contains(".o-mail-ActivityMarkAsDone");
     await contains(".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
@@ -42,12 +38,8 @@ QUnit.test("activity with force next mark done popover simplest layout", async (
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openView } = await start();
-    await openView({
-        res_model: "res.partner",
-        res_id: partnerId,
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", partnerId);
     await click(".btn", { text: "Mark Done" });
     await contains(".o-mail-ActivityMarkAsDone");
     await contains(".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
@@ -65,7 +57,7 @@ QUnit.test("activity mark done popover mark done without feedback", async (asser
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openView } = await start({
+    await start({
         async mockRPC(route, args) {
             if (route === "/web/dataset/call_kw/mail.activity/action_feedback") {
                 assert.step("action_feedback");
@@ -85,11 +77,7 @@ QUnit.test("activity mark done popover mark done without feedback", async (asser
             }
         },
     });
-    await openView({
-        res_model: "res.partner",
-        res_id: partnerId,
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner", partnerId);
     await click(".btn", { text: "Mark Done" });
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
     assert.verifySteps(["action_feedback"]);
@@ -104,7 +92,7 @@ QUnit.test("activity mark done popover mark done with feedback", async (assert) 
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { openView } = await start({
+    await start({
         async mockRPC(route, args) {
             if (route === "/web/dataset/call_kw/mail.activity/action_feedback") {
                 assert.step("action_feedback");
@@ -124,11 +112,7 @@ QUnit.test("activity mark done popover mark done with feedback", async (assert) 
             }
         },
     });
-    await openView({
-        res_model: "res.partner",
-        res_id: partnerId,
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner", partnerId);
     await click(".btn", { text: "Mark Done" });
     await insertText(
         ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']",
@@ -147,7 +131,7 @@ QUnit.test("activity mark done popover mark done and schedule next", async (asse
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { env, openView } = await start({
+    const { env } = await start({
         async mockRPC(route, args) {
             if (route === "/web/dataset/call_kw/mail.activity/action_feedback_schedule_next") {
                 assert.step("action_feedback_schedule_next");
@@ -165,11 +149,7 @@ QUnit.test("activity mark done popover mark done and schedule next", async (asse
             }
         },
     });
-    await openView({
-        res_model: "res.partner",
-        res_id: partnerId,
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner", partnerId);
     patchWithCleanup(env.services.action, {
         doAction() {
             assert.step("activity_action");
@@ -196,18 +176,14 @@ QUnit.test("[technical] activity mark done & schedule next with new action", asy
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { env, openView } = await start({
+    const { env } = await start({
         async mockRPC(route, args) {
             if (route === "/web/dataset/call_kw/mail.activity/action_feedback_schedule_next") {
                 return { type: "ir.actions.act_window" };
             }
         },
     });
-    await openView({
-        res_model: "res.partner",
-        res_id: partnerId,
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner", partnerId);
     const def = makeDeferred();
     patchWithCleanup(env.services.action, {
         doAction(action) {

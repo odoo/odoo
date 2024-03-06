@@ -18,7 +18,7 @@ QUnit.test("base rendering not editable", async () => {
         res_id: threadId,
         res_model: "res.partner",
     });
-    const { openView } = await start({
+    await start({
         async mockRPC(route, args, performRpc) {
             if (route === "/mail/thread/data") {
                 // mimic user without write access
@@ -28,11 +28,7 @@ QUnit.test("base rendering not editable", async () => {
             }
         },
     });
-    await openView({
-        res_id: threadId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
     await contains(".o-mail-Follower-details");
@@ -49,12 +45,8 @@ QUnit.test("base rendering editable", async () => {
         res_id: threadId,
         res_model: "res.partner",
     });
-    const { openView } = await start();
-    await openView({
-        res_id: threadId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await start();
+    await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
     await contains(".o-mail-Follower-details");
@@ -74,12 +66,8 @@ QUnit.test("click on partner follower details", async (assert) => {
         res_model: "res.partner",
     });
     const openFormDef = makeDeferred();
-    const { env, openView } = await start();
-    await openView({
-        res_id: threadId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    const { env } = await start();
+    await openFormView("res.partner", threadId);
     patchWithCleanup(env.services.action, {
         doAction(action) {
             assert.step("do_action");
@@ -107,18 +95,14 @@ QUnit.test("click on edit follower", async (assert) => {
         res_id: threadId,
         res_model: "res.partner",
     });
-    const { openView } = await start({
+    await start({
         async mockRPC(route, args) {
             if (route.includes("/mail/read_subscription_data")) {
                 assert.step("fetch_subtypes");
             }
         },
     });
-    await openView({
-        res_id: threadId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
     await contains("button[title='Edit subscription']");
@@ -138,18 +122,14 @@ QUnit.test("edit follower and close subtype dialog", async (assert) => {
         res_id: threadId,
         res_model: "res.partner",
     });
-    const { openView } = await start({
+    await start({
         async mockRPC(route, args) {
             if (route.includes("/mail/read_subscription_data")) {
                 assert.step("fetch_subtypes");
             }
         },
     });
-    await openView({
-        res_id: threadId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
     await contains("button[title='Edit subscription']");
