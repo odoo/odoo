@@ -91,7 +91,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
 }, {
     trigger: ".o_kanban_record .oe_kanban_content",
     extra_trigger: '.o_kanban_project_tasks',
-    run: "drag_and_drop .o_kanban_group:eq(1) ",
+    run: "drag_and_drop_native .o_kanban_group:eq(1) ",
 }, {
     trigger: ".o_project_updates_breadcrumb",
     content: 'Open Updates'

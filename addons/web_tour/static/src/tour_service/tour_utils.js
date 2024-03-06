@@ -4,7 +4,7 @@ import * as hoot from "@odoo/hoot-dom";
 import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { utils } from "@web/core/ui/ui_service";
-import { _legacyIsVisible } from "@web/core/utils/ui";
+import { isVisible } from "@web/core/utils/ui";
 
 /**
  * @typedef {string | (actions: RunningTourActionHelper) => void | Promise<void>} RunCommand
@@ -37,37 +37,6 @@ export function callWithUnloadCheck(func, ...args) {
     } else {
         window.removeEventListener("beforeunload", beforeunload);
         return willUnload;
-    }
-}
-
-export function getFirstVisibleElement($elements) {
-    for (var i = 0; i < $elements.length; i++) {
-        var $i = $elements.eq(i);
-        if (_legacyIsVisible($i[0])) {
-            return $i;
-        }
-    }
-    return $();
-}
-
-/**
- * @param {JQuery|undefined} target
- */
-export function getJQueryElementFromSelector(selector, $target) {
-    $target = $target || $(document);
-    const iframeSplit = typeof selector === "string" && selector.match(/(.*\biframe[^ ]*)(.*)/);
-    if (iframeSplit && iframeSplit[2]) {
-        var $iframe = $target.find(`${iframeSplit[1]}:not(.o_ignore_in_tour)`);
-        if ($iframe.is('[is-ready="false"]')) {
-            return $();
-        }
-        var $el = $iframe.contents().find(iframeSplit[2]);
-        $el.iframeContainer = $iframe[0];
-        return $el;
-    } else if (typeof selector === "string") {
-        return $target.find(selector);
-    } else {
-        return $(selector);
     }
 }
 
@@ -139,11 +108,6 @@ export function getConsumeEventType(element, runCommand) {
             return "click";
         }
         return "input";
-    }
-
-    // jQuery draggable
-    if (classList.contains("ui-draggable-handle")) {
-        return "mousedown";
     }
 
     // Drag & drop run command
@@ -221,67 +185,74 @@ export const triggerPointerEvent = (el, type, canBubbleAndBeCanceled, additional
 };
 
 export class RunningTourActionHelper {
-    constructor(tip_widget) {
-        this.tip_widget = tip_widget;
+    constructor(anchor, consume_event) {
+        this.anchor = anchor;
+        this.consume_event = consume_event;
     }
-    click(element) {
-        this._click(this._get_action_values(element));
+    click(selector) {
+        const element = this._get_action_element(selector);
+        this._click(element);
     }
-    dblclick(element) {
-        this._click(this._get_action_values(element), 2);
+    dblclick(selector) {
+        const element = this._get_action_element(selector);
+        this._click(element, 2);
     }
-    tripleclick(element) {
-        this._click(this._get_action_values(element), 3);
+    text(text, selector) {
+        const element = this._get_action_element(selector);
+        this._text(element, text);
     }
-    clicknoleave(element) {
-        this._click(this._get_action_values(element), 1, false);
+    remove_text(selector) {
+        const element = this._get_action_element(selector);
+        this._text(element, "\n");
     }
-    text(text, element) {
-        this._text(this._get_action_values(element), text);
+    text_blur(text, selector) {
+        const element = this._get_action_element(selector);
+        this._text_blur(element, text);
     }
-    remove_text(text, element) {
-        this._text(this._get_action_values(element), "\n");
+    range(text, selector) {
+        const element = this._get_action_element(selector);
+        this._range(element, text);
     }
-    text_blur(text, element) {
-        this._text_blur(this._get_action_values(element), text);
+    drag_and_drop_native(toSel, fromSel) {
+        const source = this._get_action_element(fromSel);
+        const target = getNodesFromSelector(toSel)[0];
+        this._drag_and_drop(source, target);
     }
-    range(text, element) {
-        this._range(this._get_action_values(element), text);
-    }
-    drag_and_drop(to, element) {
-        this._drag_and_drop_jquery(this._get_action_values(element), to);
-    }
-    drag_and_drop_native(toSel, element) {
-        const to = getJQueryElementFromSelector(toSel)[0];
-        this._drag_and_drop(this._get_action_values(element).$element[0], to);
-    }
-    keydown(keyCodes, element) {
-        this._keydown(this._get_action_values(element), keyCodes.split(/[,\s]+/));
-    }
-    auto(element) {
-        var values = this._get_action_values(element);
-        if (values.consume_event === "input") {
-            this._text(values);
+    auto(selector) {
+        const element = this._get_action_element(selector);
+        const consume_event = this._get_action_consume_event(element);
+        if (consume_event === "input") {
+            this._text(element);
         } else {
-            this._click(values);
+            this._click(element);
         }
     }
-    _get_action_values(element) {
-        var $e = getJQueryElementFromSelector(element);
-        var $element = element ? getFirstVisibleElement($e) : $(this.tip_widget.anchor);
-        if ($element.length === 0) {
-            $element = $e.first();
+    /**
+     * Get Node for a selector, return this.anchor by default
+     * @param {string|Node} selector
+     * @returns {Node}
+     */
+    _get_action_element(selector) {
+        if (typeof selector === "string" && selector.length) {
+            const nodes = getNodesFromSelector(selector);
+            return nodes.find(isVisible) || nodes.at(0);
+        } else if (selector instanceof Node) {
+            return selector;
         }
-        var consume_event = element
-            ? getConsumeEventType($element[0])
-            : this.tip_widget.consume_event;
-        return {
-            $element: $element,
-            consume_event: consume_event,
-        };
+        return this.anchor;
     }
-    _click(values, nb, leave) {
-        const target = values.$element[0];
+    /**
+     * Get Event to consume on selector, return this.consume_event by default
+     * @param {Node} element
+     * @returns {string}
+     */
+    _get_action_consume_event(element) {
+        if (element instanceof Node) {
+            return getConsumeEventType(element);
+        }
+        return this.consume_event;
+    }
+    _click(target, nb) {
         triggerPointerEvent(target, "pointerover", true);
         triggerPointerEvent(target, "pointerenter", false);
         triggerPointerEvent(target, "pointermove", true);
@@ -293,116 +264,86 @@ export class RunningTourActionHelper {
                 triggerPointerEvent(target, "dblclick", true);
             }
         }
-        if (leave !== false) {
-            triggerPointerEvent(target, "pointerout", true);
-            triggerPointerEvent(target, "pointerleave", false);
-        }
+        triggerPointerEvent(target, "pointerout", true);
+        triggerPointerEvent(target, "pointerleave", false);
     }
-    _text(values, text) {
-        this._click(values);
+    _text(element, text) {
+        this._click(element);
+        const consume_event = this._get_action_consume_event(element);
 
-        text = text || "Test";
-        if (values.consume_event === "input") {
-            values.$element
-                .trigger({ type: "keydown", key: text[text.length - 1] })
-                .val(text)
-                .trigger({ type: "keyup", key: text[text.length - 1] });
-            values.$element[0].dispatchEvent(
-                new InputEvent("input", {
-                    bubbles: true,
-                })
-            );
-        } else if (values.$element.is("select")) {
-            var $options = values.$element.find("option");
-            $options.prop("selected", false).removeProp("selected");
-            var $selectedOption = $options.filter(function () {
-                return $(this).val() === text;
+        text = text ? String(text) : "Test";
+        if (consume_event === "input") {
+            element.dispatchEvent(new KeyboardEvent("keydown", { key: text.at(-1) }));
+            element.value = text;
+            element.dispatchEvent(new KeyboardEvent("keyup", { key: text.at(-1) }));
+            element.dispatchEvent(new InputEvent("input", { bubbles: true }));
+        } else if (element.matches("select")) {
+            const options = hoot.queryAll("option", { root: element });
+            options.forEach((option) => {
+                delete option.selected;
             });
-            if ($selectedOption.length === 0) {
-                $selectedOption = $options.filter(function () {
-                    return $(this).text().trim() === text;
-                });
+            let selectedOption = options.find((option) => option.value === text);
+            if (!selectedOption) {
+                selectedOption = options.find(
+                    (option) => String(option.textContent).trim() === text
+                );
             }
             const regex = /option\s+([0-9]+)/;
-            if ($selectedOption.length === 0 && regex.test(text)) {
+            if (!selectedOption && regex.test(text)) {
                 // Extract position as 1-based, as the nth selectors.
                 const position = parseInt(regex.exec(text)[1]);
-                $selectedOption = $options.eq(position - 1); // eq is 0-based.
+                selectedOption = options.at(position - 1); // eq is 0-based.
             }
-            $selectedOption.prop("selected", true);
-            this._click(values);
+            selectedOption.selected = true;
+            this._click(element);
             // For situations where an `oninput` is defined.
-            values.$element.trigger("input");
+            element.dispatchEvent(new Event("input"));
         } else {
-            values.$element.focusIn();
-            values.$element.trigger($.Event("keydown", { key: "_" }));
-            values.$element.text(text).trigger("input");
-            values.$element.focusInEnd();
-            values.$element.trigger($.Event("keyup", { key: "_" }));
+            this._set_range(element, "start");
+            element.dispatchEvent(new KeyboardEvent("keydown", { key: "_" }));
+            element.textContent = text;
+            element.dispatchEvent(new InputEvent("input", { bubbles: true }));
+            this._set_range(element, "stop");
+            element.dispatchEvent(new KeyboardEvent("keyup", { key: "_" }));
         }
-        values.$element[0].dispatchEvent(new Event("change", { bubbles: true, cancelable: false }));
+        element.dispatchEvent(new Event("change", { bubbles: true, cancelable: false }));
     }
-    _text_blur(values, text) {
-        this._text(values, text);
-        values.$element.trigger("focusout");
-        values.$element.trigger("blur");
-    }
-    _range(values, text) {
-        values.$element[0].value = text;
-        values.$element[0].dispatchEvent(new Event('change', { bubbles: true, cancelable: false }));
-    }
-    _calculateCenter($el, selector) {
-        const center = $el.offset();
-        if (selector && selector.indexOf("iframe") !== -1) {
-            const iFrameOffset = $("iframe").offset();
-            center.left += iFrameOffset.left;
-            center.top += iFrameOffset.top;
+    // Useful for wysiwyg editor.
+    _set_range(element, start_or_stop) {
+        function _node_length(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                return node.nodeValue.length;
+            } else {
+                return node.childNodes.length;
+            }
         }
-        center.left += $el.outerWidth() / 2;
-        center.top += $el.outerHeight() / 2;
-        return center;
-    }
-    _drag_and_drop_jquery(values, to) {
-        var $to;
-        const elementCenter = this._calculateCenter(values.$element);
-        if (to) {
-            $to = getJQueryElementFromSelector(to);
+        const selection = element.ownerDocument.getSelection();
+        selection.removeAllRanges();
+        const range = new Range();
+        let node = element;
+        let length = 0;
+        if (start_or_stop === "start") {
+            while (node.firstChild) {
+                node = node.firstChild;
+            }
         } else {
-            $to = $(document.body);
+            while (node.lastChild) {
+                node = node.lastChild;
+            }
+            length = _node_length(node);
         }
-
-        values.$element.trigger($.Event("mouseenter"));
-        // Make the web_studio tour test happy. My guess is that 50%+ of the length of the dragged element
-        // must be situated to the right of the $to element.
-        values.$element.trigger(
-            $.Event("mousedown", {
-                which: 1,
-                pageX: elementCenter.left + 1,
-                pageY: elementCenter.top,
-            })
-        );
-        // Some tests depends on elements present only when the element to drag
-        // start to move while some other tests break while moving.
-        if (!$to.length) {
-            values.$element.trigger(
-                $.Event("mousemove", {
-                    which: 1,
-                    pageX: elementCenter.left + 1,
-                    pageY: elementCenter.top,
-                })
-            );
-            $to = getJQueryElementFromSelector(to);
-        }
-
-        let toCenter = this._calculateCenter($to, to);
-        values.$element.trigger(
-            $.Event("mousemove", { which: 1, pageX: toCenter.left, pageY: toCenter.top })
-        );
-        // Recalculate the center as the mousemove might have made the element bigger.
-        toCenter = this._calculateCenter($to, to);
-        values.$element.trigger(
-            $.Event("mouseup", { which: 1, pageX: toCenter.left, pageY: toCenter.top })
-        );
+        range.setStart(node, length);
+        range.setEnd(node, length);
+        selection.addRange(range);
+    }
+    _text_blur(element, text) {
+        this._text(element, text);
+        element.dispatchEvent(new Event("focusout"));
+        element.dispatchEvent(new Event("blur"));
+    }
+    _range(element, text) {
+        element.value = text;
+        element.dispatchEvent(new Event("change", { bubbles: true, cancelable: false }));
     }
     /**
      * ! This function is a reduced version of "drag" in @web/../tests/helpers/utils
@@ -431,33 +372,6 @@ export class RunningTourActionHelper {
         }
 
         triggerPointerEvent(target, "pointerup", true, targetPosition);
-    }
-    _keydown(values, keyCodes) {
-        while (keyCodes.length) {
-            const eventOptions = {};
-            const keyCode = keyCodes.shift();
-            let insertedText = null;
-            if (isNaN(keyCode)) {
-                eventOptions.key = keyCode;
-            } else {
-                const code = parseInt(keyCode, 10);
-                if (
-                    code === 32 || // spacebar
-                    (code > 47 && code < 58) || // number keys
-                    (code > 64 && code < 91) || // letter keys
-                    (code > 95 && code < 112) || // numpad keys
-                    (code > 185 && code < 193) || // ;=,-./` (in order)
-                    (code > 218 && code < 223) // [\]' (in order))
-                ) {
-                    insertedText = String.fromCharCode(code);
-                }
-            }
-            values.$element.trigger(Object.assign({ type: "keydown" }, eventOptions));
-            if (insertedText) {
-                document.execCommand("insertText", 0, insertedText);
-            }
-            values.$element.trigger(Object.assign({ type: "keyup" }, eventOptions));
-        }
     }
 }
 
@@ -505,13 +419,14 @@ export const stepUtils = {
 
     autoExpandMoreButtons(extra_trigger) {
         return {
+            content: `autoExpandMoreButtons`,
             trigger: ".o-form-buttonbox",
             extra_trigger: extra_trigger,
             auto: true,
             run: (actions) => {
-                const $more = $(".o-form-buttonbox .o_button_more");
-                if ($more.length) {
-                    actions.click($more);
+                const more = hoot.queryOne(".o-form-buttonbox .o_button_more");
+                if (more) {
+                    hoot.click(more);
                 }
             },
         };
@@ -571,9 +486,11 @@ export const stepUtils = {
                 trigger: ".o_statusbar_buttons",
                 extra_trigger: extraTrigger,
                 run: (actions) => {
-                    const $action = $(".o_statusbar_buttons .btn.dropdown-toggle:contains(Action)");
-                    if ($action.length) {
-                        actions.click($action);
+                    const node = hoot.queryOne(
+                        ".o_statusbar_buttons .btn.dropdown-toggle:contains(Action)"
+                    );
+                    if (node) {
+                        hoot.click(node);
                     }
                 },
             },
