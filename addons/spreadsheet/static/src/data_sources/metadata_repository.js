@@ -1,13 +1,7 @@
 /** @odoo-module */
 // @ts-check
 
-import { _t } from "@web/core/l10n/translation";
-import { sprintf } from "@web/core/utils/strings";
-
-import { isLoadingError } from "../o_spreadsheet/errors";
-import { DisplayNameRepository } from "./display_name_repository";
 import { LabelsRepository } from "./labels_repository";
-import { EvaluationError } from "@odoo/o-spreadsheet";
 
 import { EventBus } from "@odoo/owl";
 
@@ -38,19 +32,9 @@ import { EventBus } from "@odoo/owl";
  * At the end of this process, an event is triggered (labels-fetched)
  */
 export class MetadataRepository extends EventBus {
-    /**
-     * @param {import("@web/env").OdooEnv} env
-     */
-    constructor(env) {
+    constructor() {
         super();
-        this.orm = env.services.orm.silent;
-        this.nameService = env.services.name;
-
         this.labelsRepository = new LabelsRepository();
-
-        this.displayNameRepository = new DisplayNameRepository(env, {
-            whenDataIsFetched: () => this.trigger("labels-fetched"),
-        });
     }
 
     /**
@@ -75,34 +59,5 @@ export class MetadataRepository extends EventBus {
      */
     getLabel(model, field, value) {
         return this.labelsRepository.getLabel(model, field, value);
-    }
-
-    /**
-     * Save the result of display_name read request in the cache
-     */
-    setDisplayName(model, id, result) {
-        this.displayNameRepository.setDisplayName(model, id, result);
-    }
-
-    /**
-     * Get the display name associated to the given model-id
-     * If the name is not yet loaded, a rpc will be triggered in the next clock
-     * cycle.
-     *
-     * @param {string} model
-     * @param {number} id
-     * @returns {string}
-     */
-    getRecordDisplayName(model, id) {
-        try {
-            return this.displayNameRepository.getDisplayName(model, id);
-        } catch (e) {
-            if (isLoadingError(e)) {
-                throw e;
-            }
-            throw new EvaluationError(
-                sprintf(_t("Unable to fetch the label of %s of model %s"), id, model)
-            );
-        }
     }
 }

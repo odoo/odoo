@@ -598,8 +598,6 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
     });
 
     QUnit.test("relational PIVOT.HEADER with undefined id", async function (assert) {
-        assert.expect(2);
-
         const { model } = await createSpreadsheetWithPivot({
             arch: /*xml*/ `
                 <pivot>
@@ -611,7 +609,9 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         setCellContent(model, "F10", `=ODOO.PIVOT.HEADER("1", "product_id", A25)`);
         assert.equal(getCell(model, "A25"), null, "the cell should be empty");
         await waitForDataLoaded(model);
-        assert.equal(getCellValue(model, "F10"), "None");
+        const F10 = getEvaluatedCell(model, "F10");
+        assert.strictEqual(F10.value, "#ERROR");
+        assert.strictEqual(F10.message, "Unable to fetch the label of 0 of model product");
     });
 
     QUnit.test("Verify pivot measures are correctly computed :)", async function (assert) {
