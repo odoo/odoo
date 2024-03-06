@@ -5,7 +5,7 @@ import { rpc } from "@web/core/network/rpc";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { config as transitionConfig } from "@web/core/transition";
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -1053,7 +1053,7 @@ QUnit.test("New message separator not appearing after showing composer on thread
             body: "Message on partner",
         },
     ]);
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await contains("button", { text: "Log note" });
     await contains(".o-mail-Thread-newMessage", { count: 0 });

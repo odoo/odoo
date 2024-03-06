@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains, triggerEvents } from "@web/../tests/utils";
 
@@ -39,7 +39,7 @@ QUnit.test("hover following button", async () => {
 });
 
 QUnit.test('click on "follow" button', async () => {
-    const { openFormView, pyEnv } = await start();
+    const { pyEnv } = await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await contains("button", { text: "Follow" });
     await click("button", { text: "Follow" });
@@ -58,7 +58,7 @@ QUnit.test('Click on "follow" button should save draft record', async () => {
                 </div>
             </form>`,
     };
-    const { openFormView } = await start({ serverData: { views } });
+    await start({ serverData: { views } });
     await openFormView("res.partner");
     await contains("button", { text: "Follow" });
     await contains("div.o_field_char");
