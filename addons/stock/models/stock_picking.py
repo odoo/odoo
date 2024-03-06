@@ -841,6 +841,11 @@ class Picking(models.Model):
                     if picking.partner_id:
                         picking.message_unsubscribe(picking.partner_id.ids)
                     picking.message_subscribe([vals.get('partner_id')])
+        if vals.get('picking_type_id'):
+            picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
+            for picking in self:
+                if picking.picking_type_id != picking_type:
+                    picking.name = picking_type.sequence_id.next_by_id()
         res = super(Picking, self).write(vals)
         if vals.get('signature'):
             for picking in self:

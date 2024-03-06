@@ -652,3 +652,30 @@ class TestRepair(common.TransactionCase):
             {'product_id': product_a.id, 'product_qty': 1.0},
             {'product_id': product_a.id, 'product_qty': 1.0},
         ])
+
+    def test_onchange_picking_type_id_and_name(self):
+        """
+        Test that when changing the picking_type_id, the name of the repair order should be changed too
+        """
+        repair_order = self.env['repair.order'].create({
+            'product_id': self.product_product_3.id,
+            'picking_type_id': self.stock_warehouse.repair_type_id.id,
+        })
+        picking_type_1 = self.env['stock.picking.type'].create({
+            'name': 'new_picking_type_1',
+            'code': 'repair_operation',
+            'sequence_code': 'PT1/',
+        })
+        picking_type_2 = self.env['stock.picking.type'].create({
+            'name': 'new_picking_type_2',
+            'code': 'repair_operation',
+            'sequence_code': 'PT2/',
+        })
+        repair_order.picking_type_id = picking_type_1
+        self.assertEqual(repair_order.name, "PT1/00001")
+        repair_order.picking_type_id = picking_type_2
+        self.assertEqual(repair_order.name, "PT2/00001")
+        repair_order.picking_type_id = picking_type_1
+        self.assertEqual(repair_order.name, "PT1/00002")
+        repair_order.picking_type_id = picking_type_1
+        self.assertEqual(repair_order.name, "PT1/00002")
