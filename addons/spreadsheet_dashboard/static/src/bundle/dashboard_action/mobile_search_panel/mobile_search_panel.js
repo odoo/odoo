@@ -5,7 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Component, useState } from "@odoo/owl";
 
 export class DashboardMobileSearchPanel extends Component {
-    static template = "documents_spreadsheet.DashboardMobileSearchPanel";
+    static template = "spreadsheet_dashboard.DashboardMobileSearchPanel";
     static props = {
         /**
          * (dashboardId: number) => void
