@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains } from "@web/../tests/utils";
 
@@ -11,7 +11,7 @@ QUnit.module("attachment panel");
 QUnit.test("Empty attachment panel", async () => {
     const pyEnv = await startServer();
     const channelId = await pyEnv["discuss.channel"].create({ name: "General" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Show Attachments']");
     await contains(".o-mail-Discuss-inspector", {
@@ -36,7 +36,7 @@ QUnit.test("Attachment panel sort by date", async () => {
             create_date: "2023-09-21",
         },
     ]);
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Show Attachments']");
     await contains(".o-mail-AttachmentList", {

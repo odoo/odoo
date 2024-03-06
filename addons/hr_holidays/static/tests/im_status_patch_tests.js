@@ -2,8 +2,8 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
 import { Command } from "@mail/../tests/helpers/command";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { contains } from "@web/../tests/utils";
 
@@ -19,7 +19,7 @@ QUnit.test("on leave & online", async () => {
         ],
         channel_type: "chat",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-ImStatus i.fa-plane[title='Online']");
 });
@@ -34,7 +34,7 @@ QUnit.test("on leave & away", async () => {
         ],
         channel_type: "chat",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-ImStatus i.fa-plane[title='Idle']");
 });
@@ -49,7 +49,7 @@ QUnit.test("on leave & offline", async () => {
         ],
         channel_type: "chat",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-ImStatus i.fa-plane[title='Out of office']");
 });

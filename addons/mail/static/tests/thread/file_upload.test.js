@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains, createFile, inputFiles } from "@web/../tests/utils";
 
@@ -49,7 +49,7 @@ QUnit.test("no conflicts between file uploads", async () => {
 QUnit.test("Attachment shows spinner during upload", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "channel_1" });
-    const { openDiscuss } = await start({
+    await start({
         async mockRPC(route) {
             if (route === "/mail/attachment/upload") {
                 // never fulfill the attachment upload promise.

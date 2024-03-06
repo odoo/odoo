@@ -4,7 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { SIZES, patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-import { mockGetMedia, start } from "@mail/../tests/helpers/test_utils";
+import { mockGetMedia, openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -18,7 +18,7 @@ QUnit.test("basic rendering", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("[title='Start a Call']");
     await contains(".o-discuss-Call");
@@ -46,7 +46,7 @@ QUnit.test("no call with odoobot", async () => {
         ],
         channel_type: "chat",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Discuss-header");
     await contains("[title='Start a Call']", { count: 0 });
@@ -56,7 +56,7 @@ QUnit.test("should not display call UI when no more members (self disconnect)", 
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("[title='Start a Call']");
     await contains(".o-discuss-Call");
@@ -82,7 +82,7 @@ QUnit.test("should disconnect when closing page while in call", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     patchWithCleanup(browser, {
         navigator: {
@@ -181,7 +181,7 @@ QUnit.test("can share screen", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("[title='Start a Call']");
     await click("[title='More']");
@@ -199,7 +199,7 @@ QUnit.test("can share user camera", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("[title='Start a Call']");
     await click("[title='Turn camera on']");
@@ -210,7 +210,7 @@ QUnit.test("can share user camera", async () => {
 
 QUnit.test("Create a direct message channel when clicking on start a meeting", async () => {
     mockGetMedia();
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss();
     await click("button", { text: "Start a meeting" });
     await contains(".o-mail-DiscussSidebarChannel", { text: "Mitchell Admin" });
@@ -224,7 +224,7 @@ QUnit.test("Can share user camera and screen together", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("[title='Start a Call']");
     await click("[title='More']");
@@ -239,7 +239,7 @@ QUnit.test("Click on inset card should replace the inset and active stream toget
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("[title='Start a Call']");
     await click("[title='More']");
@@ -286,7 +286,7 @@ QUnit.test("'Start a meeting' in mobile", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 2" });
     pyEnv["res.users"].create({ partner_id: partnerId });
     pyEnv["discuss.channel"].create({ name: "Slytherin" });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Chat" });

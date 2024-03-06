@@ -1,7 +1,8 @@
 /** @odoo-module alias=@mail/../tests/discuss/call/ptt_ad_banner_tests default=false */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { mockGetMedia, start } from "@mail/../tests/helpers/test_utils";
+import { mockGetMedia, openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+
 import { click, contains } from "@web/../tests/utils";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
@@ -11,7 +12,7 @@ QUnit.test("display banner when ptt extension is not enabled", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { env, openDiscuss } = await start();
+    const { env } = await start();
     patchWithCleanup(env.services["discuss.ptt_extension"], {
         get isEnabled() {
             return false;

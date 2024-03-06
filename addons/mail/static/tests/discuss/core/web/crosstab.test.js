@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
@@ -15,7 +15,7 @@ QUnit.test("Channel subscription is renewed when channel is manually added", asy
         { name: "my channel" },
         { name: "General", channel_member_ids: [] },
     ]);
-    const { env, openDiscuss } = await start();
+    const { env } = await start();
     patchWithCleanup(env.services["bus_service"], {
         forceUpdateChannels() {
             step("update-channels");

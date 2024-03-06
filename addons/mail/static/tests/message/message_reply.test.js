@@ -2,9 +2,9 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
+import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
@@ -27,7 +27,7 @@ QUnit.test("click on message in reply to highlight the parent message", async ()
         parent_id: messageId,
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click(".o-mail-MessageInReply-message", {
         parent: [".o-mail-Message", { text: "Reply to Hey" }],
@@ -61,7 +61,7 @@ QUnit.test("click on message in reply to scroll to the parent message", async ()
         parent_id: oldestMessageId,
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click(".o-mail-MessageInReply-message", {
         parent: [".o-mail-Message", { text: "Response to first message" }],
@@ -88,7 +88,7 @@ QUnit.test("reply shows correct author avatar", async (assert) => {
         parent_id: messageId,
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(
         `.o-mail-MessageInReply-avatar[data-src='${`${getOrigin()}/web/image/res.partner/${

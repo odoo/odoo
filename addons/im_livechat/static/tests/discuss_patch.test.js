@@ -5,7 +5,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { click, contains, insertText } from "@web/../tests/utils";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("discuss (patch)");
 
@@ -28,7 +28,7 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebar");
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
@@ -61,7 +61,7 @@ QUnit.test("invite button should be present on livechat", async () => {
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Discuss button[title='Add Users']");
 });
@@ -106,7 +106,7 @@ QUnit.test(
                 livechat_operator_id: pyEnv.currentPartnerId,
             },
         ]);
-        const { openDiscuss } = await start();
+        await start();
         await openDiscuss();
         await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
         await contains(":nth-child(1 of .o-mail-DiscussSidebarChannel)", { text: "Visitor 12" });

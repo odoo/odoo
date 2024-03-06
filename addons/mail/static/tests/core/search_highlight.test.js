@@ -1,10 +1,11 @@
 /** @odoo-module alias=@mail/../tests/core/search_highlight_test default=false */
 
 import { HIGHLIGHT_CLASS, searchHighlight } from "@mail/core/common/message_search_hook";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { start } from "../helpers/test_utils";
 import { SIZES, patchUiSize } from "../helpers/patch_ui_size";
 
 QUnit.module("Search highlight test", {});
@@ -143,7 +144,7 @@ QUnit.test("Display highligthed search in Discuss", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("button[title='Search Messages']");
     await insertText(".o_searchview_input", "empty");
@@ -162,7 +163,7 @@ QUnit.test("Display multiple highligthed search in Discuss", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await click("button[title='Search Messages']");
     await insertText(".o_searchview_input", "not empty");
