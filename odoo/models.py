@@ -4527,6 +4527,8 @@ class BaseModel(metaclass=MetaModel):
             # for rounding values. X2many fields must be written last, because
             # they flush other fields when deleting lines.
             for field, value in sorted(field_values, key=lambda item: item[0].write_sequence):
+                if field.type == 'many2one_reference':
+                    value = (value, vals.get(field.model_field))
                 field.write(self, value)
 
             # determine records depending on new values

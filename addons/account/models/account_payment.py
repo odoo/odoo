@@ -141,6 +141,7 @@ class AccountPayment(models.Model):
     )
 
     # == Display purpose fields ==
+    linked_attachment_ids = fields.One2many(comodel_name='ir.attachment', inverse_name='res_id')
     payment_method_code = fields.Char(
         related='payment_method_line_id.code')
     payment_receipt_title = fields.Char(

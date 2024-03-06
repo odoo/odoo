@@ -102,6 +102,7 @@ class Message(models.Model):
         'ir.attachment', 'message_attachment_rel',
         'message_id', 'attachment_id',
         string='Attachments')
+    linked_attachment_ids = fields.One2many(comodel_name='ir.attachment', inverse_name='res_id')
     parent_id = fields.Many2one(
         'mail.message', 'Parent Message', index='btree_not_null', ondelete='set null')
     child_ids = fields.One2many('mail.message', 'parent_id', 'Child Messages')
