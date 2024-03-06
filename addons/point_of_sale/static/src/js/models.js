@@ -1321,7 +1321,7 @@ exports.PosModel = Backbone.Model.extend({
                                     },
                                 })
                                 .catch(() => {
-                                    reject({ code: 401, message: 'Backend Invoice', data: { order: order } });
+                                    reject({ code: 401, message: 'Backend Invoice', data: { order: order }, server_ids: server_ids });
                                 });
                         } else {
                             reject({ code: 401, message: 'Backend Invoice', data: { order: order } });
