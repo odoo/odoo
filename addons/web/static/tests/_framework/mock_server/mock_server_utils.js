@@ -1,6 +1,19 @@
 import { makeErrorFromResponse } from "@web/core/network/rpc";
 
 /**
+ * This is a flag on kwargs, so that they can easily be distinguished from args in methods of models.
+ * That way they can be easily be parsed, e.g. by combining args & kwargs @see parseModelParams
+ */
+const IS_KWARGS = Symbol("is_kwargs");
+export function isKwargs(kwargs) {
+    return kwargs?.[IS_KWARGS];
+}
+export function Kwargs(obj) {
+    obj[IS_KWARGS] = true;
+    return obj;
+}
+
+/**
  * @param {import("./mock_model").ModelRecord} record
  */
 export function getRecordQualifier(record) {

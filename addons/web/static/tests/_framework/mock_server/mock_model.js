@@ -343,7 +343,7 @@ const getRelation = (field, record = {}) => {
     } else if (field.type === "many2one_reference") {
         relation = record[field.model_field];
     }
-    const comodel = relation || record[field._model_name_ref_fname];
+    const comodel = relation || record[field.model_name_ref_fname];
     return comodel && MockServer.env[comodel];
 };
 
@@ -530,7 +530,8 @@ const isValidId = (id, field, record) => {
     if (!Number.isInteger(id)) {
         return false;
     }
-    return getRelation(field, record)?.some((record) => record.id === id);
+    const rel = getRelation(field, record);
+    return rel && rel.some((record) => record.id === id);
 };
 
 /**
@@ -586,7 +587,7 @@ const orderByField = (model, orderBy, records) => {
     }
     const orderBys = safeSplit(orderBy);
     const [fieldNameSpec, direction = "ASC"] = safeSplit(orderBys.pop(), " ");
-    const field = getOrderByField(model, fieldNameSpec);
+    const field = getOrderByField(model.env[model._name], fieldNameSpec);
 
     // Prepares a values map if needed to easily retrieve the ordering
     // factor associated to a certain id or value.
@@ -1059,7 +1060,7 @@ const updateComodelRelationalFields = (model, record, originalRecord) => {
         const field = model._fields[fname];
         const coModel = getRelation(field, record);
         const inverseFieldName =
-            field._inverse_fname_by_model_name && field._inverse_fname_by_model_name[coModel._name];
+            field.inverse_fname_by_model_name && field.inverse_fname_by_model_name[coModel._name];
         if (!inverseFieldName) {
             // field has no inverse, skip it.
             continue;
@@ -1085,14 +1086,14 @@ const updateComodelRelationalFields = (model, record, originalRecord) => {
                 }
                 const data = { [inverseFieldName]: inverseFieldNewValue };
                 if (comodelInverseField.type === "many2one_reference") {
-                    data[comodelInverseField._model_name_ref_fname] = model._name;
+                    data[comodelInverseField.model_name_ref_fname] = model._name;
                 }
                 coModel._write(data, relatedRecordId);
             }
         } else if (field.type === "many2one_reference") {
             // we need to clean the many2one_field as well.
             const model_many2one_field =
-                comodelInverseField._inverse_fname_by_model_name[model._name];
+                comodelInverseField.inverse_fname_by_model_name[model._name];
             model._write({ [model_many2one_field]: false }, record.id);
         }
         // it's an update, get the records that were originally referenced but are not
@@ -1219,6 +1220,9 @@ export class Model extends Array {
                         model._fields[key] = value;
                         delete model[key];
                     }
+                }
+                if (!model._rec_name && "name" in model._fields) {
+                    model._rec_name = "name";
                 }
 
                 // Views
@@ -1656,7 +1660,7 @@ export class Model extends Array {
                     if (!modelMap[coModel._name]) {
                         modelMap[coModel._name] = {};
                     }
-                    modelMap[coModel._name][record.id] = record;
+                    modelMap[coModel._name][record[fieldName]] = record[fieldName];
                 }
             } else {
                 const coModel = getRelation(field);
@@ -1691,7 +1695,11 @@ export class Model extends Array {
                 } else if (isM2OField(field)) {
                     const relRecord = modelMap[getRelation(field, record)._name][record[fieldName]];
                     if (relRecord) {
-                        result[fieldName] = [record[fieldName], relRecord.display_name];
+                        if (field.type === "many2one_reference") {
+                            result[fieldName] = record[fieldName];
+                        } else {
+                            result[fieldName] = [record[fieldName], relRecord.display_name];
+                        }
                     } else {
                         result[fieldName] = false;
                     }
@@ -2525,7 +2533,7 @@ export class Model extends Array {
         if (this._rec_name) {
             for (const record of this) {
                 const value = record[this._rec_name];
-                record.display_name = value && String(value);
+                record.display_name = (value && String(value)) ?? false;
             }
         } else {
             for (const record of this) {
@@ -2742,9 +2750,13 @@ export class Model extends Array {
      */
     _write(values, id) {
         const record = this.find((r) => r.id === id);
-        for (const fieldName in values) {
+        const todoValsMap = new Map(Object.entries(values));
+        const MAX_ITER = todoValsMap.size;
+        let i = 0;
+        while (todoValsMap.size > 0 && i < MAX_ITER) {
+            let [fieldName, value] = todoValsMap.entries().next().value;
+            todoValsMap.delete(fieldName);
             const field = this._fields[fieldName];
-            let value = values[fieldName];
             if (!field) {
                 throw fieldNotFoundError(
                     this._name,
@@ -2773,8 +2785,7 @@ export class Model extends Array {
                     if (command[0] === 0) {
                         // CREATE
                         const inverseData = command[2]; // write in place instead of copy, because some tests rely on the object given being updated
-                        const inverseFieldName =
-                            field._inverse_fname_by_model_name?.[coModel._name];
+                        const inverseFieldName = field.inverse_fname_by_model_name?.[coModel._name];
                         if (inverseFieldName) {
                             inverseData[inverseFieldName] = id;
                         }
@@ -2812,6 +2823,11 @@ export class Model extends Array {
             } else if (isM2OField(field)) {
                 if (value) {
                     if (!isValidId(value, field, record)) {
+                        if (todoValsMap.has(field.model_name_ref_fname)) {
+                            // handle it later as it might likely become valid
+                            todoValsMap.set(fieldName, value);
+                            continue;
+                        }
                         throw new MockServerError(
                             `invalid ID "${JSON.stringify(
                                 value
@@ -2825,6 +2841,7 @@ export class Model extends Array {
             } else if (!isComputed(field)) {
                 record[fieldName] = value;
             }
+            i++;
         }
     }
 }
