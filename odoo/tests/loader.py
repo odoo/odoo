@@ -76,17 +76,17 @@ def make_suite(module_names, position='at_install'):
     return OdooSuite(sorted(tests, key=lambda t: t.test_sequence))
 
 
-def run_suite(suite, module_name=None):
+def run_suite(suite):
     # avoid dependency hell
     from ..modules import module
-    module.current_test = module_name
+    module.current_test = True
     threading.current_thread().testing = True
 
     results = OdooTestResult()
     suite(results)
 
     threading.current_thread().testing = False
-    module.current_test = None
+    module.current_test = False
     return results
 
 

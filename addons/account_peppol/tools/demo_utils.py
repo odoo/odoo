@@ -167,6 +167,6 @@ def handle_demo(func, self, *args, **kwargs):
     }
     demo_mode = get_demo_mode.get(self._name) and get_demo_mode[self._name](self, args, kwargs) or False
 
-    if not demo_mode or tools.config['test_enable'] or modules.module.current_test:
+    if not demo_mode or modules.module.current_test:
         return func(self, *args, **kwargs)
     return _demo_behaviour[func.__name__](func, self, *args, **kwargs)
