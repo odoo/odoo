@@ -132,11 +132,6 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                 }
             }
 
-            try {
-                await globalState.load_new_partners();
-            } catch {
-                // FIXME Universal catch seems ill advised
-            }
             const order_partner = globalState.db.get_partner_by_id(sale_order.partner_id[0]);
             if (order_partner) {
                 currentPOSOrder.set_partner(order_partner);
