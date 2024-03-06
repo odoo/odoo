@@ -129,9 +129,11 @@ class FleetVehicleLogContract(models.Model):
             ('expiration_date', '<', outdated_days),
             ('user_id', '!=', False)
         ]
-        ).filtered(
-            lambda nec: reminder_activity_type not in nec.activity_ids.activity_type_id
         )
+        if reminder_activity_type:
+            nearly_expired_contracts = nearly_expired_contracts.filtered(
+                lambda nec: reminder_activity_type not in nec.activity_ids.activity_type_id
+            )
 
         for contract in nearly_expired_contracts:
             contract.activity_schedule(
