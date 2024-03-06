@@ -68,7 +68,7 @@ def MockRequest(
         env, *, routing=True, multilang=True,
         context=None,
         cookies=None, country_code=None, website=None, sale_order_id=None,
-        website_sale_current_pl=None,
+        website_sale_current_pl=None, url_root=None,
 ):
     router = MagicMock()
     match = router.return_value.bind.return_value.match
@@ -98,6 +98,7 @@ def MockRequest(
             environ={'REMOTE_ADDR': '127.0.0.1'},
             cookies=cookies or {},
             referrer='',
+            url_root=url_root,
         ),
         lang=env['res.lang']._lang_get(lang_code),
         redirect=env['ir.http']._redirect,
