@@ -401,7 +401,7 @@ patch(MockServer.prototype, {
             if (!user) {
                 continue;
             }
-            // Note: `channel_info` on the server is supposed to be called with
+            // Note: `_channel_info` on the server is supposed to be called with
             // the proper user context but this is not done here for simplicity.
             const channelInfos = this._mockDiscussChannelChannelInfo(ids);
             const [relatedPartner] = this.pyEnv["res.partner"].searchRead([

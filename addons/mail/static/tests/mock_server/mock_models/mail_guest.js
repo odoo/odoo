@@ -1,43 +1,44 @@
-import { constants, models } from "@web/../tests/web_test_helpers";
+import { models } from "@web/../tests/web_test_helpers";
 
 export class MailGuest extends models.ServerModel {
     _name = "mail.guest";
 
-    /**
-     * Simulates `_get_guest_from_context` on `mail.guest`.
-     */
-    _getGuestFromContext() {
+    _get_guest_from_context() {
         const guestId = this.env.cookie.get("dgid");
         return guestId ? this.search_read([["id", "=", guestId]])[0] : null;
     }
 
-    /**
-     * Simulates `_init_messaging` on `mail.guest`.
-     */
-    _initMessaging() {
-        const guest = this._getGuestFromContext();
-        const members = this.env["discuss.channel.member"]._filter([
-            ["guest_id", "=", guest.id],
-            "|",
-            ["fold_state", "in", ["open", "folded"]],
-            ["inviting_partner_ids", "!=", false],
-        ]);
+    _init_messaging() {
         return {
             Store: {
-                current_user_id: false,
-                hasGifPickerFeature: true,
-                hasLinkPreviewFeature: true,
                 initBusId: this.lastBusNotificationId,
-                menu_id: false,
-                odoobot: this.env["res.partner"].mail_partner_format(constants.ODOOBOT_ID)[
-                    constants.ODOOBOT_ID
-                ],
-                self: { id: guest.id, name: guest.name, type: "guest" },
-                settings: {},
             },
-            Thread: this.env["discuss.channel"].channel_info(
-                members.map((member) => member.channel_id)
-            ),
         };
+    }
+
+    /**
+     * @param {Number[]} ids
+     * @returns {Record<string, ModelRecord>}
+     */
+    _guest_format(ids) {
+        const guests = this._filter([["id", "in", ids]], { active_test: false });
+        return Object.fromEntries(
+            guests.map((guest) => {
+                return [
+                    guest.id,
+                    {
+                        id: guest.id,
+                        im_status: guest.im_status,
+                        name: guest.name,
+                        type: "guest",
+                        write_date: guest.write_date,
+                    },
+                ];
+            })
+        );
+    }
+
+    _set_auth_cookie(guestId) {
+        this.env.cookie.set("dgid", guestId);
     }
 }

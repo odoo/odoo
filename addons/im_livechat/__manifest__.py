@@ -82,6 +82,7 @@ Help your customers with this chat, and analyse their feedback.
         ],
         'web.qunit_suite_tests': [
             'im_livechat/static/tests/**/*',
+            ('remove', 'im_livechat/static/tests/mock_server/**/*'),
             ('remove', 'im_livechat/static/tests/embed/**/*'),
             ('remove', 'im_livechat/static/tests/tours/**/*'),
             ('remove', 'im_livechat/static/tests/helpers/**/*.js'),
