@@ -430,3 +430,45 @@ class TestLoyalty(TestSaleCouponCommon):
         self._claim_reward(order, giftcard_program)
 
         self.assertEqual(giftcard_program.coupon_count, 0)
+
+    def test_100_percent_discount(self):
+        """
+        Check whether a program offering 100% discount on an order reduces the order's total amount
+        to zero.
+
+        Assumes global tax rounding, as there's no good way to ensure the tax of the reward product
+        equals the sum of taxes of the lines when each of them gets rounded.
+        """
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        loyalty_program = self.env['loyalty.program'].create([{
+            'name': 'Full Discount',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'unit',
+                'reward_point_amount': 1,
+                'product_ids': [self.product_a.id],
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 100,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        }])
+        self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id, 'partner_id': self.partner_a.id, 'points': 2
+        })
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_A.id, 'product_uom_qty': 1, 'price_unit': price
+            }) for price in (5.60, 8.92, 44.91, 217.26, 2400.00)],
+        })
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, loyalty_program)
+        msg = "100% discount on order should reduce total amount to 0"
+        self.assertEqual(order.amount_total, 0, msg=msg)
