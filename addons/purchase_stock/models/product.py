@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.osv import expression
+from odoo.exceptions import UserError
 
 
 class ProductCategory(models.Model):
@@ -126,6 +127,8 @@ class SupplierInfo(models.Model):
         orderpoint = self.env['stock.warehouse.orderpoint'].browse(orderpoint_id)
         if not orderpoint:
             return
+        if self.partner_id.purchase_warn == 'block':
+            raise UserError(_('This vendor cannot be set as a supplier: %s', self.partner_id.purchase_warn_msg))
         if 'buy' not in orderpoint.route_id.rule_ids.mapped('action'):
             orderpoint.route_id = self.env['stock.rule'].search([('action', '=', 'buy')], limit=1).route_id.id
         orderpoint.supplier_id = self

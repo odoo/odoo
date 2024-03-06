@@ -72,7 +72,11 @@ class StockRule(models.Model):
             )[:1]
 
             if not supplier:
-                msg = _('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.', procurement.product_id.display_name)
+                msg = _('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, vendor is blocked, ...). Go on the product form and complete the list of vendors.', procurement.product_id.display_name)
+                errors.append((procurement, msg))
+
+            if procurement.product_id.purchase_line_warn == 'block':
+                msg = _('Product %s cannot be purchased because of blocking message: %s', procurement.product_id.display_name, procurement.product_id.purchase_line_warn_msg)
                 errors.append((procurement, msg))
 
             partner = supplier.partner_id

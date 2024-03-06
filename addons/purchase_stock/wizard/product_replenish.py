@@ -24,10 +24,10 @@ class ProductReplenish(models.TransientModel):
                 ], limit=1).id
             orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', 'in', [product_tmpl_id.product_variant_id.id, product_id.id]), ("warehouse_id", "=", res['warehouse_id'])], limit=1)
             res['supplier_id'] = False
-            if orderpoint:
+            if orderpoint and orderpoint.supplier_id.partner_id.purchase_warn != 'block':
                 res['supplier_id'] = orderpoint.supplier_id.id
             elif product_tmpl_id.seller_ids:
-                res['supplier_id'] = product_tmpl_id.seller_ids[0].id
+                res['supplier_id'] = next((seller.id for seller in product_tmpl_id.seller_ids if seller.partner_id.purchase_warn != 'block'), False)
         return res
 
     @api.depends('route_id', 'supplier_id')
