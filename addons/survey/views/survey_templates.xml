@@ -3,7 +3,7 @@
 <data>
     <!-- Main survey layout -->
     <template id="survey.layout" name="Survey Layout" inherit_id="web.frontend_layout" primary="True">
-        <xpath expr="//div[@id='wrapwrap']" position="before">
+        <xpath expr="//head" position="before">
             <!--TODO DBE Fix me : If one day, there is a survey_livechat bridge module, put this in that module-->
             <t t-set="no_livechat" t-value="True"/>
         </xpath>
@@ -65,7 +65,7 @@
         <t t-call="survey.layout">
             <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
             <div class="wrap o_survey_wrap d-flex">
-                <div class="container o_survey_form d-flex flex-column mb-5">
+                <div class="o_container_small o_survey_form d-flex flex-column mb-5">
                     <t t-call="survey.survey_fill_header" />
                     <t t-call="survey.survey_fill_form" />
                 </div>
@@ -186,8 +186,8 @@
             t-att-data-time-limit-minutes="time_limit_minutes"/>
         <t t-if="survey.questions_layout == 'one_page'">
             <t t-foreach='survey.question_and_page_ids' t-as='question'>
-                <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title pb16 text-break w-lg-50 mx-lg-auto" />
-                <div t-if="question.is_page" t-field='question.description' class="text-break w-lg-50 mx-lg-auto"/>
+                <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title pb16 text-break"/>
+                <div t-if="question.is_page" t-field='question.description' class="text-break"/>
                 <t t-if="not question.is_page and question in answer.predefined_question_ids" t-call="survey.question_container"/>
             </t>
 
@@ -201,8 +201,8 @@
         </t>
 
         <t t-if="survey.questions_layout == 'page_per_section'">
-            <h2 t-field='page.title' class="o_survey_title pb16 text-break w-lg-50 mx-lg-auto" />
-            <div t-field='page.description' class="oe_no_empty text-break w-lg-50 mx-lg-auto"/>
+            <h2 t-field='page.title' class="o_survey_title pb16 text-break" />
+            <div t-field='page.description' class="oe_no_empty text-break"/>
 
             <input type="hidden" name="page_id" t-att-value="page.id" />
             <t t-foreach='page.question_ids' t-as='question'>
@@ -228,7 +228,7 @@
         An exception is made for options with images, where we always want to optimize screen space.-->
         <t t-set="minimized_display" t-value="survey.questions_layout == 'page_per_question' and not any(suggestion.value_image for suggestion in question.suggested_answer_ids)" />
         <div t-if="survey.questions_layout == 'page_per_question'"
-            t-attf-class="o_survey_page_per_question #{'w-lg-50 mx-lg-auto' if question.question_type in ('numerical_box', 'date', 'datetime') else ''}">
+            t-attf-class="o_survey_page_per_question">
             <input type="hidden" name="question_id" t-att-value="question.id" />
             <!-- User has already answered for this session -->
             <t t-if="answer.is_session_answer and (has_answered or answer.question_time_limit_reached)">
@@ -272,7 +272,7 @@
     <template id="survey_fill_form_done" name="Survey: finished">
         <div class="wrap">
             <div class="o_survey_finished mt32 mb32">
-                <h1>Thank you!</h1>
+                <h1 class="fs-2">Thank you!</h1>
                 <div t-field="survey.description_done" class="oe_no_empty" />
                 <div class="row">
                     <div class="col">
@@ -332,8 +332,7 @@
         <t t-set="is_skipped_question" t-value="skipped_questions and question in skipped_questions"/>
         <div t-attf-class="js_question-wrapper pb-4
                            #{'d-none' if not display_question else ''}
-                           #{'me-2' if extra_right_margin else ''}
-                           #{'w-lg-50 mx-lg-auto' if survey.questions_layout != 'page_per_question' else ''}"
+                           #{'me-2' if extra_right_margin else ''}"
              t-att-id="question.id"
              t-att-data-required="bool(question.constr_mandatory and (not survey.users_can_go_back or survey.questions_layout == 'one_page')) or None"
              t-att-data-constr-error-msg="question.constr_error_msg or default_constr_error_msg if question.constr_mandatory else None"
