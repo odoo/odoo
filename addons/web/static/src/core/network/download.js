@@ -544,7 +544,7 @@ export function configureBlobDownloadXHR(
                 const contents = decoder.result;
                 const doc = new DOMParser().parseFromString(contents, "text/html");
                 const nodes =
-                    doc.body.children.length === 0 ? doc.body.childNodes : doc.body.children;
+                    doc.body.children.length === 0 ? [doc.body] : doc.body.children;
 
                 let error;
                 try {
