@@ -419,14 +419,18 @@ const logEvents = (actionName) => {
 
 /**
  * @param {KeyStrokes} keyStrokes
+ * @param {KeyboardEventInit} [options]
  * @returns {KeyboardEventInit}
  */
-const parseKeyStrokes = (keyStrokes) =>
+const parseKeyStrokes = (keyStrokes, options) =>
     (isIterable(keyStrokes) ? [...keyStrokes] : [keyStrokes])
         .flatMap((keyStroke) => keyStroke.split(/\s*[,+]\s*/))
         .map((key) => {
             const lower = key.toLowerCase();
-            return { key: lower.length === 1 ? key : KEY_ALIASES[lower] || key };
+            return {
+                ...options,
+                key: lower.length === 1 ? key : KEY_ALIASES[lower] || key,
+            };
         });
 
 /**
@@ -1712,12 +1716,13 @@ export function hover(target, options) {
  *  element.
  *
  * @param {KeyStrokes} keyStrokes
+ * @param {KeyboardEventInit} [options]
  * @returns {Event[]}
  * @example
  *  keyDown(" "); // Space key
  */
-export function keyDown(keyStrokes) {
-    const eventInits = parseKeyStrokes(keyStrokes);
+export function keyDown(keyStrokes, options) {
+    const eventInits = parseKeyStrokes(keyStrokes, options);
     for (const eventInit of eventInits) {
         _keyDown(getActiveElement(), eventInit);
     }
@@ -1732,12 +1737,13 @@ export function keyDown(keyStrokes) {
  *  - `keyup`
  *
  * @param {KeyStrokes} keyStrokes
+ * @param {KeyboardEventInit} [options]
  * @returns {Event[]}
  * @example
  *  keyUp("Enter");
  */
-export function keyUp(keyStrokes) {
-    const eventInits = parseKeyStrokes(keyStrokes);
+export function keyUp(keyStrokes, options) {
+    const eventInits = parseKeyStrokes(keyStrokes, options);
     for (const eventInit of eventInits) {
         _keyUp(getActiveElement(), eventInit);
     }
@@ -1853,6 +1859,7 @@ export function pointerUp(target, options) {
  *  - `keyup`
  *
  * @param {KeyStrokes} keyStrokes
+ * @param {KeyboardEventInit} [options]
  * @returns {Event[]}
  * @example
  *  pointerDown("button[type=submit]"); // Moves focus to <button>
@@ -1862,8 +1869,8 @@ export function pointerUp(target, options) {
  * @example
  *  keyDown(["ctrl", "v"]); // Pastes current clipboard content
  */
-export function press(keyStrokes) {
-    const eventInits = parseKeyStrokes(keyStrokes);
+export function press(keyStrokes, options) {
+    const eventInits = parseKeyStrokes(keyStrokes, options);
     const activeElement = getActiveElement();
 
     for (const eventInit of eventInits) {
