@@ -4,7 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Composer } from "@mail/core/common/composer";
 import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
@@ -79,7 +79,7 @@ QUnit.test(
 
 QUnit.test('display partner mention suggestions on typing "@" in chatter', async () => {
     const pyEnv = await startServer();
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@");
@@ -241,7 +241,7 @@ QUnit.test("display partner mention when typing more than 2 words if they match"
             name: "My Test Partner",
         },
     ]);
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@My ");
@@ -276,7 +276,7 @@ QUnit.test("Internal user should be displayed first", async () => {
             res_model: "res.partner",
         },
     ]);
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@Person ");
@@ -301,7 +301,7 @@ QUnit.test("Current user that is a follower should be considered as such", async
             res_model: "res.partner",
         },
     ]);
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@");

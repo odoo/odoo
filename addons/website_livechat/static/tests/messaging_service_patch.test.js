@@ -2,7 +2,7 @@ import { rpc } from "@web/core/network/rpc";
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { contains } from "@web/../tests/utils";
 
@@ -11,7 +11,7 @@ QUnit.module("messaging service (patch)");
 QUnit.test("Should open chat window on send chat request to website visitor", async () => {
     const pyEnv = await startServer();
     const visitorId = pyEnv["website.visitor"].create({});
-    const { env, openFormView } = await start({
+    const { env } = await start({
         serverData: {
             views: {
                 "website.visitor,false,form": `

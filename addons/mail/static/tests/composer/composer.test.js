@@ -5,7 +5,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { Composer } from "@mail/core/common/composer";
 import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import {
     makeDeferred,
@@ -38,7 +38,7 @@ QUnit.module("composer", {
 
 QUnit.test("composer text input: basic rendering when posting a message", async () => {
     const pyEnv = await startServer();
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button", { text: "Send message" });
     await contains("textarea.o-mail-Composer-input[placeholder='Send a message to followers…']");
@@ -46,7 +46,7 @@ QUnit.test("composer text input: basic rendering when posting a message", async 
 
 QUnit.test("composer text input: basic rendering when logging note", async () => {
     const pyEnv = await startServer();
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button", { text: "Log note" });
     await contains("textarea.o-mail-Composer-input[placeholder='Log an internal note…']");
@@ -376,7 +376,7 @@ QUnit.test("add an emoji after a channel mention", async () => {
 
 QUnit.test("pending mentions are kept when toggling composer", async () => {
     const pyEnv = await startServer();
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@");
@@ -801,7 +801,7 @@ QUnit.test("Show recipient list when there is more than 5 followers.", async () 
             res_model: "res.partner",
         });
     }
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerIds[0]);
     await click("button", { text: "Send message" });
     await click("button[title='Show all recipients']");
@@ -817,7 +817,7 @@ QUnit.test("Show recipient list when there is more than 5 followers.", async () 
 QUnit.test("Show 'No recipient found.' with 0 followers.", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "test name 1", email: "test1@odoo.com" });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await click("button", { text: "Send message" });
     await contains(".o-mail-Chatter-top", { text: "To: No recipient" });

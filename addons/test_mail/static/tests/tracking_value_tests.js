@@ -1,6 +1,6 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import {
     editSelect,
@@ -36,13 +36,13 @@ QUnit.module("tracking value", {
                 </form>`,
         };
         this.start = async ({ res_id }) => {
-            const { openFormView, ...remainder } = await start({
+            const res = await start({
                 serverData: { views },
             });
             await openFormView("mail.test.track.all", res_id, {
                 props: { mode: "edit" },
             });
-            return remainder;
+            return res;
         };
 
         patchTimeZone(0);

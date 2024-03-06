@@ -3,7 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { PRESENT_THRESHOLD } from "@mail/core/common/thread";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains, insertText, scroll } from "@web/../tests/utils";
 import { SIZES, patchUiSize } from "../helpers/patch_ui_size";
@@ -54,7 +54,7 @@ QUnit.test(
                 res_id: partnerId,
             });
         }
-        const { openFormView } = await start();
+        await start();
         await openFormView("res.partner", partnerId);
         await contains(".o-mail-Message", { count: 20 });
         await contains(".o-mail-Thread");

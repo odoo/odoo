@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains } from "@web/../tests/utils";
 
@@ -17,7 +17,7 @@ QUnit.test("Toggle display of original/translated version of chatter message", a
         author_id: pyEnv.odoobotId,
         res_id: partnerId,
     });
-    const { openFormView } = await start({
+    await start({
         mockRPC(route) {
             if (route === "/mail/message/translate") {
                 assert.step("Request");
@@ -57,7 +57,7 @@ QUnit.test("translation of email message", async () => {
         author_id: partnerId,
         res_id: partnerId,
     });
-    const { openFormView } = await start({
+    await start({
         mockRPC(route) {
             if (route === "/mail/message/translate") {
                 return { body: "To bad weather, good face.", lang_name: "Spanish", error: null };

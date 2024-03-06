@@ -9,7 +9,7 @@ import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferr
 
 import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import {
     editInput,
@@ -209,7 +209,7 @@ QUnit.test(
             res_id: partnerId,
             message_type: "notification",
         });
-        const { openFormView } = await start();
+        await start();
         await openFormView("res.partner", partnerId);
         await contains(".o-mail-Message-body");
         assert.notOk(
@@ -236,7 +236,7 @@ QUnit.test("Click on avatar opens its partner chat window", async () => {
         model: "res.partner",
         res_id: partnerId,
     });
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message-sidebar .o-mail-Message-avatarContainer img");
     await click(".o-mail-Message-sidebar .o-mail-Message-avatarContainer img");
@@ -385,7 +385,7 @@ QUnit.test("reply to message from inbox (message linked to document) [REQUIRE FO
         notification_type: "inbox",
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { openFormView } = await start();
+    await start();
     await openDiscuss();
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-header small", { text: "on Refactoring" });
