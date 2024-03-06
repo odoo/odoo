@@ -36,3 +36,13 @@ class TestWebSave(TransactionCase):
         # Modify an existing record, with unity specification
         result = person.web_save({'name': 'lpe'}, {'display_name': {}})
         self.assertEqual(result, [{'id': person.id, 'display_name': 'lpe'}])
+
+    def test_web_save_computed_stored_binary_write(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG, JPG
+        # This should work without problems
+        binary_svg = self.env['test_new_api.binary_svg'].create({
+            'name': 'Test without attachment',
+            'image_wo_attachment': SVG,
+        })
+        binary_svg.web_save({'image_wo_attachment': JPG}, {'image_wo_attachment': {}, 'image_wo_attachment_computed_stored': {}})
+        self.assertEqual(binary_svg.image_wo_attachment, binary_svg.image_wo_attachment_computed_stored)

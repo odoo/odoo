@@ -940,6 +940,16 @@ class BinarySvg(models.Model):
     name = fields.Char(required=True)
     image_attachment = fields.Binary(attachment=True)
     image_wo_attachment = fields.Binary(attachment=False)
+    image_wo_attachment_computed_stored = fields.Binary(
+        compute="_compute_image_wo_attachment",
+        store=True,
+        attachment=False
+    )
+
+    @api.depends('image_wo_attachment')
+    def _compute_image_wo_attachment(self):
+        for svg in self:
+            svg.image_wo_attachment_computed_stored = svg.image_wo_attachment
 
 
 class MonetaryBase(models.Model):

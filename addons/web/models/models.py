@@ -73,6 +73,7 @@ class Base(models.AbstractModel):
             self = self.create(vals)
         if next_id:
             self = self.browse(next_id)
+        self.flush_recordset()
         return self.with_context(bin_size=True).web_read(specification)
 
     def web_read(self, specification: Dict[str, Dict]) -> List[Dict]:
