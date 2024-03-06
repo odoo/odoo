@@ -164,8 +164,6 @@ class LunchSupplier(models.Model):
                 'active': False,
                 'interval_type': 'days',
                 'interval_number': 1,
-                'numbercall': -1,
-                'doall': False,
                 'name': "Lunch: send automatic email",
                 'model_id': self.env['ir.model']._get_id(self._name),
                 'state': 'code',
