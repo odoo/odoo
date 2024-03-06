@@ -3,12 +3,8 @@ import { models } from "@web/../tests/web_test_helpers";
 export class MailLinkPreview extends models.ServerModel {
     _name = "mail.link.preview";
 
-    /**
-     * Simulates the `_link_preview_format` method of `mail.link.preview`.
-     *
-     * @param {object} linkPreview
-     */
-    _linkPreviewFormat(linkPreview) {
+    /** @param {object} linkPreview */
+    _link_preview_format(linkPreview) {
         return {
             id: linkPreview.id,
             message: { id: linkPreview.message_id[0] || linkPreview.message_id },

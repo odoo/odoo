@@ -3,44 +3,40 @@ import { models } from "@web/../tests/web_test_helpers";
 export class MailNotification extends models.ServerModel {
     _name = "mail.notification";
 
-    /**
-     * Simulates `_filtered_for_web_client` on `mail.notification`.
-     *
-     * @param {number[]} ids
-     */
-    _filteredForWebClient(ids) {
+    /** @param {number[]} ids */
+    _filtered_for_web_client(ids) {
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+        /** @type {import("mock_models").MailMessageSubtype} */
+        const MailMessageSubtype = this.env["mail.message.subtype"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
         const notifications = this._filter([["id", "in", ids]]);
         return notifications.filter((notification) => {
-            const partner = this.env["res.partner"]._filter([
-                ["id", "=", notification.res_partner_id],
-            ])[0];
+            const partner = ResPartner._filter([["id", "=", notification.res_partner_id]])[0];
             if (
                 ["bounce", "exception", "canceled"].includes(notification.notification_status) ||
                 (partner && partner.partner_share)
             ) {
                 return true;
             }
-            const message = this.env["mail.message"]._filter([
-                ["id", "=", notification.mail_message_id],
-            ])[0];
+            const message = MailMessage._filter([["id", "=", notification.mail_message_id]])[0];
             const subtypes = message.subtype_id
-                ? this.env["mail.message.subtype"]._filter([["id", "=", message.subtype_id]])
+                ? MailMessageSubtype._filter([["id", "=", message.subtype_id]])
                 : [];
-            return subtypes.length == 0 || subtypes[0].track_recipients;
+            return subtypes.length === 0 || subtypes[0].track_recipients;
         });
     }
 
-    /**
-     * Simulates `_notification_format` on `mail.notification`.
-     *
-     * @param {number[]} ids
-     */
-    _notificationFormat(ids) {
+    /** @param {number[]} ids */
+    _notification_format(ids) {
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
         const notifications = this._filter([["id", "in", ids]]);
         return notifications.map((notification) => {
-            const partner = this.env["res.partner"]._filter([
-                ["id", "=", notification.res_partner_id],
-            ])[0];
+            const partner = ResPartner._filter([["id", "=", notification.res_partner_id]])[0];
             return {
                 id: notification.id,
                 notification_type: notification.notification_type,

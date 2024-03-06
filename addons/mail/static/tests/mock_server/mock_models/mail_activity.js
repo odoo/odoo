@@ -1,32 +1,42 @@
 import { Domain } from "@web/core/domain";
 import { groupBy, sortBy, unique } from "@web/core/utils/arrays";
 import { deserializeDate, serializeDate, today } from "@web/core/l10n/dates";
-import { fields, models } from "@web/../tests/web_test_helpers";
-
-/**
- * @template T
- * @typedef {import("@web/../tests/web_test_helpers").KwArgs<T>} KwArgs
- */
+import { fields, models, serverState } from "@web/../tests/web_test_helpers";
+import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
+import { MailActivityType } from "./mail_activity_type";
+import { parseModelParams } from "../mail_mock_server";
 
 const { DateTime } = luxon;
 
 export class MailActivity extends models.ServerModel {
     _name = "mail.activity";
+    _views = {
+        [`search,${DEFAULT_MAIL_SEARCH_ID}`]: /* xml */ `<search/>`,
+        [`form,${DEFAULT_MAIL_VIEW_ID}`]: /* xml */ `<form/>`,
+    };
 
+    activity_type_id = fields.Many2one({
+        relation: "mail.activity.type",
+        default() {
+            return MailActivityType._records[0].id;
+        },
+    });
+    user_id = fields.Many2one({ relation: "res.users", default: () => serverState.userId });
     chaining_type = fields.Generic({ default: "suggest" });
+    activity_category = fields.Generic({ related: false }); // removes related from server to ease creating activities
+    res_model = fields.Char({ string: "Related Document Model", related: false }); // removes related from server to ease creating activities
 
-    /**
-     * Simulates `action_feedback` on `mail.activity`.
-     *
-     * @param {number[]} ids
-     */
+    /** @param {number[]} ids */
     action_feedback(ids) {
+        /** @type {import("mock_models").MailActivityType} */
+        const MailActivityType = this.env["mail.activity.type"];
+
         const activities = this._filter([["id", "in", ids]]);
-        const activityTypes = this.env["mail.activity.type"]._filter([
+        const activityTypes = MailActivityType._filter([
             ["id", "in", unique(activities.map((a) => a.activity_type_id))],
         ]);
         const activityTypeById = Object.fromEntries(
-            activityTypes.map((actType) => [actType.id, actType])
+            activityTypes._records.map((actType) => [actType.id, actType])
         );
         this.write(
             activities
@@ -41,13 +51,9 @@ export class MailActivity extends models.ServerModel {
         );
     }
 
-    /**
-     * Simulates `action_feedback_schedule_next` on `mail.activity`.
-     *
-     * @param {number[]} ids
-     */
+    /** @param {number[]} ids */
     action_feedback_schedule_next(ids) {
-        this._actionDone(ids);
+        this._action_done(ids);
         return {
             name: "Schedule an Activity",
             view_mode: "form",
@@ -57,102 +63,108 @@ export class MailActivity extends models.ServerModel {
         };
     }
 
-    /**
-     * Simulates `activity_format` on `mail.activity`.
-     *
-     * @param {number[]} ids
-     */
+    /** @param {number[]} ids */
     activity_format(ids) {
+        /** @type {import("mock_models").MailActivityType} */
+        const MailActivityType = this.env["mail.activity.type"];
+        /** @type {import("mock_models").MailTemplate} */
+        const MailTemplate = this.env["mail.template"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+
         return this.read(ids).map((record) => {
-            if (record.mail_template_ids) {
-                record.mail_template_ids = record.mail_template_ids.map((template_id) => {
-                    const template = this.env["mail.template"]._filter([
-                        ["id", "=", template_id],
-                    ])[0];
+            const activityType = record.activity_type_id
+                ? MailActivityType._records.find((r) => r.id === record.activity_type_id[0])
+                : false;
+            if (activityType) {
+                record.display_name = activityType.name;
+                record.icon = activityType.icon;
+                record.mail_template_ids = activityType.mail_template_ids.map((template_id) => {
+                    const template = MailTemplate._filter([["id", "=", template_id]])[0];
                     return {
                         id: template.id,
                         name: template.name,
                     };
                 });
             }
-            const [activityType] = record.activity_type_id
-                ? this.env["mail.activity.type"].search_read([
-                      ["id", "=", record.activity_type_id[0]],
-                  ])
-                : [false];
-            if (activityType) {
-                record.display_name = activityType.name;
-                record.icon = activityType.icon;
-            }
             if (record.summary) {
                 record.display_name = record.summary;
             }
-            const user = this.pyEnv["res.users"].searchRead([["id", "=", record.user_id[0]]])[0];
-            record.persona = this._mockResPartnerMailPartnerFormat([user.partner_id[0]]).get(
+            const user = ResUsers.search_read([["id", "=", record.user_id[0]]])[0];
+            record.persona = ResPartner.mail_partner_format([user.partner_id[0]])[
                 user.partner_id[0]
-            );
+            ];
             return record;
         });
     }
 
     /**
-     * Simulates `get_activity_data` on `mail.activity`.
-     *
-     * @param {string} resModel
+     * @param {string} res_model
      * @param {string} domain
      * @param {number} limit
      * @param {number} offset
-     * @param {boolean} fetchDone
-     * @param {KwArgs<>} [kwargs]
+     * @param {boolean} fetch_done
      */
-    get_activity_data(resModel, domain, limit, offset, fetchDone, kwargs = {}) {
-        resModel = kwargs.res_model || resModel;
-        domain = kwargs.domain || domain;
-        limit = kwargs.limit || limit || 0;
-        offset = kwargs.offset || offset || 0;
-        fetchDone = kwargs.fetch_done ?? fetchDone ?? false;
+    get_activity_data(res_model, domain, limit = 0, offset = 0, fetch_done) {
+        const kwargs = parseModelParams(
+            arguments,
+            "res_model",
+            "domain",
+            "limit",
+            "offset",
+            "fetch_done"
+        );
+        res_model = kwargs.res_model;
+        domain = kwargs.domain;
+        limit = kwargs.limit || 0;
+        offset = kwargs.offset || 0;
+        fetch_done = kwargs.fetch_done ?? false;
+
+        /** @type {import("mock_models").IrAttachment} */
+        const IrAttachment = this.env["ir.attachment"];
+        /** @type {import("mock_models").MailActivityType} */
+        const MailActivityType = this.env["mail.activity.type"];
+        /** @type {import("mock_models").MailTemplate} */
+        const MailTemplate = this.env["mail.template"];
 
         // 1. Retrieve all ongoing and completed activities according to the parameters
-        const activityTypes = this.env["mail.activity.type"]._filter([
+        const activityTypes = MailActivityType._filter([
             "|",
-            ["res_model", "=", resModel],
+            ["res_model", "=", res_model],
             ["res_model", "=", false],
         ]);
         // Remove domain term used to filter record having "done" activities (not understood by the _filter mock)
         domain = Domain.removeDomainLeaves(new Domain(domain ?? []).toList(), [
             "activity_ids.active",
         ]).toList();
-        const allRecords = this.env[resModel]._filter(domain ?? []);
+        const allRecords = this.env[res_model]._filter(domain ?? []);
         const records = limit ? allRecords.slice(offset, offset + limit) : allRecords;
-        const activityDomain = [["res_model", "=", resModel]];
+        const activityDomain = [["res_model", "=", res_model]];
         const isFiltered = domain || limit || offset;
         const domainResIds = records.map((r) => r.id);
         if (isFiltered) {
             activityDomain.push(["res_id", "in", domainResIds]);
         }
-        const allActivities = this._filter(activityDomain, { active_test: !resModel });
+        const allActivities = this._filter(activityDomain, { active_test: !res_model });
         const allOngoing = allActivities.filter((a) => a.active);
         const allCompleted = allActivities.filter((a) => !a.active);
-
         // 2. Get attachment of completed activities
         let attachmentsById;
         if (allCompleted.length) {
             const attachmentIds = allCompleted.map((a) => a.attachment_ids).flat();
             attachmentsById = attachmentIds.length
                 ? Object.fromEntries(
-                      this.env["ir.attachment"]
-                          ._filter([["id", "in", attachmentIds]])
-                          .map((a) => [a.id, a])
+                      IrAttachment._filter([["id", "in", attachmentIds]]).map((a) => [a.id, a])
                   )
                 : {};
         } else {
             attachmentsById = {};
         }
-
         // 3. Group activities per records and activity type
         const groupedCompleted = groupBy(allCompleted, (a) => [a.res_id, a.activity_type_id]);
         const groupedOngoing = groupBy(allOngoing, (a) => [a.res_id, a.activity_type_id]);
-
         // 4. Format data
         const resIdToDeadline = {};
         const resIdToDateDone = {};
@@ -215,7 +227,7 @@ export class MailActivity extends models.ServerModel {
                     ...Object.fromEntries(
                         Object.entries(
                             groupBy(ongoing, (a) =>
-                                this._computeStateFromDate(deserializeDate(a.date_deadline))
+                                this._compute_state_from_date(deserializeDate(a.date_deadline))
                             )
                         ).map(([state, activities]) => [state, activities.length])
                     ),
@@ -223,12 +235,11 @@ export class MailActivity extends models.ServerModel {
                 },
                 ids: ongoing.map((a) => a.id).concat(completed.map((a) => a.id)),
                 reporting_date: reportingDate ? reportingDate.toFormat("yyyy-LL-dd") : false,
-                state: ongoing.length ? this._computeStateFromDate(dateDeadline) : "done",
+                state: ongoing.length ? this._compute_state_from_date(dateDeadline) : "done",
                 user_assigned_ids: userAssignedIds,
                 ...attachmentsInfo,
             };
         }
-
         const ongoingResIds = sortBy(Object.keys(resIdToDeadline), (item) => resIdToDeadline[item]);
         const completedResIds = sortBy(
             Object.keys(resIdToDateDone).filter((resId) => !(resId in resIdToDeadline)),
@@ -237,9 +248,7 @@ export class MailActivity extends models.ServerModel {
         return {
             activity_types: activityTypes.map((type) => {
                 const templates = (type.mail_template_ids || []).map((template_id) => {
-                    const { id, name } = this.env["mail.template"]._filter([
-                        ["id", "=", template_id],
-                    ])[0];
+                    const { id, name } = MailTemplate._filter([["id", "=", template_id]])[0];
                     return { id, name };
                 });
                 return {
@@ -254,22 +263,16 @@ export class MailActivity extends models.ServerModel {
         };
     }
 
-    /**
-     * Simulates `_action_done` on `mail.activity`.
-     *
-     * @param {number[]} ids
-     */
-    _actionDone(ids) {
+    /** @param {number[]} ids */
+    _action_done(ids) {
         this.action_feedback(ids);
     }
 
     /**
-     * Simulate partially (time zone not supported) `_compute_state_from_date` on `mail.activity`.
-     *
      * @param {DateTime} date_deadline to convert into state
      * @returns {"today" | "planned" | "overdue"}
      */
-    _computeStateFromDate(date_deadline) {
+    _compute_state_from_date(date_deadline) {
         const now = DateTime.now();
         if (date_deadline.hasSame(now, "day")) {
             return "today";

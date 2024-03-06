@@ -1,4 +1,5 @@
 import { reactive } from "@odoo/owl";
+import { rpc as rpc2 } from "@web/core/network/rpc";
 
 export function assignDefined(obj, data, keys = Object.keys(data)) {
     for (const key of keys) {
@@ -16,6 +17,20 @@ export function assignIn(obj, data, keys = Object.keys(data)) {
         }
     }
     return obj;
+}
+
+export const mailGlobal = {
+    isInTest: false,
+    elligibleEnvs: new Set(),
+};
+
+export function rpcWithEnv(env) {
+    return function (url, params = {}, settings = {}) {
+        if (mailGlobal.isInTest && !mailGlobal.elligibleEnvs.has(env?.envId)) {
+            return new Promise(() => {});
+        }
+        return rpc2(...arguments);
+    };
 }
 
 // todo: move this some other place in the future
