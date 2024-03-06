@@ -15,7 +15,7 @@
                         isSmall="ui.isSmall"
                         placeholder="'Search products...'"
                         icon="{type: 'fa', value: 'fa-search'}"
-                        debounceMillis="100"
+                        debounceMillis="500"
                         t-if="pos.showSearchButton()" />
                     <CashierName />
                     <SaleDetailsButton t-if="hardwareProxy.printer" isHeaderButton="true"/>
