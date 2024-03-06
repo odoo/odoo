@@ -1012,23 +1012,27 @@ export class ListRenderer extends Component {
         if (this.hasSelectors) {
             colspan++;
         }
-        if (this.props.onOpenFormView) {
-            colspan++;
-        }
         return colspan;
     }
 
     getGroupPagerCellColspan(group) {
         const lastAggregateIndex = this.getLastAggregateIndex(group);
+        console.log(lastAggregateIndex)
+        let colspan;
         if (lastAggregateIndex > -1) {
-            let colspan = this.state.columns.length - lastAggregateIndex - 1;
+            colspan = this.state.columns.length - lastAggregateIndex - 1;
             if (this.displayOptionalFields) {
                 colspan++;
             }
-            return colspan;
+            console.log(colspan)
         } else {
-            return this.state.columns.length > 1 ? DEFAULT_GROUP_PAGER_COLSPAN : 0;
+            colspan = this.state.columns.length > 1 ? DEFAULT_GROUP_PAGER_COLSPAN : 0;
         }
+        if (this.props.onOpenFormView) {
+            colspan++;
+        }
+        console.log(colspan)
+        return colspan
     }
 
     getGroupPagerProps(group) {
