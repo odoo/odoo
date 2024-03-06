@@ -4,6 +4,7 @@
 from odoo import api, exceptions, fields, models, _
 from odoo.addons.mail.models.mail_alias import dot_atom_text
 
+
 class AliasDomain(models.Model):
     """ Model alias domains, now company-specific. Alias domains are email
     domains used to receive emails through catchall and bounce aliases, as
@@ -174,3 +175,26 @@ class AliasDomain(models.Model):
                 config_values['default_from'], is_email=True
             )
         return config_values
+
+    @api.model
+    def _migrate_icp_to_domain(self):
+        """ Compatibility layer helping going from pre-v17 ICP to alias
+        domains. Mainly used when base mail configuration is done with 'base'
+        module only and 'mail' is installed afterwards: configuration should
+        not be lost (odoo.sh use case). """
+        Icp = self.env['ir.config_parameter'].sudo()
+        alias_domain = Icp.get_param('mail.catchall.domain')
+        if alias_domain:
+            existing = self.search([('name', '=', alias_domain)])
+            if existing:
+                return existing
+            bounce_alias = Icp.get_param('mail.bounce.alias')
+            catchall_alias = Icp.get_param('mail.catchall.alias')
+            default_from = Icp.get_param('mail.default.from')
+            return self.create({
+                'bounce_alias': bounce_alias or 'bounce',
+                'catchall_alias': catchall_alias or 'catchall',
+                'default_from': default_from or 'notifications',
+                'name': alias_domain,
+            })
+        return self.browse()
