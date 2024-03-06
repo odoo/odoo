@@ -28,5 +28,10 @@ This module adds the batch transfer option in warehouse management
         'data/stock_picking_batch_demo.xml',
     ],
     'installable': True,
+    'assets': {
+        'web.assets_backend': [
+            'stock_picking_batch/static/src/scss/*.scss',
+        ]
+    },
     'license': 'LGPL-3',
 }
