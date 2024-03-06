@@ -1,11 +1,7 @@
 /** @odoo-module */
 
-import {
-    adapt_price_unit_to_another_taxes,
-    computeSingleLineTaxes,
-    eval_taxes_computation_prepare_context,
-    eval_taxes_computation_prepare_product_values,
-} from "@account/helpers/account_tax";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
+
 
 export const getPriceUnitAfterFiscalPosition = (
     taxes,
@@ -20,9 +16,9 @@ export const getPriceUnitAfterFiscalPosition = (
     }
 
     const newTaxes = getTaxesAfterFiscalPosition(taxes, fiscalPosition, models);
-    return adapt_price_unit_to_another_taxes(
+    return accountTaxHelpers.adapt_price_unit_to_another_taxes(
         priceUnit,
-        eval_taxes_computation_prepare_product_values(productDefaultValues, product),
+        accountTaxHelpers.eval_taxes_computation_prepare_product_values(productDefaultValues, product),
         taxes,
         newTaxes
     );
@@ -37,10 +33,10 @@ export const getTaxesValues = (
     company,
     currency
 ) => {
-    const evalContext = eval_taxes_computation_prepare_context(
+    const evalContext = accountTaxHelpers.eval_taxes_computation_prepare_context(
         priceUnit,
         quantity,
-        eval_taxes_computation_prepare_product_values(productDefaultValues, product),
+        accountTaxHelpers.eval_taxes_computation_prepare_product_values(productDefaultValues, product),
         {
             rounding_method: company.tax_calculation_rounding_method,
             precision_rounding: currency.rounding,

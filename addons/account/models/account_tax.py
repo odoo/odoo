@@ -1233,6 +1233,7 @@ class AccountTax(models.Model):
         ):
             return price_unit
 
+        # Find the price unit without tax.
         taxes_computation = self._prepare_taxes_computation(original_tax_values_list)
         evaluation_context = self._eval_taxes_computation_prepare_context(
             price_unit,
@@ -1242,6 +1243,8 @@ class AccountTax(models.Model):
         )
         taxes_computation = self._eval_taxes_computation(taxes_computation, evaluation_context)
         price_unit = taxes_computation['total_excluded']
+
+        # Find the new price unit after applying the price included taxes.
         taxes_computation = self._prepare_taxes_computation(new_tax_values_list)
         evaluation_context = self._eval_taxes_computation_prepare_context(
             price_unit,
