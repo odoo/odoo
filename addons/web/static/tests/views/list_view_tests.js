@@ -2141,6 +2141,60 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "basic grouped list rendering 4 cols with aggregates, selector and openFormView",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
+                    <tree open_form_view="True">
+                        <field name="datetime"/>
+                        <field name="int_field" sum="Sum1"/>
+                        <field name="bar"/>
+                        <field name="qux" sum="Sum2" optional="hide"/>
+                    </tree>`,
+                groupBy: ["bar"],
+            });
+
+            assert.strictEqual(
+                target.querySelector(".o_group_header th").getAttribute("colspan"), "2"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_group_header th:last-child").getAttribute("colspan"),
+                "2",
+            );
+        }
+    );
+
+    QUnit.test(
+        "basic grouped list rendering 4 cols with aggregates, selector, optional and openFormView",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
+                    <tree open_form_view="True">
+                        <field name="datetime"/>
+                        <field name="int_field" sum="Sum1"/>
+                        <field name="bar"/>
+                        <field name="qux" sum="Sum2" optional="show"/>
+                    </tree>`,
+                groupBy: ["bar"],
+            });
+
+            assert.strictEqual(
+                target.querySelector(".o_group_header th").getAttribute("colspan"), "2"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_group_header th:last-child").getAttribute("colspan"),
+                "1",
+            );
+        }
+    );
+
     QUnit.test("group a list view with the aggregable field 'value'", async function (assert) {
         serverData.models.foo.fields.value = {
             string: "Value",
