@@ -252,3 +252,27 @@ export function zip(iter1, iter2, fill = false) {
 export function zipWith(iter1, iter2, mapFn) {
     return zip(iter1, iter2).map(([e1, e2]) => mapFn(e1, e2));
 }
+
+export function* rangeAround(iter, targetIndex, offsetLeft = 1, offsetRight = offsetLeft) {
+    const start = Math.max(targetIndex - offsetLeft, 0);
+    const end = targetIndex + offsetRight + 1;
+
+    if (!Array.isArray(iter)) {
+        const iterator = iter[Symbol.iterator]();
+        let index = 0;
+        while (true) {
+            const { value, done } = iterator.next();
+            if (done) {
+                break;
+            }
+            if (index >= start && index < end) {
+                yield value;
+            }
+            index++;
+        }
+    } else {
+        for (let i = start; i < Math.min(end, iter.length); i++) {
+            yield iter[i];
+        }
+    }
+}

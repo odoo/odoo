@@ -39,7 +39,6 @@ class Macro {
         this.name = descr.name || "anonymous";
         this.timeoutDuration = descr.timeout || 0;
         this.timeout = null;
-        this.currentIndex = 0;
         this.checkDelay = descr.checkDelay || 0;
         this.isComplete = false;
         this.steps = descr.steps;
@@ -49,11 +48,25 @@ class Macro {
         this.setTimer();
     }
 
+    nextStep() {
+        if (!this._stepIter) {
+            this._stepIter = this.steps[Symbol.iterator]();
+        }
+        const { done, value } = this._stepIter.next();
+        if (done) {
+            this._stepIter = null;
+            this.currentStep = undefined;
+            return;
+        }
+        this.currentStep = value;
+        return this.currentStep;
+    }
+
     async advance() {
         if (this.isComplete) {
             return;
         }
-        const step = this.steps[this.currentIndex];
+        const step = this.currentStep || this.nextStep();
         const [proceedToAction, el] = this.checkTrigger(step);
         if (proceedToAction) {
             this.safeCall(this.onStep, el, step);
@@ -61,8 +74,7 @@ class Macro {
             if (!actionResult) {
                 // If falsy action result, it means the action worked properly.
                 // So we can proceed to the next step.
-                this.currentIndex++;
-                if (this.currentIndex === this.steps.length) {
+                if (this.nextStep() === undefined) {
                     this.isComplete = true;
                     browser.clearTimeout(this.timeout);
                 } else {
@@ -133,9 +145,7 @@ class Macro {
             browser.clearTimeout(this.timeout);
             this.timeout = browser.setTimeout(() => {
                 if (this.onTimeout) {
-                    const index = this.currentIndex;
-                    const step = this.steps[index];
-                    this.safeCall(this.onTimeout, step, index);
+                    this.safeCall(this.onTimeout, this.currentStep);
                 } else {
                     const error = new TimeoutError("Step timeout");
                     this.handleError(error);
@@ -150,9 +160,7 @@ class Macro {
         this.isComplete = true;
         browser.clearTimeout(this.timeout);
         if (this.onError) {
-            const index = this.currentIndex;
-            const step = this.steps[index];
-            this.onError(error, step, index);
+            this.onError(error, this.currentStep);
         } else {
             console.error(error);
         }
