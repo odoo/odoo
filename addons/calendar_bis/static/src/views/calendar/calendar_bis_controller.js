@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { _t } from "@web/core/l10n/translation";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { CalendarQuickCreate } from "@calendar_bis/views/form/calendar_quick_create";
 import { user } from "@web/core/user";
