@@ -1020,7 +1020,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                     # link all move lines to record 0 (the one we will keep).
                     moves.mapped('move_line_ids').write({'move_id': moves[0].id})
                     # merge move data
-                    moves[0].write(moves._merge_moves_fields())
+                    merge_extra = self.env.context.get('merge_extra') and bool(merge_into)
+                    moves[0].write(moves.with_context(merge_extra=merge_extra)._merge_moves_fields())
                     # update merged moves dicts
                     moves_to_unlink |= moves[1:]
                     merged_moves |= moves[0]

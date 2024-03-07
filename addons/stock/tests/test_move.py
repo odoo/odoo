@@ -649,6 +649,29 @@ class StockMove(TransactionCase):
         quants = self.gather_relevant(self.product_serial, self.stock_location)
         self.assertEqual(len(quants), 0)
 
+    def test_multi_step_update(self):
+        """
+            multi step reciept update done quantity
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.reception_steps = 'two_steps'
+
+        move_input = self.env['stock.move'].create({
+            'name': self.product.name,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'warehouse_id': warehouse.id,
+        })
+        move_input._action_confirm()
+        move_input.move_line_ids.quantity = 9
+        move_input.picked = True
+        move_input._action_done()
+
+        self.assertEqual(move_input.move_dest_ids.product_uom_qty, 9)
+
     def test_mixed_tracking_reservation_8(self):
         """ Send one product tracked by lot to a customer. In your stock, there are one tracked and
         one untracked quant. Reserve the move, then edit the lot to one not present in stock. The
