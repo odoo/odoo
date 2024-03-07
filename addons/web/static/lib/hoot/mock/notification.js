@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { makePublicListeners } from "../hoot_utils";
-import { PERMISSIONS } from "./navigator";
+import { currentPermissions } from "./navigator";
 
 //-----------------------------------------------------------------------------
 // Global
@@ -35,7 +35,7 @@ export function flushNotifications() {
 export class MockNotification extends EventTarget {
     /** @type {NotificationPermission} */
     static get permission() {
-        return PERMISSIONS.notifications.state;
+        return currentPermissions.notifications.state;
     }
 
     /** @type {NotificationPermission} */

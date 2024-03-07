@@ -5,7 +5,7 @@
  */
 
 export { setRandomSeed } from "./mock/math";
-export { mockPermission } from "./mock/navigator";
+export { mockPermission, mockUserAgent } from "./mock/navigator";
 export { mockFetch, mockWebSocket, mockWorker } from "./mock/network";
 export { flushNotifications } from "./mock/notification";
 export {
@@ -21,4 +21,4 @@ export {
     setFrameRate,
     tick,
 } from "./mock/time";
-export { mockLocation } from "./mock/window";
+export { mockLocation, mockTouch } from "./mock/window";
