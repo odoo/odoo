@@ -125,6 +125,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             ProductScreen.totalAmountIs("4.40"),
 
             // Test transfering an order
+            ProductScreen.controlButtonMore(),
             ProductScreen.controlButton("Transfer"),
             FloorScreen.clickTable("4"),
 
@@ -148,6 +149,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             FloorScreen.clickTable("2"),
             ProductScreen.isShown(),
             ProductScreen.orderIsEmpty(),
+            ProductScreen.controlButtonMore(),
             ProductScreen.controlButton("Transfer"),
             FloorScreen.clickTable("4"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
@@ -191,6 +193,7 @@ registry.category("web_tour.tours").add("BillScreenTour", {
 function mergeTableHelpers(childName, parentName) {
     return [
         FloorScreen.clickTable(childName),
+        ProductScreen.controlButton("More"),
         ProductScreen.controlButton("Merge"),
         {
             content: `click the merge button`,

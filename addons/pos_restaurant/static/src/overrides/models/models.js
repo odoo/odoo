@@ -60,6 +60,7 @@ patch(Order.prototype, {
     },
     setBooked(booked) {
         this.booked = booked;
+
         if (booked) {
             this.save_to_db();
             this.pos.ordersToUpdateSet.add(this);

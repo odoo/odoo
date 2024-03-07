@@ -6,6 +6,7 @@ import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
 import * as PartnerList from "@point_of_sale/../tests/tours/helpers/PartnerListTourMethods";
 import * as TextInputPopup from "@point_of_sale/../tests/tours/helpers/TextInputPopupTourMethods";
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
+import * as Chrome from "./ChromeTourMethods";
 
 export function clickLine(productName, quantity = "1.0") {
     return inLeftSide([
@@ -117,15 +118,7 @@ export function clickCustomer(name) {
     return [PartnerList.clickPartner(name), goBackToMainScreen()];
 }
 export function clickRefund() {
-    return [
-        clickReview(),
-        {
-            content: "click more button",
-            trigger: ".mobile-more-button",
-            mobile: true,
-        },
-        controlButton("Refund"),
-    ];
+    return [clickReview(), controlButtonMore(), controlButton("Refund")];
 }
 export function controlButtonTrigger(name = "") {
     return `.control-buttons button:contains("${name}")`;
@@ -136,13 +129,25 @@ export function controlButton(name) {
         trigger: controlButtonTrigger(name),
     };
 }
-export function selectPriceList(name) {
-    return inLeftSide([
+
+export function controlButtonMore() {
+    return [
         {
             content: "click more button",
             trigger: ".mobile-more-button",
             mobile: true,
         },
+        {
+            content: "click more button",
+            trigger: controlButtonTrigger("More..."),
+            mobile: false,
+        },
+    ];
+}
+
+export function selectPriceList(name) {
+    return inLeftSide([
+        ...controlButtonMore(),
         { trigger: ".o_pricelist_button" },
         {
             content: `select price list '${name}'`,
@@ -162,11 +167,7 @@ export function enterOpeningAmount(amount) {
 export function changeFiscalPosition(name) {
     return [
         clickReview(),
-        {
-            content: "click more button",
-            trigger: ".mobile-more-button",
-            mobile: true,
-        },
+        ...controlButtonMore(),
         {
             content: "click fiscal position button",
             trigger: ".o_fiscal_position_button",
@@ -379,11 +380,7 @@ export function addOrderline(productName, quantity = 1, unitPrice, expectedTotal
 export function addCustomerNote(note) {
     return inLeftSide(
         [
-            {
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                mobile: true,
-            },
+            controlButtonMore(),
             controlButton("Customer Note"),
             TextInputPopup.inputText(note),
             Dialog.confirm(),
@@ -404,6 +401,21 @@ export function checkOrderlinesNumber(number) {
                     throw new Error(`Expected ${number} orderlines, got ${orderline_amount}`);
                 }
             },
+        },
+    ];
+}
+
+export function closePos() {
+    return [
+        Chrome.clickMenuButton(),
+        {
+            content: "open closing the Point of Sale frontend popup",
+            trigger: ".close-button",
+        },
+        {
+            content: "close the Point of Sale frontend",
+            trigger: ".close-pos-popup .button:contains('Discard')",
+            run: function () {}, //it's a check,
         },
     ];
 }

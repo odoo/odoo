@@ -158,6 +158,7 @@ registry.category("web_tour.tours").add("PosLoyaltyTour2", {
             PosLoyalty.removeRewardLine("90% on the cheapest product"),
             PosLoyalty.hasRewardLine("10% on your order", "-1.91"),
             PosLoyalty.orderTotalIs("17.23"),
+            ProductScreen.controlButtonMore(),
             ProductScreen.controlButton("Reset Programs"),
             PosLoyalty.hasRewardLine("90% on the cheapest product", "-2.87"),
             PosLoyalty.orderTotalIs("16.27"),

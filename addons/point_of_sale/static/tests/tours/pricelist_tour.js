@@ -122,11 +122,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
                 trigger: ".btn-switchpane.review-button",
                 mobile: true,
             },
-            {
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                mobile: true,
-            },
+            ...ProductScreen.controlButtonMore(),
             {
                 content: "click pricelist button",
                 trigger: ".control-buttons button.o_pricelist_button",
@@ -148,11 +144,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
                 content: "select Deco Addict",
                 trigger: ".partner-line:contains('Deco Addict')",
             },
-            {
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                mobile: true,
-            },
+            ...ProductScreen.controlButtonMore(),
             {
                 content: "click pricelist button",
                 trigger: ".control-buttons button.o_pricelist_button",
@@ -171,11 +163,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
                 content: "select Lumber Inc",
                 trigger: ".partner-line:contains('Lumber Inc')",
             },
-            {
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                mobile: true,
-            },
+            ...ProductScreen.controlButtonMore(),
             {
                 content: "click pricelist button",
                 trigger: ".control-buttons button.o_pricelist_button",
@@ -207,11 +195,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
                 quantity: "1.0",
                 withClass: ".selected",
             }),
-            {
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                mobile: true,
-            },
+            ...ProductScreen.controlButtonMore(),
             {
                 content: "click pricelist button",
                 trigger: ".control-buttons button.o_pricelist_button",
@@ -253,11 +237,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
             ...Order.hasLine({ productName: "Small Shelf", price: "5.0", withClass: ".selected" }),
             Numpad.click("Qty"),
             Numpad.isActive("Qty"),
-            {
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                mobile: true,
-            },
+            ...ProductScreen.controlButtonMore(),
             {
                 content: "click pricelist button",
                 trigger: ".control-buttons button.o_pricelist_button",
@@ -268,11 +248,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
             },
             // verify that the boni shelf have been recomputed and the shelf have not (their price was manually overridden)
             Order.hasTotal(`$ 8.96`),
-            {
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                mobile: true,
-            },
+            ...ProductScreen.controlButtonMore(),
             {
                 content: "click pricelist button",
                 trigger: ".control-buttons button.o_pricelist_button",

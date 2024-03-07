@@ -24,6 +24,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
             ProductScreen.addOrderline("Minute Maid", "3", "2", "6.0"),
             ProductScreen.addOrderline("Coca-Cola", "1", "2", "2.0"),
+            ProductScreen.controlButtonMore(),
             ProductScreen.controlButton("Split"),
 
             // Check if the screen contains all the orderlines
@@ -71,6 +72,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             ProductScreen.addOrderline("Coca-Cola", "1", "2.0"),
             FloorScreen.backToFloor(),
             FloorScreen.clickTable("2"),
+            ProductScreen.controlButtonMore(),
             ProductScreen.controlButton("Split"),
 
             SplitBillScreen.clickOrderline("Water"),
@@ -103,6 +105,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
             Dialog.confirm("Open session"),
             FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Water", "2", "2", "4.00"),
+            ProductScreen.controlButtonMore(),
             ProductScreen.controlButton("Split"),
 
             // Check if the screen contains all the orderlines
@@ -156,6 +159,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4PosCombo", {
             // The water and the first combo will go in the new splitted order
             // we will then check if the rest of the items from this combo
             // are automatically sent to the new order.
+            ProductScreen.controlButtonMore(),
             ProductScreen.controlButton("Split"),
             SplitBillScreen.clickOrderline("Water"),
             SplitBillScreen.clickOrderline("Combo Product 3"),

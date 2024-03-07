@@ -6,7 +6,7 @@
                 class="leftpane d-flex flex-column border-end bg-200" >
                 <OrderSummary />
                 <div class="pads border-top">
-                    <ControlButtons t-if="!ui.isSmall" />
+                    <ControlButtons t-if="!ui.isSmall" onClickMore.bind="displayAllControlPopup"/>
                     <div class="subpads d-flex">
                         <ActionpadWidget
                             partner="currentOrder?.get_partner()"

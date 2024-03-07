@@ -19,6 +19,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             // Test TransferOrderButton
             FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
+            ProductScreen.controlButtonMore(),
             ProductScreen.controlButton("Transfer"),
             FloorScreen.clickTable("4"),
             FloorScreen.backToFloor(),
@@ -28,9 +29,11 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             FloorScreen.clickTable("4"),
 
             // Test SplitBillButton
+            ProductScreen.controlButtonMore(),
             ProductScreen.controlButton("Split"),
             SplitBillScreen.clickBack(),
 
+            ProductScreen.controlButtonMore(),
             ProductScreen.controlButton("Internal Note"),
             TextInputPopup.inputText("test note"),
             Dialog.confirm(),
@@ -49,6 +52,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             Dialog.cancel(),
 
             // Test GuestButton
+            ProductScreen.controlButtonMore(),
             ProductScreen.controlButton("Guests"),
             NumberPopup.enterValue("15"),
             NumberPopup.isShown("15"),
