@@ -1,7 +1,9 @@
 import { getFixture, mountOnFixture } from "@odoo/hoot";
+import { queryFirst } from "@odoo/hoot-dom";
 import { App } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { getPopoverForTarget } from "@web/core/popover/popover";
 import { getTemplate } from "@web/core/templates";
 import { getMockEnv, makeMockEnv } from "./env_test_helpers";
 
@@ -29,6 +31,23 @@ export function findComponent(parent, predicate) {
         queue.unshift(...Object.values(children));
     }
     return null;
+}
+
+/**
+ * Returns the dropdown menu for a specific toggler.
+ *
+ * @param {import("@odoo/hoot-dom").Target} togglerSelector
+* @returns {HTMLElement | undefined}
+*/
+export function getDropdownMenu(togglerSelector) {
+    let el = queryFirst(togglerSelector);
+    if (el && !el.classList.contains("o-dropdown")) {
+        el = el.querySelector(".o-dropdown");
+    }
+    if (!el) {
+        throw new Error(`getDropdownMenu: Could not find element "${togglerSelector}".`);
+    }
+    return getPopoverForTarget(el);
 }
 
 /**
