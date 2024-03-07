@@ -23,7 +23,7 @@ class MrpProductionSplit(models.TransientModel):
     product_uom_id = fields.Many2one(related='production_id.product_uom_id')
     production_capacity = fields.Float(related='production_id.production_capacity')
     counter = fields.Integer(
-        "Split #", default=0, compute="_compute_counter",
+        "Split #", default=2, compute="_compute_counter",
         store=True, readonly=False)
     production_detailed_vals_ids = fields.One2many(
         'mrp.production.split.line', 'mrp_production_split_id',
