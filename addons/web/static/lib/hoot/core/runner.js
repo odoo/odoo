@@ -19,9 +19,9 @@ import {
     normalize,
 } from "../hoot_utils";
 import { MockMath, internalRandom } from "../mock/math";
-import { cleanupNavigator } from "../mock/navigator";
+import { cleanupNavigator, mockUserAgent } from "../mock/navigator";
 import { cleanupTime, setFrameRate } from "../mock/time";
-import { cleanupWindow, watchListeners } from "../mock/window";
+import { cleanupWindow, mockTouch, watchListeners } from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
 import { makeExpect } from "./expect";
 import { makeFixtureManager } from "./fixture";
@@ -46,6 +46,15 @@ import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
  * @typedef {Suite | Test} Job
  *
  * @typedef {import("./job").JobConfig} JobConfig
+ *
+ * @typedef {{
+ *  browser?: import("../mock/navigator").Browser;
+ *  icon?: string;
+ *  label: string;
+ *  platform?: import("../mock/navigator").Platform;
+ *  tags?: string[];
+ *  touch?: boolean;
+ * }} Preset
  *
  * @typedef {{
  *  auto?: boolean;
@@ -117,6 +126,41 @@ const formatAssertions = (assertions) => {
     }
     return lines.join("\n");
 };
+
+/**
+ * @returns {Map<Job, Preset>}
+ */
+const getDefaultPresets = () =>
+    new Map([
+        [
+            "",
+            {
+                label: "No preset",
+            },
+        ],
+        [
+            "desktop",
+            {
+                browser: "chrome",
+                icon: "fa-desktop",
+                label: "Desktop",
+                platform: "linux",
+                tags: ["-mobile"],
+                touch: false,
+            },
+        ],
+        [
+            "mobile",
+            {
+                browser: "chrome",
+                icon: "fa-mobile",
+                label: "Mobile",
+                platform: "android",
+                tags: ["-desktop"],
+                touch: true,
+            },
+        ],
+    ]);
 
 const noop = () => {};
 
@@ -195,6 +239,7 @@ export class TestRunner {
     expect;
     /** @type {ReturnType<typeof makeExpect>[1]} */
     expectHooks;
+    presets = reactive(getDefaultPresets());
     /** @type {Suite[]} */
     rootSuites = [];
     /** @type {Map<string, Suite>} */
@@ -261,6 +306,7 @@ export class TestRunner {
     #hasIncludeFilter = false;
     /** @type {(() => MaybePromise<void>)[]} */
     #missedCallbacks = [];
+    #prepared = false;
     /** @type {Suite[]} */
     #suiteStack = [];
     #startTime = 0;
@@ -601,7 +647,8 @@ export class TestRunner {
         this.#dry = true;
 
         await callback();
-        this.#currentJobs = this.prepareJobs();
+
+        this.#prepareRunner();
 
         this.#dry = false;
 
@@ -709,6 +756,14 @@ export class TestRunner {
     }
 
     /**
+     * @param {string} name
+     * @param {Preset} preset
+     */
+    registerPreset(name, preset) {
+        this.presets.set(name, preset);
+    }
+
+    /**
      * Boot function starting all registered tests and suites.
      *
      * The returned promise is resolved after all tests (and teardowns) have been
@@ -731,10 +786,8 @@ export class TestRunner {
         }
         this.state.status = "running";
 
+        this.#prepareRunner();
         this.#startTime = performance.now();
-        if (!this.#currentJobs.length) {
-            this.#currentJobs = this.prepareJobs();
-        }
 
         // Config log
         const table = { ...toRaw(this.config) };
@@ -1192,6 +1245,23 @@ export class TestRunner {
     }
 
     /**
+     * @param {Preset} preset
+     */
+    #applyPreset(preset) {
+        if (preset.tags?.length) {
+            this.#include("tags", preset.tags, true);
+        }
+        const { browser, platform } = preset;
+        if (browser || platform) {
+            mockUserAgent(browser, platform);
+        }
+
+        if (typeof preset.touch === "boolean") {
+            mockTouch(preset.touch);
+        }
+    }
+
+    /**
      * @param {Job} job
      */
     #applyTagModifiers(job) {
@@ -1374,6 +1444,23 @@ export class TestRunner {
         }
 
         return false;
+    }
+
+    #prepareRunner() {
+        if (this.#prepared) {
+            return;
+        }
+        this.#prepared = true;
+
+        if (this.config.preset) {
+            const preset = this.presets.get(this.config.preset);
+            if (!preset) {
+                throw new HootError(`unknown preset: "${this.config.preset}"`);
+            }
+            this.#applyPreset(preset);
+        }
+
+        this.#currentJobs = this.prepareJobs();
     }
 
     /**

@@ -52,6 +52,7 @@ export const mountOnFixture = runner.fixture.mount;
 export const createJobScopedGetter = runner.exportFn(runner.createJobScopedGetter);
 export const dryRun = runner.exportFn(runner.dryRun);
 export const getCurrent = runner.exportFn(runner.getCurrent);
+export const registerPreset = runner.exportFn(runner.registerPreset);
 export const start = runner.exportFn(runner.start);
 
 export { makeExpect } from "./core/expect";
