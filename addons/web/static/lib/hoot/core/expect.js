@@ -30,7 +30,16 @@ import { logger } from "./logger";
 import { Test } from "./test";
 
 /**
+ *
+ * @typedef {{
+ *  aborted: boolean;
+ * }} AfterTestOptions
+ *
  * @typedef {import("../hoot_utils").ArgumentType} ArgumentType
+ *
+ * @typedef {{
+ *  headless: boolean;
+ * }} ExpectBuilderParams
  *
  * @typedef {{
  *  message?: string;
@@ -78,10 +87,10 @@ const { Boolean, Error, Object, Promise, TypeError, performance } = globalThis;
 //-----------------------------------------------------------------------------
 
 /**
- * @param {import("./runner").TestRunner} runner
  * @param {Test} test
+ * @param {AfterTestOptions} options
  */
-const afterTest = (runner, test) => {
+const afterTest = (test, options) => {
     currentResult.duration = performance.now() - currentResult.ts;
 
     // Steps
@@ -155,7 +164,7 @@ const afterTest = (runner, test) => {
         }
     }
 
-    if (runner.aborted) {
+    if (options?.aborted) {
         registerAssertion(
             new Assertion({
                 label: "aborted",
@@ -166,7 +175,7 @@ const afterTest = (runner, test) => {
     }
 
     // Set test status
-    if (runner.aborted) {
+    if (options?.aborted) {
         test.status = Test.ABORTED;
     } else if (currentResult.pass) {
         test.status ||= Test.PASSED;
@@ -217,10 +226,9 @@ const assertions = (expected) => {
 };
 
 /**
- * @param {import("./runner").TestRunner} runner
  * @param {Test} test
  */
-const beforeTest = (runner, test) => {
+const beforeTest = (test) => {
     test.results.push(new TestResult());
 
     // Must be retrieved from the list to be proxified
@@ -378,9 +386,10 @@ let currentStack = "";
 //-----------------------------------------------------------------------------
 
 /**
- * @param {import("./runner").TestRunner} runner
+ * @param {ExpectBuilderParams} params
+ * @returns {[typeof enrichedExpect, typeof expectHooks]}
  */
-export function makeExpectFunction(runner) {
+export function makeExpect(params) {
     /**
      * Main entry point to write assertions in tests.
      *
@@ -399,18 +408,21 @@ export function makeExpectFunction(runner) {
             throw scopeError("expect");
         }
 
-        return new Matchers(received, {}, runner.config.headless);
+        return new Matchers(received, {}, params.headless);
     }
 
-    return Object.assign(expect, {
+    const enrichedExpect = Object.assign(expect, {
         assertions,
         errors,
         extend,
         step,
-        // Private members
-        __after: afterTest,
-        __before: beforeTest,
     });
+    const expectHooks = {
+        after: afterTest,
+        before: beforeTest,
+    };
+
+    return [enrichedExpect, expectHooks];
 }
 
 export class Assertion {
