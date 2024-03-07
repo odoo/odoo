@@ -90,7 +90,10 @@ class ResPartner(models.Model):
         """
         self.ensure_one()
 
-        edi_identification = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
-        self.account_peppol_validity_last_check = fields.Date.context_today(self)
-        self.account_peppol_is_endpoint_valid = self._check_peppol_participant_exists(edi_identification)
+        if not self.peppol_eas and self.peppol_endpoint:
+            self.account_peppol_is_endpoint_valid = False
+        else:
+            edi_identification = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
+            self.account_peppol_validity_last_check = fields.Date.context_today(self)
+            self.account_peppol_is_endpoint_valid = self._check_peppol_participant_exists(edi_identification)
         return False
