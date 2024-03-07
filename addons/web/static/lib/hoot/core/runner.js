@@ -23,7 +23,7 @@ import { cleanupNavigator } from "../mock/navigator";
 import { cleanupTime, setFrameRate } from "../mock/time";
 import { cleanupWindow, watchListeners } from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
-import { makeExpectFunction } from "./expect";
+import { makeExpect } from "./expect";
 import { makeFixtureManager } from "./fixture";
 import { logLevels, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
@@ -191,6 +191,10 @@ export class TestRunner {
     aborted = false;
     /** @type {boolean | Test | Suite} */
     debug = false;
+    /** @type {ReturnType<typeof makeExpect>[0]} */
+    expect;
+    /** @type {ReturnType<typeof makeExpect>[1]} */
+    expectHooks;
     /** @type {Suite[]} */
     rootSuites = [];
     /** @type {Map<string, Suite>} */
@@ -272,12 +276,11 @@ export class TestRunner {
     constructor(config) {
         // Main test methods
         this.describe = this.#addConfigurators(this.addSuite, () => this.#suiteStack.at(-1));
-        this.expect = makeExpectFunction(this);
         this.fixture = makeFixtureManager(this);
         this.test = this.#addConfigurators(this.addTest, false);
 
         const initialConfig = { ...DEFAULT_CONFIG, ...config };
-        this.config = reactive({ ...initialConfig, ...urlParams }, () => {
+        const reactiveConfig = reactive({ ...initialConfig, ...urlParams }, () => {
             setParams(
                 Object.fromEntries(
                     Object.entries(this.config).map(([key, value]) => [
@@ -287,6 +290,14 @@ export class TestRunner {
                 )
             );
         });
+
+        [this.expect, this.expectHooks] = makeExpect({
+            get headless() {
+                return reactiveConfig.headless;
+            },
+        });
+
+        this.config = reactiveConfig;
 
         // Debug
         this.debug = Boolean(this.config.debugTest);
@@ -851,7 +862,7 @@ export class TestRunner {
                 await callbackRegistry.call("before-test", test);
             }
 
-            this.expect.__before(this, test);
+            this.expectHooks.before(test);
 
             let timeoutId = 0;
 
@@ -906,7 +917,7 @@ export class TestRunner {
             }
 
             // Log test errors and increment counters
-            this.expect.__after(this, test);
+            this.expectHooks.after(test, this);
             test.visited++;
             if (lastResults.pass) {
                 logger.logTest(test);
