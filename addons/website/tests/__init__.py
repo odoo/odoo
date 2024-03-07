@@ -9,8 +9,8 @@ from . import test_client_action
 from . import test_configurator
 from . import test_controllers
 from . import test_converter
-from . import test_custom_snippets
 from . import test_crawl
+from . import test_custom_snippets
 from . import test_disable_unused_snippets_assets
 from . import test_fuzzy
 from . import test_get_current_website
