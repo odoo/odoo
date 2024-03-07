@@ -117,8 +117,10 @@ export class FileSelectorControlPanel extends Component {
             showUrlInput: false,
             urlInput: '',
             isValidUrl: false,
-            isValidFileFormat: false
+            isValidFileFormat: false,
+            isValidatingUrl: false,
         });
+        this.debouncedValidateUrl = useDebounced(this.props.validateUrl, 500);
 
         this.fileInput = useRef('file-input');
     }
@@ -140,10 +142,12 @@ export class FileSelectorControlPanel extends Component {
         }
     }
 
-    onUrlInput(ev) {
-        const { isValidUrl, isValidFileFormat } = this.props.validateUrl(ev.target.value);
+    async onUrlInput(ev) {
+        this.state.isValidatingUrl = true;
+        const { isValidUrl, isValidFileFormat } = await this.debouncedValidateUrl(ev.target.value);
         this.state.isValidFileFormat = isValidFileFormat;
         this.state.isValidUrl = isValidUrl;
+        this.state.isValidatingUrl = false;
     }
 
     onClickUpload() {
