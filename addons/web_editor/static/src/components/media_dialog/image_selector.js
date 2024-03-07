@@ -187,10 +187,15 @@ export class ImageSelector extends FileSelector {
         });
     }
 
-    validateUrl(...args) {
+    async validateUrl(...args) {
         const { isValidUrl, path } = super.validateUrl(...args);
-        const isValidFileFormat = IMAGE_EXTENSIONS.some(format => path.endsWith(format));
-        return { isValidFileFormat, isValidUrl };
+        const isValidFileFormat = isValidUrl && await new Promise(resolve => {
+            const img = new Image();
+            img.src = path;
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+        });
+        return { isValidUrl, isValidFileFormat };
     }
 
     isInitialMedia(attachment) {
