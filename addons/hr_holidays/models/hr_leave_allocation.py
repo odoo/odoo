@@ -136,6 +136,7 @@ class HolidaysAllocation(models.Model):
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
     taken_leave_ids = fields.One2many('hr.leave', 'holiday_allocation_id', domain="[('state', 'in', ['confirm', 'validate1', 'validate'])]")
+    employee_info = fields.Char(string="Employee Information", compute='_compute_employee_info', readonly=True)
 
     _sql_constraints = [
         ('type_value',
@@ -516,6 +517,20 @@ class HolidaysAllocation(models.Model):
             '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()),
             '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
         allocations._process_accrual_plans()
+
+    @api.depends('employee_id', 'holiday_status_id')
+    def _compute_employee_info(self):
+        allocation_no_info = self.filtered(lambda a: not a.employee_id or len(a.employee_id) > 1)
+        allocation_no_info.employee_info = False
+        self = self - allocation_no_info
+
+        data_days = self.holiday_status_id.get_employees_days(self.employee_id.ids)
+        for allocation in self:
+            data = data_days[allocation.employee_id.id][allocation.holiday_status_id.id]
+            allocation.employee_info = _('%g remaining out of %g') % (
+                float_round(data.get('virtual_remaining_leaves', 0), precision_digits=2) or 0.0,
+                float_round(data.get('max_leaves', 0), precision_digits=2) or 0.0,
+            ) + (_(' hours') if allocation.type_request_unit == 'hour' else _(' days'))
 
     ####################################################
     # ORM Overrides methods
