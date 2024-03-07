@@ -18,7 +18,7 @@ class StockValuationLayer(models.Model):
 
     company_id = fields.Many2one('res.company', 'Company', readonly=True, required=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True, required=True, check_company=True, auto_join=True)
-    categ_id = fields.Many2one('product.category', related='product_id.categ_id', store=True)
+    categ_id = fields.Many2one('product.category', related='product_id.categ_id')
     product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id')
     quantity = fields.Float('Quantity', readonly=True, digits='Product Unit of Measure')
     uom_id = fields.Many2one(related='product_id.uom_id', readonly=True, required=True)

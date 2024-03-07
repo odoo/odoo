@@ -557,7 +557,7 @@ class IrActionsServer(models.Model):
     model_id = fields.Many2one('ir.model', string='Model', required=True, ondelete='cascade', index=True,
                                help="Model on which the server action runs.")
     available_model_ids = fields.Many2many('ir.model', string='Available Models', compute='_compute_available_model_ids', store=False)
-    model_name = fields.Char(related='model_id.model', string='Model Name', readonly=True, store=True)
+    model_name = fields.Char(related='model_id.model', string='Model Name')
     # Python code
     code = fields.Text(string='Python Code', groups='base.group_system',
                        default=DEFAULT_PYTHON_CODE,

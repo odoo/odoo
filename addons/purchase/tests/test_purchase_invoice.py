@@ -939,6 +939,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         prev_moves = self.env['account.move'].search([])
         self.init_purchase(confirm=True, products=[self.product_order, self.product_order_var_name])
         self.env['purchase.order.line'].flush_model()
+        self.env['purchase.order'].flush_model()
 
         match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
         match_lines.action_match_lines()
