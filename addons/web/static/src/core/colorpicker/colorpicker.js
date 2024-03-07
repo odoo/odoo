@@ -79,6 +79,7 @@ export class Colorpicker extends Component {
                 this._onMouseDownOpacitySlider.bind(this)
             );
             this.$el.on("change", ".o_color_picker_inputs", this._onChangeInputs.bind(this));
+            this.el.querySelector(".o_hex_input").addEventListener("input", this._onHexColorInput.bind(this));
 
             this.start();
         });
@@ -250,6 +251,7 @@ export class Colorpicker extends Component {
      * @param {string} hex - hexadecimal code
      */
     _updateHex(hex) {
+        hex = hex.startsWith('#') ? hex : `#${hex}`;
         const rgb = convertCSSColorToRgba(hex);
         if (!rgb) {
             return;
@@ -500,8 +502,8 @@ export class Colorpicker extends Component {
     _onChangeInputs(ev) {
         switch ($(ev.target).data("colorMethod")) {
             case "hex":
-                this._updateHex(this.$el.find(".o_hex_input").val());
-                break;
+                // Handled by the "input" event (see "_onHexColorInput").
+                return;
             case "rgb":
                 this._updateRgba(
                     parseInt(this.$el.find(".o_red_input").val()),
@@ -522,5 +524,19 @@ export class Colorpicker extends Component {
         }
         this._updateUI();
         this._colorSelected();
+    }
+    /**
+     * Called when the hex color input's input event is triggered.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onHexColorInput(ev) {
+        const hexColorValue = ev.target.value;
+        if (hexColorValue.replace("#", "").length === 6) {
+            this._updateHex(hexColorValue);
+            this._updateUI();
+            this._colorSelected();
+        }
     }
 }
