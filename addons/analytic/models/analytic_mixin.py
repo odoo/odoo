@@ -114,3 +114,8 @@ class AnalyticMixin(models.AbstractModel):
             vals['analytic_distribution'] = vals.get('analytic_distribution') and {
                 account_id: float_round(distribution, decimal_precision) for account_id, distribution in vals['analytic_distribution'].items()}
         return vals
+
+    def _get_analytic_account_ids(self) -> list[int]:
+        """ Get the analytic account ids from the analytic_distribution dict """
+        self.ensure_one()
+        return [int(account_id) for ids in self.analytic_distribution for account_id in ids.split(',')]
