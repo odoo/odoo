@@ -1,15 +1,27 @@
-import { getFixture, mountOnFixture } from "@odoo/hoot";
+import { after, getFixture, mountOnFixture } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import { App } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { getPopoverForTarget } from "@web/core/popover/popover";
 import { getTemplate } from "@web/core/templates";
+import { patch } from "@web/core/utils/patch";
 import { getMockEnv, makeMockEnv } from "./env_test_helpers";
 
 /**
  * @typedef {import("@odoo/owl").Component} Component
  */
+
+patch(MainComponentsContainer.prototype, {
+    setup() {
+        super.setup();
+
+        hasMainComponent = true;
+        after(() => (hasMainComponent = false));
+    },
+});
+
+let hasMainComponent = false;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -37,8 +49,8 @@ export function findComponent(parent, predicate) {
  * Returns the dropdown menu for a specific toggler.
  *
  * @param {import("@odoo/hoot-dom").Target} togglerSelector
-* @returns {HTMLElement | undefined}
-*/
+ * @returns {HTMLElement | undefined}
+ */
 export function getDropdownMenu(togglerSelector) {
     let el = queryFirst(togglerSelector);
     if (el && !el.classList.contains("o-dropdown")) {
@@ -81,14 +93,8 @@ export async function mountWithCleanup(ComponentClass, options) {
 
     /** @type {InstanceType<C>} */
     const component = await mountOnFixture(ComponentClass, config, options?.target);
-    if (
-        !options?.noMainContainer &&
-        !findComponent(component, (c) => c instanceof MainComponentsContainer)
-    ) {
-        await mountOnFixture(MainComponentsContainer, {
-            ...config,
-            props: {},
-        });
+    if (!options?.noMainContainer && !hasMainComponent) {
+        await mountOnFixture(MainComponentsContainer, { ...config, props: {} });
     }
 
     return component;
