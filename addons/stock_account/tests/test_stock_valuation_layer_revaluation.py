@@ -449,7 +449,7 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         revaluation_wizard.added_value = -80
         revaluation_wizard.account_id = self.stock_valuation_account
         revaluation_wizard.reason = "unit_test_fifo_distribute_by_value"
-        
+
         with self.assertRaises(UserError):
             revaluation_wizard.save().action_validate_revaluation()
 

@@ -67,7 +67,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
 
         product_id = self.product_id.with_company(self.company_id)
         cost_method = product_id.categ_id.property_cost_method
-        
+
         distribution_method = self.env['ir.config_parameter'].get_param('stock_account.distribution_method', 'quantity')
         if distribution_method not in ['quantity', 'value']:
             raise UserError(_("Invalid system parameter 'stock_account.distribution_method'. It's value can either be 'quantity' or 'value'."))
@@ -81,7 +81,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
         remaining_qty = sum(remaining_svls.mapped('remaining_qty'))
         remaining_value = sum(remaining_svls.mapped('remaining_value'))
         mutation_unit_cost = self.added_value / remaining_qty
-        
+
         if distribution_method == 'value' and float_compare(remaining_value, 0, precision_digits=self.product_id.uom_id.rounding) > 0:
             mutation_factor = self.added_value / remaining_value
         else:
