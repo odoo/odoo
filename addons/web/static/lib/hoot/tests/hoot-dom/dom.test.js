@@ -434,6 +434,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         test("native selectors", async () => {
             await mountOnFixture(FULL_HTML_TEMPLATE);
 
+            expect(queryAll()).toEqual([]);
             for (const selector of [
                 "main",
                 `.${"title"}`,
