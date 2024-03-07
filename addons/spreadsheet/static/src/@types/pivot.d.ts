@@ -1,4 +1,3 @@
-import { MetadataRepository } from "@spreadsheet/data_sources/metadata_repository";
 import { OdooPivotRuntimeDefinition } from "@spreadsheet/pivot/pivot_runtime";
 import { ORM } from "@web/core/orm_service";
 import { PivotMeasure } from "@spreadsheet/pivot/pivot_runtime";
@@ -131,7 +130,6 @@ declare module "@spreadsheet" {
     }
 
     export interface PivotModelServices {
-        metadataRepository: MetadataRepository;
         serverData: ServerData
         orm: ORM;
     }

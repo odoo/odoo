@@ -95,6 +95,10 @@ export class OdooPivotModel extends PivotModel {
         this._displayNames = {};
         /**
          * @private
+         */
+        this._displayLabels = {};
+        /**
+         * @private
          * @type {import("@spreadsheet/data_sources/server_data").ServerData}
          */
         this.serverData = services.serverData;
@@ -112,9 +116,6 @@ export class OdooPivotModel extends PivotModel {
             ...params.searchParams,
         };
         super.setup(p);
-
-        this.metadataRepository = services.metadataRepository;
-
         this.definition = params.definition;
     }
 
@@ -169,7 +170,7 @@ export class OdooPivotModel extends PivotModel {
             }
             return this._getRelationalDisplayName(field.relation, value);
         }
-        const label = this.metadataRepository.getLabel(this.metaData.resModel, field.name, value);
+        const label = this._displayLabels[field.name]?.[value];
         if (!label) {
             return undef;
         }
@@ -251,20 +252,13 @@ export class OdooPivotModel extends PivotModel {
         const prune = false;
         await super._loadData(config, prune);
 
-        const metadataRepository = this.metadataRepository;
-
         const registerLabels = (tree, groupBys) => {
             const group = tree.root;
             if (!tree.directSubTrees.size) {
                 for (let i = 0; i < group.values.length; i++) {
                     const { field } = this.parseGroupField(groupBys[i]);
                     if (!field.relation) {
-                        metadataRepository.registerLabel(
-                            config.metaData.resModel,
-                            field.name,
-                            group.values[i],
-                            group.labels[i]
-                        );
+                        this._registerDisplayLabel(field.name, group.values[i], group.labels[i]);
                     } else {
                         const id = group.values[i];
                         const displayName = group.labels[i];
@@ -279,6 +273,13 @@ export class OdooPivotModel extends PivotModel {
 
         registerLabels(this.data.colGroupTree, this.metaData.fullColGroupBys);
         registerLabels(this.data.rowGroupTree, this.metaData.fullRowGroupBys);
+    }
+
+    _registerDisplayLabel(fieldName, value, label) {
+        if (!this._displayLabels[fieldName]) {
+            this._displayLabels[fieldName] = {};
+        }
+        this._displayLabels[fieldName][value] = label;
     }
 
     _registerDisplayName(resModel, resId, displayName) {
