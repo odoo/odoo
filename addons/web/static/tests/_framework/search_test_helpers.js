@@ -1,9 +1,13 @@
-import { queryAll, queryAllTexts, queryContent, queryOne } from "@odoo/hoot-dom";
+import { queryAll, queryAllTexts, queryOne, queryText } from "@odoo/hoot-dom";
 import { contains } from "./dom_test_helpers";
 import { getMockEnv } from "./env_test_helpers";
 
 const ensureSearchView = async () => {
-    if (getMockEnv().isSmall && !queryAll`.o_searchview`.length) {
+    if (
+        getMockEnv().isSmall &&
+        queryAll`.o_control_panel_navigation`.length &&
+        !queryAll`.o_searchview`.length
+    ) {
         await contains(`.o_control_panel_navigation button`).click();
     }
 };
@@ -111,7 +115,7 @@ export async function toggleGroupByMenu() {
  */
 export async function selectGroup(fieldName) {
     await ensureSearchBarMenu();
-    await contains(`.o_add_custom_group_menu`).edit(fieldName);
+    await contains(`.o_add_custom_group_menu`).select(fieldName);
 }
 
 //-----------------------------------------------------------------------------
@@ -181,7 +185,7 @@ export async function removeFacet(label) {
  */
 export async function editSearch(value) {
     await ensureSearchView();
-    await contains(`.o_searchview input`).edit(value);
+    await contains(`.o_searchview input`).fill(value, { confirm: false });
 }
 
 export async function validateSearch() {
@@ -205,13 +209,13 @@ export async function switchView(viewType) {
 //-----------------------------------------------------------------------------
 
 export function getPagerValue() {
-    return queryContent(".o_pager .o_pager_value")
+    return queryText(".o_pager .o_pager_value")
         .split(/\s*-\s*/)
         .map(Number);
 }
 
 export function getPagerLimit() {
-    return queryContent(".o_pager .o_pager_limit");
+    return parseInt(queryText(".o_pager .o_pager_limit"), 10);
 }
 
 export async function pagerNext() {
