@@ -6,6 +6,7 @@ import { useWindowListener } from "../hoot_utils";
 import { HootButtons } from "./hoot_buttons";
 import { HootConfigDropdown } from "./hoot_config_dropdown";
 import { HootDebugToolBar } from "./hoot_debug_toolbar";
+import { HootPresets } from "./hoot_presets";
 import { HootReporting } from "./hoot_reporting";
 import { HootSearch } from "./hoot_search";
 import { HootSideBar } from "./hoot_side_bar";
@@ -17,10 +18,6 @@ import { HootStatusPanel } from "./hoot_status_panel";
  */
 
 //-----------------------------------------------------------------------------
-// Internal
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
@@ -30,6 +27,7 @@ export class HootMain extends Component {
         HootButtons,
         HootConfigDropdown,
         HootDebugToolBar,
+        HootPresets,
         HootReporting,
         HootSearch,
         HootSideBar,
@@ -57,7 +55,10 @@ export class HootMain extends Component {
                         </h1>
                         <HootButtons />
                         <HootSearch />
-                        <HootConfigDropdown />
+                        <div class="flex gap-1">
+                            <HootPresets />
+                            <HootConfigDropdown />
+                        </div>
                     </nav>
                 </header>
                 <HootStatusPanel />
