@@ -48,7 +48,7 @@ export class Registry extends EventBus {
      * be chained
      *
      * @param {K} key
-     * @param {V} value
+     * @param {{test: boolean, steps: (function(): [{run: *, trigger: string, content: string}]), url: string}} value
      * @param {{ force?: boolean; sequence?: number }} [options]
      * @returns {Registry<K, V>}
      */

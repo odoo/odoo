@@ -1,27 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ControlButtons">
-        <div t-attf-class="flex-{{props.wrapped ? 'wrap' : 'column'}}" class="control-buttons d-flex bg-300 border-bottom">
+        <div t-attf-class="flex-{{!props.wrapped ? (ui.isSmall ? 'column' : 'wrap') : 'wrap'}}" class="control-buttons d-flex bg-300 border-bottom">
+            <!-- All buttons always displayed -->
+            <SelectPartnerButton partner="partner"/>
             <button t-if="pos.models['account.fiscal.position'].length" class="control-button o_fiscal_position_button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickFiscalPosition()">
                 <i class="fa fa-book me-1" role="img" aria-label="Set fiscal position"
                 title="Set fiscal position" />
                 <t t-if="currentOrder?.fiscal_position" t-esc="currentOrder.fiscal_position.display_name" />
                 <t t-else="">Tax</t>
             </button>
-            <button class="o_pricelist_button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickPricelist()">
-                <i class="fa fa-th-list me-2" role="img" aria-label="Price list" title="Price list" />
-                <t t-if="currentOrder?.pricelist" t-esc="currentOrder.pricelist.display_name" />
-                <t t-else="">Pricelist</t>
+            <OrderlineNoteButton
+                icon="'fa fa-tag'"
+                label="'Internal Note'"
+                getter="(orderline) => orderline.getNote()"
+                setter="(orderline, note) => orderline.setNote(note)" />
+            <OrderlineNoteButton t-if="!pos.config.module_pos_restaurant"/>
+
+            <!-- All buttons only displayed outside of dialog -->
+            <button class="btn btn-light rounded-0 fw-bolder" t-if="props.wrapped and !ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
+                More...
             </button>
-            <OrderlineNoteButton/>
-            <button class="btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickRefund()">
-                <i class="fa fa-undo me-1" role="img" aria-label="Refund" title="Refund" />
-                Refund
-            </button>
-            <button class="btn btn-light rounded-0 fw-bolder" t-on-click="onClickSave">
-                <i class="fa fa-upload" role="img" aria-label="Save" title="Save" />
-                Save
-            </button>
+
+            <!-- All these buttons will only be displayed in a dialog -->
+            <t t-if="!props.wrapped">
+                <OrderlineNoteButton t-if="pos.config.module_pos_restaurant" />
+                <button class="o_pricelist_button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickPricelist()">
+                    <i class="fa fa-th-list me-2" role="img" aria-label="Price list" title="Price list" />
+                    <t t-if="currentOrder?.pricelist" t-esc="currentOrder.pricelist.display_name" />
+                    <t t-else="">Pricelist</t>
+                </button>
+                <button class="btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickRefund()">
+                    <i class="fa fa-undo me-1" role="img" aria-label="Refund" title="Refund" />
+                    Refund
+                </button>
+                <button class="btn btn-light rounded-0 fw-bolder" t-on-click="onClickSave">
+                    <i class="fa fa-upload" role="img" aria-label="Save" title="Save" />
+                    Park Order
+                </button>
+            </t>
         </div>
     </t>
 </templates>
