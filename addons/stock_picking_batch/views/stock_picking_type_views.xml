@@ -37,4 +37,14 @@
             </xpath>
         </field>
     </record>
+    <record id="stock_picking_type_kanban_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.type.kanban.inherit</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//a[@name='get_action_picking_type_operations']" position="replace">
+                <a name="get_prepare_wave_action" type="object">Prepare Wave</a>
+            </xpath>
+        </field>
+    </record>
 </odoo>

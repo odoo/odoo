@@ -154,6 +154,7 @@
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="state"/>
+                <field name="move_line_ids"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click">
@@ -161,7 +162,10 @@
                                 <div class="o_kanban_record_headings">
                                     <strong class="o_kanban_record_title"><field name="name"/></strong>
                                     <div>
-                                        <span class="o_kanban_record_subtitle"><field name="description" /></span>
+                                        <t t-esc="record.move_line_ids.raw_value.length"/> Lines
+                                    </div>
+                                    <div>
+                                        <span class="o_kanban_record_subtitle text-muted"><field name="description"/></span>
                                     </div>
                                 </div>
                                 <field name="state" widget="label_selection"/>
@@ -239,7 +243,9 @@
             </div>
         </field>
     </record>
-    <menuitem action="stock_picking_batch_action" id="stock_picking_batch_menu" parent="stock.menu_stock_transfers" sequence="30"/>
+
+    <menuitem id="menu_stock_jobs" name="Jobs" parent="stock.menu_stock_warehouse_mgmt" sequence="2"/>
+    <menuitem action="stock_picking_batch_action" id="stock_picking_batch_menu" parent="menu_stock_jobs" sequence="30"/>
 
     <record id="vpicktree_inherit_stock_picking_batch" model="ir.ui.view">
         <field name="name">stock.picking.tree</field>
