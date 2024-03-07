@@ -174,6 +174,7 @@ class Meeting(models.Model):
     display_start = fields.Char('Start Date', compute='_compute_display_start')
     display_stop = fields.Char('Stop Date', compute='_compute_display_stop')
     duration = fields.Float('Duration', compute='_compute_duration', store=True, readonly=False)
+    display_duration = fields.Float('Display Duration', compute='_compute_display_duration')
     # linked document
     res_id = fields.Many2oneReference('Document ID', model_field='res_model')
     res_model_id = fields.Many2one('ir.model', 'Document Model', ondelete='cascade')
@@ -354,6 +355,14 @@ class Meeting(models.Model):
         for event in self:
             event.display_stop = self._get_display_date(event.allday, event.stop)
 
+    @api.depends('stop_date', 'start_date', 'allday')
+    def _compute_display_duration(self):
+        for event in self:
+            if event.allday:
+                event.display_duration = ((event.stop_date - event.start_date).days + 1) * 24
+            else:
+                event.display_duration = event.duration
+    
     @api.depends('stop', 'start')
     def _compute_duration(self):
         for event in self:
