@@ -1244,6 +1244,9 @@ class AccountMove(models.Model):
 
         # Group the moves by journal and month
         for move in self:
+            if move.state == 'cancel':
+                continue
+
             move_has_name = move.name and move.name != '/'
             if move_has_name or move.state != 'posted':
                 try:
