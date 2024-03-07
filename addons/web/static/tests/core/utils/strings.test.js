@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { patchTranslations } from "@web/../tests/web_test_helpers";
 
 import {
     capitalize,
@@ -10,7 +10,7 @@ import {
     sprintf,
     unaccent,
 } from "@web/core/utils/strings";
-import { _t, translatedTerms } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 
 describe.current.tags("headless");
 
@@ -94,7 +94,7 @@ describe("sprintf", () => {
     });
 
     test("supports lazy translated string", () => {
-        patchWithCleanup(translatedTerms, { one: "en", two: "två" });
+        patchTranslations({ one: "en", two: "två" });
         expect(sprintf("Hello %s", _t("one"))).toBe("Hello en");
         expect(sprintf("Hello %s %s", _t("one"), _t("two"))).toBe("Hello en två");
 
