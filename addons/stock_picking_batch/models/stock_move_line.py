@@ -12,7 +12,7 @@ from odoo.tools.misc import OrderedSet
 class StockMoveLine(models.Model):
     _inherit = ["stock.move.line"]
 
-    batch_id = fields.Many2one(related='picking_id.batch_id', store=True)
+    batch_id = fields.Many2one(related='picking_id.batch_id')
 
     def action_open_add_to_wave(self):
         # This action can be called from the move line list view or from the 'Add to wave' wizard

@@ -89,11 +89,11 @@ class PurchaseBillLineMatch(models.Model):
                    po.id as purchase_order_id,
                    NULL as account_move_id,
                    pol.price_subtotal as line_amount_untaxed,
-                   pol.currency_id as currency_id,
+                   po.currency_id as currency_id,
                    po.state as state
               FROM purchase_order_line pol
          LEFT JOIN purchase_order po ON pol.order_id = po.id
-             WHERE pol.state in ('purchase', 'done')
+             WHERE po.state in ('purchase', 'done')
                AND pol.product_qty > pol.qty_invoiced
                 OR ((pol.display_type = '' OR pol.display_type IS NULL) AND pol.is_downpayment AND pol.qty_invoiced > 0)
         """)

@@ -125,7 +125,7 @@ class StockWarehouseOrderpoint(models.Model):
     supplier_id = fields.Many2one(
         'product.supplierinfo', string='Supplier', check_company=True,
         domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
-    vendor_id = fields.Many2one(related='supplier_id.partner_id', string="Vendor", store=True)
+    vendor_id = fields.Many2one(related='supplier_id.partner_id', string="Vendor")
     purchase_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the purchase routes.")
     product_supplier_id = fields.Many2one('res.partner', compute='_compute_product_supplier_id', store=True, string='Product Supplier')
 
