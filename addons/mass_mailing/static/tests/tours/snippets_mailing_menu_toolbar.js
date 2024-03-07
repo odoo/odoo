@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
     },
     {
         content: "Wait for the theme selector to load.",
-        trigger: 'iframe .o_mail_theme_selector_new',
+        trigger: ':iframe .o_mail_theme_selector_new',
     },
     {
         content: "Make sure there does not exist a floating toolbar",
@@ -31,17 +31,17 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
     },
     {
         content: "Make sure the empty template is an option on non-mobile devices.",
-        trigger: 'iframe #empty',
+        trigger: ':iframe #empty',
         run: () => null,
     },
     {
         content: "Click on the default 'welcome' template.",
-        trigger: 'iframe #default',
+        trigger: ':iframe #default',
     },
     { // necessary to wait for the cursor to be placed in the first p
       // and to avoid leaving the page before the selection is added
         content: "Wait for template selection event to be over.",
-        trigger: 'iframe .o_editable.theme_selection_done',
+        trigger: ':iframe .o_editable.theme_selection_done',
     },
     {
         content: "Make sure the snippets menu is not hidden",
@@ -50,7 +50,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
     },
     {
         content: "Wait for .s_text_block to be populated",
-        trigger: 'iframe .s_text_block p',
+        trigger: ':iframe .s_text_block p',
         run: () => null,
     },
     {

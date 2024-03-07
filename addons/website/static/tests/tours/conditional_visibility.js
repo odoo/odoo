@@ -72,7 +72,7 @@ wTourUtils.changeOption('ConditionalVisibility', 'we-toggler'),
 {
     content: 'Check if the rule was applied',
     extra_trigger: '.o_website_preview:only-child',
-    trigger: 'iframe #wrap',
+    trigger: ':iframe #wrap',
     allowInvisible: true,
     run: function (actions) {
         const style = window.getComputedStyle(this.anchor.getElementsByClassName('s_text_image')[0]);
@@ -84,7 +84,7 @@ wTourUtils.changeOption('ConditionalVisibility', 'we-toggler'),
 ...wTourUtils.clickOnEditAndWaitEditMode(),
 {
     content: 'Check if the element is visible as it should always be visible in edit view',
-    trigger: 'iframe #wrap .s_text_image',
+    trigger: ':iframe #wrap .s_text_image',
     run: function (actions) {
         const style = window.getComputedStyle((this.anchor));
         if (style.display === 'none') {
@@ -119,13 +119,13 @@ wTourUtils.dragNDrop(snippets[2]),
 checkEyeIcon("Popup", false),
 {
     content: "Click on footer",
-    trigger: "iframe #wrapwrap footer",
+    trigger: ":iframe #wrapwrap footer",
 },
 wTourUtils.changeOption("HideFooter", "we-checkbox"),
 checkEyeIcon("Footer", false),
 {
     content: "Click on Header",
-    trigger: "iframe #wrapwrap header",
+    trigger: ":iframe #wrapwrap header",
 },
 wTourUtils.changeOption("TopMenuVisibility", "we-toggler"),
 wTourUtils.changeOption("TopMenuVisibility", '[data-visibility="hidden"]'),
@@ -150,7 +150,7 @@ wTourUtils.registerWebsitePreviewTour("conditional_visibility_4", {
 wTourUtils.clickOnSnippet(snippets[0]),
 {
     content: "Click on the 'move down' option",
-    trigger: "iframe we-button.o_we_user_value_widget.fa-angle-down",
+    trigger: ":iframe we-button.o_we_user_value_widget.fa-angle-down",
 },
 ...checkEyesIconAfterSave(),
 {
@@ -164,14 +164,14 @@ wTourUtils.clickOnSnippet(snippets[0]),
 },
 {
     content: "Check that the footer is visible",
-    trigger: "iframe #wrapwrap footer",
+    trigger: ":iframe #wrapwrap footer",
     run: () => {}, // it is a check
 },
 // Click on the "Banner" snippet.
 wTourUtils.clickOnSnippet(snippets[1]),
 {
     content: "Drag the 'Banner' snippet to the end of the page",
-    trigger: "iframe .o_overlay_move_options .o_move_handle",
+    trigger: ":iframe .o_overlay_move_options .o_move_handle",
     run: "drag_and_drop_native iframe #wrapwrap footer",
 },
 ...checkEyesIconAfterSave(false),
@@ -190,7 +190,7 @@ wTourUtils.registerWebsitePreviewTour("conditional_visibility_5", {
     wTourUtils.dragNDrop(snippets[0]),
     {
         content: "Click on the image of the dragged snippet",
-        trigger: "iframe .s_text_image img",
+        trigger: ":iframe .s_text_image img",
     },
     wTourUtils.changeOption("DeviceVisibility", 'we-button[data-toggle-device-visibility="no_desktop"]'),
     {
@@ -200,7 +200,7 @@ wTourUtils.registerWebsitePreviewTour("conditional_visibility_5", {
     },
     {
         content: "Click on the 'Text - Image' snippet",
-        trigger: "iframe .s_text_image",
+        trigger: ":iframe .s_text_image",
     },
     wTourUtils.changeOption("ConditionalVisibility", 'we-button[data-toggle-device-visibility="no_desktop"]'),
     {
@@ -214,7 +214,7 @@ wTourUtils.registerWebsitePreviewTour("conditional_visibility_5", {
     },
     {
         content: "Check that the snippet is visible on the website",
-        trigger: "iframe .s_text_image.o_snippet_desktop_invisible.o_snippet_override_invisible",
+        trigger: ":iframe .s_text_image.o_snippet_desktop_invisible.o_snippet_override_invisible",
         run: () => {}, // it is a check
     },
     wTourUtils.changeOption("ConditionalVisibility", 'we-button[data-toggle-device-visibility="no_mobile"]'),
@@ -229,7 +229,7 @@ wTourUtils.registerWebsitePreviewTour("conditional_visibility_5", {
     },
     {
         content: "Check that the column is visible on the website",
-        trigger: "iframe .s_text_image .row > .o_snippet_desktop_invisible.o_snippet_override_invisible",
+        trigger: ":iframe .s_text_image .row > .o_snippet_desktop_invisible.o_snippet_override_invisible",
         run: () => {}, // it is a check
     },
     wTourUtils.changeOption("DeviceVisibility", 'we-button[data-toggle-device-visibility="no_mobile"]'),

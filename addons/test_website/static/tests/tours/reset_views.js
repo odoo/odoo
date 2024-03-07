@@ -58,12 +58,12 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part2'
     () => [
         {
             content: "check that the view got fixed",
-            trigger: "iframe p:contains(/^Test Page View$/)",
+            trigger: ":iframe p:contains(/^Test Page View$/)",
             run: function () {}, // it's a check
         },
         {
             content: "check that the inherited COW view is still there (created during edit mode)",
-            trigger: 'iframe #oe_structure_test_website_page .s_cover',
+            trigger: ':iframe #oe_structure_test_website_page .s_cover',
             run: function () {}, // it's a check
         },
         //4. Now break the inherited view created when dropping a snippet

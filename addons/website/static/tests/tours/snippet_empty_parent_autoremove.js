@@ -21,17 +21,17 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     }),
     {
         content: "Click on second column",
-        trigger: 'iframe #wrap .s_text_image .row > :nth-child(2)',
+        trigger: ':iframe #wrap .s_text_image .row > :nth-child(2)',
     },
     removeSelectedBlock(),
     {
         content: "Click on first column",
-        trigger: 'iframe #wrap .s_text_image .row > :first-child',
+        trigger: ':iframe #wrap .s_text_image .row > :first-child',
     },
     removeSelectedBlock(),
     {
         content: "Check that #wrap is empty",
-        trigger: 'iframe #wrap:empty',
+        trigger: ':iframe #wrap:empty',
     },
 
     // Cover: test that parallax, bg-filter and shape are not treated as content
@@ -47,17 +47,17 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     wTourUtils.changeOption('ColoredLevelBackground', 'Shape'),
     {
         content: "Check that the parallax element is present",
-        trigger: 'iframe #wrap .s_cover .s_parallax_bg',
+        trigger: ':iframe #wrap .s_cover .s_parallax_bg',
         run: () => null,
     },
     {
         content: "Check that the filter element is present",
-        trigger: 'iframe #wrap .s_cover .o_we_bg_filter',
+        trigger: ':iframe #wrap .s_cover .o_we_bg_filter',
         run: () => null,
     },
     {
         content: "Check that the shape element is present",
-        trigger: 'iframe #wrap .s_cover .o_we_shape',
+        trigger: ':iframe #wrap .s_cover .o_we_shape',
         run: () => null,
     },
     // Add a column
@@ -65,12 +65,12 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     wTourUtils.changeOption('layout_column', '[data-select-count="1"]'),
     {
         content: "Click on the created column",
-        trigger: 'iframe #wrap .s_cover .row > :first-child',
+        trigger: ':iframe #wrap .s_cover .row > :first-child',
     },
     removeSelectedBlock(),
     {
         content: "Check that #wrap is empty",
-        trigger: 'iframe #wrap:empty',
+        trigger: ':iframe #wrap:empty',
         run: () => null,
     },
 ]);

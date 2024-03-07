@@ -11,7 +11,7 @@ wTourUtils.registerWebsitePreviewTour("website_snippets_menu_tabs", {
     {
         content: "Click on the empty 'DRAG BUILDING BLOCKS HERE' area.",
         extra_trigger: 'we-customizeblock-option.snippet-option-ThemeColors',
-        trigger: 'iframe main > .oe_structure.oe_empty',
+        trigger: ':iframe main > .oe_structure.oe_empty',
         run: 'click',
     },
     wTourUtils.goToTheme(),

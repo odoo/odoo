@@ -16,7 +16,7 @@
         trigger: '.btn[id="stock.view_diagram_button"]',
     },
     {
-        trigger: 'iframe .o_report_stock_rule',
+        trigger: ':iframe .o_report_stock_rule',
         isCheck: true,
     },
     ]});

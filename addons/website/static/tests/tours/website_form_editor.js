@@ -43,7 +43,7 @@
     const selectFieldByLabel = (label) => {
         return [{
             content: `Select field "${label}"`,
-            trigger: "iframe " + triggerFieldByLabel(label),
+            trigger: ":iframe " + triggerFieldByLabel(label),
         }];
     };
     const selectButtonByText = function (text) {
@@ -70,8 +70,8 @@
         const data = isCustom ? `data-custom-field="${name}"` : `data-existing-field="${name}"`;
         const ret = [{
             content: "Select form",
-            extra_trigger: 'iframe .s_website_form_field',
-            trigger: 'iframe section.s_website_form',
+            extra_trigger: ':iframe .s_website_form_field',
+            trigger: ':iframe section.s_website_form',
         }, {
             content: "Add field",
             trigger: 'we-button[data-add-field]',
@@ -138,8 +138,8 @@
             run: 'drag_and_drop_native iframe #wrap',
         }, {
             content: "Select form by clicking on an input field",
-            extra_trigger: 'iframe .s_website_form_field',
-            trigger: 'iframe section.s_website_form input',
+            extra_trigger: ':iframe .s_website_form_field',
+            trigger: ':iframe section.s_website_form input',
         }, {
             content: "Verify that the form editor appeared",
             trigger: '.o_we_customize_panel .snippet-option-WebsiteFormEditor',
@@ -148,8 +148,8 @@
         wTourUtils.goBackToBlocks(),
         {
             content: "Select form by clicking on a text area",
-            extra_trigger: 'iframe .s_website_form_field',
-            trigger: 'iframe section.s_website_form textarea',
+            extra_trigger: ':iframe .s_website_form_field',
+            trigger: ':iframe section.s_website_form textarea',
         }, {
             content: "Verify that the form editor appeared",
             trigger: '.o_we_customize_panel .snippet-option-WebsiteFormEditor',
@@ -166,16 +166,16 @@
         wTourUtils.goBackToBlocks(),
         {
             content: "Select form itself (not a specific field)",
-            extra_trigger: 'iframe .s_website_form_field',
-            trigger: 'iframe section.s_website_form',
+            extra_trigger: ':iframe .s_website_form_field',
+            trigger: ':iframe section.s_website_form',
         },
         ...selectButtonByText('Send an E-mail'),
         {
             content: "Form has a model name",
-            trigger: 'iframe section.s_website_form form[data-model_name="mail.mail"]',
+            trigger: ':iframe section.s_website_form form[data-model_name="mail.mail"]',
         }, {
             content: 'Edit the Phone Number field',
-            trigger: 'iframe input[name="phone"]',
+            trigger: ':iframe input[name="phone"]',
         }, {
             content: 'Change the label position of the phone field',
             trigger: 'we-button[data-select-label-position="right"]',
@@ -222,7 +222,7 @@
         ...addExistingField('email_cc', 'text', 'Test conditional visibility', false, {visibility: CONDITIONALVISIBILITY, condition: 'odoo'}),
         {
             content: "Ensure that the description has correctly been added on the field",
-            trigger: "iframe .s_website_form_field:contains('Test conditional visibility') .s_website_form_field_description",
+            trigger: ":iframe .s_website_form_field:contains('Test conditional visibility') .s_website_form_field_description",
             isCheck: true,
         },
 
@@ -256,7 +256,7 @@
             run: 'text Wiko Stairway',
         }, {
             content: "Check the resulting field",
-            trigger: "iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+            trigger: ":iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
                         ":has(.s_website_form_multiple[data-display='horizontal'])" +
                         ":has(.checkbox:has(label:contains('Iphone')):has(input[type='checkbox'][required]))" +
                         ":has(.checkbox:has(label:contains('Galaxy S')):has(input[type='checkbox'][required]))" +
@@ -267,7 +267,7 @@
         ...selectButtonByData('data-multi-checkbox-display="vertical"'),
         {
             content: "Check the resulting field",
-            trigger: "iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+            trigger: ":iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
                         ":has(.s_website_form_multiple[data-display='vertical'])" +
                         ":has(.checkbox:has(label:contains('Iphone')):has(input[type='checkbox'][required]))" +
                         ":has(.checkbox:has(label:contains('Galaxy S')):has(input[type='checkbox'][required]))" +
@@ -301,7 +301,7 @@
             trigger: 'we-button[data-name="required_opt"] we-checkbox',
         }, {
             content: "Check the resulting field",
-            trigger: "iframe .s_website_form_field.s_website_form_custom:not(.s_website_form_required)" +
+            trigger: ":iframe .s_website_form_field.s_website_form_custom:not(.s_website_form_required)" +
                         ":has(.radio:has(label:contains('After-sales Service')):has(input[type='radio']:not([required])))" +
                         ":has(.radio:has(label:contains('Invoicing Service')):has(input[type='radio']:not([required])))" +
                         ":has(.radio:has(label:contains('Development Service')):has(input[type='radio']:not([required])))" +
@@ -352,7 +352,7 @@
             },
         }, {
             content: "Check the resulting snippet",
-            trigger: "iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+            trigger: ":iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
                         ":has(label:contains('State'))" +
                         ":has(select[required]:hidden)" +
                         ":has(.s_website_form_select_item:contains('Belgium'))" +
@@ -367,7 +367,7 @@
 
         {
             content: "Insure the history step of the editor is not checking for unbreakable",
-            trigger: 'iframe #wrapwrap',
+            trigger: ':iframe #wrapwrap',
             run: () => {
                 const wysiwyg = $('iframe:not(.o_ignore_in_tour)').contents().find('#wrapwrap').data('wysiwyg');
                 wysiwyg.odooEditor.historyStep(true);
@@ -376,10 +376,10 @@
         // Edit the submit button using linkDialog.
         {
             content: "Click submit button to show edit popover",
-            trigger: 'iframe .s_website_form_send',
+            trigger: ':iframe .s_website_form_send',
         }, {
             content: "Click on Edit Link in Popover",
-            trigger: 'iframe .o_edit_menu_popover .o_we_edit_link',
+            trigger: ':iframe .o_edit_menu_popover .o_we_edit_link',
         }, {
             content: "Check that no URL field is suggested",
             trigger: '.oe-toolbar:not(.oe-floating):has(#url_row:hidden)',
@@ -397,13 +397,13 @@
             },
         }, {
             content: "Check the resulting button",
-            trigger: 'iframe .s_website_form_send.btn.btn-sm.btn-secondary.rounded-circle',
+            trigger: ':iframe .s_website_form_send.btn.btn-sm.btn-secondary.rounded-circle',
             run: () => null,
         },
         // Add a default value to a auto-fillable field.
         {
             content: 'Select the name field',
-            trigger: 'iframe .s_website_form_field:eq(0)',
+            trigger: ':iframe .s_website_form_field:eq(0)',
         }, {
             content: 'Set a default value to the name field',
             trigger: 'we-input[data-attribute-name="value"] input',
@@ -427,11 +427,11 @@
         ...wTourUtils.clickOnSave(),
         {
             content: 'Verify value attribute and property',
-            trigger: 'iframe .s_website_form_field:eq(0) input[value="John Smith"]:value("Mitchell Admin")',
+            trigger: ':iframe .s_website_form_field:eq(0) input[value="John Smith"]:value("Mitchell Admin")',
         },
         {
             content: 'Verify that phone field is still auto-fillable',
-            trigger: 'iframe .s_website_form_field input[data-fill-with="phone"]:value("+1 555-555-5555")',
+            trigger: ':iframe .s_website_form_field input[data-fill-with="phone"]:value("+1 555-555-5555")',
         },
         // Check that the resulting form behavior is correct.
         {
@@ -451,7 +451,7 @@
         ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
             content: 'Edit the form',
-            trigger: 'iframe .s_website_form_field:eq(0) input',
+            trigger: ':iframe .s_website_form_field:eq(0) input',
             run: 'click',
         },
         ...addCustomField("char", "text", "field C", false),
@@ -464,10 +464,10 @@
         // Check that the resulting form behavior is correct.
         {
             content: 'Verify that the value has not been deleted',
-            trigger: 'iframe .s_website_form_field:eq(0) input[value="John Smith"]',
+            trigger: ':iframe .s_website_form_field:eq(0) input[value="John Smith"]',
         }, {
             content: "Check that fields A and B are not visible and that field B's prefill text is still set",
-            trigger: "iframe .s_website_form" +
+            trigger: ":iframe .s_website_form" +
                 `:has(${triggerFieldByLabel("field A")}:not(:visible))` +
                 `:has(${triggerFieldByLabel("field B")}` +
                 `:has(input[value="prefilled"]):not(:visible))`,
@@ -524,12 +524,12 @@
         // exiting edit mode
         {
             content: "Click on the select field",
-            trigger: "iframe .s_website_form_field select",
+            trigger: ":iframe .s_website_form_field select",
         },
         {
             content: 'Click on the submit button',
-            trigger: 'iframe .s_website_form_send',
-            extra_trigger: "iframe .s_website_form_field .row :has(#editable_select)",
+            trigger: ':iframe .s_website_form_send',
+            extra_trigger: ":iframe .s_website_form_field .row :has(#editable_select)",
             run: 'click',
         },
         {
@@ -549,7 +549,7 @@
         wTourUtils.changeOption("WebsiteFieldEditor", "we-button[data-toggle-description] we-checkbox"),
         {
             content: "Ensure that the description has correctly been added on the field",
-            trigger: "iframe .s_website_form_field:contains('Check description option') .s_website_form_field_description",
+            trigger: ":iframe .s_website_form_field:contains('Check description option') .s_website_form_field_description",
             isCheck: true,
         },
 
@@ -557,12 +557,12 @@
         {
             content: 'Verify that the recipient email has been saved',
             // We have to this that way because the input type = hidden.
-            trigger: 'iframe form:has(input[name="email_to"][value="test@test.test"])',
+            trigger: ':iframe form:has(input[name="email_to"][value="test@test.test"])',
             isCheck: true,
         },
         {
             content: "Verify that the selects have been cleaned",
-            trigger: "iframe .s_website_form",
+            trigger: ":iframe .s_website_form",
             run() {
                 if (
                     this.anchor.querySelector(
@@ -579,7 +579,7 @@
         return [
             {
                 content: "Select the contact us form by clicking on an input field",
-                trigger: 'iframe .s_website_form input',
+                trigger: ':iframe .s_website_form input',
                 extra_trigger: '#oe_snippets .oe_snippet_thumbnail',
                 run: 'click',
             },
@@ -630,8 +630,8 @@
             run: 'drag_and_drop_native iframe #wrap',
         }, {
             content: "Select the form by clicking on an input field",
-            extra_trigger: 'iframe .s_website_form_field',
-            trigger: 'iframe section.s_website_form input',
+            extra_trigger: ':iframe .s_website_form_field',
+            trigger: ':iframe section.s_website_form input',
             run: function (actions) {
                 actions.auto();
 
@@ -651,11 +651,11 @@
             for (let i = 0; i < NB_NON_ESSENTIAL_REQUIRED_FIELDS_IN_DEFAULT_FORM; i++) {
                 steps.push({
                     content: "Select required field to remove",
-                    trigger: 'iframe .s_website_form_required .s_website_form_input',
+                    trigger: ':iframe .s_website_form_required .s_website_form_input',
                 });
                 steps.push({
                     content: "Remove required field",
-                    trigger: 'iframe .oe_overlay .oe_snippet_remove',
+                    trigger: ':iframe .oe_overlay .oe_snippet_remove',
                 });
             }
             return steps;
@@ -680,7 +680,7 @@
         // Check that the resulting form behavior is correct
         {
             content: "Wait for page reload",
-            trigger: 'iframe body:not(.editor_enable) [data-snippet="s_website_form"]',
+            trigger: ':iframe body:not(.editor_enable) [data-snippet="s_website_form"]',
             run: function (actions) {
                 // The next steps will be about removing non essential required
                 // fields. For the robustness of the test, check that amount
@@ -694,39 +694,39 @@
         ...essentialFieldsForDefaultFormFillInSteps,
         {
             content: 'Try sending empty form',
-            trigger: 'iframe .s_website_form_send',
+            trigger: ':iframe .s_website_form_send',
         }, {
             content: 'Check the form could not be sent',
-            trigger: 'iframe #s_website_form_result.text-danger',
+            trigger: ':iframe #s_website_form_result.text-danger',
             run: () => null,
         }, {
             content: 'Check the first checkbox',
-            trigger: 'iframe input[type="checkbox"][name="Checkbox 1"]',
+            trigger: ':iframe input[type="checkbox"][name="Checkbox 1"]',
         }, {
             content: 'Check the second checkbox is now hidden',
-            trigger: 'iframe .s_website_form:has(input[type="checkbox"][name="Checkbox 2"]:not(:visible))',
+            trigger: ':iframe .s_website_form:has(input[type="checkbox"][name="Checkbox 2"]:not(:visible))',
             run: () => null,
         }, {
             content: 'Try sending the form',
-            trigger: 'iframe .s_website_form_send',
+            trigger: ':iframe .s_website_form_send',
         }, {
             content: "Check the form was sent (success page without form)",
-            trigger: 'iframe body:not(:has([data-snippet="s_website_form"])) .fa-check-circle',
+            trigger: ':iframe body:not(:has([data-snippet="s_website_form"])) .fa-check-circle',
             run: () => null,
         }, {
             content: "Go back to the form",
-            trigger: 'iframe a.navbar-brand.logo',
+            trigger: ':iframe a.navbar-brand.logo',
         },
         ...essentialFieldsForDefaultFormFillInSteps,
         {
             content: 'Check the second checkbox',
-            trigger: 'iframe input[type="checkbox"][name="Checkbox 2"]',
+            trigger: ':iframe input[type="checkbox"][name="Checkbox 2"]',
         }, {
             content: 'Try sending the form again',
-            trigger: 'iframe .s_website_form_send',
+            trigger: ':iframe .s_website_form_send',
         }, {
             content: "Check the form was again sent (success page without form)",
-            trigger: 'iframe body:not(:has([data-snippet="s_website_form"])) .fa-check-circle',
+            trigger: ':iframe body:not(:has([data-snippet="s_website_form"])) .fa-check-circle',
             run: () => null,
         }
     ]);

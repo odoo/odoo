@@ -49,7 +49,7 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
 ...wTourUtils.clickOnEditAndWaitEditMode(),
 {
     content: 'eLearning: double click image to edit it',
-    trigger: 'iframe img.o_wslides_course_pict',
+    trigger: ':iframe img.o_wslides_course_pict',
     run: 'dblclick',
 }, {
     content: 'eLearning: click "Add URL" to trigger URL box',
@@ -64,14 +64,14 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
     extra_trigger: '.o_we_url_success',
 }, {
     content: 'eLearning: is the Corgi set ?',
-    trigger: 'iframe img.o_wslides_course_pict[data-original-src$="GoldWinnerPembrookeWelshCorgi.jpg"]',
+    trigger: ':iframe img.o_wslides_course_pict[data-original-src$="GoldWinnerPembrookeWelshCorgi.jpg"]',
 }, {
     content: 'eLearning: save course edition',
     trigger: 'button[data-action="save"]',
 }, {
     content: 'eLearning: course create with current member',
-    extra_trigger: 'iframe body:not(.editor_enable)',  // wait for editor to close
-    trigger: 'iframe .o_wslides_js_course_join:contains("You\'re enrolled")',
+    extra_trigger: ':iframe body:not(.editor_enable)',  // wait for editor to close
+    trigger: ':iframe .o_wslides_js_course_join:contains("You\'re enrolled")',
     run: function () {} // check membership
 }
 ].concat(
@@ -81,7 +81,7 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
     slidesTourTools.addVideoToSection('Introduction', false, true),
     [{
     content: 'eLearning: publish newly added course',
-    trigger: 'iframe span:contains("Dschinghis Khan - Dschinghis Khan (1979)")',  // wait for slide to appear
+    trigger: ':iframe span:contains("Dschinghis Khan - Dschinghis Khan (1979)")',  // wait for slide to appear
     // trigger: 'span.o_wslides_js_slide_toggle_is_preview:first',
     run: function () {
         document.querySelector(

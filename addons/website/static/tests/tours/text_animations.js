@@ -13,7 +13,7 @@ wTourUtils.registerWebsitePreviewTour("text_animations", {
     }),
     {
         content: "Click on the snippet title",
-        trigger: "iframe .s_cover h1",
+        trigger: ":iframe .s_cover h1",
         run: "dblclick", // Make sure the title is selected.
     },
     {
@@ -22,7 +22,7 @@ wTourUtils.registerWebsitePreviewTour("text_animations", {
     },
     {
         content: "Check that the animation was applied",
-        trigger: "iframe .s_cover h1 span.o_animated_text",
+        trigger: ":iframe .s_cover h1 span.o_animated_text",
         isCheck: true,
     },
     {
@@ -31,7 +31,7 @@ wTourUtils.registerWebsitePreviewTour("text_animations", {
     },
     {
         content: "Check that the animation was disabled for the title",
-        trigger: "iframe .s_cover:not(:has(.o_animated_text))",
+        trigger: ":iframe .s_cover:not(:has(.o_animated_text))",
         isCheck: true,
     },
     {
@@ -40,7 +40,7 @@ wTourUtils.registerWebsitePreviewTour("text_animations", {
     },
     {
         content: "Check that the animation was applied",
-        trigger: "iframe .s_cover:has(span.o_animated_text)",
+        trigger: ":iframe .s_cover:has(span.o_animated_text)",
         isCheck: true,
     },
 ]);

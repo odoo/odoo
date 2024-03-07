@@ -39,7 +39,7 @@ function getFontSizeTestSteps(fontSizeClass) {
         wTourUtils.dragNDrop({id: "s_text_block", name: "Text"}),
         {
             content: `[${fontSizeClass}] Click on the text block first paragraph (to auto select)`,
-            trigger: "iframe .s_text_block p",
+            trigger: ":iframe .s_text_block p",
         }, {
             content: `Open the font size dropdown to select ${fontSizeClass}`,
             trigger: "#font-size button",
@@ -117,7 +117,7 @@ wTourUtils.registerWebsitePreviewTour("website_text_font_size", {
     // The last step has to be a check.
     {
         content: "Verify that the text block has been deleted",
-        trigger: "iframe #wrap:not(:has(.s_text_block))",
+        trigger: ":iframe #wrap:not(:has(.s_text_block))",
         isCheck: true,
     },
 ]);

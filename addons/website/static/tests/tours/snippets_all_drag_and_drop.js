@@ -65,7 +65,7 @@ for (const snippet of snippetsNames) {
     if (snippet === 's_google_map') {
         snippetSteps.splice(1, 3, {
             content: 'Close API Key popup',
-            trigger: "iframe .modal-footer .btn-secondary",
+            trigger: ":iframe .modal-footer .btn-secondary",
         });
     } else if (isModal) {
         snippetSteps[2]['in_modal'] = false;
@@ -74,7 +74,7 @@ for (const snippet of snippetsNames) {
             trigger: `iframe [data-snippet='${snippet}'] .s_popup_close`,
         }, {
             content: `Make sure ${snippet} is hidden`,
-            trigger: "iframe body:not(.modal-open)",
+            trigger: ":iframe body:not(.modal-open)",
         });
     } else if (isDropInOnlySnippet) {
         // The 'drop in only' snippets have their 'data-snippet' attribute
@@ -113,7 +113,7 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
     }),
     {
         content: "Edit s_text_image snippet",
-        trigger: "iframe #wrap.o_editable [data-snippet='s_text_image']"
+        trigger: ":iframe #wrap.o_editable [data-snippet='s_text_image']"
     },
     {
         content: "check setting are loaded, wait panel is visible",

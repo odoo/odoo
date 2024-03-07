@@ -13,7 +13,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
     {
         content: "Click inside the popup to access its options menu.",
         in_modal: false,
-        trigger: "iframe .s_popup .s_banner",
+        trigger: ":iframe .s_popup .s_banner",
     },
     wTourUtils.changeOption("SnippetPopup", 'we-select[data-attribute-name="display"] we-toggler'),
     {
@@ -52,12 +52,12 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
     {
         content: "Verify that the popup opens after clicked the button.",
         in_modal: false,
-        trigger: "iframe .s_popup .modal[id='Win-%2420'].show",
+        trigger: ":iframe .s_popup .modal[id='Win-%2420'].show",
     },
     wTourUtils.clickOnElement("button to close the popup", "iframe .s_popup_close"),
     {
         content: "Go to the 'contactus' page.",
-        trigger: "iframe a[href='/contactus']",
+        trigger: ":iframe a[href='/contactus']",
     },
     {
         content: "wait for the page to be loaded",
@@ -86,7 +86,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
         content: "Verify that the popup opens when the homepage page loads.",
         in_modal: false,
         extra_trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
-        trigger: "iframe .s_popup .modal[id='Win-%2420'].show",
+        trigger: ":iframe .s_popup .modal[id='Win-%2420'].show",
         isCheck: true,
     },
 ]);

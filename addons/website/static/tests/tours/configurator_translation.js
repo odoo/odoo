@@ -72,7 +72,7 @@ registry.category("web_tour.tours").add('configurator_translation', {
         trigger: '.o_we_website_top_actions button.btn-primary:contains("Save_Parseltongue")',
     }, {
          content: "wait for editor to be closed",
-         trigger: 'iframe body:not(.editor_enable)',
+         trigger: ':iframe body:not(.editor_enable)',
          run: function () {}, // It's a check.
     }
 ]});

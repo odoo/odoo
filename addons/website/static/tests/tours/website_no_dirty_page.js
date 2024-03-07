@@ -28,7 +28,7 @@ const makeSteps = (steps = []) => [
         // Makes sure the dirty flag does not happen after a setTimeout or
         // something like that.
         content: "Click elsewhere and wait for a few ms",
-        trigger: "iframe #wrap",
+        trigger: ":iframe #wrap",
         async run(actions) {
             actions.auto();
             await new Promise((resolve) => {
@@ -64,20 +64,20 @@ wTourUtils.registerWebsitePreviewTour('website_no_dirty_page', {
         // This has been known to mark the page as dirty because of the "drag
         // the column on image move" feature.
         content: "Click on default image",
-        trigger: 'iframe .s_text_image img',
+        trigger: ':iframe .s_text_image img',
     }, {
         content: "Click on default paragraph",
-        trigger: 'iframe .s_text_image h2 + p.o_default_snippet_text',
+        trigger: ':iframe .s_text_image h2 + p.o_default_snippet_text',
     }, {
         // TODO this should be done in a dedicated test which would be testing
         // all default snippet texts behaviors. Will be done in master where a
         // task will review this feature.
         content: "Make sure the paragraph still acts as a default paragraph",
-        trigger: 'iframe .s_text_image h2 + p.o_default_snippet_text',
+        trigger: ':iframe .s_text_image h2 + p.o_default_snippet_text',
         run: () => null,
     }, {
         content: "Click on button",
-        trigger: 'iframe .s_text_image .btn',
+        trigger: ':iframe .s_text_image .btn',
         run: function (actions) {
             actions.click();
             const el = this.anchor;

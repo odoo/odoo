@@ -12,22 +12,22 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         ...wTourUtils.clickOnSave(),
         {
             content: "select product attribute Steel",
-            trigger: 'iframe form.js_attributes input:not(:checked) + label:contains(Steel - Test)',
+            trigger: ':iframe form.js_attributes input:not(:checked) + label:contains(Steel - Test)',
         },
         {
             content: "check the selection",
-            trigger: 'iframe form.js_attributes input:checked + label:contains(Steel - Test)',
+            trigger: ':iframe form.js_attributes input:checked + label:contains(Steel - Test)',
             run: function () {}, // it's a check
         },
         {
             content: "select product",
-            extra_trigger: 'iframe body:not(:has(.oe_website_sale .oe_product_cart:eq(3)))',
-            trigger: 'iframe .oe_product_cart a:contains("Test Product")',
+            extra_trigger: ':iframe body:not(:has(.oe_website_sale .oe_product_cart:eq(3)))',
+            trigger: ':iframe .oe_product_cart a:contains("Test Product")',
         },
         {
             content: "check list view of variants is disabled initially",
-            extra_trigger: "iframe #product_detail",
-            trigger: 'iframe body:not(:has(.js_product_change))',
+            extra_trigger: ":iframe #product_detail",
+            trigger: ':iframe body:not(:has(.js_product_change))',
             run: function () {},
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
@@ -47,21 +47,21 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         ...wTourUtils.clickOnSave(),
         {
             context: "check variant price",
-            trigger: 'iframe .form-check:contains("Aluminium") .badge:contains("+") .oe_currency_value:contains("50.4")',
+            trigger: ':iframe .form-check:contains("Aluminium") .badge:contains("+") .oe_currency_value:contains("50.4")',
             run: function () {},
         },
         {
             content: "check price is 750",
-            trigger: "iframe .product_price .oe_price .oe_currency_value:contains(/^750.00$/)",
+            trigger: ":iframe .product_price .oe_price .oe_currency_value:contains(/^750.00$/)",
             run: function () {},
         },
         {
             content: "switch to another variant",
-            trigger: "iframe .js_product label:contains('Aluminium')",
+            trigger: ":iframe .js_product label:contains('Aluminium')",
         },
         {
             content: "verify that price has changed when changing variant",
-            trigger: "iframe .product_price .oe_price .oe_currency_value:contains(/^800.40$/)",
+            trigger: ":iframe .product_price .oe_price .oe_currency_value:contains(/^800.40$/)",
             run: function () {},
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
@@ -81,46 +81,46 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         ...wTourUtils.clickOnSave(),
         {
             content: "check page loaded after list of variant customization disabled",
-            trigger: "iframe .js_product:not(:has(.js_product_change))",
+            trigger: ":iframe .js_product:not(:has(.js_product_change))",
             run: function () {}, // it's a check
         },
         {
             content: "check price is 750",
-            trigger: "iframe .product_price .oe_price .oe_currency_value:contains(/^750.00$/)",
+            trigger: ":iframe .product_price .oe_price .oe_currency_value:contains(/^750.00$/)",
             run: function () {},
         },
         {
             content: "switch to Aluminium variant",
-            trigger: 'iframe .js_product input[data-value_name="Aluminium"]',
+            trigger: ':iframe .js_product input[data-value_name="Aluminium"]',
         },
         {
             content: "verify that price has changed when changing variant",
-            trigger: "iframe .product_price .oe_price .oe_currency_value:contains(/^800.40$/)",
+            trigger: ":iframe .product_price .oe_price .oe_currency_value:contains(/^800.40$/)",
             run: function () {}, // it's a check
         },
         {
             content: "switch back to Steel variant",
-            trigger: "iframe .js_product label:contains('Steel - Test')",
+            trigger: ":iframe .js_product label:contains('Steel - Test')",
         },
         {
             content: "check price is 750",
-            trigger: "iframe .product_price .oe_price .oe_currency_value:contains(/^750.00$/)",
+            trigger: ":iframe .product_price .oe_price .oe_currency_value:contains(/^750.00$/)",
             run: function () {},
         },
         {
             content: "click on 'Add to Cart' button",
-            trigger: "iframe a:contains(Add to cart)",
+            trigger: ":iframe a:contains(Add to cart)",
         },
         {
             content: "check quantity",
-            trigger: "iframe .my_cart_quantity:contains(/^1$/),.o_extra_menu_items .fa-plus",
+            trigger: ":iframe .my_cart_quantity:contains(/^1$/),.o_extra_menu_items .fa-plus",
             run: function () {}, // it's a check
         },
         tourUtils.goToCart({backend: true}),
         {
             content: "click on shop",
-            trigger: "iframe a:contains(Continue shopping)",
-            extra_trigger: 'iframe body:not(:has(#products_grid_before .js_attributes))',
+            trigger: ":iframe a:contains(Continue shopping)",
+            extra_trigger: ':iframe body:not(:has(#products_grid_before .js_attributes))',
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
@@ -139,8 +139,8 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         },
         {
             content: "finish",
-            extra_trigger: 'iframe body:not(:has(#products_grid_before .js_attributes))',
-            trigger: 'iframe #wrap:not(:has(li:has(.my_cart_quantity):visible))',
+            extra_trigger: ':iframe body:not(:has(#products_grid_before .js_attributes))',
+            trigger: ':iframe #wrap:not(:has(li:has(.my_cart_quantity):visible))',
             run: function () {}, // it's a check
         },
     ],

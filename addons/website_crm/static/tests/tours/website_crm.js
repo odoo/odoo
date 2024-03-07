@@ -9,7 +9,7 @@
         edition: true,
     }, () => [{
         content: "Select contact form",
-        trigger: "iframe #wrap.o_editable section.s_website_form",
+        trigger: ":iframe #wrap.o_editable section.s_website_form",
     }, {
         content: "Open action select",
         trigger: "we-select:has(we-button:contains('Create an Opportunity')) we-toggler",
@@ -21,7 +21,7 @@
     ...wTourUtils.clickOnSave(),
     {
         content: "Ensure form model has changed and page reload is done after save",
-        trigger: "iframe section.s_website_form form[data-model_name='crm.lead']",
+        trigger: ":iframe section.s_website_form form[data-model_name='crm.lead']",
         isCheck: true,
     }]);
 

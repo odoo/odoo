@@ -31,7 +31,7 @@ wTourUtils.registerWebsitePreviewTour('website_media_dialog_icons', {
     }),
     {
         content: "Open MediaDialog from a snippet icon",
-        trigger: 'iframe .s_process_steps .fa-unlock-alt',
+        trigger: ':iframe .s_process_steps .fa-unlock-alt',
         run: "dblclick",
     },
     {
@@ -40,12 +40,12 @@ wTourUtils.registerWebsitePreviewTour('website_media_dialog_icons', {
     },
     {
         content: "Check if the icon remains the same",
-        trigger: 'iframe .s_process_steps .fa-unlock-alt',
+        trigger: ':iframe .s_process_steps .fa-unlock-alt',
         run: () => null, // it's a check
     },
     {
         content: "Open MediaDialog again",
-        trigger: 'iframe .s_process_steps .fa-unlock-alt',
+        trigger: ':iframe .s_process_steps .fa-unlock-alt',
         run: "dblclick",
     },
     {
@@ -54,7 +54,7 @@ wTourUtils.registerWebsitePreviewTour('website_media_dialog_icons', {
     },
     {
         content: "Check if the icon remains the same",
-        trigger: 'iframe .s_process_steps .fa-unlock-alt',
+        trigger: ':iframe .s_process_steps .fa-unlock-alt',
         run: () => null, // it's a check
     },
     ...wTourUtils.clickOnSave()
@@ -71,13 +71,13 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_image_shape", {
     }),
     {
         content: "Click on the image",
-        trigger: "iframe .s_text_image img",
+        trigger: ":iframe .s_text_image img",
     },
     wTourUtils.changeOption("ImageTools", 'we-select[data-name="shape_img_opt"] we-toggler'),
     wTourUtils.changeOption("ImageTools", "we-button[data-set-img-shape]"),
     {
         content: "Open MediaDialog from an image",
-        trigger: "iframe .s_text_image img[data-shape]",
+        trigger: ":iframe .s_text_image img[data-shape]",
         run: "dblclick",
     },
     {
@@ -90,7 +90,7 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_image_shape", {
     },
     {
         content: "Checks that the icon doesn't have a shape",
-        trigger: "iframe .s_text_image .fa-heart:not([data-shape])",
+        trigger: ":iframe .s_text_image .fa-heart:not([data-shape])",
         run: () => {}, //it's a check
     },
 ]);

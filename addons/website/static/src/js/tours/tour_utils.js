@@ -227,7 +227,7 @@ function clickOnSave(position = "bottom", timeout) {
         position: position,
         timeout: timeout,
     }, {
-        trigger: 'iframe body:not(.editor_enable)',
+        trigger: ':iframe body:not(.editor_enable)',
         noPrepend: true,
         auto: true, // Just making sure save is finished in automatic tests
         run: () => null,
@@ -243,7 +243,7 @@ function clickOnSave(position = "bottom", timeout) {
 function clickOnText(snippet, element, position = "bottom") {
     return {
         trigger: snippet.id ? `iframe #wrapwrap .${snippet.id} ${element}` : snippet,
-        extra_trigger: "iframe body.editor_enable",
+        extra_trigger: ":iframe body.editor_enable",
         content: markup(_t("<b>Click on a text</b> to start editing it.")),
         position: position,
         run: "text",

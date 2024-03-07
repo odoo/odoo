@@ -14,21 +14,21 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     }),
     {
         content: 'Wait for the list id to be set.',
-        trigger: 'iframe .s_newsletter_block[data-list-id]:not([data-list-id="0"]) .s_newsletter_subscribe_form',
+        trigger: ':iframe .s_newsletter_block[data-list-id]:not([data-list-id="0"]) .s_newsletter_subscribe_form',
         run: () => null, // it's a check
     },
     ...wTourUtils.clickOnSave(),
     // Subscribe to the newsletter.
     {
         content: 'Wait for the email to be loaded in the newsletter input',
-        trigger: 'iframe .s_newsletter_block .js_subscribe_btn',
-        extra_trigger: 'iframe .s_newsletter_block input:value("admin@yourcompany.example.com")',
+        trigger: ':iframe .s_newsletter_block .js_subscribe_btn',
+        extra_trigger: ':iframe .s_newsletter_block input:value("admin@yourcompany.example.com")',
     },
     // Change the link style.
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: 'Click on the Subscribe button',
-        trigger: 'iframe .s_newsletter_block .js_subscribe_btn',
+        trigger: ':iframe .s_newsletter_block .js_subscribe_btn',
     },
     {
         content: 'Toggle the option to display the Thanks button',
@@ -36,7 +36,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     },
     {
         content: 'Click on the Thanks button',
-        trigger: 'iframe .s_newsletter_block .js_subscribed_btn',
+        trigger: ':iframe .s_newsletter_block .js_subscribed_btn',
     },
     {
         content: 'Click on the link style button',
@@ -74,7 +74,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     // prevent to edit the button).
     {
         content: 'Check that the link style is correct',
-        trigger: 'iframe .s_newsletter_block .js_subscribed_btn.btn.btn-custom.flat:not(.btn-success)',
+        trigger: ':iframe .s_newsletter_block .js_subscribed_btn.btn.btn-custom.flat:not(.btn-success)',
         isCheck: true,
     },
 ]);

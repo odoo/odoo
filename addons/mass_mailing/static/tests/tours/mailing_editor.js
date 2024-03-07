@@ -53,6 +53,6 @@ registry.category("web_tour.tours").add('mailing_editor', {
 },
 ...stepUtils.saveForm(),
 {
-    trigger: 'iframe .o_editable',
+    trigger: ':iframe .o_editable',
     run: () => {},
 }]});

@@ -29,12 +29,12 @@ patch(EventAdditionalTourSteps.prototype, {
                 position: 'bottom',
             }, {
                 trigger: '.o_menu_systray_item .o_switch_danger_success',
-                extra_trigger: 'iframe body:not(.editor_enable) .o_wevent_event',
+                extra_trigger: ':iframe body:not(.editor_enable) .o_wevent_event',
                 content: markup(_t("Looking great! Let's now <b>publish</b> this page so that it becomes <b>visible</b> on your website!")),
                 position: 'bottom',
             }, {
                 trigger: '.o_website_edit_in_backend > a',
-                extra_trigger: 'iframe .o_wevent_event',
+                extra_trigger: ':iframe .o_wevent_event',
                 content: _t("This shortcut will bring you right back to the event form."),
                 position: 'bottom'
             }];

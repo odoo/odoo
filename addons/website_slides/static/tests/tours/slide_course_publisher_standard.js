@@ -45,7 +45,7 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
 ...wTourUtils.clickOnEditAndWaitEditMode(),
 {
     content: 'eLearning: double click image to edit it',
-    trigger: 'iframe img.o_wslides_course_pict',
+    trigger: ':iframe img.o_wslides_course_pict',
     run: 'dblclick',
 }, {
     content: 'eLearning: click "Add URL" to trigger URL box',
@@ -60,14 +60,14 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
     extra_trigger: '.o_we_url_success',
 }, {
     content: 'eLearning: is the Corgi set ?',
-    trigger: 'iframe img.o_wslides_course_pict[data-original-src$="GoldWinnerPembrookeWelshCorgi.jpg"]',
+    trigger: ':iframe img.o_wslides_course_pict[data-original-src$="GoldWinnerPembrookeWelshCorgi.jpg"]',
 }, {
     content: 'eLearning: save course edition',
     trigger: 'button[data-action="save"]',
 }, {
     content: 'eLearning: course create with current member',
-    extra_trigger: 'iframe body:not(.editor_enable)',  // wait for editor to close
-    trigger: 'iframe .o_wslides_js_course_join:contains("You\'re enrolled")',
+    extra_trigger: ':iframe body:not(.editor_enable)',  // wait for editor to close
+    trigger: ':iframe .o_wslides_js_course_join:contains("You\'re enrolled")',
     run: function () {} // check membership
 }
 ].concat(
@@ -77,7 +77,7 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
     slidesTourTools.addArticleToSection('Introduction', 'MyArticle', true),
     [{
     content: "eLearning: check editor is loaded for article",
-    trigger: 'iframe body.editor_enable',
+    trigger: ':iframe body.editor_enable',
     timeout: 30000,
     run: () => null, // it's a check
 }, {
@@ -85,7 +85,7 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
     trigger: '.o_we_website_top_actions button.btn-primary:contains("Save")',
 }, {
     content: "eLearning: use breadcrumb to go back to channel",
-    trigger: 'iframe .o_wslides_course_nav a:contains("Déboulonnate")',
+    trigger: ':iframe .o_wslides_course_nav a:contains("Déboulonnate")',
 }],
     slidesTourTools.addImageToSection('Introduction', 'Overview', true),
     slidesTourTools.addPdfToSection('Introduction', 'Exercise', true),

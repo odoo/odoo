@@ -34,15 +34,15 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
     },
     {
         content: "Select the language dropdown",
-        trigger: 'iframe .js_language_selector .dropdown-toggle',
+        trigger: ':iframe .js_language_selector .dropdown-toggle',
     },
     {
         content: "Select parseltongue",
-        trigger: 'iframe a.js_change_lang[data-url_code=pa_GB]',
+        trigger: ':iframe a.js_change_lang[data-url_code=pa_GB]',
     },
     {
         content: "Check that we're on parseltongue and then go to settings",
-        trigger: 'iframe html[lang=pa-GB]',
+        trigger: ':iframe html[lang=pa-GB]',
         run: () => {
             // Now go through the settings for a new website. A frontend_lang
             // cookie was set during previous steps. It should not be used when

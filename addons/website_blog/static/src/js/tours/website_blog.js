@@ -33,7 +33,7 @@
         // thus fail as this will be considered.
         auto: true,
     }, {
-        trigger: "iframe h1[data-oe-expression=\"blog_post.name\"]",
+        trigger: ":iframe h1[data-oe-expression=\"blog_post.name\"]",
         extra_trigger: "#oe_snippets.o_loaded",
         content: _t("Edit your title, the subtitle is optional."),
         position: "top",
@@ -65,7 +65,7 @@
         content: _t("Choose an image from the library."),
         position: "top",
     }, {
-        trigger: "iframe #o_wblog_post_content",
+        trigger: ":iframe #o_wblog_post_content",
         content: markup(_t("<b>Write your story here.</b> Use the top toolbar to style your text: add an image or table, set bold or italic, etc. Drag and drop building blocks for more graphical blogs.")),
         position: "top",
         run: function (actions) {
@@ -85,7 +85,7 @@
         position: "right",
     }, {
         trigger: '.o_menu_systray_item a:contains("Unpublished")',
-        extra_trigger: "iframe body:not(.editor_enable)",
+        extra_trigger: ":iframe body:not(.editor_enable)",
         position: "bottom",
         content: markup(_t("<b>Publish your blog post</b> to make it visible to your visitors.")),
     }, {

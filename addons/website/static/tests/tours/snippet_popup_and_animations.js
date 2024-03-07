@@ -42,8 +42,8 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     {
         content: "Scroll to top",
-        trigger: "iframe #wrapwrap",
-        extra_trigger: "iframe #website_cookies_bar:not(.d-none)",
+        trigger: ":iframe #wrapwrap",
+        extra_trigger: ":iframe #website_cookies_bar:not(.d-none)",
         run: function () {
             const animatedColumnEl = this.anchor.querySelector(".s_three_columns .row > :last-child");
             // When the animated element is fully visible, its animation delay
@@ -60,8 +60,8 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     {
         content: "Wait for the page to be scrolled to the top.",
-        trigger: "iframe .s_three_columns .row > :last-child:not(.o_animating)",
-        extra_trigger: "iframe header#top:not(.o_header_affixed)",
+        trigger: ":iframe .s_three_columns .row > :last-child:not(.o_animating)",
+        extra_trigger: ":iframe header#top:not(.o_header_affixed)",
         run: function () {
             // If the column has been animated successfully, the animation delay
             // should be set to approximately zero when it is not visible.
@@ -89,7 +89,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     ...setOnScrollAnim(),
     {
         content: "Verify the animation delay of the animated element in the popup at the beginning",
-        trigger: "iframe .s_popup .modal",
+        trigger: ":iframe .s_popup .modal",
         run: function () {
             const animatedColumnEl = this.anchor.querySelector(".s_three_columns .row > :last-child");
             // When the animated element is fully visible, its animation delay
@@ -106,7 +106,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     {
         content: "Wait until the column is no longer animated/visible.",
-        trigger: "iframe .s_popup .s_three_columns .row > :last-child:not(.o_animating)",
+        trigger: ":iframe .s_popup .s_three_columns .row > :last-child:not(.o_animating)",
         run: function () {
             // If the column has been animated successfully, the animation delay
             // should be set to approximately zero when it is not visible.

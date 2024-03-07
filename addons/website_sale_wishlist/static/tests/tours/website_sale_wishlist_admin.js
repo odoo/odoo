@@ -9,12 +9,12 @@ wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
     () => [
         {
             content: "Go to Rock shop page",
-            trigger: 'iframe a:contains("Rock"):first',
+            trigger: ':iframe a:contains("Rock"):first',
         },
         {
             content: "check list view of variants is disabled initially (when on /product page)",
-            trigger: 'iframe body:not(:has(.js_product_change))',
-            extra_trigger: 'iframe #product_details',
+            trigger: ':iframe body:not(:has(.js_product_change))',
+            extra_trigger: ':iframe #product_details',
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
@@ -33,49 +33,49 @@ wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
         ...wTourUtils.clickOnSave(),
         {
             content: "check page loaded after list of variant customization enabled",
-            trigger: 'iframe .js_product_change',
+            trigger: ':iframe .js_product_change',
         },
         {
             content: "Add red product in wishlist",
-            trigger: "iframe #product_detail .o_add_wishlist_dyn:not(.disabled)",
+            trigger: ":iframe #product_detail .o_add_wishlist_dyn:not(.disabled)",
         },
         {
             content: "Check that wishlist contains 1 items",
-            trigger: 'iframe .my_wish_quantity:contains(1)',
+            trigger: ':iframe .my_wish_quantity:contains(1)',
             run: function () {
                 window.location.href = '/@/shop/wishlist';
             }
         },
         {
             content: "Check wishlist contains first variant",
-            trigger: 'iframe #o_comparelist_table tr:contains("red")',
+            trigger: ':iframe #o_comparelist_table tr:contains("red")',
             run: function () {
                 window.location.href = '/@/shop?search=Rock';
             }
         },
         {
             content: "Go to Rock shop page",
-            trigger: 'iframe a:contains("Rock"):first',
+            trigger: ':iframe a:contains("Rock"):first',
         },
         {
             content: "Switch to black Rock",
-            trigger: 'iframe .js_product span:contains("black")',
+            trigger: ':iframe .js_product span:contains("black")',
         },
         {
             content: "Add black rock to wishlist",
-            trigger: "iframe #product_detail .o_add_wishlist_dyn:not(.disabled)",
+            trigger: ":iframe #product_detail .o_add_wishlist_dyn:not(.disabled)",
         },
         {
             content: "Check that black product was added",
-            trigger: 'iframe .my_wish_quantity:contains(2)',
+            trigger: ':iframe .my_wish_quantity:contains(2)',
             run: function () {
                 window.location.href = '/@/shop/wishlist';
             }
         },
         {
             content: "Check wishlist contains both variants",
-            extra_trigger: 'iframe #o_comparelist_table tr:contains("red")',
-            trigger: 'iframe #o_comparelist_table tr:contains("black")',
+            extra_trigger: ':iframe #o_comparelist_table tr:contains("red")',
+            trigger: ':iframe #o_comparelist_table tr:contains("black")',
             run: function () {}, // This is a check
         },
     ]

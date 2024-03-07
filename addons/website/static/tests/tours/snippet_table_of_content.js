@@ -42,7 +42,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "Click on the first TOC's title",
-        trigger: 'iframe .s_table_of_content:eq(0) h2',
+        trigger: ':iframe .s_table_of_content:eq(0) h2',
     },
     {
         content: "Hide the first TOC on mobile",
@@ -52,7 +52,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
     wTourUtils.goBackToBlocks(),
     {
         content: "Click on the second TOC's title",
-        trigger: 'iframe .s_table_of_content:eq(1) h2',
+        trigger: ':iframe .s_table_of_content:eq(1) h2',
     },
     {
         content: "Hide the second TOC on desktop",
@@ -61,7 +61,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
     ...wTourUtils.clickOnSave(),
     {
         content: "Check that we have the good TOC on desktop",
-        trigger: 'iframe .s_table_of_content.o_snippet_mobile_invisible',
+        trigger: ':iframe .s_table_of_content.o_snippet_mobile_invisible',
         run: () => {
             if (isVisible(':iframe .s_table_of_content.o_snippet_desktop_invisible')) {
                 console.error('The mobile TOC should not be visible on desktop');
@@ -74,7 +74,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
     },
     {
         content: "Check that we have the good TOC on mobile",
-        trigger: 'iframe .s_table_of_content.o_snippet_desktop_invisible',
+        trigger: ':iframe .s_table_of_content.o_snippet_desktop_invisible',
         run: () => {
             if (isVisible(':iframe .s_table_of_content.o_snippet_mobile_invisible')) {
                 console.error('The desktop TOC should not be visible on mobile');

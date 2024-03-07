@@ -34,66 +34,66 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     trigger: 'table > tbody > tr a:has(span:contains(Project Sharing))',
     content: 'Select "Project Sharing" project to go to project sharing feature for this project.',
 }, {
-    trigger: 'iframe .o_project_sharing',
+    trigger: ':iframe .o_project_sharing',
     content: 'Wait the project sharing feature be loaded',
     run: function () {},
 }, {
-    trigger: 'iframe button.o-kanban-button-new',
+    trigger: ':iframe button.o-kanban-button-new',
     content: 'Click "Create" button',
     run: 'click',
 }, {
-    trigger: 'iframe .o_kanban_quick_create .o_field_widget[name="name"] input',
+    trigger: ':iframe .o_kanban_quick_create .o_field_widget[name="name"] input',
     content: 'Create Task',
     run: 'text Test Create Task',
 }, {
     content: "Check that task stages cannot be drag and dropped",
-    trigger: 'iframe .o_kanban_group:not(.o_group_draggable)',
+    trigger: ':iframe .o_kanban_group:not(.o_group_draggable)',
     isCheck: true,
 }, {
-    trigger: 'iframe .o_kanban_quick_create .o_kanban_edit',
+    trigger: ':iframe .o_kanban_quick_create .o_kanban_edit',
     content: 'Go to the form view of this new task',
 }, {
-    trigger: 'iframe div[name="stage_id"] div.o_statusbar_status button[aria-checked="false"]:contains(Done)',
+    trigger: ':iframe div[name="stage_id"] div.o_statusbar_status button[aria-checked="false"]:contains(Done)',
     content: 'Change the stage of the task.',
 }, {
-    trigger: 'iframe .o_portal_chatter_composer_input .o_portal_chatter_composer_body textarea',
+    trigger: ':iframe .o_portal_chatter_composer_input .o_portal_chatter_composer_body textarea',
     content: 'Write a message in the chatter of the task',
     run: 'text I create a new task for testing purpose.',
 }, {
-    trigger: 'iframe .o_portal_chatter_composer_input .o_portal_chatter_composer_body button[name="send_message"]',
+    trigger: ':iframe .o_portal_chatter_composer_input .o_portal_chatter_composer_body button[name="send_message"]',
     content: 'Send the message',
 }, {
-    trigger: 'iframe ol.breadcrumb > li.o_back_button > a:contains(Project Sharing)',
+    trigger: ':iframe ol.breadcrumb > li.o_back_button > a:contains(Project Sharing)',
     content: 'Go back to the kanban view',
 }, {
-    trigger: 'iframe .o_searchview_dropdown_toggler',
+    trigger: ':iframe .o_searchview_dropdown_toggler',
     content: 'open the search panel menu',
 }, {
-    trigger: 'iframe .o_filter_menu .dropdown-item:first-child',
+    trigger: ':iframe .o_filter_menu .dropdown-item:first-child',
     content: 'click on the first item in the filter menu',
 }, {
-    trigger: 'iframe .o_group_by_menu .dropdown-item:first-child',
+    trigger: ':iframe .o_group_by_menu .dropdown-item:first-child',
     content: 'click on the first item in the group by menu',
 }, {
-    trigger: 'iframe .o_favorite_menu .o_add_favorite',
+    trigger: ':iframe .o_favorite_menu .o_add_favorite',
     content: 'open accordion "save current search" in favorite menu',
 }, {
-    trigger: 'iframe .o_favorite_menu .o_accordion_values .o_save_favorite',
+    trigger: ':iframe .o_favorite_menu .o_accordion_values .o_save_favorite',
     content: 'click to "save" button in favorite menu',
 }, {
-    trigger: 'iframe .o_filter_menu .dropdown-item:first-child',
+    trigger: ':iframe .o_filter_menu .dropdown-item:first-child',
     content: 'click on the first item in the filter menu',
 }, {
-    trigger: 'iframe .o_group_by_menu .dropdown-item:first-child',
+    trigger: ':iframe .o_group_by_menu .dropdown-item:first-child',
     content: 'click on the first item in the group by menu',
 }, {
-    trigger: 'iframe .o_favorite_menu .o_accordion_values .o_save_favorite',
+    trigger: ':iframe .o_favorite_menu .o_accordion_values .o_save_favorite',
     content: 'click to "save" button in favorite menu',
 }, {
-    trigger: 'iframe button.o_switch_view.o_list',
+    trigger: ':iframe button.o_switch_view.o_list',
     content: 'Go to the list view',
 }, {
-    trigger: 'iframe .o_list_view',
+    trigger: ':iframe .o_list_view',
     content: 'Check the list view',
     isCheck: true,
 }];
