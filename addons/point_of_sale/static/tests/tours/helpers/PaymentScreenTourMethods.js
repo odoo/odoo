@@ -55,8 +55,18 @@ export function clickValidate() {
             mobile: false,
         },
         {
+            trigger: ".pos-content:not(:has(.payment-screen .button.next.highlight))",
+            isCheck: true,
+            mobile: false,
+        },
+        {
             content: "validate payment",
             trigger: `.payment-screen .btn-switchpane:contains('Validate')`,
+            mobile: true,
+        },
+        {
+            trigger: ".pos-content:not(:has(.payment-screen .btn-switchpane:contains('Validate')))",
+            isCheck: true,
             mobile: true,
         },
     ];
@@ -258,22 +268,22 @@ export function pay(method, amount) {
 export function isInvoiceButtonChecked() {
     return [
         {
-            content: 'check invoice button is checked',
-            trigger: '.js_invoice.highlight',
+            content: "check invoice button is checked",
+            trigger: ".js_invoice.highlight",
             run: () => {},
-        }
-    ]
+        },
+    ];
 }
 
 export function clickShipLaterButton() {
     return [
         {
-            content: 'click ship later button',
+            content: "click ship later button",
             trigger: '.button:contains("Ship Later")',
         },
         {
-            content: 'click confirm button',
-            trigger: '.button.confirm',
+            content: "click confirm button",
+            trigger: ".button.confirm",
         },
-    ]
+    ];
 }
