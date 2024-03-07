@@ -226,6 +226,26 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             self.assertEqual(new_multiple_move_1.name, 'AJ/2016/01/0001')
             move_form.date = fields.Date.to_date('2016-01-10')
 
+    def test_sequence_draft_first_of_period(self):
+        """
+        | Step | Move | Action      | Date       | Name           |
+        | ---- | ---- | ----------- | ---------- | -----------    |
+        | 1    | `A`  | Add         | 2023-02-01 | `2023/02/0001` |
+        | 2    | `B`  | Add         | 2023-02-02 | `/`            |
+        | 3    | `B`  | Post        | 2023-02-02 | `2023/02/0002` |
+        | 4    | `A`  | Cancel      | 2023-02-01 | `2023/02/0001` | -> Assert
+        """
+        move_a = self.test_move.copy({'date': '2023-02-01'})
+        self.assertEqual(move_a.name, 'MISC/2023/02/0001')
+
+        move_b = self.test_move.copy({'date': '2023-02-02'})
+        self.assertEqual(move_b.name, '/')
+
+        move_b.action_post()
+        self.assertEqual(move_b.name, 'MISC/2023/02/0002')
+
+        move_a.button_cancel()
+        self.assertEqual(move_a.name, 'MISC/2023/02/0001')
 
     def test_journal_sequence(self):
         self.assertEqual(self.test_move.name, 'MISC/2016/01/0001')
