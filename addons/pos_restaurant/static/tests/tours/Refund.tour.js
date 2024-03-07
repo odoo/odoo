@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
             // Go to another table and refund one of the products
             FloorScreen.clickTable("4"),
             ProductScreen.orderIsEmpty(),
-            ProductScreen.clickRefund(),
+            ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("-0001"),
             Order.hasLine({
                 productName: "Coca-Cola",

@@ -4,13 +4,6 @@ from functools import partial
 
 from odoo import api, fields, models
 
-
-class PosOrderLine(models.Model):
-    _inherit = 'pos.order.line'
-
-    note = fields.Char('Internal Note added by the waiter.')
-
-
 class PosOrder(models.Model):
     _inherit = 'pos.order'
 
