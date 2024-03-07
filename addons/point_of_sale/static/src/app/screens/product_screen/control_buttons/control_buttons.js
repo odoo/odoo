@@ -8,12 +8,14 @@ import { OrderlineNoteButton } from "@point_of_sale/app/screens/product_screen/c
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { _t } from "@web/core/l10n/translation";
 import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { SelectPartnerButton } from "@point_of_sale/app/screens/product_screen/control_buttons/select_partner_button/select_partner_button";
 
 export class ControlButtons extends Component {
     static template = "point_of_sale.ControlButtons";
-    static components = { OrderlineNoteButton };
+    static components = { OrderlineNoteButton, SelectPartnerButton };
     static props = {
         wrapped: { type: Boolean, optional: true },
+        onClickMore: { type: Function, optional: true },
     };
     static defaultProps = {
         wrapped: true,
