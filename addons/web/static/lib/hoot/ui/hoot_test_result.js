@@ -114,7 +114,7 @@ export class HootTestResult extends Component {
                     </button>
                     <t t-if="state.showCode">
                         <pre
-                            class="px-2 py-1 rounded bg-white text-black dark:bg-black dark:text-white animate-slide-down"
+                            class="px-2 py-1 rounded bg-white text-black dark:bg-black dark:text-white animate-slide-down overflow-auto"
                             t-esc="props.test.code"
                         />
                     </t>

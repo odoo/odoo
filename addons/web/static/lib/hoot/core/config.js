@@ -126,6 +126,18 @@ export const CONFIG_SCHEMA = {
         parse: parseBoolean(true),
     },
     /**
+     * Environment in which the test runner is running. This parameter is used to
+     * determine the default value of other parameters, namely:
+     *  - the user agent;
+     *  - touch support;
+     *  - size of the viewport.
+     * @default "" no specific parameters are set
+     */
+    preset: {
+        default: "",
+        parse: parseString(""),
+    },
+    /**
      * Determines the seed from which random numbers will be generated. If truthy,
      * tests and suites will be shuffled within their parent suite.
      *
