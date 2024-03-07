@@ -1325,7 +1325,7 @@ export class Matchers {
      * @param {string | string[]} className
      * @param {ExpectOptions} [options]
      * @example
-     *  expect("button").toHaveClass("btn");
+     *  expect("button").toHaveClass("btn btn-primary");
      * @example
      *  expect("body").toHaveClass(["o_webclient", "o_dark"]);
      */
