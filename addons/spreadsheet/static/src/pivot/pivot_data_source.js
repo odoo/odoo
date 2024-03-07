@@ -71,7 +71,6 @@ export class OdooPivot extends OdooViewsDataSource {
             {
                 orm: this._orm,
                 serverData: this.odooDataProvider.serverData,
-                metadataRepository: this.metadataRepository,
             }
         );
         await this._model.load(this._searchParams);
@@ -210,10 +209,7 @@ export class OdooPivot extends OdooViewsDataSource {
                 definition: this._runtimeDefinition,
                 searchParams: this._initialSearchParams,
             },
-            {
-                orm: this._orm,
-                metadataRepository: this.metadataRepository,
-            }
+            { orm: this._orm }
         );
 
         const domain = new Domain(this._initialSearchParams.domain).toList({
