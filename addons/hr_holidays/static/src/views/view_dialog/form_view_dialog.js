@@ -50,7 +50,7 @@ export class TimeOffDialogFormController extends FormController {
     }
 
     get canDelete() {
-        return !this.model.root.isNew && (this.record.can_cancel || this.record.state && !['validate', 'refuse'].includes(this.record.state));
+        return !this.model.root.isNew && (this.record.can_cancel || this.record.state && ['confirm', 'validate', 'validate1'].includes(this.record.state));
     }
 }
 
