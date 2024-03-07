@@ -13,7 +13,6 @@ class ResCompany(models.Model):
     alias_domain_id = fields.Many2one(
         'mail.alias.domain', string='Email Domain',
         default=lambda self: self._default_alias_domain_id())
-    alias_domain_name = fields.Char('Alias Domain Name', related='alias_domain_id.name', readonly=True, store=True)
     bounce_email = fields.Char(string="Bounce Email", compute="_compute_bounce")
     bounce_formatted = fields.Char(string="Bounce", compute="_compute_bounce")
     catchall_email = fields.Char(string="Catchall Email", compute="_compute_catchall")
