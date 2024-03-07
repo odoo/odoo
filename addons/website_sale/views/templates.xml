@@ -973,11 +973,11 @@
                 <input type="checkbox"
                        name="tags"
                        class="form-check-input"
-                       t-att-id="tag.id"
+                       t-attf-id="tag_#{tag.id}"
                        t-att-value="tag.id"
                        t-att-checked="'checked' if tag.id in tags else None"
                 />
-                <label class="form-check-label fw-normal" t-att-for="tag.id" t-field="tag.name"/>
+                <label class="form-check-label fw-normal" t-attf-for="tag_#{tag.id}" t-field="tag.name"/>
             </div>
         </t>
     </template>
