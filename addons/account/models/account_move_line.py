@@ -640,8 +640,15 @@ class AccountMoveLine(models.Model):
                 line.balance = False
             elif not line.move_id.is_invoice(include_receipts=True):
                 # Only act as a default value when none of balance/debit/credit is specified
-                # balance is always the written field because of `_sanitize_vals`
-                line.balance = -sum((line.move_id.line_ids - line).mapped('balance'))
+                # balance is always the written field because of `_sanitize_vals`.
+                # Virtual record holds just the differences coming from the onchange
+                # so we need to recover balance of stored lines to calculate correctly the
+                # new line balance.
+                active_line_ids = [lid for lid in self.env.context.get('line_ids', []) if isinstance(lid, int)]
+                existing_lines = self.env['account.move.line'].browse(active_line_ids)
+                outdated_lines = line.move_id.line_ids._origin
+                new_lines = line.move_id.line_ids - line
+                line.balance = -sum((existing_lines - outdated_lines + new_lines).mapped('balance'))
             else:
                 line.balance = 0
 
