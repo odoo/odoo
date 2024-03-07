@@ -70,7 +70,7 @@ class IrBinary(models.AbstractModel):
         :rtype: odoo.http.Stream
         """
         if record._name == 'ir.attachment' and field_name in ('raw', 'datas', 'db_datas'):
-            return Stream.from_attachment(record)
+            return record._to_http_stream()
 
         record.check_field_access_rights('read', [field_name])
         field_def = record._fields[field_name]
@@ -87,7 +87,7 @@ class IrBinary(models.AbstractModel):
             limit=1)
         if not field_attachment:
             raise MissingError("The related attachment does not exist.")
-        return Stream.from_attachment(field_attachment)
+        return field_attachment._to_http_stream()
 
     def _get_stream_from(
         self, record, field_name='raw', filename=None, filename_field='name',
