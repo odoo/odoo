@@ -56,6 +56,12 @@ class StockPickingType(models.Model):
     def get_action_picking_tree_wave(self):
         return self._get_action('stock_picking_batch.action_picking_tree_wave')
 
+    def get_new_batch_action(self):
+        return self._get_action('stock_picking_batch.new_stock_picking_batch_action')
+
+    def get_prepare_wave_action(self):
+        return self._get_action('stock_picking_batch.action_prepare_wave')
+
 
 class StockPicking(models.Model):
     _inherit = "stock.picking"

@@ -37,4 +37,24 @@
             </xpath>
         </field>
     </record>
+    <record id="stock_picking_type_kanban_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.type.kanban.inherit</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('col-6') and hasclass('o_kanban_card_manage_section') and hasclass('o_kanban_manage_new')]" position="replace">
+                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
+                    <h5 role="menuitem" class="o_kanban_card_manage_title">
+                        New
+                    </h5>
+                    <div role="menuitem">
+                        <a name="get_new_batch_action" type="object">New Transfer</a>
+                    </div>
+                    <div role="menuitem">
+                        <a name="get_prepare_wave_action" type="object">Prepare Wave</a>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
 </odoo>

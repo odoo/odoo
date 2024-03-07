@@ -242,7 +242,15 @@
             </div>
         </field>
     </record>
-    <menuitem action="stock_picking_batch_action" id="stock_picking_batch_menu" parent="stock.menu_stock_transfers" sequence="30"/>
+    <record id="new_stock_picking_batch_action" model="ir.actions.act_window">
+        <field name="name">New Transfer</field>
+        <field name="res_model">stock.picking.batch</field>
+        <field name="view_mode">form</field>
+        <field name="domain">[('is_wave', '=', False)]</field>
+    </record>
+
+    <menuitem id="menu_stock_jobs" name="Jobs" parent="stock.menu_stock_warehouse_mgmt" sequence="2"/>
+    <menuitem action="stock_picking_batch_action" id="stock_picking_batch_menu" parent="menu_stock_jobs" sequence="30"/>
 
     <record id="vpicktree_inherit_stock_picking_batch" model="ir.ui.view">
         <field name="name">stock.picking.tree</field>
