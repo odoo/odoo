@@ -706,3 +706,16 @@ class TestSalesTeam(SaleCommon):
         self.assertEqual(sale_order.team_id, crm_team0, "Sales team should change to partner's")
         sale_order.with_user(self.user_not_in_team).write({'partner_id': partner_b.id})
         self.assertEqual(sale_order.team_id, crm_team1, "Sales team should change to partner's")
+
+    def test_qty_delivered_on_creation(self):
+        """Checks that the qty delivered of sol is automatically set to 0.0 when an so is created"""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                })],
+        })
+        # As we want to determine if the value is set in the DB we need to perform a search
+        self.assertFalse(self.env['sale.order.line'].search(['&', ('order_id', '=', sale_order.id), ('qty_delivered', '=', False)]))
+        self.assertEqual(self.env['sale.order.line'].search(['&', ('order_id', '=', sale_order.id), ('qty_delivered', '=', 0.0)]), sale_order.order_line)
