@@ -4,6 +4,7 @@ import { Component, xml } from "@odoo/owl";
 import {
     clear,
     click,
+    dblclick,
     drag,
     fill,
     hover,
@@ -153,6 +154,38 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
+    test("dblclick", async () => {
+        await mountOnFixture(/* xml */ `<button autofocus="" type="button">Click me</button>`);
+        monitorEvents("button");
+
+        dblclick("button");
+
+        expect([
+            // Hover
+            "button.pointerover",
+            "button.mouseover",
+            "button.pointerenter",
+            "button.mouseenter",
+            "button.pointermove",
+            "button.mousemove",
+            // Click 1
+            "button.pointerdown",
+            "button.mousedown",
+            "button.focus",
+            "button.pointerup",
+            "button.mouseup",
+            "button.click",
+            // Click 2
+            "button.pointerdown",
+            "button.mousedown",
+            "button.pointerup",
+            "button.mouseup",
+            "button.click",
+            // Double click event
+            "button.dblclick",
+        ]).toVerifySteps();
+    });
+
     test("drag & drop: draggable items", async () => {
         await mountOnFixture(/* xml */ `
             <ul>
@@ -179,7 +212,6 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
-            "first-item.dragstart",
             // Cancel
             "keydown:Escape",
             "keyup:Escape",
@@ -192,8 +224,8 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
-            "first-item.dragstart",
             // Leave first
+            "first-item.dragstart",
             "first-item.drag",
             "first-item.dragover",
             "first-item.dragleave",
@@ -226,8 +258,8 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
-            "first-item.dragstart",
             // Leave first
+            "first-item.dragstart",
             "first-item.drag",
             "first-item.dragover",
             "first-item.dragleave",
@@ -261,8 +293,8 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
-            "first-item.dragstart",
             // Leave first
+            "first-item.dragstart",
             "first-item.drag",
             "first-item.dragover",
             "first-item.dragleave",
@@ -295,8 +327,8 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
-            "first-item.dragstart",
             // Leave first
+            "first-item.dragstart",
             "first-item.drag",
             "first-item.dragover",
             "first-item.dragleave",
