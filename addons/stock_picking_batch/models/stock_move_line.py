@@ -4,9 +4,9 @@
 from collections import defaultdict
 
 from odoo import _, fields, models
-from odoo import Command
+from odoo import Command, api
 from odoo.tools.float_utils import float_compare
-
+from odoo.osv import expression
 
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
@@ -88,3 +88,25 @@ class StockMoveLine(models.Model):
         if picking_to_wave_vals_list:
             self.env['stock.picking'].create(picking_to_wave_vals_list)
         wave.action_confirm()
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        # a read_group cannot be performed if the move lines are grouped by picking_type_id, since it is a computed field
+        # so it is done on two steps: first, the corresponding stock pickings of the stock move lines matching the domain is fetched
+        # then the stock pickings are grouped by picking type
+        # the result of read_group on stock pickings is returned after adjusting the count and the domain
+        if 'picking_type_id' in groupby:
+            groupby.remove('picking_type_id')
+            groupby.append('picking_id')
+            move_lines = super().search(domain)
+            pickings = [move_line.picking_id.id for move_line in move_lines]
+            grouped_stock_moves = self.env['stock.picking'].read_group(domain=[('id', 'in', pickings)], fields=[], groupby=['picking_type_id'], offset=0, limit=None, orderby=False, lazy=True)
+            for group in grouped_stock_moves:
+                if group['picking_type_id']:
+                    group['__domain'] = [('picking_id', term[1], term[2]) if 'id' in term else term for term in group['__domain']]
+                    group['__domain'] = expression.AND([group['__domain'], domain])
+                    group['picking_type_id_count'] = super().search_count(group['__domain'])
+            grouped_stock_moves = [group for group in grouped_stock_moves if group['picking_type_id']]
+            return grouped_stock_moves
+
+        return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)

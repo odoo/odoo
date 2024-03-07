@@ -288,6 +288,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='groupby']" position="inside">
                 <filter string="Batch Transfer" name="by_batch_id" context="{'group_by': 'batch_id'}"/>
+                <filter string="Operation Type" name="groupby_picking_type_id" context="{'group_by': 'picking_type_id'}"/>
             </xpath>
         </field>
     </record>
