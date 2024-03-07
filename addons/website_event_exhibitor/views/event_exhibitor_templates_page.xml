@@ -168,10 +168,10 @@
 <template id="exhibitor_aside" name="Exhibitor: Aside">
     <div t-att-class="'o_wevent_online_page_aside o_wesponsor_exhibitor_aside col-12 mt-3 ps-0 pe-0 border %s' % ('col-lg-2' if option_widescreen else 'col-lg-3')">
         <div class="o_wevent_online_page_aside_content">
-            <div class="d-flex align-items-center justify-content-between">
+            <div class="position-relative d-flex align-items-center justify-content-between">
                 <span class="h5 m-3">Other exhibitors</span>
                 <a href="#collapse_exhibitor_aside" data-bs-toggle="collapse"
-                   class="o_wevent_online_page_aside_collapse d-lg-none p-2 text-decoration-none collapsed">
+                   class="o_wevent_online_page_aside_collapse o_wevent_collapse_link stretched-link d-lg-none p-2 text-decoration-none collapsed">
                     <i class="oi oi-chevron-down d-lg-none"/>
                 </a>
             </div>
