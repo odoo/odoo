@@ -2115,7 +2115,7 @@ export class Model extends Array {
         if (hierarchize && coModel._fields[coModel._parent_name]) {
             parentName = coModel._parent_name;
             fieldNames.push(parentName);
-            getParentId = (record) => record[parentName]?.[0];
+            getParentId = (record) => record[parentName]?.[0] ?? false;
         } else {
             hierarchize = false;
         }
