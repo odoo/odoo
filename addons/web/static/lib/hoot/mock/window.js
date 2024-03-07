@@ -249,6 +249,17 @@ export function getTitle() {
 }
 
 /**
+ * @param {boolean} setTouch
+ */
+export function mockTouch(setTouch) {
+    if (setTouch) {
+        window.ontouchstart ||= null;
+    } else {
+        delete window.ontouchstart;
+    }
+}
+
+/**
  * @param {typeof globalThis} global
  */
 export function patchWindow({ document, window } = globalThis) {
