@@ -28,7 +28,11 @@ import { defineModels } from "./_framework/mock_server/mock_server";
  * @typedef {import("./_framework/mock_server/mock_server").RouteCallback<T>} RouteCallback
  */
 
-export { findComponent, mountWithCleanup } from "./_framework/component_test_helpers";
+export {
+    findComponent,
+    getDropdownMenu,
+    mountWithCleanup,
+} from "./_framework/component_test_helpers";
 export { contains, editAce } from "./_framework/dom_test_helpers";
 export {
     clearRegistry,
