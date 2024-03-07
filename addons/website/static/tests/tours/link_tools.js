@@ -5,7 +5,7 @@ import { boundariesIn, setSelection } from '@web_editor/js/editor/odoo-editor/sr
 
 const clickOnImgStep = {
     content: "Click somewhere else to save.",
-    trigger: 'iframe #wrap .s_text_image img',
+    trigger: ':iframe #wrap .s_text_image img',
 };
 
 wTourUtils.registerWebsitePreviewTour('link_tools', {
@@ -20,7 +20,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     }),
     {
         content: "Replace first paragraph, to insert a new link",
-        trigger: 'iframe #wrap .s_text_image p',
+        trigger: ':iframe #wrap .s_text_image p',
         run: 'text Go to odoo: '
     },
     {
@@ -36,7 +36,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     // 2. Edit the link with the link tools.
     {
         content: "Click on the newly created link",
-        trigger: 'iframe .s_text_image a[href="http://odoo.com"]:contains("odoo.com")',
+        trigger: ':iframe .s_text_image a[href="http://odoo.com"]:contains("odoo.com")',
     },
     {
         content: "Change content (editing the label input) to odoo website_2",
@@ -45,17 +45,17 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Click again on the link",
-        trigger: 'iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website_2")',
+        trigger: ':iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website_2")',
     },
     {
         content: "Change content (editing the DOM) to odoo website",
-        trigger: 'iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website_2")',
+        trigger: ':iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website_2")',
         run: 'text odoo website',
     },
     clickOnImgStep,
     {
         content: "Click again on the link",
-        trigger: 'iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website")',
+        trigger: ':iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website")',
     },
     {
         content: "Check that the label input contains the new content",
@@ -73,7 +73,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "The new link content should be odoo website and url odoo.be",
-        trigger: 'iframe .s_text_image a[href="http://odoo.be"]:contains("odoo website")',
+        trigger: ':iframe .s_text_image a[href="http://odoo.be"]:contains("odoo website")',
     },
     {
         content: "The new link content should be odoo website and url odoo.be",
@@ -86,7 +86,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     ...wTourUtils.clickOnSave(),
     {
         content: "The link should have the secondary button style.",
-        trigger: 'iframe .s_text_image a.btn.btn-secondary[href="http://odoo.be"]:contains("odoo website")',
+        trigger: ':iframe .s_text_image a.btn.btn-secondary[href="http://odoo.be"]:contains("odoo website")',
         isCheck: true,
     },
     // 4. Add link on image.
@@ -97,7 +97,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     }),
     {
         content: "Click on the first image.",
-        trigger: 'iframe .s_three_columns .row > :nth-child(1) img',
+        trigger: ':iframe .s_three_columns .row > :nth-child(1) img',
     },
     {
         content: "Activate link.",
@@ -110,30 +110,30 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Deselect image.",
-        trigger: 'iframe .s_three_columns .row > :nth-child(2) img',
+        trigger: ':iframe .s_three_columns .row > :nth-child(2) img',
     },
     {
         content: "Re-select image.",
-        trigger: 'iframe .s_three_columns .row > :nth-child(1) img',
+        trigger: ':iframe .s_three_columns .row > :nth-child(1) img',
     },
     {
         content: "Check that the second image is not within a link.",
-        trigger: 'iframe .s_three_columns .row > :nth-child(2) div > img',
+        trigger: ':iframe .s_three_columns .row > :nth-child(2) div > img',
         isCheck: true,
     },
     {
         content: "Check that link tools appear.",
-        trigger: 'iframe .popover div a:contains("http://odoo.com")',
+        trigger: ':iframe .popover div a:contains("http://odoo.com")',
         isCheck: true,
     },
     // 5. Remove link from image.
     {
         content: "Remove link.",
-        trigger: 'iframe .popover:contains("http://odoo.com") a .fa-chain-broken',
+        trigger: ':iframe .popover:contains("http://odoo.com") a .fa-chain-broken',
     },
     {
         content: "Check that image is not within a link anymore.",
-        trigger: 'iframe .s_three_columns .row > :nth-child(1) div > img',
+        trigger: ':iframe .s_three_columns .row > :nth-child(1) div > img',
         isCheck: true,
     },
     // 6. Add mega menu with Cards template and edit URL on text-selected card.
@@ -172,18 +172,18 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check nothing is lost",
-        trigger: "iframe header .s_mega_menu_cards a[href='https://www.odoo.com']:has(img):has(h4):has(p)",
+        trigger: ":iframe header .s_mega_menu_cards a[href='https://www.odoo.com']:has(img):has(h4):has(p)",
         isCheck: true,
     },
     // 7. Create new a link from a URL-like text.
     {
         content: "Replace first paragraph, write a URL",
-        trigger: 'iframe #wrap .s_text_image p',
+        trigger: ':iframe #wrap .s_text_image p',
         run: 'text odoo.com'
     },
     {
         content: "Select text",
-        trigger: 'iframe #wrap .s_text_image p:contains(odoo.com)',
+        trigger: ':iframe #wrap .s_text_image p:contains(odoo.com)',
         run() {
             setSelection(...boundariesIn(this.anchor), false);
         }
@@ -197,12 +197,12 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         // URL transformation into link should persist, without the need for
         // input at input[name=url]
         content: "Check that link was created",
-        trigger: "iframe .s_text_image p a[href='http://odoo.com']:contains('odoo.com')",
+        trigger: ":iframe .s_text_image p a[href='http://odoo.com']:contains('odoo.com')",
         isCheck: true,
     },
     {
         content: "Click on link to open the link tools",
-        trigger: "iframe .s_text_image p a",
+        trigger: ":iframe .s_text_image p a",
     },
     // 8. Check that http links are not coerced to https and vice-versa.
     {
@@ -212,7 +212,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check that link was updated",
-        trigger: "iframe .s_text_image p a[href='https://odoo.com']:contains('odoo.com')",
+        trigger: ":iframe .s_text_image p a[href='https://odoo.com']:contains('odoo.com')",
         isCheck: true,
     },
     {
@@ -222,7 +222,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check that link was updated",
-        trigger: "iframe .s_text_image p a[href='http://odoo.com']:contains('odoo.com')",
+        trigger: ":iframe .s_text_image p a[href='http://odoo.com']:contains('odoo.com')",
         isCheck: true,
     },
     // 9. Test conversion between http and mailto links.
@@ -233,7 +233,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check that link was updated and link content is synced with URL",
-        trigger: "iframe .s_text_image p a[href='mailto:callme@maybe.com']:contains('callme@maybe.com')",
+        trigger: ":iframe .s_text_image p a[href='mailto:callme@maybe.com']:contains('callme@maybe.com')",
         isCheck: true,
     },
     {
@@ -243,7 +243,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check that link was updated and link content is synced with URL",
-        trigger: "iframe .s_text_image p a[href='http://callmemaybe.com']:contains('callmemaybe.com')",
+        trigger: ":iframe .s_text_image p a[href='http://callmemaybe.com']:contains('callmemaybe.com')",
     },
     // 10. Test that UI stays up-to-date.
     // TODO this step which was added by https://github.com/odoo/odoo/commit/9fc283b514d420fdfd66123845d9ec3563572692
@@ -256,13 +256,13 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     /*
     {
         content: "Popover should be shown",
-        trigger: "iframe .o_edit_menu_popover .o_we_url_link:contains('http://callmemaybe.com')",
+        trigger: ":iframe .o_edit_menu_popover .o_we_url_link:contains('http://callmemaybe.com')",
         isCheck: true,
     },
     */
     {
         content: "Edit link label",
-        trigger: "iframe .s_text_image p a",
+        trigger: ":iframe .s_text_image p a",
         run(actions) {
             // See SHOPS_STEP_DISABLED. TODO. These steps do not consistently
             // update the link for some reason... to investigate.
@@ -282,7 +282,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     /*
     {
         content: "Check that links's href was updated",
-        trigger: "iframe .s_text_image p a[href='http://callmemaybe.com/shop']:contains('callmemaybe.com/shop')",
+        trigger: ":iframe .s_text_image p a[href='http://callmemaybe.com/shop']:contains('callmemaybe.com/shop')",
         isCheck: true,
     },
     */
@@ -293,7 +293,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     /*
     {
         content: "Check popover content is up-to-date",
-        trigger: "iframe .popover div a:contains('http://callmemaybe.com/shop')",
+        trigger: ":iframe .popover div a:contains('http://callmemaybe.com/shop')",
         isCheck: true,
     },
     */
@@ -328,7 +328,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check that links's href and label were updated",
-        trigger: "iframe .s_text_image p a[href='/contactus']:contains('/contactus')",
+        trigger: ":iframe .s_text_image p a[href='/contactus']:contains('/contactus')",
         isCheck: true,
     },
     // 12. Add a link leading to a 404 page
@@ -339,7 +339,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check that the link's href was updated and click on it",
-        trigger: "iframe .s_text_image p a[href='/this-address-does-not-exist']",
+        trigger: ":iframe .s_text_image p a[href='/this-address-does-not-exist']",
     },
     // TODO this step is disabled for now because it is a cause of race
     // condition (last check: 3 times over 95). The popover seems to sometimes
@@ -347,7 +347,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     /*
     {
         content: "Check popover content is up-to-date (2)",
-        trigger: "iframe .popover div a:contains('/this-address-does-not-exist')",
+        trigger: ":iframe .popover div a:contains('/this-address-does-not-exist')",
         isCheck: true,
     },
     */
@@ -355,7 +355,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     clickOnImgStep,
     {
         content: "Click on contact us button",
-        trigger: "iframe a.btn[href='/contactus']",
+        trigger: ":iframe a.btn[href='/contactus']",
     },
     {
         content: "Verify that the link label input does not contain ZWS",

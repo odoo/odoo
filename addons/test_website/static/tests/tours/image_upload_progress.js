@@ -47,14 +47,12 @@ const setupSteps = [{
 }, {
     content: "drop a snippet",
     trigger: "#oe_snippets .oe_snippet[name='Text - Image'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
-    moveTrigger: "iframe .oe_drop_zone",
-    run: "drag_and_drop_native iframe #wrap",
+    run: "drag_and_drop_native :iframe #wrap",
 }, {
     content: "drop a snippet",
     trigger: "#oe_snippets .oe_snippet[name='Image Gallery'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
     extra_trigger: "body.editor_has_snippets",
-    moveTrigger: ".oe_drop_zone",
-    run: "drag_and_drop_native iframe #wrap",
+    run: "drag_and_drop_native :iframe #wrap",
 }];
 
 const formatErrorMsg = "format is not supported. Try with: .gif, .jpe, .jpeg, .jpg, .png, .svg, .webp";
@@ -68,7 +66,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     // 1. Check multi image upload
     {
         content: "click on dropped snippet",
-        trigger: "iframe #wrap .s_image_gallery .img",
+        trigger: ":iframe #wrap .s_image_gallery .img",
     }, {
         content: "click on add images to open image dialog (in multi mode)",
         trigger: 'we-customizeblock-option [data-add-images]',
@@ -121,7 +119,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     // 2. Check success single image upload
     {
         content: "click on dropped snippet",
-        trigger: "iframe #wrap .s_text_image .img",
+        trigger: ":iframe #wrap .s_text_image .img",
     }, {
         content: "click on replace media to open image dialog",
         trigger: 'we-customizeblock-option [data-replace-media]',
@@ -164,7 +162,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     // 3. Check error single image upload
     {
         content: "click on dropped snippet",
-        trigger: "iframe #wrap .s_text_image .img",
+        trigger: ":iframe #wrap .s_text_image .img",
     }, {
         content: "click on replace media to open image dialog",
         trigger: 'we-customizeblock-option [data-replace-media]',
@@ -210,7 +208,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
     // 1. Check multi image upload
     {
         content: "click on dropped snippet",
-        trigger: "iframe #wrap .s_image_gallery .img",
+        trigger: ":iframe #wrap .s_image_gallery .img",
     }, {
         content: "click on replace media to open image dialog",
         trigger: 'we-customizeblock-option [data-replace-media]',
@@ -234,7 +232,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
         in_modal: false,
     }, {
         content: "unsplash image (mocked to logo) should have been used",
-        trigger: "iframe #wrap .s_image_gallery .img[data-original-src^='/unsplash/HQqIOc8oYro/fox']",
+        trigger: ":iframe #wrap .s_image_gallery .img[data-original-src^='/unsplash/HQqIOc8oYro/fox']",
         run: () => {
             unpatchMediaDialog();
         },

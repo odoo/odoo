@@ -16,7 +16,7 @@ wTourUtils.registerWebsitePreviewTour('category_page_and_products_snippet_editio
     }),
     {
         content: "Click on the product snippet to show its options",
-        trigger: 'iframe #category_header .s_dynamic_snippet_products',
+        trigger: ':iframe #category_header .s_dynamic_snippet_products',
     },
     {
         content: "Open category option dropdown",

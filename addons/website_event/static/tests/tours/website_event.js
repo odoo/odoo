@@ -48,10 +48,10 @@
         trigger: "button[data-action=save]",
         content: _t("Once you click on save, your event is updated."),
         position: "bottom",
-        extra_trigger: "iframe .o_dirty",
+        extra_trigger: ":iframe .o_dirty",
     }, {
         trigger: ".o_menu_systray_item .o_switch_danger_success",
-        extra_trigger: "iframe body:not(.editor_enable)",
+        extra_trigger: ":iframe body:not(.editor_enable)",
         content: _t("Click to publish your event."),
         position: "top",
     }, {
