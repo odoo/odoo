@@ -243,7 +243,9 @@
             </div>
         </field>
     </record>
-    <menuitem action="stock_picking_batch_action" id="stock_picking_batch_menu" parent="stock.menu_stock_transfers" sequence="30"/>
+
+    <menuitem id="menu_stock_jobs" name="Jobs" parent="stock.menu_stock_warehouse_mgmt" sequence="2"/>
+    <menuitem action="stock_picking_batch_action" id="stock_picking_batch_menu" parent="menu_stock_jobs" sequence="30"/>
 
     <record id="view_picking_internal_search_inherit_stock_picking_batch" model="ir.ui.view">
         <field name="name">stock.picking.search</field>
