@@ -740,3 +740,16 @@ class TestSalesTeam(SaleCommon):
             self.sale_order.prepayment_percent = -1
         with self.assertRaises(ValidationError):
             self.sale_order.prepayment_percent = 1.01
+
+    def test_qty_delivered_on_creation(self):
+        """Checks that the qty delivered of sol is automatically set to 0.0 when an so is created"""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                })],
+        })
+        # As we want to determine if the value is set in the DB we need to perform a search
+        self.assertFalse(self.env['sale.order.line'].search(['&', ('order_id', '=', sale_order.id), ('qty_delivered', '=', False)]))
+        self.assertEqual(self.env['sale.order.line'].search(['&', ('order_id', '=', sale_order.id), ('qty_delivered', '=', 0.0)]), sale_order.order_line)
