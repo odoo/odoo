@@ -101,6 +101,7 @@ export class ColorPalette extends Component {
             $el.on('mouseenter', '.o_we_color_btn', this._onColorButtonEnter.bind(this));
             $el.on('mouseleave', '.o_we_color_btn', this._onColorButtonLeave.bind(this));
             this.el.addEventListener("click", this._onColorpickerClick.bind(this));
+            this.el.querySelector(".o_eyedropper").addEventListener("click", this._onEyeDropperClick.bind(this));
 
             $el.on('click', '.o_custom_gradient_editor .o_custom_gradient_btn', this._onGradientCustomButtonClick.bind(this));
             $el.on('click', '.o_custom_gradient_editor', this._onPanelClick.bind(this));
@@ -1074,5 +1075,17 @@ export class ColorPalette extends Component {
         if (ev.target.matches(".o_colorpicker_section, .o_colorpicker_sections")) {
             ev.stopPropagation();
         }
+    }
+    /**
+     * Called when the eyedropper is clicked.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onEyeDropperClick(ev) {
+        const wrapwrapEl = this.props.document.querySelector("#wrapwrap");
+        html2canvas(wrapwrapEl).then(canvas => {
+            document.body.appendChild(canvas);
+        });
     }
 }

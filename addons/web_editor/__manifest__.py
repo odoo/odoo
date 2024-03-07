@@ -132,6 +132,7 @@ Odoo Web Editor widget.
             'web_editor/static/lib/jQuery.transfo.js',
             'web_editor/static/lib/webgl-image-filter/webgl-image-filter.js',
             'web_editor/static/lib/DOMPurify.js',
+            'web_editor/static/lib/html2canvas.js',
 
             # odoo-editor
             'web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js',
