@@ -116,6 +116,12 @@ $o-wevent-color: $body-color;
         }
     }
 
+    // To be more efficiently implemented by using default Bootstrap accordion
+    // components
+    .o_wevent_collapse_link:not(.collapsed) .oi {
+        transform: rotate(180deg);
+    }
+
     .o_wevent_cta  {
         color: #fff;
         background-color: $o-enterprise-color;
