@@ -10,7 +10,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_translation', {
     wTourUtils.dragNDrop({name: 'Cover'}),
     {
         content: "Check that contact us contain Parseltongue",
-        trigger: 'iframe .s_cover .btn-primary:contains("Contact us in Parseltongue")',
+        trigger: ':iframe .s_cover .btn-primary:contains("Contact us in Parseltongue")',
         run: () => null, // it's a check
     },
     {
@@ -25,11 +25,11 @@ wTourUtils.registerWebsitePreviewTour('snippet_translation_changing_lang', {
 }, () => [
     {
         content: "Change language to Parseltongue",
-        trigger: 'iframe .js_language_selector .btn',
+        trigger: ':iframe .js_language_selector .btn',
     },
     {
         content: "Change the language to English",
-        trigger: 'iframe .js_language_selector .js_change_lang[data-url_code="en"]',
+        trigger: ':iframe .js_language_selector .js_change_lang[data-url_code="en"]',
     },
     {
         content: "Enable translation",
@@ -44,7 +44,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_translation_changing_lang', {
     wTourUtils.dragNDrop({name: 'Cover'}),
     {
         content: "Check that contact us contain Parseltongue",
-        trigger: 'iframe .s_cover .btn-primary:contains("Contact us in Parseltongue")',
+        trigger: ':iframe .s_cover .btn-primary:contains("Contact us in Parseltongue")',
         run: () => null, // it's a check
     },
 ]);

@@ -32,7 +32,7 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
     }),
     {
         content: "customize snippet",
-        trigger: "iframe #wrapwrap .s_banner h1",
+        trigger: ":iframe #wrapwrap .s_banner h1",
         run: "text",
         consumeEvent: "input",
     },
@@ -71,12 +71,12 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
     wTourUtils.dragNDrop({ name: "Bruce Banner" }),
     {
         content: "ensure banner section exists",
-        trigger: "iframe #wrap section[data-name='Banner']",
+        trigger: ":iframe #wrap section[data-name='Banner']",
         run: function () {}, // check
     },
     {
         content: "ensure custom banner section exists",
-        trigger: "iframe #wrap section[data-name='Bruce Banner']",
+        trigger: ":iframe #wrap section[data-name='Bruce Banner']",
         run: function () {
             document.querySelector(
                 "#oe_snippets .oe_snippet[name='Bruce Banner'] .o_delete_btn"

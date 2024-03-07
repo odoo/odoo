@@ -44,7 +44,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     {
         content: 'Click on the s_popup snippet',
         in_modal: false,
-        trigger: 'iframe .s_popup .modal',
+        trigger: ':iframe .s_popup .modal',
     },
     toggleBackdrop(), // hide Popup backdrop
     checkScrollbar(true),
@@ -57,11 +57,11 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     checkScrollbar(false),
     {
         content: "Select the Media List snippet in the Popup.",
-        trigger: "iframe #wrap .s_popup .modal-content .s_media_list",
+        trigger: ":iframe #wrap .s_popup .modal-content .s_media_list",
     },
     {
         content: "Remove the Media List snippet in the Popup.",
-        trigger: "iframe .oe_overlay.oe_active .oe_snippet_remove",
+        trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove",
     },
     checkScrollbar(true),
     toggleBackdrop(), // show Popup backdrop
@@ -95,7 +95,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     {
         content: 'Click on the s_popup snippet',
         in_modal: false,
-        trigger: 'iframe .s_popup .modal',
+        trigger: ':iframe .s_popup .modal',
     },
     {
         content: "Remove the s_popup snippet",
@@ -112,7 +112,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     },
     {
         content: "Select the Media List snippet in the Cookies Bar.",
-        trigger: "iframe #website_cookies_bar .modal-content .s_media_list",
+        trigger: ":iframe #website_cookies_bar .modal-content .s_media_list",
     },
     {
         content: "Duplicate the Media List snippet",
@@ -123,11 +123,11 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     checkScrollbar(false),
     {
         content: "Remove the first Media List snippet in the Cookies Bar.",
-        trigger: "iframe .oe_overlay.oe_active .oe_snippet_remove",
+        trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove",
     },
     {
         content: "Remove the second Media List snippet in the Cookies Bar.",
-        trigger: "iframe .oe_overlay.oe_active .oe_snippet_remove",
+        trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove",
     },
     checkScrollbar(true),
 ]);

@@ -9,7 +9,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     // Add a megamenu item from the menu.
     {
         content: "open site menu",
-        extra_trigger: "iframe #wrapwrap",
+        extra_trigger: ":iframe #wrapwrap",
         trigger: 'button[data-menu-xmlid="website.menu_site"]',
     },
     {
@@ -38,18 +38,18 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     wTourUtils.clickOnExtraMenuItem({extra_trigger: 'body:not(:has(.oe_menu_editor))'}, true),
     {
         content: "There should be a new megamenu item.",
-        trigger: 'iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
+        trigger: ':iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
         run: () => {}, // It's a check.
     },
     // Add a menu item in edit mode.
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "Click on a menu item",
-        trigger: "iframe .top_menu .nav-item a",
+        trigger: ":iframe .top_menu .nav-item a",
     },
     {
         content: "Click on Edit Menu",
-        trigger: 'iframe .o_edit_menu_popover a.js_edit_menu',
+        trigger: ':iframe .o_edit_menu_popover a.js_edit_menu',
     },
     {
         content: "Trigger the link dialog (click 'Add Menu Item')",
@@ -96,7 +96,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Click on Edit Link",
-        trigger: 'iframe .o_edit_menu_popover a.o_we_edit_link',
+        trigger: ':iframe .o_edit_menu_popover a.o_we_edit_link',
     },
     {
         content: "Change the label",
@@ -111,18 +111,18 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     wTourUtils.clickOnExtraMenuItem({}, true),
     {
         content: "Label should have changed",
-        trigger: 'iframe .top_menu .nav-item a:contains("Modnar")',
+        trigger: ':iframe .top_menu .nav-item a:contains("Modnar")',
         run: () => {}, // it's a check
     },
     // Edit the menu item from the "edit menu" popover button
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "Click on the 'Modnar' link",
-        trigger: 'iframe .top_menu .nav-item a:contains("Modnar")',
+        trigger: ':iframe .top_menu .nav-item a:contains("Modnar")',
     },
     {
         content: "Click on the popover Edit Menu button",
-        trigger: 'iframe .o_edit_menu_popover a.js_edit_menu',
+        trigger: ':iframe .o_edit_menu_popover a.js_edit_menu',
     },
     {
         content: "Click on the dialog Edit Menu button",
@@ -152,7 +152,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     wTourUtils.clickOnExtraMenuItem({}, true),
     {
         content: "Label should have changed",
-        trigger: 'iframe .top_menu .nav-item a:contains("Modnar !!")',
+        trigger: ':iframe .top_menu .nav-item a:contains("Modnar !!")',
         run: () => {}, // It's a check.
     },
     // Nest menu item from the menu.
@@ -205,13 +205,13 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Menu item should have a child",
-        trigger: 'iframe .top_menu .nav-item a.dropdown-toggle:contains("Home")',
+        trigger: ':iframe .top_menu .nav-item a.dropdown-toggle:contains("Home")',
     },
     // Check that with the auto close of dropdown menus, the dropdowns remain
     // openable.
     {
         content: "When menu item is opened, child item must appear in the shown menu",
-        trigger: 'iframe .top_menu .nav-item:contains("Home") ul.show li a.dropdown-item:contains("Contact us")[href="/contactus"]',
+        trigger: ':iframe .top_menu .nav-item:contains("Home") ul.show li a.dropdown-item:contains("Contact us")[href="/contactus"]',
         run: function () {
             // Scroll down.
             this.anchor.closest("body").querySelector(".o_footer_copyright_name")
@@ -220,35 +220,35 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "The Home menu should be closed",
-        trigger: 'iframe .top_menu .nav-item:contains("Home"):has(ul:not(.show))',
+        trigger: ':iframe .top_menu .nav-item:contains("Home"):has(ul:not(.show))',
         run: () => {}, // It's a check.
     },
     {
         content: "Open the Home menu after scroll",
-        trigger: 'iframe .top_menu .nav-item a.dropdown-toggle:contains("Home")',
+        trigger: ':iframe .top_menu .nav-item a.dropdown-toggle:contains("Home")',
     },
     {
         content: "Check that the Home menu is opened",
-        trigger: 'iframe .top_menu .nav-item:contains("Home") ul.show li' +
+        trigger: ':iframe .top_menu .nav-item:contains("Home") ul.show li' +
             ' a.dropdown-item:contains("Contact us")[href="/contactus"]',
         run: () => {}, // It's a check.
     },
     {
         content: "Close the Home menu",
-        trigger: 'iframe .top_menu .nav-item:has(a.dropdown-toggle:contains("Home"))',
+        trigger: ':iframe .top_menu .nav-item:has(a.dropdown-toggle:contains("Home"))',
     },
     {
         content: "Check that the Home menu is closed",
-        trigger: 'iframe .top_menu .nav-item:contains("Home"):has(ul:not(.show))',
+        trigger: ':iframe .top_menu .nav-item:contains("Home"):has(ul:not(.show))',
         run: () => {}, // It's a check.
     },
     {
         content: "Open the mega menu",
-        trigger: 'iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
+        trigger: ':iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
     },
     {
         content: "When the mega menu is opened, scroll up",
-        trigger: "iframe .top_menu .o_mega_menu_toggle.show",
+        trigger: ":iframe .top_menu .o_mega_menu_toggle.show",
         run: function () {
             const marginTopOfMegaMenu = getComputedStyle(
                 this.anchor.closest(".dropdown").querySelector(".o_mega_menu"))["margin-top"];
@@ -262,16 +262,16 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Check that the mega menu is closed",
-        trigger: 'iframe .top_menu .nav-item:contains("Megaaaaa!"):has(div[data-name="Mega Menu"]:not(.show))',
+        trigger: ':iframe .top_menu .nav-item:contains("Megaaaaa!"):has(div[data-name="Mega Menu"]:not(.show))',
         run: () => {}, // It's a check.
     },
     {
         content: "Open the mega menu after scroll",
-        trigger: 'iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
+        trigger: ':iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
     },
     {
         content: "Check that the mega menu is opened",
-        trigger: 'iframe .top_menu .nav-item:has(a.o_mega_menu_toggle:contains("Megaaaaa!")) ' +
+        trigger: ':iframe .top_menu .nav-item:has(a.o_mega_menu_toggle:contains("Megaaaaa!")) ' +
                  '.s_mega_menu_odoo_menu',
         run: () => {}, // It's a check.
     },
@@ -283,7 +283,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         // If this step fails, it means that a patch inside bootstrap was lost.
         content: "Press the 'down arrow' key.",
-        trigger: 'iframe .top_menu .nav-item:contains("Home") li:contains("Contact us")',
+        trigger: ':iframe .top_menu .nav-item:contains("Home") li:contains("Contact us")',
         run: function (actions) {
             this.anchor.dispatchEvent(new window.KeyboardEvent("keydown", { key: "ArrowDown" }));
         },

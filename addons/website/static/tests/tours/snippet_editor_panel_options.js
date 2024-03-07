@@ -15,7 +15,7 @@ wTourUtils.dragNDrop({
 // Test keeping the text selection when using the width option.
 {
     content: "Click on the first paragraph.",
-    trigger: 'iframe .s_text_image p',
+    trigger: ':iframe .s_text_image p',
 }, {
     content: "The text toolbar should be visible. The paragraph should be selected.",
     trigger: '#oe_snippets .o_we_customize_panel > #o_we_editor_toolbar_container',
@@ -32,7 +32,7 @@ wTourUtils.dragNDrop({
     trigger: '[data-select-class="o_container_small"]',
 }, {
     content: "The snippet should have the correct class.",
-    trigger: 'iframe .s_text_image > .o_container_small',
+    trigger: ':iframe .s_text_image > .o_container_small',
     run: () => {}, // It's a check.
 }, {
     content: "The text toolbar should still be visible, and the text still selected.",
@@ -84,7 +84,7 @@ wTourUtils.dragNDrop({
 }),
 {
     content: "Click on the first paragraph.",
-    trigger: 'iframe .s_text_block p',
+    trigger: ':iframe .s_text_block p',
 }, {
     content: "The text toolbar should be visible. The paragraph should be selected.",
     trigger: '#oe_snippets .o_we_customize_panel > #o_we_editor_toolbar_container',
@@ -105,7 +105,7 @@ wTourUtils.dragNDrop({
     trigger: '.snippet-option-layout_column [data-select-count="3"]',
 }, {
     content: "The snippet should have the correct number of columns.",
-    trigger: 'iframe .s_text_block .container > .row .col-lg-4:eq(3)',
+    trigger: ':iframe .s_text_block .container > .row .col-lg-4:eq(3)',
     run() {
         if (this.anchor.childElementCount !== 3) {
             console.error("The snippet does not have the correct number of columns");
@@ -133,7 +133,7 @@ wTourUtils.dragNDrop({
     trigger: '.snippet-option-layout_column [data-select-count="0"]',
 }, {
     content: "The snippet should have the correct number of columns.",
-    trigger: 'iframe .s_text_block .container:not(:has(.row))',
+    trigger: ':iframe .s_text_block .container:not(:has(.row))',
 }, {
     content: "The text toolbar should still be visible, and the text still selected.",
     trigger: '#oe_snippets .o_we_customize_panel > #o_we_editor_toolbar_container',
@@ -150,7 +150,7 @@ wTourUtils.dragNDrop({
 wTourUtils.changeOption("layout_column", 'we-button[data-name="grid_mode"]'),
 {
     content: "The snippet row should have the grid mode class.",
-    trigger: "iframe .s_text_block .row.o_grid_mode",
+    trigger: ":iframe .s_text_block .row.o_grid_mode",
     run: () => {}, // It's a check.
 }, {
     content: "The text toolbar should still be visible, and the text still selected.",
@@ -168,7 +168,7 @@ wTourUtils.changeOption("layout_column", 'we-button[data-name="grid_mode"]'),
 wTourUtils.changeOption("layout_column", 'we-button[data-name="normal_mode"]'),
 {
     content: "The snippet row should not have the grid mode class anymore.",
-    trigger: "iframe .s_text_block .row:not(.o_grid_mode)",
+    trigger: ":iframe .s_text_block .row:not(.o_grid_mode)",
     run: () => {}, // It's a check.
 }, {
     content: "The text toolbar should still be visible, and the text still selected.",

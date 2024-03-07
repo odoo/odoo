@@ -11,7 +11,7 @@
     }, () => [{
         trigger: ".o_menu_systray .o_new_content_container > a",
         content: _t("Let's create your first product."),
-        extra_trigger: "iframe .js_sale",
+        extra_trigger: ":iframe .js_sale",
         consumeVisibleOnly: true,
         position: "bottom",
     }, {
@@ -27,7 +27,7 @@
         content: markup(_t("Click on <em>Save</em> to create the product.")),
         position: "right",
     }, {
-        trigger: "iframe .product_price .oe_currency_value:visible",
+        trigger: ":iframe .product_price .oe_currency_value:visible",
         extra_trigger: "#oe_snippets.o_loaded",
         content: _t("Edit the price of this product by clicking on the amount."),
         position: "bottom",
@@ -63,7 +63,7 @@
         position: "bottom",
     }, {
         trigger: ".o_menu_systray_item .o_switch_danger_success",
-        extra_trigger: "iframe body:not(.editor_enable)",
+        extra_trigger: ":iframe body:not(.editor_enable)",
         content: _t("Click on this button so your customers can see it."),
         position: "bottom",
     }, {

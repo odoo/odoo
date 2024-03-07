@@ -22,7 +22,7 @@ wTourUtils.registerWebsitePreviewTour('website_start_cloned_snippet', {
         },
         {
             content: 'Check that the cloned snippet has a canvas and that something has been drawn inside of it',
-            trigger: 'iframe .s_countdown:eq(1) canvas',
+            trigger: ':iframe .s_countdown:eq(1) canvas',
             run: function () {
                 // Check that at least one bit has been drawn in the canvas
                 if (!this.anchor.getContext("2d").getImageData(0, 0, 1000, 1000).data.includes(1)) {

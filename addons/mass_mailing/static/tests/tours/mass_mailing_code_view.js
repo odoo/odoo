@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             content: 'Select item from dropdown',
             run: 'click',
         }, {
-            trigger: 'div[name="body_arch"] iframe #default',
+            trigger: 'div[name="body_arch"] :iframe #default',
             content: markup('Choose this <b>theme</b>.'),
             run: 'click',
         }, {
@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             content: markup('Click here to switch to <b>code view</b>'),
             run: 'click'
         }, {
-            trigger: 'iframe .o_codeview',
+            trigger: ':iframe .o_codeview',
             content: ('Remove all content from codeview'),
             run: function () {
                 const iframe = document.querySelector('.wysiwyg_iframe');
@@ -47,17 +47,17 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             content: markup('Click here to switch back from <b>code view</b>'),
             run: 'click'
         }, {
-            trigger: '[name="body_arch"] iframe .o_mail_wrapper_td',
+            trigger: '[name="body_arch"] :iframe .o_mail_wrapper_td',
             content: 'Verify that the dropable zone was not removed',
             run: () => {},
         }, {
             trigger: '[name="body_arch"] #email_designer_default_body [name="Title"] .oe_snippet_thumbnail',
             content: 'Drag the "Title" snippet from the design panel and drop it in the editor',
             run: function (actions) {
-                actions.drag_and_drop_native('[name="body_arch"] iframe .o_editable');
+                actions.drag_and_drop_native('[name="body_arch"] :iframe .o_editable');
             }
         }, {
-            trigger: '[name="body_arch"] iframe .o_editable h1',
+            trigger: '[name="body_arch"] :iframe .o_editable h1',
             content: 'Verify that the title was inserted properly in the editor',
             run: () => {},
         },

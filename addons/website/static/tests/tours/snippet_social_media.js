@@ -12,7 +12,7 @@ const preventRaceConditionStep = [{
     content: "Wait a few ms to avoid race condition",
     // Ensure the class is remove from previous call of those steps
     extra_trigger: `body:not(.${socialRaceConditionClass})`,
-    trigger: 'iframe .s_social_media',
+    trigger: ':iframe .s_social_media',
     run() {
         setTimeout(() => {
             document.body.classList.add(socialRaceConditionClass);
@@ -90,7 +90,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     },
     {
         content: "Ensure twitter became first",
-        trigger: 'iframe .s_social_media:has(a:eq(0)[href="/website/social/twitter"])',
+        trigger: ':iframe .s_social_media:has(a:eq(0)[href="/website/social/twitter"])',
         run: () => {}, // This is a check.
     },
     {
@@ -111,7 +111,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     ...addNewSocialNetwork(9, 8, 'https://instagr.am/odoo.official/'),
     {
         content: "Check if the result is correct before removing",
-        trigger: "iframe .s_social_media" +
+        trigger: ":iframe .s_social_media" +
                  ":has(a:eq(0)[href='/website/social/twitter'])" +
                  ":has(a:eq(1)[href='/website/social/linkedin'])" +
                  ":has(a:eq(2)[href='/website/social/youtube'])" +
@@ -131,7 +131,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     },
     {
         content: "Ensure paypal icon is found",
-        trigger: "iframe .s_social_media" +
+        trigger: ":iframe .s_social_media" +
                  ":has(a:eq(6)[href='https://www.paypal.com/abc']:has(i.fa-paypal))",
         run: () => {}, // This is a check.
     },
@@ -143,7 +143,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     },
     {
         content: "Ensure custom link was removed",
-        trigger: 'iframe .s_social_media:has(a:eq(6)[href="https://whatever.it/1EdSw9X"]:has(i.fa-pencil))',
+        trigger: ':iframe .s_social_media:has(a:eq(6)[href="https://whatever.it/1EdSw9X"]:has(i.fa-pencil))',
         run: () => {}, // This is a check.
     },
     {
@@ -153,7 +153,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     },
     {
         content: "Check if the result is correct after removing",
-        trigger: "iframe .s_social_media" +
+        trigger: ":iframe .s_social_media" +
                  ":has(a:eq(0)[href='/website/social/twitter'])" +
                  ":has(a:eq(1)[href='/website/social/linkedin'])" +
                  ":has(a:eq(2)[href='/website/social/youtube'])" +
@@ -178,7 +178,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     }),
     {
         content: "Check if we can still change custom icons",
-        trigger: 'iframe .s_social_media a[href="https://whatever.it/1EdSw9X"] i.fa-pencil',
+        trigger: ':iframe .s_social_media a[href="https://whatever.it/1EdSw9X"] i.fa-pencil',
         run: 'dblclick',
     },
     {
@@ -187,7 +187,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     },
     {
         content: "Check if the result is correct after setting the icon",
-        trigger: "iframe .s_social_media" +
+        trigger: ":iframe .s_social_media" +
                  ":has(a:eq(0)[href='/website/social/twitter'])" +
                  ":has(a:eq(1)[href='/website/social/linkedin'])" +
                  ":has(a:eq(2)[href='/website/social/youtube'])" +
@@ -207,7 +207,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     ...addNewSocialNetwork(10, 10, "https://facebook.com"),
     {
         content: "Check if the result is correct after adding images",
-        trigger: "iframe .s_social_media" +
+        trigger: ":iframe .s_social_media" +
                  ":has(a:eq(0)[href='/website/social/twitter']:has(img))" +
                  ":has(a:eq(9)[href='https://google.com']:has(img))" +
                  ":has(a:eq(10)[href='https://facebook.com']:has(img))",

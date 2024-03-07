@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_tabs', {
     },
     {
         content: "Click on the 'Start From Scratch' template.",
-        trigger: 'iframe #empty',
+        trigger: ':iframe #empty',
     },
     {
         content: "Click on the 'Design' tab.",
@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_tabs', {
     },
     {
         content: "Click on the empty 'DRAG BUILDING BLOCKS HERE' area.",
-        trigger: 'iframe .oe_structure.o_mail_no_options',
+        trigger: ':iframe .oe_structure.o_mail_no_options',
     },
     {
         content: "Click on the 'Design' tab.",

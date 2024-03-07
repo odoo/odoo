@@ -11,12 +11,12 @@ wTourUtils.registerWebsitePreviewTour('snippet_image_gallery', {
     ...wTourUtils.clickOnSave(),
     {
         content: 'Click on an image of the Image Wall',
-        trigger: 'iframe .s_image_gallery img',
+        trigger: ':iframe .s_image_gallery img',
         run: 'click',
     },
     {
         content: 'Check that the modal has opened properly',
-        trigger: 'iframe .s_gallery_lightbox img',
+        trigger: ':iframe .s_gallery_lightbox img',
         isCheck: true,
     },
 ]);
@@ -37,7 +37,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_remove", {
     trigger: "we-button:has(div:contains('Remove all'))",
 }, {
     content: "Click on Add Images",
-    trigger: "iframe span:contains('Add Images')",
+    trigger: ":iframe span:contains('Add Images')",
 }, {
     content: "Click on the first new image",
     trigger: ".o_select_media_dialog img[title='s_default_image.jpg']",
@@ -48,7 +48,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_remove", {
     wTourUtils.addMedia(),
    {
     content: "Click on the image of the Image Gallery snippet",
-    trigger: "iframe .s_image_gallery .carousel-item.active  img",
+    trigger: ":iframe .s_image_gallery .carousel-item.active  img",
 }, {
     content: "Check that the Snippet Editor of the clicked image has been loaded",
     trigger: "we-customizeblock-options span:contains('Image'):not(:contains('Image Gallery'))",
@@ -58,7 +58,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_remove", {
     trigger: ".o_we_customize_panel we-title:has(span:contains('Image Gallery')) we-button[title='Remove Block']",
 }, {
     content: "Check that the Image Gallery snippet has been removed",
-    trigger: "iframe #wrap:not(:has(.s_image_gallery))",
+    trigger: ":iframe #wrap:not(:has(.s_image_gallery))",
     isCheck: true,
 }]);
 
@@ -73,7 +73,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     }),
 {
     content: "Click on the first image of the snippet",
-    trigger: "iframe .s_image_gallery .carousel-item.active img",
+    trigger: ":iframe .s_image_gallery .carousel-item.active img",
 },
     wTourUtils.changeOption('ImageTools', 'we-select:contains("Filter") we-toggler'),
     wTourUtils.changeOption('ImageTools', '[data-gl-filter="blur"]'),
@@ -88,7 +88,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     content: "Check that the moved image still has the correct filter",
     // FIXME somehow checking what the editor panel shows here is not reliable
     // unless you add a big delay before checking.
-    trigger: "iframe .s_image_gallery .carousel-item.active img[data-index='1'][data-gl-filter='blur']",
+    trigger: ":iframe .s_image_gallery .carousel-item.active img[data-index='1'][data-gl-filter='blur']",
     isCheck: true,
 }]);
 
@@ -113,10 +113,10 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", 
     wTourUtils.addMedia(),
 {
     content: "Check that the new image has been added",
-    trigger: "iframe .s_image_gallery:has(img[data-index='3'])",
+    trigger: ":iframe .s_image_gallery:has(img[data-index='3'])",
     isCheck: true,
 }, {
     content: "Check that the thumbnail of the first image has not been changed",
-    trigger: "iframe .s_image_gallery ul.carousel-indicators li:first-child[style='background-image: url(/web/image/website.library_image_08)']",
+    trigger: ":iframe .s_image_gallery ul.carousel-indicators li:first-child[style='background-image: url(/web/image/website.library_image_08)']",
     isCheck: true,
 }]);

@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add('website_event_pages_seo', {
     {
         content: "Open the site menu",
         trigger: '[data-menu-xmlid="website.menu_site"]',
-        extra_trigger: 'iframe #o_wevent_event_submenu', // Ensure we landed on the event page
+        extra_trigger: ':iframe #o_wevent_event_submenu', // Ensure we landed on the event page
     },
     {
         content: "Open the optimize SEO dialog",

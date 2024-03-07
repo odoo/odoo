@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar_mobile', 
     },
     {
         content: "Check templates available in theme selector",
-        trigger: 'iframe .o_mail_theme_selector_new',
+        trigger: ':iframe .o_mail_theme_selector_new',
         run: function () {
             if (this.anchor.querySelector("#empty")) {
                 console.error('The empty template should not be visible on mobile.');
@@ -39,12 +39,12 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar_mobile', 
     },
     {
         content: "Click on the 'Start From Scratch' template.",
-        trigger: 'iframe #default',
+        trigger: ':iframe #default',
         mobile: true,
     },
     {
         content: "Select an editable element",
-        trigger: 'iframe .s_text_block',
+        trigger: ':iframe .s_text_block',
         mobile: true,
     },
     {
@@ -60,7 +60,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar_mobile', 
     },
     {
         content: "Make sure the toolbar is there",
-        trigger: 'iframe #toolbar.oe-floating',
+        trigger: ':iframe #toolbar.oe-floating',
         run: () => null, // it's a check
         mobile: true,
     },

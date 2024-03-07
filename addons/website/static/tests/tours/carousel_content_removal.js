@@ -11,13 +11,13 @@ wTourUtils.registerWebsitePreviewTour("carousel_content_removal", {
         id: 's_carousel',
         name: 'Carousel',
 }), {
-    trigger: "iframe .carousel .carousel-item.active .carousel-content",
+    trigger: ":iframe .carousel .carousel-item.active .carousel-content",
     content: "Select the active carousel item.",
 }, {
-    trigger: "iframe .oe_overlay.oe_active .oe_snippet_remove",
+    trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove",
     content: "Remove the active carousel item.",
 }, {
-    trigger: "iframe .carousel .carousel-item.active .container:not(:has(*))",
+    trigger: ":iframe .carousel .carousel-item.active .container:not(:has(*))",
     content: "Check for a carousel slide with an empty container tag",
     allowInvisible: true,
     run: function () {},

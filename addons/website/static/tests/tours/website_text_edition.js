@@ -23,7 +23,7 @@ wTourUtils.registerWebsitePreviewTour('website_text_edition', {
     wTourUtils.dragNDrop({id: 's_text_block', name: 'Text'}),
     {
         content: "Click on the text block first paragraph (to auto select)",
-        trigger: 'iframe .s_text_block p',
+        trigger: ':iframe .s_text_block p',
     },
     {
         content: "Open the foreground colorpicker",
@@ -40,7 +40,7 @@ wTourUtils.registerWebsitePreviewTour('website_text_edition', {
     },
     {
         content: "Check that paragraph now uses the main color *class*",
-        trigger: 'iframe .s_text_block p',
+        trigger: ':iframe .s_text_block p',
         run: function (actions) {
             const fontEl = this.anchor.querySelector("font");
             if (!fontEl) {
