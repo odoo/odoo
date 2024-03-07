@@ -441,7 +441,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/legacy/reactivity_tests.js',
             'web/static/tests/legacy/core/**/*.js',
             'web/static/tests/legacy/search/**/*.js',
-            'web/static/tests/legacy/model/**/*.js',
             ('remove', 'web/static/tests/legacy/search/helpers.js'),
             'web/static/tests/legacy/views/**/*.js',
             ('remove', 'web/static/tests/legacy/views/helpers.js'),
