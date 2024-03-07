@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { patchTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { localization } from "@web/core/l10n/localization";
 import {
@@ -199,6 +199,7 @@ describe("formatFloat", () => {
     });
 
     test("humanReadable", () => {
+        patchTranslations();
         patchWithCleanup(localization, {
             decimalPoint: ".",
             grouping: [3, 0],
