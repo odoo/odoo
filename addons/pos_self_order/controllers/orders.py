@@ -80,7 +80,7 @@ class PosSelfOrderController(http.Controller):
 
         order.write({
             'lines': lines,
-            'state': 'paid' if amount_total == 0 else 'draft',
+            'state': 'draft',
             'amount_tax': amount_total - amount_untaxed,
             'amount_total': amount_total,
         })
@@ -178,6 +178,19 @@ class PosSelfOrderController(http.Controller):
 
         return tables
 
+    @http.route('/pos-self-order/make-payment-zero-amount-order', auth='public', type='json', website=True)
+    def make_payment_zero_amount_order(self, order_id, access_token):
+        # If order total amount is 0 then it will make a payment and convert
+        # order into paid without redirecting to payment screen.
+        pos_config = self._verify_pos_config(access_token)
+        order = pos_config.env['pos.order'].browse(order_id)
+        if order.exists() and order.amount_total == 0 and order.state == "draft":
+            pos_make_payment = pos_config.env['pos.make.payment'].with_context(active_id=order_id).create({
+                'amount': order.amount_total,
+                'config_id': order.config_id.id,
+                'payment_method_id': order.config_id._default_payment_methods()[:1].id,
+            })
+            pos_make_payment.check()
 
     @http.route('/kiosk/payment/<int:pos_config_id>/<device_type>', auth='public', type='json', website=True)
     def pos_self_order_kiosk_payment(self, pos_config_id, order, payment_method_id, access_token, device_type):
