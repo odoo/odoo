@@ -12,12 +12,14 @@ import os
 import psycopg2
 import re
 import uuid
+import werkzeug
 
 from collections import defaultdict
 from PIL import Image
 
 from odoo import api, fields, models, SUPERUSER_ID, tools, _
 from odoo.exceptions import AccessError, ValidationError, UserError
+from odoo.http import Stream, root, request
 from odoo.tools import config, human_size, ImageProcess, str2bool, consteq
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.osv import expression
@@ -734,3 +736,51 @@ class IrAttachment(models.Model):
             ('create_uid', '=', SUPERUSER_ID),
         ]).unlink()
         self.env.registry.clear_cache('assets')
+
+    def _to_http_stream(self):
+        """ Create a :class:`~Stream`: from an ir.attachment record. """
+        self.ensure_one()
+
+        stream = Stream(
+            mimetype=self.mimetype,
+            download_name=self.name,
+            etag=self.checksum,
+            public=self.public,
+        )
+
+        if self.store_fname:
+            stream.type = 'path'
+            stream.path = werkzeug.security.safe_join(
+                os.path.abspath(config.filestore(request.db)),
+                self.store_fname
+            )
+            stat = os.stat(stream.path)
+            stream.last_modified = stat.st_mtime
+            stream.size = stat.st_size
+
+        elif self.db_datas:
+            stream.type = 'data'
+            stream.data = self.raw
+            stream.last_modified = self.write_date
+            stream.size = len(stream.data)
+
+        elif self.url:
+            # When the URL targets a file located in an addon, assume it
+            # is a path to the resource. It saves an indirection and
+            # stream the file right away.
+            static_path = root.get_static_file(
+                self.url,
+                host=request.httprequest.environ.get('HTTP_HOST', '')
+            )
+            if static_path:
+                stream = Stream.from_path(static_path, public=True)
+            else:
+                stream.type = 'url'
+                stream.url = self.url
+
+        else:
+            stream.type = 'data'
+            stream.data = b''
+            stream.size = 0
+
+        return stream
