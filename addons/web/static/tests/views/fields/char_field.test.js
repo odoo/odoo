@@ -935,24 +935,22 @@ test("edit a char field should display the status indicator buttons without flic
             </field>
         </form>`,
     });
-    onRpc(async (route, { method, args, kwargs }) => {
-        if (method === "onchange") {
-            expect.step("onchange");
-            await def;
-        }
+    onRpc("onchange", async () => {
+        expect.step("onchange");
+        await def;
     });
-    expect(".o_form_status_indicator_buttons.invisible").toHaveCount(1, {
+    expect(queryOne(".o_form_status_indicator_buttons")).not.toBeVisible({
         message: "form view is not dirty",
     });
     await contains(".o_data_cell").click();
     await fieldInput("name").edit("a");
-    expect(".o_form_status_indicator_buttons:not(.invisible)").toHaveCount(1, {
+    expect(queryOne(".o_form_status_indicator_buttons")).toBeVisible({
         message: "form view is dirty",
     });
     def.resolve();
     expect(["onchange"]).toVerifySteps();
     await animationFrame();
-    expect(".o_form_status_indicator_buttons:not(.invisible)").toHaveCount(1, {
+    expect(queryOne(".o_form_status_indicator_buttons")).toBeVisible({
         message: "form view is dirty",
     });
     expect(["onchange"]).toVerifySteps();
