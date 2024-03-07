@@ -71,7 +71,7 @@ import { Test } from "./test";
 // Global
 //-----------------------------------------------------------------------------
 
-const { Boolean, Error, Object, Promise, TypeError, console, performance } = globalThis;
+const { Boolean, Error, Object, Promise, TypeError, performance } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -603,7 +603,7 @@ export class Matchers {
 
         return this.#resolve({
             name: "toBeEmpty",
-            acceptedType: ["string", "node", "node[]"],
+            acceptedType: ["any"],
             predicate: isEmpty,
             message: (pass) =>
                 options?.message ||
