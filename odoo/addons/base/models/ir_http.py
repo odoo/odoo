@@ -239,7 +239,7 @@ class IrHttp(models.AbstractModel):
         model = request.env['ir.attachment']
         attach = model.sudo()._get_serve_attachment(request.httprequest.path)
         if attach and (attach.store_fname or attach.db_datas):
-            return Stream.from_attachment(attach).get_response()
+            return attach._to_http_stream().get_response()
 
     @classmethod
     def _redirect(cls, location, code=303):

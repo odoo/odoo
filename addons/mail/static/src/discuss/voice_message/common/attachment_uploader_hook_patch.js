@@ -10,7 +10,7 @@ patch(AttachmentUploadService.prototype, {
         }
         return attachmentData;
     },
-    _buildFormData(formData, file, thread, composer, tmpId, options) {
+    _buildFormData(formData, tmpURL, thread, composer, tmpId, options) {
         super._buildFormData(...arguments);
         if (options?.voice) {
             formData.append("voice", true);

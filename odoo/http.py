@@ -473,9 +473,9 @@ class Stream:
     This utility is safe, cache-aware and uses the best available
     streaming strategy. Works best with the --x-sendfile cli option.
 
-    Create a Stream via one of the constructors: :meth:`~from_path`:,
-    :meth:`~from_attachment`: or :meth:`~from_binary_field`:, generate
-    the corresponding HTTP response object via :meth:`~get_response`:.
+    Create a Stream via one of the constructors: :meth:`~from_path`:, or
+    :meth:`~from_binary_field`:, generate the corresponding HTTP response
+    object via :meth:`~get_response`:.
 
     Instantiating a Stream object manually without using one of the
     dedicated constructors is discouraged.
@@ -525,55 +525,6 @@ class Stream:
         )
 
     @classmethod
-    def from_attachment(cls, attachment):
-        """ Create a :class:`~Stream`: from an ir.attachment record. """
-        attachment.ensure_one()
-
-        self = cls(
-            mimetype=attachment.mimetype,
-            download_name=attachment.name,
-            etag=attachment.checksum,
-            public=attachment.public,
-        )
-
-        if attachment.store_fname:
-            self.type = 'path'
-            self.path = werkzeug.security.safe_join(
-                os.path.abspath(config.filestore(request.db)),
-                attachment.store_fname
-            )
-            stat = os.stat(self.path)
-            self.last_modified = stat.st_mtime
-            self.size = stat.st_size
-
-        elif attachment.db_datas:
-            self.type = 'data'
-            self.data = attachment.raw
-            self.last_modified = attachment.write_date
-            self.size = len(self.data)
-
-        elif attachment.url:
-            # When the URL targets a file located in an addon, assume it
-            # is a path to the resource. It saves an indirection and
-            # stream the file right away.
-            static_path = root.get_static_file(
-                attachment.url,
-                host=request.httprequest.environ.get('HTTP_HOST', '')
-            )
-            if static_path:
-                self = cls.from_path(static_path, public=True)
-            else:
-                self.type = 'url'
-                self.url = attachment.url
-
-        else:
-            self.type = 'data'
-            self.data = b''
-            self.size = 0
-
-        return self
-
-    @classmethod
     def from_binary_field(cls, record, field_name):
         """ Create a :class:`~Stream`: from a binary field. """
         data_b64 = record[field_name]
@@ -616,6 +567,10 @@ class Stream:
         assert getattr(self, self.type) is not None, "There is nothing to stream, missing {self.type!r} attribute."
 
         if self.type == 'url':
+            if self.max_age is not None:
+                res = request.redirect(self.url, code=302, local=False)
+                res.headers['Cache-Control'] = f'max-age={self.max_age}'
+                return res
             return request.redirect(self.url, code=301, local=False)
 
         if as_attachment is None:
