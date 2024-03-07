@@ -461,9 +461,6 @@ class PickingType(models.Model):
     def get_action_picking_tree_ready(self):
         return self._get_action('stock.action_picking_tree_ready')
 
-    def get_action_picking_type_operations(self):
-        return self._get_action('stock.action_get_picking_type_operations')
-
     def get_action_picking_type_moves_analysis(self):
         action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_move_action')
         action['domain'] = expression.AND([
