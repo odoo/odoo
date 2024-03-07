@@ -54,6 +54,8 @@ export const dryRun = runner.exportFn(runner.dryRun);
 export const getCurrent = runner.exportFn(runner.getCurrent);
 export const start = runner.exportFn(runner.start);
 
+export { makeExpect } from "./core/expect";
+
 // Constants
 export const globals = {
     AbortController: globalThis.AbortController,
