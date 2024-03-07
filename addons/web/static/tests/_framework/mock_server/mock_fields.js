@@ -190,6 +190,8 @@ export const Generic = makeFieldGenerator("generic");
 
 export const Html = makeFieldGenerator("html");
 
+export const Image = makeFieldGenerator("image");
+
 export const Integer = makeFieldGenerator("integer", {
     groupOperator: "sum",
 });
@@ -254,6 +256,7 @@ export const DEFAULT_STANDARD_FIELD_VALUES = {
     float: () => 0,
     html: () => false,
     number: () => 0,
+    image: () => false,
     integer: () => 0,
     json: () => false,
     properties: () => false,
