@@ -32,7 +32,7 @@ class EventRegistration(models.Model):
 
     # event
     event_id = fields.Many2one(
-        'event.event', string='Event', required=True)
+        'event.event', string='Event', default=lambda self: self.env.context.get('active_id'), required=True)
     event_ticket_id = fields.Many2one(
         'event.event.ticket', string='Event Ticket', ondelete='restrict')
     active = fields.Boolean(default=True)
