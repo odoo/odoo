@@ -1,7 +1,13 @@
-import { beforeEach, expect, getFixture, test } from "@odoo/hoot";
-import { press } from "@odoo/hoot-dom";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { press, queryAllTexts } from "@odoo/hoot-dom";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
-import { contains, makeMockEnv, mountWithCleanup, patchWithCleanup } from "../../web_test_helpers";
+import {
+    contains,
+    getService,
+    makeMockEnv,
+    mountWithCleanup,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 
 import { Component, reactive, xml } from "@odoo/owl";
 
@@ -26,7 +32,8 @@ class Parent extends Component {
 const commandProviderRegistry = registry.category("command_provider");
 const commandSetupRegistry = registry.category("command_setup");
 
-let env;
+describe.current.tags("desktop");
+
 beforeEach(async () => {
     commandProviderRegistry.getEntries().forEach(([key]) => {
         if (!["command", "data-hotkeys", "default"].includes(key)) {
@@ -38,7 +45,7 @@ beforeEach(async () => {
             commandSetupRegistry.remove(key);
         }
     });
-    env = await makeMockEnv();
+    await makeMockEnv();
     const commandCategoryRegistry = registry.category("command_categories");
     // Adding default last. The order of insertion of categories matters
     commandCategoryRegistry.remove("default");
@@ -46,23 +53,20 @@ beforeEach(async () => {
 });
 
 test("commands evilness 👹", async () => {
-    const command = env.services.command;
-    function action() {}
-
     expect(function () {
-        command.add();
+        getService("command").add();
     }).toThrow(/A Command must have a name and an action function/);
     expect(function () {
-        command.add(null);
+        getService("command").add(null);
     }).toThrow(/A Command must have a name and an action function/);
     expect(function () {
-        command.add("");
+        getService("command").add("");
     }).toThrow(/A Command must have a name and an action function/);
     expect(function () {
-        command.add("", action);
+        getService("command").add("", function action() {});
     }).toThrow(/A Command must have a name and an action function/);
     expect(function () {
-        command.add("command", null);
+        getService("command").add("command", null);
     }).toThrow(/A Command must have a name and an action function/);
 });
 
@@ -114,10 +118,7 @@ test("useCommand hook when the activeElement change", async () => {
     press("Control+k");
     await animationFrame();
     expect(".o_command").toHaveCount(2);
-    expect([...getFixture().querySelectorAll(".o_command")].map((e) => e.textContent)).toEqual([
-        "Take the throne",
-        "Lose the throne",
-    ]);
+    expect(queryAllTexts(".o_command")).toEqual(["Take the throne", "Lose the throne"]);
     press("escape");
     await animationFrame();
 
@@ -125,10 +126,7 @@ test("useCommand hook when the activeElement change", async () => {
     press("Control+k");
     await animationFrame();
     expect(".o_command").toHaveCount(2);
-    expect([...getFixture().querySelectorAll(".o_command")].map((e) => e.textContent)).toEqual([
-        "Lose the throne",
-        "I'm taking the throne",
-    ]);
+    expect(queryAllTexts(".o_command")).toEqual(["Lose the throne", "I'm taking the throne"]);
 });
 
 test("useCommand hook with isAvailable", async () => {
@@ -160,7 +158,7 @@ test("useCommand hook with isAvailable", async () => {
 
 test("command with hotkey", async () => {
     const hotkey = "a";
-    env.services.command.add("test", () => expect.step(hotkey), {
+    getService("command").add("test", () => expect.step(hotkey), {
         hotkey,
     });
     await animationFrame();
@@ -171,12 +169,12 @@ test("command with hotkey", async () => {
 
 test("global command with hotkey", async () => {
     const globalHotkey = "a";
-    env.services.command.add("testA", () => expect.step(globalHotkey), {
+    getService("command").add("testA", () => expect.step(globalHotkey), {
         global: true,
         hotkey: globalHotkey,
     });
     const hotkey = "b";
-    env.services.command.add("testB", () => expect.step(hotkey), {
+    getService("command").add("testB", () => expect.step(hotkey), {
         hotkey,
     });
     await animationFrame();
@@ -203,7 +201,7 @@ test("global command with hotkey", async () => {
 test("command with hotkey and isAvailable", async () => {
     const hotkey = "a";
     let isAvailable = false;
-    env.services.command.add("test", () => expect.step(hotkey), {
+    getService("command").add("test", () => expect.step(hotkey), {
         hotkey,
         isAvailable: () => isAvailable,
     });
@@ -316,11 +314,7 @@ test("useCommand hook with hotkey and isAvailable", async () => {
     await animationFrame();
     expect(".o_command_palette").toHaveCount(1);
     expect(".o_command").toHaveCount(3);
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual([
-        "Command 1A",
-        "Command 2B",
-        "Command 4D",
-    ]);
+    expect(queryAllTexts(".o_command")).toEqual(["Command 1\nA", "Command 2\nB", "Command 4\nD"]);
 });
 
 test("open command palette with command config", async () => {
@@ -333,7 +327,7 @@ test("open command palette with command config", async () => {
         },
     ];
     const providers = [{ provide }];
-    env.services.command.add(
+    getService("command").add(
         "test",
         () => {
             return {
@@ -350,11 +344,7 @@ test("open command palette with command config", async () => {
     press("alt+a");
     await animationFrame();
     expect(".o_command").toHaveCount(1);
-    expect(
-        [...getFixture().querySelectorAll(".o_command span:first-child")].map(
-            (el) => el.textContent
-        )
-    ).toEqual(["Command1"]);
+    expect(queryAllTexts(".o_command span:first-child")).toEqual(["Command1"]);
 });
 
 test("data-hotkey added to command palette", async () => {
@@ -380,11 +370,7 @@ test("data-hotkey added to command palette", async () => {
     await animationFrame();
 
     expect(".o_command").toHaveCount(2);
-    expect(
-        [...getFixture().querySelectorAll(".o_command span:first-child")].map(
-            (el) => el.textContent
-        )
-    ).toEqual(["Aria stark", "Bran stark"]);
+    expect(queryAllTexts(".o_command span:first-child")).toEqual(["Aria stark", "Bran stark"]);
 
     // Click on first command
     await contains("#o_command_0").click();
@@ -395,12 +381,10 @@ test("data-hotkey added to command palette", async () => {
     await animationFrame();
 
     // Click on second command
-    expect(document.activeElement).not.toBe(
-        getFixture().querySelector("input[title='Bran Stark']")
-    );
+    expect("input[title='Bran Stark']").not.toBeFocused();
     await contains("#o_command_1").click();
     expect(".o_command_palette").toHaveCount(0);
-    expect(document.activeElement).toBe(getFixture().querySelector("input[title='Bran Stark']"));
+    expect("input[title='Bran Stark']").toBeFocused();
 
     // only step should come from the first command execution
     expect(["Hodor"]).toVerifySteps();
@@ -408,7 +392,7 @@ test("data-hotkey added to command palette", async () => {
 
 test("access to hotkeys from the command palette", async () => {
     const hotkey = "a";
-    env.services.command.add("A", () => expect.step("A"), {
+    getService("command").add("A", () => expect.step("A"), {
         hotkey,
     });
 
@@ -436,11 +420,7 @@ test("access to hotkeys from the command palette", async () => {
     await animationFrame();
 
     expect(".o_command").toHaveCount(3);
-    expect(
-        [...getFixture().querySelectorAll(".o_command span:first-child")].map(
-            (el) => el.textContent
-        )
-    ).toEqual(["A", "B", "C"]);
+    expect(queryAllTexts(".o_command span:first-child")).toEqual(["A", "B", "C"]);
 
     // Trigger the command a
     press("a");
@@ -472,10 +452,9 @@ test("can be searched", async () => {
     await mountWithCleanup(TestComponent);
 
     // Register some commands
-    function action() {}
     const names = ["Cersei Lannister", "Jaime Lannister", "Tyrion Lannister", "Tywin Lannister"];
     for (const name of names) {
-        env.services.command.add(name, action);
+        getService("command").add(name, function action() {});
     }
     await animationFrame();
 
@@ -485,25 +464,19 @@ test("can be searched", async () => {
 
     expect(".o_command_palette_search input").toHaveValue("");
 
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual(
-        names
-    );
+    expect(queryAllTexts(".o_command")).toEqual(names);
 
     // Search something
     await contains(".o_command_palette_search input").edit("jl", { confirm: false });
     await animationFrame();
 
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual([
-        "Jaime Lannister",
-    ]);
+    expect(queryAllTexts(".o_command")).toEqual(["Jaime Lannister"]);
 
     // Clear search input
     await contains(".o_command_palette_search input").edit("", { confirm: false });
     await animationFrame();
 
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual(
-        names
-    );
+    expect(queryAllTexts(".o_command")).toEqual(names);
 });
 
 test("configure the empty message based on the namespace", async () => {
@@ -531,7 +504,6 @@ test("configure the empty message based on the namespace", async () => {
     commandSetupRegistry.add("@", {
         emptyMessage: "Empty @",
     });
-    await Promise.resolve();
 
     await mountWithCleanup(TestComponent);
 
@@ -641,34 +613,26 @@ test("namespaces display in the footer are still clickable", async () => {
     press("Control+k");
     await animationFrame();
     expect(".o_command_palette_footer").toHaveText("TIP — search for @users and #channels");
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual(
-        []
-    );
+    expect(queryAllTexts(".o_command")).toEqual([]);
 
     await contains(".o_command_palette_footer .o_namespace").click();
     await animationFrame();
     expect(".o_command_palette_search .o_namespace").toHaveText("@");
     expect(".o_command_palette_search input").toHaveValue("");
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual([
-        "Command@",
-    ]);
+    expect(queryAllTexts(".o_command")).toEqual(["Command@"]);
 
     await contains(".o_command_palette_search input").edit("Com", { confirm: false });
     await contains(".o_command_palette_footer .o_namespace:eq(1)").click();
     await animationFrame();
     expect(".o_command_palette_search .o_namespace").toHaveText("#");
     expect(".o_command_palette_search input").toHaveValue("Com");
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual([
-        "Command#",
-    ]);
+    expect(queryAllTexts(".o_command")).toEqual(["Command#"]);
 
     await contains(".o_command_palette_footer .o_namespace:eq(0)").click();
     await animationFrame();
     expect(".o_command_palette_search .o_namespace").toHaveText("@");
     expect(".o_command_palette_search input").toHaveValue("Com");
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual([
-        "Command@",
-    ]);
+    expect(queryAllTexts(".o_command")).toEqual(["Command@"]);
 });
 
 test("defined multiple providers with the same namespace", async () => {
@@ -701,9 +665,7 @@ test("defined multiple providers with the same namespace", async () => {
     await animationFrame();
     expect(".o_command_palette_search input").toHaveValue("");
 
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual(
-        defaultNames.concat(otherNames)
-    );
+    expect(queryAllTexts(".o_command")).toEqual([...defaultNames, ...otherNames]);
 });
 
 test("can switch between command providers", async () => {
@@ -736,24 +698,18 @@ test("can switch between command providers", async () => {
 
     expect(".o_command_palette_search input").toHaveValue("");
 
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual(
-        defaultNames
-    );
+    expect(queryAllTexts(".o_command")).toEqual(defaultNames);
 
     // Switch to the other provider
     await contains(".o_command_palette_search input").edit("@", { confirm: false });
 
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual(
-        otherNames
-    );
+    expect(queryAllTexts(".o_command")).toEqual(otherNames);
 
     // Press backspace to recover the default provider
     press("backspace");
     await animationFrame();
 
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual(
-        defaultNames
-    );
+    expect(queryAllTexts(".o_command")).toEqual(defaultNames);
 });
 
 test("multi level commands", async () => {
@@ -797,9 +753,7 @@ test("multi level commands", async () => {
         "Search for a command..."
     );
 
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual(
-        defaultNames
-    );
+    expect(queryAllTexts(".o_command")).toEqual(defaultNames);
 
     await contains(".o_command.focused").click();
     await animationFrame();
@@ -809,9 +763,7 @@ test("multi level commands", async () => {
         "Who is the next King ?"
     );
 
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual(
-        otherNames
-    );
+    expect(queryAllTexts(".o_command")).toEqual(otherNames);
 });
 
 test("multi level commands with hotkey", async () => {
@@ -860,9 +812,7 @@ test("multi level commands with hotkey", async () => {
         "Search for a command..."
     );
 
-    expect(
-        [...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent.toLowerCase())
-    ).toEqual([(name + hotkey).toLowerCase()]);
+    expect(queryAllTexts(".o_command")).toEqual([[name, hotkey.toUpperCase()].join("\n")]);
 
     press("a");
     await animationFrame();
@@ -872,9 +822,7 @@ test("multi level commands with hotkey", async () => {
         "Who is the next King ?"
     );
 
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual(
-        otherNames
-    );
+    expect(queryAllTexts(".o_command")).toEqual(otherNames);
 });
 
 test("command categories", async () => {
@@ -882,10 +830,10 @@ test("command categories", async () => {
 
     // Register some commands
     function action() {}
-    env.services.command.add("a", action, { category: "custom-nolabel" });
-    env.services.command.add("b", action, { category: "custom" });
-    env.services.command.add("c", action);
-    env.services.command.add("d", action, { category: "invalid-category" });
+    getService("command").add("a", action, { category: "custom-nolabel" });
+    getService("command").add("b", action, { category: "custom" });
+    getService("command").add("c", action);
+    getService("command").add("d", action, { category: "invalid-category" });
     await animationFrame();
 
     // Open palette
@@ -893,9 +841,7 @@ test("command categories", async () => {
     await animationFrame();
 
     expect(".o_command_category").toHaveCount(3);
-    expect(
-        [...getFixture().querySelectorAll(".o_command_category")].map((el) => el.textContent)
-    ).toEqual(["a", "b", "cd"]);
+    expect(queryAllTexts(".o_command_category")).toEqual(["a", "b", "c\nd"]);
 });
 
 test("data-command-category", async () => {
@@ -924,18 +870,10 @@ test("data-command-category", async () => {
 
     expect(".o_command").toHaveCount(4);
     expect(
-        [
-            ...getFixture().querySelectorAll(
-                ".o_command_category:nth-of-type(1) .o_command > a > div > span:first-child"
-            ),
-        ].map((el) => el.textContent)
+        queryAllTexts(".o_command_category:nth-of-type(1) .o_command > a > div > span:first-child")
     ).toEqual(["Robert baratheon", "Joffrey baratheon"]);
     expect(
-        [
-            ...getFixture().querySelectorAll(
-                ".o_command_category:nth-of-type(2) .o_command > a > div > span:first-child"
-            ),
-        ].map((el) => el.textContent)
+        queryAllTexts(".o_command_category:nth-of-type(2) .o_command > a > div > span:first-child")
     ).toEqual(["Aria stark", "Bran stark"]);
 });
 
@@ -955,13 +893,13 @@ test("display shortcuts correctly for non-MacOS ", async () => {
 
     // Register some commands
     function action() {}
-    env.services.command.add("a", action);
-    env.services.command.add("b", action, { hotkey: "alt+b" });
-    env.services.command.add("c", action, { hotkey: "c" });
-    env.services.command.add("d", action, {
+    getService("command").add("a", action);
+    getService("command").add("b", action, { hotkey: "alt+b" });
+    getService("command").add("c", action, { hotkey: "c" });
+    getService("command").add("d", action, {
         hotkey: "control+d",
     });
-    env.services.command.add("e", action, {
+    getService("command").add("e", action, {
         hotkey: "alt+control+e",
     });
     await animationFrame();
@@ -970,13 +908,13 @@ test("display shortcuts correctly for non-MacOS ", async () => {
     press("Control+k");
     await animationFrame();
 
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual([
+    expect(queryAllTexts(".o_command")).toEqual([
         "a",
-        "bALT + B",
-        "cC",
-        "dCONTROL + D",
-        "eALT + CONTROL + E",
-        "ClickALT + F",
+        "b\nALT + B",
+        "c\nC",
+        "d\nCONTROL + D",
+        "e\nALT + CONTROL + E",
+        "Click\nALT + F",
     ]);
 });
 
@@ -1006,13 +944,13 @@ test("display shortcuts correctly for MacOS ", async () => {
 
     // Register some commands
     function action() {}
-    env.services.command.add("a", action);
-    env.services.command.add("b", action, { hotkey: "alt+b" });
-    env.services.command.add("c", action, { hotkey: "c" });
-    env.services.command.add("d", action, {
+    getService("command").add("a", action);
+    getService("command").add("b", action, { hotkey: "alt+b" });
+    getService("command").add("c", action, { hotkey: "c" });
+    getService("command").add("d", action, {
         hotkey: "control+d",
     });
-    env.services.command.add("e", action, {
+    getService("command").add("e", action, {
         hotkey: "alt+control+e",
     });
     await animationFrame();
@@ -1021,13 +959,13 @@ test("display shortcuts correctly for MacOS ", async () => {
     press("Control+k");
     await animationFrame();
 
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual([
+    expect(queryAllTexts(".o_command")).toEqual([
         "a",
-        "bCONTROL + B",
-        "cC",
-        "dCOMMAND + D",
-        "eCONTROL + COMMAND + E",
-        "ClickCONTROL + F",
+        "b\nCONTROL + B",
+        "c\nC",
+        "d\nCOMMAND + D",
+        "e\nCONTROL + COMMAND + E",
+        "Click\nCONTROL + F",
     ]);
 });
 
@@ -1053,9 +991,7 @@ test("display shortcuts correctly for non-MacOS with a new overlayModifier", asy
     press("Control+k");
     await animationFrame();
 
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual([
-        "ClickALT + CONTROL + A",
-    ]);
+    expect(queryAllTexts(".o_command")).toEqual(["Click\nALT + CONTROL + A"]);
 });
 
 test("display shortcuts correctly for MacOS with a new overlayModifier", async () => {
@@ -1091,13 +1027,11 @@ test("display shortcuts correctly for MacOS with a new overlayModifier", async (
     press("Control+k");
     await animationFrame();
 
-    expect([...getFixture().querySelectorAll(".o_command")].map((el) => el.textContent)).toEqual([
-        "ClickCONTROL + COMMAND + A",
-    ]);
+    expect(queryAllTexts(".o_command")).toEqual(["Click\nCONTROL + COMMAND + A"]);
 });
 
 test("openMainPalette with onClose", async () => {
-    const command = env.services.command;
+    const command = getService("command");
     command.openMainPalette({}, () => {
         expect.step("onClose");
     });
@@ -1113,7 +1047,7 @@ test("openMainPalette with onClose", async () => {
 
 test("uses openPalette to modify the config used by the command palette", async () => {
     const action = () => {};
-    env.services.command.add("Command1", action);
+    getService("command").add("Command1", action);
 
     await mountWithCleanup(TestComponent);
 
@@ -1121,11 +1055,7 @@ test("uses openPalette to modify the config used by the command palette", async 
     await animationFrame();
     expect(".o_command_palette_search input").toHaveValue("");
     expect(".o_command").toHaveCount(1);
-    expect(
-        [...getFixture().querySelectorAll(".o_command span:first-child")].map(
-            (el) => el.textContent
-        )
-    ).toEqual(["Command1"]);
+    expect(queryAllTexts(".o_command span:first-child")).toEqual(["Command1"]);
 
     const provide = () => [
         {
@@ -1138,14 +1068,10 @@ test("uses openPalette to modify the config used by the command palette", async 
         searchValue: "Command",
         providers,
     };
-    env.services.command.openPalette(configCustom);
+    getService("command").openPalette(configCustom);
     await animationFrame();
     expect(".o_command").toHaveCount(1);
-    expect(
-        [...getFixture().querySelectorAll(".o_command span:first-child")].map(
-            (el) => el.textContent
-        )
-    ).toEqual(["Command2"]);
+    expect(queryAllTexts(".o_command span:first-child")).toEqual(["Command2"]);
     expect(".o_command_palette_search input").toHaveValue("Command");
 });
 
@@ -1185,10 +1111,10 @@ test("ensure that calling openPalette multiple times successfully loads the last
         providers: [{ provide: provide[1] }],
     };
 
-    env.services.command.openPalette(configCustom1);
+    getService("command").openPalette(configCustom1);
     await animationFrame();
     expect(".o_command_palette").toHaveCount(0);
-    env.services.command.openPalette(configCustom2);
+    getService("command").openPalette(configCustom2);
     await animationFrame();
     expect(".o_command_palette").toHaveCount(0);
     providePromise1.resolve();
@@ -1199,10 +1125,6 @@ test("ensure that calling openPalette multiple times successfully loads the last
     await animationFrame();
     // Second config should be loaded properly.
     expect(".o_command").toHaveCount(1);
-    expect(
-        [...getFixture().querySelectorAll(".o_command span:first-child")].map(
-            (el) => el.textContent
-        )
-    ).toEqual(["Command2"]);
+    expect(queryAllTexts(".o_command span:first-child")).toEqual(["Command2"]);
     expect(".o_command_palette_search input").toHaveValue("Command");
 });
