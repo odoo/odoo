@@ -1,7 +1,11 @@
 /** @odoo-module */
 
 import { App, Component, xml } from "@odoo/owl";
-import { defineRootNode, getActiveElement } from "@web/../lib/hoot-dom/helpers/dom";
+import {
+    defineRootNode,
+    getActiveElement,
+    getCurrentDimensions,
+} from "@web/../lib/hoot-dom/helpers/dom";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import { HootError } from "../hoot_utils";
 
@@ -28,8 +32,9 @@ const FIXTURE_DEBUG_STYLE = [
     ...FIXTURE_COMMON_STYLE,
     "background-color: inherit",
     "color: inherit",
-    "left: 0",
-    "top: 0",
+    "left: 50%",
+    "top: 50%",
+    "transform: translate(-50%, -50%)",
     "z-index: 3",
 ].join(";");
 const FIXTURE_STYLE = [
@@ -83,6 +88,14 @@ export function makeFixtureManager(runner) {
                 fixture.setAttribute("style", FIXTURE_DEBUG_STYLE);
             } else {
                 fixture.setAttribute("style", FIXTURE_STYLE);
+            }
+
+            const dimensions = getCurrentDimensions();
+            if (dimensions.width) {
+                fixture.style.width = `${dimensions.width}px`;
+            }
+            if (dimensions.height) {
+                fixture.style.height = `${dimensions.height}px`;
             }
 
             setupEventActions(fixture);
