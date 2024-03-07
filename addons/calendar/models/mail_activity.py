@@ -38,6 +38,9 @@ class MailActivity(models.Model):
                     _('Feedback: %(feedback)s', feedback=tools.plaintext2html(feedback)) if feedback else '',
                 )
                 event.write({'description': description})
+
+        if events:
+            feedback = False
         messages, activities = super(MailActivity, self)._action_done(feedback=feedback, attachment_ids=attachment_ids)
         return messages, activities
 
