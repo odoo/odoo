@@ -128,3 +128,8 @@ class AnalyticMixin(models.AbstractModel):
             ('analytic_distribution_search', leaf[1], leaf[2]) if len(leaf) == 3 and leaf[0] == 'analytic_distribution' and isinstance(leaf[2], (str, tuple, list)) else leaf
             for leaf in domain
         ]
+
+    def _get_analytic_account_ids(self) -> list[int]:
+        """ Get the analytic account ids from the analytic_distribution dict """
+        self.ensure_one()
+        return [int(account_id) for ids in self.analytic_distribution for account_id in ids.split(',')]
