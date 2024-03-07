@@ -342,7 +342,7 @@ class AccountReportLine(models.Model):
             if report_line.parent_id.groupby or report_line.parent_id.user_groupby:
                 raise ValidationError(_("A line cannot have both children and a groupby value (line '%s').", report_line.parent_id.name))
 
-    @api.constrains('expression_ids', 'groupby')
+    @api.constrains('expression_ids', 'groupby', 'user_groupby')
     def _validate_formula(self):
         for expression in self.expression_ids:
             if expression.engine == 'aggregation' and (expression.report_line_id.groupby or expression.report_line_id.user_groupby):
