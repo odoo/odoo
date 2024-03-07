@@ -418,6 +418,9 @@ class SaleOrderLine(models.Model):
         mapping = lines_by_analytic._get_delivered_quantity_by_analytic([('amount', '<=', 0.0)])
         for so_line in lines_by_analytic:
             so_line.qty_delivered = mapping.get(so_line.id or so_line._origin.id, 0.0)
+        # add a default value of 0.0 to other records if necessary
+        for so_line in self-lines_by_analytic:
+            so_line.qty_delivered = so_line.qty_delivered or 0.0
 
     def _get_delivered_quantity_by_analytic(self, additional_domain):
         """ Compute and write the delivered quantity of current SO lines, based on their related
