@@ -13,7 +13,7 @@ patch(Thread, {
         if (thread.fetchChannelInfoState === "fetched") {
             return Promise.resolve(thread);
         }
-        if (thread.fetchChannelInfoStateState === "fetching") {
+        if (thread.fetchChannelInfoState === "fetching") {
             return thread.fetchChannelInfoDeferred;
         }
         thread.fetchChannelInfoState = "fetching";
