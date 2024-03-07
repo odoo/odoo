@@ -1,10 +1,12 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { patchTranslations } from "@web/../tests/web_test_helpers";
 
 import { renderToElement, renderToString } from "@web/core/utils/render";
 
 describe.current.tags("headless");
 
 test("renderToElement always returns an element", () => {
+    patchTranslations();
     renderToString.app.addTemplate(
         "test.render.template.1",
         `<t t-if="False">
