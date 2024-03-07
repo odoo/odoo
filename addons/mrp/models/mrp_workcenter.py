@@ -443,7 +443,7 @@ class MrpWorkcenterProductivityLoss(models.Model):
     sequence = fields.Integer('Sequence', default=1)
     manual = fields.Boolean('Is a Blocking Reason', default=True)
     loss_id = fields.Many2one('mrp.workcenter.productivity.loss.type', domain=[('loss_type', 'in', ['quality', 'availability'])], string='Category')
-    loss_type = fields.Selection(string='Effectiveness Category', related='loss_id.loss_type', store=True, readonly=False)
+    loss_type = fields.Selection(string='Effectiveness Category', related='loss_id.loss_type', readonly=False)
 
     def _convert_to_duration(self, date_start, date_stop, workcenter=False):
         """ Convert a date range into a duration in minutes.
@@ -494,7 +494,7 @@ class MrpWorkcenterProductivity(models.Model):
         'mrp.workcenter.productivity.loss', "Loss Reason",
         ondelete='restrict', required=True)
     loss_type = fields.Selection(
-        string="Effectiveness", related='loss_id.loss_type', store=True, readonly=False)
+        string="Effectiveness", related='loss_id.loss_type', readonly=False)
     description = fields.Text('Description')
     date_start = fields.Datetime('Start Date', default=fields.Datetime.now, required=True)
     date_end = fields.Datetime('End Date')

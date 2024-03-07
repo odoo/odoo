@@ -48,7 +48,7 @@ class StockWarehouseOrderpoint(models.Model):
             " [('id', '=', context.get('default_product_id', False))] if context.get('default_product_id') else"
             " [('is_storable', '=', True)]"),
         ondelete='cascade', required=True, check_company=True)
-    product_category_id = fields.Many2one('product.category', name='Product Category', related='product_id.categ_id', store=True)
+    product_category_id = fields.Many2one('product.category', name='Product Category', related='product_id.categ_id')
     product_uom = fields.Many2one(
         'uom.uom', 'Unit of Measure', related='product_id.uom_id')
     product_uom_name = fields.Char(string='Product unit of measure label', related='product_uom.display_name', readonly=True)
