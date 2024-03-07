@@ -13,10 +13,10 @@ wTourUtils.registerWebsitePreviewTour('drop_404_ir_attachment_url', {
     }),
     {
         content: 'Click on the snippet image',
-        trigger: 'iframe .s_404_snippet img',
+        trigger: ':iframe .s_404_snippet img',
     }, {
         content: 'Once the image UI appears, check the image has no size (404)',
-        trigger: 'iframe .s_404_snippet img',
+        trigger: ':iframe .s_404_snippet img',
         extra_trigger: '.snippet-option-ReplaceMedia',
         run: function () {
             const imgEl = this.anchor;
@@ -31,7 +31,7 @@ wTourUtils.registerWebsitePreviewTour('drop_404_ir_attachment_url', {
     wTourUtils.changeOption('ImageTools', 'we-button[data-set-img-shape]'),
     {
         content: 'Once the shape is applied, check the image has now a size (placeholder image)',
-        trigger: 'iframe .s_404_snippet img[src^="data:"]',
+        trigger: ':iframe .s_404_snippet img[src^="data:"]',
         run: function () {
             const imgEl = this.anchor;
             if (!imgEl.complete

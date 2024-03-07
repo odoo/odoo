@@ -42,7 +42,7 @@ registry.category("web_tour.tours").add("website_settings_m2o_dirty", {
         },
         {
             content: "check that we are on '/'",
-            trigger: "iframe body div#wrap",
+            trigger: ":iframe body div#wrap",
             run: function () {
                 if (window.location.pathname !== "/") {
                     // If this fails, it's probably because the change of website

@@ -28,7 +28,7 @@ const goToBackendSteps = [{
 }];
 const checkEditorSteps = [{
     content: "Check that the editor is loaded",
-    trigger: 'iframe body.editor_enable',
+    trigger: ':iframe body.editor_enable',
     timeout: 30000,
     run: () => null, // it's a check
 }, {
@@ -36,7 +36,7 @@ const checkEditorSteps = [{
     trigger: '.o_we_website_top_actions button.btn-primary:contains("Save")',
 }, {
     content: "wait for editor to close",
-    trigger: 'iframe body:not(.editor_enable)',
+    trigger: ':iframe body:not(.editor_enable)',
     run: () => null, // It's a check
 }];
 
@@ -66,7 +66,7 @@ registry.category("web_tour.tours").add('client_action_redirect', {
     // ...goToBackendSteps,
     // {
     //     content: "Click on the link to frontend (2)",
-    //     trigger: 'iframe #test_contact_FR',
+    //     trigger: ':iframe #test_contact_FR',
     // },
     // ...checkEditorSteps,
 
@@ -74,7 +74,7 @@ registry.category("web_tour.tours").add('client_action_redirect', {
     ...goToBackendSteps,
     {
         content: "Click on the link to backend (2)",
-        trigger: 'iframe #test_contact_BE',
+        trigger: ':iframe #test_contact_BE',
     },
     ...checkEditorSteps,
 ]});

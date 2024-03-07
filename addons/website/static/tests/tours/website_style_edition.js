@@ -54,10 +54,10 @@ wTourUtils.goToTheme(),
     run: `text_blur ${TARGET_FONT_SIZE}`,
 }, {
     content: "Check the font size was properly adapted",
-    trigger: 'iframe #wrapwrap',
+    trigger: ':iframe #wrapwrap',
     // Waiting the CSS to be reloaded: the code adds a new assets bundle with
     // a #t=... at the end then removes the old one.
-    extra_trigger: 'iframe html:not(:has(link[href$="web.assets_frontend.min.css"]))',
+    extra_trigger: ':iframe html:not(:has(link[href$="web.assets_frontend.min.css"]))',
     run: checkFontSize,
 }, {
     content: "Open the color combinations area",
@@ -73,7 +73,7 @@ wTourUtils.goToTheme(),
     trigger: `.o_we_color_btn[style*="background-color:${TARGET_BODY_BG_COLOR}"]`,
 }, {
     content: "Check the body background color was properly adapted",
-    trigger: 'iframe body',
+    trigger: ':iframe body',
     extra_trigger: `
         .o_we_theme_presets_collapse we-collapse .o_we_so_color_palette:eq(0) .o_we_color_preview[style*="${TARGET_BODY_BG_COLOR}"],
         .o_we_theme_presets_collapse we-collapse .o_we_so_color_palette:eq(0) .o_we_color_preview[style*="${TARGET_BODY_BG_COLOR_V2}"]
@@ -87,7 +87,7 @@ wTourUtils.goToTheme(),
     trigger: `.o_we_color_btn[style*="background-color:${TARGET_BODY_COLOR}"]`,
 }, {
     content: "Check the body color was properly adapted",
-    trigger: 'iframe body',
+    trigger: ':iframe body',
     extra_trigger: `
         .o_we_theme_presets_collapse we-collapse .o_we_so_color_palette:eq(1) .o_we_color_preview[style*="${TARGET_BODY_COLOR}"],
         .o_we_theme_presets_collapse we-collapse .o_we_so_color_palette:eq(1) .o_we_color_preview[style*="${TARGET_BODY_COLOR_V2}"]
@@ -97,15 +97,15 @@ wTourUtils.goToTheme(),
 ...wTourUtils.clickOnSave(),
 {
     content: "Check the font size is still ok outside of edit mode",
-    trigger: 'iframe body #wrapwrap',
+    trigger: ':iframe body #wrapwrap',
     run: checkFontSize,
 }, {
     content: "Check the body background color is still ok outside of edit mode",
-    trigger: 'iframe body',
+    trigger: ':iframe body',
     run: checkBodyBgColor,
 }, {
     content: "Check the body color is still ok outside of edit mode",
-    trigger: 'iframe body',
+    trigger: ':iframe body',
     run: checkBodyColor,
 },
 ...wTourUtils.clickOnEditAndWaitEditMode(),

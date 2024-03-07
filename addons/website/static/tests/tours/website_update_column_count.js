@@ -77,7 +77,7 @@ wTourUtils.clickOnSnippet({
     trigger: `${columnsSnippetRow} > :nth-child(2)`,
 }, {
     content: "Change the orders of the 2nd and 3rd items",
-    trigger: "iframe .o_overlay_move_options [data-name='move_right_opt']",
+    trigger: ":iframe .o_overlay_move_options [data-name='move_right_opt']",
 }, {
     content: "Check that the 1st item now has order: 0 and a class .order-lg-0 " +
              "and that order: 1, .order-lg-0 is set on the 3rd item, and order: 2, .order-lg-0 on the 2nd",
@@ -104,11 +104,11 @@ wTourUtils.clickOnSnippet({
     // TODO: remove this step. It should not be needed, but the build fails
     // without it.
     content: "Wait for move arrows to appear",
-    trigger: "iframe .o_overlay_move_options [data-name='move_left_opt']:has(+ .d-none[data-name='move_right_opt'])",
+    trigger: ":iframe .o_overlay_move_options:has([data-name='move_left_opt'] + .d-none[data-name='move_right_opt'])",
     isCheck: true,
 }, {
     content: "Change the orders of the 5th and 6th items to override the mobile orders",
-    trigger: "iframe .o_overlay_move_options [data-name='move_left_opt']",
+    trigger: ":iframe .o_overlay_move_options [data-name='move_left_opt']",
 }, {
     content: "Check that there are no orders anymore",
     trigger: `${columnsSnippetRow}:not(:has([style*='order: 0;'])):not(:has(.order-lg-0))`,

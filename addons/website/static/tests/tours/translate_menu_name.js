@@ -18,7 +18,7 @@ wTourUtils.registerWebsitePreviewTour('translate_menu_name', {
     wTourUtils.clickOnExtraMenuItem({}, true),
     {
         content: "translate the menu entry",
-        trigger: 'iframe a[href="/englishURL"] span',
+        trigger: ':iframe a[href="/englishURL"] span',
         run: 'text value pa-GB',
     },
     ...wTourUtils.clickOnSave(),

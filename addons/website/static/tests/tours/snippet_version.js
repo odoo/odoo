@@ -44,18 +44,18 @@ wTourUtils.registerWebsitePreviewTour("snippet_version", {
     },
 }, {
     content: "Edit s_test_snip",
-    trigger: 'iframe #wrap.o_editable .s_test_snip',
+    trigger: ':iframe #wrap.o_editable .s_test_snip',
 }, {
     content: "Edit text_image",
     extra_trigger: 'we-customizeblock-options:contains(Test snip) .snippet-option-VersionControl > we-alert',
-    trigger: 'iframe #wrap.o_editable .s_text_image',
+    trigger: ':iframe #wrap.o_editable .s_text_image',
 }, {
     content: "Edit s_share",
     extra_trigger: 'we-customizeblock-options:contains(Text - Image) .snippet-option-VersionControl  > we-alert',
-    trigger: 'iframe #wrap.o_editable .s_share',
+    trigger: ':iframe #wrap.o_editable .s_share',
 }, {
     content: "s_share is outdated",
     extra_trigger: 'we-customizeblock-options:contains(Share) .snippet-option-VersionControl > we-alert',
-    trigger: 'iframe body',
+    trigger: ':iframe body',
     isCheck: true,
 }]);
