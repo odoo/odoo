@@ -244,13 +244,6 @@ export class MockServer {
      */
     currentRequest = null;
 
-    get currentRoute() {
-        if (!this.currentRequest) {
-            throw new MockServerError(`no current request`);
-        }
-        return new URL(this.currentRequest.url).pathname;
-    }
-
     /**
      * @param {ServerParams} [params]
      */
@@ -317,9 +310,10 @@ export class MockServer {
     }
 
     /**
+     * @param {string} route
      * @param {OrmParams} params
      */
-    callOrm(params) {
+    callOrm(route, params) {
         const { method, model: modelName } = params;
         const args = params.args || [];
         const kwargs = params.kwargs || {};
@@ -348,7 +342,7 @@ export class MockServer {
             }
         }
 
-        throw new MockServerError(`unimplemented server route: ${this.currentRoute}`);
+        throw new MockServerError(`unimplemented server route: ${route}`);
     }
 
     /**
@@ -550,10 +544,11 @@ export class MockServer {
         const method = init?.method?.toUpperCase() || (init?.body ? "POST" : "GET");
         this.currentRequest = new Request(url, { method, ...(init || {}) });
 
-        const [routeFn, routeParams, routeOptions] = this.findRoute(this.currentRoute);
+        const route = new URL(this.currentRequest.url).pathname;
+        const [routeFn, routeParams, routeOptions] = this.findRoute(route);
         const pure = options.pure || routeOptions.pure;
         if (!routeFn) {
-            const message = `unimplemented server route: ${this.currentRoute}`;
+            const message = `unimplemented server route: ${route}`;
             const body = pure
                 ? "not found"
                 : JSON.stringify({
@@ -855,7 +850,7 @@ export class MockServer {
     /** @type {RouteCallback} */
     async mockCallKw(request) {
         const { params } = await request.json();
-        const route = this.currentRoute;
+        const route = new URL(request.url).pathname;
 
         let result;
         // Check own routes
@@ -871,7 +866,7 @@ export class MockServer {
         }
         // Check ORM methods
         try {
-            result ??= await this.callOrm(params);
+            result ??= await this.callOrm(route, params);
         } catch (error) {
             return ensureError(error);
         }
