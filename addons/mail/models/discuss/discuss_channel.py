@@ -232,7 +232,7 @@ class Channel(models.Model):
                 if cmd[0] != 0:
                     raise ValidationError(_('Invalid value when creating a channel with memberships, only 0 is allowed.'))
                 for field_name in cmd[2]:
-                    if field_name not in ["partner_id", "guest_id", "is_pinned", "fold_state"]:
+                    if field_name not in ["partner_id", "guest_id", "is_pinned"]:
                         raise ValidationError(
                             _(
                                 "Invalid field “%(field_name)s” when creating a channel with members.",
@@ -901,7 +901,6 @@ class Channel(models.Model):
                 member = member_of_current_user_by_channel.get(channel, self.env['discuss.channel.member']).with_prefetch([m.id for m in member_of_current_user_by_channel.values()])
                 if member:
                     info['channelMembers'] = [('ADD', list(member._discuss_channel_member_format().values()))]
-                    info['state'] = member.fold_state or 'closed'
                     info['message_unread_counter'] = member.message_unread_counter
                     info['custom_notifications'] = member.custom_notifications
                     info['mute_until_dt'] = fields.Datetime.to_string(member.mute_until_dt)
@@ -954,7 +953,7 @@ class Channel(models.Model):
     # User methods
     @api.model
     @api.returns('self', lambda channel: channel._channel_info()[0])
-    def channel_get(self, partners_to, pin=True, force_open=False):
+    def channel_get(self, partners_to, pin=True):
         """ Get the canonical private channel between some partners, create it if needed.
             To reuse an old channel (conversation), this one must be private, and contains
             only the given partners.
@@ -997,8 +996,6 @@ class Channel(models.Model):
                 vals = {'last_interest_dt': fields.Datetime.now()}
                 if pin:
                     vals['is_pinned'] = True
-                if force_open:
-                    vals['fold_state'] = "open"
                 member.write(vals)
             channel._broadcast(self.env.user.partner_id.ids)
         else:

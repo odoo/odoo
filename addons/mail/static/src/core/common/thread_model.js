@@ -37,18 +37,6 @@ export class Thread extends Record {
     static insert(data) {
         return super.insert(...arguments);
     }
-    static new(data) {
-        const thread = super.new(data);
-        Record.onChange(thread, ["state"], () => {
-            if (thread.state !== "closed" && !this.store.env.services.ui.isSmall) {
-                this.store.ChatWindow.insert({
-                    folded: thread.state === "folded",
-                    thread,
-                });
-            }
-        });
-        return thread;
-    }
     static async getOrFetch(data) {
         return this.get(data);
     }

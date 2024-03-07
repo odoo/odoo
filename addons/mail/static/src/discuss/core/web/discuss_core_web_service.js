@@ -50,28 +50,6 @@ export class DiscussCoreWeb {
                 this.store.ChatWindow.insert({ thread: chat });
             }
         });
-        this.busService.subscribe("discuss.Thread/fold_state", async (data) => {
-            const thread = await this.store.Thread.getOrFetch(data);
-            if (data.fold_state && thread && data.foldStateCount > thread.foldStateCount) {
-                thread.foldStateCount = data.foldStateCount;
-                if (data.fold_state !== thread.state) {
-                    thread.state = data.fold_state;
-                    if (thread.state === "closed") {
-                        const chatWindow = this.store.discuss.chatWindows.find((chatWindow) =>
-                            chatWindow.thread?.eq(thread)
-                        );
-                        if (chatWindow) {
-                            this.chatWindowService.close(chatWindow, { notifyState: false });
-                        }
-                    } else {
-                        this.store.ChatWindow.insert({
-                            thread,
-                            folded: thread.state === "folded",
-                        });
-                    }
-                }
-            }
-        });
         this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
             if (message.thread?.model === "discuss.channel") {
                 // initChannelsUnreadCounter becomes unreliable

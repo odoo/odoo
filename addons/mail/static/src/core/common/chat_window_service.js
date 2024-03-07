@@ -1,8 +1,6 @@
-import { assignDefined, rpcWithEnv } from "@mail/utils/common/misc";
+import { assignDefined } from "@mail/utils/common/misc";
 
 import { browser } from "@web/core/browser/browser";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { registry } from "@web/core/registry";
 
 export const CHAT_WINDOW_END_GAP_WIDTH = 10; // for a single end, multiply by 2 for left and right together.
@@ -24,40 +22,68 @@ export class ChatWindowService {
      * @param {Partial<import("services").Services>} services
      */
     setup(env, services) {
-        rpc = rpcWithEnv(env);
         this.env = env;
         this.store = services["mail.store"];
         this.orm = services.orm;
         this.ui = services.ui;
+        try {
+            // useful for synchronizing activity data between multiple tabs
+            this.broadcastChannel = new browser.BroadcastChannel("discuss.chat_window");
+            this.broadcastChannel.onmessage = ({ data }) => {
+                for (const item of data) {
+                    const thread = this.store.Thread.insert(item.thread);
+                    const chatWindow = this.store.ChatWindow.insert({ ...item, thread });
+                    if (chatWindow.state === "closed") {
+                        if (chatWindow) {
+                            this.close(chatWindow);
+                        }
+                    }
+                }
+            };
+        } catch {
+            // BroadcastChannel API is not supported (e.g. Safari < 15.4), so disabling it.
+            this.broadcastChannel = null;
+        }
     }
 
+    /**
+     * @param {import("models").ChatWindow} chatWindow
+     */
     notifyState(chatWindow) {
         if (this.ui.isSmall || chatWindow.thread?.isTransient) {
             return;
         }
         if (chatWindow.thread?.model === "discuss.channel") {
             chatWindow.thread.foldStateCount++;
-            return rpc(
-                "/discuss/channel/fold",
-                {
-                    channel_id: chatWindow.thread.id,
-                    state: chatWindow.thread.state,
-                    state_count: chatWindow.thread.foldStateCount,
-                },
-                { shadow: true }
+            const chatWindows = Object.values(this.store.ChatWindow.records);
+            const payload = [];
+            for (chatWindow of chatWindows) {
+                if (chatWindow.thread) {
+                    payload.push({
+                        state: chatWindow.state,
+                        thread: {
+                            model: chatWindow.thread.model,
+                            id: chatWindow.thread.id,
+                        },
+                    });
+                }
+            }
+            browser.localStorage.setItem(
+                "discuss.chat_window",
+                JSON.stringify(payload.filter((c) => c.state !== "closed"))
             );
+            this.broadcastChannel?.postMessage(payload);
         }
     }
 
     open(thread, replaceNewMessageChatWindow) {
         const chatWindow = this.store.ChatWindow.insert({
-            folded: false,
             thread,
             replaceNewMessageChatWindow,
         });
         chatWindow.autofocus++;
         if (thread) {
-            thread.state = "open";
+            chatWindow.state = "open";
         }
         this.notifyState(chatWindow);
         return chatWindow;
@@ -112,18 +138,15 @@ export class ChatWindowService {
     }
 
     toggleFold(chatWindow) {
-        chatWindow.folded = !chatWindow.folded;
-        const thread = chatWindow.thread;
-        if (thread) {
-            thread.state = chatWindow.folded ? "folded" : "open";
+        if (chatWindow.thread) {
+            chatWindow.state = !chatWindow.folded ? "folded" : "open";
         }
         this.notifyState(chatWindow);
     }
 
     show(chatWindow, { notifyState = true } = {}) {
         chatWindow.hidden = false;
-        chatWindow.folded = false;
-        chatWindow.thread.state = "open";
+        chatWindow.state = "open";
         if (notifyState) {
             this.notifyState(chatWindow);
         }
@@ -138,7 +161,6 @@ export class ChatWindowService {
         if (!chatWindow.hidden && this.maxVisible < this.store.discuss.chatWindows.length) {
             const swaped = this.hidden[0];
             swaped.hidden = false;
-            swaped.folded = false;
         }
         const index = this.store.discuss.chatWindows.findIndex((c) => c.eq(chatWindow));
         if (index > -1) {
@@ -146,7 +168,7 @@ export class ChatWindowService {
         }
         const thread = chatWindow.thread;
         if (thread) {
-            thread.state = "closed";
+            chatWindow.state = "closed";
         }
         if (escape && this.store.discuss.chatWindows.length > 0) {
             this.focus(this.store.discuss.chatWindows.at(index - 1));

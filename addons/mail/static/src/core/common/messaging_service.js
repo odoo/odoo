@@ -1,4 +1,5 @@
 import { cleanTerm } from "@mail/utils/common/format";
+import { browser } from "@web/core/browser/browser";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -49,6 +50,10 @@ export class Messaging {
     async initialize() {
         await this.store.fetchData(this.initMessagingParams, { readonly: false });
         this.isReady.resolve();
+        const chatWindows = JSON.parse(browser.localStorage.getItem("discuss.chat_window"));
+        if (chatWindows) {
+            this.store.ChatWindow.insert(chatWindows);
+        }
     }
 
     // -------------------------------------------------------------------------

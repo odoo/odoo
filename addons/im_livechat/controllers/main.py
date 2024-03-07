@@ -183,7 +183,6 @@ class LivechatController(http.Controller):
                     post_joined_message=False
                 )
             channel = channel.with_context(guest=guest)  # a new guest was possibly created
-            channel.channel_member_ids.filtered(lambda m: m.is_self).fold_state = "open"
             if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
                 channel._broadcast([channel.livechat_operator_id.id])
             channel_info = channel._channel_info()[0]

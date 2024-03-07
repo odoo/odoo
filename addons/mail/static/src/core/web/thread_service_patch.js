@@ -135,7 +135,6 @@ patch(ThreadService.prototype, {
         const chatWindow = this.store.ChatWindow.insert(
             assignDefined(
                 {
-                    folded: false,
                     replaceNewMessageChatWindow,
                     thread,
                 },
@@ -146,7 +145,7 @@ patch(ThreadService.prototype, {
         );
         chatWindow.autofocus++;
         if (thread) {
-            thread.state = "open";
+            chatWindow.state = "open";
         }
         this.chatWindowService.notifyState(chatWindow);
     },

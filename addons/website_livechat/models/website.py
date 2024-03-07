@@ -57,7 +57,7 @@ class Website(models.Model):
                         # update the channel to link it to the current guest.
                         chat_request_channel.write({'channel_member_ids': [
                             Command.unlink(channel_guest_member.id),
-                            Command.create({'guest_id': current_guest.id, 'fold_state': 'open'})
+                            Command.create({'guest_id': current_guest.id})
                         ]})
                     if not current_guest and channel_guest_member:
                         channel_guest_member.guest_id._set_auth_cookie()

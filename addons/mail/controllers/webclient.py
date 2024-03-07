@@ -52,7 +52,7 @@ class WebclientController(http.Controller):
             member_domain = [
                 ("is_self", "=", True),
                 "|",
-                ("fold_state", "in", ("open", "folded")),
+                ("is_pinned", "=", True),
                 ("rtc_inviting_session_id", "!=", False)
             ]
             channels_domain = [("channel_member_ids", "any", member_domain)]

@@ -63,9 +63,15 @@ export class ChatWindow extends Record {
 
     thread = Record.one("Thread");
     autofocus = 0;
-    folded = false;
     hidden = false;
     openMessagingMenuOnClose = false;
+
+    /** @type {'open' | 'folded' | 'closed' | 'hidden'} */
+    state = "open";
+
+    get folded() {
+        return this.state === "folded";
+    }
 
     get displayName() {
         return this.thread?.displayName ?? _t("New message");
