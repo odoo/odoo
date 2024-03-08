@@ -665,8 +665,9 @@ class AccountBankStatementLine(models.Model):
                 ],
             )
             for domain in domains:
-                partner = self.env['res.partner'].search(list(domain) + [('parent_id', '=', False)], limit=1)
-                if partner:
+                partner = self.env['res.partner'].search(list(domain) + [('parent_id', '=', False)], limit=2)
+                # Return the partner if there is only one with this name
+                if len(partner) == 1:
                     return partner
 
         # Retrieve the partner from the 'reconcile models'.
