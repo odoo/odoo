@@ -19,7 +19,7 @@ class OnboardingProgress(models.Model):
     onboarding_state = fields.Selection(
         ONBOARDING_PROGRESS_STATES, string='Onboarding progress', compute='_compute_onboarding_state', store=True)
     is_onboarding_closed = fields.Boolean('Was panel closed?')
-    company_id = fields.Many2one('res.company')
+    company_id = fields.Many2one('res.company', ondelete='cascade')
     onboarding_id = fields.Many2one(
         'onboarding.onboarding', 'Related onboarding tracked', required=True, ondelete='cascade')
     progress_step_ids = fields.Many2many('onboarding.progress.step', string='Progress Steps Trackers')
