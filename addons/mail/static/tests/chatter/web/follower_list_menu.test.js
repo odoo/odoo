@@ -6,7 +6,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains, scroll } from "@web/../tests/utils";
+import { assertSteps, click, contains, scroll, step } from "@web/../tests/utils";
 
 QUnit.module("follower list menu");
 
@@ -71,7 +71,7 @@ test('click on "add followers" button', async (assert) => {
     await openFormView("res.partner", partnerId_1);
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
-            assert.step("action:open_view");
+            step("action:open_view");
             assert.strictEqual(action.context.default_res_model, "res.partner");
             assert.strictEqual(action.context.default_res_id, partnerId_1);
             assert.strictEqual(action.res_model, "mail.wizard.invite");
@@ -93,7 +93,7 @@ test('click on "add followers" button', async (assert) => {
     await contains(".o-mail-Followers-dropdown");
     await click("a", { text: "Add Followers" });
     await contains(".o-mail-Followers-dropdown", { count: 0 });
-    assert.verifySteps(["action:open_view"]);
+    await assertSteps(["action:open_view"]);
     await contains(".o-mail-Followers-counter", { text: "2" });
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower", { count: 2 });
@@ -124,7 +124,7 @@ test("click on remove follower", async (assert) => {
                 return res;
             }
             if (route.includes("message_unsubscribe")) {
-                assert.step("message_unsubscribe");
+                step("message_unsubscribe");
                 assert.deepEqual(args.args, [[partnerId_1], [partnerId_2]]);
             }
         },
@@ -136,7 +136,7 @@ test("click on remove follower", async (assert) => {
     await contains("button[title='Remove this follower']");
 
     await click("button[title='Remove this follower']");
-    assert.verifySteps(["message_unsubscribe"]);
+    await assertSteps(["message_unsubscribe"]);
     await contains(".o-mail-Follower", { count: 0 });
 });
 

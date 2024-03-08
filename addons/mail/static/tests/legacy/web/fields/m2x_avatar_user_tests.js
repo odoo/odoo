@@ -12,7 +12,7 @@ import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
-import { click, contains } from "@web/../tests/utils";
+import { assertSteps, click, contains, step } from "@web/../tests/utils";
 import { getOrigin } from "@web/core/utils/urls";
 
 const fakeMultiTab = {
@@ -370,7 +370,7 @@ test("avatar card preview", async (assert) => {
     const mockRPC = (route, args) => {
         if (route === "/web/dataset/call_kw/res.users/read") {
             assert.deepEqual(args.args[1], ["name", "email", "phone", "im_status", "share"]);
-            assert.step("user read");
+            step("user read");
         }
     };
     const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_id: userId });
@@ -395,7 +395,7 @@ test("avatar card preview", async (assert) => {
 
     patchWithCleanup(browser, {
         setTimeout: (callback, delay) => {
-            assert.step(`setTimeout of ${delay}ms`);
+            step(`setTimeout of ${delay}ms`);
             callback();
         },
     });
@@ -405,7 +405,7 @@ test("avatar card preview", async (assert) => {
     await contains(".o_card_user_infos > span", { text: "Mario" });
     await contains(".o_card_user_infos > a", { text: "Mario@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+78786987" });
-    assert.verifySteps(["setTimeout of 250ms", "user read"]);
+    await assertSteps(["setTimeout of 250ms", "user read"]);
     // Close card
     await click(".o_action_manager");
     await contains(".o_avatar_card", { count: 0 });

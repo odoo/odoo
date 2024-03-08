@@ -4,17 +4,17 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
 import { nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 
 QUnit.module("Livechat history command");
 
-test("Handle livechat history command", async (assert) => {
+test("Handle livechat history command", async () => {
     const pyEnv = await startServer();
     await loadDefaultConfig();
     const env = await start({
         mockRPC(route, args) {
             if (route === "/im_livechat/history") {
-                assert.step("/im_livechat/history");
+                step("/im_livechat/history");
                 return true;
             }
         },
@@ -28,5 +28,5 @@ test("Handle livechat history command", async (assert) => {
         id: thread.id,
     });
     await nextTick();
-    assert.verifySteps(["/im_livechat/history"]);
+    await assertSteps(["/im_livechat/history"]);
 });

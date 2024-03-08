@@ -6,11 +6,11 @@ import { Command } from "@mail/../tests/helpers/command";
 import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { rpc } from "@web/core/network/rpc";
-import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 
 QUnit.module("composer (patch)");
 
-test("Can execute help command on livechat channels", async (assert) => {
+test("Can execute help command on livechat channels", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -25,7 +25,7 @@ test("Can execute help command on livechat channels", async (assert) => {
     await start({
         mockRPC(route, args, originalMockRPC) {
             if (args.method === "execute_command_help") {
-                assert.step("execute_command_help");
+                step("execute_command_help");
                 return true;
             }
             return originalMockRPC(route, args);
@@ -34,7 +34,7 @@ test("Can execute help command on livechat channels", async (assert) => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/help");
     await click(".o-mail-Composer-send:enabled");
-    assert.verifySteps(["execute_command_help"]);
+    await assertSteps(["execute_command_help"]);
 });
 
 test('Receives visitor typing status "is typing"', async () => {

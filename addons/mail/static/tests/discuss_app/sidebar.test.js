@@ -54,7 +54,7 @@ test("Closing a category sends the updated user setting to the server.", async (
     await start({
         mockRPC(route, args) {
             if (route === "/web/dataset/call_kw/res.users.settings/set_res_users_settings") {
-                assert.step(route);
+                step(route);
                 assert.strictEqual(
                     args.kwargs.new_settings.is_discuss_sidebar_category_channel_open,
                     false
@@ -66,7 +66,7 @@ test("Closing a category sends the updated user setting to the server.", async (
     await click(
         ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-icon"
     );
-    assert.verifySteps(["/web/dataset/call_kw/res.users.settings/set_res_users_settings"]);
+    await assertSteps(["/web/dataset/call_kw/res.users.settings/set_res_users_settings"]);
 });
 
 test("Opening a category sends the updated user setting to the server.", async (assert) => {
@@ -78,7 +78,7 @@ test("Opening a category sends the updated user setting to the server.", async (
     await start({
         mockRPC(route, args) {
             if (route === "/web/dataset/call_kw/res.users.settings/set_res_users_settings") {
-                assert.step(route);
+                step(route);
                 assert.ok(args.kwargs.new_settings.is_discuss_sidebar_category_channel_open);
             }
         },
@@ -87,7 +87,7 @@ test("Opening a category sends the updated user setting to the server.", async (
     await click(
         ".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-icon.oi-chevron-right"
     );
-    assert.verifySteps(["/web/dataset/call_kw/res.users.settings/set_res_users_settings"]);
+    await assertSteps(["/web/dataset/call_kw/res.users.settings/set_res_users_settings"]);
 });
 
 test("channel - command: should have view command when category is unfolded", async () => {
@@ -282,7 +282,7 @@ test("sidebar: open channel and leave it", async (assert) => {
     await start({
         async mockRPC(route, args) {
             if (args.method === "action_unfollow") {
-                assert.step("action_unfollow");
+                step("action_unfollow");
                 assert.deepEqual(args.args[0], channelId);
             }
         },
@@ -290,13 +290,13 @@ test("sidebar: open channel and leave it", async (assert) => {
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-Discuss-threadName", { value: "General" });
-    assert.verifySteps([]);
+    await assertSteps([]);
     await click(".btn[title='Leave this channel']", {
         parent: [".o-mail-DiscussSidebarChannel.o-active", { text: "General" }],
     });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
-    assert.verifySteps(["action_unfollow"]);
+    await assertSteps(["action_unfollow"]);
 });
 
 test("sidebar: unpin chat from bus", async () => {
@@ -710,7 +710,7 @@ test("channel - avatar: should have correct avatar", async () => {
     );
 });
 
-test("channel - avatar: should update avatar url from bus", async (assert) => {
+test("channel - avatar: should update avatar url from bus", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         avatarCacheKey: "notaDateCache",
@@ -1105,13 +1105,13 @@ test("Can leave channel", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });
 });
 
-test("Do no channel_info after unpin", async (assert) => {
+test("Do no channel_info after unpin", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General", channel_type: "chat" });
     await start({
         mockRPC(route, args, originalRPC) {
             if (route === "/discuss/channel/info") {
-                assert.step("channel_info");
+                step("channel_info");
             }
             return originalRPC(route, args);
         },
@@ -1127,7 +1127,7 @@ test("Do no channel_info after unpin", async (assert) => {
         },
     });
     // weak test, no guarantee that we waited long enough for the potential rpc to be done
-    assert.verifySteps([]);
+    await assertSteps([]);
 });
 
 test("Group unread counter up to date after mention is marked as seen", async () => {

@@ -6,7 +6,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup, triggerHotkey, makeDeferred } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 
 QUnit.module("discuss inbox");
 
@@ -103,7 +103,7 @@ test('"reply to" composer should log note if message replied to is a note', asyn
     await start({
         async mockRPC(route, args) {
             if (route === "/mail/message/post") {
-                assert.step("/mail/message/post");
+                step("/mail/message/post");
                 assert.strictEqual(args.post_data.message_type, "comment");
                 assert.strictEqual(args.post_data.subtype_xmlid, "mail.mt_note");
             }
@@ -117,7 +117,7 @@ test('"reply to" composer should log note if message replied to is a note', asyn
     await insertText(".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer-send:enabled", { text: "Log" });
     await contains(".o-mail-Composer", { count: 0 });
-    assert.verifySteps(["/mail/message/post"]);
+    await assertSteps(["/mail/message/post"]);
 });
 
 test('"reply to" composer should send message if message replied to is not a note', async (assert) => {
@@ -140,7 +140,7 @@ test('"reply to" composer should send message if message replied to is not a not
     await start({
         async mockRPC(route, args) {
             if (route === "/mail/message/post") {
-                assert.step("/mail/message/post");
+                step("/mail/message/post");
                 assert.strictEqual(args.post_data.message_type, "comment");
                 assert.strictEqual(args.post_data.subtype_xmlid, "mail.mt_comment");
             }
@@ -154,7 +154,7 @@ test('"reply to" composer should send message if message replied to is not a not
     await insertText(".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer-send:enabled", { text: "Send" });
     await contains(".o-mail-Composer-send", { count: 0 });
-    assert.verifySteps(["/mail/message/post"]);
+    await assertSteps(["/mail/message/post"]);
 });
 
 test("show subject of message in Inbox", async () => {
@@ -372,7 +372,7 @@ test('subject should not be shown when subject differs from thread name only by 
     });
 });
 
-test("inbox: mark all messages as read", async (assert) => {
+test("inbox: mark all messages as read", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
@@ -447,7 +447,7 @@ test("click on (non-channel/non-partner) origin thread link should redirect to f
             // Callback of doing an action (action manager).
             // Expected to be called on click on origin thread link,
             // which redirects to form view of record related to origin thread
-            assert.step("do-action");
+            step("do-action");
             assert.strictEqual(action.type, "ir.actions.act_window");
             assert.deepEqual(action.views, [[false, "form"]]);
             assert.strictEqual(action.res_model, "res.fake");
@@ -459,7 +459,7 @@ test("click on (non-channel/non-partner) origin thread link should redirect to f
     await contains(".o-mail-Message");
     await click(".o-mail-Message-header a", { text: "Some record" });
     await def;
-    assert.verifySteps(["do-action"]);
+    await assertSteps(["do-action"]);
 });
 
 test("inbox messages are never squashed", async () => {

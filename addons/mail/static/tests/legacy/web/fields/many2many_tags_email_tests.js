@@ -6,7 +6,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { selectDropdownItem } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 
 QUnit.module("FieldMany2ManyTagsEmail");
 
@@ -35,7 +35,7 @@ test("fieldmany2many tags email (edition)", async (assert) => {
         serverData: { views },
         mockRPC(route, args) {
             if (args.method === "web_read" && args.model === "res.partner") {
-                assert.step(JSON.stringify(args.args[0]));
+                step(JSON.stringify(args.args[0]));
                 assert.ok("email" in args.kwargs.specification);
             } else if (args.method === "get_formview_id") {
                 return false;
@@ -43,7 +43,7 @@ test("fieldmany2many tags email (edition)", async (assert) => {
         },
     });
     await openFormView("mail.message", messageId, { props: { mode: "edit" } });
-    assert.verifySteps([]);
+    await assertSteps([]);
     await contains('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0');
 
     // add an other existing tag
@@ -67,7 +67,7 @@ test("fieldmany2many tags email (edition)", async (assert) => {
     assert.hasAttrValue(firstTag.querySelector(".o_badge_text"), "title", "coucou@petite.perruche");
     // should have read Partner_1 three times: when opening the dropdown, when opening the modal, and
     // after the save
-    assert.verifySteps([`[${partnerId_2}]`, `[${partnerId_2}]`, `[${partnerId_1},${partnerId_2}]`]);
+    await assertSteps([`[${partnerId_2}]`, `[${partnerId_2}]`, `[${partnerId_1},${partnerId_2}]`]);
 });
 
 test("many2many_tags_email widget can load more than 40 records", async () => {
