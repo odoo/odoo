@@ -6,7 +6,7 @@ import { RATING } from "@im_livechat/embed/common/livechat_service";
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
 
 import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 
 QUnit.module("feedback panel");
 
@@ -20,16 +20,16 @@ test("Do not ask feedback if empty", async () => {
     await contains(".o-livechat-LivechatButton", { count: 0 });
 });
 
-test("Close without feedback", async (assert) => {
+test("Close without feedback", async () => {
     await startServer();
     await loadDefaultConfig();
     start({
         mockRPC(route) {
             if (route === "/im_livechat/visitor_leave_session") {
-                assert.step(route);
+                step(route);
             }
             if (route === "/im_livechat/feedback") {
-                assert.step(route);
+                step(route);
             }
         },
     });
@@ -41,7 +41,7 @@ test("Close without feedback", async (assert) => {
     await click("[title='Close Chat Window']");
     await click("button", { text: "Close conversation" });
     await contains(".o-livechat-LivechatButton");
-    assert.verifySteps(["/im_livechat/visitor_leave_session"]);
+    await assertSteps(["/im_livechat/visitor_leave_session"]);
 });
 
 test("Feedback with rating and comment", async (assert) => {
@@ -50,10 +50,10 @@ test("Feedback with rating and comment", async (assert) => {
     start({
         mockRPC(route, args) {
             if (route === "/im_livechat/visitor_leave_session") {
-                assert.step(route);
+                step(route);
             }
             if (route === "/im_livechat/feedback") {
-                assert.step(route);
+                step(route);
                 assert.ok(args.reason.includes("Good job!"));
                 assert.strictEqual(args.rate, RATING.GOOD);
             }
@@ -65,12 +65,12 @@ test("Feedback with rating and comment", async (assert) => {
     triggerHotkey("Enter");
     await contains(".o-mail-Message-content", { text: "Hello World!" });
     await click("[title='Close Chat Window']");
-    assert.verifySteps(["/im_livechat/visitor_leave_session"]);
+    await assertSteps(["/im_livechat/visitor_leave_session"]);
     await click(`img[data-alt="${RATING.GOOD}"]`);
     await insertText("textarea[placeholder='Explain your note']", "Good job!");
     await click("button:enabled", { text: "Send" });
     await contains("p", { text: "Thank you for your feedback" });
-    assert.verifySteps(["/im_livechat/feedback"]);
+    await assertSteps(["/im_livechat/feedback"]);
 });
 
 test("Closing folded chat window should open it with feedback", async () => {

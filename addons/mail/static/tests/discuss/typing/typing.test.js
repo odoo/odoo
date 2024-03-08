@@ -11,7 +11,7 @@ import { OTHER_LONG_TYPING } from "@mail/discuss/typing/common/typing_service";
 import { Command } from "@mail/../tests/helpers/command";
 import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
-import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 
 QUnit.module("typing");
 
@@ -207,36 +207,36 @@ test('receive several other members typing status "is typing"', async () => {
     await contains(".o-discuss-Typing", { text: "Other 11, Other 12 and more are typing..." });
 });
 
-test("current partner notify is typing to other thread members", async (assert) => {
+test("current partner notify is typing to other thread members", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     await start({
         async mockRPC(route, args) {
             if (route === "/discuss/channel/notify_typing") {
-                assert.step(`notify_typing:${args.is_typing}`);
+                step(`notify_typing:${args.is_typing}`);
             }
         },
     });
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "a");
-    assert.verifySteps(["notify_typing:true"]);
+    await assertSteps(["notify_typing:true"]);
 });
 
-test("current partner notify is typing again to other members for long continuous typing", async (assert) => {
+test("current partner notify is typing again to other members for long continuous typing", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const { advanceTime } = await start({
         hasTimeControl: true,
         async mockRPC(route, args) {
             if (route === "/discuss/channel/notify_typing") {
-                assert.step(`notify_typing:${args.is_typing}`);
+                step(`notify_typing:${args.is_typing}`);
             }
         },
     });
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
     await insertText(".o-mail-Composer-input", "a");
-    assert.verifySteps(["notify_typing:true"]);
+    await assertSteps(["notify_typing:true"]);
 
     // simulate current partner typing a character for a long time.
     let totalTimeElapsed = 0;
@@ -246,42 +246,42 @@ test("current partner notify is typing again to other members for long continuou
         totalTimeElapsed += elapseTickTime;
         await advanceTime(elapseTickTime);
     }
-    assert.verifySteps(["notify_typing:true"]);
+    await assertSteps(["notify_typing:true"]);
 });
 
-test("current partner notify no longer is typing to thread members after 5 seconds inactivity", async (assert) => {
+test("current partner notify no longer is typing to thread members after 5 seconds inactivity", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const { advanceTime } = await start({
         hasTimeControl: true,
         async mockRPC(route, args) {
             if (route === "/discuss/channel/notify_typing") {
-                assert.step(`notify_typing:${args.is_typing}`);
+                step(`notify_typing:${args.is_typing}`);
             }
         },
     });
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
     await insertText(".o-mail-Composer-input", "a");
-    assert.verifySteps(["notify_typing:true"]);
+    await assertSteps(["notify_typing:true"]);
 
     await advanceTime(SHORT_TYPING);
-    assert.verifySteps(["notify_typing:false"]);
+    await assertSteps(["notify_typing:false"]);
 });
 
-test("current partner is typing should not translate on textual typing status", async (assert) => {
+test("current partner is typing should not translate on textual typing status", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     await start({
         async mockRPC(route, args) {
             if (route === "/discuss/channel/notify_typing") {
-                assert.step(`notify_typing:${args.is_typing}`);
+                step(`notify_typing:${args.is_typing}`);
             }
         },
     });
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "a");
-    assert.verifySteps(["notify_typing:true"]);
+    await assertSteps(["notify_typing:true"]);
     await contains(".o-discuss-Typing");
     await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
 });

@@ -6,7 +6,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { editInput, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains } from "@web/../tests/utils";
+import { assertSteps, click, contains, step } from "@web/../tests/utils";
 
 QUnit.module("follower");
 
@@ -71,7 +71,7 @@ test("click on partner follower details", async (assert) => {
     await openFormView("res.partner", threadId);
     patchWithCleanup(env.services.action, {
         doAction(action) {
-            assert.step("do_action");
+            step("do_action");
             assert.strictEqual(action.res_id, partnerId);
             assert.strictEqual(action.res_model, "res.partner");
             assert.strictEqual(action.type, "ir.actions.act_window");
@@ -84,10 +84,10 @@ test("click on partner follower details", async (assert) => {
 
     $(".o-mail-Follower-details")[0].click();
     await openFormDef;
-    assert.verifySteps(["do_action"], "redirect to partner profile");
+    await assertSteps(["do_action"], "redirect to partner profile");
 });
 
-test("click on edit follower", async (assert) => {
+test("click on edit follower", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -99,7 +99,7 @@ test("click on edit follower", async (assert) => {
     await start({
         async mockRPC(route, args) {
             if (route.includes("/mail/read_subscription_data")) {
-                assert.step("fetch_subtypes");
+                step("fetch_subtypes");
             }
         },
     });
@@ -110,11 +110,11 @@ test("click on edit follower", async (assert) => {
 
     await click("button[title='Edit subscription']");
     await contains(".o-mail-Follower", { count: 0 });
-    assert.verifySteps(["fetch_subtypes"]);
+    await assertSteps(["fetch_subtypes"]);
     await contains(".o-mail-FollowerSubtypeDialog");
 });
 
-test("edit follower and close subtype dialog", async (assert) => {
+test("edit follower and close subtype dialog", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -126,7 +126,7 @@ test("edit follower and close subtype dialog", async (assert) => {
     await start({
         async mockRPC(route, args) {
             if (route.includes("/mail/read_subscription_data")) {
-                assert.step("fetch_subtypes");
+                step("fetch_subtypes");
             }
         },
     });
@@ -137,13 +137,13 @@ test("edit follower and close subtype dialog", async (assert) => {
 
     await click("button[title='Edit subscription']");
     await contains(".o-mail-FollowerSubtypeDialog");
-    assert.verifySteps(["fetch_subtypes"]);
+    await assertSteps(["fetch_subtypes"]);
 
     await click(".o-mail-FollowerSubtypeDialog button", { text: "Cancel" });
     await contains(".o-mail-FollowerSubtypeDialog", { count: 0 });
 });
 
-test("remove a follower in a dirty form view", async (assert) => {
+test("remove a follower in a dirty form view", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["discuss.channel"].create({ name: "General", display_name: "General" });
@@ -178,7 +178,7 @@ test("remove a follower in a dirty form view", async (assert) => {
     await contains(".o_tag", { text: "General" });
 });
 
-test("removing a follower should reload form view", async function (assert) {
+test("removing a follower should reload form view", async function () {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -190,15 +190,15 @@ test("removing a follower should reload form view", async function (assert) {
     await start({
         async mockRPC(route, args) {
             if (args.method === "web_read") {
-                assert.step(`read ${args.args[0][0]}`);
+                step(`read ${args.args[0][0]}`);
             }
         },
     });
     await openFormView("res.partner", threadId);
     await contains(".o-mail-Followers-button");
-    assert.verifySteps([`read ${threadId}`]);
+    await assertSteps([`read ${threadId}`]);
     await click(".o-mail-Followers-button");
     await click("button[title='Remove this follower']");
     await contains(".o-mail-Followers-counter", { text: "0" });
-    assert.verifySteps([`read ${threadId}`]);
+    await assertSteps([`read ${threadId}`]);
 });

@@ -7,7 +7,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 import { serializeDate, today } from "@web/core/l10n/dates";
 import { user } from "@web/core/user";
 import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains } from "@web/../tests/utils";
+import { assertSteps, click, contains, step } from "@web/../tests/utils";
 
 QUnit.module("activity menu", {
     beforeEach() {
@@ -81,7 +81,7 @@ test("activity menu widget: activity menu with 2 models", async (assert) => {
             Object.entries(actionChecks).forEach(([key, value]) => {
                 assert.deepEqual(action[key], value);
             });
-            assert.step("do_action:" + action.name);
+            step("do_action:" + action.name);
         },
     });
     await click(".o_menu_systray i[aria-label='Activities']");
@@ -109,7 +109,7 @@ test("activity menu widget: activity menu with 2 models", async (assert) => {
     await click(".o_menu_systray i[aria-label='Activities']");
     actionChecks.res_model = "mail.test.activity";
     await click(".o-mail-ActivityMenu .o-mail-ActivityGroup", { text: "mail.test.activity" });
-    assert.verifySteps(["do_action:res.partner", "do_action:mail.test.activity"]);
+    await assertSteps(["do_action:res.partner", "do_action:mail.test.activity"]);
 });
 
 test("activity menu widget: close on messaging menu click", async () => {

@@ -7,7 +7,7 @@ import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains, triggerEvents } from "@web/../tests/utils";
+import { assertSteps, click, contains, step, triggerEvents } from "@web/../tests/utils";
 
 QUnit.module("notification");
 
@@ -104,7 +104,7 @@ test("open non-channel failure", async (assert) => {
     const { env } = await start();
     patchWithCleanup(env.services.action, {
         doAction(action) {
-            assert.step("do_action");
+            step("do_action");
             assert.strictEqual(action.name, "Mail Failures");
             assert.strictEqual(action.type, "ir.actions.act_window");
             assert.strictEqual(action.view_mode, "kanban,list,form");
@@ -126,7 +126,7 @@ test("open non-channel failure", async (assert) => {
     });
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    assert.verifySteps(["do_action"]);
+    await assertSteps(["do_action"]);
 });
 
 test("different discuss.channel are not grouped", async () => {

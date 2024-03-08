@@ -6,7 +6,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { getOrigin } from "@web/core/utils/urls";
-import { click, contains } from "@web/../tests/utils";
+import { assertSteps, click, contains, step } from "@web/../tests/utils";
 
 QUnit.module("attachment list");
 
@@ -62,7 +62,7 @@ test("layout with card details and filename and extension", async () => {
     await contains(".o-mail-AttachmentCard small", { text: "txt" });
 });
 
-test("clicking on the delete attachment button multiple times should do the rpc only once", async (assert) => {
+test("clicking on the delete attachment button multiple times should do the rpc only once", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -82,7 +82,7 @@ test("clicking on the delete attachment button multiple times should do the rpc 
     await start({
         async mockRPC(route, args) {
             if (route === "/mail/attachment/delete") {
-                assert.step("attachment_unlink");
+                step("attachment_unlink");
             }
         },
     });
@@ -92,7 +92,7 @@ test("clicking on the delete attachment button multiple times should do the rpc 
     await click(".modal-footer .btn-primary");
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentCard-unlink", { count: 0 });
-    assert.verifySteps(["attachment_unlink"], "The unlink method must be called once");
+    await assertSteps(["attachment_unlink"], "The unlink method must be called once");
 });
 
 test("view attachment", async () => {
