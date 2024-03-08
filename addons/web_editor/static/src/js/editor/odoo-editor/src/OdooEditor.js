@@ -2845,6 +2845,19 @@ export class OdooEditor extends EventTarget {
                     .map((node) => closestElement(node, "table"))
                     .filter((node) => !isProtected(node))
             );
+            const endSelectionTable = closestElement(selection.focusNode, 'table');
+            const endSelectionTableTds = endSelectionTable && getTableCells(endSelectionTable);
+            const traversedTds = new Set(traversedNodes.map(node => closestElement(node, 'td')));
+            const isTableFullySelected = endSelectionTableTds?.every(td => traversedTds.has(td));
+            if (endSelectionTable && !isTableFullySelected) {
+                // Make sure all the cells are traversed in actual selection
+                // when selecting full table. If not, they will be selected
+                // forcefully and _handleSelectionInTable will be called again.
+                const direction = getCursorDirection(selection.anchorNode, selection.anchorOffset, selection.focusNode, selection.focusOffset);
+                const targetTd = direction === DIRECTIONS.RIGHT ? endSelectionTableTds.pop() : endSelectionTableTds.shift();
+                setSelection(selection.anchorNode, selection.anchorOffset, targetTd, direction === DIRECTIONS.RIGHT ? nodeSize(targetTd) : 0);
+                return;
+            }
             for (const table of traversedTables) {
                 // Don't apply several nested levels of selection.
                 if (table && !ancestors(table, this.editable).some(node => [...traversedTables].includes(node))) {
