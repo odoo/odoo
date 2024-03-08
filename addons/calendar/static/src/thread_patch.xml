@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Thread.loadingError" t-inherit-mode="extension">
+        <xpath expr="//div" position="replace">
+            <div class="d-flex flex-grow-1 align-items-center justify-content-center flex-column">
+                <t t-if="props.thread.model === 'calendar.event' and this.isAccesible">
+                    This event is private.
+                </t>
+                <t t-else="">
+                    <div class="o-mail-Thread-error">
+                        An error occurred while fetching messages.
+                    </div>
+                    <button class="btn btn-link" t-on-click="onClickLoadOlder">
+                        Click here to retry
+                    </button>
+                </t>
+            </div>
+        </xpath>
+    </t>
+    <t t-inherit="mail.Thread" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if='props.thread.isLoaded']/t[@t-else='']" position="replace">
+            <t t-if="props.thread.model === 'calendar.event' and this.isAccesible">
+                This event is private.
+            </t>
+            <t t-else="">
+                There are no messages in this conversation.
+            </t>
+        </xpath>
+    </t>
+</templates>
