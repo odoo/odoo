@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/core/message_model_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -7,7 +8,7 @@ import { serializeDateTime, deserializeDateTime } from "@web/core/l10n/dates";
 
 QUnit.module("message model test", {});
 
-QUnit.test("Message model properties", async (assert) => {
+test("Message model properties", async (assert) => {
     const pyEnv = await startServer();
     const { env } = await start();
     env.services["mail.store"].Store.insert({

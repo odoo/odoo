@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/web/fields/many2many_tags_email_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -9,7 +10,7 @@ import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("FieldMany2ManyTagsEmail");
 
-QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
+test("fieldmany2many tags email (edition)", async (assert) => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { name: "gold", email: "coucou@petite.perruche" },
@@ -69,7 +70,7 @@ QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
     assert.verifySteps([`[${partnerId_2}]`, `[${partnerId_2}]`, `[${partnerId_1},${partnerId_2}]`]);
 });
 
-QUnit.test("many2many_tags_email widget can load more than 40 records", async () => {
+test("many2many_tags_email widget can load more than 40 records", async () => {
     const pyEnv = await startServer();
     const partnerIds = [];
     for (let i = 100; i < 200; i++) {

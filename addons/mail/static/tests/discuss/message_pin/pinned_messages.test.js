@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/message_pin/pinned_messages_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -9,7 +10,7 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("pinned messages");
 
-QUnit.test("Pin message", async () => {
+test("Pin message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -29,7 +30,7 @@ QUnit.test("Pin message", async () => {
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", { text: "Hello world!" });
 });
 
-QUnit.test("Unpin message", async () => {
+test("Unpin message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -48,7 +49,7 @@ QUnit.test("Unpin message", async () => {
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", { count: 0 });
 });
 
-QUnit.test("Deleted messages are not pinned", async () => {
+test("Deleted messages are not pinned", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -68,7 +69,7 @@ QUnit.test("Deleted messages are not pinned", async () => {
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", { count: 0 });
 });
 
-QUnit.test("Open pinned panel from notification", async () => {
+test("Open pinned panel from notification", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -86,7 +87,7 @@ QUnit.test("Open pinned panel from notification", async () => {
     await contains(".o-discuss-PinnedMessagesPanel");
 });
 
-QUnit.test("Jump to message", async () => {
+test("Jump to message", async () => {
     // make scroll behavior instantaneous.
     patchWithCleanup(Element.prototype, {
         scrollIntoView() {
@@ -116,7 +117,7 @@ QUnit.test("Jump to message", async () => {
     await contains(".o-mail-Thread .o-mail-Message-body", { text: "Hello world!", visible: true });
 });
 
-QUnit.test("Jump to message from notification", async () => {
+test("Jump to message from notification", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({

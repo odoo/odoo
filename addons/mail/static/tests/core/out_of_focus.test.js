@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/core/out_of_focus_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 import { startServer } from "@bus/../tests/legacy/helpers/mock_python_environment";
@@ -9,7 +10,7 @@ import { assertSteps, contains, step } from "@web/../tests/utils";
 
 QUnit.module("out of focus");
 
-QUnit.test("Spaces in notifications are not encoded", async () => {
+test("Spaces in notifications are not encoded", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];

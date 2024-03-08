@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/mobile/mobile_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -9,7 +10,7 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("mobile");
 
-QUnit.test("auto-select 'Inbox' when discuss had channel as active thread", async () => {
+test("auto-select 'Inbox' when discuss had channel as active thread", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
 

@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/core/channel_member_list_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -9,46 +10,40 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("channel member list");
 
-QUnit.test(
-    "there should be a button to show member list in the thread view topbar initially",
-    async () => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-        const channelId = pyEnv["discuss.channel"].create({
-            name: "TestChanel",
-            channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
-                Command.create({ partner_id: partnerId }),
-            ],
-            channel_type: "channel",
-        });
-        await start();
-        await openDiscuss(channelId);
-        await contains("[title='Show Member List']");
-    }
-);
+test("there should be a button to show member list in the thread view topbar initially", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChanel",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Show Member List']");
+});
 
-QUnit.test(
-    "should show member list when clicking on show member list button in thread view topbar",
-    async () => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-        const channelId = pyEnv["discuss.channel"].create({
-            name: "TestChanel",
-            channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
-                Command.create({ partner_id: partnerId }),
-            ],
-            channel_type: "channel",
-        });
-        await start();
-        await openDiscuss(channelId);
-        await click("[title='Show Member List']");
-        await contains(".o-discuss-ChannelMemberList");
-    }
-);
+test("should show member list when clicking on show member list button in thread view topbar", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChanel",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Show Member List']");
+    await contains(".o-discuss-ChannelMemberList");
+});
 
-QUnit.test("should have correct members in member list", async () => {
+test("should have correct members in member list", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -67,27 +62,24 @@ QUnit.test("should have correct members in member list", async () => {
     await contains(".o-discuss-ChannelMember", { text: "Demo" });
 });
 
-QUnit.test(
-    "there should be a button to hide member list in the thread view topbar when the member list is visible",
-    async () => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-        const channelId = pyEnv["discuss.channel"].create({
-            name: "TestChanel",
-            channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
-                Command.create({ partner_id: partnerId }),
-            ],
-            channel_type: "channel",
-        });
-        await start();
-        await openDiscuss(channelId);
-        await click("[title='Show Member List']");
-        await contains("[title='Hide Member List']");
-    }
-);
+test("there should be a button to hide member list in the thread view topbar when the member list is visible", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChanel",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Show Member List']");
+    await contains("[title='Hide Member List']");
+});
 
-QUnit.test("chat with member should be opened after clicking on channel member", async () => {
+test("chat with member should be opened after clicking on channel member", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -106,7 +98,7 @@ QUnit.test("chat with member should be opened after clicking on channel member",
     await contains(".o-mail-AutoresizeInput[title='Demo']");
 });
 
-QUnit.test("should show a button to load more members if they are not all loaded", async () => {
+test("should show a button to load more members if they are not all loaded", async () => {
     // Test assumes at most 100 members are loaded at once.
     const pyEnv = await startServer();
     const channel_member_ids = [];
@@ -125,7 +117,7 @@ QUnit.test("should show a button to load more members if they are not all loaded
     await contains("button", { text: "Load more" });
 });
 
-QUnit.test("Load more button should load more members", async () => {
+test("Load more button should load more members", async () => {
     // Test assumes at most 100 members are loaded at once.
     const pyEnv = await startServer();
     const channel_member_ids = [];
@@ -145,7 +137,7 @@ QUnit.test("Load more button should load more members", async () => {
     await contains(".o-discuss-ChannelMember", { count: 102 });
 });
 
-QUnit.test("Channel member count update after user joined", async () => {
+test("Channel member count update after user joined", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const userId = pyEnv["res.users"].create({ name: "Harry" });
@@ -162,7 +154,7 @@ QUnit.test("Channel member count update after user joined", async () => {
     await contains(".o-discuss-ChannelMemberList h6", { text: "Offline - 2" });
 });
 
-QUnit.test("Channel member count update after user left", async () => {
+test("Channel member count update after user left", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Dobby" });
     const partnerId = pyEnv["res.partner"].create({ name: "Dobby", user_ids: [userId] });

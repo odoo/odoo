@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/chatter/web/attachment_box_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -9,7 +10,7 @@ import { click, contains, scroll } from "@web/../tests/utils";
 
 QUnit.module("attachment box");
 
-QUnit.test("base non-empty rendering", async () => {
+test("base non-empty rendering", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create([
@@ -44,7 +45,7 @@ QUnit.test("base non-empty rendering", async () => {
     await contains(".o-mail-AttachmentList");
 });
 
-QUnit.test("remove attachment should ask for confirmation", async () => {
+test("remove attachment should ask for confirmation", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create({
@@ -76,7 +77,7 @@ QUnit.test("remove attachment should ask for confirmation", async () => {
     await contains(".o-mail-AttachmentImage", { count: 0 });
 });
 
-QUnit.test("view attachments", async () => {
+test("view attachments", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create([
@@ -116,7 +117,7 @@ QUnit.test("view attachments", async () => {
     await contains(".o-FileViewer-header", { text: "Blah.txt" });
 });
 
-QUnit.test("scroll to attachment box when toggling on", async () => {
+test("scroll to attachment box when toggling on", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
@@ -143,7 +144,7 @@ QUnit.test("scroll to attachment box when toggling on", async () => {
     await contains(".o-mail-AttachmentBox", { visible: true });
 });
 
-QUnit.test("do not auto-scroll to attachment box when initially open", async () => {
+test("do not auto-scroll to attachment box when initially open", async () => {
     patchUiSize({ size: SIZES.LG });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
@@ -175,7 +176,7 @@ QUnit.test("do not auto-scroll to attachment box when initially open", async () 
     await contains(".o_content", { scroll: 0 });
 });
 
-QUnit.test("attachment box should order attachments from newest to oldest", async () => {
+test("attachment box should order attachments from newest to oldest", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const resData = { res_id: partnerId, res_model: "res.partner" };
@@ -193,7 +194,7 @@ QUnit.test("attachment box should order attachments from newest to oldest", asyn
     await contains(":nth-child(3 of .o-mail-AttachmentCard)", { text: "A.txt" });
 });
 
-QUnit.test("attachment box auto-closed on switch to record wih no attachments", async () => {
+test("attachment box auto-closed on switch to record wih no attachments", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { display_name: "first partner" },

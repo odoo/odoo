@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/web/activity/activity_widget_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -14,7 +15,7 @@ const { DateTime } = luxon;
 
 QUnit.module("activity widget");
 
-QUnit.test("list activity widget with no activity", async () => {
+test("list activity widget with no activity", async () => {
     const pyEnv = await startServer();
     const views = {
         "res.users,false,list": `
@@ -74,7 +75,7 @@ QUnit.test("list activity widget with no activity", async () => {
     await contains(".o-mail-ListActivity-summary", { text: "" });
 });
 
-QUnit.test("list activity widget with activities", async () => {
+test("list activity widget with activities", async () => {
     const pyEnv = await startServer();
     const [activityId_1, activityId_2] = pyEnv["mail.activity"].create([{}, {}]);
     const [activityTypeId_1, activityTypeId_2] = pyEnv["mail.activity.type"].create([
@@ -162,7 +163,7 @@ QUnit.test("list activity widget with activities", async () => {
     });
 });
 
-QUnit.test("list activity widget with exception", async () => {
+test("list activity widget with exception", async () => {
     const pyEnv = await startServer();
     const activityId = pyEnv["mail.activity"].create({});
     const activityTypeId = pyEnv["mail.activity.type"].create({});
@@ -231,7 +232,7 @@ QUnit.test("list activity widget with exception", async () => {
     await contains(".o-mail-ListActivity-summary", { text: "Warning" });
 });
 
-QUnit.test("list activity widget: open dropdown", async () => {
+test("list activity widget: open dropdown", async () => {
     const pyEnv = await startServer();
     const [activityTypeId_1, activityTypeId_2] = pyEnv["mail.activity.type"].create([{}, {}]);
     const [activityId_1, activityId_2] = pyEnv["mail.activity"].create([
@@ -378,7 +379,7 @@ QUnit.test("list activity widget: open dropdown", async () => {
     await contains(".o-mail-ListActivity-summary", { text: "Meet FP" });
 });
 
-QUnit.test("list activity widget: batch selection from list", async (assert) => {
+test("list activity widget: batch selection from list", async (assert) => {
     function selectContaining(domElement, selector, containing) {
         return Array.from(domElement.querySelectorAll(selector)).filter((sel) =>
             sel.textContent.includes(containing)
@@ -487,7 +488,7 @@ QUnit.test("list activity widget: batch selection from list", async (assert) => 
     await assertSteps(Array(4).fill("do_action_activity"));
 });
 
-QUnit.test("list activity exception widget with activity", async () => {
+test("list activity exception widget with activity", async () => {
     const pyEnv = await startServer();
     const [activityTypeId_1, activityTypeId_2] = pyEnv["mail.activity.type"].create([{}, {}]);
     const [activityId_1, activityId_2] = pyEnv["mail.activity"].create([

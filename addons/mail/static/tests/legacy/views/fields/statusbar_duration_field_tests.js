@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/views/fields/statusbar_duration_field_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
@@ -66,7 +67,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("StatusBarDurationField");
 
-    QUnit.test("StatusBarDurationField in a form view", async function (assert) {
+    test("StatusBarDurationField in a form view", async function (assert) {
         await makeView({
             serverData,
             type: "form",

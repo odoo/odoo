@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/chatter/web/follower_subtype_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -8,7 +9,7 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("follower subtype");
 
-QUnit.test("simplest layout of a followed subtype", async () => {
+test("simplest layout of a followed subtype", async () => {
     const pyEnv = await startServer();
     const subtypeId = pyEnv["mail.message.subtype"].create({
         default: true,
@@ -45,7 +46,7 @@ QUnit.test("simplest layout of a followed subtype", async () => {
     );
 });
 
-QUnit.test("simplest layout of a not followed subtype", async () => {
+test("simplest layout of a not followed subtype", async () => {
     const pyEnv = await startServer();
     const subtypeId = pyEnv["mail.message.subtype"].create({
         default: true,
@@ -77,7 +78,7 @@ QUnit.test("simplest layout of a not followed subtype", async () => {
     );
 });
 
-QUnit.test("toggle follower subtype checkbox", async () => {
+test("toggle follower subtype checkbox", async () => {
     const pyEnv = await startServer();
     const subtypeId = pyEnv["mail.message.subtype"].create({
         default: true,
@@ -121,7 +122,7 @@ QUnit.test("toggle follower subtype checkbox", async () => {
     );
 });
 
-QUnit.test("follower subtype apply", async () => {
+test("follower subtype apply", async () => {
     const pyEnv = await startServer();
     const subtypeId1 = pyEnv["mail.message.subtype"].create({
         default: true,

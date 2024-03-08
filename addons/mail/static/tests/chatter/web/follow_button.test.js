@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/chatter/web/follow_button_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -8,13 +9,13 @@ import { click, contains, triggerEvents } from "@web/../tests/utils";
 
 QUnit.module("follow button");
 
-QUnit.test("base rendering not editable", async () => {
+test("base rendering not editable", async () => {
     const { pyEnv } = await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await contains(".o-mail-Chatter-follow", { text: "Follow" });
 });
 
-QUnit.test("hover following button", async () => {
+test("hover following button", async () => {
     const pyEnv = await startServer();
     const threadId = pyEnv["res.partner"].create({});
     pyEnv["mail.followers"].create({
@@ -30,7 +31,7 @@ QUnit.test("hover following button", async () => {
     await contains(".o-mail-Chatter-follow", { text: "Unfollow" });
 });
 
-QUnit.test('click on "follow" button', async () => {
+test('click on "follow" button', async () => {
     const { pyEnv } = await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await contains("button", { text: "Follow" });
@@ -38,7 +39,7 @@ QUnit.test('click on "follow" button', async () => {
     await contains("button", { text: "Following" });
 });
 
-QUnit.test('Click on "follow" button should save draft record', async () => {
+test('Click on "follow" button should save draft record', async () => {
     const views = {
         "res.partner,false,form": `
             <form string="Partners">
@@ -58,7 +59,7 @@ QUnit.test('Click on "follow" button should save draft record', async () => {
     await contains("div.o_field_invalid");
 });
 
-QUnit.test('click on "unfollow" button', async () => {
+test('click on "unfollow" button', async () => {
     const pyEnv = await startServer();
     const threadId = pyEnv["res.partner"].create({});
     pyEnv["mail.followers"].create({

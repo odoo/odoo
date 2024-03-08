@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/message/message_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -22,7 +23,7 @@ const { DateTime } = luxon;
 
 QUnit.module("message");
 
-QUnit.test("Start edition on click edit", async () => {
+test("Start edition on click edit", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -42,7 +43,7 @@ QUnit.test("Start edition on click edit", async () => {
     await contains(".o-mail-Message-editable .o-mail-Composer-input", { value: "Hello world" });
 });
 
-QUnit.test("Edit message (mobile)", async () => {
+test("Edit message (mobile)", async () => {
     patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
@@ -75,7 +76,7 @@ QUnit.test("Edit message (mobile)", async () => {
     await contains(".o-mail-Message-content", { text: "edited message" });
 });
 
-QUnit.test("Can edit message comment in chatter", async () => {
+test("Can edit message comment in chatter", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
     pyEnv["mail.message"].create({
@@ -94,7 +95,7 @@ QUnit.test("Can edit message comment in chatter", async () => {
     await contains(".o-mail-Message-content", { text: "edited message" });
 });
 
-QUnit.test("Cursor is at end of composer input on edit", async (assert) => {
+test("Cursor is at end of composer input on edit", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -116,7 +117,7 @@ QUnit.test("Cursor is at end of composer input on edit", async (assert) => {
     assert.strictEqual(textarea.selectionEnd, contentLength);
 });
 
-QUnit.test("Stop edition on click cancel", async () => {
+test("Stop edition on click cancel", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -137,7 +138,7 @@ QUnit.test("Stop edition on click cancel", async () => {
     await contains(".o-mail-Message-editable .o-mail-Composer", { count: 0 });
 });
 
-QUnit.test("Stop edition on press escape", async () => {
+test("Stop edition on press escape", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -158,7 +159,7 @@ QUnit.test("Stop edition on press escape", async () => {
     await contains(".o-mail-Message-editable .o-mail-Composer", { count: 0 });
 });
 
-QUnit.test("Stop edition on click save", async () => {
+test("Stop edition on click save", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -179,7 +180,7 @@ QUnit.test("Stop edition on click save", async () => {
     await contains(".o-mail-Message-editable .o-mail-Composer", { count: 0 });
 });
 
-QUnit.test("Stop edition on press enter", async () => {
+test("Stop edition on press enter", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -200,7 +201,7 @@ QUnit.test("Stop edition on press enter", async () => {
     await contains(".o-mail-Message-editable .o-mail-Composer", { count: 0 });
 });
 
-QUnit.test("Do not stop edition on click away when clicking on emoji", async () => {
+test("Do not stop edition on click away when clicking on emoji", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -222,7 +223,7 @@ QUnit.test("Do not stop edition on click away when clicking on emoji", async () 
     await contains(".o-mail-Message-editable .o-mail-Composer");
 });
 
-QUnit.test("Edit and click save", async () => {
+test("Edit and click save", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -244,7 +245,7 @@ QUnit.test("Edit and click save", async () => {
     await contains(".o-mail-Message-body", { text: "Goodbye World" });
 });
 
-QUnit.test("Do not call server on save if no changes", async (assert) => {
+test("Do not call server on save if no changes", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -271,7 +272,7 @@ QUnit.test("Do not call server on save if no changes", async (assert) => {
     assert.verifySteps([]);
 });
 
-QUnit.test("Update the link previews when a message is edited", async (assert) => {
+test("Update the link previews when a message is edited", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -302,7 +303,7 @@ QUnit.test("Update the link previews when a message is edited", async (assert) =
     assert.verifySteps(["link_preview"]);
 });
 
-QUnit.test("Scroll bar to the top when edit starts", async (assert) => {
+test("Scroll bar to the top when edit starts", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -325,7 +326,7 @@ QUnit.test("Scroll bar to the top when edit starts", async (assert) => {
     await contains(".o-mail-Message .o-mail-Composer-input", { scroll: 0 });
 });
 
-QUnit.test("mentions are kept when editing message", async () => {
+test("mentions are kept when editing message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -353,7 +354,7 @@ QUnit.test("mentions are kept when editing message", async () => {
     });
 });
 
-QUnit.test("can add new mentions when editing message", async () => {
+test("can add new mentions when editing message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -389,7 +390,7 @@ QUnit.test("can add new mentions when editing message", async () => {
     });
 });
 
-QUnit.test("Other messages are grayed out when replying to another one", async () => {
+test("Other messages are grayed out when replying to another one", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -409,7 +410,7 @@ QUnit.test("Other messages are grayed out when replying to another one", async (
     await contains(".o-mail-Message:not(.opacity_50)", { text: "Hello world" });
 });
 
-QUnit.test("Parent message body is displayed on replies", async () => {
+test("Parent message body is displayed on replies", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -428,40 +429,37 @@ QUnit.test("Parent message body is displayed on replies", async () => {
     await contains(".o-mail-MessageInReply-message", { text: "Hello world" });
 });
 
-QUnit.test(
-    "Updating the parent message of a reply also updates the visual of the reply",
-    async () => {
-        const pyEnv = await startServer();
-        const channelId = pyEnv["discuss.channel"].create({
-            channel_type: "channel",
-            name: "channel1",
-        });
-        const messageId = pyEnv["mail.message"].create({
-            body: "Hello world",
-            res_id: channelId,
-            message_type: "comment",
-            model: "discuss.channel",
-        });
-        pyEnv["mail.message"].create({
-            body: "Hello world",
-            res_id: channelId,
-            message_type: "comment",
-            model: "discuss.channel",
-            parent_id: messageId,
-        });
-        await start();
-        await openDiscuss(channelId);
-        await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
-        await click(".o-mail-Message-moreMenu [title='Edit']");
-        await insertText(".o-mail-Message .o-mail-Composer-input", "Goodbye World", {
-            replace: true,
-        });
-        triggerHotkey("Enter");
-        await contains(".o-mail-MessageInReply-message", { text: "Goodbye World" });
-    }
-);
+test("Updating the parent message of a reply also updates the visual of the reply", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId,
+        message_type: "comment",
+        model: "discuss.channel",
+    });
+    pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId,
+        message_type: "comment",
+        model: "discuss.channel",
+        parent_id: messageId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
+    await click(".o-mail-Message-moreMenu [title='Edit']");
+    await insertText(".o-mail-Message .o-mail-Composer-input", "Goodbye World", {
+        replace: true,
+    });
+    triggerHotkey("Enter");
+    await contains(".o-mail-MessageInReply-message", { text: "Goodbye World" });
+});
 
-QUnit.test("Deleting parent message of a reply should adapt reply visual", async () => {
+test("Deleting parent message of a reply should adapt reply visual", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -484,7 +482,7 @@ QUnit.test("Deleting parent message of a reply should adapt reply visual", async
     await contains(".o-mail-MessageInReply", { text: "Original message was deleted" });
 });
 
-QUnit.test("Can open emoji picker after edit mode", async () => {
+test("Can open emoji picker after edit mode", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -505,7 +503,7 @@ QUnit.test("Can open emoji picker after edit mode", async () => {
     await contains(".o-EmojiPicker");
 });
 
-QUnit.test("Can add a reaction", async () => {
+test("Can add a reaction", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -524,7 +522,7 @@ QUnit.test("Can add a reaction", async () => {
     await contains(".o-mail-MessageReaction", { text: "😅1" });
 });
 
-QUnit.test("Can remove a reaction", async () => {
+test("Can remove a reaction", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -544,7 +542,7 @@ QUnit.test("Can remove a reaction", async () => {
     await contains(".o-mail-MessageReaction", { count: 0 });
 });
 
-QUnit.test("Two users reacting with the same emoji", async () => {
+test("Two users reacting with the same emoji", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -578,7 +576,7 @@ QUnit.test("Two users reacting with the same emoji", async () => {
     await contains(".o-mail-MessageReaction", { text: "😅2" });
 });
 
-QUnit.test("Reaction summary", async () => {
+test("Reaction summary", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -614,7 +612,7 @@ QUnit.test("Reaction summary", async () => {
     }
 });
 
-QUnit.test("Add the same reaction twice from the emoji picker", async () => {
+test("Add the same reaction twice from the emoji picker", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -635,7 +633,7 @@ QUnit.test("Add the same reaction twice from the emoji picker", async () => {
     await contains(".o-mail-MessageReaction", { text: "😅1" });
 });
 
-QUnit.test("basic rendering of message", async () => {
+test("basic rendering of message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
@@ -670,7 +668,7 @@ QUnit.test("basic rendering of message", async () => {
     );
 });
 
-QUnit.test("should not be able to reply to temporary/transient messages", async () => {
+test("should not be able to reply to temporary/transient messages", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     await start();
@@ -681,7 +679,7 @@ QUnit.test("should not be able to reply to temporary/transient messages", async 
     await contains(".o-mail-Message [title='Reply']", { count: 0 });
 });
 
-QUnit.test("squashed transient message should not have date in the sidebar", async () => {
+test("squashed transient message should not have date in the sidebar", async () => {
     patchDate(2024, 2, 26, 10, 0, 0);
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "Channel 1" });
@@ -716,7 +714,7 @@ QUnit.test("squashed transient message should not have date in the sidebar", asy
     });
 });
 
-QUnit.test("message comment of same author within 1min. should be squashed", async () => {
+test("message comment of same author within 1min. should be squashed", async () => {
     // messages are squashed when "close", e.g. less than 1 minute has elapsed
     // from messages of same author and same thread. Note that this should
     // be working in non-mailboxes
@@ -768,7 +766,7 @@ QUnit.test("message comment of same author within 1min. should be squashed", asy
     });
 });
 
-QUnit.test("open author avatar card", async () => {
+test("open author avatar card", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["res.users"].create({
@@ -805,7 +803,7 @@ QUnit.test("open author avatar card", async () => {
     await contains(".o_card_user_infos > a", { text: "+5646548" });
 });
 
-QUnit.test("toggle_star message", async (assert) => {
+test("toggle_star message", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const messageId = pyEnv["mail.message"].create({
@@ -838,59 +836,53 @@ QUnit.test("toggle_star message", async (assert) => {
     await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star-o");
 });
 
-QUnit.test(
-    "Name of message author is only displayed in chat window for partners others than the current user",
-    async () => {
-        const pyEnv = await startServer();
-        const channelId = pyEnv["discuss.channel"].create({ channel_type: "channel" });
-        const partnerId = pyEnv["res.partner"].create({ name: "Not the current user" });
-        pyEnv["mail.message"].create([
-            {
-                body: "not empty",
-                model: "discuss.channel",
-                res_id: channelId,
-            },
-            {
-                author_id: partnerId,
-                body: "not empty",
-                model: "discuss.channel",
-                res_id: channelId,
-            },
-        ]);
-        await start();
-        await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem");
-        await contains(".o-mail-Message-author", { text: "Not the current user" });
-    }
-);
+test("Name of message author is only displayed in chat window for partners others than the current user", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ channel_type: "channel" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Not the current user" });
+    pyEnv["mail.message"].create([
+        {
+            body: "not empty",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: partnerId,
+            body: "not empty",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-Message-author", { text: "Not the current user" });
+});
 
-QUnit.test(
-    "Name of message author is not displayed in chat window for channel of type chat",
-    async () => {
-        const pyEnv = await startServer();
-        const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
-        const partnerId = pyEnv["res.partner"].create({ name: "A" });
-        pyEnv["mail.message"].create([
-            {
-                body: "not empty",
-                model: "discuss.channel",
-                res_id: channelId,
-            },
-            {
-                author_id: partnerId,
-                body: "not empty",
-                model: "discuss.channel",
-                res_id: channelId,
-            },
-        ]);
-        await start();
-        await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem");
-        await contains(".o-mail-Message-author", { count: 0 });
-    }
-);
+test("Name of message author is not displayed in chat window for channel of type chat", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
+    const partnerId = pyEnv["res.partner"].create({ name: "A" });
+    pyEnv["mail.message"].create([
+        {
+            body: "not empty",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: partnerId,
+            body: "not empty",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-Message-author", { count: 0 });
+});
 
-QUnit.test("click on message edit button should open edit composer", async () => {
+test("click on message edit button should open edit composer", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -906,7 +898,7 @@ QUnit.test("click on message edit button should open edit composer", async () =>
     await contains(".o-mail-Message .o-mail-Composer");
 });
 
-QUnit.test("Notification Sent", async (assert) => {
+test("Notification Sent", async (assert) => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([
         {},
@@ -938,7 +930,7 @@ QUnit.test("Notification Sent", async (assert) => {
     await contains(".o-mail-MessageNotificationPopover", { text: "Someone" });
 });
 
-QUnit.test("Notification Error", async (assert) => {
+test("Notification Error", async (assert) => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([
         {},
@@ -976,38 +968,35 @@ QUnit.test("Notification Error", async (assert) => {
     assert.verifySteps(["do_action"]);
 });
 
-QUnit.test(
-    'Quick edit (edit from Composer with ArrowUp) ignores empty ("deleted") messages.',
-    async () => {
-        const pyEnv = await startServer();
-        const channelId = pyEnv["discuss.channel"].create({
-            name: "general",
-            channel_type: "channel",
-        });
-        pyEnv["mail.message"].create({
-            author_id: pyEnv.currentPartnerId,
-            body: "not empty",
-            model: "discuss.channel",
-            res_id: channelId,
-            message_type: "comment",
-        });
-        pyEnv["mail.message"].create({
-            author_id: pyEnv.currentPartnerId,
-            body: "", // empty body
-            model: "discuss.channel",
-            res_id: channelId,
-            message_type: "comment",
-        });
-        await start();
-        await openDiscuss(channelId);
-        await contains(".o-mail-Message");
-        triggerHotkey("ArrowUp");
-        await contains(".o-mail-Message .o-mail-Message-editable");
-        await contains(".o-mail-Message .o-mail-Composer-input", { value: "not empty" });
-    }
-);
+test('Quick edit (edit from Composer with ArrowUp) ignores empty ("deleted") messages.', async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    pyEnv["mail.message"].create({
+        author_id: pyEnv.currentPartnerId,
+        body: "not empty",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    pyEnv["mail.message"].create({
+        author_id: pyEnv.currentPartnerId,
+        body: "", // empty body
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message");
+    triggerHotkey("ArrowUp");
+    await contains(".o-mail-Message .o-mail-Message-editable");
+    await contains(".o-mail-Message .o-mail-Composer-input", { value: "not empty" });
+});
 
-QUnit.test("Editing a message to clear its composer opens message delete dialog.", async () => {
+test("Editing a message to clear its composer opens message delete dialog.", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -1029,40 +1018,37 @@ QUnit.test("Editing a message to clear its composer opens message delete dialog.
     await contains(".modal-body p", { text: "Are you sure you want to delete this message?" });
 });
 
-QUnit.test(
-    "Clear message body should not open message delete dialog if it has attachments",
-    async () => {
-        const pyEnv = await startServer();
-        const channelId = pyEnv["discuss.channel"].create({
-            name: "general",
-            channel_type: "channel",
-        });
-        pyEnv["mail.message"].create({
-            author_id: pyEnv.currentPartnerId,
-            body: "not empty",
-            model: "discuss.channel",
-            res_id: channelId,
-            message_type: "comment",
-            attachment_ids: [
-                pyEnv["ir.attachment"].create({ name: "test.txt", mimetype: "text/plain" }),
-            ],
-        });
-        await start();
-        await openDiscuss(channelId);
-        await click(".o-mail-Message [title='Expand']");
-        await click(".o-mail-Message-moreMenu [title='Edit']");
-        await insertText(".o-mail-Message-editable .o-mail-Composer-input", "", { replace: true });
-        triggerHotkey("Enter");
-        await contains(".o-mail-Message-textContent", { text: "" });
-        // weak test, no guarantee that we waited long enough for the potential dialog to show
-        await contains(".modal-body p", {
-            text: "Are you sure you want to delete this message?",
-            count: 0,
-        });
-    }
-);
+test("Clear message body should not open message delete dialog if it has attachments", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    pyEnv["mail.message"].create({
+        author_id: pyEnv.currentPartnerId,
+        body: "not empty",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+        attachment_ids: [
+            pyEnv["ir.attachment"].create({ name: "test.txt", mimetype: "text/plain" }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message-moreMenu [title='Edit']");
+    await insertText(".o-mail-Message-editable .o-mail-Composer-input", "", { replace: true });
+    triggerHotkey("Enter");
+    await contains(".o-mail-Message-textContent", { text: "" });
+    // weak test, no guarantee that we waited long enough for the potential dialog to show
+    await contains(".modal-body p", {
+        text: "Are you sure you want to delete this message?",
+        count: 0,
+    });
+});
 
-QUnit.test("highlight the message mentioning the current user inside the channel", async () => {
+test("highlight the message mentioning the current user inside the channel", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ display_name: "Test Partner" });
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -1082,33 +1068,30 @@ QUnit.test("highlight the message mentioning the current user inside the channel
     await contains(".o-mail-Message-bubble.bg-warning-light");
 });
 
-QUnit.test(
-    "not highlighting the message if not mentioning the current user inside the channel",
-    async () => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({
-            display_name: "testPartner",
-            email: "testPartner@odoo.com",
-        });
-        pyEnv["res.users"].create({ partner_id: partnerId });
-        const channelId = pyEnv["discuss.channel"].create({
-            channel_type: "channel",
-            name: "General",
-        });
-        pyEnv["mail.message"].create({
-            author_id: pyEnv.currentPartnerId,
-            body: "hello @testPartner",
-            model: "discuss.channel",
-            partner_ids: [partnerId],
-            res_id: channelId,
-        });
-        await start();
-        await openDiscuss(channelId);
-        await contains(".o-mail-Message-bubble:not(.bg-warning-light)");
-    }
-);
+test("not highlighting the message if not mentioning the current user inside the channel", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        display_name: "testPartner",
+        email: "testPartner@odoo.com",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "General",
+    });
+    pyEnv["mail.message"].create({
+        author_id: pyEnv.currentPartnerId,
+        body: "hello @testPartner",
+        model: "discuss.channel",
+        partner_ids: [partnerId],
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message-bubble:not(.bg-warning-light)");
+});
 
-QUnit.test("allow attachment delete on authored message", async () => {
+test("allow attachment delete on authored message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["mail.message"].create({
@@ -1138,7 +1121,7 @@ QUnit.test("allow attachment delete on authored message", async () => {
     await contains(".o-mail-AttachmentCard", { count: 0 });
 });
 
-QUnit.test("prevent attachment delete on non-authored message in channels", async () => {
+test("prevent attachment delete on non-authored message in channels", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
@@ -1166,7 +1149,7 @@ QUnit.test("prevent attachment delete on non-authored message in channels", asyn
     await contains(".o-mail-AttachmentImage div[title='Remove']", { count: 0 });
 });
 
-QUnit.test("Toggle star should update starred counter on all tabs", async () => {
+test("Toggle star should update starred counter on all tabs", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -1191,7 +1174,7 @@ QUnit.test("Toggle star should update starred counter on all tabs", async () => 
     });
 });
 
-QUnit.test("allow attachment image download on message", async () => {
+test("allow attachment image download on message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     const attachmentId = pyEnv["ir.attachment"].create({
@@ -1209,7 +1192,7 @@ QUnit.test("allow attachment image download on message", async () => {
     await contains(".o-mail-AttachmentImage .fa-download");
 });
 
-QUnit.test("Can download all files of a message", async () => {
+test("Can download all files of a message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     const [attachmentId_1, attachmentId_2, attachmentId_3] = pyEnv["ir.attachment"].create([
@@ -1240,7 +1223,7 @@ QUnit.test("Can download all files of a message", async () => {
     await contains("[title='Download Files']", { count: 0 });
 });
 
-QUnit.test("Can remove files of message individually", async () => {
+test("Can remove files of message individually", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     const [attachmentId_1, attachmentId_2, attachmentId_3, attachmentId_4] = pyEnv[
@@ -1286,39 +1269,36 @@ QUnit.test("Can remove files of message individually", async () => {
     await contains(":nth-child(3 of .o-mail-Message) .o-mail-AttachmentCard [title='Remove']");
 });
 
-QUnit.test(
-    "avatar card from author should be opened after clicking on their avatar",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
-            { name: "Partner_1" },
-            { name: "Partner_2" },
-        ]);
-        pyEnv["res.users"].create({
-            partner_id: partnerId_2,
-            name: "Partner_2",
-            email: "partner2@mail.com",
-            phone: "+15968415",
-        });
-        pyEnv["mail.message"].create({
-            author_id: partnerId_2,
-            body: "not empty",
-            model: "res.partner",
-            res_id: partnerId_1,
-        });
-        await start();
-        await openFormView("res.partner", partnerId_1);
-        await contains(".o-mail-Message-avatar");
-        assert.hasClass($(".o-mail-Message-avatarContainer"), "cursor-pointer");
-        await click(".o-mail-Message-avatar");
-        await contains(".o_avatar_card");
-        await contains(".o_card_user_infos > span", { text: "Partner_2" });
-        await contains(".o_card_user_infos > a", { text: "partner2@mail.com" });
-        await contains(".o_card_user_infos > a", { text: "+15968415" });
-    }
-);
+test("avatar card from author should be opened after clicking on their avatar", async (assert) => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "Partner_1" },
+        { name: "Partner_2" },
+    ]);
+    pyEnv["res.users"].create({
+        partner_id: partnerId_2,
+        name: "Partner_2",
+        email: "partner2@mail.com",
+        phone: "+15968415",
+    });
+    pyEnv["mail.message"].create({
+        author_id: partnerId_2,
+        body: "not empty",
+        model: "res.partner",
+        res_id: partnerId_1,
+    });
+    await start();
+    await openFormView("res.partner", partnerId_1);
+    await contains(".o-mail-Message-avatar");
+    assert.hasClass($(".o-mail-Message-avatarContainer"), "cursor-pointer");
+    await click(".o-mail-Message-avatar");
+    await contains(".o_avatar_card");
+    await contains(".o_card_user_infos > span", { text: "Partner_2" });
+    await contains(".o_card_user_infos > a", { text: "partner2@mail.com" });
+    await contains(".o_card_user_infos > a", { text: "+15968415" });
+});
 
-QUnit.test("avatar card from author should be opened after clicking on their name", async () => {
+test("avatar card from author should be opened after clicking on their name", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["res.users"].create({
@@ -1342,7 +1322,7 @@ QUnit.test("avatar card from author should be opened after clicking on their nam
     await contains(".o_card_user_infos > a", { text: "+5646548" });
 });
 
-QUnit.test("subtype description should be displayed if it is different than body", async () => {
+test("subtype description should be displayed if it is different than body", async () => {
     const pyEnv = await startServer();
     const threadId = pyEnv["res.partner"].create({});
     const subtypeId = pyEnv["mail.message.subtype"].create({ description: "Bonjour" });
@@ -1357,7 +1337,7 @@ QUnit.test("subtype description should be displayed if it is different than body
     await contains(".o-mail-Message-body", { text: "HelloBonjour" });
 });
 
-QUnit.test("subtype description should not be displayed if it is similar to body", async () => {
+test("subtype description should not be displayed if it is similar to body", async () => {
     const pyEnv = await startServer();
     const threadId = pyEnv["res.partner"].create({});
     const subtypeId = pyEnv["mail.message.subtype"].create({ description: "hello" });
@@ -1372,7 +1352,7 @@ QUnit.test("subtype description should not be displayed if it is similar to body
     await contains(".o-mail-Message-body", { text: "Hello" });
 });
 
-QUnit.test("data-oe-id & data-oe-model link redirection on click", async (assert) => {
+test("data-oe-id & data-oe-model link redirection on click", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.message"].create({
@@ -1394,7 +1374,7 @@ QUnit.test("data-oe-id & data-oe-model link redirection on click", async (assert
     assert.verifySteps(["do-action:openFormView_some.model_250"]);
 });
 
-QUnit.test("Chat with partner should be opened after clicking on their mention", async () => {
+test("Chat with partner should be opened after clicking on their mention", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Test Partner",
@@ -1413,7 +1393,7 @@ QUnit.test("Chat with partner should be opened after clicking on their mention",
     await contains(".o-mail-ChatWindow", { text: "Test Partner" });
 });
 
-QUnit.test("Channel should be opened after clicking on its mention", async () => {
+test("Channel should be opened after clicking on its mention", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["discuss.channel"].create({ name: "my-channel" });
@@ -1428,59 +1408,53 @@ QUnit.test("Channel should be opened after clicking on its mention", async () =>
     await contains(".o-mail-ChatWindow", { text: "my-channel" });
 });
 
-QUnit.test(
-    "delete all attachments of message without content should no longer display the message",
-    async () => {
-        const pyEnv = await startServer();
-        const attachmentId = pyEnv["ir.attachment"].create({
-            mimetype: "text/plain",
-            name: "Blah.txt",
-        });
-        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-        pyEnv["mail.message"].create({
-            attachment_ids: [attachmentId],
-            message_type: "comment",
-            model: "discuss.channel",
-            res_id: channelId,
-        });
-        await start();
-        await openDiscuss(channelId);
-        await contains(".o-mail-Message");
+test("delete all attachments of message without content should no longer display the message", async () => {
+    const pyEnv = await startServer();
+    const attachmentId = pyEnv["ir.attachment"].create({
+        mimetype: "text/plain",
+        name: "Blah.txt",
+    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        attachment_ids: [attachmentId],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message");
 
-        await click(".o-mail-Message [title='Expand']");
-        await click(".o-mail-Message-moreMenu [title='Delete']");
-        await click("button", { text: "Confirm" });
-        await contains(".o-mail-Message", { count: 0 });
-    }
-);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message-moreMenu [title='Delete']");
+    await click("button", { text: "Confirm" });
+    await contains(".o-mail-Message", { count: 0 });
+});
 
-QUnit.test(
-    "delete all attachments of a message with some text content should still keep it displayed",
-    async () => {
-        const pyEnv = await startServer();
-        const attachmentId = pyEnv["ir.attachment"].create({
-            mimetype: "text/plain",
-            name: "Blah.txt",
-        });
-        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-        pyEnv["mail.message"].create({
-            attachment_ids: [attachmentId],
-            body: "Some content",
-            message_type: "comment",
-            model: "discuss.channel",
-            res_id: channelId,
-        });
-        await start();
-        await openDiscuss(channelId);
-        await contains(".o-mail-Message");
+test("delete all attachments of a message with some text content should still keep it displayed", async () => {
+    const pyEnv = await startServer();
+    const attachmentId = pyEnv["ir.attachment"].create({
+        mimetype: "text/plain",
+        name: "Blah.txt",
+    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        attachment_ids: [attachmentId],
+        body: "Some content",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message");
 
-        await click(".o-mail-AttachmentCard button[title='Remove']");
-        await click(".modal button", { text: "Ok" });
-        await contains(".o-mail-Message");
-    }
-);
+    await click(".o-mail-AttachmentCard button[title='Remove']");
+    await click(".modal button", { text: "Ok" });
+    await contains(".o-mail-Message");
+});
 
-QUnit.test("message with subtype should be displayed (and not considered as empty)", async () => {
+test("message with subtype should be displayed (and not considered as empty)", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const subtypeId = pyEnv["mail.message.subtype"].create({ description: "Task created" });
@@ -1494,7 +1468,7 @@ QUnit.test("message with subtype should be displayed (and not considered as empt
     await contains(".o-mail-Message-content", { text: "Task created" });
 });
 
-QUnit.test("message considered empty", async () => {
+test("message considered empty", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create([
@@ -1544,7 +1518,7 @@ QUnit.test("message considered empty", async () => {
     await contains(".o-mail-Message", { count: 0 });
 });
 
-QUnit.test("message with html not to be considered empty", async () => {
+test("message with html not to be considered empty", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -1557,7 +1531,7 @@ QUnit.test("message with html not to be considered empty", async () => {
     await contains(".o-mail-Message");
 });
 
-QUnit.test("message with body 'test' should not be considered empty", async () => {
+test("message with body 'test' should not be considered empty", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -1570,7 +1544,7 @@ QUnit.test("message with body 'test' should not be considered empty", async () =
     await contains(".o-mail-Message");
 });
 
-QUnit.test("Can reply to chatter messages from history", async () => {
+test("Can reply to chatter messages from history", async () => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create({
         body: "Hello World!",
@@ -1591,7 +1565,7 @@ QUnit.test("Can reply to chatter messages from history", async () => {
     await contains("button[title='Full composer']");
 });
 
-QUnit.test("Mark as unread", async () => {
+test("Mark as unread", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "chat",
@@ -1617,7 +1591,7 @@ QUnit.test("Mark as unread", async () => {
     await contains(".o-mail-DiscussSidebarChannel .badge", { text: "1" });
 });
 
-QUnit.test("Avatar of unknown author for email message", async () => {
+test("Avatar of unknown author for email message", async () => {
     const pyEnv = await startServer();
     pyEnv["mail.message"].create({
         body: "<p>Want to know features and benefits of using the new software.</p>",
@@ -1633,7 +1607,7 @@ QUnit.test("Avatar of unknown author for email message", async () => {
     await contains(".o-mail-Message-avatar[data-src*='mail/static/src/img/email_icon.png']");
 });
 
-QUnit.test("Show email_from of message without author for email message", async () => {
+test("Show email_from of message without author for email message", async () => {
     const pyEnv = await startServer();
     pyEnv["mail.message"].create({
         author_id: null,
@@ -1649,7 +1623,7 @@ QUnit.test("Show email_from of message without author for email message", async 
     await contains(".o-mail-Message-author", { text: "md@oilcompany.fr" });
 });
 
-QUnit.test("Avatar of unknown author for not email message", async () => {
+test("Avatar of unknown author for not email message", async () => {
     const pyEnv = await startServer();
     pyEnv["mail.message"].create({
         body: "<p>Want to know features and benefits of using the new software.</p>",
@@ -1665,7 +1639,7 @@ QUnit.test("Avatar of unknown author for not email message", async () => {
     await contains(".o-mail-Message-avatar[data-src*='/mail/static/src/img/smiley/avatar.jpg']");
 });
 
-QUnit.test("Show email_from of message without author for not email message", async () => {
+test("Show email_from of message without author for not email message", async () => {
     const pyEnv = await startServer();
     pyEnv["mail.message"].create({
         author_id: null,
@@ -1681,7 +1655,7 @@ QUnit.test("Show email_from of message without author for not email message", as
     await contains(".o-mail-Message-author", { text: "md@oilcompany.fr" });
 });
 
-QUnit.test("Message should display attachments in order", async () => {
+test("Message should display attachments in order", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -1706,7 +1680,7 @@ QUnit.test("Message should display attachments in order", async () => {
     await contains(":nth-child(3 of .o-mail-AttachmentCard)", { text: "C.txt" });
 });
 
-QUnit.test("Can edit a message only containing an attachment", async () => {
+test("Can edit a message only containing an attachment", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -1731,7 +1705,7 @@ QUnit.test("Can edit a message only containing an attachment", async () => {
     await contains(".o-mail-Message-editable .o-mail-Composer-input");
 });
 
-QUnit.test("Click on view reactions shows the reactions on the message", async () => {
+test("Click on view reactions shows the reactions on the message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -1753,7 +1727,7 @@ QUnit.test("Click on view reactions shows the reactions on the message", async (
     await contains(".o-mail-MessageReactionMenu", { text: "😅1" });
 });
 
-QUnit.test("discuss - bigger font size when there is only emoji", async (assert) => {
+test("discuss - bigger font size when there is only emoji", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -1774,7 +1748,7 @@ QUnit.test("discuss - bigger font size when there is only emoji", async (assert)
     );
 });
 
-QUnit.test("chatter - font size unchanged when there is only emoji", async (assert) => {
+test("chatter - font size unchanged when there is only emoji", async (assert) => {
     const pyEnv = await startServer();
     await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);

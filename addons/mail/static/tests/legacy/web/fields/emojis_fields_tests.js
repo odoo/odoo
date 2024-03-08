@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/web/fields/emojis_fields_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { addFakeModel } from "@bus/../tests/helpers/model_definitions_helpers";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
@@ -81,12 +82,12 @@ async function openTestView(model) {
 
 QUnit.module("Field char emojis");
 
-QUnit.test("emojis button is shown", async () => {
+test("emojis button is shown", async () => {
     await openTestView("fields.char.emojis.user");
     await testEmojiButtonVisible(".o_field_char_emojis");
 });
 
-QUnit.test("emojis button works", async (assert) => {
+test("emojis button works", async (assert) => {
     await openTestView("fields.char.emojis.user");
     const input = $(".o_field_char_emojis input[type='text']")[0];
     const emojiButton = $(".o_field_char_emojis button")[0];
@@ -95,12 +96,12 @@ QUnit.test("emojis button works", async (assert) => {
 
 QUnit.module("Field text emojis");
 
-QUnit.test("emojis button is shown", async () => {
+test("emojis button is shown", async () => {
     await openTestView("fields.text.emojis.user");
     await testEmojiButtonVisible(".o_field_text_emojis");
 });
 
-QUnit.test("emojis button works", async (assert) => {
+test("emojis button works", async (assert) => {
     await openTestView("fields.text.emojis.user");
     const input = $(".o_field_text_emojis textarea")[0];
     const emojiButton = $(".o_field_text_emojis button")[0];

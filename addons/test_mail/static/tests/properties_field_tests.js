@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { openFormView, start } from "@mail/../tests/helpers/test_utils";
@@ -62,10 +64,10 @@ async function testPropertyFieldAvatarOpenChat(assert, propertyType) {
     await contains(".o-mail-ChatWindow", { text: "Partner Test" });
 }
 
-QUnit.test("Properties fields: many2one avatar open chat on click", async function (assert) {
+test("Properties fields: many2one avatar open chat on click", async function (assert) {
     await testPropertyFieldAvatarOpenChat(assert, "many2one");
 });
 
-QUnit.test("Properties fields: m2m avatar list open chat on click", async function (assert) {
+test("Properties fields: m2m avatar list open chat on click", async function (assert) {
     await testPropertyFieldAvatarOpenChat(assert, "many2many");
 });

@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start, loadDefaultConfig } from "@im_livechat/../tests/embed/helper/test_utils";
@@ -9,7 +11,7 @@ import { browser } from "@web/core/browser/browser";
 
 QUnit.module("autopopup");
 
-QUnit.test("persisted session", async () => {
+test("persisted session", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
@@ -32,7 +34,7 @@ QUnit.test("persisted session", async () => {
     await contains(".o-mail-ChatWindow");
 });
 
-QUnit.test("rule received in init", async () => {
+test("rule received in init", async () => {
     await startServer();
     await loadDefaultConfig();
     start({

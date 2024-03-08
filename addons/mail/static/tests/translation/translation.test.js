@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/translation/translation_test default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -8,7 +9,7 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("Google Cloud Translation");
 
-QUnit.test("Toggle display of original/translated version of chatter message", async (assert) => {
+test("Toggle display of original/translated version of chatter message", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.message"].create({
@@ -47,7 +48,7 @@ QUnit.test("Toggle display of original/translated version of chatter message", a
     assert.verifySteps(["Request"]);
 });
 
-QUnit.test("translation of email message", async () => {
+test("translation of email message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.message"].create({

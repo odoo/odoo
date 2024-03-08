@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/call/call_settings_menu_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -10,7 +11,7 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("call setting");
 
-QUnit.test("Renders the call settings", async () => {
+test("Renders the call settings", async () => {
     patchWithCleanup(browser, {
         navigator: {
             ...browser.navigator,
@@ -46,7 +47,7 @@ QUnit.test("Renders the call settings", async () => {
     await contains("input[title='Blur video background']");
 });
 
-QUnit.test("activate push to talk", async () => {
+test("activate push to talk", async () => {
     patchWithCleanup(browser, {
         navigator: {
             ...browser.navigator,
@@ -66,7 +67,7 @@ QUnit.test("activate push to talk", async () => {
     await contains("label[aria-label='Voice detection threshold']", { count: 0 });
 });
 
-QUnit.test("activate blur", async () => {
+test("activate blur", async () => {
     patchWithCleanup(browser, {
         navigator: {
             ...browser.navigator,
@@ -85,7 +86,7 @@ QUnit.test("activate blur", async () => {
     await contains("label[aria-label='Edge blur intensity']");
 });
 
-QUnit.test("Inbox should not have any call settings menu", async () => {
+test("Inbox should not have any call settings menu", async () => {
     await startServer();
     await start();
     await openDiscuss("mail.box_inbox");
@@ -93,24 +94,21 @@ QUnit.test("Inbox should not have any call settings menu", async () => {
     await contains("button[title='Show Call Settings']", { count: 0 });
 });
 
-QUnit.test(
-    "Call settings menu should not be visible on selecting a mailbox (from being open)",
-    async () => {
-        patchWithCleanup(browser, {
-            navigator: {
-                ...browser.navigator,
-                mediaDevices: {
-                    enumerateDevices: () => Promise.resolve([]),
-                },
+test("Call settings menu should not be visible on selecting a mailbox (from being open)", async () => {
+    patchWithCleanup(browser, {
+        navigator: {
+            ...browser.navigator,
+            mediaDevices: {
+                enumerateDevices: () => Promise.resolve([]),
             },
-        });
-        const pyEnv = await startServer();
-        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-        await start();
-        await openDiscuss(channelId);
-        await click("button[title='Show Call Settings']");
-        await click("button", { text: "Inbox" });
-        await contains("button[title='Hide Call Settings']", { count: 0 });
-        await contains(".o-discuss-CallSettings", { count: 0 });
-    }
-);
+        },
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Show Call Settings']");
+    await click("button", { text: "Inbox" });
+    await contains("button[title='Hide Call Settings']", { count: 0 });
+    await contains(".o-discuss-CallSettings", { count: 0 });
+});

@@ -1,10 +1,11 @@
 /** @odoo-module alias=@mail/../tests/core/attachment_model_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("attachment model test", {});
 
-QUnit.test("Attachment model properties", async (assert) => {
+test("Attachment model properties", async (assert) => {
     const { env } = await start();
 
     const attachment = env.services["mail.store"].Attachment.insert({
