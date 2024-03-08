@@ -2,6 +2,7 @@
 
 import logging
 import warnings
+from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.api import call_kw
@@ -15,7 +16,10 @@ _logger = logging.getLogger(__name__)
 
 def _call_kw_readonly(registry, request):
     params = request.get_json_data()['params']
-    model_class = registry[params['model']]
+    try:
+        model_class = registry[params['model']]
+    except KeyError as e:
+        raise NotFound() from e
     method_name = params['method']
     for cls in model_class.mro():
         method = getattr(cls, method_name, None)
