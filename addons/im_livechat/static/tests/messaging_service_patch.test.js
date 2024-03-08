@@ -1,16 +1,23 @@
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import {
+    assertSteps,
+    contains,
+    onRpcBefore,
+    start,
+    startServer,
+    step,
+} from "@mail/../tests/mail_test_helpers";
+import { Command, mockService, serverState } from "@web/../tests/web_test_helpers";
+import { rpcWithEnv } from "@mail/utils/common/misc";
+import { presenceService } from "@bus/services/presence_service";
+import { defineLivechatModels } from "./livechat_test_helpers";
+import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
-
-import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { assertSteps, contains, step } from "@web/../tests/utils";
-
-QUnit.module("messaging service (patch)");
+describe.current.tags("desktop");
+defineLivechatModels();
 
 test("Notify message received out of focus", async () => {
     const pyEnv = await startServer();
@@ -19,36 +26,31 @@ test("Notify message received out of focus", async () => {
         name: "Livechat 1",
         channel_type: "livechat",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.adminPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
     });
-    await start({
-        async mockRPC(route, args, originalRpc) {
-            if (route === "/mail/action" && args.init_messaging) {
-                const res = await originalRpc(...arguments);
-                step(`/mail/action - ${JSON.stringify(args)}`);
-                return res;
-            }
-        },
-        services: {
-            presence: makeFakePresenceService({
-                isOdooFocused() {
-                    return false;
-                },
-            }),
-        },
+    onRpcBefore("/mail/action", async (args) => {
+        if (args.init_messaging) {
+            step(`/mail/action - ${JSON.stringify(args)}`);
+        }
     });
+    mockService("presence", () => ({
+        ...presenceService.start(),
+        isOdooFocused: () => false,
+    }));
+    const env = await start();
+    rpc = rpcWithEnv(env);
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: serverState.userId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
-    await pyEnv.withGuest(guestId, () =>
+    await withGuest(guestId, () =>
         rpc("/mail/message/post", {
             post_data: {
                 body: "Hello",

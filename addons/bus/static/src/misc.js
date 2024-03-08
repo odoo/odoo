@@ -19,7 +19,7 @@ function throttle(func, wait, options) {
     }
 
     const later = function () {
-        previous = options.leading === false ? 0 : Date.now();
+        previous = options.leading === false ? 0 : luxon.DateTime.now().ts;
         timeout = null;
         result = func.apply(context, args);
         if (!timeout) {
@@ -28,7 +28,7 @@ function throttle(func, wait, options) {
     };
 
     const throttled = function () {
-        const _now = Date.now();
+        const _now = luxon.DateTime.now().ts;
         if (!previous && options.leading === false) {
             previous = _now;
         }

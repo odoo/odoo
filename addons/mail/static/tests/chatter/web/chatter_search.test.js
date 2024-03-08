@@ -1,26 +1,36 @@
-/** @odoo-module alias=@mail/../tests/chatter/web/chatter_search_tests default=false */
-const test = QUnit.test; // QUnit.test()
-
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { openFormView, start } from "@mail/../tests/helpers/test_utils";
-import { SIZES, patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { click, contains, insertText, scroll } from "@web/../tests/utils";
+import { describe, test } from "@odoo/hoot";
 import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_hook";
+import {
+    SIZES,
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    openFormView,
+    patchUiSize,
+    scroll,
+    start,
+    startServer,
+    triggerHotkey,
+} from "../../mail_test_helpers";
+import { serverState } from "@web/../tests/web_test_helpers";
 
-QUnit.module("chatter search");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("Chatter should display search icon", async () => {
+    const pyEnv = await startServer();
     patchUiSize({ size: SIZES.XXL });
-    const { pyEnv } = await start();
+    await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await contains("[title='Search Messages']");
 });
 
 test("Click on the search icon should open the search form", async () => {
+    const pyEnv = await startServer();
     patchUiSize({ size: SIZES.XXL });
-    const { pyEnv } = await start();
+    await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");

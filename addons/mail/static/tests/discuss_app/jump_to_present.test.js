@@ -1,17 +1,25 @@
-/** @odoo-module alias=@mail/../tests/discuss_app/jump_to_present_tests default=false */
-const test = QUnit.test; // QUnit.test()
-
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { describe, expect, test } from "@odoo/hoot";
+import {
+    SIZES,
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    onRpcBefore,
+    openDiscuss,
+    openFormView,
+    patchUiSize,
+    scroll,
+    start,
+    startServer,
+} from "../mail_test_helpers";
 
 import { PRESENT_THRESHOLD } from "@mail/core/common/thread";
-import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
 
-import { click, contains, insertText, scroll } from "@web/../tests/utils";
-import { SIZES, patchUiSize } from "../helpers/patch_ui_size";
+describe.current.tags("desktop");
+defineMailModels();
 
-QUnit.module("jump to present");
-
-test("Basic jump to present when scrolling to outdated messages", async (assert) => {
+test("Basic jump to present when scrolling to outdated messages", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     for (let i = 0; i < 20; i++) {
@@ -26,9 +34,9 @@ test("Basic jump to present when scrolling to outdated messages", async (assert)
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 20 });
     await contains(".o-mail-Thread");
-    assert.ok(
-        document.querySelector(".o-mail-Thread").scrollHeight > PRESENT_THRESHOLD,
-        "should have enough scroll height to trigger jump to present"
+    expect(document.querySelector(".o-mail-Thread").scrollHeight).toBeGreaterThan(
+        PRESENT_THRESHOLD,
+        { message: "should have enough scroll height to trigger jump to present" }
     );
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
@@ -41,7 +49,7 @@ test("Basic jump to present when scrolling to outdated messages", async (assert)
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
-test("Basic jump to present when scrolling to outdated messages (chatter, DESC)", async (assert) => {
+test("Basic jump to present when scrolling to outdated messages (chatter, DESC)", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
@@ -57,9 +65,9 @@ test("Basic jump to present when scrolling to outdated messages (chatter, DESC)"
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message", { count: 20 });
     await contains(".o-mail-Thread");
-    assert.ok(
-        document.querySelector(".o-mail-Thread").scrollHeight > PRESENT_THRESHOLD,
-        "should have enough scroll height to trigger jump to present"
+    expect(document.querySelector(".o-mail-Thread").scrollHeight).toBeGreaterThan(
+        PRESENT_THRESHOLD,
+        { message: "should have enough scroll height to trigger jump to present" }
     );
     await contains(".o-mail-Chatter", { scroll: 0 });
     await scroll(".o-mail-Chatter", "bottom");
@@ -144,13 +152,8 @@ test("Jump to old reply should prompt jump to present (RPC small delay)", async 
         res_id: channelId,
         parent_id: oldestMessageId,
     });
-    await start({
-        async mockRPC(route, args) {
-            if (route === "/discuss/channel/messages") {
-                await new Promise(setTimeout); // small delay
-            }
-        },
-    });
+    onRpcBefore("/discuss/channel/messages", async () => await new Promise(setTimeout)); // small delay
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");

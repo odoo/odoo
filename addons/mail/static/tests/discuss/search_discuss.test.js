@@ -1,14 +1,23 @@
-/** @odoo-module alias=@mail/../tests/discuss/search_discuss_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, expect, test } from "@odoo/hoot";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_hook";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import {
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    onRpcBefore,
+    openDiscuss,
+    scroll,
+    start,
+    startServer,
+    triggerHotkey,
+} from "../mail_test_helpers";
+import { serverState } from "@web/../tests/web_test_helpers";
+import { tick } from "@odoo/hoot-mock";
 
-import { nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
-import { click, contains, insertText, scroll } from "@web/../tests/utils";
-
-QUnit.module("discuss search");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("Should have a search button", async () => {
     const pyEnv = await startServer();
@@ -164,7 +173,7 @@ test("Search a message in 60 messages should return 30 message first", async () 
     triggerHotkey("Enter");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 30 });
     // give enough time to useVisible to potentially load more (unexpected) messages
-    await nextTick();
+    await tick();
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 30 });
 });
 
@@ -190,11 +199,11 @@ test("Scrolling to the bottom should load more searched message", async () => {
     await scroll(".o-mail-SearchMessagesPanel .o-mail-ActionPanel", "bottom");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 60 });
     // give enough time to useVisible to potentially load more (unexpected) messages
-    await nextTick();
+    await tick();
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 60 });
 });
 
-test("Editing the searched term should not edit the current searched term", async (assert) => {
+test("Editing the searched term should not edit the current searched term", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     for (let i = 0; i < 60; i++) {
@@ -207,14 +216,13 @@ test("Editing the searched term should not edit the current searched term", asyn
             res_id: channelId,
         });
     }
-    await start({
-        async mockRPC(route, args) {
-            if (route === "/discuss/channel/messages" && args.search_term) {
-                const { search_term } = args;
-                assert.strictEqual(search_term, "message");
-            }
-        },
+    onRpcBefore("/discuss/channel/messages", (args) => {
+        if (args.search_term) {
+            const { search_term } = args;
+            expect(search_term).toBe("message");
+        }
     });
+    await start();
     await openDiscuss(channelId);
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "message");

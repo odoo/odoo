@@ -1,20 +1,25 @@
-/** @odoo-module alias=@mail/../tests/discuss/core/web/crosstab_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import {
+    assertSteps,
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    openDiscuss,
+    start,
+    startServer,
+    step,
+} from "../../../mail_test_helpers";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
-
-QUnit.module("crosstab");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("Channel subscription is renewed when channel is manually added", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General", channel_member_ids: [] });
-    const { env } = await start();
-    patchWithCleanup(env.services["bus_service"], {
+    const env = await start();
+    patchWithCleanup(env.services.bus_service, {
         forceUpdateChannels() {
             step("update-channels");
         },

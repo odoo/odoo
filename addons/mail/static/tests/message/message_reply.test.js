@@ -1,16 +1,19 @@
-/** @odoo-module alias=@mail/../tests/message/message_reply_tests default=false */
-const test = QUnit.test; // QUnit.test()
-
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { describe, test } from "@odoo/hoot";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains } from "@web/../tests/utils";
+import {
+    click,
+    contains,
+    defineMailModels,
+    openDiscuss,
+    start,
+    startServer,
+} from "../mail_test_helpers";
+import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
-QUnit.module("message reply");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("click on message in reply to highlight the parent message", async () => {
     const pyEnv = await startServer();
@@ -70,7 +73,7 @@ test("click on message in reply to scroll to the parent message", async () => {
     await contains(":nth-child(1 of .o-mail-Message)", { visible: true });
 });
 
-test("reply shows correct author avatar", async (assert) => {
+test("reply shows correct author avatar", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const messageId = pyEnv["mail.message"].create({

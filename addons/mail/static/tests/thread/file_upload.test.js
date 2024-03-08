@@ -1,13 +1,20 @@
-/** @odoo-module alias=@mail/../tests/thread/file_upload_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import {
+    click,
+    contains,
+    createFile,
+    defineMailModels,
+    inputFiles,
+    openDiscuss,
+    openFormView,
+    start,
+    startServer,
+} from "../mail_test_helpers";
+import { onRpc } from "@web/../tests/web_test_helpers";
+import { Deferred } from "@odoo/hoot-mock";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains, createFile, inputFiles } from "@web/../tests/utils";
-
-QUnit.module("file upload");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("no conflicts between file uploads", async () => {
     const pyEnv = await startServer();
@@ -46,14 +53,11 @@ test("no conflicts between file uploads", async () => {
 test("Attachment shows spinner during upload", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "channel_1" });
-    await start({
-        async mockRPC(route) {
-            if (route === "/mail/attachment/upload") {
-                // never fulfill the attachment upload promise.
-                await new Promise(() => {});
-            }
-        },
+    onRpc("/mail/attachment/upload", async (route, args) => {
+        // never fulfill the attachment upload promise.
+        await new Deferred();
     });
+    await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer input[type=file]", [
         await createFile({

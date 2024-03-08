@@ -1,24 +1,28 @@
-/** @odoo-module alias=@mail/../tests/discuss/core/suggestion_tests default=false */
-const test = QUnit.test; // QUnit.test()
-
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { describe, beforeEach, test } from "@odoo/hoot";
 
 import { Composer } from "@mail/core/common/composer";
-import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import {
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    openDiscuss,
+    start,
+    startServer,
+} from "../../mail_test_helpers";
+import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { mockDate } from "@odoo/hoot-mock";
 
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
+describe.current.tags("desktop");
+defineMailModels();
 
-QUnit.module("suggestion", {
-    async beforeEach() {
-        // Simulate real user interactions
-        patchWithCleanup(Composer.prototype, {
-            isEventTrusted() {
-                return true;
-            },
-        });
-    },
+beforeEach(() => {
+    // Simulate real user interactions
+    patchWithCleanup(Composer.prototype, {
+        isEventTrusted() {
+            return true;
+        },
+    });
 });
 
 test('display command suggestions on typing "/"', async () => {
@@ -67,6 +71,7 @@ test("command suggestion should only open if command is the first character", as
 });
 
 test("Sort partner suggestions by recent chats", async () => {
+    mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
     const [partner_1, partner_2, partner_3] = pyEnv["res.partner"].create([
         { name: "User 1" },
@@ -102,7 +107,7 @@ test("Sort partner suggestions by recent chats", async () => {
         {
             channel_member_ids: [
                 Command.create({
-                    last_interest_dt: "2023-01-01 00:00:00",
+                    last_interest_dt: "2023-01-01 00:00:10",
                     partner_id: serverState.partnerId,
                 }),
                 Command.create({ partner_id: partner_2 }),
@@ -112,7 +117,7 @@ test("Sort partner suggestions by recent chats", async () => {
         {
             channel_member_ids: [
                 Command.create({
-                    last_interest_dt: "2023-01-01 00:00:00",
+                    last_interest_dt: "2023-01-01 00:00:20",
                     partner_id: serverState.partnerId,
                 }),
                 Command.create({ partner_id: partner_3 }),
@@ -152,7 +157,6 @@ test("mention suggestion are shown after deleting a character", async () => {
     await contains(".o-mail-Composer-suggestion strong", { text: "John Doe" });
     await insertText(".o-mail-Composer-input", "a");
     await contains(".o-mail-Composer-suggestion strong", { count: 0, text: "John D" });
-
     // Simulate pressing backspace
     const textarea = document.querySelector(".o-mail-Composer-input");
     textarea.value = textarea.value.slice(0, -1);
@@ -176,7 +180,6 @@ test("command suggestion are shown after deleting a character", async () => {
     await contains(".o-mail-Composer-suggestion strong", { text: "help" });
     await insertText(".o-mail-Composer-input", "e");
     await contains(".o-mail-Composer-suggestion strong", { count: 0, text: "help" });
-
     // Simulate pressing backspace
     const textarea = document.querySelector(".o-mail-Composer-input");
     textarea.value = textarea.value.slice(0, -1);
@@ -192,7 +195,7 @@ test("mention suggestion displays OdooBot before archived partners", async () =>
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
-            Command.create({ partner_id: pyEnv.odoobotId }),
+            Command.create({ partner_id: serverState.odoobotId }),
         ],
     });
     await start();

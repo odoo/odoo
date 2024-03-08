@@ -1,35 +1,35 @@
-/** @odoo-module alias=@mail/../tests/discuss/call/call_settings_menu_tests default=false */
-const test = QUnit.test; // QUnit.test()
-
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { describe, test } from "@odoo/hoot";
 
 import { browser } from "@web/core/browser/browser";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains } from "@web/../tests/utils";
+import {
+    click,
+    contains,
+    defineMailModels,
+    openDiscuss,
+    start,
+    startServer,
+} from "../../mail_test_helpers";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-QUnit.module("call setting");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("Renders the call settings", async () => {
-    patchWithCleanup(browser, {
-        navigator: {
-            ...browser.navigator,
-            mediaDevices: {
-                enumerateDevices: () =>
-                    Promise.resolve([
-                        {
-                            deviceId: "mockAudioDeviceId",
-                            kind: "audioinput",
-                            label: "mockAudioDeviceLabel",
-                        },
-                        {
-                            deviceId: "mockVideoDeviceId",
-                            kind: "videoinput",
-                            label: "mockVideoDeviceLabel",
-                        },
-                    ]),
-            },
+    patchWithCleanup(browser.navigator, {
+        mediaDevices: {
+            enumerateDevices: () =>
+                Promise.resolve([
+                    {
+                        deviceId: "mockAudioDeviceId",
+                        kind: "audioinput",
+                        label: "mockAudioDeviceLabel",
+                    },
+                    {
+                        deviceId: "mockVideoDeviceId",
+                        kind: "videoinput",
+                        label: "mockVideoDeviceLabel",
+                    },
+                ]),
         },
     });
     const pyEnv = await startServer();
@@ -48,14 +48,6 @@ test("Renders the call settings", async () => {
 });
 
 test("activate push to talk", async () => {
-    patchWithCleanup(browser, {
-        navigator: {
-            ...browser.navigator,
-            mediaDevices: {
-                enumerateDevices: () => Promise.resolve([]),
-            },
-        },
-    });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     await start();
@@ -68,14 +60,6 @@ test("activate push to talk", async () => {
 });
 
 test("activate blur", async () => {
-    patchWithCleanup(browser, {
-        navigator: {
-            ...browser.navigator,
-            mediaDevices: {
-                enumerateDevices: () => Promise.resolve([]),
-            },
-        },
-    });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     await start();
@@ -95,14 +79,6 @@ test("Inbox should not have any call settings menu", async () => {
 });
 
 test("Call settings menu should not be visible on selecting a mailbox (from being open)", async () => {
-    patchWithCleanup(browser, {
-        navigator: {
-            ...browser.navigator,
-            mediaDevices: {
-                enumerateDevices: () => Promise.resolve([]),
-            },
-        },
-    });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();

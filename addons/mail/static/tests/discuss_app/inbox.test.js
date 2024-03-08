@@ -1,14 +1,24 @@
-/** @odoo-module alias=@mail/../tests/discuss_app/inbox_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, expect, test } from "@odoo/hoot";
+import {
+    assertSteps,
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    onRpcBefore,
+    openDiscuss,
+    start,
+    startServer,
+    step,
+    triggerHotkey,
+} from "../mail_test_helpers";
+import { Command, mockService, serverState } from "@web/../tests/web_test_helpers";
+import { Deferred } from "@odoo/hoot-mock";
+import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
+import { actionService } from "@web/webclient/actions/action_service";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
-import { patchWithCleanup, triggerHotkey, makeDeferred } from "@web/../tests/helpers/utils";
-import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
-
-QUnit.module("discuss inbox");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("reply: discard on reply button toggle", async () => {
     const pyEnv = await startServer();
@@ -29,7 +39,6 @@ test("reply: discard on reply button toggle", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-Message");
-
     await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer");
@@ -40,7 +49,7 @@ test("reply: discard on reply button toggle", async () => {
 
 test("reply: discard on pressing escape", async () => {
     const pyEnv = await startServer();
-    pyEnv["res.partner"].create({
+    const partnerId = pyEnv["res.partner"].create({
         email: "testpartnert@odoo.com",
         name: "TestPartner",
     });
@@ -49,7 +58,7 @@ test("reply: discard on pressing escape", async () => {
         model: "res.partner",
         needaction: true,
         needaction_partner_ids: [serverState.partnerId],
-        res_id: 20,
+        res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
@@ -63,27 +72,24 @@ test("reply: discard on pressing escape", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Reply']");
     await contains(".o-mail-Composer");
-
     // Escape on emoji picker does not stop replying
     await click(".o-mail-Composer button[aria-label='Emojis']");
     await contains(".o-EmojiPicker");
     triggerHotkey("Escape");
     await contains(".o-EmojiPicker", { count: 0 });
     await contains(".o-mail-Composer");
-
     // Escape on suggestion prompt does not stop replying
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestionList .o-open");
     triggerHotkey("Escape");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await contains(".o-mail-Composer");
-
     click(".o-mail-Composer-input").catch(() => {});
     triggerHotkey("Escape");
     await contains(".o-mail-Composer", { count: 0 });
 });
 
-test('"reply to" composer should log note if message replied to is a note', async (assert) => {
+test('"reply to" composer should log note if message replied to is a note', async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const messageId = pyEnv["mail.message"].create({
@@ -100,15 +106,12 @@ test('"reply to" composer should log note if message replied to is a note', asyn
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    await start({
-        async mockRPC(route, args) {
-            if (route === "/mail/message/post") {
-                step("/mail/message/post");
-                assert.strictEqual(args.post_data.message_type, "comment");
-                assert.strictEqual(args.post_data.subtype_xmlid, "mail.mt_note");
-            }
-        },
+    onRpcBefore("/mail/message/post", (args) => {
+        step("/mail/message/post");
+        expect(args.post_data.message_type).toBe("comment");
+        expect(args.post_data.subtype_xmlid).toBe("mail.mt_note");
     });
+    await start();
     await openDiscuss();
     await contains(".o-mail-Message");
     await click("[title='Expand']");
@@ -120,7 +123,7 @@ test('"reply to" composer should log note if message replied to is a note', asyn
     await assertSteps(["/mail/message/post"]);
 });
 
-test('"reply to" composer should send message if message replied to is not a note', async (assert) => {
+test('"reply to" composer should send message if message replied to is not a note', async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const messageId = pyEnv["mail.message"].create({
@@ -137,15 +140,12 @@ test('"reply to" composer should send message if message replied to is not a not
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    await start({
-        async mockRPC(route, args) {
-            if (route === "/mail/message/post") {
-                step("/mail/message/post");
-                assert.strictEqual(args.post_data.message_type, "comment");
-                assert.strictEqual(args.post_data.subtype_xmlid, "mail.mt_comment");
-            }
-        },
+    onRpcBefore("/mail/message/post", (args) => {
+        step("/mail/message/post");
+        expect(args.post_data.message_type).toBe("comment");
+        expect(args.post_data.subtype_xmlid).toBe("mail.mt_comment");
     });
+    await start();
     await openDiscuss();
     await contains(".o-mail-Message");
     await click("[title='Expand']");
@@ -181,7 +181,7 @@ test("show subject of message in history", async () => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
-        history_partner_ids: [3], // not needed, for consistency
+        history_partner_ids: [Command.link(serverState.partnerId)], // not needed, for consistency
         model: "discuss.channel",
         subject: "Salutations, voyageur",
     });
@@ -423,7 +423,7 @@ test("inbox: mark all messages as read", async () => {
     await contains("button:disabled", { text: "Mark all read" });
 });
 
-test("click on (non-channel/non-partner) origin thread link should redirect to form view", async (assert) => {
+test("click on (non-channel/non-partner) origin thread link should redirect to form view", async () => {
     const pyEnv = await startServer();
     const fakeId = pyEnv["res.fake"].create({ name: "Some record" });
     const messageId = pyEnv["mail.message"].create({
@@ -439,23 +439,30 @@ test("click on (non-channel/non-partner) origin thread link should redirect to f
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    const { env } = await start();
-    await openDiscuss();
-    const def = makeDeferred();
-    patchWithCleanup(env.services.action, {
-        doAction(action) {
-            // Callback of doing an action (action manager).
-            // Expected to be called on click on origin thread link,
-            // which redirects to form view of record related to origin thread
-            step("do-action");
-            assert.strictEqual(action.type, "ir.actions.act_window");
-            assert.deepEqual(action.views, [[false, "form"]]);
-            assert.strictEqual(action.res_model, "res.fake");
-            assert.strictEqual(action.res_id, fakeId);
-            def.resolve();
-            return Promise.resolve();
-        },
+    const def = new Deferred();
+    mockService("action", () => {
+        const ogService = actionService.start(getMockEnv());
+        return {
+            ...ogService,
+            doAction(action) {
+                if (action?.res_model === "res.fake") {
+                    // Callback of doing an action (action manager).
+                    // Expected to be called on click on origin thread link,
+                    // which redirects to form view of record related to origin thread
+                    step("do-action");
+                    expect(action.type).toBe("ir.actions.act_window");
+                    expect(action.views).toEqual([[false, "form"]]);
+                    expect(action.res_model).toBe("res.fake");
+                    expect(action.res_id).toBe(fakeId);
+                    def.resolve();
+                    return Promise.resolve();
+                }
+                return ogService.doAction.call(this, ...arguments);
+            },
+        };
     });
+    await start();
+    await openDiscuss();
     await contains(".o-mail-Message");
     await click(".o-mail-Message-header a", { text: "Some record" });
     await def;
@@ -530,12 +537,10 @@ test("reply: stop replying button click", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-Message");
-
     await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer");
     await contains("i[title='Stop replying']");
-
     await click("i[title='Stop replying']");
     await contains(".o-mail-Composer", { count: 0 });
 });
@@ -569,14 +574,12 @@ test("error notifications should not be shown in Inbox", async () => {
 test("emptying inbox displays rainbow man in inbox", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const messageId1 = pyEnv["mail.message"].create([
-        {
-            body: "not empty",
-            model: "discuss.channel",
-            needaction: true,
-            res_id: channelId,
-        },
-    ]);
+    const messageId1 = pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "discuss.channel",
+        needaction: true,
+        res_id: channelId,
+    });
     pyEnv["mail.notification"].create([
         {
             mail_message_id: messageId1,
@@ -612,7 +615,8 @@ test("emptying inbox doesn't display rainbow man in another thread", async () =>
     await start();
     await openDiscuss(channelId);
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/mark_as_read", {
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    pyEnv["bus.bus"]._sendone(partner, "mail.message/mark_as_read", {
         message_ids: [messageId],
         needaction_inbox_counter: 0,
     });
