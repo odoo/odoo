@@ -151,22 +151,16 @@
                                 <div class="o_wslides_fs_slide_name text-600 text-truncate" t-esc="slide.name"/>
                             </div>
                         </span>
-                        <ul class="list-unstyled w-100 small fw-light" t-if="slide._has_additional_resources() or (slide.question_ids and not slide.slide_category =='quiz')" >
-                            <t t-if="can_access_channel">
-                                <t t-set="links" t-value="slide.slide_resource_ids.filtered(lambda res: res.resource_type == 'url')"/>
-                                <li t-foreach="links" t-as="link" class="ps-1 mb-1">
-                                    <a t-if="can_access" class="o_wslides_fs_slide_link" t-att-href="link.link" target="_blank">
-                                        <i class="fa fa-link me-2"/><span t-esc="link.name"/>
+                        <ul class="list-unstyled w-100 small fw-light" t-if="slide.sudo().slide_resource_ids or (slide.question_ids and not slide.slide_category =='quiz')" >
+                            <t t-if="can_access_channel" t-foreach="slide.slide_resource_ids" t-as="resource">
+                                <li class="ps-1 mb-1">
+                                    <a t-if="resource.resource_type == 'url'" class="o_wslides_fs_slide_link" t-att-href="resource.link" target="_blank">
+                                        <i class="fa fa-link me-2"/><span t-esc="resource.name"/>
+                                    </a>
+                                    <a t-else="" class="o_wslides_fs_slide_link ps-0" t-att-href="resource.download_url">
+                                        <i class="fa fa-download me-2"/><span t-esc="resource.name"/>
                                     </a>
                                 </li>
-                                <div class="o_wslides_js_course_join ps-0" t-if="slide._has_additional_resources('file')">
-                                    <t t-set="resources" t-value="slide.slide_resource_ids.filtered(lambda res: res.resource_type == 'file')"/>
-                                    <li t-foreach="resources" t-as="resource" class="ps-1 mb-1">
-                                        <a class="o_wslides_fs_slide_link" t-att-href="resource.download_url">
-                                            <i class="fa fa-download me-2"/><span t-esc="resource.name"/>
-                                        </a>
-                                    </li>
-                                </div>
                             </t>
                             <div t-else="" class="o_wslides_js_course_join o_wslides_no_access ps-0">
                                 <li t-if="slide.channel_id.enroll == 'public' or (slide.channel_id.enroll == 'invite' and slide.channel_id.is_member_invited)"

@@ -489,10 +489,8 @@ class TestAccessFeatures(common.SlidesCase):
             resource1.with_user(self.user_public).write({'name': 'other name'})
             resource3.with_user(self.user_public).write({'name': 'other name'})
 
-        # public access to knowing if there are resources, also by type
-        self.assertTrue(self.slide_3.with_user(self.user_public)._has_additional_resources())
-        self.assertTrue(self.slide_3.with_user(self.user_public)._has_additional_resources('file'))
-        self.assertTrue(self.slide_3.with_user(self.user_public)._has_additional_resources('url'))
+        # public access to knowing if there are resources
+        self.assertTrue(self.slide_3.with_user(self.user_public).sudo().slide_resource_ids)
 
         # No random portal access
         with self.assertRaises(AccessError):
