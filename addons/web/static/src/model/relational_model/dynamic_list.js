@@ -327,7 +327,7 @@ export class DynamicList extends DataPoint {
             getSequence,
             getResId,
         });
-        if (resequencedRecords) {
+        if (resequencedRecords.length) {
             for (const dpData of resequencedRecords) {
                 const dp = originalList.find((d) => getResId(d) === dpData.id);
                 if (dp instanceof Record) {

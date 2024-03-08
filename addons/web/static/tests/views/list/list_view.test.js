@@ -9560,18 +9560,8 @@ test(`list with handle widget`, async () => {
     onRpc("web_search_read", ({ kwargs }) => {
         expect.step(`web_search_read: order: ${kwargs.order}`);
     });
-    onRpc("/web/dataset/resequence", async (request) => {
-        const { params } = await request.json();
-        expect.step("resequence");
-        expect(params.offset).toBe(9, {
-            message: "should write the sequence starting from the lowest current one",
-        });
-        expect(params.field).toBe("int_field", {
-            message: "should write the right field as sequence",
-        });
-        expect(params.ids).toEqual([3, 2, 1], {
-            message: "should write the sequence in correct order",
-        });
+    onRpc("web_resequence", async ({ args }) => {
+        expect.step(["web_resequence", ...args]);
     });
 
     await mountView({
@@ -9600,7 +9590,7 @@ test(`list with handle widget`, async () => {
 
     // Drag and drop the fourth line in second position
     await contains(`tbody tr:eq(3) .o_handle_cell`).dragAndDrop(queryFirst(`tbody tr:eq(1)`));
-    expect.verifySteps(["resequence"]);
+    expect.verifySteps([["web_resequence", [3, 2, 1], "int_field", 9]]);
     expect(`.o_data_row:eq(0) [name='amount']`).toHaveText("0", {
         message: "new second record should have amount 0",
     });
@@ -9629,53 +9619,18 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
     }
     defineModels([MyFoo]);
 
-    let moves = 0;
-    const context = {
-        lang: "en",
-        tz: "taht",
-        uid: 7,
-        allowed_company_ids: [1],
+    const kwargs = {
+        context: {
+            lang: "en",
+            tz: "taht",
+            uid: 7,
+            allowed_company_ids: [1],
+        },
+        specification: { int_field: {} },
     };
-    onRpc("/web/dataset/resequence", async (request) => {
-        expect.step("resequence");
-        const { params } = await request.json();
-        if (moves === 0) {
-            expect(params).toEqual({
-                context,
-                model: "my.foo",
-                ids: [4, 3],
-                offset: 13,
-                field: "int_field",
-            });
-        }
-        if (moves === 1) {
-            expect(params).toEqual({
-                context,
-                model: "my.foo",
-                ids: [4, 2],
-                offset: 12,
-                field: "int_field",
-            });
-        }
-        if (moves === 2) {
-            expect(params).toEqual({
-                context,
-                model: "my.foo",
-                ids: [2, 4],
-                offset: 12,
-                field: "int_field",
-            });
-        }
-        if (moves === 3) {
-            expect(params).toEqual({
-                context,
-                model: "my.foo",
-                ids: [4, 2],
-                offset: 12,
-                field: "int_field",
-            });
-        }
-        moves += 1;
+
+    onRpc("my.foo", "web_resequence", async ({ args, kwargs }) => {
+        expect.step({ args, kwargs });
     });
 
     await mountView({
@@ -9695,7 +9650,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
     await contains(`.o_list_view tbody tr:eq(3) .o_handle_cell`).dragAndDrop(
         ".o_list_view tbody tr:eq(2)"
     );
-    expect.verifySteps(["resequence"]);
+    expect.verifySteps([{ args: [[4, 3], "int_field", 13], kwargs }]);
     expect(queryAllTexts(`tbody tr td[name=id]`)).toEqual(["1", "2", "4", "3"], {
         message: "the int_field (sequence) should have been correctly updated",
     });
@@ -9703,7 +9658,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
     await contains(`.o_list_view tbody tr:eq(2) .o_handle_cell`).dragAndDrop(
         ".o_list_view tbody tr:eq(1)"
     );
-    expect.verifySteps(["resequence"]);
+    expect.verifySteps([{ args: [[4, 2], "int_field", 12], kwargs }]);
     expect(queryAllTexts(`tbody tr td[name=id]`)).toEqual(["1", "4", "2", "3"], {
         message: "the int_field (sequence) should have been correctly updated",
     });
@@ -9711,7 +9666,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
     await contains(`.o_list_view tbody tr:eq(1) .o_handle_cell`).dragAndDrop(
         ".o_list_view tbody tr:eq(2)"
     );
-    expect.verifySteps(["resequence"]);
+    expect.verifySteps([{ args: [[2, 4], "int_field", 12], kwargs }]);
     expect(queryAllTexts(`tbody tr td[name=id]`)).toEqual(["1", "2", "4", "3"], {
         message: "the int_field (sequence) should have been correctly updated",
     });
@@ -9719,7 +9674,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
     await contains(`.o_list_view tbody tr:eq(2) .o_handle_cell`).dragAndDrop(
         ".o_list_view tbody tr:eq(1)"
     );
-    expect.verifySteps(["resequence"]);
+    expect.verifySteps([{ args: [[4, 2], "int_field", 12], kwargs }]);
     expect(queryAllTexts(`tbody tr td[name=id]`)).toEqual(["1", "4", "2", "3"], {
         message: "the int_field (sequence) should have been correctly updated",
     });
@@ -9761,10 +9716,9 @@ test("resequence with NULL values", async () => {
         return res;
     });
 
-    onRpc("/web/dataset/resequence", async (request) => {
-        const { params } = await request.json();
-        for (let i = 0; i < params.ids.length; i++) {
-            serverValues[params.ids[i]] = i;
+    onRpc("web_resequence", async ({ args }) => {
+        for (let i = 0; i < args[0].length; i++) {
+            serverValues[args[0][i]] = i;
         }
     });
 
@@ -9817,10 +9771,9 @@ test("resequence with only NULL values", async () => {
         return res;
     });
 
-    onRpc("/web/dataset/resequence", async (request) => {
-        const { params } = await request.json();
-        for (let i = 0; i < params.ids.length; i++) {
-            serverValues[params.ids[i]] = i;
+    onRpc("web_resequence", async ({ args }) => {
+        for (let i = 0; i < args[0].length; i++) {
+            serverValues[args[0][i]] = i;
         }
     });
 
@@ -9851,18 +9804,8 @@ test(`editable list with handle widget`, async () => {
     Foo._records[2].int_field = 2;
     Foo._records[3].int_field = 3;
 
-    onRpc("/web/dataset/resequence", async (request) => {
-        expect.step("resequence");
-        const { params } = await request.json();
-        expect(params.offset).toBe(1, {
-            message: "should write the sequence starting from the lowest current one",
-        });
-        expect(params.field).toBe("int_field", {
-            message: "should write the right field as sequence",
-        });
-        expect(params.ids).toEqual([4, 2, 3], {
-            message: "should write the sequence in correct order",
-        });
+    onRpc("web_resequence", async ({ args }) => {
+        expect.step(["web_resequence", ...args]);
     });
 
     await mountView({
@@ -9890,7 +9833,7 @@ test(`editable list with handle widget`, async () => {
 
     // Drag and drop the fourth line in second position
     await contains(`tbody tr:eq(3) .o_handle_cell`).dragAndDrop(queryFirst(`tbody tr:eq(1)`));
-    expect.verifySteps(["resequence"]);
+    expect.verifySteps([["web_resequence", [4, 2, 3], "int_field", 1]]);
     expect(`tbody tr:eq(0) td:last`).toHaveText("1,200", {
         message: "new first record should have amount 1,200",
     });
@@ -9990,18 +9933,8 @@ test(`editable list with handle widget with slow network`, async () => {
     Foo._records[3].int_field = 3;
 
     const deferred = new Deferred();
-    onRpc("/web/dataset/resequence", async (request) => {
-        expect.step("resequence");
-        const { params } = await request.json();
-        expect(params.offset).toBe(1, {
-            message: "should write the sequence starting from the lowest current one",
-        });
-        expect(params.field).toBe("int_field", {
-            message: "should write the right field as sequence",
-        });
-        expect(params.ids).toEqual([4, 2, 3], {
-            message: "should write the sequence in correct order",
-        });
+    onRpc("web_resequence", async ({ args }) => {
+        expect.step(["web_resequence", ...args]);
         await deferred;
     });
 
@@ -10019,7 +9952,7 @@ test(`editable list with handle widget with slow network`, async () => {
 
     // drag and drop the fourth line in second position
     await contains(`tbody tr:eq(3) .o_handle_cell`).dragAndDrop(`tbody tr:eq(1)`);
-    expect.verifySteps(["resequence"]);
+    expect.verifySteps([["web_resequence", [4, 2, 3], "int_field", 1]]);
 
     // edit moved row before the end of resequence
     await contains(`tbody tr:eq(3) .o_field_widget[name='amount']`).click();
