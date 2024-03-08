@@ -11,6 +11,7 @@
                 t-on-mouseenter="onMouseenter"
                 t-on-mouseleave="onMouseleave"
                 t-ref="root"
+                t-if="message.exists()"
             >
                 <MessageInReply t-if="message.parentMessage" alignedRight="isAlignedRight" message="message" onClick="props.onParentMessageClick"/>
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
