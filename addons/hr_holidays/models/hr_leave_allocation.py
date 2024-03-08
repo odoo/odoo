@@ -48,10 +48,10 @@ class HolidaysAllocation(models.Model):
     state = fields.Selection([
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
-        ('validate', 'Approved')],
-        string='Status', readonly=True, tracking=True, copy=False, default='confirm',
-        help="The status is set to 'To Submit', when an allocation request is created."
-        "\nThe status is 'To Approve', when an allocation request is confirmed by user."
+        ('validate1', 'Second Approval'),
+        ('validate', 'Approved'),
+        ], string='Status', default='confirm', tracking=True, copy=False, readonly=True,
+        help="The status is 'To Approve', when an allocation request is created."
         "\nThe status is 'Refused', when an allocation request is refused by manager."
         "\nThe status is 'Approved', when an allocation request is approved by manager.")
     date_from = fields.Date('Start Date', index=True, copy=False, default=fields.Date.context_today,
@@ -85,6 +85,9 @@ class HolidaysAllocation(models.Model):
     approver_id = fields.Many2one(
         'hr.employee', string='First Approval', readonly=True, copy=False,
         help='This area is automatically filled by the user who validates the allocation')
+    second_approver_id = fields.Many2one(
+        'hr.employee', string='Second Approval', readonly=True, copy=False,
+        help='This area is automatically filled by the user who validates the allocation with second level (If time off type need second validation)')
     validation_type = fields.Selection(string='Validation Type', related='holiday_status_id.allocation_validation_type', readonly=True)
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
     type_request_unit = fields.Selection([
@@ -248,7 +251,7 @@ class HolidaysAllocation(models.Model):
     def _compute_can_approve(self):
         for allocation in self:
             try:
-                if allocation.state == 'confirm' and allocation.validation_type != 'no':
+                if allocation.state == 'confirm' and allocation.validation_type != 'no_validation':
                     allocation._check_approval_update('validate')
             except (AccessError, UserError):
                 allocation.can_approve = False
@@ -651,7 +654,7 @@ class HolidaysAllocation(models.Model):
     def create(self, vals_list):
         """ Override to avoid automatic logging of creation """
         for values in vals_list:
-            if 'state' in values and values['state'] not in ('draft', 'confirm'):
+            if 'state' in values and values['state'] != 'confirm':
                 raise UserError(_('Incorrect state for new allocation'))
             employee_id = values.get('employee_id', False)
             if not values.get('department_id'):
@@ -662,13 +665,13 @@ class HolidaysAllocation(models.Model):
             partners_to_subscribe = set()
             if allocation.employee_id.user_id:
                 partners_to_subscribe.add(allocation.employee_id.user_id.partner_id.id)
-            if allocation.validation_type == 'officer':
+            if allocation.validation_type == 'hr':
                 partners_to_subscribe.add(allocation.employee_id.parent_id.user_id.partner_id.id)
                 partners_to_subscribe.add(allocation.employee_id.leave_manager_id.partner_id.id)
             allocation.message_subscribe(partner_ids=tuple(partners_to_subscribe))
             if not self._context.get('import_file'):
                 allocation.activity_update()
-            if allocation.validation_type == 'no' and allocation.state == 'confirm':
+            if allocation.validation_type == 'no_validation' and allocation.state == 'confirm':
                 allocation.action_validate()
         return allocations
 
@@ -746,7 +749,11 @@ class HolidaysAllocation(models.Model):
         } for employee in employees]
 
     def action_validate(self):
-        to_validate = self.filtered(lambda alloc: alloc.state != 'validate')
+        if any(allocation.state not in ['confirm', 'validate1'] and allocation.validation_type != 'no_validation' for allocation in self):
+            raise UserError(_('Allocation must be "To Approve" or "Second Approval" in order to validate it.'))
+
+        to_validate = self.filtered(lambda alloc: alloc.state == 'confirm' and alloc.validation_type != 'both')
+        to_second_validate = self.filtered(lambda alloc: alloc.state == 'validate1' and alloc.validation_type == 'both')
         if to_validate:
             to_validate.write({
                 'state': 'validate',
@@ -754,6 +761,37 @@ class HolidaysAllocation(models.Model):
             })
             to_validate._action_validate_create_childs()
             to_validate.activity_update()
+        if to_second_validate:
+            to_second_validate.write({
+                'state': 'validate',
+                'second_approver_id': self.env.user.employee_id.id
+            })
+            to_second_validate.activity_update()
+        return True
+
+    def action_set_to_confirm(self):
+        if any(allocation.state != 'refuse' for allocation in self):
+            raise UserError(_('Allocation state must be "Refused" in order to be reset to "To Approve".'))
+        self.write({
+            'state': 'confirm',
+            'approver_id': False,
+            'second_approver_id': False,
+        })
+        self.activity_update()
+        return True
+
+    def action_approve(self):
+        # if allocation_validation_type == 'both': this method is the first approval
+        # if allocation_validation_type != 'both': this method calls action_validate() below
+
+        if any(allocation.state != 'confirm' for allocation in self):
+            raise UserError(_('Allocation must be confirmed ("To Approve") in order to approve it.'))
+
+        current_employee = self.env.user.employee_id
+        self.filtered(lambda alloc: alloc.validation_type == 'both').write({'state': 'validate1', 'approver_id': current_employee.id})
+
+        self.filtered(lambda alloc: alloc.validation_type != 'both').action_validate()
+        self.activity_update()
         return True
 
     def _action_validate_create_childs(self):
@@ -779,12 +817,12 @@ class HolidaysAllocation(models.Model):
                 mail_notify_force_send=False,
                 mail_activity_automation_skip=True
             ).create(allocation_vals)
-            children.filtered(lambda c: c.validation_type != 'no').action_validate()
+            children.filtered(lambda c: c.validation_type != 'no_validation').action_validate()
 
     def action_refuse(self):
         current_employee = self.env.user.employee_id
-        if any(allocation.state not in ['confirm', 'validate'] for allocation in self):
-            raise UserError(_('Allocation request must be confirmed or validated in order to refuse it.'))
+        if any(allocation.state not in ['confirm', 'validate', 'validate1'] for allocation in self):
+            raise UserError(_('Allocation request must be confirmed, second approval or validated in order to refuse it.'))
 
         days_per_allocation = self.employee_id._get_consumed_leaves(self.holiday_status_id)[0]
 
@@ -815,14 +853,14 @@ class HolidaysAllocation(models.Model):
             if state == 'confirm':
                 continue
 
-            if not is_officer and self.env.user != allocation.employee_id.leave_manager_id and not val_type == 'no':
+            if not is_officer and self.env.user != allocation.employee_id.leave_manager_id and not val_type == 'no_validation':
                 raise UserError(_('Only a time off Officer/Responsible or Manager can approve or refuse time off requests.'))
 
             if is_officer or self.env.user == allocation.employee_id.leave_manager_id:
                 # use ir.rule based first access check: department, members, ... (see security.xml)
                 allocation.check_access_rule('write')
 
-            if allocation.employee_id == current_employee and not is_manager and not val_type == 'no':
+            if allocation.employee_id == current_employee and not is_manager and not val_type == 'no_validation':
                 raise UserError(_('Only a time off Manager can approve its own requests.'))
 
     @api.onchange('allocation_type')
@@ -858,44 +896,69 @@ class HolidaysAllocation(models.Model):
         self.ensure_one()
         responsible = self.env.user
 
-        if self.validation_type == 'officer' or self.validation_type == 'set':
+        if self.holiday_type != 'employee':
+            return responsible
+
+        if self.validation_type == 'manager' or (self.validation_type == 'both' and self.state == 'confirm'):
+            if self.employee_id.leave_manager_id:
+                responsible = self.employee_id.leave_manager_id
+            elif self.employee_id.parent_id.user_id:
+                responsible = self.employee_id.parent_id.user_id
+        elif self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
             if self.holiday_status_id.responsible_ids:
                 responsible = self.holiday_status_id.responsible_ids
+
         return responsible
 
     def activity_update(self):
-        to_clean, to_do = self.env['hr.leave.allocation'], self.env['hr.leave.allocation']
+        to_clean, to_do, to_second_do = self.env['hr.leave.allocation'], self.env['hr.leave.allocation'], self.env['hr.leave.allocation']
         activity_vals = []
+        model_id = self.env.ref('hr_holidays.model_hr_leave_allocation').id
+        confirm_activity = self.env.ref('hr_holidays.mail_act_leave_allocation_approval')
+        approval_activity = self.env.ref('hr_holidays.mail_act_leave_allocation_second_approval')
         for allocation in self:
-            if allocation.validation_type != 'no':
-                note = _(
-                    'New Allocation Request created by %(user)s: %(count)s Days of %(allocation_type)s',
-                    user=allocation.create_uid.name,
-                    count=allocation.number_of_days,
-                    allocation_type=allocation.holiday_status_id.name
-                )
-                if allocation.state == 'confirm':
-                    if allocation.holiday_status_id.responsible_ids:
-                        user_ids = allocation.sudo()._get_responsible_for_approval().ids
-                        for user_id in user_ids:
-                            activity_vals.append({
-                                'activity_type_id': self.env.ref('hr_holidays.mail_act_leave_allocation_approval').id,
-                                'automated': True,
-                                'note': note,
-                                'user_id': user_id,
-                                'res_id': allocation.id,
-                                'res_model_id': self.env.ref('hr_holidays.model_hr_leave_allocation').id,
-                            })
-                elif allocation.state == 'validate':
-                    to_do |= allocation
-                elif allocation.state == 'refuse':
-                    to_clean |= allocation
-        if activity_vals:
-            self.env['mail.activity'].create(activity_vals)
+            if allocation.state in ['confirm', 'validate1']:
+                if allocation.holiday_status_id.leave_validation_type != 'no_validation':
+                    if allocation.state == 'confirm':
+                        activity_type = confirm_activity
+                        note = _(
+                            'New Allocation Request created by %(user)s: %(count)s Days of %(allocation_type)s',
+                            user=allocation.create_uid.name,
+                            count=allocation.number_of_days,
+                            allocation_type=allocation.holiday_status_id.name
+                        )
+                    else:
+                        activity_type = approval_activity
+                        note = _(
+                            'Second approval request for %(allocation_type)s',
+                            allocation_type=allocation.holiday_status_id.name,
+                        )
+                        to_second_do |= allocation
+                    user_ids = allocation.sudo()._get_responsible_for_approval().ids or self.env.user.ids
+                    for user_id in user_ids:
+                        activity_vals.append({
+                            'activity_type_id': activity_type.id,
+                            'automated': True,
+                            'note': note,
+                            'user_id': user_id,
+                            'res_id': allocation.id,
+                            'res_model_id': model_id,
+                        })
+            elif allocation.state == 'validate':
+                to_do |= allocation
+
+            elif allocation.state == 'refuse':
+                to_clean |= allocation
+
         if to_clean:
             to_clean.activity_unlink(['hr_holidays.mail_act_leave_allocation_approval'])
         if to_do:
-            to_do.activity_feedback(['hr_holidays.mail_act_leave_allocation_approval'])
+            to_do.activity_feedback(['hr_holidays.mail_act_leave_allocation_approval', 'hr_holidays.mail_act_leave_allocation_second_approval'])
+        if to_second_do:
+            to_second_do.activity_feedback(['hr_holidays.mail_act_leave_allocation_approval'])
+
+        if activity_vals:
+            self.env['mail.activity'].create(activity_vals)
 
     ####################################################
     # Messaging methods

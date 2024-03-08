@@ -18,21 +18,21 @@ class TestAllocationRights(TestHrHolidaysCommon):
 
         cls.lt_no_allocation = cls.env['hr.leave.type'].create({
             'name': 'Validation = HR',
-            'allocation_validation_type': 'officer',
+            'allocation_validation_type': 'hr',
             'requires_allocation': 'no',
             'employee_requests': 'yes',
         })
 
         cls.lt_validation_manager = cls.env['hr.leave.type'].create({
             'name': 'Validation = manager',
-            'allocation_validation_type': 'officer',
+            'allocation_validation_type': 'hr',
             'requires_allocation': 'yes',
             'employee_requests': 'yes',
         })
 
         cls.lt_allocation_no_validation = cls.env['hr.leave.type'].create({
             'name': 'Validation = user',
-            'allocation_validation_type': 'no',
+            'allocation_validation_type': 'no_validation',
             'requires_allocation': 'yes',
             'employee_requests': 'yes',
         })

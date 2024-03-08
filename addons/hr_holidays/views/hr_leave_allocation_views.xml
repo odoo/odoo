@@ -9,7 +9,31 @@
                 <field name="employee_id"/>
                 <field name="name"/>
                 <field name="allocation_type"/>
-                <filter domain="[('state', '=', 'confirm')]" string="To Approve" name="second_approval"/>
+                <filter domain="[
+                        ('state','in',['confirm']),
+                        '|',
+                        ('employee_id.user_id', '!=', uid),
+                        '&amp;',
+                        ('employee_id.user_id', '=', uid),
+                        ('employee_id.leave_manager_id', '=', uid)]"
+                    string="Waiting For Me"
+                    name="waiting_for_me"
+                    groups="hr_holidays.group_hr_holidays_responsible,!hr_holidays.group_hr_holidays_user"/>
+                <filter domain="[
+                        ('state','in',['confirm','validate1']),
+                        '|',
+                            ('employee_id.user_id', '!=', uid),
+                            '|',
+                                '&amp;',
+                                    ('state','=','confirm'),
+                                    ('holiday_status_id.leave_validation_type','=','hr'),
+                                ('state','=','validate1')]"
+                    string="Waiting For Me"
+                    name="waiting_for_me_manager"
+                    groups="hr_holidays.group_hr_holidays_user"/>
+                <separator/>
+                <filter domain="[('state','in',('confirm','validate1'))]" string="First Approval" name="approve"/>
+                <filter domain="[('state', '=', 'validate1')]" string="Second Approval" name="second_approval"/>
                 <filter string="Approved" domain="[('state', '=', 'validate')]" name="validated"/>
                 <separator/>
                 <filter name="year" string="Currently Valid"
@@ -66,8 +90,10 @@
             <form string="Allocation Request">
                 <field name="can_approve" invisible="1"/>
                 <field name="holiday_type" invisible="1" readonly="state not in ['confirm']"/>
+                <field name="validation_type" invisible="1"/>
                 <header>
-                    <field name="state" widget="statusbar" statusbar_visible="confirm,validate"/>
+                    <field name="state" widget="statusbar" statusbar_visible="confirm,validate,validate1" invisible="validation_type != 'both'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="confirm,validate" invisible="validation_type == 'both'"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
@@ -150,10 +176,14 @@
         <field name="priority">16</field>
         <field name="arch" type="xml">
             <field name="state" position="before">
+                <button string="Approve" name="action_approve"
+                    invisible="not can_approve or state != 'confirm'" type="object" class="oe_highlight"/>
                 <button string="Validate" name="action_validate"
-                    invisible="state == 'validate'" type="object" class="oe_highlight"/>
+                    invisible="state != 'validate1'" type="object" class="oe_highlight"/>
                 <button string="Refuse" name="action_refuse" type="object"
-                    invisible="not can_approve or state not in ('confirm', 'validate')"/>
+                    invisible="not can_approve or state not in ('confirm', 'validate1','validate')"/>
+                <button string="Mark as ready to approve" name="action_set_to_confirm" type="object"
+                        invisible="not can_approve or state != 'refuse'"/>
             </field>
             <div id="title" position="replace">
                 <div class="oe_title">
@@ -276,14 +306,18 @@
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="active_employee" column_invisible="True"/>
                 <field name="state" widget="badge" decoration-warning="state == 'confirm'" decoration-success="state == 'validate'"/>
+                <button string="Approve" name="action_approve" type="object"
+                    icon="fa-thumbs-up"
+                    invisible="state != 'confirm'"
+                    groups="hr_holidays.group_hr_holidays_responsible"/>
                 <button string="Validate" name="action_validate" type="object"
                     icon="fa-check"
-                    invisible="state != 'confirm'"
-                    groups="hr_holidays.group_hr_holidays_user"/>
+                    invisible="state != 'validate1'"
+                    groups="hr_holidays.group_hr_holidays_responsible"/>
                 <button string="Refuse" name="action_refuse" type="object"
                     icon="fa-times"
-                    invisible="state != 'confirm'"
-                    groups="hr_holidays.group_hr_holidays_user"/>
+                    invisible="state not in ('confirm', 'validate1','validate')"
+                    groups="hr_holidays.group_hr_holidays_responsible"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>

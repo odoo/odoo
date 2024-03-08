@@ -173,7 +173,7 @@
             '|',
                 ('employee_id.user_id', '=', user.id),
                 '&amp;',
-                    ('validation_type', '=', 'officer'),
+                    ('validation_type', '=', 'hr'),
                     ('employee_id.leave_manager_id', '=', user.id),
         ]</field>
         <field name="perm_read" eval="False"/>

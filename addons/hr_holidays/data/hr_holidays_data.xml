@@ -257,7 +257,7 @@
             <field name="requires_allocation">yes</field>
             <field name="employee_requests">no</field>
             <field name="leave_validation_type">both</field>
-            <field name="allocation_validation_type">officer</field>
+            <field name="allocation_validation_type">hr</field>
             <field name="leave_notif_subtype_id" ref="mt_leave"/>
             <field name="allocation_notif_subtype_id" ref="mt_leave_allocation"/>
             <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
@@ -286,7 +286,7 @@
             <field name="requires_allocation">yes</field>
             <field name="employee_requests">yes</field>
             <field name="leave_validation_type">manager</field>
-            <field name="allocation_validation_type">officer</field>
+            <field name="allocation_validation_type">hr</field>
             <field name="request_unit">hour</field>
             <field name="leave_notif_subtype_id" ref="mt_leave"/>
             <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
@@ -301,7 +301,7 @@
             <field name="name">Unpaid</field>
             <field name="requires_allocation">no</field>
             <field name="leave_validation_type">both</field>
-            <field name="allocation_validation_type">officer</field>
+            <field name="allocation_validation_type">hr</field>
             <field name="request_unit">hour</field>
             <field name="unpaid" eval="True"/>
             <field name="leave_notif_subtype_id" ref="mt_leave_unpaid"/>
