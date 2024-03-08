@@ -3,7 +3,7 @@ const test = QUnit.test; // QUnit.test()
 
 import { rpc } from "@web/core/network/rpc";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
@@ -154,7 +154,7 @@ test("channel preview ignores messages from the past", async () => {
     await contains(".o-mail-Message-content", { text: "last message", count: 0 });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await contains(".o-mail-NotificationItem-text", { text: "You: last message" });
-    pyEnv.withUser(pyEnv.currentUserId, () =>
+    pyEnv.withUser(serverState.userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,
@@ -174,7 +174,7 @@ test("counter is taking into account non-fetched channels", async (assert) => {
             Command.create({
                 fold_state: "closed", // minimized channels are fetched at init
                 message_unread_counter: 1,
-                partner_id: pyEnv.currentPartnerId,
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
@@ -203,7 +203,7 @@ test("counter is updated on receiving message on non-fetched channels", async (a
         channel_member_ids: [
             Command.create({
                 fold_state: "closed", // minimized channels are fetched at init
-                partner_id: pyEnv.currentPartnerId,
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],

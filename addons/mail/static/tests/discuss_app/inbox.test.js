@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/discuss_app/inbox_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
@@ -17,14 +17,14 @@ test("reply: discard on reply button toggle", async () => {
         body: "not empty",
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -48,14 +48,14 @@ test("reply: discard on pressing escape", async () => {
         body: "not empty",
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
         res_id: 20,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -91,14 +91,14 @@ test('"reply to" composer should log note if message replied to is a note', asyn
         is_note: true,
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start({
         async mockRPC(route, args) {
@@ -128,14 +128,14 @@ test('"reply to" composer should send message if message replied to is not a not
         is_discussion: true,
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start({
         async mockRPC(route, args) {
@@ -163,14 +163,14 @@ test("show subject of message in Inbox", async () => {
         body: "not empty",
         model: "discuss.channel",
         needaction: true,
-        needaction_partner_ids: [pyEnv.currentPartnerId], // not needed, for consistency
+        needaction_partner_ids: [serverState.partnerId], // not needed, for consistency
         subject: "Salutations, voyageur",
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -190,7 +190,7 @@ test("show subject of message in history", async () => {
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss("mail.box_history");
@@ -211,7 +211,7 @@ test("subject should not be shown when subject is the same as the thread name", 
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss("mail.box_inbox");
@@ -236,7 +236,7 @@ test("subject should not be shown when subject is the same as the thread name an
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss("mail.box_inbox");
@@ -261,7 +261,7 @@ test('subject should not be shown when subject differs from thread name only by 
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss("mail.box_inbox");
@@ -286,7 +286,7 @@ test('subject should not be shown when subject differs from thread name only by 
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss("mail.box_inbox");
@@ -311,7 +311,7 @@ test("subject should be shown when the thread name has an extra prefix compared 
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss("mail.box_inbox");
@@ -336,7 +336,7 @@ test('subject should not be shown when subject differs from thread name only by 
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss("mail.box_inbox");
@@ -361,7 +361,7 @@ test('subject should not be shown when subject differs from thread name only by 
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss("mail.box_inbox");
@@ -393,12 +393,12 @@ test("inbox: mark all messages as read", async () => {
         {
             mail_message_id: messageId_1,
             notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
+            res_partner_id: serverState.partnerId,
         },
         {
             mail_message_id: messageId_2,
             notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
+            res_partner_id: serverState.partnerId,
         },
     ]);
     await start();
@@ -430,14 +430,14 @@ test("click on (non-channel/non-partner) origin thread link should redirect to f
         body: "not empty",
         model: "res.fake",
         needaction: true,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
         res_id: fakeId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     const { env } = await start();
     await openDiscuss();
@@ -474,7 +474,7 @@ test("inbox messages are never squashed", async () => {
             message_type: "comment",
             model: "discuss.channel",
             needaction: true,
-            needaction_partner_ids: [pyEnv.currentPartnerId],
+            needaction_partner_ids: [serverState.partnerId],
             res_id: channelId,
         },
         {
@@ -484,7 +484,7 @@ test("inbox messages are never squashed", async () => {
             message_type: "comment",
             model: "discuss.channel",
             needaction: true,
-            needaction_partner_ids: [pyEnv.currentPartnerId],
+            needaction_partner_ids: [serverState.partnerId],
             res_id: channelId,
         },
     ]);
@@ -493,13 +493,13 @@ test("inbox messages are never squashed", async () => {
             mail_message_id: messageId_1,
             notification_status: "sent",
             notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
+            res_partner_id: serverState.partnerId,
         },
         {
             mail_message_id: messageId_2,
             notification_status: "sent",
             notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
+            res_partner_id: serverState.partnerId,
         },
     ]);
     await start();
@@ -518,14 +518,14 @@ test("reply: stop replying button click", async () => {
         body: "not empty",
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -547,14 +547,14 @@ test("error notifications should not be shown in Inbox", async () => {
         body: "not empty",
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_status: "exception",
         notification_type: "email",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -581,7 +581,7 @@ test("emptying inbox displays rainbow man in inbox", async () => {
         {
             mail_message_id: messageId1,
             notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
+            res_partner_id: serverState.partnerId,
         },
     ]);
     await start();
@@ -599,14 +599,14 @@ test("emptying inbox doesn't display rainbow man in another thread", async () =>
         body: "not empty",
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create([
         {
             mail_message_id: messageId,
             notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
+            res_partner_id: serverState.partnerId,
         },
     ]);
     await start();

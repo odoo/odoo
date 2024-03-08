@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/discuss/core/web/command_palette_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
@@ -39,7 +39,7 @@ test("open the chatWindow of a channel from the command palette", async () => {
         name: "general",
         channel_member_ids: [
             Command.create({
-                partner_id: pyEnv.currentPartnerId,
+                partner_id: serverState.partnerId,
                 last_interest_dt: "2021-01-02 10:00:00", // same last interest to sort by id
             }),
         ],
@@ -48,7 +48,7 @@ test("open the chatWindow of a channel from the command palette", async () => {
         name: "project",
         channel_member_ids: [
             Command.create({
-                partner_id: pyEnv.currentPartnerId,
+                partner_id: serverState.partnerId,
                 last_interest_dt: "2021-01-02 10:00:00", // same last interest to sort by id
             }),
         ],
@@ -68,7 +68,7 @@ test("Channel mentions in the command palette of Discuss app with @", async () =
     const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "group",
@@ -83,7 +83,7 @@ test("Channel mentions in the command palette of Discuss app with @", async () =
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     triggerHotkey("control+k");

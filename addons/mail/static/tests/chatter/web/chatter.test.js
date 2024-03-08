@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/chatter/web/chatter_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
@@ -35,7 +35,7 @@ test("simple chatter on a record", async () => {
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
     ]);
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });

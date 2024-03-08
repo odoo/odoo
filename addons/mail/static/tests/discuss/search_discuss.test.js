@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/discuss/search_discuss_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_hook";
 import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
@@ -33,7 +33,7 @@ test("Search a message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "This is a message",
         attachment_ids: [],
         message_type: "comment",
@@ -52,7 +52,7 @@ test("Search should be hightlighted", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "This is a message",
         attachment_ids: [],
         message_type: "comment",
@@ -71,13 +71,13 @@ test("Search a starred message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "This is a message",
         attachment_ids: [],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
-        starred_partner_ids: [pyEnv.currentPartnerId],
+        starred_partner_ids: [serverState.partnerId],
     });
     await start();
     await openDiscuss("mail.box_starred");
@@ -91,7 +91,7 @@ test("Search a message in inbox", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "This is a message",
         attachment_ids: [],
         message_type: "comment",
@@ -111,7 +111,7 @@ test("Search a message in history", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const messageId = pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "This is a message",
         attachment_ids: [],
         message_type: "comment",
@@ -124,7 +124,7 @@ test("Search a message in history", async () => {
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss("mail.box_history");
@@ -149,7 +149,7 @@ test("Search a message in 60 messages should return 30 message first", async () 
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     for (let i = 0; i < 60; i++) {
         pyEnv["mail.message"].create({
-            author_id: pyEnv.currentPartnerId,
+            author_id: serverState.partnerId,
             body: "This is a message",
             attachment_ids: [],
             message_type: "comment",
@@ -173,7 +173,7 @@ test("Scrolling to the bottom should load more searched message", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     for (let i = 0; i < 90; i++) {
         pyEnv["mail.message"].create({
-            author_id: pyEnv.currentPartnerId,
+            author_id: serverState.partnerId,
             body: "This is a message",
             attachment_ids: [],
             message_type: "comment",
@@ -199,7 +199,7 @@ test("Editing the searched term should not edit the current searched term", asyn
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     for (let i = 0; i < 60; i++) {
         pyEnv["mail.message"].create({
-            author_id: pyEnv.currentPartnerId,
+            author_id: serverState.partnerId,
             body: "This is a message",
             attachment_ids: [],
             message_type: "comment",

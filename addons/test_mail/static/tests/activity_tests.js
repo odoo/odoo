@@ -1,6 +1,6 @@
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { ActivityController } from "@mail/views/web/activity/activity_controller";
 import { ActivityModel } from "@mail/views/web/activity/activity_model";
@@ -278,7 +278,7 @@ QUnit.module("test_mail", {}, function () {
                                       create_date: serializeDate(
                                           DateTime.now().minus({ days: idx })
                                       ),
-                                      create_uid: pyEnv.currentUserId,
+                                      create_uid: serverState.userId,
                                   }),
                               ]
                             : [],

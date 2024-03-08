@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/chatter/web/follow_button_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
@@ -10,8 +10,8 @@ import { click, contains, triggerEvents } from "@web/../tests/utils";
 QUnit.module("follow button");
 
 test("base rendering not editable", async () => {
-    const { pyEnv } = await start();
-    await openFormView("res.partner", pyEnv.currentPartnerId);
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
     await contains(".o-mail-Chatter-follow", { text: "Follow" });
 });
 
@@ -20,7 +20,7 @@ test("hover following button", async () => {
     const threadId = pyEnv["res.partner"].create({});
     pyEnv["mail.followers"].create({
         is_active: true,
-        partner_id: pyEnv.currentPartnerId,
+        partner_id: serverState.partnerId,
         res_id: threadId,
         res_model: "res.partner",
     });
@@ -32,8 +32,8 @@ test("hover following button", async () => {
 });
 
 test('click on "follow" button', async () => {
-    const { pyEnv } = await start();
-    await openFormView("res.partner", pyEnv.currentPartnerId);
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
     await contains("button", { text: "Follow" });
     await click("button", { text: "Follow" });
     await contains("button", { text: "Following" });
@@ -64,7 +64,7 @@ test('click on "unfollow" button', async () => {
     const threadId = pyEnv["res.partner"].create({});
     pyEnv["mail.followers"].create({
         is_active: true,
-        partner_id: pyEnv.currentPartnerId,
+        partner_id: serverState.partnerId,
         res_id: threadId,
         res_model: "res.partner",
     });

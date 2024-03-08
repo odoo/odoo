@@ -1,6 +1,6 @@
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
 
@@ -101,10 +101,10 @@ test("Only necessary requests are made when creating a new chat", async () => {
             },
             failures: true, // called because mail/core/web is loaded in qunit bundle
             systray_get_activities: true, // called because mail/core/web is loaded in qunit bundle
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
         `/mail/message/post - ${JSON.stringify({
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId, temporary_id: 0.81 },
+            context: { lang: "en", tz: "taht", uid: serverState.userId, temporary_id: 0.81 },
             post_data: {
                 body: "Hello!",
                 attachment_ids: [],

@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/web/activity/activity_widget_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 import { ROUTES_TO_IGNORE } from "@mail/../tests/helpers/webclient_setup";
@@ -16,7 +16,7 @@ const { DateTime } = luxon;
 QUnit.module("activity widget");
 
 test("list activity widget with no activity", async () => {
-    const pyEnv = await startServer();
+    await startServer();
     const views = {
         "res.users,false,list": `
             <list>
@@ -33,14 +33,14 @@ test("list activity widget with no activity", async () => {
             }
         },
         serverData: { views },
-        session: { uid: pyEnv.currentUserId },
+        session: { uid: serverState.userId },
     });
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
     ]);
     await openView({
@@ -65,7 +65,7 @@ test("list activity widget with no activity", async () => {
                 offset: 0,
                 order: "",
                 limit: 80,
-                context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId, bin_size: true },
+                context: { lang: "en", tz: "taht", uid: serverState.userId, bin_size: true },
                 count_limit: 10001,
                 domain: [],
             },
@@ -82,7 +82,7 @@ test("list activity widget with activities", async () => {
         { name: "Type 1" },
         { name: "Type 2" },
     ]);
-    pyEnv["res.users"].write([pyEnv.currentUserId], {
+    pyEnv["res.users"].write([serverState.userId], {
         activity_ids: [activityId_1, activityId_2],
         activity_state: "today",
         activity_summary: "Call with Al",
@@ -118,7 +118,7 @@ test("list activity widget with activities", async () => {
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
     ]);
     await openView({
@@ -143,7 +143,7 @@ test("list activity widget with activities", async () => {
                 offset: 0,
                 order: "",
                 limit: 80,
-                context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId, bin_size: true },
+                context: { lang: "en", tz: "taht", uid: serverState.userId, bin_size: true },
                 count_limit: 10001,
                 domain: [],
             },
@@ -167,7 +167,7 @@ test("list activity widget with exception", async () => {
     const pyEnv = await startServer();
     const activityId = pyEnv["mail.activity"].create({});
     const activityTypeId = pyEnv["mail.activity.type"].create({});
-    pyEnv["res.users"].write([pyEnv.currentUserId], {
+    pyEnv["res.users"].write([serverState.userId], {
         activity_ids: [activityId],
         activity_state: "today",
         activity_summary: "Call with Al",
@@ -197,7 +197,7 @@ test("list activity widget with exception", async () => {
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
     ]);
     await openView({
@@ -222,7 +222,7 @@ test("list activity widget with exception", async () => {
                 offset: 0,
                 order: "",
                 limit: 80,
-                context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId, bin_size: true },
+                context: { lang: "en", tz: "taht", uid: serverState.userId, bin_size: true },
                 count_limit: 10001,
                 domain: [],
             },
@@ -241,8 +241,8 @@ test("list activity widget: open dropdown", async () => {
             date_deadline: serializeDate(DateTime.now()), // now
             can_write: true,
             state: "today",
-            user_id: pyEnv.currentUserId,
-            create_uid: pyEnv.currentUserId,
+            user_id: serverState.userId,
+            create_uid: serverState.userId,
             activity_type_id: activityTypeId_1,
         },
         {
@@ -250,12 +250,12 @@ test("list activity widget: open dropdown", async () => {
             date_deadline: serializeDate(DateTime.now().plus({ days: 1 })), // tomorrow
             can_write: true,
             state: "planned",
-            user_id: pyEnv.currentUserId,
-            create_uid: pyEnv.currentUserId,
+            user_id: serverState.userId,
+            create_uid: serverState.userId,
             activity_type_id: activityTypeId_2,
         },
     ]);
-    pyEnv["res.users"].write([pyEnv.currentUserId], {
+    pyEnv["res.users"].write([serverState.userId], {
         activity_ids: [activityId_1, activityId_2],
         activity_state: "today",
         activity_summary: "Call with Al",
@@ -276,7 +276,7 @@ test("list activity widget: open dropdown", async () => {
                 step(`${route} - ${JSON.stringify(args)}`);
             }
             if (args.method === "action_feedback") {
-                pyEnv["res.users"].write([pyEnv.currentUserId], {
+                pyEnv["res.users"].write([serverState.userId], {
                     activity_ids: [activityId_2],
                     activity_state: "planned",
                     activity_summary: "Meet FP",
@@ -303,7 +303,7 @@ test("list activity widget: open dropdown", async () => {
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
     ]);
     await openView({
@@ -328,7 +328,7 @@ test("list activity widget: open dropdown", async () => {
                 offset: 0,
                 order: "",
                 limit: 80,
-                context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId, bin_size: true },
+                context: { lang: "en", tz: "taht", uid: serverState.userId, bin_size: true },
                 count_limit: 10001,
                 domain: [],
             },
@@ -341,7 +341,7 @@ test("list activity widget: open dropdown", async () => {
             model: "mail.activity",
             method: "activity_format",
             args: [[activityId_1, activityId_2]],
-            kwargs: { context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId } },
+            kwargs: { context: { lang: "en", tz: "taht", uid: serverState.userId } },
         })}`,
     ]);
     await click(
@@ -355,7 +355,7 @@ test("list activity widget: open dropdown", async () => {
             args: [[activityId_1]],
             kwargs: {
                 attachment_ids: [],
-                context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+                context: { lang: "en", tz: "taht", uid: serverState.userId },
             },
         })}`,
         `/web/dataset/call_kw/res.users/web_read - ${JSON.stringify({
@@ -363,7 +363,7 @@ test("list activity widget: open dropdown", async () => {
             method: "web_read",
             args: [[activityId_2]],
             kwargs: {
-                context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId, bin_size: true },
+                context: { lang: "en", tz: "taht", uid: serverState.userId, bin_size: true },
                 specification: {
                     activity_ids: { fields: {} },
                     activity_exception_decoration: {},
@@ -497,8 +497,8 @@ test("list activity exception widget with activity", async () => {
             date_deadline: serializeDate(DateTime.now()), // now
             can_write: true,
             state: "today",
-            user_id: pyEnv.currentUserId,
-            create_uid: pyEnv.currentUserId,
+            user_id: serverState.userId,
+            create_uid: serverState.userId,
             activity_type_id: activityTypeId_1,
         },
         {
@@ -506,13 +506,13 @@ test("list activity exception widget with activity", async () => {
             date_deadline: serializeDate(DateTime.now()), // now
             can_write: true,
             state: "today",
-            user_id: pyEnv.currentUserId,
-            create_uid: pyEnv.currentUserId,
+            user_id: serverState.userId,
+            create_uid: serverState.userId,
             activity_type_id: activityTypeId_2,
         },
     ]);
 
-    pyEnv["res.users"].write([pyEnv.currentUserId], { activity_ids: [activityId_1] });
+    pyEnv["res.users"].write([serverState.userId], { activity_ids: [activityId_1] });
     pyEnv["res.users"].create({
         message_attachment_count: 3,
         display_name: "second partner",
