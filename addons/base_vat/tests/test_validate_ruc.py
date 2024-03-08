@@ -95,6 +95,8 @@ class TestStructure(TransactionCase):
 
 @tagged('-standard', 'external')
 class TestStructureVIES(TestStructure):
+    allow_inherited_tests_method = True
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

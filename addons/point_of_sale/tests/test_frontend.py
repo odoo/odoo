@@ -1143,3 +1143,4 @@ class TestUi(TestPointOfSaleHttpCommon):
 class MobileTestUi(TestUi):
     browser_size = '375x667'
     touch_enabled = True
+    allow_inherited_tests_method = True

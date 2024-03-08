@@ -5,6 +5,7 @@ from odoo.tests import tagged
 
 @tagged('post_install', '-at_install')
 class SaleTestTaxTotals(TestTaxTotals):
+    allow_inherited_tests_method = True
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
