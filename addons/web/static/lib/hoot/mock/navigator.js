@@ -134,6 +134,8 @@ export const mockNavigator = createMock(navigator, {
     permissions: { value: mockPermissions },
     userAgent: { get: () => currentUserAgent },
     serviceWorker: { get: () => undefined },
+    platform: { get: () => "MacIntel" },
+    maxTouchPoints: { get: () => 0 },
 });
 
 /** @type {Record<PermissionName, { name: string; state: PermissionState }>} */
