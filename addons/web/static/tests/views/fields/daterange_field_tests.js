@@ -172,8 +172,8 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // Select a new range and check that inputs are updated
-        await click(getPickerCell("8").at(0)); // 02/08/2017
         await click(getPickerCell("9").at(0)); // 02/09/2017
+        await click(getPickerCell("8").at(0)); // 02/08/2017
         assert.equal(
             target.querySelector("input[data-field=datetime]").value,
             "02/08/2017 15:30:00"
@@ -233,8 +233,8 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // Change date
-        await click(getPickerCell("12").at(1));
         await click(getPickerCell("16").at(0));
+        await click(getPickerCell("12").at(1));
         // Close picker
         await click(document.querySelector(".o_form_view"));
 
@@ -268,8 +268,8 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // Change date
-        await click(getPickerCell("13").at(0));
         await click(getPickerCell("18").at(1));
+        await click(getPickerCell("13").at(0));
         // Close picker
         await click(document.querySelector(".o_form_view"));
 

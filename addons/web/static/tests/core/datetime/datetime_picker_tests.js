@@ -1022,7 +1022,7 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         await click(getPickerCell("19").at(0));
 
-        assert.verifySteps(["2023-04-19T08:43:00,2023-04-23T17:16:00"]);
+        assert.verifySteps(["2023-04-20T08:43:00,2023-04-19T17:16:00"]);
     });
 
     QUnit.test("range value, select date for first value after second value", async (assert) => {
@@ -1037,7 +1037,7 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         await click(getPickerCell("27").at(1));
 
-        assert.verifySteps(["2023-04-20T08:43:00,2023-04-27T17:16:00"]);
+        assert.verifySteps(["2023-04-27T08:43:00,2023-04-23T17:16:00"]);
     });
 
     QUnit.test("focus proper month when changing props out of current month", async (assert) => {
