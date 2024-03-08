@@ -87,7 +87,7 @@ class IrActionsReport(models.Model):
     _description = 'Report Action'
     _inherit = 'ir.actions.actions'
     _table = 'ir_act_report_xml'
-    _order = 'name'
+    _order = 'name, id'
     _allow_sudo_commands = False
 
     type = fields.Char(default='ir.actions.report')
