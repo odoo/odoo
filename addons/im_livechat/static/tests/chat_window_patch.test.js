@@ -2,27 +2,24 @@ const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
+import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("chat window (patch)");
 
-test("closing a chat window with no message from admin side unpins it", async (assert) => {
+test("closing a chat window with no message from admin side unpins it", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["res.users"].create({ partner_id: partnerId });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [
-                0,
-                0,
-                {
-                    is_pinned: true,
-                    partner_id: pyEnv.currentPartnerId,
-                },
-            ],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({
+                is_pinned: true,
+                partner_id: pyEnv.currentPartnerId,
+            }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "livechat",
         uuid: "channel-10-uuid",

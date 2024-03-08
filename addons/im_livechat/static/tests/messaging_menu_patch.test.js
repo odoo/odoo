@@ -16,7 +16,7 @@ test('livechats should be in "chat" filter', async () => {
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -38,7 +38,7 @@ test('livechats should be in "livechat" tab in mobile', async () => {
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",

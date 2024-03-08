@@ -108,14 +108,10 @@ test("new message chat window should close on selecting the user if chat with th
     pyEnv["res.users"].create({ partner_id: partnerId });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [
-                0,
-                0,
-                {
-                    fold_state: "open",
-                    partner_id: pyEnv.currentPartnerId,
-                },
-            ],
+            Command.create({
+                fold_state: "open",
+                partner_id: pyEnv.currentPartnerId,
+            }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",

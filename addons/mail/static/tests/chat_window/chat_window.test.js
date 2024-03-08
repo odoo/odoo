@@ -481,27 +481,19 @@ test("focus next visible chat window when closing current chat window with ESCAP
         {
             name: "General",
             channel_member_ids: [
-                [
-                    0,
-                    0,
-                    {
-                        fold_state: "open",
-                        partner_id: pyEnv.currentPartnerId,
-                    },
-                ],
+                Command.create({
+                    fold_state: "open",
+                    partner_id: pyEnv.currentPartnerId,
+                }),
             ],
         },
         {
             name: "MyTeam",
             channel_member_ids: [
-                [
-                    0,
-                    0,
-                    {
-                        fold_state: "open",
-                        partner_id: pyEnv.currentPartnerId,
-                    },
-                ],
+                Command.create({
+                    fold_state: "open",
+                    partner_id: pyEnv.currentPartnerId,
+                }),
             ],
         },
     ]);
@@ -564,40 +556,28 @@ test("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", async (a
         {
             name: "General",
             channel_member_ids: [
-                [
-                    0,
-                    0,
-                    {
-                        fold_state: "open",
-                        partner_id: pyEnv.currentPartnerId,
-                    },
-                ],
+                Command.create({
+                    fold_state: "open",
+                    partner_id: pyEnv.currentPartnerId,
+                }),
             ],
         },
         {
             name: "MyTeam",
             channel_member_ids: [
-                [
-                    0,
-                    0,
-                    {
-                        fold_state: "open",
-                        partner_id: pyEnv.currentPartnerId,
-                    },
-                ],
+                Command.create({
+                    fold_state: "open",
+                    partner_id: pyEnv.currentPartnerId,
+                }),
             ],
         },
         {
             name: "MyProject",
             channel_member_ids: [
-                [
-                    0,
-                    0,
-                    {
-                        fold_state: "open",
-                        partner_id: pyEnv.currentPartnerId,
-                    },
-                ],
+                Command.create({
+                    fold_state: "open",
+                    partner_id: pyEnv.currentPartnerId,
+                }),
             ],
         },
     ]);
@@ -636,15 +616,11 @@ test("new message separator is shown in a chat window of a chat on receiving new
     const userId = pyEnv["res.users"].create({ name: "Foreigner user", partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [
-                0,
-                0,
-                {
-                    fold_state: "open",
-                    is_pinned: false,
-                    partner_id: pyEnv.currentPartnerId,
-                },
-            ],
+            Command.create({
+                fold_state: "open",
+                is_pinned: false,
+                partner_id: pyEnv.currentPartnerId,
+            }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -765,14 +741,10 @@ test("chat window should scroll to the newly posted message just after posting i
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [
-                0,
-                0,
-                {
-                    fold_state: "open",
-                    partner_id: pyEnv.currentPartnerId,
-                },
-            ],
+            Command.create({
+                fold_state: "open",
+                partner_id: pyEnv.currentPartnerId,
+            }),
         ],
     });
     for (let i = 0; i < 10; i++) {
@@ -799,14 +771,10 @@ test("chat window should remain folded when new message is received", async () =
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [
-                0,
-                0,
-                {
-                    fold_state: "folded",
-                    partner_id: pyEnv.currentPartnerId,
-                },
-            ],
+            Command.create({
+                fold_state: "folded",
+                partner_id: pyEnv.currentPartnerId,
+            }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -901,14 +869,10 @@ test("focusing a chat window of a chat should make new message separator disappe
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            [
-                0,
-                0,
-                {
-                    fold_state: "open",
-                    partner_id: pyEnv.currentPartnerId,
-                },
-            ],
+            Command.create({
+                fold_state: "open",
+                partner_id: pyEnv.currentPartnerId,
+            }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",

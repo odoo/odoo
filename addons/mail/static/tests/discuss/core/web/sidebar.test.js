@@ -58,7 +58,7 @@ test("unknown channel can be displayed and interacted with", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
     const channelId = pyEnv["discuss.channel"].create({
-        channel_member_ids: [[0, 0, { partner_id: partnerId }]],
+        channel_member_ids: [Command.create({ partner_id: partnerId })],
         channel_type: "channel",
         name: "Not So Secret",
     });

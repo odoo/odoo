@@ -1096,16 +1096,12 @@ test("allow attachment delete on authored message", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["mail.message"].create({
         attachment_ids: [
-            [
-                0,
-                0,
-                {
-                    mimetype: "image/jpeg",
-                    name: "BLAH",
-                    res_id: channelId,
-                    res_model: "discuss.channel",
-                },
-            ],
+            Command.create({
+                mimetype: "image/jpeg",
+                name: "BLAH",
+                res_id: channelId,
+                res_model: "discuss.channel",
+            }),
         ],
         author_id: pyEnv.currentPartnerId,
         body: "<p>Test</p>",
@@ -1127,16 +1123,12 @@ test("prevent attachment delete on non-authored message in channels", async () =
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["mail.message"].create({
         attachment_ids: [
-            [
-                0,
-                0,
-                {
-                    mimetype: "image/jpeg",
-                    name: "BLAH",
-                    res_id: channelId,
-                    res_model: "discuss.channel",
-                },
-            ],
+            Command.create({
+                mimetype: "image/jpeg",
+                name: "BLAH",
+                res_id: channelId,
+                res_model: "discuss.channel",
+            }),
         ],
         author_id: partnerId,
         body: "<p>Test</p>",

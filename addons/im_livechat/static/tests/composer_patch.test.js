@@ -16,7 +16,7 @@ test("Can execute help command on livechat channels", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -43,7 +43,7 @@ test('Receives visitor typing status "is typing"', async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 20",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -69,7 +69,7 @@ test('display canned response suggestions on typing ":"', async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Mario",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -93,7 +93,7 @@ test("use a canned response", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Mario",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -119,7 +119,7 @@ test("use a canned response some text", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Mario",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -146,7 +146,7 @@ test("add an emoji after a canned response", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 20",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
