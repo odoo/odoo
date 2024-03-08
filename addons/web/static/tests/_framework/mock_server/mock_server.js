@@ -10,6 +10,7 @@ import { patchWithCleanup } from "../patch_test_helpers";
 import { DEFAULT_FIELD_VALUES, FIELD_SYMBOL } from "./mock_fields";
 import {
     FIELD_NOT_FOUND,
+    Kwargs,
     MockServerError,
     getRecordQualifier,
     safeSplit,
@@ -163,8 +164,12 @@ class MockServerBaseEnvironment {
         return serverState.userId;
     }
 
+    set uid(newUid) {
+        serverState.userId = newUid;
+    }
+
     get user() {
-        return this.server.env["res.users"].read(serverState.userId)[0];
+        return this.server.env["res.users"]._filter([["id", "=", serverState.userId]])[0];
     }
 
     /**
@@ -260,6 +265,7 @@ export class MockServer {
         this.onRpc("/web/action/load", this.mockActionLoad);
         this.onRpc("/web/bundle", this.mockBundle, { pure: true });
         this.onRpc("/web/dataset/call_kw", this.mockCallKw);
+        this.onRpc("/web/dataset/call_button", this.mockCallKw);
         this.onRpc("/web/dataset/resequence", this.mockResequence);
         this.onRpc("/web/image/:model/:id/:field", this.mockImage, { pure: true });
         this.onRpc("/web/webclient/load_menus", this.mockLoadMenus, { pure: true });
@@ -316,7 +322,7 @@ export class MockServer {
     callOrm(route, params) {
         const { method, model: modelName } = params;
         const args = params.args || [];
-        const kwargs = params.kwargs || {};
+        const kwargs = Kwargs(params.kwargs || {});
 
         // Try to find a model method
         if (modelName) {
@@ -593,14 +599,17 @@ export class MockServer {
 
             for (const [
                 name,
-                { description, fields, inherit, order, parent_name, rec_name },
+                { description, fields, inherit, order, parent_name, rec_name, ...others },
             ] of modelEntries) {
                 const localModelDef = [...models].find((model) => model._name === name);
                 localModelDef._description = description;
-                localModelDef._inherit = inherit;
+                localModelDef._inherit = [...new Set([...(localModelDef._inherit || []), inherit])];
                 localModelDef._order = order;
                 localModelDef._parent_name = parent_name;
                 localModelDef._rec_name = rec_name;
+                for (const name in others) {
+                    localModelDef[name] = others[name];
+                }
                 for (const [fieldName, serverFieldDef] of Object.entries(fields)) {
                     localModelDef._fields[fieldName] = {
                         ...serverFieldDef,
@@ -703,6 +712,9 @@ export class MockServer {
             get: (target, p) => {
                 if (p in target || typeof p !== "string") {
                     return target[p];
+                }
+                if (p === "then") {
+                    return;
                 }
                 const model = this.models[p];
                 if (!model) {
@@ -935,7 +947,7 @@ export class MockServer {
  * @param {string} login
  * @param {string} password
  */
-export async function authenticate(login, password) {
+export function authenticate(login, password) {
     const { env } = MockServer;
     const [user] = env["res.users"]._filter(
         [
