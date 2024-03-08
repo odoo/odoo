@@ -14,12 +14,8 @@ class ProjectProductEmployeeMap(models.Model):
     sale_line_id = fields.Many2one(
         'sale.order.line', "Sales Order Item",
         compute="_compute_sale_line_id", store=True, readonly=False,
-        domain="""[
-            ('is_service', '=', True),
-            ('is_expense', '=', False),
-            ('state', '=', 'sale'),
-            ('order_partner_id', '=?', partner_id),
-            ('is_downpayment', '=', False)]""")
+        domain=lambda self: self.env['sale.order.line']._domain_sale_line_service_str("[('order_partner_id', '=?', partner_id)]")
+    )
     sale_order_id = fields.Many2one(related="project_id.sale_order_id")
     company_id = fields.Many2one('res.company', string='Company', related='project_id.company_id')
     partner_id = fields.Many2one(related='project_id.partner_id')
