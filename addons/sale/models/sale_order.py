@@ -945,6 +945,12 @@ class SaleOrder(models.Model):
 
         return True
 
+    def _should_be_locked(self):
+        self.ensure_one()
+        # Public user can confirm SO, so we check the group on any record creator.
+        user = self[:1].create_uid
+        return user and user.sudo().has_group('sale.group_auto_done_setting')
+
     def _can_be_confirmed(self):
         self.ensure_one()
         return self.state in {'draft', 'sent'}
