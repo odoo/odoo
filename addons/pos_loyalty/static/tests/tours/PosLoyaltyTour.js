@@ -382,3 +382,27 @@ registry.category("web_tour.tours").add('PosLoyaltyTour11.2', {
             PosLoyalty.finalizeOrder('Cash', '50'),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add('PosLoyaltyTour12', {
+    test: true,
+    url: '/pos/web',
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.addOrderline('Free Product A', '2'),
+            ProductScreen.clickDisplayedProduct('Free Product A'),
+            ProductScreen.totalAmountIs('2.00'),
+            PosLoyalty.hasRewardLine('Free Product', '-1.00'),
+            ProductScreen.addOrderline('Free Product B', '2'),
+            ProductScreen.clickDisplayedProduct('Free Product B'),
+            ProductScreen.totalAmountIs('4.00'),
+            PosLoyalty.hasRewardLine('Free Product', '-2.00'),
+            ProductScreen.clickDisplayedProduct('Free Product B'),
+            ProductScreen.clickDisplayedProduct('Free Product B'),
+            ProductScreen.clickDisplayedProduct('Free Product B'),
+            ProductScreen.selectedOrderlineHas("Free Product B", "6.00"),
+            ProductScreen.totalAmountIs('6.00'),
+            PosLoyalty.hasRewardLine('Free Product', '-3.00'),
+        ].flat(),
+});
