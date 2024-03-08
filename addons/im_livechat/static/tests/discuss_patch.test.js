@@ -2,7 +2,7 @@ const test = QUnit.test; // QUnit.test()
 
 import { rpc } from "@web/core/network/rpc";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { click, contains, insertText } from "@web/../tests/utils";
 
@@ -13,22 +13,22 @@ QUnit.module("discuss (patch)");
 
 test("add livechat in the sidebar on visitor sending first message", async () => {
     const pyEnv = await startServer();
-    pyEnv["res.users"].write([pyEnv.currentUserId], { im_status: "online" });
+    pyEnv["res.users"].write([serverState.userId], { im_status: "online" });
     const countryId = pyEnv["res.country"].create({ code: "be", name: "Belgium" });
     const livechatChannelId = pyEnv["im_livechat.channel"].create({
-        user_ids: [pyEnv.currentUserId],
+        user_ids: [serverState.userId],
     });
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor (Belgium)" });
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor (Belgium)",
         channel_member_ids: [
-            Command.create({ is_pinned: false, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ is_pinned: false, partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
         country_id: countryId,
         livechat_channel_id: livechatChannelId,
-        livechat_operator_id: pyEnv.currentPartnerId,
+        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -57,11 +57,11 @@ test("invite button should be present on livechat", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: pyEnv.currentPartnerId,
+        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss(channelId);
@@ -78,24 +78,24 @@ test("livechats are sorted by last activity time in the sidebar: most recent at 
             channel_member_ids: [
                 Command.create({
                     last_interest_dt: "2021-01-01 10:00:00",
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                 }),
                 Command.create({ guest_id: guestId_1 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
         },
         {
             anonymous_name: "Visitor 12",
             channel_member_ids: [
                 Command.create({
                     last_interest_dt: "2021-02-01 10:00:00",
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                 }),
                 Command.create({ guest_id: guestId_2 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
         },
     ]);
     await start();

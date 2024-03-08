@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/activity/activity_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
@@ -542,12 +542,12 @@ test("Activity avatar should have a unique timestamp", async () => {
         res_model: "res.partner",
     });
     await start();
-    const partner = pyEnv["res.partner"].search_read([["id", "=", pyEnv.currentPartnerId]])[0];
+    const partner = pyEnv["res.partner"].search_read([["id", "=", serverState.partnerId]])[0];
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity");
     await contains(
         `.o-mail-Activity-sidebar img[data-src="${getOrigin()}/web/image/res.partner/${
-            pyEnv.currentPartnerId
+            serverState.partnerId
         }/avatar_128?unique=${deserializeDateTime(partner.write_date).ts}`
     );
 });

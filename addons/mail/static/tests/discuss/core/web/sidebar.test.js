@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/discuss/core/web/sidebar_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
@@ -35,7 +35,7 @@ test("sidebar find shows channels matching search term", async () => {
 test("sidebar find shows channels matching search term even when user is member", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        channel_member_ids: [Command.create({ partner_id: pyEnv.currentPartnerId })],
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
         channel_type: "channel",
         group_public_id: false,
         name: "test",

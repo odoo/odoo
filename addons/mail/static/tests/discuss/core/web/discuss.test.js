@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/discuss/core/web/discuss_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
@@ -31,14 +31,14 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
     ]);
     await openDiscuss();
     await assertSteps([
         `/mail/data - ${JSON.stringify({
             channels_as_member: true,
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
         '/mail/inbox/messages - {"limit":30}',
     ]);
@@ -57,7 +57,7 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
                     ["name", "ilike", "abc"],
                 ],
                 fields: ["name"],
-                context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+                context: { lang: "en", tz: "taht", uid: serverState.userId },
             },
         })}`,
     ]);
@@ -70,7 +70,7 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
             model: "discuss.channel",
             method: "channel_create",
             args: ["abc", null],
-            kwargs: { context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId } },
+            kwargs: { context: { lang: "en", tz: "taht", uid: serverState.userId } },
         })}`,
         `/discuss/channel/messages - {"channel_id":${channelId},"limit":30}`,
     ]);
@@ -119,14 +119,14 @@ test("can join a chat conversation", async (assert) => {
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
     ]);
     await openDiscuss();
     await assertSteps([
         `/mail/data - ${JSON.stringify({
             channels_as_member: true,
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
         '/mail/inbox/messages - {"limit":30}',
     ]);
@@ -144,7 +144,7 @@ test("can join a chat conversation", async (assert) => {
             kwargs: {
                 partners_to: [partnerId],
                 force_open: false,
-                context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+                context: { lang: "en", tz: "taht", uid: serverState.userId },
             },
         })}`,
     ]);

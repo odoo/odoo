@@ -3,7 +3,7 @@ const test = QUnit.test; // QUnit.test()
 
 import { rpc } from "@web/core/network/rpc";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
@@ -72,7 +72,7 @@ test("Closing a category sends the updated user setting to the server.", async (
 test("Opening a category sends the updated user setting to the server.", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
     });
     await start({
@@ -99,7 +99,7 @@ test("channel - command: should have view command when category is unfolded", as
 test("channel - command: should have view command when category is folded", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
     });
     await start();
@@ -117,7 +117,7 @@ test("channel - command: should have add command when category is unfolded", asy
 test("channel - command: should not have add command when category is folded", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
     });
     await start();
@@ -130,7 +130,7 @@ test("channel - states: close manually by clicking the title", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "general" });
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: true,
     });
     await start();
@@ -144,7 +144,7 @@ test("channel - states: open manually by clicking the title", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "general" });
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
     });
     await start();
@@ -160,7 +160,7 @@ test("sidebar: inbox with counter", async () => {
     const pyEnv = await startServer();
     pyEnv["mail.notification"].create({
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -234,7 +234,7 @@ test("sidebar: basic chat rendering", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -275,7 +275,7 @@ test("sidebar: open channel and leave it", async (assert) => {
         channel_member_ids: [
             Command.create({
                 fold_state: "open",
-                partner_id: pyEnv.currentPartnerId,
+                partner_id: serverState.partnerId,
             }),
         ],
     });
@@ -304,7 +304,7 @@ test("sidebar: unpin chat from bus", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -333,7 +333,7 @@ test("chat - channel should count unread message [REQUIRE FOCUS]", async () => {
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ message_unread_counter: 1, partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -356,7 +356,7 @@ test("mark channel as seen on last message visible [REQUIRE FOCUS]", async () =>
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            Command.create({ message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ message_unread_counter: 1, partner_id: serverState.partnerId }),
         ],
     });
     pyEnv["mail.message"].create({
@@ -373,7 +373,7 @@ test("mark channel as seen on last message visible [REQUIRE FOCUS]", async () =>
 test("channel - counter: should not have a counter if the category is unfolded and without needaction messages", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: true,
     });
     pyEnv["discuss.channel"].create({ name: "general" });
@@ -391,7 +391,7 @@ test("channel - counter: should not have a counter if the category is unfolded a
 test("channel - counter: should not have a counter if the category is unfolded and with needaction messages", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: true,
     });
     const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
@@ -414,12 +414,12 @@ test("channel - counter: should not have a counter if the category is unfolded a
         {
             mail_message_id: messageId_1,
             notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
+            res_partner_id: serverState.partnerId,
         },
         {
             mail_message_id: messageId_2,
             notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
+            res_partner_id: serverState.partnerId,
         },
     ]);
     await start();
@@ -437,7 +437,7 @@ test("channel - counter: should not have a counter if category is folded and wit
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({});
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
     });
     await start();
@@ -473,16 +473,16 @@ test("channel - counter: should have correct value of needaction threads if cate
         {
             mail_message_id: messageId_1,
             notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
+            res_partner_id: serverState.partnerId,
         },
         {
             mail_message_id: messageId_2,
             notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
+            res_partner_id: serverState.partnerId,
         },
     ]);
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
     });
     await start();
@@ -499,12 +499,12 @@ test("channel - counter: should have correct value of needaction threads if cate
 test("chat - counter: should not have a counter if the category is unfolded and without unread messages", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: true,
     });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ message_unread_counter: 0, partner_id: serverState.partnerId }),
         ],
         channel_type: "chat",
     });
@@ -522,14 +522,14 @@ test("chat - counter: should not have a counter if the category is unfolded and 
 test("chat - counter: should not have a counter if the category is unfolded and with unread messagens", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: true,
     });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({
                 message_unread_counter: 10,
-                partner_id: pyEnv.currentPartnerId,
+                partner_id: serverState.partnerId,
             }),
         ],
         channel_type: "chat",
@@ -548,12 +548,12 @@ test("chat - counter: should not have a counter if the category is unfolded and 
 test("chat - counter: should not have a counter if category is folded and without unread messages", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: false,
     });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ message_unread_counter: 0, partner_id: serverState.partnerId }),
         ],
         channel_type: "chat",
     });
@@ -571,7 +571,7 @@ test("chat - counter: should not have a counter if category is folded and withou
 test("chat - counter: should have correct value of unread threads if category is folded and with unread messages", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: false,
     });
     pyEnv["discuss.channel"].create([
@@ -579,7 +579,7 @@ test("chat - counter: should have correct value of unread threads if category is
             channel_member_ids: [
                 Command.create({
                     message_unread_counter: 10,
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                 }),
             ],
             channel_type: "chat",
@@ -588,7 +588,7 @@ test("chat - counter: should have correct value of unread threads if category is
             channel_member_ids: [
                 Command.create({
                     message_unread_counter: 20,
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                 }),
             ],
             channel_type: "chat",
@@ -620,7 +620,7 @@ test("chat - command: should have add command when category is unfolded", async 
 test("chat - command: should not have add command when category is folded", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: false,
     });
     await start();
@@ -639,7 +639,7 @@ test("chat - states: close manually by clicking the title", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ channel_type: "chat" });
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: true,
     });
     await start();
@@ -738,10 +738,10 @@ test("channel - states: close should update the value on the server", async (ass
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: true,
     });
-    const currentUserId = pyEnv.currentUserId;
+    const currentUserId = serverState.userId;
     const { env } = await start();
     await openDiscuss();
     const initalSettings = await env.services.orm.call(
@@ -763,10 +763,10 @@ test("channel - states: open should update the value on the server", async (asse
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    const currentUserId = pyEnv.currentUserId;
+    const currentUserId = serverState.userId;
     const { env } = await start();
     await openDiscuss();
     const initalSettings = await env.services.orm.call(
@@ -789,7 +789,7 @@ test("channel - states: close from the bus", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "channel1" });
     const userSettingsId = pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: true,
     });
     await start();
@@ -808,7 +808,7 @@ test("channel - states: open from the bus", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "channel1" });
     const userSettingsId = pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
     });
     await start({
@@ -825,7 +825,7 @@ test("channel - states: open from the bus", async () => {
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
@@ -861,7 +861,7 @@ test("chat - states: open manually by clicking the title", async () => {
         channel_type: "chat",
     });
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: false,
     });
     await start();
@@ -877,10 +877,10 @@ test("chat - states: close should call update server data", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: true,
     });
-    const currentUserId = pyEnv.currentUserId;
+    const currentUserId = serverState.userId;
     const { env } = await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
@@ -905,13 +905,13 @@ test("chat - states: open should call update server data", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: false,
     });
     const { env } = await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
-    const currentUserId = pyEnv.currentUserId;
+    const currentUserId = serverState.userId;
     const initalSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
@@ -933,7 +933,7 @@ test("chat - states: close from the bus", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ channel_type: "chat" });
     const userSettingsId = pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: true,
     });
     await start();
@@ -952,7 +952,7 @@ test("chat - states: open from the bus", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ channel_type: "chat" });
     const userSettingsId = pyEnv["res.users.settings"].create({
-        user_id: pyEnv.currentUserId,
+        user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: false,
     });
     await start({
@@ -969,7 +969,7 @@ test("chat - states: open from the bus", async () => {
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
@@ -1013,7 +1013,7 @@ test("chat - avatar: should have correct avatar", async () => {
     const partner = pyEnv["res.partner"].search_read([["id", "=", partnerId]])[0];
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -1038,7 +1038,7 @@ test("chat should be sorted by last activity time [REQUIRE FOCUS]", async () => 
             channel_member_ids: [
                 Command.create({
                     last_interest_dt: "2021-01-01 10:00:00",
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                 }),
                 Command.create({ partner_id: demo_id }),
             ],
@@ -1048,7 +1048,7 @@ test("chat should be sorted by last activity time [REQUIRE FOCUS]", async () => 
             channel_member_ids: [
                 Command.create({
                     last_interest_dt: "2021-02-01 10:00:00",
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                 }),
                 Command.create({ partner_id: yoshi_id }),
             ],
@@ -1135,7 +1135,7 @@ test("Group unread counter up to date after mention is marked as seen", async ()
     const partnerId = pyEnv["res.partner"].create({ name: "Chuck" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "group",
@@ -1151,7 +1151,7 @@ test("Group unread counter up to date after mention is marked as seen", async ()
         {
             mail_message_id: messageId,
             notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
+            res_partner_id: serverState.partnerId,
         },
     ]);
     await start();
@@ -1181,9 +1181,9 @@ test("Update channel data via bus notification", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "Sales",
-        channel_member_ids: [Command.create({ partner_id: pyEnv.currentPartnerId })],
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
         channel_type: "channel",
-        create_uid: pyEnv.currentUserId,
+        create_uid: serverState.userId,
     });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });

@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/core/open_chat_test default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
@@ -49,7 +49,7 @@ test("openChat: open existing chat for user [REQUIRE FOCUS]", async () => {
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({
-                partner_id: pyEnv.currentPartnerId,
+                partner_id: serverState.partnerId,
                 fold_state: "open",
             }),
             Command.create({ partner_id: partnerId }),

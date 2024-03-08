@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/message/message_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
@@ -30,7 +30,7 @@ test("Start edition on click edit", async () => {
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "Hello world",
         model: "discuss.channel",
         res_id: channelId,
@@ -51,7 +51,7 @@ test("Edit message (mobile)", async () => {
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "Hello world",
         model: "discuss.channel",
         res_id: channelId,
@@ -80,7 +80,7 @@ test("Can edit message comment in chatter", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "original message",
         message_type: "comment",
         model: "res.partner",
@@ -124,7 +124,7 @@ test("Stop edition on click cancel", async () => {
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "Hello world",
         model: "discuss.channel",
         res_id: channelId,
@@ -145,7 +145,7 @@ test("Stop edition on press escape", async () => {
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "Hello world",
         model: "discuss.channel",
         res_id: channelId,
@@ -166,7 +166,7 @@ test("Stop edition on click save", async () => {
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "Hello world",
         model: "discuss.channel",
         res_id: channelId,
@@ -187,7 +187,7 @@ test("Stop edition on press enter", async () => {
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "Hello world",
         model: "discuss.channel",
         res_id: channelId,
@@ -208,7 +208,7 @@ test("Do not stop edition on click away when clicking on emoji", async () => {
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "Hello world",
         model: "discuss.channel",
         res_id: channelId,
@@ -230,7 +230,7 @@ test("Edit and click save", async () => {
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "Hello world",
         model: "discuss.channel",
         res_id: channelId,
@@ -252,7 +252,7 @@ test("Do not call server on save if no changes", async () => {
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "Hello world",
         model: "discuss.channel",
         res_id: channelId,
@@ -279,7 +279,7 @@ test("Update the link previews when a message is edited", async () => {
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "Hello world",
         model: "discuss.channel",
         res_id: channelId,
@@ -310,7 +310,7 @@ test("Scroll bar to the top when edit starts", async (assert) => {
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "Hello world!".repeat(1000),
         model: "discuss.channel",
         res_id: channelId,
@@ -333,10 +333,10 @@ test("mentions are kept when editing message", async () => {
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "Hello @Mitchell Admin",
         model: "discuss.channel",
-        partner_ids: [pyEnv.currentPartnerId],
+        partner_ids: [serverState.partnerId],
         res_id: channelId,
         message_type: "comment",
     });
@@ -363,16 +363,16 @@ test("can add new mentions when editing message", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "Hello",
         model: "discuss.channel",
-        partner_ids: [pyEnv.currentPartnerId],
+        partner_ids: [serverState.partnerId],
         res_id: channelId,
         message_type: "comment",
     });
@@ -559,7 +559,7 @@ test("Two users reacting with the same emoji", async () => {
         {
             message_id: messageId,
             content: "😅",
-            partner_id: pyEnv.currentPartnerId,
+            partner_id: serverState.partnerId,
         },
         {
             message_id: messageId,
@@ -779,7 +779,7 @@ test("open author avatar card", async () => {
         { name: "General" },
         {
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ partner_id: partnerId }),
             ],
             channel_type: "chat",
@@ -975,14 +975,14 @@ test('Quick edit (edit from Composer with ArrowUp) ignores empty ("deleted") mes
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "not empty",
         model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "", // empty body
         model: "discuss.channel",
         res_id: channelId,
@@ -1003,7 +1003,7 @@ test("Editing a message to clear its composer opens message delete dialog.", asy
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "not empty",
         model: "discuss.channel",
         res_id: channelId,
@@ -1025,7 +1025,7 @@ test("Clear message body should not open message delete dialog if it has attachm
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "not empty",
         model: "discuss.channel",
         res_id: channelId,
@@ -1060,7 +1060,7 @@ test("highlight the message mentioning the current user inside the channel", asy
         author_id: partnerId,
         body: "hello @Admin",
         model: "discuss.channel",
-        partner_ids: [pyEnv.currentPartnerId],
+        partner_ids: [serverState.partnerId],
         res_id: channelId,
     });
     await start();
@@ -1080,7 +1080,7 @@ test("not highlighting the message if not mentioning the current user inside the
         name: "General",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "hello @testPartner",
         model: "discuss.channel",
         partner_ids: [partnerId],
@@ -1103,7 +1103,7 @@ test("allow attachment delete on authored message", async () => {
                 res_model: "discuss.channel",
             }),
         ],
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "<p>Test</p>",
         model: "discuss.channel",
         res_id: channelId,
@@ -1148,7 +1148,7 @@ test("Toggle star should update starred counter on all tabs", async () => {
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "Hello world",
         model: "discuss.channel",
         res_id: channelId,
@@ -1542,13 +1542,13 @@ test("Can reply to chatter messages from history", async () => {
         body: "Hello World!",
         message_type: "comment",
         model: "res.partner",
-        res_id: pyEnv.currentPartnerId,
+        res_id: serverState.partnerId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_type: "inbox",
         is_read: true,
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss("mail.box_history");
@@ -1570,7 +1570,7 @@ test("Mark as unread", async () => {
     });
     const [memberId] = pyEnv["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
-        ["partner_id", "=", pyEnv.currentPartnerId],
+        ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], {
         seen_message_id: messageId,
@@ -1591,11 +1591,11 @@ test("Avatar of unknown author for email message", async () => {
         message_type: "email",
         subject: "Need Details",
         model: "res.partner",
-        res_id: pyEnv.currentPartnerId,
+        res_id: serverState.partnerId,
         author_id: null,
     });
     await start();
-    await openFormView("res.partner", pyEnv.currentPartnerId);
+    await openFormView("res.partner", serverState.partnerId);
     await contains(".o-mail-Message-avatar[data-src*='mail/static/src/img/email_icon.png']");
 });
 
@@ -1608,10 +1608,10 @@ test("Show email_from of message without author for email message", async () => 
         message_type: "email",
         subject: "Need Details",
         model: "res.partner",
-        res_id: pyEnv.currentPartnerId,
+        res_id: serverState.partnerId,
     });
     await start();
-    await openFormView("res.partner", pyEnv.currentPartnerId);
+    await openFormView("res.partner", serverState.partnerId);
     await contains(".o-mail-Message-author", { text: "md@oilcompany.fr" });
 });
 
@@ -1623,11 +1623,11 @@ test("Avatar of unknown author for not email message", async () => {
         message_type: "comment",
         subject: "Need Details",
         model: "res.partner",
-        res_id: pyEnv.currentPartnerId,
+        res_id: serverState.partnerId,
         author_id: null,
     });
     await start();
-    await openFormView("res.partner", pyEnv.currentPartnerId);
+    await openFormView("res.partner", serverState.partnerId);
     await contains(".o-mail-Message-avatar[data-src*='/mail/static/src/img/smiley/avatar.jpg']");
 });
 
@@ -1640,10 +1640,10 @@ test("Show email_from of message without author for not email message", async ()
         message_type: "comment",
         subject: "Need Details",
         model: "res.partner",
-        res_id: pyEnv.currentPartnerId,
+        res_id: serverState.partnerId,
     });
     await start();
-    await openFormView("res.partner", pyEnv.currentPartnerId);
+    await openFormView("res.partner", serverState.partnerId);
     await contains(".o-mail-Message-author", { text: "md@oilcompany.fr" });
 });
 
@@ -1654,7 +1654,7 @@ test("Message should display attachments in order", async () => {
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "not empty",
         model: "discuss.channel",
         res_id: channelId,
@@ -1684,7 +1684,7 @@ test("Can edit a message only containing an attachment", async () => {
     });
     pyEnv["mail.message"].create({
         attachment_ids: [attachmentId],
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "",
         model: "discuss.channel",
         res_id: channelId,
@@ -1741,9 +1741,9 @@ test("discuss - bigger font size when there is only emoji", async (assert) => {
 });
 
 test("chatter - font size unchanged when there is only emoji", async (assert) => {
-    const pyEnv = await startServer();
+    await startServer();
     await start();
-    await openFormView("res.partner", pyEnv.currentPartnerId);
+    await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Chatter-sendMessage");
     await insertText(".o-mail-Composer-input", "🥳");
     await click(".o-mail-Composer-send:enabled");

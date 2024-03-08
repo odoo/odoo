@@ -3,7 +3,7 @@ const test = QUnit.test; // QUnit.test()
 
 import { rpc } from "@web/core/network/rpc";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 
 import { Command } from "@mail/../tests/helpers/command";
@@ -48,7 +48,7 @@ test("counter is taking into account failure notification", async () => {
     });
     const [memberId] = pyEnv["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
-        ["partner_id", "=", pyEnv.currentPartnerId],
+        ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], {
         seen_message_id: messageId,
@@ -450,7 +450,7 @@ test("mark unread channel as read", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ message_unread_counter: 1, partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         name: "My Channel",
@@ -461,7 +461,7 @@ test("mark unread channel as read", async () => {
     ]);
     const [currentMemberId] = pyEnv["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
-        ["partner_id", "=", pyEnv.currentPartnerId],
+        ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([currentMemberId], { seen_message_id: messagId_1 });
     await start({
@@ -490,7 +490,7 @@ test("mark failure as read", async () => {
     pyEnv["discuss.channel"].create({
         message_ids: [messageId],
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId, seen_message_id: messageId }),
+            Command.create({ partner_id: serverState.partnerId, seen_message_id: messageId }),
         ],
     });
     pyEnv["mail.notification"].create({
@@ -640,7 +640,7 @@ test("Counter is updated when receiving new message", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
@@ -819,7 +819,7 @@ test("Messaging menu notification body of chat should show author name once", as
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "chat",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
@@ -852,14 +852,14 @@ test("click on preview should mark as read and open the thread", async () => {
         body: "not empty",
         author_id: pyEnv.odoobotId,
         needaction: true,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -879,14 +879,14 @@ test("click on expand from chat window should close the chat window and open the
         body: "not empty",
         author_id: pyEnv.odoobotId,
         needaction: true,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     const { env } = await start();
     patchWithCleanup(env.services.action, {
@@ -911,11 +911,11 @@ test("preview should display last needaction message preview even if there is a 
         body: "I am the oldest but needaction",
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "I am more recent",
         model: "res.partner",
         res_id: partnerId,
@@ -924,7 +924,7 @@ test("preview should display last needaction message preview even if there is a 
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -939,7 +939,7 @@ test("single preview for channel if it has unread and needaction messages", asyn
     const channelId = pyEnv["discuss.channel"].create({
         name: "Test",
         channel_member_ids: [
-            Command.create({ message_unread_counter: 2, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ message_unread_counter: 2, partner_id: serverState.partnerId }),
         ],
     });
     const messageId = pyEnv["mail.message"].create({
@@ -947,14 +947,14 @@ test("single preview for channel if it has unread and needaction messages", asyn
         body: "Message with needaction",
         model: "discuss.channel",
         needaction: true,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
         res_id: channelId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     pyEnv["mail.message"].create({
         author_id: partnerId,
@@ -980,7 +980,7 @@ test("chat should show unread counter on receiving new messages", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "chat",
         channel_member_ids: [
-            Command.create({ message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ message_unread_counter: 0, partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
@@ -1056,7 +1056,7 @@ test("failure notifications are shown before channel preview", async () => {
     });
     const [memberId] = pyEnv["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
-        ["partner_id", "=", pyEnv.currentPartnerId],
+        ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
     await start();
@@ -1083,13 +1083,13 @@ test("messaging menu should show new needaction messages from chatter", async ()
         needaction: true,
         model: "res.partner",
         res_id: partnerId,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     const [formattedMessage] = await env.services.orm.call("mail.message", "message_format", [
         [messageId],
@@ -1139,14 +1139,14 @@ test("Latest needaction is shown in thread preview", async () => {
             message_type: "comment",
             model: "res.partner",
             needaction: true,
-            needaction_partner_ids: [pyEnv.currentPartnerId],
-            res_id: pyEnv.currentPartnerId,
+            needaction_partner_ids: [serverState.partnerId],
+            res_id: serverState.partnerId,
         });
         pyEnv["mail.notification"].create({
             mail_message_id: messageId,
             notification_status: "sent",
             notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
+            res_partner_id: serverState.partnerId,
         });
     }
     await start();

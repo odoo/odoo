@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/chatter/web/follower_list_menu_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
@@ -149,7 +149,7 @@ test('Hide "Add follower" and subtypes edition/removal buttons except own user o
     pyEnv["mail.followers"].create([
         {
             is_active: true,
-            partner_id: pyEnv.currentPartnerId,
+            partner_id: serverState.partnerId,
             res_id: partnerId_1,
             res_model: "res.partner",
         },
@@ -193,7 +193,7 @@ test("Load 100 followers at once", async () => {
         [...Array(210).keys()].map((i) => {
             return {
                 is_active: true,
-                partner_id: i === 0 ? pyEnv.currentPartnerId : partnerIds[i],
+                partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
                 res_id: partnerIds[0],
                 res_model: "res.partner",
             };
@@ -227,7 +227,7 @@ test("Load 100 recipients at once", async () => {
         [...Array(210).keys()].map((i) => {
             return {
                 is_active: true,
-                partner_id: i === 0 ? pyEnv.currentPartnerId : partnerIds[i],
+                partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
                 res_id: partnerIds[0],
                 res_model: "res.partner",
             };
@@ -261,7 +261,7 @@ test('Show "Add follower" and subtypes edition/removal buttons on all followers 
     pyEnv["mail.followers"].create([
         {
             is_active: true,
-            partner_id: pyEnv.currentPartnerId,
+            partner_id: serverState.partnerId,
             res_id: partnerId_1,
             res_model: "res.partner",
         },

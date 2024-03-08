@@ -1,6 +1,6 @@
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { insertText, contains, focus } from "@web/../tests/utils";
 
 import { Command } from "@mail/../tests/helpers/command";
@@ -19,39 +19,39 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
         {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ guest_id: guestId_1 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 1",
         },
         {
             anonymous_name: "Visitor 12",
             channel_member_ids: [
                 Command.create({
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                     message_unread_counter: 1,
                     last_interest_dt: "2021-01-02 10:00:00",
                 }),
                 Command.create({ guest_id: guestId_2 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 2",
         },
         {
             anonymous_name: "Visitor 13",
             channel_member_ids: [
                 Command.create({
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                     message_unread_counter: 1,
                     last_interest_dt: "2021-01-01 10:00:00",
                 }),
                 Command.create({ guest_id: guestId_3 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 3",
         },
     ]);
@@ -94,20 +94,20 @@ test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async () => {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
                 Command.create({
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                     fold_state: "open",
                 }),
                 Command.create({ guest_id: guestId_1 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 1",
         },
         {
             anonymous_name: "Visitor 12",
             channel_member_ids: [
                 Command.create({
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                     fold_state: "folded",
                     message_unread_counter: 1,
                     last_interest_dt: "2021-01-02 10:00:00",
@@ -115,7 +115,7 @@ test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async () => {
                 Command.create({ guest_id: guestId_2 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 2",
         },
     ]);
@@ -140,20 +140,20 @@ test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async () => {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
                 Command.create({
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                     fold_state: "open",
                 }),
                 Command.create({ guest_id: guestId_1 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 1",
         },
         {
             anonymous_name: "Visitor 12",
             channel_member_ids: [
                 Command.create({
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                     fold_state: "open",
                     message_unread_counter: 1,
                     last_interest_dt: "2021-01-02 10:00:00",
@@ -161,12 +161,12 @@ test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async () => {
                 Command.create({ guest_id: guestId_2 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 2",
         },
         {
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId, fold_state: "open" }),
+                Command.create({ partner_id: serverState.partnerId, fold_state: "open" }),
             ],
         },
     ]);
@@ -192,25 +192,25 @@ test("tab on composer doesn't switch thread if user is typing", async () => {
         {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ guest_id: guestId_1 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 1",
         },
         {
             anonymous_name: "Visitor 12",
             channel_member_ids: [
                 Command.create({
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                     message_unread_counter: 1,
                     last_interest_dt: "2021-01-02 10:00:00",
                 }),
                 Command.create({ guest_id: guestId_2 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 2",
         },
     ]);
@@ -230,21 +230,21 @@ test("tab on composer doesn't switch thread if no unread thread", async () => {
         {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ guest_id: guestId_1 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 1",
         },
         {
             anonymous_name: "Visitor 12",
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ guest_id: guestId_2 }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: pyEnv.currentPartnerId,
+            livechat_operator_id: serverState.partnerId,
             name: "Livechat 2",
         },
     ]);

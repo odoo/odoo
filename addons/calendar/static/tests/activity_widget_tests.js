@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
@@ -38,7 +38,7 @@ QUnit.test("list activity widget: reschedule button in dropdown", async (assert)
         res_model: "res.partner",
         calendar_event_id: meetingId,
     });
-    pyEnv["res.users"].write([pyEnv.currentUserId], {
+    pyEnv["res.users"].write([serverState.userId], {
         activity_ids: [activityId_1],
         activity_state: "today",
         activity_summary: "OXP",

@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/message/message_seen_indicator_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
@@ -17,14 +17,14 @@ test("rendering when just one has received the message", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId_1 }),
             Command.create({ partner_id: partnerId_2 }),
         ],
         channel_type: "group",
     });
     const messageId = pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "<p>Test</p>",
         model: "discuss.channel",
         res_id: channelId,
@@ -51,14 +51,14 @@ test("rendering when everyone have received the message", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId_1 }),
             Command.create({ partner_id: partnerId_2 }),
         ],
         channel_type: "group",
     });
     const messageId = pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "<p>Test</p>",
         model: "discuss.channel",
         res_id: channelId,
@@ -82,14 +82,14 @@ test("rendering when just one has seen the message", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId_1 }),
             Command.create({ partner_id: partnerId_2 }),
         ],
         channel_type: "group",
     });
     const messageId = pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "<p>Test</p>",
         model: "discuss.channel",
         res_id: channelId,
@@ -120,14 +120,14 @@ test("rendering when just one has seen & received the message", async (assert) =
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId_1 }),
             Command.create({ partner_id: partnerId_2 }),
         ],
         channel_type: "group",
     });
     const mesageId = pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "<p>Test</p>",
         model: "discuss.channel",
         res_id: channelId,
@@ -154,14 +154,14 @@ test("rendering when just everyone has seen the message", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId_1 }),
             Command.create({ partner_id: partnerId_2 }),
         ],
         channel_type: "group",
     });
     const messageId = pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "<p>Test</p>",
         model: "discuss.channel",
         res_id: channelId,
@@ -184,13 +184,13 @@ test("'channel_fetch' notification received is correctly handled", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "<p>Test</p>",
         model: "discuss.channel",
         res_id: channelId,
@@ -220,13 +220,13 @@ test("'channel_seen' notification received is correctly handled", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "<p>Test</p>",
         model: "discuss.channel",
         res_id: channelId,
@@ -256,13 +256,13 @@ test("'channel_fetch' notification then 'channel_seen' received are correctly ha
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "<p>Test</p>",
         model: "discuss.channel",
         res_id: channelId,
@@ -305,7 +305,7 @@ test("do not show message seen indicator on the last message seen by everyone wh
         name: "test",
         channel_type: "chat",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
@@ -330,19 +330,19 @@ test("do not show message seen indicator on all the messages of the current user
         name: "test",
         channel_type: "chat",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
     const [, messageId_2] = pyEnv["mail.message"].create([
         {
-            author_id: pyEnv.currentPartnerId,
+            author_id: serverState.partnerId,
             body: "<p>Message before last seen</p>",
             model: "discuss.channel",
             res_id: channelId,
         },
         {
-            author_id: pyEnv.currentPartnerId,
+            author_id: serverState.partnerId,
             body: "<p>Last seen by everyone</p>",
             model: "discuss.channel",
             res_id: channelId,
@@ -365,12 +365,12 @@ test("only show messaging seen indicator if authored by me, after last seen by a
         name: "test",
         channel_type: "chat",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
     const messageId = pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "<p>Test</p>",
         res_id: channelId,
         model: "discuss.channel",

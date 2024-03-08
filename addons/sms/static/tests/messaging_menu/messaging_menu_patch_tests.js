@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
@@ -14,7 +14,7 @@ QUnit.test("mark as read", async () => {
     const messageId = pyEnv["mail.message"].create({
         message_type: "sms",
         model: "res.partner",
-        res_id: pyEnv.currentPartnerId,
+        res_id: serverState.partnerId,
         res_model_name: "Partner",
     });
     pyEnv["mail.notification"].create({

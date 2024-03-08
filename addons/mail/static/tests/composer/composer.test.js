@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/composer/composer_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Composer } from "@mail/core/common/composer";
 import { Command } from "@mail/../tests/helpers/command";
@@ -38,17 +38,17 @@ QUnit.module("composer", {
 });
 
 test("composer text input: basic rendering when posting a message", async () => {
-    const pyEnv = await startServer();
+    await startServer();
     await start();
-    await openFormView("res.partner", pyEnv.currentPartnerId);
+    await openFormView("res.partner", serverState.partnerId);
     await click("button", { text: "Send message" });
     await contains("textarea.o-mail-Composer-input[placeholder='Send a message to followers…']");
 });
 
 test("composer text input: basic rendering when logging note", async () => {
-    const pyEnv = await startServer();
+    await startServer();
     await start();
-    await openFormView("res.partner", pyEnv.currentPartnerId);
+    await openFormView("res.partner", serverState.partnerId);
     await click("button", { text: "Log note" });
     await contains("textarea.o-mail-Composer-input[placeholder='Log an internal note…']");
 });
@@ -213,7 +213,7 @@ test("keep emoji picker scroll value independent if two or more different emoji 
     const channelId = pyEnv["discuss.channel"].create({ name: "roblox-jaywalking" });
     await start();
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "This is a message",
         attachment_ids: [],
         message_type: "comment",
@@ -305,7 +305,7 @@ test("add an emoji after a partner mention", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "Mario Party",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
@@ -354,9 +354,9 @@ test("add an emoji after a channel mention", async () => {
 });
 
 test("pending mentions are kept when toggling composer", async () => {
-    const pyEnv = await startServer();
+    await startServer();
     await start();
-    await openFormView("res.partner", pyEnv.currentPartnerId);
+    await openFormView("res.partner", serverState.partnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@");
     await click(".o-mail-Composer-suggestion strong", { text: "Mitchell Admin" });
@@ -377,7 +377,7 @@ test("composer suggestion should match with input selection", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "Mario Party",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
@@ -444,7 +444,7 @@ test("Can handle leave notification from unknown member", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
@@ -463,7 +463,7 @@ test("leave command on chat", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Chuck Norris" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -500,7 +500,7 @@ test("composer text input placeholder should contain correspondent name when thr
     const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -514,7 +514,7 @@ test("quick edit last self-message from UP arrow", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "Test",
         attachment_ids: [],
         message_type: "comment",
@@ -553,7 +553,7 @@ test("Select composer suggestion via Enter does not send the message", async () 
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
@@ -628,13 +628,13 @@ test("composer: add an attachment in reply to message in history", async () => {
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         model: "discuss.channel",
-        history_partner_ids: [pyEnv.currentPartnerId],
+        history_partner_ids: [serverState.partnerId],
         res_id: channelId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
         is_read: true,
     });
     await start();

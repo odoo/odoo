@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/discuss/core/suggestion_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Composer } from "@mail/core/common/composer";
 import { Command } from "@mail/../tests/helpers/command";
@@ -83,7 +83,7 @@ test("Sort partner suggestions by recent chats", async () => {
             name: "General",
             channel_type: "channel",
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ partner_id: partner_1 }),
                 Command.create({ partner_id: partner_2 }),
                 Command.create({ partner_id: partner_3 }),
@@ -93,7 +93,7 @@ test("Sort partner suggestions by recent chats", async () => {
             channel_member_ids: [
                 Command.create({
                     last_interest_dt: "2023-01-01 00:00:00",
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                 }),
                 Command.create({ partner_id: partner_1 }),
             ],
@@ -103,7 +103,7 @@ test("Sort partner suggestions by recent chats", async () => {
             channel_member_ids: [
                 Command.create({
                     last_interest_dt: "2023-01-01 00:00:00",
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                 }),
                 Command.create({ partner_id: partner_2 }),
             ],
@@ -113,7 +113,7 @@ test("Sort partner suggestions by recent chats", async () => {
             channel_member_ids: [
                 Command.create({
                     last_interest_dt: "2023-01-01 00:00:00",
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                 }),
                 Command.create({ partner_id: partner_3 }),
             ],
@@ -142,7 +142,7 @@ test("mention suggestion are shown after deleting a character", async () => {
         name: "General",
         channel_type: "channel",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
@@ -166,7 +166,7 @@ test("command suggestion are shown after deleting a character", async () => {
         name: "General",
         channel_type: "channel",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
@@ -190,7 +190,7 @@ test("mention suggestion displays OdooBot before archived partners", async () =>
         name: "Our channel",
         channel_type: "group",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
             Command.create({ partner_id: pyEnv.odoobotId }),
         ],

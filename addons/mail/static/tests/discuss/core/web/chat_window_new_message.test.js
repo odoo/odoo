@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/discuss/core/web/chat_window_new_message_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import {
     CHAT_WINDOW_END_GAP_WIDTH,
@@ -66,13 +66,13 @@ test('open chat from "new message" chat window should open chat in place of this
         {
             name: "channel-1",
             channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
+                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
             ],
         },
         {
             name: "channel-2",
             channel_member_ids: [
-                Command.create({ fold_state: "closed", partner_id: pyEnv.currentPartnerId }),
+                Command.create({ fold_state: "closed", partner_id: serverState.partnerId }),
             ],
         },
     ]);
@@ -110,7 +110,7 @@ test("new message chat window should close on selecting the user if chat with th
         channel_member_ids: [
             Command.create({
                 fold_state: "open",
-                partner_id: pyEnv.currentPartnerId,
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
@@ -145,7 +145,7 @@ test('open chat from "new message" chat window should unfold existing window', a
         channel_member_ids: [
             Command.create({
                 fold_state: "folded",
-                partner_id: pyEnv.currentPartnerId,
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],

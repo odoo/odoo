@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/chat_window/chat_window_manager_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import {
     CHAT_WINDOW_END_GAP_WIDTH,
@@ -21,17 +21,17 @@ test("chat window does not fetch messages if hidden", async (assert) => {
     const [channeId1, channelId2, channelId3] = pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
+                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
             ],
         },
         {
             channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
+                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
             ],
         },
         {
             channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
+                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
             ],
         },
     ]);
@@ -83,17 +83,17 @@ test("click on hidden chat window should fetch its messages", async (assert) => 
     const [channeId1, channelId2, channelId3] = pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
+                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
             ],
         },
         {
             channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
+                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
             ],
         },
         {
             channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
+                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
             ],
         },
     ]);

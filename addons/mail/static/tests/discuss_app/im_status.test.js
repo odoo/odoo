@@ -2,7 +2,7 @@
 const test = QUnit.test; // QUnit.test()
 
 import { UPDATE_BUS_PRESENCE_DELAY } from "@bus/im_status_service";
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Store } from "@mail/core/common/store_service";
 import { Command } from "@mail/../tests/helpers/command";
@@ -17,7 +17,7 @@ test("initially online", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "online" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -32,7 +32,7 @@ test("initially offline", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "offline" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -47,7 +47,7 @@ test("initially away", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "away" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -62,7 +62,7 @@ test("change icon on change partner im_status", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "online" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -90,7 +90,7 @@ test("show im status in messaging menu preview of chat", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "online" });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",

@@ -3,7 +3,7 @@ const test = QUnit.test; // QUnit.test()
 
 import { rpc } from "@web/core/network/rpc";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
@@ -36,7 +36,7 @@ test("Delete starred message updates counter", async () => {
         body: "Hello World!",
         model: "discuss.channel",
         res_id: channelId,
-        starred_partner_ids: [pyEnv.currentPartnerId],
+        starred_partner_ids: [serverState.partnerId],
     });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
@@ -55,7 +55,7 @@ test("Delete starred message updates counter", async () => {
 test("Thread rename", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
-        create_uid: pyEnv.currentUserId,
+        create_uid: serverState.userId,
         name: "General",
     });
     const tab1 = await start({ asTab: true });
@@ -74,7 +74,7 @@ test("Thread rename", async () => {
 test("Thread description update", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
-        create_uid: pyEnv.currentUserId,
+        create_uid: serverState.userId,
         name: "General",
     });
     const tab1 = await start({ asTab: true });
@@ -110,7 +110,7 @@ test("Channel subscription is renewed when channel is added from invite", async 
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel");
     env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
-        partner_ids: [pyEnv.currentPartnerId],
+        partner_ids: [serverState.partnerId],
     });
     await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
     await assertSteps(["update-channels"]);
@@ -171,15 +171,15 @@ test("Message delete notification", async () => {
     const messageId = pyEnv["mail.message"].create({
         body: "Needaction message",
         model: "discuss.channel",
-        res_id: pyEnv.currentPartnerId,
+        res_id: serverState.partnerId,
         needaction: true,
-        needaction_partner_ids: [pyEnv.currentPartnerId], // not needed, for consistency
+        needaction_partner_ids: [serverState.partnerId], // not needed, for consistency
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_type: "inbox",
         notification_status: "sent",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();

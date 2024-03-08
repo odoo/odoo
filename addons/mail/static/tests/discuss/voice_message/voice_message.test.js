@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/discuss/voice_message/voice_message_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { VoicePlayer } from "@mail/discuss/voice_message/common/voice_player";
 import { VoiceRecorder } from "@mail/discuss/voice_message/common/voice_recorder";
@@ -148,7 +148,7 @@ test("make voice message in chat", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",

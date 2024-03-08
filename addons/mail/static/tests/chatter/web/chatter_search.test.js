@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/chatter/web/chatter_search_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 import { SIZES, patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
 import { triggerHotkey } from "@web/../tests/helpers/utils";
@@ -105,7 +105,7 @@ test("Scrolling bottom in non-aside chatter should load more searched message", 
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     for (let i = 0; i < 60; i++) {
         pyEnv["mail.message"].create({
-            author_id: pyEnv.currentPartnerId,
+            author_id: serverState.partnerId,
             body: "This is a message",
             attachment_ids: [],
             message_type: "comment",

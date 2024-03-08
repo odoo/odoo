@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { getOrigin } from "@web/core/utils/urls";
 import { assertSteps, click, contains, step } from "@web/../tests/utils";
@@ -21,7 +21,7 @@ QUnit.module("Views", {}, function () {
     QUnit.module("ExpenseLineWidget");
 
     const OpenPreparedView = async (size, sheet) => {
-        const pyEnv = await startServer();
+        await startServer();
         const views = {
             "hr.expense.sheet,false,form": `<form>
                     <sheet name="Expenses">
@@ -61,7 +61,7 @@ QUnit.module("Views", {}, function () {
                 init_messaging: {},
                 failures: true,
                 systray_get_activities: true,
-                context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+                context: { lang: "en", tz: "taht", uid: serverState.userId },
             })}`,
         ]);
         await openFormView("hr.expense.sheet", sheet);
@@ -99,7 +99,7 @@ QUnit.module("Views", {}, function () {
                 method: "get_views",
                 args: [],
                 kwargs: {
-                    context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+                    context: { lang: "en", tz: "taht", uid: serverState.userId },
                     views: [
                         [false, "form"],
                         [false, "search"],
@@ -115,7 +115,7 @@ QUnit.module("Views", {}, function () {
                     context: {
                         lang: "en",
                         tz: "taht",
-                        uid: pyEnv.currentUserId,
+                        uid: serverState.userId,
                         bin_size: true,
                     },
                     specification: {
