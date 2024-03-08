@@ -890,11 +890,14 @@ class SaleOrder(models.Model):
 
         self.with_context(context)._action_confirm()
 
-        if self[:1].create_uid.has_group('sale.group_auto_done_setting'):
-            # Public user can confirm SO, so we check the group on any record creator.
-            self.action_done()
+        self.filtered(lambda so: so._should_be_locked()).action_done()
 
         return True
+
+    def _should_be_locked(self):
+        self.ensure_one()
+        # Public user can confirm SO, so we check the group on any record creator.
+        return self.create_uid.has_group('sale.group_auto_done_setting')
 
     def _get_forbidden_state_confirm(self):
         return {'done', 'cancel'}
