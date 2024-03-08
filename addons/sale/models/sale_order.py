@@ -924,11 +924,15 @@ class SaleOrder(models.Model):
         context.pop('default_name', None)
 
         self.with_context(context)._action_confirm()
-        if self[:1].create_uid.has_group('sale.group_auto_done_setting'):
-            # Public user can confirm SO, so we check the group on any record creator.
-            self.action_lock()
+
+        self.filtered(lambda so: so._should_be_locked()).action_lock()
 
         return True
+
+    def _should_be_locked(self):
+        self.ensure_one()
+        # Public user can confirm SO, so we check the group on any record creator.
+        return self.create_uid.has_group('sale.group_auto_done_setting')
 
     def _can_be_confirmed(self):
         self.ensure_one()
