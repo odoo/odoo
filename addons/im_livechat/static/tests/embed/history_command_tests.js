@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
@@ -6,7 +8,7 @@ import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("Livechat history command");
 
-QUnit.test("Handle livechat history command", async (assert) => {
+test("Handle livechat history command", async (assert) => {
     const pyEnv = await startServer();
     await loadDefaultConfig();
     const env = await start({

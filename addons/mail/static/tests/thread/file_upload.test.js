@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/thread/file_upload_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -8,7 +9,7 @@ import { click, contains, createFile, inputFiles } from "@web/../tests/utils";
 
 QUnit.module("file upload");
 
-QUnit.test("no conflicts between file uploads", async () => {
+test("no conflicts between file uploads", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const channelId = pyEnv["discuss.channel"].create({});
@@ -42,7 +43,7 @@ QUnit.test("no conflicts between file uploads", async () => {
     await contains(".o-mail-ChatWindow .o-mail-AttachmentCard");
 });
 
-QUnit.test("Attachment shows spinner during upload", async () => {
+test("Attachment shows spinner during upload", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "channel_1" });
     await start({

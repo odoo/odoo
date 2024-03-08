@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/core/crosstab_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -9,7 +10,7 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("crosstab");
 
-QUnit.test("Add member to channel", async () => {
+test("Add member to channel", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const userId = pyEnv["res.users"].create({ name: "Harry" });
@@ -26,7 +27,7 @@ QUnit.test("Add member to channel", async () => {
     await contains(".o-discuss-ChannelMember", { text: "Harry" });
 });
 
-QUnit.test("Remove member from channel", async () => {
+test("Remove member from channel", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Harry" });
     const partnerId = pyEnv["res.partner"].create({

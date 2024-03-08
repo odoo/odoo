@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/core/open_chat_test default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -9,7 +10,7 @@ import { contains } from "@web/../tests/utils";
 
 QUnit.module("Open Chat test", {});
 
-QUnit.test("openChat: display notification for partner without user", async () => {
+test("openChat: display notification for partner without user", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { env } = await start();
@@ -19,7 +20,7 @@ QUnit.test("openChat: display notification for partner without user", async () =
     });
 });
 
-QUnit.test("openChat: display notification for wrong user", async () => {
+test("openChat: display notification for wrong user", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].create({});
     const { env } = await start();
@@ -30,7 +31,7 @@ QUnit.test("openChat: display notification for wrong user", async () => {
     });
 });
 
-QUnit.test("openChat: open new chat for user", async () => {
+test("openChat: open new chat for user", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -41,7 +42,7 @@ QUnit.test("openChat: open new chat for user", async () => {
     await contains(".o-mail-ChatWindow");
 });
 
-QUnit.test("openChat: open existing chat for user [REQUIRE FOCUS]", async () => {
+test("openChat: open existing chat for user [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["res.users"].create({ partner_id: partnerId });

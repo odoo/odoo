@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/core/suggestion_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -20,7 +21,7 @@ QUnit.module("suggestion", {
     },
 });
 
-QUnit.test('display command suggestions on typing "/"', async () => {
+test('display command suggestions on typing "/"', async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
@@ -34,7 +35,7 @@ QUnit.test('display command suggestions on typing "/"', async () => {
     await contains(".o-mail-Composer-suggestionList .o-open");
 });
 
-QUnit.test("use a command for a specific channel type", async () => {
+test("use a command for a specific channel type", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     await start();
@@ -47,7 +48,7 @@ QUnit.test("use a command for a specific channel type", async () => {
     await contains(".o-mail-Composer-input", { value: "/who " });
 });
 
-QUnit.test("command suggestion should only open if command is the first character", async () => {
+test("command suggestion should only open if command is the first character", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
@@ -65,7 +66,7 @@ QUnit.test("command suggestion should only open if command is the first characte
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
 });
 
-QUnit.test("Sort partner suggestions by recent chats", async () => {
+test("Sort partner suggestions by recent chats", async () => {
     const pyEnv = await startServer();
     const [partner_1, partner_2, partner_3] = pyEnv["res.partner"].create([
         { name: "User 1" },
@@ -134,7 +135,7 @@ QUnit.test("Sort partner suggestions by recent chats", async () => {
     await contains(":nth-child(3 of .o-mail-Composer-suggestion) strong", { text: "User 1" });
 });
 
-QUnit.test("mention suggestion are shown after deleting a character", async () => {
+test("mention suggestion are shown after deleting a character", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -158,7 +159,7 @@ QUnit.test("mention suggestion are shown after deleting a character", async () =
     await contains(".o-mail-Composer-suggestion strong", { text: "John Doe" });
 });
 
-QUnit.test("command suggestion are shown after deleting a character", async () => {
+test("command suggestion are shown after deleting a character", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -182,7 +183,7 @@ QUnit.test("command suggestion are shown after deleting a character", async () =
     await contains(".o-mail-Composer-suggestion strong", { text: "help" });
 });
 
-QUnit.test("mention suggestion displays OdooBot before archived partners", async () => {
+test("mention suggestion displays OdooBot before archived partners", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jane", active: false });
     const channelId = pyEnv["discuss.channel"].create({

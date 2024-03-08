@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss_app/im_status_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { UPDATE_BUS_PRESENCE_DELAY } from "@bus/im_status_service";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
@@ -11,7 +12,7 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("im status");
 
-QUnit.test("initially online", async () => {
+test("initially online", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "online" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -26,7 +27,7 @@ QUnit.test("initially online", async () => {
     await contains(".o-mail-ImStatus i[title='Online']");
 });
 
-QUnit.test("initially offline", async () => {
+test("initially offline", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "offline" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -41,7 +42,7 @@ QUnit.test("initially offline", async () => {
     await contains(".o-mail-ImStatus i[title='Offline']");
 });
 
-QUnit.test("initially away", async () => {
+test("initially away", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "away" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -56,7 +57,7 @@ QUnit.test("initially away", async () => {
     await contains(".o-mail-ImStatus i[title='Idle']");
 });
 
-QUnit.test("change icon on change partner im_status", async () => {
+test("change icon on change partner im_status", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "online" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -84,7 +85,7 @@ QUnit.test("change icon on change partner im_status", async () => {
     await contains(".o-mail-ImStatus i[title='Online']");
 });
 
-QUnit.test("show im status in messaging menu preview of chat", async () => {
+test("show im status in messaging menu preview of chat", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "online" });
     pyEnv["discuss.channel"].create({

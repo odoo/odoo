@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { RATING } from "@im_livechat/embed/common/livechat_service";
@@ -8,7 +10,7 @@ import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("feedback panel");
 
-QUnit.test("Do not ask feedback if empty", async () => {
+test("Do not ask feedback if empty", async () => {
     await startServer();
     await loadDefaultConfig();
     start();
@@ -18,7 +20,7 @@ QUnit.test("Do not ask feedback if empty", async () => {
     await contains(".o-livechat-LivechatButton", { count: 0 });
 });
 
-QUnit.test("Close without feedback", async (assert) => {
+test("Close without feedback", async (assert) => {
     await startServer();
     await loadDefaultConfig();
     start({
@@ -42,7 +44,7 @@ QUnit.test("Close without feedback", async (assert) => {
     assert.verifySteps(["/im_livechat/visitor_leave_session"]);
 });
 
-QUnit.test("Feedback with rating and comment", async (assert) => {
+test("Feedback with rating and comment", async (assert) => {
     await startServer();
     await loadDefaultConfig();
     start({
@@ -71,7 +73,7 @@ QUnit.test("Feedback with rating and comment", async (assert) => {
     assert.verifySteps(["/im_livechat/feedback"]);
 });
 
-QUnit.test("Closing folded chat window should open it with feedback", async () => {
+test("Closing folded chat window should open it with feedback", async () => {
     await startServer();
     await loadDefaultConfig();
     await start();

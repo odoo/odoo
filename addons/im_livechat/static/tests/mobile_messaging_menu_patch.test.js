@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
@@ -11,14 +13,14 @@ QUnit.module("mobile messaging menu (patch)", {
     },
 });
 
-QUnit.test("Livechat button is not present when there is no livechat thread", async () => {
+test("Livechat button is not present when there is no livechat thread", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu");
     await contains(".o-mail-MessagingMenu-navbar span", { count: 0, text: "Livechat" });
 });
 
-QUnit.test("Livechat button is present when there is at least one livechat thread", async () => {
+test("Livechat button is present when there is at least one livechat thread", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",

@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/call/call_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -12,7 +13,7 @@ import { assertSteps, click, contains, step, triggerEvents } from "@web/../tests
 
 QUnit.module("call");
 
-QUnit.test("basic rendering", async () => {
+test("basic rendering", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
@@ -37,7 +38,7 @@ QUnit.test("basic rendering", async () => {
     await contains("[title='Enter Full Screen']");
 });
 
-QUnit.test("no call with odoobot", async () => {
+test("no call with odoobot", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
@@ -52,7 +53,7 @@ QUnit.test("no call with odoobot", async () => {
     await contains("[title='Start a Call']", { count: 0 });
 });
 
-QUnit.test("should not display call UI when no more members (self disconnect)", async () => {
+test("should not display call UI when no more members (self disconnect)", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -64,7 +65,7 @@ QUnit.test("should not display call UI when no more members (self disconnect)", 
     await contains(".o-discuss-Call", { count: 0 });
 });
 
-QUnit.test("show call UI in chat window when in call", async () => {
+test("show call UI in chat window when in call", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
@@ -78,7 +79,7 @@ QUnit.test("show call UI in chat window when in call", async () => {
     await contains(".o-mail-ChatWindow-command[title='Start a Call']", { count: 0 });
 });
 
-QUnit.test("should disconnect when closing page while in call", async () => {
+test("should disconnect when closing page while in call", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -104,7 +105,7 @@ QUnit.test("should disconnect when closing page while in call", async () => {
     await assertSteps([`sendBeacon_leave_call:${channelId}`]);
 });
 
-QUnit.test("should display invitations", async () => {
+test("should display invitations", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({ name: "InvitationSender" });
@@ -175,7 +176,7 @@ QUnit.test("should display invitations", async () => {
     await assertSteps(["stop - incoming-call"]);
 });
 
-QUnit.test("can share screen", async () => {
+test("can share screen", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
@@ -193,7 +194,7 @@ QUnit.test("can share screen", async () => {
     await contains("video", { count: 0 });
 });
 
-QUnit.test("can share user camera", async () => {
+test("can share user camera", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
@@ -208,7 +209,7 @@ QUnit.test("can share user camera", async () => {
     await contains("video", { count: 0 });
 });
 
-QUnit.test("Create a direct message channel when clicking on start a meeting", async () => {
+test("Create a direct message channel when clicking on start a meeting", async () => {
     mockGetMedia();
     await start();
     await openDiscuss();
@@ -218,7 +219,7 @@ QUnit.test("Create a direct message channel when clicking on start a meeting", a
     await contains(".o-discuss-ChannelInvitation");
 });
 
-QUnit.test("Can share user camera and screen together", async () => {
+test("Can share user camera and screen together", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
@@ -233,7 +234,7 @@ QUnit.test("Can share user camera and screen together", async () => {
     await contains("video", { count: 2 });
 });
 
-QUnit.test("Click on inset card should replace the inset and active stream together", async () => {
+test("Click on inset card should replace the inset and active stream together", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
@@ -251,7 +252,7 @@ QUnit.test("Click on inset card should replace the inset and active stream toget
     await contains("video[type='camera']:not(.o-inset)");
 });
 
-QUnit.test("join/leave sounds are only played on main tab", async () => {
+test("join/leave sounds are only played on main tab", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -279,7 +280,7 @@ QUnit.test("join/leave sounds are only played on main tab", async () => {
     await assertSteps(["tab1 - play - channel-leave"]);
 });
 
-QUnit.test("'Start a meeting' in mobile", async () => {
+test("'Start a meeting' in mobile", async () => {
     mockGetMedia();
     patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();

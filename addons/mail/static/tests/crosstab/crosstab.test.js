@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/crosstab/crosstab_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -11,7 +12,7 @@ import { assertSteps, click, contains, insertText, step } from "@web/../tests/ut
 
 QUnit.module("crosstab");
 
-QUnit.test("Messages are received cross-tab", async () => {
+test("Messages are received cross-tab", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
@@ -26,7 +27,7 @@ QUnit.test("Messages are received cross-tab", async () => {
     await contains(".o-mail-Message-content", { target: tab2.target, text: "Hello World!" });
 });
 
-QUnit.test("Delete starred message updates counter", async () => {
+test("Delete starred message updates counter", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
@@ -51,7 +52,7 @@ QUnit.test("Delete starred message updates counter", async () => {
     await contains("button", { count: 0, target: tab2.target, text: "Starred1" });
 });
 
-QUnit.test("Thread rename", async () => {
+test("Thread rename", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         create_uid: pyEnv.currentUserId,
@@ -70,7 +71,7 @@ QUnit.test("Thread rename", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { target: tab2.target, text: "Sales" });
 });
 
-QUnit.test("Thread description update", async () => {
+test("Thread description update", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         create_uid: pyEnv.currentUserId,
@@ -90,7 +91,7 @@ QUnit.test("Thread description update", async () => {
     });
 });
 
-QUnit.test("Channel subscription is renewed when channel is added from invite", async () => {
+test("Channel subscription is renewed when channel is added from invite", async () => {
     const pyEnv = await startServer();
     const [, channelId] = pyEnv["discuss.channel"].create([
         { name: "R&D" },
@@ -115,7 +116,7 @@ QUnit.test("Channel subscription is renewed when channel is added from invite", 
     await assertSteps(["update-channels"]);
 });
 
-QUnit.test("Adding attachments", async () => {
+test("Adding attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "Hogwarts Legacy" });
     const messageId = pyEnv["mail.message"].create({
@@ -140,7 +141,7 @@ QUnit.test("Adding attachments", async () => {
     await contains(".o-mail-AttachmentCard", { target: tab2.target, text: "test.txt" });
 });
 
-QUnit.test("Remove attachment from message", async () => {
+test("Remove attachment from message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const attachmentId = pyEnv["ir.attachment"].create({
@@ -165,7 +166,7 @@ QUnit.test("Remove attachment from message", async () => {
     await contains(".o-mail-AttachmentCard", { count: 0, target: tab1.target, text: "test.txt" });
 });
 
-QUnit.test("Message delete notification", async () => {
+test("Message delete notification", async () => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create({
         body: "Needaction message",

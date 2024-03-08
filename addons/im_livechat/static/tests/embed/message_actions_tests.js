@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
@@ -7,7 +9,7 @@ import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("message actions");
 
-QUnit.test("Only two quick actions are shown", async () => {
+test("Only two quick actions are shown", async () => {
     // This is desired because 2 actions share a same icon
     // "Add a reaction" and "View reactions".
     await startServer();

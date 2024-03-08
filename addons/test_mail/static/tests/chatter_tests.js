@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { openFormView, start } from "@mail/../tests/helpers/test_utils";
@@ -6,7 +8,7 @@ import { contains } from "@web/../tests/utils";
 
 QUnit.module("chatter");
 
-QUnit.test("Send message button activation (access rights dependent)", async function (assert) {
+test("Send message button activation (access rights dependent)", async function (assert) {
     const pyEnv = await startServer();
     const view = `
         <form string="Simple">
@@ -93,7 +95,7 @@ QUnit.test("Send message button activation (access rights dependent)", async fun
     await assertSendButton(true, "Draft record", "mail.test.multi.company.read");
 });
 
-QUnit.test("basic chatter rendering with a model without activities", async () => {
+test("basic chatter rendering with a model without activities", async () => {
     const pyEnv = await startServer();
     const recordId = pyEnv["mail.test.simple"].create({ name: "new record" });
     const views = {

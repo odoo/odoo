@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/emoji/emoji_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -10,7 +11,7 @@ import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("emoji");
 
-QUnit.test("search emoji from keywords", async () => {
+test("search emoji from keywords", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
@@ -20,7 +21,7 @@ QUnit.test("search emoji from keywords", async () => {
     await contains(".o-Emoji", { text: "🌮" });
 });
 
-QUnit.test("search emoji from keywords should be case insensitive", async () => {
+test("search emoji from keywords should be case insensitive", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
@@ -30,7 +31,7 @@ QUnit.test("search emoji from keywords should be case insensitive", async () => 
     await contains(".o-Emoji", { text: "🆗" }); // all search terms are uppercase OK
 });
 
-QUnit.test("search emoji from keywords with special regex character", async () => {
+test("search emoji from keywords with special regex character", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
@@ -40,7 +41,7 @@ QUnit.test("search emoji from keywords with special regex character", async () =
     await contains(".o-Emoji", { text: "🆎" });
 });
 
-QUnit.test("updating search emoji should scroll top", async (assert) => {
+test("updating search emoji should scroll top", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
@@ -52,7 +53,7 @@ QUnit.test("updating search emoji should scroll top", async (assert) => {
     await contains(".o-EmojiPicker-content", { scroll: 0 });
 });
 
-QUnit.test("Press Escape in emoji picker closes the emoji picker", async () => {
+test("Press Escape in emoji picker closes the emoji picker", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
@@ -62,7 +63,7 @@ QUnit.test("Press Escape in emoji picker closes the emoji picker", async () => {
     await contains(".o-EmojiPicker", { count: 0 });
 });
 
-QUnit.test("Basic keyboard navigation", async () => {
+test("Basic keyboard navigation", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
@@ -85,7 +86,7 @@ QUnit.test("Basic keyboard navigation", async () => {
     await contains(".o-mail-Composer-input", { value: codepoints });
 });
 
-QUnit.test("recent category (basic)", async () => {
+test("recent category (basic)", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
@@ -102,7 +103,7 @@ QUnit.test("recent category (basic)", async () => {
     });
 });
 
-QUnit.test("emoji usage amount orders frequent emojis", async () => {
+test("emoji usage amount orders frequent emojis", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
@@ -128,7 +129,7 @@ QUnit.test("emoji usage amount orders frequent emojis", async () => {
     });
 });
 
-QUnit.test("first category should be highlighted by default", async () => {
+test("first category should be highlighted by default", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
@@ -137,17 +138,14 @@ QUnit.test("first category should be highlighted by default", async () => {
     await contains(".o-EmojiPicker-navbar :nth-child(1 of .o-Emoji).o-active");
 });
 
-QUnit.test(
-    "selecting an emoji while holding down the Shift key prevents the emoji picker from closing",
-    async () => {
-        const pyEnv = await startServer();
-        const channelId = pyEnv["discuss.channel"].create({ name: "" });
-        await start();
-        await openDiscuss(channelId);
-        await click("button[aria-label='Emojis']");
-        await click(".o-EmojiPicker-content .o-Emoji", { shiftKey: true, text: "👺" });
-        await contains(".o-EmojiPicker-navbar [title='Frequently used']");
-        await contains(".o-EmojiPicker");
-        await contains(".o-mail-Composer-input", { value: "👺" });
-    }
-);
+test("selecting an emoji while holding down the Shift key prevents the emoji picker from closing", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[aria-label='Emojis']");
+    await click(".o-EmojiPicker-content .o-Emoji", { shiftKey: true, text: "👺" });
+    await contains(".o-EmojiPicker-navbar [title='Frequently used']");
+    await contains(".o-EmojiPicker");
+    await contains(".o-mail-Composer-input", { value: "👺" });
+});

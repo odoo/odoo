@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/core/attachment_panel_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -8,7 +9,7 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("attachment panel");
 
-QUnit.test("Empty attachment panel", async () => {
+test("Empty attachment panel", async () => {
     const pyEnv = await startServer();
     const channelId = await pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -19,7 +20,7 @@ QUnit.test("Empty attachment panel", async () => {
     });
 });
 
-QUnit.test("Attachment panel sort by date", async () => {
+test("Attachment panel sort by date", async () => {
     const pyEnv = await startServer();
     const channelId = await pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["ir.attachment"].create([
@@ -50,7 +51,7 @@ QUnit.test("Attachment panel sort by date", async () => {
     });
 });
 
-QUnit.test("Can toggle allow public upload", async () => {
+test("Can toggle allow public upload", async () => {
     const pyEnv = await startServer();
     const channelId = await pyEnv["discuss.channel"].create({ name: "General" });
     const tab1 = await start({ asTab: true });

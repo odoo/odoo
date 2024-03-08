@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { insertText, contains, focus } from "@web/../tests/utils";
 
@@ -8,7 +10,7 @@ import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("go to oldest unread livechat");
 
-QUnit.test("tab on discuss composer goes to oldest unread livechat", async () => {
+test("tab on discuss composer goes to oldest unread livechat", async () => {
     const pyEnv = await startServer();
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
@@ -83,7 +85,7 @@ QUnit.test("tab on discuss composer goes to oldest unread livechat", async () =>
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 12" });
 });
 
-QUnit.test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async () => {
+test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
@@ -129,7 +131,7 @@ QUnit.test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async (
     });
 });
 
-QUnit.test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async () => {
+test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
@@ -182,7 +184,7 @@ QUnit.test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async (
     });
 });
 
-QUnit.test("tab on composer doesn't switch thread if user is typing", async () => {
+test("tab on composer doesn't switch thread if user is typing", async () => {
     const pyEnv = await startServer();
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
@@ -220,7 +222,7 @@ QUnit.test("tab on composer doesn't switch thread if user is typing", async () =
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 11" });
 });
 
-QUnit.test("tab on composer doesn't switch thread if no unread thread", async () => {
+test("tab on composer doesn't switch thread if no unread thread", async () => {
     const pyEnv = await startServer();
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });

@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/core/web/command_palette_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -23,7 +24,7 @@ QUnit.module("command palette", {
     },
 });
 
-QUnit.test("open the chatWindow of a user from the command palette", async () => {
+test("open the chatWindow of a user from the command palette", async () => {
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
@@ -32,7 +33,7 @@ QUnit.test("open the chatWindow of a user from the command palette", async () =>
     await contains(".o-mail-ChatWindow", { text: "OdooBot" });
 });
 
-QUnit.test("open the chatWindow of a channel from the command palette", async () => {
+test("open the chatWindow of a channel from the command palette", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         name: "general",
@@ -62,7 +63,7 @@ QUnit.test("open the chatWindow of a channel from the command palette", async ()
     await contains(".o-mail-ChatWindow", { text: "project" });
 });
 
-QUnit.test("Channel mentions in the command palette of Discuss app with @", async () => {
+test("Channel mentions in the command palette of Discuss app with @", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -103,7 +104,7 @@ QUnit.test("Channel mentions in the command palette of Discuss app with @", asyn
     await contains(".o-mail-ChatWindow", { text: "Mitchell Admin and Mario" });
 });
 
-QUnit.test("Max 3 most recent channels in command palette of Discuss app with #", async () => {
+test("Max 3 most recent channels in command palette of Discuss app with #", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "channel_1" });
     pyEnv["discuss.channel"].create({ name: "channel_2" });

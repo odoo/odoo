@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/call/ptt_ad_banner_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { mockGetMedia, openDiscuss, start } from "@mail/../tests/helpers/test_utils";
@@ -8,7 +9,7 @@ import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("ptt ad banner");
 
-QUnit.test("display banner when ptt extension is not enabled", async () => {
+test("display banner when ptt extension is not enabled", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
