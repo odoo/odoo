@@ -209,13 +209,13 @@ test("Computed fields: lazy (default) vs. eager", async (assert) => {
         }
         typeLazy = Record.attr("", {
             compute() {
-                assert.step("LAZY");
+                step("LAZY");
                 return this.computeType();
             },
         });
         typeEager = Record.attr("", {
             compute() {
-                assert.step("EAGER");
+                step("EAGER");
                 return this.computeType();
             },
             eager: true,
@@ -229,24 +229,24 @@ test("Computed fields: lazy (default) vs. eager", async (assert) => {
     const store = await start();
     const thread = store.Thread.insert("General");
     const members = thread.members;
-    assert.verifySteps(["EAGER"]);
+    await assertSteps(["EAGER"]);
     assert.strictEqual(thread.typeEager, "empty chat");
-    assert.verifySteps([]);
+    await assertSteps([]);
     assert.strictEqual(thread.typeLazy, "empty chat");
-    assert.verifySteps(["LAZY"]);
+    await assertSteps(["LAZY"]);
     members.add("John");
-    assert.verifySteps(["EAGER"]);
+    await assertSteps(["EAGER"]);
     assert.strictEqual(thread.typeEager, "self-chat");
-    assert.verifySteps([]);
+    await assertSteps([]);
     members.add("Antony");
-    assert.verifySteps(["EAGER"]);
+    await assertSteps(["EAGER"]);
     assert.strictEqual(thread.typeEager, "dm chat");
-    assert.verifySteps([]);
+    await assertSteps([]);
     members.add("Demo");
-    assert.verifySteps(["EAGER"]);
+    await assertSteps(["EAGER"]);
     assert.strictEqual(thread.typeEager, "group chat");
     assert.strictEqual(thread.typeLazy, "group chat");
-    assert.verifySteps(["LAZY"]);
+    await assertSteps(["LAZY"]);
 });
 
 test("Trusted insert on html field with { html: true }", async (assert) => {
@@ -307,14 +307,14 @@ test("Unshift preserves order", async (assert) => {
     );
 });
 
-test("onAdd hook should see fully inserted data", async (assert) => {
+test("onAdd hook should see fully inserted data", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
         members = Record.many("Member", {
             inverse: "thread",
             onAdd: (member) =>
-                assert.step(`Thread.onAdd::${member.name}.${member.type}.${member.isAdmin}`),
+                step(`Thread.onAdd::${member.name}.${member.type}.${member.isAdmin}`),
         });
     }).register();
     (class Member extends Record {
@@ -331,7 +331,7 @@ test("onAdd hook should see fully inserted data", async (assert) => {
     const store = await start();
     const thread = store.Thread.insert("General");
     thread.members.add({ name: "John", type: "admin" });
-    assert.verifySteps(["Thread.onAdd::John.admin.true"]);
+    await assertSteps(["Thread.onAdd::John.admin.true"]);
 });
 
 test("Can insert with relation as id, using relation as data object", async (assert) => {
@@ -356,7 +356,7 @@ test("Can insert with relation as id, using relation as data object", async (ass
     assert.notOk(store.User.get("Paul").settings.pushNotif);
 });
 
-test("Set on attr should invoke onChange", async (assert) => {
+test("Set on attr should invoke onChange", async () => {
     (class Message extends Record {
         static id = "id";
         id;
@@ -364,11 +364,11 @@ test("Set on attr should invoke onChange", async (assert) => {
     }).register();
     const store = await start();
     const message = store.Message.insert(1);
-    Record.onChange(message, "body", () => assert.step("BODY_CHANGED"));
-    assert.verifySteps([]);
+    Record.onChange(message, "body", () => step("BODY_CHANGED"));
+    await assertSteps([]);
     message.update({ body: "test1" });
     message.body = "test2";
-    assert.verifySteps(["BODY_CHANGED", "BODY_CHANGED"]);
+    await assertSteps(["BODY_CHANGED", "BODY_CHANGED"]);
 });
 
 test("record list sort should be manually observable", async (assert) => {
@@ -393,28 +393,28 @@ test("record list sort should be manually observable", async (assert) => {
     function sortMessages() {
         // minimal access through observed variables to reduce unexpected observing
         observedMessages.sort((m1, m2) => (m1.body < m2.body ? -1 : 1));
-        assert.step(`sortMessages`);
+        step(`sortMessages`);
     }
     const observedMessages = reactive(thread.messages, sortMessages);
     assert.equal(`${thread.messages.map((m) => m.id)}`, "1,2");
     sortMessages();
     assert.equal(`${thread.messages.map((m) => m.id)}`, "1,2");
-    assert.verifySteps(["sortMessages"]);
+    await assertSteps(["sortMessages"]);
     messages[0].body = "c";
     assert.equal(`${thread.messages.map((m) => m.id)}`, "2,1");
-    assert.verifySteps(["sortMessages", "sortMessages"]);
+    await assertSteps(["sortMessages", "sortMessages"]);
     messages[0].body = "d";
     assert.equal(`${thread.messages.map((m) => m.id)}`, "2,1");
-    assert.verifySteps(["sortMessages"]);
+    await assertSteps(["sortMessages"]);
     messages[0].author = "Jane";
     assert.equal(`${thread.messages.map((m) => m.id)}`, "2,1");
-    assert.verifySteps([]);
+    await assertSteps([]);
     store.Message.insert({ id: 3, body: "c", thread });
     assert.equal(`${thread.messages.map((m) => m.id)}`, "2,3,1");
-    assert.verifySteps(["sortMessages", "sortMessages"]);
+    await assertSteps(["sortMessages", "sortMessages"]);
     messages[0].delete();
     assert.equal(`${thread.messages.map((m) => m.id)}`, "2,3");
-    assert.verifySteps(["sortMessages"]);
+    await assertSteps(["sortMessages"]);
 });
 
 test("relation field sort should be automatically observed", async (assert) => {
@@ -492,7 +492,7 @@ test("lazy compute should re-compute while they are observed", async (assert) =>
         count = 0;
         multiplicity = Record.attr(undefined, {
             compute() {
-                assert.step("computing");
+                step("computing");
                 if (this.count > 3) {
                     return "many";
                 }
@@ -505,39 +505,39 @@ test("lazy compute should re-compute while they are observed", async (assert) =>
     let observe = true;
     function render() {
         if (observe) {
-            assert.step(`render ${reactiveChannel.multiplicity}`);
+            step(`render ${reactiveChannel.multiplicity}`);
         }
     }
     const reactiveChannel = reactive(channel, render);
     render();
-    assert.verifySteps(
+    await assertSteps(
         ["computing", "render few", "render few"],
         "initial call, render with new value"
     );
     channel.count = 2;
-    assert.verifySteps(["computing"], "changing value to 2 is observed");
+    await assertSteps(["computing"], "changing value to 2 is observed");
     channel.count = 5;
-    assert.verifySteps(["computing", "render many"], "changing value to 5 is observed");
+    await assertSteps(["computing", "render many"], "changing value to 5 is observed");
     observe = false;
     channel.count = 6;
-    assert.verifySteps(["computing"], "changing value to 6, still observed until it changes");
+    await assertSteps(["computing"], "changing value to 6, still observed until it changes");
     channel.count = 7;
-    assert.verifySteps(["computing"], "changing value to 7, still observed until it changes");
+    await assertSteps(["computing"], "changing value to 7, still observed until it changes");
     channel.count = 1;
-    assert.verifySteps(["computing"], "changing value to 1, observed one last time");
+    await assertSteps(["computing"], "changing value to 1, observed one last time");
     channel.count = 0;
-    assert.verifySteps([], "changing value to 0, no longer observed");
+    await assertSteps([], "changing value to 0, no longer observed");
     channel.count = 7;
-    assert.verifySteps([], "changing value to 7, no longer observed");
+    await assertSteps([], "changing value to 7, no longer observed");
     channel.count = 1;
-    assert.verifySteps([], "changing value to 1, no longer observed");
+    await assertSteps([], "changing value to 1, no longer observed");
     assert.strictEqual(channel.multiplicity, "few");
-    assert.verifySteps(["computing"]);
+    await assertSteps(["computing"]);
     observe = true;
     render();
-    assert.verifySteps(["render few"]);
+    await assertSteps(["render few"]);
     channel.count = 7;
-    assert.verifySteps(["computing", "render many"]);
+    await assertSteps(["computing", "render many"]);
 });
 
 test("lazy sort should re-sort while they are observed", async (assert) => {
@@ -560,21 +560,21 @@ test("lazy sort should re-sort while they are observed", async (assert) => {
     let observe = true;
     function render() {
         if (observe) {
-            assert.step(`render ${reactiveChannel.messages.map((m) => m.id)}`);
+            step(`render ${reactiveChannel.messages.map((m) => m.id)}`);
         }
     }
     const reactiveChannel = reactive(thread, render);
     render();
     const message = thread.messages[0];
-    assert.verifySteps(["render 1,2"]);
+    await assertSteps(["render 1,2"]);
     message.sequence = 3;
-    assert.verifySteps(["render 2,1"]);
+    await assertSteps(["render 2,1"]);
     message.sequence = 4;
-    assert.verifySteps([]);
+    await assertSteps([]);
     message.sequence = 5;
-    assert.verifySteps([]);
+    await assertSteps([]);
     message.sequence = 1;
-    assert.verifySteps(["render 1,2"]);
+    await assertSteps(["render 1,2"]);
     observe = false;
     message.sequence = 10;
     assert.equal(
@@ -584,7 +584,7 @@ test("lazy sort should re-sort while they are observed", async (assert) => {
         "2,1",
         "observed one last time when it changes"
     );
-    assert.verifySteps([]);
+    await assertSteps([]);
     message.sequence = 1;
     assert.equal(
         `${toRaw(thread)
@@ -596,26 +596,26 @@ test("lazy sort should re-sort while they are observed", async (assert) => {
     assert.equal(`${thread.messages.map((m) => m.id)}`, "1,2");
     observe = true;
     render();
-    assert.verifySteps(["render 1,2"]);
+    await assertSteps(["render 1,2"]);
     message.sequence = 10;
-    assert.verifySteps(["render 2,1"]);
+    await assertSteps(["render 2,1"]);
 });
 
-test("store updates can be observed", async (assert) => {
+test("store updates can be observed", async () => {
     const store = await start();
     function onUpdate() {
-        assert.step(`abc:${reactiveStore.abc}`);
+        step(`abc:${reactiveStore.abc}`);
     }
     const rawStore = toRaw(store)._raw;
     const reactiveStore = reactive(store, onUpdate);
     onUpdate();
-    assert.verifySteps(["abc:undefined"]);
+    await assertSteps(["abc:undefined"]);
     store.abc = 1;
-    assert.verifySteps(["abc:1"], "observable from makeStore");
+    await assertSteps(["abc:1"], "observable from makeStore");
     rawStore._store.abc = 2;
-    assert.verifySteps(["abc:2"], "observable from record._store");
+    await assertSteps(["abc:2"], "observable from record._store");
     rawStore.Model.store.abc = 3;
-    assert.verifySteps(["abc:3"], "observable from Model.store");
+    await assertSteps(["abc:3"], "observable from Model.store");
 });
 
 test("onAdd/onDelete hooks on one without inverse", async () => {

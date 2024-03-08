@@ -8,6 +8,7 @@ import {
     nextTick,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
+import { assertSteps, step } from "@web/../tests/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { dom } from "@web/../tests/legacy_tests/helpers/test_utils";
 
@@ -80,7 +81,7 @@ test("Test that onchange_on_keydown option triggers the onchange properly", asyn
     await nextTick();
 });
 
-test("Editing a text field with the onchange_on_keydown option disappearing shouldn't trigger a crash", async function (assert) {
+test("Editing a text field with the onchange_on_keydown option disappearing shouldn't trigger a crash", async function () {
     const { execRegisteredTimeouts } = mockTimeout();
     await makeView({
         type: "form",
@@ -94,7 +95,7 @@ test("Editing a text field with the onchange_on_keydown option disappearing shou
             </form>`,
         mockRPC(route, params) {
             if (params.method === "onchange") {
-                assert.step("onchange");
+                step("onchange");
             }
         },
     });
@@ -102,5 +103,5 @@ test("Editing a text field with the onchange_on_keydown option disappearing shou
     await triggerEvent(target, 'textarea[id="description_0"]', "keydown", { key: "a" });
     await editInput(target, "[name=display_name] input", "yop");
     await execRegisteredTimeouts();
-    assert.verifySteps([]);
+    await assertSteps([]);
 });

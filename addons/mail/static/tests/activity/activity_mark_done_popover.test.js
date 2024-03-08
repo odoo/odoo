@@ -6,7 +6,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 
 QUnit.module("activity mark as done popover");
 
@@ -61,7 +61,7 @@ test("activity mark done popover mark done without feedback", async (assert) => 
     await start({
         async mockRPC(route, args) {
             if (route === "/web/dataset/call_kw/mail.activity/action_feedback") {
-                assert.step("action_feedback");
+                step("action_feedback");
                 assert.strictEqual(args.args.length, 1);
                 assert.strictEqual(args.args[0].length, 1);
                 assert.strictEqual(args.args[0][0], activityId);
@@ -81,7 +81,7 @@ test("activity mark done popover mark done without feedback", async (assert) => 
     await openFormView("res.partner", partnerId);
     await click(".btn", { text: "Mark Done" });
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
-    assert.verifySteps(["action_feedback"]);
+    await assertSteps(["action_feedback"]);
 });
 
 test("activity mark done popover mark done with feedback", async (assert) => {
@@ -96,7 +96,7 @@ test("activity mark done popover mark done with feedback", async (assert) => {
     await start({
         async mockRPC(route, args) {
             if (route === "/web/dataset/call_kw/mail.activity/action_feedback") {
-                assert.step("action_feedback");
+                step("action_feedback");
                 assert.strictEqual(args.args.length, 1);
                 assert.strictEqual(args.args[0].length, 1);
                 assert.strictEqual(args.args[0][0], activityId);
@@ -120,7 +120,7 @@ test("activity mark done popover mark done with feedback", async (assert) => {
         "This task is done"
     );
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
-    assert.verifySteps(["action_feedback"]);
+    await assertSteps(["action_feedback"]);
 });
 
 test("activity mark done popover mark done and schedule next", async (assert) => {
@@ -135,7 +135,7 @@ test("activity mark done popover mark done and schedule next", async (assert) =>
     const { env } = await start({
         async mockRPC(route, args) {
             if (route === "/web/dataset/call_kw/mail.activity/action_feedback_schedule_next") {
-                assert.step("action_feedback_schedule_next");
+                step("action_feedback_schedule_next");
                 assert.strictEqual(args.args.length, 1);
                 assert.strictEqual(args.args[0].length, 1);
                 assert.strictEqual(args.args[0][0], activityId);
@@ -153,7 +153,7 @@ test("activity mark done popover mark done and schedule next", async (assert) =>
     await openFormView("res.partner", partnerId);
     patchWithCleanup(env.services.action, {
         doAction() {
-            assert.step("activity_action");
+            step("activity_action");
             throw new Error(
                 "The do-action event should not be triggered when the route doesn't return an action"
             );
@@ -165,7 +165,7 @@ test("activity mark done popover mark done and schedule next", async (assert) =>
         "This task is done"
     );
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
-    assert.verifySteps(["action_feedback_schedule_next"]);
+    await assertSteps(["action_feedback_schedule_next"]);
 });
 
 test("[technical] activity mark done & schedule next with new action", async (assert) => {
@@ -189,7 +189,7 @@ test("[technical] activity mark done & schedule next with new action", async (as
     patchWithCleanup(env.services.action, {
         doAction(action) {
             def.resolve();
-            assert.step("activity_action");
+            step("activity_action");
             assert.deepEqual(
                 action,
                 { type: "ir.actions.act_window" },
@@ -200,5 +200,5 @@ test("[technical] activity mark done & schedule next with new action", async (as
     await click(".btn", { text: "Mark Done" });
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
     await def;
-    assert.verifySteps(["activity_action"]);
+    await assertSteps(["activity_action"]);
 });

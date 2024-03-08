@@ -4,14 +4,14 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
-import { click, contains } from "@web/../tests/utils";
+import { assertSteps, click, contains, step } from "@web/../tests/utils";
 
 QUnit.module("properties field");
 
 /**
  * Open a chat window when clicking on an avatar many2one / many2many properties.
  */
-async function testPropertyFieldAvatarOpenChat(assert, propertyType) {
+async function testPropertyFieldAvatarOpenChat(propertyType) {
     const pyEnv = await startServer();
     const view = `
         <form string="Form With Avatar Users">
@@ -35,7 +35,7 @@ async function testPropertyFieldAvatarOpenChat(assert, propertyType) {
             if (route.includes("/mail.test.properties/check_access_rights")) {
                 return true;
             } else if (route === "/web/dataset/call_kw/res.users/read") {
-                assert.step("read res.users");
+                step("read res.users");
                 return [{ id: userId, partner_id: [partnerId, "Partner Test"] }];
             } else if (route === "/web/dataset/call_kw/res.users/search_read") {
                 return [{ id: userId, name: "User Test" }];
@@ -56,18 +56,18 @@ async function testPropertyFieldAvatarOpenChat(assert, propertyType) {
     });
 
     await openFormView("mail.test.properties", childId);
-    assert.verifySteps([]);
+    await assertSteps([]);
     await click(
         propertyType === "many2one" ? ".o_field_property_many2one_value img" : ".o_m2m_avatar"
     );
-    assert.verifySteps(["read res.users"]);
+    await assertSteps(["read res.users"]);
     await contains(".o-mail-ChatWindow", { text: "Partner Test" });
 }
 
-test("Properties fields: many2one avatar open chat on click", async function (assert) {
-    await testPropertyFieldAvatarOpenChat(assert, "many2one");
+test("Properties fields: many2one avatar open chat on click", async () => {
+    await testPropertyFieldAvatarOpenChat("many2one");
 });
 
-test("Properties fields: m2m avatar list open chat on click", async function (assert) {
-    await testPropertyFieldAvatarOpenChat(assert, "many2many");
+test("Properties fields: m2m avatar list open chat on click", async () => {
+    await testPropertyFieldAvatarOpenChat("many2many");
 });

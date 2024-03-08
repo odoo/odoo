@@ -346,7 +346,7 @@ test("mark channel as fetched and seen when a new message is loaded if composer 
                 );
             } else if (route === "/discuss/channel/set_last_seen_message") {
                 assert.strictEqual(args.channel_id, channelId);
-                assert.step("rpc:set_last_seen_message");
+                step("rpc:set_last_seen_message");
             }
         },
     });
@@ -361,7 +361,7 @@ test("mark channel as fetched and seen when a new message is loaded if composer 
         })
     );
     await contains(".o-mail-Message");
-    assert.verifySteps(["rpc:set_last_seen_message"]);
+    await assertSteps(["rpc:set_last_seen_message"]);
 });
 
 test("should scroll to bottom on receiving new message if the list is initially scrolled to bottom (asc order)", async () => {
@@ -831,7 +831,7 @@ test("chat window header should not have unread counter for non-channel thread",
     await contains(".o-mail-ChatWindow-counter", { count: 0, text: "1" });
 });
 
-test("[technical] opening a non-channel chat window should not call channel_fold", async (assert) => {
+test("[technical] opening a non-channel chat window should not call channel_fold", async () => {
     // channel_fold should not be called when opening non-channels in chat
     // window, because there is no server sync of fold state for them.
     const pyEnv = await startServer();
@@ -855,7 +855,7 @@ test("[technical] opening a non-channel chat window should not call channel_fold
             if (route.includes("channel_fold")) {
                 const message =
                     "should not call channel_fold when opening a non-channel chat window";
-                assert.step(message);
+                step(message);
                 console.error(message);
                 throw Error(message);
             }
@@ -869,13 +869,13 @@ test("[technical] opening a non-channel chat window should not call channel_fold
     await contains(".o-mail-ChatWindow");
 });
 
-test("Thread messages are only loaded once", async (assert) => {
+test("Thread messages are only loaded once", async () => {
     const pyEnv = await startServer();
     const channelIds = pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
     await start({
         mockRPC(route, args, originalRPC) {
             if (route === "/discuss/channel/messages") {
-                assert.step(`load messages - ${args["channel_id"]}`);
+                step(`load messages - ${args["channel_id"]}`);
             }
             return originalRPC(route, args);
         },
@@ -899,7 +899,7 @@ test("Thread messages are only loaded once", async (assert) => {
     await contains(".o-mail-Message-content", { text: "Message on channel2" });
     await click(":nth-child(1 of .o-mail-DiscussSidebarChannel)");
     await contains(".o-mail-Message-content", { text: "Message on channel1" });
-    assert.verifySteps([`load messages - ${channelIds[0]}`, `load messages - ${channelIds[1]}`]);
+    await assertSteps([`load messages - ${channelIds[0]}`, `load messages - ${channelIds[1]}`]);
 });
 
 test("Opening thread with needaction messages should mark all messages of thread as read", async (assert) => {
@@ -909,7 +909,7 @@ test("Opening thread with needaction messages should mark all messages of thread
     const { env } = await start({
         mockRPC(route, args) {
             if (args.model === "mail.message" && args.method === "mark_all_as_read") {
-                assert.step("mark-all-messages-as-read");
+                step("mark-all-messages-as-read");
                 assert.deepEqual(args.args[0], [
                     ["model", "=", "discuss.channel"],
                     ["res_id", "=", channelId],
@@ -945,16 +945,16 @@ test("Opening thread with needaction messages should mark all messages of thread
     await click("button", { text: "General" });
     await contains(".o-discuss-badge", { count: 0 });
     await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
-    assert.verifySteps(["mark-all-messages-as-read"]);
+    await assertSteps(["mark-all-messages-as-read"]);
 });
 
-test("[technical] Opening thread without needaction messages should not mark all messages of thread as read", async (assert) => {
+test("[technical] Opening thread without needaction messages should not mark all messages of thread as read", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start({
         mockRPC(route, args) {
             if (args.model === "mail.message" && args.method === "mark_all_as_read") {
-                assert.step("mark-all-messages-as-read");
+                step("mark-all-messages-as-read");
             }
         },
     });
@@ -970,7 +970,7 @@ test("[technical] Opening thread without needaction messages should not mark all
     });
     await click("button", { text: "General" });
     await nextTick();
-    assert.verifySteps([]);
+    await assertSteps([]);
 });
 
 test("can be marked as read while loading", async function () {

@@ -6,7 +6,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 
 const views = {
     "res.fake,false,form": `
@@ -62,7 +62,7 @@ test("Opening full composer in 'send message' mode should copy selected suggeste
     const def = makeDeferred();
     patchWithCleanup(env.services.action, {
         doAction(action) {
-            assert.step("do-action");
+            step("do-action");
             assert.strictEqual(action.name, "Compose Email");
             assert.strictEqual(action.context.default_subtype_xmlid, "mail.mt_comment");
             assert.strictEqual(action.context.default_partner_ids.length, 2);
@@ -86,7 +86,7 @@ test("Opening full composer in 'send message' mode should copy selected suggeste
     });
     await click("button[title='Full composer']");
     await def;
-    assert.verifySteps(["do-action"]);
+    await assertSteps(["do-action"]);
 });
 
 test("Opening full composer in 'log note' mode should not copy selected suggested recipients", async (assert) => {
@@ -104,7 +104,7 @@ test("Opening full composer in 'log note' mode should not copy selected suggeste
     const def = makeDeferred();
     patchWithCleanup(env.services.action, {
         doAction(action) {
-            assert.step("do-action");
+            step("do-action");
             assert.strictEqual(action.name, "Log note");
             assert.strictEqual(action.context.default_subtype_xmlid, "mail.mt_note");
             assert.deepEqual(action.context.default_partner_ids, []);
@@ -124,7 +124,7 @@ test("Opening full composer in 'log note' mode should not copy selected suggeste
     await click("button", { text: "Log note" });
     await click("button[title='Full composer']");
     await def;
-    assert.verifySteps(["do-action"]);
+    await assertSteps(["do-action"]);
 });
 
 test("more than 3 suggested recipients: display only 3 and 'show more' button", async () => {

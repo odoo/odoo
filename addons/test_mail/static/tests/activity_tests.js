@@ -15,7 +15,7 @@ import testUtils from "@web/../tests/legacy_tests/helpers/test_utils";
 import { patchUserContextWithCleanup } from "@web/../tests/helpers/mock_services";
 import { editInput, patchWithCleanup, click, patchDate } from "@web/../tests/helpers/utils";
 import { toggleSearchBarMenu } from "@web/../tests/search/helpers";
-import { contains } from "@web/../tests/utils";
+import { assertSteps, contains, step } from "@web/../tests/utils";
 import { doAction } from "@web/../tests/webclient/helpers";
 import { onMounted, onWillUnmount } from "@odoo/owl";
 import { getOrigin } from "@web/core/utils/urls";
@@ -24,7 +24,7 @@ const { DateTime } = luxon;
 let serverData;
 let pyEnv;
 
-async function openViewAndPatchDoAction(assert) {
+async function openViewAndPatchDoAction() {
     const { env, openView } = await start({
         serverData,
     });
@@ -34,7 +34,7 @@ async function openViewAndPatchDoAction(assert) {
     });
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
-            assert.step("doAction");
+            step("doAction");
             options.onClose();
         },
     });
@@ -259,7 +259,7 @@ QUnit.module("test_mail", {}, function () {
         );
     });
 
-    test("activity view: Activity rendering with done activities", async function (assert) {
+    test("activity view: Activity rendering with done activities", async function () {
         const activityTypeUpload = pyEnv["mail.activity.type"].create({
             category: "upload_file",
             name: "Test Upload document",
@@ -497,7 +497,7 @@ QUnit.module("test_mail", {}, function () {
             serverData,
             mockRPC: function (route, args) {
                 if (args.method === "activity_send_mail") {
-                    assert.step(JSON.stringify(args.args));
+                    step(JSON.stringify(args.args));
                     return Promise.resolve(true);
                 }
             },
@@ -531,7 +531,7 @@ QUnit.module("test_mail", {}, function () {
         testUtils.dom.click(
             $activity.find(".dropdown-menu.show .o_send_mail_template:contains(Template1)")
         );
-        assert.verifySteps([
+        await assertSteps([
             `[[${mailTestActivityIds[0]},${mailTestActivityIds[1]}],${mailTemplateIds[1]}]`, // send mail template 1 on mail.test.activity 1 and 2
             `[[${mailTestActivityIds[0]},${mailTestActivityIds[1]}],${mailTemplateIds[0]}]`, // send mail template 2 on mail.test.activity 1 and 2
         ]);
@@ -543,7 +543,7 @@ QUnit.module("test_mail", {}, function () {
             serverData,
             mockRPC: function (route, args) {
                 if (["get_activity_data", "web_search_read"].includes(args.method)) {
-                    assert.step(JSON.stringify(args.kwargs.domain));
+                    step(JSON.stringify(args.kwargs.domain));
                 }
             },
         });
@@ -552,7 +552,7 @@ QUnit.module("test_mail", {}, function () {
             views: [[false, "activity"]],
         });
 
-        assert.verifySteps([
+        await assertSteps([
             JSON.stringify([["activity_ids.active", "in", [true, false]]]),
             '[[1,"=",1]]', // Due to the patch above that removes it
         ]);
@@ -574,7 +574,7 @@ QUnit.module("test_mail", {}, function () {
                         args.args,
                         "Should send template related to mailTestActivity2"
                     );
-                    assert.step("activity_send_mail");
+                    step("activity_send_mail");
                     // random value returned in order for the mock server to know that this route is implemented.
                     return true;
                 }
@@ -585,7 +585,7 @@ QUnit.module("test_mail", {}, function () {
                         "Should execute action_feedback_schedule_next only on the overude activity"
                     );
                     assert.equal(args.kwargs.feedback, "feedback2");
-                    assert.step("action_feedback_schedule_next");
+                    step("action_feedback_schedule_next");
                     return Promise.resolve({ serverGeneratedAction: true });
                 }
             },
@@ -598,7 +598,7 @@ QUnit.module("test_mail", {}, function () {
         patchWithCleanup(env.services.action, {
             doAction(action) {
                 if (action.serverGeneratedAction) {
-                    assert.step("serverGeneratedAction");
+                    step("serverGeneratedAction");
                 } else if (action.res_model === "mail.compose.message") {
                     assert.deepEqual(
                         {
@@ -610,7 +610,7 @@ QUnit.module("test_mail", {}, function () {
                         },
                         action.context
                     );
-                    assert.step("do_action_compose");
+                    step("do_action_compose");
                 } else if (action.res_model === "mail.activity.schedule") {
                     assert.deepEqual(
                         {
@@ -621,9 +621,9 @@ QUnit.module("test_mail", {}, function () {
                         },
                         action.context
                     );
-                    assert.step("do_action_activity");
+                    step("do_action_activity");
                 } else {
-                    assert.step("Unexpected action" + action.res_model);
+                    step("Unexpected action" + action.res_model);
                 }
                 return Promise.resolve();
             },
@@ -677,7 +677,7 @@ QUnit.module("test_mail", {}, function () {
                 ".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']"
             )
         );
-        assert.verifySteps([
+        await assertSteps([
             "do_action_compose",
             "activity_send_mail",
             "do_action_activity",
@@ -686,7 +686,7 @@ QUnit.module("test_mail", {}, function () {
         ]);
     });
 
-    test("activity view: Mark as done with keep done enabled", async function (assert) {
+    test("activity view: Mark as done with keep done enabled", async function () {
         const emailActType = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
         pyEnv["mail.activity.type"].write([emailActType], {
             keep_done: true,
@@ -834,7 +834,7 @@ QUnit.module("test_mail", {}, function () {
         });
         patchWithCleanup(env.services.action, {
             doAction(action, options) {
-                assert.step("doAction");
+                step("doAction");
                 const expectedAction = {
                     context: {
                         active_ids: [mailTestActivityId1],
@@ -874,7 +874,7 @@ QUnit.module("test_mail", {}, function () {
         );
         // select a record to schedule an activity for it (this triggers a do_action)
         await testUtils.dom.click($modal.find(".o_data_row:last .o_data_cell"));
-        assert.verifySteps(["doAction"]);
+        await assertSteps(["doAction"]);
     });
 
     test("activity view: Domain should not reset on load", async function (assert) {
@@ -892,7 +892,7 @@ QUnit.module("test_mail", {}, function () {
         });
         patchWithCleanup(env.services.action, {
             doAction(action, options) {
-                assert.step("doAction");
+                step("doAction");
                 options.onClose();
             },
         });
@@ -900,7 +900,7 @@ QUnit.module("test_mail", {}, function () {
         await click(document.querySelector(".o_activity_view .o_record_selector"));
         // search create dialog
         await click(document.querySelector(".modal-lg .o_data_row .o_data_cell"));
-        assert.verifySteps(["doAction"]);
+        await assertSteps(["doAction"]);
 
         await click(document.querySelector(".o_activity_view .o_record_selector"));
         // again open search create dialog
@@ -911,18 +911,18 @@ QUnit.module("test_mail", {}, function () {
         );
     });
 
-    test("activity view: 'scheduleActivity' does not add activity_ids condition as selectCreateDialog domain", async function (assert) {
+    test("activity view: 'scheduleActivity' does not add activity_ids condition as selectCreateDialog domain", async function () {
         patchWithCleanup(ActivityController.prototype, {
             scheduleActivity() {
                 super.scheduleActivity();
-                assert.step(JSON.stringify(this.getSearchProps().domain));
+                step(JSON.stringify(this.getSearchProps().domain));
             },
         });
         Object.assign(serverData.views, {
             "mail.test.activity,false,list":
                 '<tree string="MailTestActivity"><field name="name"/></tree>',
         });
-        await openViewAndPatchDoAction(assert);
+        await openViewAndPatchDoAction();
 
         // open search create dialog and schedule an activity
         await click(document.querySelector(".o_activity_view .o_record_selector"));
@@ -930,37 +930,37 @@ QUnit.module("test_mail", {}, function () {
 
         // again open search create dialog
         await click(document.querySelector(".o_activity_view .o_record_selector"));
-        assert.verifySteps(["[]", "doAction", "[]"]);
+        await assertSteps(["[]", "doAction", "[]"]);
     });
 
-    test("activity view: 'onClose' of 'openActivityFormView' does not add activity_ids condition as selectCreateDialog domain", async function (assert) {
+    test("activity view: 'onClose' of 'openActivityFormView' does not add activity_ids condition as selectCreateDialog domain", async function () {
         patchWithCleanup(ActivityController.prototype, {
             openActivityFormView(resId, activityTypeId) {
                 super.openActivityFormView(resId, activityTypeId);
-                assert.step(JSON.stringify(this.getSearchProps().domain));
+                step(JSON.stringify(this.getSearchProps().domain));
             },
         });
-        await openViewAndPatchDoAction(assert);
+        await openViewAndPatchDoAction();
 
         //schedule an activity on an empty activity cell
         await click(document.querySelector(".o_activity_view .o_data_row .o_activity_empty_cell"));
-        assert.verifySteps(["doAction", "[]"]);
+        await assertSteps(["doAction", "[]"]);
     });
 
-    test("activity view: 'onReloadData' does not add activity_ids condition as selectCreateDialog domain", async function (assert) {
+    test("activity view: 'onReloadData' does not add activity_ids condition as selectCreateDialog domain", async function () {
         patchWithCleanup(ActivityController.prototype, {
             get rendererProps() {
                 const rendererProps = { ...super.rendererProps };
-                assert.step(JSON.stringify(this.getSearchProps().domain));
+                step(JSON.stringify(this.getSearchProps().domain));
                 return rendererProps;
             },
         });
-        await openViewAndPatchDoAction(assert);
+        await openViewAndPatchDoAction();
 
         //schedule another activity on an activity cell with a scheduled activity
         await click(document.querySelector(".today .o-mail-ActivityCell-deadline"));
         await click($(".o-mail-ActivityListPopover button:contains(Schedule an activity)")[0]);
-        assert.verifySteps(["[]", "doAction", "[]", "[]"]);
+        await assertSteps(["[]", "doAction", "[]", "[]"]);
     });
 
     test("Activity view: discard an activity creation dialog", async function (assert) {
@@ -1056,10 +1056,10 @@ QUnit.module("test_mail", {}, function () {
             setup() {
                 super.setup();
                 onMounted(() => {
-                    assert.step("mounted");
+                    step("mounted");
                 });
                 onWillUnmount(() => {
-                    assert.step("willUnmount");
+                    step("willUnmount");
                 });
             },
         });
@@ -1073,7 +1073,7 @@ QUnit.module("test_mail", {}, function () {
         });
         // force the unmounting of the activity view by opening another one
         await openFormView("mail.test.activity");
-        assert.verifySteps(["mounted", "willUnmount"]);
+        await assertSteps(["mounted", "willUnmount"]);
     });
 
     test("Schedule activity dialog uses the same search view as activity view", async function (assert) {
@@ -1087,7 +1087,7 @@ QUnit.module("test_mail", {}, function () {
 
         function mockRPC(route, args) {
             if (args.method === "get_views") {
-                assert.step(JSON.stringify(args.kwargs.views));
+                step(JSON.stringify(args.kwargs.views));
             }
         }
 
@@ -1101,12 +1101,12 @@ QUnit.module("test_mail", {}, function () {
             views: [[false, "activity"]],
         });
 
-        assert.verifySteps(['[[false,"activity"],[false,"search"]]']);
+        await assertSteps(['[[false,"activity"],[false,"search"]]']);
 
         // click on "Schedule activity"
         await click(document.querySelector(".o_activity_view .o_record_selector"));
 
-        assert.verifySteps(['[[false,"list"],[false,"search"]]']);
+        await assertSteps(['[[false,"list"],[false,"search"]]']);
 
         // open an activity view (with search arch 1)
         await doAction(webClient, {
@@ -1117,12 +1117,12 @@ QUnit.module("test_mail", {}, function () {
             search_view_id: [1, "search"],
         });
 
-        assert.verifySteps(['[[false,"activity"],[1,"search"]]']);
+        await assertSteps(['[[false,"activity"],[1,"search"]]']);
 
         // click on "Schedule activity"
         await click(document.querySelector(".o_activity_view .o_record_selector"));
 
-        assert.verifySteps(['[[false,"list"],[1,"search"]]']);
+        await assertSteps(['[[false,"list"],[1,"search"]]']);
     });
 
     test("Activity view: apply progressbar filter", async function (assert) {
@@ -1288,7 +1288,7 @@ QUnit.module("test_mail", {}, function () {
         }
     });
 
-    test("Activity view: luxon in renderingContext", async function (assert) {
+    test("Activity view: luxon in renderingContext", async function () {
         Object.assign(serverData.views, {
             "mail.test.activity,false,activity": `
                     <activity string="MailTestActivity">

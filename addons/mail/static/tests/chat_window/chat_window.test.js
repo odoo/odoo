@@ -192,13 +192,13 @@ test("Mobile: opening a chat window should not update channel state on the serve
     assert.strictEqual(member.fold_state, "closed");
 });
 
-test("chat window: fold", async (assert) => {
+test("chat window: fold", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({});
     await start({
         mockRPC(route, args) {
             if (route === "/discuss/channel/fold") {
-                assert.step(`channel_fold/${args.state}`);
+                step(`channel_fold/${args.state}`);
             }
         },
     });
@@ -206,26 +206,26 @@ test("chat window: fold", async (assert) => {
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow .o-mail-Thread");
-    assert.verifySteps(["channel_fold/open"]);
+    await assertSteps(["channel_fold/open"]);
 
     // Fold chat window
     await click(".o-mail-ChatWindow-command[title='Fold']");
     await contains(".o-mail-ChatWindow .o-mail-Thread", { count: 0 });
-    assert.verifySteps(["channel_fold/folded"]);
+    await assertSteps(["channel_fold/folded"]);
 
     // Unfold chat window
     await click(".o-mail-ChatWindow-command[title='Open']");
     await contains(".o-mail-ChatWindow .o-mail-Thread");
-    assert.verifySteps(["channel_fold/open"]);
+    await assertSteps(["channel_fold/open"]);
 });
 
-test("chat window: open / close", async (assert) => {
+test("chat window: open / close", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({});
     await start({
         mockRPC(route, args) {
             if (route === "/discuss/channel/fold") {
-                assert.step(`channel_fold/${args.state}`);
+                step(`channel_fold/${args.state}`);
             }
         },
     });
@@ -233,17 +233,17 @@ test("chat window: open / close", async (assert) => {
     await contains(".o-mail-ChatWindow", { count: 0 });
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
-    assert.verifySteps(["channel_fold/open"]);
+    await assertSteps(["channel_fold/open"]);
 
     await click(".o-mail-ChatWindow-command[title='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    assert.verifySteps(["channel_fold/closed"]);
+    await assertSteps(["channel_fold/closed"]);
 
     // Reopen chat window
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
-    assert.verifySteps(["channel_fold/open"]);
+    await assertSteps(["channel_fold/open"]);
 });
 
 test("open chat on very narrow device should work", async (assert) => {
@@ -278,7 +278,7 @@ test("Mobile: closing a chat window should not update channel state on the serve
     assert.strictEqual(member.fold_state, "open");
 });
 
-test("chat window: close on ESCAPE", async (assert) => {
+test("chat window: close on ESCAPE", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
@@ -288,7 +288,7 @@ test("chat window: close on ESCAPE", async (assert) => {
     await start({
         mockRPC(route, args) {
             if (route === "/discuss/channel/fold") {
-                assert.step(`channel_fold/${args.state}`);
+                step(`channel_fold/${args.state}`);
             }
         },
     });
@@ -296,7 +296,7 @@ test("chat window: close on ESCAPE", async (assert) => {
     await focus(".o-mail-Composer-input");
     triggerHotkey("Escape");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    assert.verifySteps(["channel_fold/closed"]);
+    await assertSteps(["channel_fold/closed"]);
 });
 
 test("Close composer suggestions in chat window with ESCAPE does not also close the chat window", async () => {
@@ -1118,7 +1118,7 @@ test("Close dropdown in chat window with ESCAPE does not also close the chat win
     await contains(".o-mail-ChatWindow");
 });
 
-test("hiding/swapping hidden chat windows does not update server state", async (assert) => {
+test("hiding/swapping hidden chat windows does not update server state", async () => {
     patchUiSize({ size: SIZES.MD }); // only 2 chat window can be opened at a time
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }, { name: "D&D" }]);
@@ -1128,24 +1128,24 @@ test("hiding/swapping hidden chat windows does not update server state", async (
                 const [channel] = pyEnv["discuss.channel"].searchRead([
                     ["id", "=", args.channel_id],
                 ]);
-                assert.step(`${channel.name} - ${args.state}`);
+                step(`${channel.name} - ${args.state}`);
             }
         },
     });
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "General" });
     await contains(".o-mail-ChatWindow", { text: "General" });
-    assert.verifySteps(["General - open"]);
+    await assertSteps(["General - open"]);
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "Sales" });
     await contains(".o-mail-ChatWindow", { text: "Sales" });
-    assert.verifySteps(["Sales - open"]);
+    await assertSteps(["Sales - open"]);
     // Sales chat window will be hidden since there is not enough space for the
     // D&D one but Sales fold state should not be updated.
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "D&D" });
     await contains(".o-mail-ChatWindow", { text: "D&D" });
-    assert.verifySteps(["D&D - open"]);
+    await assertSteps(["D&D - open"]);
     // D&D chat window will be hidden since there is not enough space for the
     // Sales one, the server should not be notified as the state is up to date.
     await click(".o-mail-ChatWindowHiddenToggler");
@@ -1154,5 +1154,5 @@ test("hiding/swapping hidden chat windows does not update server state", async (
         visible: true,
     });
     await contains(".o-mail-ChatWindow", { text: "Sales" });
-    assert.verifySteps([]);
+    await assertSteps([]);
 });

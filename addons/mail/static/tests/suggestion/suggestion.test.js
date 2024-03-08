@@ -8,7 +8,7 @@ import { Command } from "@mail/../tests/helpers/command";
 import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 
 QUnit.module("suggestion", {
     async beforeEach() {
@@ -173,7 +173,7 @@ test("mention a channel", async () => {
     await contains(".o-mail-Composer-input", { value: "#General " });
 });
 
-test("Channel suggestions do not crash after rpc returns", async (assert) => {
+test("Channel suggestions do not crash after rpc returns", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const deferred = makeDeferred();
@@ -181,7 +181,7 @@ test("Channel suggestions do not crash after rpc returns", async (assert) => {
         async mockRPC(args, params, originalFn) {
             if (params.method === "get_mention_suggestions") {
                 const res = await originalFn(args, params);
-                assert.step("get_mention_suggestions");
+                step("get_mention_suggestions");
                 deferred.resolve();
                 return res;
             }
@@ -194,7 +194,7 @@ test("Channel suggestions do not crash after rpc returns", async (assert) => {
     await nextTick();
     insertText(".o-mail-Composer-input", "f");
     await deferred;
-    assert.verifySteps(["get_mention_suggestions"]);
+    await assertSteps(["get_mention_suggestions"]);
 });
 
 test("Suggestions are shown after delimiter was used in text (@)", async () => {

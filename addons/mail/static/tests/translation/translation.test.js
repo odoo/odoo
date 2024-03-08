@@ -5,11 +5,11 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
-import { click, contains } from "@web/../tests/utils";
+import { assertSteps, click, contains, step } from "@web/../tests/utils";
 
 QUnit.module("Google Cloud Translation");
 
-test("Toggle display of original/translated version of chatter message", async (assert) => {
+test("Toggle display of original/translated version of chatter message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.message"].create({
@@ -21,7 +21,7 @@ test("Toggle display of original/translated version of chatter message", async (
     await start({
         mockRPC(route) {
             if (route === "/mail/message/translate") {
-                assert.step("Request");
+                step("Request");
                 return { body: "To bad weather, good face.", lang_name: "Spanish", error: null };
             }
         },
@@ -45,7 +45,7 @@ test("Toggle display of original/translated version of chatter message", async (
     });
     await click("span[title='Translate']");
     // The translation button should not trigger more than one external request for a single message.
-    assert.verifySteps(["Request"]);
+    await assertSteps(["Request"]);
 });
 
 test("translation of email message", async () => {

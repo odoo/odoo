@@ -13,7 +13,7 @@ import {
     patchWithCleanup,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
-import { click, contains, createFile, inputFiles } from "@web/../tests/utils";
+import { assertSteps, click, contains, createFile, inputFiles, step } from "@web/../tests/utils";
 import { getOrigin } from "@web/core/utils/urls";
 
 const views = {
@@ -294,7 +294,7 @@ test("activity with mail template: preview mail", async (assert) => {
     await openFormView("res.partner", partnerId);
     patchWithCleanup(env.services.action, {
         doAction(action) {
-            assert.step("do_action");
+            step("do_action");
             assert.deepEqual(action.context.default_res_ids, [partnerId]);
             assert.strictEqual(action.context.default_model, "res.partner");
             assert.strictEqual(action.context.default_template_id, mailTemplateId);
@@ -306,7 +306,7 @@ test("activity with mail template: preview mail", async (assert) => {
     await contains(".o-mail-ActivityMailTemplate-preview");
 
     await click(".o-mail-ActivityMailTemplate-preview");
-    assert.verifySteps(["do_action"]);
+    await assertSteps(["do_action"]);
 });
 
 test("activity with mail template: send mail", async (assert) => {
@@ -323,7 +323,7 @@ test("activity with mail template: send mail", async (assert) => {
     await start({
         async mockRPC(route, args) {
             if (args.method === "activity_send_mail") {
-                assert.step("activity_send_mail");
+                step("activity_send_mail");
                 assert.strictEqual(args.args[0].length, 1);
                 assert.strictEqual(args.args[0][0], partnerId);
                 assert.strictEqual(args.args[1], mailTemplateId);
@@ -337,7 +337,7 @@ test("activity with mail template: send mail", async (assert) => {
     await contains(".o-mail-ActivityMailTemplate-send");
 
     await click(".o-mail-ActivityMailTemplate-send");
-    assert.verifySteps(["activity_send_mail"]);
+    await assertSteps(["activity_send_mail"]);
 });
 
 test("activity click on mark as done", async () => {
@@ -394,7 +394,7 @@ test("activity click on edit", async (assert) => {
     await openFormView("res.partner", partnerId);
     patchWithCleanup(env.services.action, {
         doAction(action) {
-            assert.step("do_action");
+            step("do_action");
             assert.strictEqual(action.type, "ir.actions.act_window");
             assert.strictEqual(action.res_model, "mail.activity");
             assert.strictEqual(action.res_id, activityId);
@@ -402,7 +402,7 @@ test("activity click on edit", async (assert) => {
         },
     });
     await click(".o-mail-Activity .btn", { text: "Edit" });
-    assert.verifySteps(["do_action"]);
+    await assertSteps(["do_action"]);
 });
 
 test("activity click on cancel", async (assert) => {
@@ -418,7 +418,7 @@ test("activity click on cancel", async (assert) => {
     await start({
         async mockRPC(route, args) {
             if (route === "/web/dataset/call_kw/mail.activity/unlink") {
-                assert.step("unlink");
+                step("unlink");
                 assert.strictEqual(args.args[0].length, 1);
                 assert.strictEqual(args.args[0][0], activityId);
             }
@@ -427,7 +427,7 @@ test("activity click on cancel", async (assert) => {
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Activity .btn", { text: "Cancel" });
     await contains(".o-mail-Activity", { count: 0 });
-    assert.verifySteps(["unlink"]);
+    await assertSteps(["unlink"]);
 });
 
 test("activity mark done popover close on ESCAPE", async () => {
@@ -507,7 +507,7 @@ test("chatter 'activities' button open the activity schedule wizard", async (ass
     await openFormView("res.partner", fakeId);
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
-            assert.step("doAction");
+            step("doAction");
             var expectedAction = {
                 context: {
                     active_ids: [fakeId],
@@ -531,7 +531,7 @@ test("chatter 'activities' button open the activity schedule wizard", async (ass
         },
     });
     await click("button", { text: "Activities" });
-    assert.verifySteps(["doAction"]);
+    await assertSteps(["doAction"]);
 });
 
 test("Activity avatar should have a unique timestamp", async () => {

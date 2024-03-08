@@ -16,7 +16,7 @@ import {
     patchWithCleanup,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 import { SIZES, patchUiSize } from "../helpers/patch_ui_size";
 
 const { DateTime } = luxon;
@@ -245,7 +245,7 @@ test("Edit and click save", async () => {
     await contains(".o-mail-Message-body", { text: "Goodbye World" });
 });
 
-test("Do not call server on save if no changes", async (assert) => {
+test("Do not call server on save if no changes", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -261,7 +261,7 @@ test("Do not call server on save if no changes", async (assert) => {
     await start({
         async mockRPC(route, args) {
             if (route === "/mail/message/update_content") {
-                assert.step("update_content");
+                step("update_content");
             }
         },
     });
@@ -269,10 +269,10 @@ test("Do not call server on save if no changes", async (assert) => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await click(".o-mail-Message a", { text: "save" });
-    assert.verifySteps([]);
+    await assertSteps([]);
 });
 
-test("Update the link previews when a message is edited", async (assert) => {
+test("Update the link previews when a message is edited", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -288,7 +288,7 @@ test("Update the link previews when a message is edited", async (assert) => {
     await start({
         async mockRPC(route, args) {
             if (route === "/mail/link_preview") {
-                assert.step("link_preview");
+                step("link_preview");
             }
         },
     });
@@ -300,7 +300,7 @@ test("Update the link previews when a message is edited", async (assert) => {
     });
     await click(".o-mail-Message a", { text: "save" });
     await contains(".o-mail-Message-body", { text: "http://odoo.com" });
-    assert.verifySteps(["link_preview"]);
+    await assertSteps(["link_preview"]);
 });
 
 test("Scroll bar to the top when edit starts", async (assert) => {
@@ -814,7 +814,7 @@ test("toggle_star message", async (assert) => {
     await start({
         async mockRPC(route, args) {
             if (args.method === "toggle_message_starred") {
-                assert.step("rpc:toggle_message_starred");
+                step("rpc:toggle_message_starred");
                 assert.strictEqual(args.args[0][0], messageId);
             }
         },
@@ -826,12 +826,12 @@ test("toggle_star message", async (assert) => {
     await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
     await click(".o-mail-Message [title='Mark as Todo']");
     await contains("button", { text: "Starred", contains: [".badge", { text: "1" }] });
-    assert.verifySteps(["rpc:toggle_message_starred"]);
+    await assertSteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star");
     await click(".o-mail-Message [title='Mark as Todo']");
     await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
-    assert.verifySteps(["rpc:toggle_message_starred"]);
+    await assertSteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star-o");
 });
@@ -953,7 +953,7 @@ test("Notification Error", async (assert) => {
     await openFormView("res.partner", threadId);
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
-            assert.step("do_action");
+            step("do_action");
             assert.strictEqual(action, "mail.mail_resend_message_action");
             assert.strictEqual(options.additionalContext.mail_message_to_resend, messageId);
             openResendActionDef.resolve();
@@ -965,7 +965,7 @@ test("Notification Error", async (assert) => {
     assert.hasClass($(".o-mail-Message-notification i"), "fa-envelope");
     click(".o-mail-Message-notification").then(() => {});
     await openResendActionDef;
-    assert.verifySteps(["do_action"]);
+    await assertSteps(["do_action"]);
 });
 
 test('Quick edit (edit from Composer with ArrowUp) ignores empty ("deleted") messages.', async () => {
@@ -1359,11 +1359,11 @@ test("data-oe-id & data-oe-model link redirection on click", async (assert) => {
             assert.strictEqual(action.type, "ir.actions.act_window");
             assert.strictEqual(action.res_model, "some.model");
             assert.strictEqual(action.res_id, 250);
-            assert.step("do-action:openFormView_some.model_250");
+            step("do-action:openFormView_some.model_250");
         },
     });
     await click(".o-mail-Message-body a");
-    assert.verifySteps(["do-action:openFormView_some.model_250"]);
+    await assertSteps(["do-action:openFormView_some.model_250"]);
 });
 
 test("Chat with partner should be opened after clicking on their mention", async () => {
