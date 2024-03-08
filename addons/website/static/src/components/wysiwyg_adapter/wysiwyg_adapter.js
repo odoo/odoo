@@ -273,9 +273,9 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                     } else if (record.type === "childList") {
                         const addedOrRemovedNode = record.addedNodes[0] || record.removedNodes[0];
                         // Do not record the addition/removal of the offcanvas
-                        // backdrop.
+                        // backdrop or the image snippet placeholder.
                         if (addedOrRemovedNode.nodeType === Node.ELEMENT_NODE
-                                && addedOrRemovedNode.matches(".offcanvas-backdrop")) {
+                                && addedOrRemovedNode.matches(".offcanvas-backdrop, .s_image")) {
                             return false;
                         }
                     }
