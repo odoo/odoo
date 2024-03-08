@@ -29,7 +29,6 @@ if (searchParams) {
 }
 const dropInOnlySnippets = {
     's_button': '.btn',
-    's_image': '.img',
     's_video': '.media_iframe_video',
 };
 let steps = [];

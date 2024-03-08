@@ -5405,14 +5405,26 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             numberColumns = 6;
             numberRows = 6;
 
-            // Create a default image and add it to the new column.
-            const imgEl = document.createElement('img');
-            imgEl.classList.add('img', 'img-fluid', 'mx-auto');
-            imgEl.src = '/web/image/website.s_text_image_default_image';
-            imgEl.alt = '';
-            imgEl.loading = 'lazy';
-
-            newColumnEl.appendChild(imgEl);
+            // Choose an image with the media dialog.
+            let isImageSaved = false;
+            await new Promise(resolve => {
+                this.call("dialog", "add", MediaDialog, {
+                    onlyImages: true,
+                    save: imageEl => {
+                        isImageSaved = true;
+                        // Adds the image to the new column.
+                        newColumnEl.appendChild(imageEl);
+                    },
+                }, {
+                    onClose: () => resolve()
+                });
+            });
+            if (!isImageSaved) {
+                // Revert the current step to exclude the step saved when the
+                // media dialog closed.
+                this.options.wysiwyg.odooEditor.historyRevertCurrentStep();
+                return;
+            }
         } else if (elementType === 'text') {
             newColumnEl.classList.add('col-lg-4', 'g-col-lg-4', 'g-height-2');
             numberColumns = 4;

@@ -32,8 +32,12 @@ wTourUtils.registerWebsitePreviewTour('website_replace_grid_image', {
         trigger: '.o_we_user_value_widget[data-add-element="image"]',
     },
     {
+        content: "Pick new image",
+        trigger: '.o_select_media_dialog img[title="s_banner_default_image2.jpg"]',
+    },
+    {
         content: "Replace new image",
-        trigger: ':iframe .s_text_image img[src="/web/image/website.s_text_image_default_image"]',
+        trigger: ':iframe .s_text_image img[src*="s_banner_default_image2.jpg"]',
         run: 'dblclick',
     },
     {
