@@ -1,32 +1,28 @@
-const test = QUnit.test; // QUnit.test()
+import { contains, openFormView, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { defineWebsiteLivechatModels } from "./website_livechat_test_helpers";
+import { rpcWithEnv } from "@mail/utils/common/misc";
+import { describe, test } from "@odoo/hoot";
 
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openFormView, start } from "@mail/../tests/helpers/test_utils";
-
-import { contains } from "@web/../tests/utils";
-
-QUnit.module("messaging service (patch)");
+describe.current.tags("desktop");
+defineWebsiteLivechatModels();
 
 test("Should open chat window on send chat request to website visitor", async () => {
     const pyEnv = await startServer();
     const visitorId = pyEnv["website.visitor"].create({});
-    const { env } = await start({
-        serverData: {
-            views: {
-                "website.visitor,false,form": `
-                    <form>
-                        <header>
-                            <button name="action_send_chat_request" string="Send chat request" class="btn btn-primary" type="button"/>
-                        </header>
-                        <field name="name"/>
-                    </form>`,
-            },
-        },
+    const env = await start();
+    await openFormView("website.visitor", visitorId, {
+        arch: `
+            <form>
+                <header>
+                    <button name="action_send_chat_request" string="Send chat request" class="btn btn-primary" type="button"/>
+                </header>
+                <field name="name"/>
+            </form>`,
     });
-    await openFormView("website.visitor", visitorId);
+    rpc = rpcWithEnv(env);
     await rpc("/web/dataset/call_button", {
         args: [visitorId],
         kwargs: { context: env.context },

@@ -1,15 +1,20 @@
-/** @odoo-module alias=@mail/../tests/messaging_menu/notification_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, expect, test } from "@odoo/hoot";
+import {
+    assertSteps,
+    click,
+    contains,
+    defineMailModels,
+    start,
+    startServer,
+    step,
+    triggerEvents,
+} from "../mail_test_helpers";
+import { Command, mockService, serverState } from "@web/../tests/web_test_helpers";
+import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
+import { actionService } from "@web/webclient/actions/action_service";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { assertSteps, click, contains, step, triggerEvents } from "@web/../tests/utils";
-
-QUnit.module("notification");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("basic layout", async () => {
     const pyEnv = await startServer();
@@ -18,7 +23,6 @@ test("basic layout", async () => {
         message_type: "email",
         model: "discuss.channel",
         res_id: channelId,
-        res_model_name: "Channel",
     });
     pyEnv["mail.notification"].create([
         {
@@ -36,7 +40,7 @@ test("basic layout", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", {
         contains: [
-            [".o-mail-NotificationItem-name", { text: "Channel" }],
+            [".o-mail-NotificationItem-name", { text: "Discussion Channel" }],
             [".o-mail-NotificationItem-counter", { text: "2" }],
             [".o-mail-NotificationItem-date", { text: "now" }],
             [
@@ -56,7 +60,6 @@ test("mark as read", async () => {
         message_type: "email",
         model: "discuss.channel",
         res_id: channelId,
-        res_model_name: "Channel",
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
@@ -65,27 +68,26 @@ test("mark as read", async () => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await triggerEvents(".o-mail-NotificationItem", ["mouseenter"], { text: "Channel" });
+    await triggerEvents(".o-mail-NotificationItem", ["mouseenter"], { text: "Discussion Channel" });
     await click(".o-mail-NotificationItem-markAsRead", {
-        parent: [".o-mail-NotificationItem", { text: "Channel" }],
+        parent: [".o-mail-NotificationItem", { text: "Discussion Channel" }],
     });
-    await contains(".o-mail-NotificationItem", { count: 0, text: "Channel" });
+    await contains(".o-mail-NotificationItem", { count: 0, text: "Discussion Channel" });
 });
 
-test("open non-channel failure", async (assert) => {
+test("open non-channel failure", async () => {
     const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([{}, {}]);
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
             message_type: "email",
             model: "res.partner",
-            res_id: 31,
-            res_model_name: "Partner",
+            res_id: partnerId_1,
         },
         {
             message_type: "email",
             model: "res.partner",
-            res_id: 32,
-            res_model_name: "Partner",
+            res_id: partnerId_2,
         },
     ]);
     pyEnv["mail.notification"].create([
@@ -100,30 +102,28 @@ test("open non-channel failure", async (assert) => {
             notification_type: "email",
         },
     ]);
-
-    const { env } = await start();
-    patchWithCleanup(env.services.action, {
+    mockService("action", () => ({
+        ...actionService.start(getMockEnv()),
         doAction(action) {
             step("do_action");
-            assert.strictEqual(action.name, "Mail Failures");
-            assert.strictEqual(action.type, "ir.actions.act_window");
-            assert.strictEqual(action.view_mode, "kanban,list,form");
-            assert.strictEqual(
-                JSON.stringify(action.views),
+            expect(action.name).toBe("Mail Failures");
+            expect(action.type).toBe("ir.actions.act_window");
+            expect(action.view_mode).toBe("kanban,list,form");
+            expect(JSON.stringify(action.views)).toBe(
                 JSON.stringify([
                     [false, "kanban"],
                     [false, "list"],
                     [false, "form"],
                 ])
             );
-            assert.strictEqual(action.target, "current");
-            assert.strictEqual(action.res_model, "res.partner");
-            assert.strictEqual(
-                JSON.stringify(action.domain),
+            expect(action.target).toBe("current");
+            expect(action.res_model).toBe("res.partner");
+            expect(JSON.stringify(action.domain)).toBe(
                 JSON.stringify([["message_has_error", "=", true]])
             );
         },
-    });
+    }));
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await assertSteps(["do_action"]);
@@ -140,13 +140,11 @@ test("different discuss.channel are not grouped", async () => {
             message_type: "email",
             model: "discuss.channel",
             res_id: channelId_1,
-            res_model_name: "Channel",
         },
         {
             message_type: "email",
             model: "discuss.channel",
             res_id: channelId_2,
-            res_model_name: "Channel",
         },
     ]);
     pyEnv["mail.notification"].create([
@@ -181,18 +179,18 @@ test("different discuss.channel are not grouped", async () => {
 
 test("multiple grouped notifications by model", async () => {
     const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    const companyId = pyEnv["res.company"].create({});
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
             message_type: "email",
             model: "res.partner",
-            res_id: 31,
-            res_model_name: "Partner",
+            res_id: partnerId,
         },
         {
             message_type: "email",
             model: "res.company",
-            res_id: 32,
-            res_model_name: "Company",
+            res_id: companyId,
         },
     ]);
     pyEnv["mail.notification"].create([

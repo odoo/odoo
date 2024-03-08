@@ -1,17 +1,25 @@
-/** @odoo-module alias=@mail/../tests/core/search_highlight_test default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, expect, test } from "@odoo/hoot";
 
 import { HIGHLIGHT_CLASS, searchHighlight } from "@mail/core/common/message_search_hook";
-import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
+import {
+    SIZES,
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    openDiscuss,
+    openFormView,
+    patchUiSize,
+    start,
+    startServer,
+    triggerHotkey,
+} from "../mail_test_helpers";
+import { serverState } from "@web/../tests/web_test_helpers";
 
-import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { SIZES, patchUiSize } from "../helpers/patch_ui_size";
+describe.current.tags("desktop");
+defineMailModels();
 
-QUnit.module("Search highlight test", {});
-
-test("Search highlight", async (assert) => {
+test("Search highlight", async () => {
     const testCases = [
         {
             input: "test odoo",
@@ -96,7 +104,7 @@ test("Search highlight", async (assert) => {
         },
     ];
     for (const { input, output, searchTerm } of testCases) {
-        assert.equal(searchHighlight(searchTerm, input), output);
+        expect(searchHighlight(searchTerm, input).toString()).toBe(output);
     }
 });
 

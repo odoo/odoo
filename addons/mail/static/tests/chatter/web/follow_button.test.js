@@ -1,13 +1,17 @@
-/** @odoo-module alias=@mail/../tests/chatter/web/follow_button_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import {
+    click,
+    contains,
+    defineMailModels,
+    openFormView,
+    start,
+    startServer,
+    triggerEvents,
+} from "../../mail_test_helpers";
+import { serverState } from "@web/../tests/web_test_helpers";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openFormView, start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains, triggerEvents } from "@web/../tests/utils";
-
-QUnit.module("follow button");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("base rendering not editable", async () => {
     await start();
@@ -40,8 +44,9 @@ test('click on "follow" button', async () => {
 });
 
 test('Click on "follow" button should save draft record', async () => {
-    const views = {
-        "res.partner,false,form": `
+    await start();
+    await openFormView("res.partner", undefined, {
+        arch: `
             <form string="Partners">
                 <sheet>
                     <field name="name" required="1"/>
@@ -50,9 +55,7 @@ test('Click on "follow" button should save draft record', async () => {
                     <field name="message_follower_ids"/>
                 </div>
             </form>`,
-    };
-    await start({ serverData: { views } });
-    await openFormView("res.partner");
+    });
     await contains("button", { text: "Follow" });
     await contains("div.o_field_char");
     await click("button", { text: "Follow" });

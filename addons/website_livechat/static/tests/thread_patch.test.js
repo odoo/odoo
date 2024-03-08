@@ -1,25 +1,24 @@
-const test = QUnit.test; // QUnit.test()
-
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
+import { contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { defineWebsiteLivechatModels } from "./website_livechat_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { url } from "@web/core/utils/urls";
-import { contains } from "@web/../tests/utils";
 import { deserializeDateTime } from "@web/core/l10n/dates";
+import { describe, test } from "@odoo/hoot";
 
-QUnit.module("thread (patch)");
+describe.current.tags("desktop");
+defineWebsiteLivechatModels();
 
 test("Rendering of visitor banner", async () => {
     const pyEnv = await startServer();
-    const countryId = pyEnv["res.country"].create({ code: "BE" });
+    const country_id = pyEnv["res.country"].create({ code: "BE" });
+    const lang_id = pyEnv["res.lang"].create({ name: "English" });
+    const website_id = pyEnv["website"].create({ name: "General website" });
     const visitorId = pyEnv["website.visitor"].create({
-        country_id: countryId,
+        country_id,
         history: "Home → Contact",
         is_connected: true,
-        lang_name: "English",
-        website_name: "General website",
+        lang_id,
+        website_id,
     });
     pyEnv["website.visitor"].write([visitorId], {
         display_name: `Visitor #${visitorId}`,
@@ -38,7 +37,7 @@ test("Rendering of visitor banner", async () => {
     await start();
     await openDiscuss(channelId);
     await contains("img.o-website_livechat-VisitorBanner-avatar");
-    const guest = pyEnv["mail.guest"].search_read([["id", "=", guestId]])[0];
+    const [guest] = pyEnv["mail.guest"].search_read([["id", "=", guestId]]);
     await contains(
         `img.o-website_livechat-VisitorBanner-avatar[data-src='${url(
             `/web/image/mail.guest/${guestId}/avatar_128?unique=${
@@ -56,14 +55,16 @@ test("Rendering of visitor banner", async () => {
 
 test("Livechat with non-logged visitor should show visitor banner", async () => {
     const pyEnv = await startServer();
-    const countryId = pyEnv["res.country"].create({ code: "BE" });
+    const country_id = pyEnv["res.country"].create({ code: "BE" });
+    const lang_id = pyEnv["res.lang"].create({ name: "English" });
+    const website_id = pyEnv["website"].create({ name: "General website" });
     const visitorId = pyEnv["website.visitor"].create({
-        country_id: countryId,
+        country_id,
         display_name: "Visitor #11",
         history: "Home → Contact",
         is_connected: true,
-        lang_name: "English",
-        website_name: "General website",
+        lang_id,
+        website_id,
     });
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor #11" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -83,21 +84,23 @@ test("Livechat with non-logged visitor should show visitor banner", async () => 
 
 test("Livechat with logged visitor should show visitor banner", async () => {
     const pyEnv = await startServer();
-    const resCountryId1 = pyEnv["res.country"].create({ code: "BE" });
-    const partnerId = pyEnv["res.partner"].create({ name: "Partner Visitor" });
+    const country_id = pyEnv["res.country"].create({ code: "BE" });
+    const lang_id = pyEnv["res.lang"].create({ name: "English" });
+    const website_id = pyEnv["website"].create({ name: "General website" });
+    const partner_id = pyEnv["res.partner"].create({ name: "Partner Visitor" });
     const visitorId = pyEnv["website.visitor"].create({
-        country_id: resCountryId1,
+        country_id,
         display_name: "Visitor #11",
         history: "Home → Contact",
         is_connected: true,
-        lang_name: "English",
-        partner_id: partnerId,
-        website_name: "General website",
+        lang_id,
+        partner_id,
+        website_id,
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
+            Command.create({ partner_id }),
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,

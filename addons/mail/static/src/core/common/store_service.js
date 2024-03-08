@@ -1,8 +1,10 @@
 import { BaseStore, makeStore, Record } from "@mail/core/common/record";
+import { rpcWithEnv } from "@mail/utils/common/misc";
 import { reactive } from "@odoo/owl";
 
 import { router } from "@web/core/browser/router";
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -14,6 +16,7 @@ export class Store extends BaseStore {
 
     /** @returns {import("models").Store|import("models").Store[]} */
     static insert() {
+        rpc = rpcWithEnv(this.env);
         return super.insert(...arguments);
     }
 

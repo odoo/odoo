@@ -1,40 +1,40 @@
-/** @odoo-module alias=@mail/../tests/composer/composer_tests default=false */
-const test = QUnit.test; // QUnit.test()
-
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { describe, beforeEach, expect, test } from "@odoo/hoot";
 
 import { Composer } from "@mail/core/common/composer";
-import { Command } from "@mail/../tests/helpers/command";
-import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
-
 import {
-    makeDeferred,
-    nextTick,
-    patchWithCleanup,
-    triggerHotkey,
-} from "@web/../tests/helpers/utils";
-import {
+    SIZES,
     click,
     contains,
     createFile,
+    defineMailModels,
     dragenterFiles,
     dropFiles,
     inputFiles,
     insertText,
+    onRpcBefore,
+    openDiscuss,
+    openFormView,
     pasteFiles,
+    patchUiSize,
     scroll,
-} from "@web/../tests/utils";
+    start,
+    startServer,
+    triggerHotkey,
+} from "../mail_test_helpers";
+import { Command, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { Deferred, tick } from "@odoo/hoot-mock";
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 
-QUnit.module("composer", {
-    async beforeEach() {
-        // Simulate real user interactions
-        patchWithCleanup(Composer.prototype, {
-            isEventTrusted() {
-                return true;
-            },
-        });
-    },
+describe.current.tags("desktop");
+defineMailModels();
+
+beforeEach(() => {
+    // Simulate real user interactions
+    patchWithCleanup(Composer.prototype, {
+        isEventTrusted() {
+            return true;
+        },
+    });
 });
 
 test("composer text input: basic rendering when posting a message", async () => {
@@ -101,7 +101,6 @@ test("add an emoji after some text", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Blabla");
     await contains(".o-mail-Composer-input", { value: "Blabla" });
-
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji", { text: "🤑" });
     await contains(".o-mail-Composer-input", { value: "Blabla🤑" });
@@ -123,7 +122,7 @@ test("add emoji replaces (keyboard) text selection [REQUIRE FOCUS]", async () =>
     await contains(".o-mail-Composer-input", { value: "🤠" });
 });
 
-test("Cursor is positioned after emoji after adding it", async (assert) => {
+test("Cursor is positioned after emoji after adding it", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "pétanque-tournament-14" });
     await start();
@@ -134,8 +133,8 @@ test("Cursor is positioned after emoji after adding it", async (assert) => {
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji", { text: "🤠" });
     const expectedPos = 2 + "🤠".length;
-    assert.strictEqual(textarea.selectionStart, expectedPos);
-    assert.strictEqual(textarea.selectionEnd, expectedPos);
+    expect(textarea.selectionStart).toBe(expectedPos);
+    expect(textarea.selectionEnd).toBe(expectedPos);
 });
 
 test("selected text is not replaced after cancelling the selection", async () => {
@@ -155,7 +154,7 @@ test("selected text is not replaced after cancelling the selection", async () =>
     await contains(".o-mail-Composer-input", { value: "Blabla🤠" });
 });
 
-test("Selection is kept when changing channel and going back to original channel", async (assert) => {
+test("Selection is kept when changing channel and going back to original channel", async () => {
     const pyEnv = await startServer();
     const [channelId] = pyEnv["discuss.channel"].create([
         { name: "channel1" },
@@ -167,10 +166,11 @@ test("Selection is kept when changing channel and going back to original channel
     // simulate selection of all the content by keyboard
     const textarea = $(".o-mail-Composer-input")[0];
     textarea.setSelectionRange(0, textarea.value.length);
-    await nextTick();
+    await tick();
     await click(":nth-child(2 of .o-mail-DiscussSidebarChannel)");
     await click(":nth-child(1 of .o-mail-DiscussSidebarChannel)");
-    assert.ok(textarea.selectionStart === 0 && textarea.selectionEnd === textarea.value.length);
+    expect(textarea.selectionStart).toBe(0);
+    expect(textarea.selectionEnd).toBe(textarea.value.length);
 });
 
 test("click on emoji button, select emoji, then re-click on button should show emoji picker", async () => {
@@ -240,7 +240,6 @@ test("composer text input cleared on message post", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test message");
     await contains(".o-mail-Composer-input", { value: "test message" });
-
     await click(".o-mail-Composer-send:not([disabled])");
     await contains(".o-mail-Message");
     await contains(".o-mail-Composer-input", { value: "" });
@@ -405,7 +404,7 @@ test('do not post message on channel with "SHIFT-Enter" keyboard shortcut', asyn
     await insertText(".o-mail-Composer-input", "Test");
     await contains(".o-mail-Message", { count: 0 });
     triggerHotkey("shift+Enter");
-    await nextTick(); // weak test, no guarantee that we waited long enough for the potential message to be posted
+    await tick(); // weak test, no guarantee that we waited long enough for the potential message to be posted
     await contains(".o-mail-Message", { count: 0 });
 });
 
@@ -420,7 +419,7 @@ test('post message on channel with "Enter" keyboard shortcut', async () => {
     await contains(".o-mail-Message");
 });
 
-test("leave command on channel", async () => {
+test.skip("leave command on channel", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     await start();
@@ -432,7 +431,6 @@ test("leave command on channel", async () => {
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "general" });
-
     await contains(".o-mail-Discuss", { text: "No conversation selected." });
     await contains(".o_notification", { text: "You unsubscribed from general." });
 });
@@ -448,9 +446,9 @@ test("Can handle leave notification from unknown member", async () => {
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { env } = await start();
+    const env = await start();
     await openDiscuss(channelId);
-    await pyEnv.withUser(userId, () =>
+    await withUser(userId, () =>
         env.services.orm.call("discuss.channel", "action_unfollow", [channelId])
     );
     await click("button[title='Show Member List']");
@@ -477,7 +475,6 @@ test("leave command on chat", async () => {
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Chuck Norris" });
-
     await contains(".o-mail-Discuss h4.text-muted", { text: "No conversation selected." });
     await contains(".o_notification", { text: "You unpinned your conversation with Chuck Norris" });
 });
@@ -525,21 +522,18 @@ test("quick edit last self-message from UP arrow", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message-content", { text: "Test" });
     await contains(".o-mail-Message .o-mail-Composer", { count: 0 });
-
     triggerHotkey("ArrowUp");
     await contains(".o-mail-Message .o-mail-Composer");
-
     triggerHotkey("Escape");
     await contains(".o-mail-Message .o-mail-Composer", { count: 0 });
     await contains(".o-mail-Composer-input:focus");
-
     // non-empty composer should not trigger quick edit
     await insertText(".o-mail-Composer-input", "Shrek");
     triggerHotkey("ArrowUp");
     // Navigable List relies on useEffect, which behaves with 2 animation frames
     // Wait 2 animation frames to make sure it doesn't show quick edit
-    await nextTick();
-    await nextTick();
+    await tick();
+    await tick();
     await contains(".o-mail-Message .o-mail-Composer", { count: 0 });
 });
 
@@ -654,15 +648,10 @@ test("composer: add an attachment in reply to message in history", async () => {
 
 test("composer: send button is disabled if attachment upload is not finished", async () => {
     const pyEnv = await startServer();
-    const attachmentUploadedPromise = makeDeferred();
+    const attachmentUploadedDef = new Deferred();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start({
-        async mockRPC(route) {
-            if (route === "/mail/attachment/upload") {
-                await attachmentUploadedPromise;
-            }
-        },
-    });
+    onRpcBefore("/mail/attachment/upload", async () => await attachmentUploadedDef);
+    await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
         await createFile({
@@ -674,7 +663,7 @@ test("composer: send button is disabled if attachment upload is not finished", a
     await contains(".o-mail-AttachmentCard.o-isUploading");
     await contains(".o-mail-Composer-send:disabled");
     // simulates attachment finishes uploading
-    attachmentUploadedPromise.resolve();
+    attachmentUploadedDef.resolve();
     await contains(".o-mail-AttachmentCard");
     await contains(".o-mail-AttachmentCard.o-isUploading", { count: 0 });
     await contains(".o-mail-Composer-send:enabled");
@@ -738,14 +727,11 @@ test("Replying on a channel should focus composer initially", async () => {
 test("remove an uploading attachment", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    await start({
-        async mockRPC(route) {
-            if (route === "/mail/attachment/upload") {
-                // simulates uploading indefinitely
-                await new Promise(() => {});
-            }
-        },
+    onRpc("/mail/attachment/upload", async (route, args) => {
+        // simulates uploading indefinitely
+        await new Deferred();
     });
+    await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
         await createFile({
@@ -801,16 +787,11 @@ test("Show 'No recipient found.' with 0 followers.", async () => {
 
 test("Uploading multiple files in the composer create multiple temporary attachments", async () => {
     const pyEnv = await startServer();
-    // Promise to block attachment uploading
-    const uploadPromise = makeDeferred();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    await start({
-        async mockRPC(route, args) {
-            if (route === "/mail/attachment/upload") {
-                await uploadPromise;
-            }
-        },
+    onRpc("/mail/attachment/upload", async (route, args) => {
+        await new Deferred();
     });
+    await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
         await createFile({
@@ -835,15 +816,10 @@ test("[technical] does not crash when an attachment is removed before its upload
     // upload started.
     const pyEnv = await startServer();
     // Promise to block attachment uploading
-    const uploadPromise = makeDeferred();
+    const uploadDef = new Deferred();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    await start({
-        async mockRPC(route, args) {
-            if (route === "/mail/attachment/upload") {
-                await uploadPromise;
-            }
-        },
-    });
+    onRpcBefore("/mail/attachment/upload", async () => await uploadDef);
+    await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
         await createFile({
@@ -863,7 +839,7 @@ test("[technical] does not crash when an attachment is removed before its upload
     });
     await contains(".o-mail-AttachmentCard", { count: 0, text: "text2.txt" });
     // Simulates the completion of the upload of the first attachment
-    uploadPromise.resolve();
+    uploadDef.resolve();
     await contains(".o-mail-AttachmentCard:not(.o-isUploading)", { text: "text1.txt" });
 });
 

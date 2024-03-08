@@ -1,56 +1,55 @@
 /** @odoo-module **/
 
-import { constants, models } from "@web/../tests/web_test_helpers";
+import { models } from "@web/../tests/web_test_helpers";
 
 export class IrWebSocket extends models.ServerModel {
     _name = "ir.websocket";
 
     /**
-     * Simulates `_update_presence` on `ir.websocket`.
-     *
      * @param {number} inactivityPeriod
      * @param {number[]} imStatusIdsByModel
      */
-    _updatePresence(inactivityPeriod, imStatusIdsByModel) {
-        const imStatusNotifications = this._getImStatus(imStatusIdsByModel);
+    _update_presence(inactivityPeriod, imStatusIdsByModel) {
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        const imStatusNotifications = this._get_im_status(imStatusIdsByModel);
         if (Object.keys(imStatusNotifications).length > 0) {
-            const [partner] = this.env["res.partner"].read(constants.PARTNER_ID);
-            this.env["bus.bus"]._sendone(partner, "mail.record/insert", imStatusNotifications);
+            const [partner] = ResPartner.read(this.env.user.partner_id);
+            BusBus._sendone(partner, "mail.record/insert", imStatusNotifications);
         }
     }
 
-    /**
-     * Simulates `_get_im_status` on `ir.websocket`.
-     *
-     * @param {Record<string, number[]>} imStatusIdsByModel
-     */
-    _getImStatus({ "res.partner": partnerIds }) {
+    /** @param {Record<string, number[]>} imStatusIdsByModel */
+    _get_im_status({ "res.partner": partnerIds }) {
         const imStatus = {};
         if (partnerIds) {
             imStatus["Persona"] = this.env["res.partner"]
-                .search_read([["id", "in", partnerIds]], ["im_status"], {
-                    context: { active_test: false },
-                })
+                .search_read([["id", "in", partnerIds]], ["im_status"])
                 .map((p) => ({ ...p, type: "partner" }));
         }
         return imStatus;
     }
 
     /**
-     * Simulates `_build_bus_channel_list` on `ir.websocket`.
-     *
      * @returns {string[]}
      */
-    _buildBusChannelList() {
-        const channels = ["broadcast"];
+    _build_bus_channel_list(channels = []) {
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        channels = [...channels];
+        channels.push("broadcast");
         const authenticatedUserId = this.env.cookie.get("authenticated_user_sid");
-        const authenticatedPartner = authenticatedUserId
-            ? this.env["res.partner"].search_read([["user_ids", "in", [authenticatedUserId]]], {
+        const [authenticatedPartner] = authenticatedUserId
+            ? ResPartner.search_read([["user_ids", "in", [authenticatedUserId]]], {
                   context: { active_test: false },
-              })[0]
-            : null;
+              })
+            : [];
         if (authenticatedPartner) {
-            channels.push({ model: "res.partner", id: authenticatedPartner.id });
+            channels.push(authenticatedPartner);
         }
         return channels;
     }

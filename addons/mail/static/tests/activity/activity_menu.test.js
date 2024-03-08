@@ -1,13 +1,8 @@
-/** @odoo-module alias=@mail/../tests/activity/activity_menu_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import { click, contains, defineMailModels, start, startServer } from "../mail_test_helpers";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.module("activity menu");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("should update activities when opening the activity menu", async () => {
     const pyEnv = await startServer();

@@ -1,14 +1,18 @@
-/** @odoo-module alias=@mail/../tests/discuss/core/channel_invitation_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import {
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    openDiscuss,
+    start,
+    startServer,
+} from "../../mail_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains, insertText } from "@web/../tests/utils";
-
-QUnit.module("channel invitation form");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("should display the channel invitation form after clicking on the invite button of a chat", async () => {
     const pyEnv = await startServer();
@@ -154,12 +158,12 @@ test("unnamed group chat should display correct name just after being invited", 
             channel_type: "group",
         },
     ]);
-    const { env } = await start();
+    const env = await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Jane and Mitchell Admin" });
     const currentPartnerId = serverState.partnerId;
-    await pyEnv.withUser(userId, async () => {
+    await withUser(userId, async () => {
         await env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
             partner_ids: [currentPartnerId],
         });

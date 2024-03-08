@@ -1,16 +1,11 @@
-/** @odoo-module alias=@mail/../tests/message/message_seen_indicator_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, expect, test } from "@odoo/hoot";
+import { contains, defineMailModels, openDiscuss, start, startServer } from "../mail_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
+describe.current.tags("desktop");
+defineMailModels();
 
-import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
-import { contains } from "@web/../tests/utils";
-
-QUnit.module("message_seen_indicator");
-
-test("rendering when just one has received the message", async (assert) => {
+test("rendering when just one has received the message", async () => {
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
     const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
@@ -40,11 +35,11 @@ test("rendering when just one has received the message", async (assert) => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-MessageSeenIndicator");
-    assert.doesNotHaveClass($(".o-mail-MessageSeenIndicator"), "o-all-seen");
+    expect($(".o-mail-MessageSeenIndicator")).not.toHaveClass("o-all-seen");
     await contains(".o-mail-MessageSeenIndicator i");
 });
 
-test("rendering when everyone have received the message", async (assert) => {
+test("rendering when everyone have received the message", async () => {
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
     const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
@@ -71,11 +66,11 @@ test("rendering when everyone have received the message", async (assert) => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-MessageSeenIndicator");
-    assert.doesNotHaveClass($(".o-mail-MessageSeenIndicator"), "o-all-seen");
+    expect($(".o-mail-MessageSeenIndicator")).not.toHaveClass("o-all-seen");
     await contains(".o-mail-MessageSeenIndicator i");
 });
 
-test("rendering when just one has seen the message", async (assert) => {
+test("rendering when just one has seen the message", async () => {
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
     const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
@@ -109,11 +104,11 @@ test("rendering when just one has seen the message", async (assert) => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-MessageSeenIndicator");
-    assert.doesNotHaveClass($(".o-mail-MessageSeenIndicator"), "o-all-seen");
+    expect($(".o-mail-MessageSeenIndicator")).not.toHaveClass("o-all-seen");
     await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
 });
 
-test("rendering when just one has seen & received the message", async (assert) => {
+test("rendering when just one has seen & received the message", async () => {
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
     const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
@@ -143,11 +138,11 @@ test("rendering when just one has seen & received the message", async (assert) =
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-MessageSeenIndicator");
-    assert.doesNotHaveClass($(".o-mail-MessageSeenIndicator"), "o-all-seen");
+    expect($(".o-mail-MessageSeenIndicator")).not.toHaveClass("o-all-seen");
     await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
 });
 
-test("rendering when just everyone has seen the message", async (assert) => {
+test("rendering when just everyone has seen the message", async () => {
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
     const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
@@ -174,7 +169,7 @@ test("rendering when just everyone has seen the message", async (assert) => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-MessageSeenIndicator");
-    assert.hasClass($(".o-mail-MessageSeenIndicator"), "o-all-seen");
+    expect($(".o-mail-MessageSeenIndicator")).toHaveClass("o-all-seen");
     await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
 });
 
@@ -235,7 +230,6 @@ test("'channel_seen' notification received is correctly handled", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await contains(".o-mail-MessageSeenIndicator i", { count: 0 });
-
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     // Simulate received channel seen notification
     pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/seen", {
@@ -271,7 +265,6 @@ test("'channel_fetch' notification then 'channel_seen' received are correctly ha
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await contains(".o-mail-MessageSeenIndicator i", { count: 0 });
-
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     // Simulate received channel fetched notification
     pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
@@ -284,7 +277,6 @@ test("'channel_fetch' notification then 'channel_seen' received are correctly ha
         partner_id: partnerId,
     });
     await contains(".o-mail-MessageSeenIndicator i");
-
     // Simulate received channel seen notification
     pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/seen", {
         id: pyEnv["discuss.channel.member"].search([

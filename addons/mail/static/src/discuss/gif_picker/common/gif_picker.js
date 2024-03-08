@@ -1,10 +1,12 @@
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
 
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 import { user } from "@web/core/user";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
+import { rpcWithEnv } from "@mail/utils/common/misc";
 
 /**
  * @typedef {Object} TenorCategory
@@ -51,6 +53,7 @@ export class GifPicker extends Component {
     static props = ["PICKERS?", "className?", "close?", "onSelect", "state?"];
 
     setup() {
+        rpc = rpcWithEnv(this.env);
         this.orm = useService("orm");
         this.store = useState(useService("mail.store"));
         this.sequential = useSequential();

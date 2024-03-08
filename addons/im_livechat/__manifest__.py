@@ -77,15 +77,21 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/core/common/**/*',
             'im_livechat/static/src/core/web/**/*',
         ],
-        'web.tests_assets': [
-            'im_livechat/static/tests/helpers/**/*.js',
-        ],
-        'web.qunit_suite_tests': [
+        'web.assets_unit_tests': [
             'im_livechat/static/tests/**/*',
-            ('remove', 'im_livechat/static/tests/mock_server/**/*'),
+            ('remove', 'im_livechat/static/tests/legacy/**/*'),
             ('remove', 'im_livechat/static/tests/embed/**/*'),
             ('remove', 'im_livechat/static/tests/tours/**/*'),
-            ('remove', 'im_livechat/static/tests/helpers/**/*.js'),
+        ],
+        'im_livechat.qunit_embed_suite': [
+            'im_livechat/static/tests/embed/**/*',
+        ],
+        'web.tests_assets': [
+            'im_livechat/static/tests/legacy/helpers/**/*',
+        ],
+        'web.qunit_suite_tests': [
+            'im_livechat/static/tests/legacy/**/*',
+            ('remove', 'im_livechat/static/tests/legacy/helpers/**/*'),
         ],
         'web.assets_tests': [
             'im_livechat/static/tests/tours/**/*',
@@ -135,11 +141,8 @@ Help your customers with this chat, and analyse their feedback.
             ('include', 'web.tests_assets'),
             ('remove', 'web/static/tests/legacy/mock_server_tests.js'),
             ('remove', 'im_livechat/static/**'),
-            'im_livechat/static/tests/helpers/**',
+            'im_livechat/static/tests/legacy/helpers/**',
             ('include', 'im_livechat.assets_embed_core'),
-        ],
-        'im_livechat.qunit_embed_suite': [
-            'im_livechat/static/tests/embed/**/*',
         ],
     },
     'license': 'LGPL-3',

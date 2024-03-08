@@ -1,22 +1,29 @@
-/** @odoo-module alias=@mail/../tests/discuss/voice_message/voice_message_tests default=false */
-const test = QUnit.test; // QUnit.test()
-
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { describe, globals, test } from "@odoo/hoot";
 
 import { VoicePlayer } from "@mail/discuss/voice_message/common/voice_player";
 import { VoiceRecorder } from "@mail/discuss/voice_message/common/voice_recorder";
-import { Command } from "@mail/../tests/helpers/command";
-import { mockGetMedia, openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
 import { Deferred } from "@web/core/utils/concurrency";
-import { url } from "@web/core/utils/urls";
-import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains, createFile } from "@web/../tests/utils";
+import {
+    click,
+    contains,
+    createFile,
+    defineMailModels,
+    mockGetMedia,
+    openDiscuss,
+    start,
+    startServer,
+} from "../../mail_test_helpers";
+import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { mockDate } from "@odoo/hoot-mock";
+import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
 
-QUnit.module("voice message");
-
+/** @type {AudioWorkletNode} */
 let audioProcessor;
+
+describe.current.tags("desktop");
+defineMailModels();
 
 function patchAudio() {
     const {
@@ -139,7 +146,14 @@ test("make voice message in chat", async () => {
             return super.drawWave(...args);
         },
         async fetchFile() {
-            return super.fetchFile(url("/mail/static/src/audio/call_02_in_.mp3"));
+            return super.fetchFile("/mail/static/src/audio/call_02_in_.mp3");
+        },
+        _fetch(url) {
+            if (url.includes("call_02_in_.mp3")) {
+                const realFetch = globals.fetch;
+                return realFetch(...arguments);
+            }
+            return super._fetch(...arguments);
         },
     });
     mockGetMedia();
@@ -155,8 +169,9 @@ test("make voice message in chat", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await loadLamejs(); // simulated AudioProcess.process() requires lamejs fully loaded
     await contains("button[title='Voice Message']");
-    patchDate(2023, 6, 31, 13, 0, 0, 0);
+    mockDate("2023-07-31 13:00:00");
     await click("button[title='Voice Message']");
     await contains(".o-mail-VoiceRecorder", { text: "00 : 00" });
     /**
@@ -173,7 +188,7 @@ test("make voice message in chat", async () => {
      * the following process, it will round down to 11s.
      * The best bet is therefore to use 10s + 500ms difference.
      */
-    patchDate(2023, 6, 31, 13, 0, 10, 500);
+    mockDate("2023-07-31 13:00:10.500");
     // simulate some microphone data
     audioProcessor.process([[new Float32Array(128)]]);
     await contains(".o-mail-VoiceRecorder", { text: "00 : 10" });

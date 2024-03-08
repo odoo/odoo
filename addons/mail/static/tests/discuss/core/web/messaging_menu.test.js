@@ -1,19 +1,25 @@
-/** @odoo-module alias=@mail/../tests/discuss/core/web/messaging_menu_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, expect, test } from "@odoo/hoot";
 
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
+import {
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    openDiscuss,
+    patchBrowserNotification,
+    patchUiSize,
+    start,
+    startServer,
+    triggerHotkey,
+} from "../../../mail_test_helpers";
+import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+import { rpcWithEnv } from "@mail/utils/common/misc";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { Command } from "@mail/../tests/helpers/command";
-import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
-import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
-import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
-
-QUnit.module("messaging menu");
+describe.current.tags("desktop");
+defineMailModels();
 
 test('"Start a conversation" item selection opens chat', async () => {
     patchUiSize({ height: 360, width: 640 });
@@ -143,7 +149,8 @@ test("channel preview ignores messages from the past", async () => {
         parent_id: messageId,
         res_id: channelId,
     });
-    await start();
+    const env = await start();
+    rpc = rpcWithEnv(env);
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await contains(".o-mail-Message-content", { text: "last message" });
@@ -154,7 +161,7 @@ test("channel preview ignores messages from the past", async () => {
     await contains(".o-mail-Message-content", { text: "last message", count: 0 });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await contains(".o-mail-NotificationItem-text", { text: "You: last message" });
-    pyEnv.withUser(serverState.userId, () =>
+    withUser(serverState.userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,
@@ -164,7 +171,7 @@ test("channel preview ignores messages from the past", async () => {
     await contains(".o-mail-NotificationItem-text", { text: "You: new message" });
 });
 
-test("counter is taking into account non-fetched channels", async (assert) => {
+test("counter is taking into account non-fetched channels", async () => {
     patchBrowserNotification("denied");
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
@@ -186,14 +193,14 @@ test("counter is taking into account non-fetched channels", async (assert) => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { env } = await start();
+    const env = await start();
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
-    assert.notOk(
+    expect(
         env.services["mail.store"].Thread.get({ model: "discuss.channel", id: channelId })
-    );
+    ).not.toBeTruthy();
 });
 
-test("counter is updated on receiving message on non-fetched channels", async (assert) => {
+test("counter is updated on receiving message on non-fetched channels", async () => {
     patchBrowserNotification("denied");
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
@@ -215,13 +222,14 @@ test("counter is updated on receiving message on non-fetched channels", async (a
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { env } = await start();
+    const env = await start();
+    rpc = rpcWithEnv(env);
     await contains(".o_menu_systray .dropdown-toggle i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
-    assert.notOk(
+    expect(
         env.services["mail.store"].Thread.get({ model: "discuss.channel", id: channelId })
-    );
-    pyEnv.withUser(userId, () =>
+    ).not.toBeTruthy();
+    withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,

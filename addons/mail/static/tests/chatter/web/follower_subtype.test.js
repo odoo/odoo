@@ -1,13 +1,17 @@
-/** @odoo-module alias=@mail/../tests/chatter/web/follower_subtype_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import {
+    click,
+    contains,
+    defineMailModels,
+    openFormView,
+    start,
+    startServer,
+} from "../../mail_test_helpers";
+import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { MailThread } from "../../mock_server/mock_models/mail_thread";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openFormView, start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.module("follower subtype");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("simplest layout of a followed subtype", async () => {
     const pyEnv = await startServer();
@@ -15,25 +19,22 @@ test("simplest layout of a followed subtype", async () => {
         default: true,
         name: "TestSubtype",
     });
-    const followerId = pyEnv["mail.followers"].create({
+    pyEnv["mail.followers"].create({
         display_name: "François Perusse",
         partner_id: serverState.partnerId,
         res_model: "res.partner",
         res_id: serverState.partnerId,
         subtype_ids: [subtypeId],
     });
-    pyEnv["res.partner"].write([serverState.partnerId], { message_follower_ids: [followerId] });
-    await start({
-        // FIXME: should adapt mock server code to provide "hasWriteAccess"
-        async mockRPC(route, args, performRPC) {
-            if (route === "/mail/thread/data") {
-                // mimic user with write access
-                const res = await performRPC(...arguments);
-                res["hasWriteAccess"] = true;
-                return res;
-            }
+    patchWithCleanup(MailThread.prototype, {
+        _get_mail_thread_data() {
+            // mimic user with write access
+            const res = super._get_mail_thread_data(...arguments);
+            res["hasWriteAccess"] = true;
+            return res;
         },
     });
+    await start();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Followers-button");
     await click("button[title='Edit subscription']");
@@ -52,24 +53,21 @@ test("simplest layout of a not followed subtype", async () => {
         default: true,
         name: "TestSubtype",
     });
-    const followerId = pyEnv["mail.followers"].create({
+    pyEnv["mail.followers"].create({
         display_name: "François Perusse",
         partner_id: serverState.partnerId,
         res_model: "res.partner",
         res_id: serverState.partnerId,
     });
-    pyEnv["res.partner"].write([serverState.partnerId], { message_follower_ids: [followerId] });
-    await start({
-        // FIXME: should adapt mock server code to provide "hasWriteAccess"
-        async mockRPC(route, args, performRPC) {
-            if (route === "/mail/thread/data") {
-                // mimic user with write access
-                const res = await performRPC(...arguments);
-                res["hasWriteAccess"] = true;
-                return res;
-            }
+    patchWithCleanup(MailThread.prototype, {
+        _get_mail_thread_data() {
+            // mimic user with write access
+            const res = super._get_mail_thread_data(...arguments);
+            res["hasWriteAccess"] = true;
+            return res;
         },
     });
+    await start();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Followers-button");
     await click("button[title='Edit subscription']");
@@ -84,24 +82,21 @@ test("toggle follower subtype checkbox", async () => {
         default: true,
         name: "TestSubtype",
     });
-    const followerId = pyEnv["mail.followers"].create({
+    pyEnv["mail.followers"].create({
         display_name: "François Perusse",
         partner_id: serverState.partnerId,
         res_model: "res.partner",
         res_id: serverState.partnerId,
     });
-    pyEnv["res.partner"].write([serverState.partnerId], { message_follower_ids: [followerId] });
-    await start({
-        // FIXME: should adapt mock server code to provide "hasWriteAccess"
-        async mockRPC(route, args, performRPC) {
-            if (route === "/mail/thread/data") {
-                // mimic user with write access
-                const res = await performRPC(...arguments);
-                res["hasWriteAccess"] = true;
-                return res;
-            }
+    patchWithCleanup(MailThread.prototype, {
+        _get_mail_thread_data() {
+            // mimic user with write access
+            const res = super._get_mail_thread_data(...arguments);
+            res["hasWriteAccess"] = true;
+            return res;
         },
     });
+    await start();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Followers-button");
     await click("button[title='Edit subscription']");
@@ -132,19 +127,17 @@ test("follower subtype apply", async () => {
         default: true,
         name: "TestSubtype2",
     });
-    const followerId = pyEnv["mail.followers"].create({
+    pyEnv["mail.followers"].create({
         display_name: "François Perusse",
         partner_id: serverState.partnerId,
         res_model: "res.partner",
         res_id: serverState.partnerId,
         subtype_ids: [subtypeId1],
     });
-    pyEnv["res.partner"].write([serverState.partnerId], { message_follower_ids: [followerId] });
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Followers-button");
     await click("button[title='Edit subscription']");
-
     await contains(
         `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId1}'] input[type='checkbox']:checked`
     );

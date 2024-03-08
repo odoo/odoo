@@ -1,44 +1,53 @@
-/** @odoo-module alias=@mail/../tests/discuss/core/web/discuss_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, expect, test } from "@odoo/hoot";
+import {
+    assertSteps,
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    onRpcBefore,
+    openDiscuss,
+    start,
+    startServer,
+    step,
+    triggerHotkey,
+} from "../../../mail_test_helpers";
+import { onRpc, serverState } from "@web/../tests/web_test_helpers";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
-import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
-
-QUnit.module("discuss");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("can create a new channel [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
-    await start({
-        mockRPC(route, params) {
-            if (
-                route.startsWith("/mail") ||
-                route.startsWith("/discuss") ||
-                [
-                    "/web/dataset/call_kw/discuss.channel/search_read",
-                    "/web/dataset/call_kw/discuss.channel/channel_create",
-                ].includes(route)
-            ) {
-                step(`${route} - ${JSON.stringify(params)}`);
-            }
-        },
+    onRpcBefore((route, args) => {
+        if (route.startsWith("/mail") || route.startsWith("/discuss")) {
+            step(`${route} - ${JSON.stringify(args)}`);
+        }
     });
+    onRpc((route, args) => {
+        if (
+            [
+                "/web/dataset/call_kw/discuss.channel/search_read",
+                "/web/dataset/call_kw/discuss.channel/channel_create",
+            ].includes(route)
+        ) {
+            step(`${route} - ${JSON.stringify(args)}`);
+        }
+    });
+    await start();
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: serverState.userId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     await openDiscuss();
     await assertSteps([
         `/mail/data - ${JSON.stringify({
             channels_as_member: true,
-            context: { lang: "en", tz: "taht", uid: serverState.userId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
         '/mail/inbox/messages - {"limit":30}',
     ]);
@@ -57,7 +66,12 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
                     ["name", "ilike", "abc"],
                 ],
                 fields: ["name"],
-                context: { lang: "en", tz: "taht", uid: serverState.userId },
+                context: {
+                    lang: "en",
+                    tz: "taht",
+                    uid: serverState.userId,
+                    allowed_company_ids: [1],
+                },
             },
         })}`,
     ]);
@@ -70,7 +84,14 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
             model: "discuss.channel",
             method: "channel_create",
             args: ["abc", null],
-            kwargs: { context: { lang: "en", tz: "taht", uid: serverState.userId } },
+            kwargs: {
+                context: {
+                    lang: "en",
+                    tz: "taht",
+                    uid: serverState.userId,
+                    allowed_company_ids: [1],
+                },
+            },
         })}`,
         `/discuss/channel/messages - {"channel_id":${channelId},"limit":30}`,
     ]);
@@ -96,37 +117,40 @@ test("do not close channel selector when creating chat conversation after select
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
 });
 
-test("can join a chat conversation", async (assert) => {
+test("can join a chat conversation", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    await start({
-        mockRPC(route, params) {
-            if (
-                route.startsWith("/mail") ||
-                route.startsWith("/discuss") ||
-                ["/web/dataset/call_kw/discuss.channel/channel_get"].includes(route)
-            ) {
-                step(`${route} - ${JSON.stringify(params)}`);
-            }
-            if (route === "/web/dataset/call_kw/discuss.channel/channel_get") {
-                assert.equal(params.kwargs.partners_to[0], partnerId);
-            }
-        },
+    onRpcBefore((route, args) => {
+        if (route.startsWith("/mail") || route.startsWith("/discuss")) {
+            step(`${route} - ${JSON.stringify(args)}`);
+        }
     });
+    onRpc((route, args) => {
+        if (
+            [
+                "/web/dataset/call_kw/discuss.channel/search_read",
+                "/web/dataset/call_kw/discuss.channel/channel_create",
+                "/web/dataset/call_kw/discuss.channel/channel_get",
+            ].includes(route)
+        ) {
+            step(`${route} - ${JSON.stringify(args)}`);
+        }
+    });
+    await start();
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: serverState.userId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     await openDiscuss();
     await assertSteps([
         `/mail/data - ${JSON.stringify({
             channels_as_member: true,
-            context: { lang: "en", tz: "taht", uid: serverState.userId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
         '/mail/inbox/messages - {"limit":30}',
     ]);
@@ -144,7 +168,12 @@ test("can join a chat conversation", async (assert) => {
             kwargs: {
                 partners_to: [partnerId],
                 force_open: false,
-                context: { lang: "en", tz: "taht", uid: serverState.userId },
+                context: {
+                    lang: "en",
+                    tz: "taht",
+                    uid: serverState.userId,
+                    allowed_company_ids: [1],
+                },
             },
         })}`,
     ]);
@@ -178,7 +207,7 @@ test("can create a group chat conversation", async () => {
 
 test("should create DM chat when adding self and another user", async () => {
     const pyEnv = await startServer();
-    const partner_id = pyEnv["res.partner"].create([{ name: "Mario", im_status: "online" }]);
+    const partner_id = pyEnv["res.partner"].create({ name: "Mario", im_status: "online" });
     pyEnv["res.users"].create({ partner_id });
     await start();
     await openDiscuss();
@@ -215,15 +244,13 @@ test("chat search should not be visible when clicking outside of the field", asy
     await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
 });
 
-test("sidebar: add channel", async (assert) => {
+test("sidebar: add channel", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add");
-    assert.hasAttrValue(
-        $(".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add")[0],
-        "title",
-        "Add or join a channel"
-    );
+    expect(
+        $(".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add")[0]
+    ).toHaveAttribute("title", "Add or join a channel");
     await click(".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add");
     await contains(".o-discuss-ChannelSelector");
     await contains(".o-discuss-ChannelSelector input[placeholder='Add or join a channel']");
@@ -233,18 +260,18 @@ test("Chat is added to discuss on other tab that the one that joined", async () 
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jerry Golay" });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    const tab1 = await start({ asTab: true });
-    const tab2 = await start({ asTab: true });
-    tab1.openDiscuss();
-    tab2.openDiscuss();
+    const env1 = await start({ asTab: true });
+    const env2 = await start({ asTab: true });
+    await openDiscuss(undefined, { target: env1 });
+    await openDiscuss(undefined, { target: env2 });
     await click(".o-mail-DiscussSidebarCategory-chat .o-mail-DiscussSidebarCategory-add", {
-        target: tab1.target,
+        target: env1,
     });
-    await insertText(".o-discuss-ChannelSelector input", "Jer", { target: tab1.target });
-    await click(".o-discuss-ChannelSelector-suggestion", { target: tab1.target });
+    await insertText(".o-discuss-ChannelSelector input", "Jer", { target: env1 });
+    await click(".o-discuss-ChannelSelector-suggestion", { target: env1 });
     triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel", { target: tab1.target, text: "Jerry Golay" });
-    await contains(".o-mail-DiscussSidebarChannel", { target: tab2.target, text: "Jerry Golay" });
+    await contains(".o-mail-DiscussSidebarChannel", { target: env1, text: "Jerry Golay" });
+    await contains(".o-mail-DiscussSidebarChannel", { target: env2, text: "Jerry Golay" });
 });
 
 test("no conversation selected when opening non-existing channel in discuss", async () => {

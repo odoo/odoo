@@ -1,14 +1,19 @@
-const test = QUnit.test; // QUnit.test()
+import {
+    contains,
+    focus,
+    insertText,
+    openDiscuss,
+    patchUiSize,
+    start,
+    startServer,
+    triggerHotkey,
+} from "@mail/../tests/mail_test_helpers";
+import { describe, test } from "@odoo/hoot";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { defineLivechatModels } from "./livechat_test_helpers";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { insertText, contains, focus } from "@web/../tests/utils";
-
-import { Command } from "@mail/../tests/helpers/command";
-import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
-QUnit.module("go to oldest unread livechat");
+describe.current.tags("desktop");
+defineLivechatModels();
 
 test("tab on discuss composer goes to oldest unread livechat", async () => {
     const pyEnv = await startServer();
@@ -69,10 +74,8 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
             res_id: channelIds[2],
         },
     ]);
-
     await start();
     await openDiscuss(channelIds[0]);
-
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 11" });
     await contains(".o-mail-Composer-footer", { text: "Tab to next livechat" });
     await focus(".o-mail-Composer-input");
@@ -214,7 +217,6 @@ test("tab on composer doesn't switch thread if user is typing", async () => {
             name: "Livechat 2",
         },
     ]);
-
     await start();
     await openDiscuss(channelIds[0]);
     await insertText(".o-mail-Composer-input", "Hello, ");
@@ -248,7 +250,6 @@ test("tab on composer doesn't switch thread if no unread thread", async () => {
             name: "Livechat 2",
         },
     ]);
-
     await start();
     await openDiscuss(channelIds[0]);
     await focus(".o-mail-Composer-input");

@@ -1,14 +1,24 @@
-/** @odoo-module alias=@mail/../tests/chatter/web/follower_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, expect, test } from "@odoo/hoot";
+import {
+    assertSteps,
+    click,
+    contains,
+    defineMailModels,
+    editInput,
+    onRpcBefore,
+    openFormView,
+    start,
+    startServer,
+    step,
+} from "../../mail_test_helpers";
+import { mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { Deferred } from "@odoo/hoot-mock";
+import { MailThread } from "../../mock_server/mock_models/mail_thread";
+import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
+import { actionService } from "@web/webclient/actions/action_service";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openFormView, start } from "@mail/../tests/helpers/test_utils";
-
-import { editInput, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { assertSteps, click, contains, step } from "@web/../tests/utils";
-
-QUnit.module("follower");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("base rendering not editable", async () => {
     const pyEnv = await startServer();
@@ -19,16 +29,15 @@ test("base rendering not editable", async () => {
         res_id: threadId,
         res_model: "res.partner",
     });
-    await start({
-        async mockRPC(route, args, performRpc) {
-            if (route === "/mail/thread/data") {
-                // mimic user without write access
-                const res = await performRpc(...arguments);
-                res["hasWriteAccess"] = false;
-                return res;
-            }
+    patchWithCleanup(MailThread.prototype, {
+        _get_mail_thread_data() {
+            // mimic user without write access
+            const res = super._get_mail_thread_data(...arguments);
+            res["hasWriteAccess"] = false;
+            return res;
         },
     });
+    await start();
     await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
@@ -57,7 +66,7 @@ test("base rendering editable", async () => {
     await contains("button[title='Remove this follower']");
 });
 
-test("click on partner follower details", async (assert) => {
+test("click on partner follower details", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -66,25 +75,32 @@ test("click on partner follower details", async (assert) => {
         res_id: threadId,
         res_model: "res.partner",
     });
-    const openFormDef = makeDeferred();
-    const { env } = await start();
-    await openFormView("res.partner", threadId);
-    patchWithCleanup(env.services.action, {
-        doAction(action) {
-            step("do_action");
-            assert.strictEqual(action.res_id, partnerId);
-            assert.strictEqual(action.res_model, "res.partner");
-            assert.strictEqual(action.type, "ir.actions.act_window");
-            openFormDef.resolve();
-        },
+    const openFormDef = new Deferred();
+    mockService("action", () => {
+        const ogService = actionService.start(getMockEnv());
+        return {
+            ...ogService,
+            doAction(action) {
+                if (action?.res_id === partnerId) {
+                    step("do_action");
+                    expect(action.res_id).toBe(partnerId);
+                    expect(action.res_model).toBe("res.partner");
+                    expect(action.type).toBe("ir.actions.act_window");
+                    openFormDef.resolve();
+                    return;
+                }
+                return ogService.doAction.call(this, ...arguments);
+            },
+        };
     });
+    await start();
+    await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
     await contains(".o-mail-Follower-details");
-
     $(".o-mail-Follower-details")[0].click();
     await openFormDef;
-    await assertSteps(["do_action"], "redirect to partner profile");
+    await assertSteps(["do_action"]); // redirect to partner profile
 });
 
 test("click on edit follower", async () => {
@@ -96,18 +112,12 @@ test("click on edit follower", async () => {
         res_id: threadId,
         res_model: "res.partner",
     });
-    await start({
-        async mockRPC(route, args) {
-            if (route.includes("/mail/read_subscription_data")) {
-                step("fetch_subtypes");
-            }
-        },
-    });
+    onRpcBefore("/mail/read_subscription_data", () => step("fetch_subtypes"));
+    await start();
     await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
     await contains("button[title='Edit subscription']");
-
     await click("button[title='Edit subscription']");
     await contains(".o-mail-Follower", { count: 0 });
     await assertSteps(["fetch_subtypes"]);
@@ -123,22 +133,15 @@ test("edit follower and close subtype dialog", async () => {
         res_id: threadId,
         res_model: "res.partner",
     });
-    await start({
-        async mockRPC(route, args) {
-            if (route.includes("/mail/read_subscription_data")) {
-                step("fetch_subtypes");
-            }
-        },
-    });
+    onRpcBefore("/mail/read_subscription_data", () => step("fetch_subtypes"));
+    await start();
     await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
     await contains("button[title='Edit subscription']");
-
     await click("button[title='Edit subscription']");
     await contains(".o-mail-FollowerSubtypeDialog");
     await assertSteps(["fetch_subtypes"]);
-
     await click(".o-mail-FollowerSubtypeDialog button", { text: "Cancel" });
     await contains(".o-mail-FollowerSubtypeDialog", { count: 0 });
 });
@@ -153,8 +156,9 @@ test("remove a follower in a dirty form view", async () => {
         res_id: threadId,
         res_model: "res.partner",
     });
-    const views = {
-        "res.partner,false,form": `
+    await start();
+    await openFormView("res.partner", threadId, {
+        arch: `
             <form>
                 <field name="name"/>
                 <field name="channel_ids" widget="many2many_tags"/>
@@ -163,9 +167,7 @@ test("remove a follower in a dirty form view", async () => {
                     <field name="message_follower_ids"/>
                 </div>
             </form>`,
-    };
-    await start({ serverData: { views } });
-    await openFormView("res.partner", threadId);
+    });
     await click(".o_field_many2many_tags[name='channel_ids'] input");
     await click(".dropdown-item", { text: "General" });
     await contains(".o_tag", { text: "General" });
@@ -187,13 +189,12 @@ test("removing a follower should reload form view", async function () {
         res_id: threadId,
         res_model: "res.partner",
     });
-    await start({
-        async mockRPC(route, args) {
-            if (args.method === "web_read") {
-                step(`read ${args.args[0][0]}`);
-            }
-        },
+    onRpc((route, args) => {
+        if (route === "/web/dataset/call_kw/res.partner/web_read") {
+            step(`read ${args.args[0][0]}`);
+        }
     });
+    await start();
     await openFormView("res.partner", threadId);
     await contains(".o-mail-Followers-button");
     await assertSteps([`read ${threadId}`]);

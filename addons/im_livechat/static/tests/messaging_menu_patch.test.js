@@ -1,14 +1,10 @@
-const test = QUnit.test; // QUnit.test()
+import { click, contains, patchUiSize, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { describe, test } from "@odoo/hoot";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { defineLivechatModels } from "./livechat_test_helpers";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { Command } from "@mail/../tests/helpers/command";
-import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.module("messaging menu (patch)");
+describe.current.tags("desktop");
+defineLivechatModels();
 
 test('livechats should be in "chat" filter', async () => {
     const pyEnv = await startServer();

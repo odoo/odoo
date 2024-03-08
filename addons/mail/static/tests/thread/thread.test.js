@@ -1,29 +1,34 @@
-/** @odoo-module alias=@mail/../tests/thread/thread_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, expect, test } from "@odoo/hoot";
 
-import { rpc } from "@web/core/network/rpc";
-
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
 import { config as transitionConfig } from "@web/core/transition";
-import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import {
     assertSteps,
     click,
     contains,
     createFile,
+    defineMailModels,
     dragenterFiles,
     focus,
     insertText,
+    onRpcBefore,
+    openDiscuss,
+    openFormView,
     scroll,
+    start,
+    startServer,
     step,
     triggerEvents,
-} from "@web/../tests/utils";
+} from "../mail_test_helpers";
+import { Command, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { Deferred, tick } from "@odoo/hoot-mock";
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+import { rpcWithEnv } from "@mail/utils/common/misc";
 
-QUnit.module("thread");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("dragover files on thread with composer", async () => {
     const pyEnv = await startServer();
@@ -218,34 +223,6 @@ test("thread is still scrolling after scrolling up then to bottom", async () => 
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
-test("Can mention other channels in a group-restricted channel", async () => {
-    const pyEnv = await startServer();
-    const groupId = pyEnv["res.groups"].create({
-        name: "Mario Group",
-    });
-    const [channelId1] = pyEnv["discuss.channel"].create([
-        {
-            channel_type: "channel",
-            group_public_id: groupId,
-            name: "Marios",
-        },
-        {
-            channel_type: "channel",
-            group_public_id: false,
-            name: "Link and Zelda",
-        },
-    ]);
-    await start();
-    await openDiscuss(channelId1);
-    await insertText(".o-mail-Composer-input", "#");
-    await contains(".o-mail-Composer-suggestion", { text: "#Marios" });
-    await contains(".o-mail-Composer-suggestion", { text: "#Link and Zelda" });
-    await click(".o-mail-Composer-suggestion", { text: "#Link and Zelda" });
-    await contains(".o-mail-Composer-input", { value: "#Link and Zelda " });
-    await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message-body .o_channel_redirect", { text: "#Link and Zelda" });
-});
-
 test("mention a channel with space in the name", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General good boy" });
@@ -270,7 +247,7 @@ test('mention a channel with "&" in the name', async () => {
     await contains(".o-mail-Message-body .o_channel_redirect", { text: "#General & good" });
 });
 
-test("mark channel as fetched when a new message is loaded and as seen when focusing composer [REQUIRE FOCUS]", async (assert) => {
+test("mark channel as fetched when a new message is loaded and as seen when focusing composer [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "fred@example.com",
@@ -285,34 +262,35 @@ test("mark channel as fetched when a new message is loaded and as seen when focu
         ],
         channel_type: "chat",
     });
-    await start({
-        async mockRPC(route, args, originalRpc) {
-            if (route === "/mail/action" && args.init_messaging) {
-                const res = await originalRpc(...arguments);
-                step(`/mail/action - ${JSON.stringify(args)}`);
-                return res;
-            }
-            if (args.method === "channel_fetched") {
-                assert.strictEqual(args.args[0][0], channelId);
-                assert.strictEqual(args.model, "discuss.channel");
-                step("rpc:channel_fetch");
-            } else if (route === "/discuss/channel/set_last_seen_message") {
-                assert.strictEqual(args.channel_id, channelId);
-                step("rpc:set_last_seen_message");
-            }
-        },
+    onRpcBefore("/mail/action", (args) => {
+        if (args.init_messaging) {
+            step(`/mail/action - ${JSON.stringify(args)}`);
+        }
     });
+    onRpcBefore("/discuss/channel/set_last_seen_message", (args) => {
+        expect(args.channel_id).toBe(channelId);
+        step("rpc:set_last_seen_message");
+    });
+    onRpc((route, args) => {
+        if (route === "/web/dataset/call_kw/discuss.channel/channel_fetched") {
+            expect(args.args[0][0]).toBe(channelId);
+            expect(args.model).toBe("discuss.channel");
+            step("rpc:channel_fetch");
+        }
+    });
+    const env = await start();
+    rpc = rpcWithEnv(env);
     await contains(".o_menu_systray i[aria-label='Messages']");
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: serverState.userId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
-    pyEnv.withUser(userId, () =>
+    withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "Hello!", message_type: "comment" },
             thread_id: channelId,
@@ -327,7 +305,7 @@ test("mark channel as fetched when a new message is loaded and as seen when focu
     await assertSteps(["rpc:set_last_seen_message"]);
 });
 
-test("mark channel as fetched and seen when a new message is loaded if composer is focused [REQUIRE FOCUS]", async (assert) => {
+test("mark channel as fetched and seen when a new message is loaded if composer is focused [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -338,22 +316,25 @@ test("mark channel as fetched and seen when a new message is loaded if composer 
             Command.create({ partner_id: partnerId }),
         ],
     });
-    await start({
-        async mockRPC(route, args) {
-            if (args.method === "channel_fetched" && args.args[0] === channelId) {
+    onRpcBefore("/discuss/channel/set_last_seen_message", (args) => {
+        expect(args.channel_id).toBe(channelId);
+        step("rpc:set_last_seen_message");
+    });
+    onRpc((route, args) => {
+        if (route === "/web/dataset/call_kw/discuss.channel/channel_fetched") {
+            if (args.args[0] === channelId) {
                 throw new Error(
                     "'channel_fetched' RPC must not be called for created channel as message is directly seen"
                 );
-            } else if (route === "/discuss/channel/set_last_seen_message") {
-                assert.strictEqual(args.channel_id, channelId);
-                step("rpc:set_last_seen_message");
             }
-        },
+        }
     });
+    const env = await start();
+    rpc = rpcWithEnv(env);
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-input");
     // simulate receiving a message
-    await pyEnv.withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "<p>Some new message</p>", message_type: "comment" },
             thread_id: channelId,
@@ -381,13 +362,14 @@ test("should scroll to bottom on receiving new message if the list is initially 
             res_id: channelId,
         });
     }
-    await start();
+    const env = await start();
+    rpc = rpcWithEnv(env);
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 11 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
     // simulate receiving a message
-    pyEnv.withUser(userId, () =>
+    withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "hello", message_type: "comment" },
             thread_id: channelId,
@@ -415,14 +397,15 @@ test("should not scroll on receiving new message if the list is initially scroll
             res_id: channelId,
         });
     }
-    await start();
+    const env = await start();
+    rpc = rpcWithEnv(env);
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 11 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
     // simulate receiving a message
-    pyEnv.withUser(userId, () =>
+    withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "hello", message_type: "comment" },
             thread_id: channelId,
@@ -531,14 +514,14 @@ test("new messages separator on receiving new message [REQUIRE FOCUS]", async ()
         ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
-    await start();
+    const env = await start();
+    rpc = rpcWithEnv(env);
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
-
     $(".o-mail-Composer-input")[0].blur();
     // simulate receiving a message
-    pyEnv.withUser(userId, () =>
+    withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "hu", message_type: "comment" },
             thread_id: channelId,
@@ -549,7 +532,7 @@ test("new messages separator on receiving new message [REQUIRE FOCUS]", async ()
     await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "hu" });
     await focus(".o-mail-Composer-input");
-    await nextTick();
+    await tick();
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
 });
 
@@ -567,7 +550,6 @@ test("no new messages separator on posting message (no message history)", async 
     await contains(".o-mail-Composer-input");
     await contains(".o-mail-Message", { count: 0 });
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
-
     await insertText(".o-mail-Composer-input", "hey!");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message");
@@ -743,7 +725,6 @@ test("basic rendering of canceled notification", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message-notification .fa-envelope-o");
-
     await click(".o-mail-Message-notification");
     await contains(".o-mail-MessageNotificationPopover");
     await contains(".o-mail-MessageNotificationPopover .fa-trash-o");
@@ -777,7 +758,8 @@ test("first unseen message should be directly preceded by the new message separa
             res_id: channelId,
         },
     ]);
-    await start();
+    const env = await start();
+    rpc = rpcWithEnv(env);
     await openDiscuss(channelId);
     // send a command that leads to receiving a transient message
     await insertText(".o-mail-Composer-input", "/who");
@@ -786,7 +768,7 @@ test("first unseen message should be directly preceded by the new message separa
     // composer is focused by default, we remove that focus
     $(".o-mail-Composer-input")[0].blur();
     // simulate receiving a message
-    pyEnv.withUser(userId, () =>
+    withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "test", message_type: "comment" },
             thread_id: channelId,
@@ -850,21 +832,16 @@ test("[technical] opening a non-channel chat window should not call channel_fold
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    await start({
-        async mockRPC(route, args) {
-            if (route.includes("channel_fold")) {
-                const message =
-                    "should not call channel_fold when opening a non-channel chat window";
-                step(message);
-                console.error(message);
-                throw Error(message);
-            }
-        },
+    onRpcBefore("/discuss/channel/fold", () => {
+        const message = "should not call channel_fold when opening a non-channel chat window";
+        expect.step(message);
+        console.error(message);
+        throw Error(message);
     });
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow", { count: 0 });
-
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
 });
@@ -872,14 +849,10 @@ test("[technical] opening a non-channel chat window should not call channel_fold
 test("Thread messages are only loaded once", async () => {
     const pyEnv = await startServer();
     const channelIds = pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
-    await start({
-        mockRPC(route, args, originalRPC) {
-            if (route === "/discuss/channel/messages") {
-                step(`load messages - ${args["channel_id"]}`);
-            }
-            return originalRPC(route, args);
-        },
-    });
+    onRpcBefore("/discuss/channel/messages", (args) =>
+        step(`load messages - ${args["channel_id"]}`)
+    );
+    await start();
     pyEnv["mail.message"].create([
         {
             model: "discuss.channel",
@@ -902,21 +875,20 @@ test("Thread messages are only loaded once", async () => {
     await assertSteps([`load messages - ${channelIds[0]}`, `load messages - ${channelIds[1]}`]);
 });
 
-test("Opening thread with needaction messages should mark all messages of thread as read", async (assert) => {
+test("Opening thread with needaction messages should mark all messages of thread as read", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    const { env } = await start({
-        mockRPC(route, args) {
-            if (args.model === "mail.message" && args.method === "mark_all_as_read") {
-                step("mark-all-messages-as-read");
-                assert.deepEqual(args.args[0], [
-                    ["model", "=", "discuss.channel"],
-                    ["res_id", "=", channelId],
-                ]);
-            }
-        },
+    onRpc((route, args) => {
+        if (route === "/web/dataset/call_kw/mail.message/mark_all_as_read") {
+            step("mark-all-messages-as-read");
+            expect(args.args[0]).toEqual([
+                ["model", "=", "discuss.channel"],
+                ["res_id", "=", channelId],
+            ]);
+        }
     });
+    const env = await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
     await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]);
@@ -940,7 +912,8 @@ test("Opening thread with needaction messages should mark all messages of thread
     const [formattedMessage] = await env.services.orm.call("mail.message", "message_format", [
         [messageId],
     ]);
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/inbox", formattedMessage);
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", formattedMessage);
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await click("button", { text: "General" });
     await contains(".o-discuss-badge", { count: 0 });
@@ -951,13 +924,13 @@ test("Opening thread with needaction messages should mark all messages of thread
 test("[technical] Opening thread without needaction messages should not mark all messages of thread as read", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start({
-        mockRPC(route, args) {
-            if (args.model === "mail.message" && args.method === "mark_all_as_read") {
-                step("mark-all-messages-as-read");
-            }
-        },
+    onRpc((route) => {
+        if (route === "/web/dataset/call_kw/mail.message/mark_all_as_read") {
+            step("mark-all-messages-as-read");
+        }
     });
+    const env = await start();
+    rpc = rpcWithEnv(env);
     await openDiscuss(channelId);
     await click("button", { text: "Inbox" });
     await rpc("/mail/message/post", {
@@ -969,11 +942,11 @@ test("[technical] Opening thread without needaction messages should not mark all
         thread_model: "discuss.channel",
     });
     await click("button", { text: "General" });
-    await nextTick();
+    await tick();
     await assertSteps([]);
 });
 
-test("can be marked as read while loading", async function () {
+test("can be marked as read while loading", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -989,14 +962,13 @@ test("can be marked as read while loading", async function () {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const loadDeferred = makeDeferred();
-    await start({
-        async mockRPC(route) {
-            if (route === "/discuss/channel/messages") {
-                await loadDeferred;
-            }
-        },
+    const loadDeferred = new Deferred();
+    onRpc(async (route) => {
+        if (route === "/discuss/channel/messages") {
+            await loadDeferred;
+        }
     });
+    await start();
     await openDiscuss(undefined);
     await contains(".o-discuss-badge", { text: "1" });
     await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });

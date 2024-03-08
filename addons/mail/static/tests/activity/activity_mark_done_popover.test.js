@@ -1,14 +1,22 @@
-/** @odoo-module alias=@mail/../tests/activity/activity_mark_done_popover_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, expect, test } from "@odoo/hoot";
+import {
+    assertSteps,
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    openFormView,
+    start,
+    startServer,
+    step,
+} from "../mail_test_helpers";
+import { mockService, onRpc } from "@web/../tests/web_test_helpers";
+import { Deferred } from "@odoo/hoot-mock";
+import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
+import { actionService } from "@web/webclient/actions/action_service";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openFormView, start } from "@mail/../tests/helpers/test_utils";
-
-import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
-
-QUnit.module("activity mark as done popover");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("activity mark done popover simplest layout", async () => {
     const pyEnv = await startServer();
@@ -32,10 +40,14 @@ test("activity mark done popover simplest layout", async () => {
 test("activity with force next mark done popover simplest layout", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
+    const activityTypeId = pyEnv["mail.activity.type"].create({
+        name: "TriggerType",
+        chaining_type: "trigger",
+    });
     pyEnv["mail.activity"].create({
         activity_category: "not_upload_file",
+        activity_type_id: activityTypeId,
         can_write: true,
-        chaining_type: "trigger",
         res_id: partnerId,
         res_model: "res.partner",
     });
@@ -49,7 +61,7 @@ test("activity with force next mark done popover simplest layout", async () => {
     await contains(".o-mail-ActivityMarkAsDone button", { text: "Discard" });
 });
 
-test("activity mark done popover mark done without feedback", async (assert) => {
+test("activity mark done popover mark done without feedback", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityId = pyEnv["mail.activity"].create({
@@ -58,33 +70,25 @@ test("activity mark done popover mark done without feedback", async (assert) => 
         res_id: partnerId,
         res_model: "res.partner",
     });
-    await start({
-        async mockRPC(route, args) {
-            if (route === "/web/dataset/call_kw/mail.activity/action_feedback") {
-                step("action_feedback");
-                assert.strictEqual(args.args.length, 1);
-                assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], activityId);
-                assert.strictEqual(args.kwargs.attachment_ids.length, 0);
-                assert.notOk(args.kwargs.feedback);
-                // random value returned in order for the mock server to know that this route is implemented.
-                return true;
-            }
-            if (route === "/web/dataset/call_kw/mail.activity/unlink") {
-                // 'unlink' on non-existing record raises a server crash
-                throw new Error(
-                    "'unlink' RPC on activity must not be called (already unlinked from mark as done)"
-                );
-            }
-        },
+    onRpc("/web/dataset/call_kw/mail.activity/action_feedback", (request) => {
+        step("action_feedback");
+        const { params } = request.json();
+        expect(params.args.length).toBe(1);
+        expect(params.args[0].length).toBe(1);
+        expect(params.args[0][0]).toBe(activityId);
+        expect(params.kwargs.attachment_ids).toBeEmpty();
+        expect(params.kwargs.feedback).not.toBeTruthy();
+        // random value returned in order for the mock server to know that this route is implemented.
+        return true;
     });
+    await start();
     await openFormView("res.partner", partnerId);
     await click(".btn", { text: "Mark Done" });
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
     await assertSteps(["action_feedback"]);
 });
 
-test("activity mark done popover mark done with feedback", async (assert) => {
+test("activity mark done popover mark done with feedback", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityId = pyEnv["mail.activity"].create({
@@ -93,26 +97,24 @@ test("activity mark done popover mark done with feedback", async (assert) => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    await start({
-        async mockRPC(route, args) {
-            if (route === "/web/dataset/call_kw/mail.activity/action_feedback") {
-                step("action_feedback");
-                assert.strictEqual(args.args.length, 1);
-                assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], activityId);
-                assert.strictEqual(args.kwargs.attachment_ids.length, 0);
-                assert.strictEqual(args.kwargs.feedback, "This task is done");
-                // random value returned in order for the mock server to know that this route is implemented.
-                return true;
-            }
-            if (route === "/web/dataset/call_kw/mail.activity/unlink") {
-                // 'unlink' on non-existing record raises a server crash
-                throw new Error(
-                    "'unlink' RPC on activity must not be called (already unlinked from mark as done)"
-                );
-            }
-        },
+    onRpc("/web/dataset/call_kw/mail.activity/action_feedback", (request) => {
+        step("action_feedback");
+        const { params } = request.json();
+        expect(params.args.length).toBe(1);
+        expect(params.args[0].length).toBe(1);
+        expect(params.args[0][0]).toBe(activityId);
+        expect(params.kwargs.attachment_ids).toBeEmpty();
+        expect(params.kwargs.feedback).toBe("This task is done");
+        // random value returned in order for the mock server to know that this route is implemented.
+        return true;
     });
+    onRpc("/web/dataset/call_kw/mail.activity/unlink", () => {
+        // 'unlink' on non-existing record raises a server crash
+        throw new Error(
+            "'unlink' RPC on activity must not be called (already unlinked from mark as done)"
+        );
+    });
+    await start();
     await openFormView("res.partner", partnerId);
     await click(".btn", { text: "Mark Done" });
     await insertText(
@@ -123,7 +125,7 @@ test("activity mark done popover mark done with feedback", async (assert) => {
     await assertSteps(["action_feedback"]);
 });
 
-test("activity mark done popover mark done and schedule next", async (assert) => {
+test("activity mark done popover mark done and schedule next", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityId = pyEnv["mail.activity"].create({
@@ -132,33 +134,38 @@ test("activity mark done popover mark done and schedule next", async (assert) =>
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { env } = await start({
-        async mockRPC(route, args) {
-            if (route === "/web/dataset/call_kw/mail.activity/action_feedback_schedule_next") {
-                step("action_feedback_schedule_next");
-                assert.strictEqual(args.args.length, 1);
-                assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], activityId);
-                assert.strictEqual(args.kwargs.feedback, "This task is done");
-                return false;
-            }
-            if (route === "/web/dataset/call_kw/mail.activity/unlink") {
-                // 'unlink' on non-existing record raises a server crash
-                throw new Error(
-                    "'unlink' RPC on activity must not be called (already unlinked from mark as done)"
-                );
-            }
-        },
+    onRpc("/web/dataset/call_kw/mail.activity/action_feedback_schedule_next", (request) => {
+        step("action_feedback_schedule_next");
+        const { params } = request.json();
+        expect(params.args.length).toBe(1);
+        expect(params.args[0].length).toBe(1);
+        expect(params.args[0][0]).toBe(activityId);
+        expect(params.kwargs.feedback).toBe("This task is done");
+        return false;
     });
+    onRpc("/web/dataset/call_kw/mail.activity/unlink", () => {
+        // 'unlink' on non-existing record raises a server crash
+        throw new Error(
+            "'unlink' RPC on activity must not be called (already unlinked from mark as done)"
+        );
+    });
+    mockService("action", () => {
+        const ogService = actionService.start(getMockEnv());
+        return {
+            ...ogService,
+            doAction(action) {
+                if (action?.res_model !== "res.partner") {
+                    step("activity_action");
+                    throw new Error(
+                        "The do-action event should not be triggered when the route doesn't return an action"
+                    );
+                }
+                ogService.doAction.call(this, ...arguments);
+            },
+        };
+    });
+    await start();
     await openFormView("res.partner", partnerId);
-    patchWithCleanup(env.services.action, {
-        doAction() {
-            step("activity_action");
-            throw new Error(
-                "The do-action event should not be triggered when the route doesn't return an action"
-            );
-        },
-    });
     await click(".btn", { text: "Mark Done" });
     await insertText(
         ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']",
@@ -168,7 +175,7 @@ test("activity mark done popover mark done and schedule next", async (assert) =>
     await assertSteps(["action_feedback_schedule_next"]);
 });
 
-test("[technical] activity mark done & schedule next with new action", async (assert) => {
+test("[technical] activity mark done & schedule next with new action", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
@@ -177,26 +184,30 @@ test("[technical] activity mark done & schedule next with new action", async (as
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { env } = await start({
-        async mockRPC(route, args) {
-            if (route === "/web/dataset/call_kw/mail.activity/action_feedback_schedule_next") {
-                return { type: "ir.actions.act_window" };
-            }
-        },
+    onRpc("/web/dataset/call_kw/mail.activity/action_feedback_schedule_next", () => {
+        return { type: "ir.actions.act_window" };
     });
+    const def = new Deferred();
+    mockService("action", () => {
+        const ogService = actionService.start(getMockEnv());
+        return {
+            ...ogService,
+            doAction(action) {
+                if (action?.res_model !== "res.partner") {
+                    def.resolve();
+                    step("activity_action");
+                    expect(action).toEqual(
+                        { type: "ir.actions.act_window" },
+                        { message: "The content of the action should be correct" }
+                    );
+                    return;
+                }
+                return ogService.doAction.call(this, ...arguments);
+            },
+        };
+    });
+    await start();
     await openFormView("res.partner", partnerId);
-    const def = makeDeferred();
-    patchWithCleanup(env.services.action, {
-        doAction(action) {
-            def.resolve();
-            step("activity_action");
-            assert.deepEqual(
-                action,
-                { type: "ir.actions.act_window" },
-                "The content of the action should be correct"
-            );
-        },
-    });
     await click(".btn", { text: "Mark Done" });
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
     await def;

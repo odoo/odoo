@@ -1,16 +1,20 @@
-/** @odoo-module alias=@mail/../tests/mail_utils_tests default=false */
-const test = QUnit.test; // QUnit.test()
-
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { describe, expect, test } from "@odoo/hoot";
 
 import { addLink, parseAndTransform } from "@mail/utils/common/format";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import {
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    openDiscuss,
+    start,
+    startServer,
+} from "./mail_test_helpers";
 
-import { click, contains, insertText } from "@web/../tests/utils";
+describe.current.tags("desktop");
+defineMailModels();
 
-QUnit.module("Mail utils");
-
-test("add_link utility function", function (assert) {
+test("add_link utility function", () => {
     const testInputs = {
         "http://admin:password@example.com:8/%2020": true,
         "https://admin:password@example.com/test": true,
@@ -33,15 +37,15 @@ test("add_link utility function", function (assert) {
     for (const [content, willLinkify] of Object.entries(testInputs)) {
         const output = parseAndTransform(content, addLink);
         if (willLinkify) {
-            assert.strictEqual(output.indexOf("<a "), 0);
-            assert.strictEqual(output.indexOf("</a>"), output.length - 4);
+            expect(output.indexOf("<a ")).toBe(0);
+            expect(output.indexOf("</a>")).toBe(output.length - 4);
         } else {
-            assert.strictEqual(output.indexOf("<a "), -1);
+            expect(output.indexOf("<a ")).toBe(-1);
         }
     }
 });
 
-test("addLink: utility function and special entities", function (assert) {
+test("addLink: utility function and special entities", () => {
     const testInputs = {
         // textContent not unescaped
         "<p>https://example.com/?&amp;currency_id</p>":
@@ -68,15 +72,15 @@ test("addLink: utility function and special entities", function (assert) {
 
     for (const [content, result] of Object.entries(testInputs)) {
         const output = parseAndTransform(content, addLink);
-        assert.strictEqual(output, result);
+        expect(output).toBe(result);
     }
 });
 
-test("addLink: linkify inside text node (1 occurrence)", async (assert) => {
+test("addLink: linkify inside text node (1 occurrence)", async () => {
     const content = "<p>some text https://somelink.com</p>";
     const linkified = parseAndTransform(content, addLink);
-    assert.ok(linkified.startsWith("<p>some text <a"));
-    assert.ok(linkified.endsWith("</a></p>"));
+    expect(linkified.startsWith("<p>some text <a")).toBeTruthy();
+    expect(linkified.endsWith("</a></p>")).toBeTruthy();
 
     // linkify may add some attributes. Since we do not care of their exact
     // stringified representation, we continue deeper assertion with query
@@ -85,12 +89,12 @@ test("addLink: linkify inside text node (1 occurrence)", async (assert) => {
     const div = document.createElement("div");
     fragment.appendChild(div);
     div.innerHTML = linkified;
-    assert.strictEqual(div.textContent, "some text https://somelink.com");
+    expect(div.textContent).toBe("some text https://somelink.com");
     await contains("a", { target: div });
-    assert.strictEqual(div.querySelector(":scope a").textContent, "https://somelink.com");
+    expect(div.querySelector(":scope a").textContent).toBe("https://somelink.com");
 });
 
-test("addLink: linkify inside text node (2 occurrences)", function (assert) {
+test("addLink: linkify inside text node (2 occurrences)", () => {
     // linkify may add some attributes. Since we do not care of their exact
     // stringified representation, we continue deeper assertion with query
     // selectors.
@@ -100,13 +104,12 @@ test("addLink: linkify inside text node (2 occurrences)", function (assert) {
     const div = document.createElement("div");
     fragment.appendChild(div);
     div.innerHTML = linkified;
-    assert.strictEqual(
-        div.textContent,
+    expect(div.textContent).toBe(
         "some text https://somelink.com and again https://somelink2.com ..."
     );
-    assert.strictEqual(div.querySelectorAll(":scope a").length, 2);
-    assert.strictEqual(div.querySelectorAll(":scope a")[0].textContent, "https://somelink.com");
-    assert.strictEqual(div.querySelectorAll(":scope a")[1].textContent, "https://somelink2.com");
+    expect(div.querySelectorAll(":scope a")).toHaveCount(2);
+    expect(div.querySelectorAll(":scope a")[0].textContent).toBe("https://somelink.com");
+    expect(div.querySelectorAll(":scope a")[1].textContent).toBe("https://somelink2.com");
 });
 
 test("url", async () => {

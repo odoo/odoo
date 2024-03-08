@@ -1,14 +1,26 @@
-/** @odoo-module alias=@mail/../tests/composer/suggested_recipients_test default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, expect, test } from "@odoo/hoot";
+import {
+    assertSteps,
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    onRpcBefore,
+    openFormView,
+    registerArchs,
+    start,
+    startServer,
+    step,
+} from "../mail_test_helpers";
+import { mockService } from "@web/../tests/web_test_helpers";
+import { Deferred, tick } from "@odoo/hoot-mock";
+import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
+import { actionService } from "@web/webclient/actions/action_service";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+describe.current.tags("desktop");
+defineMailModels();
 
-import { openFormView, start } from "@mail/../tests/helpers/test_utils";
-
-import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
-
-const views = {
+const archs = {
     "res.fake,false,form": `
         <form string="Fake">
             <sheet></sheet>
@@ -27,8 +39,6 @@ const views = {
         </form>`,
 };
 
-QUnit.module("suggested_recipients");
-
 test("with 3 or less suggested recipients: no 'show more' button", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
@@ -46,10 +56,10 @@ test("with 3 or less suggested recipients: no 'show more' button", async () => {
     await contains("button", { count: 0, text: "Show more" });
 });
 
-test("Opening full composer in 'send message' mode should copy selected suggested recipients", async (assert) => {
+test("Opening full composer in 'send message' mode should copy selected suggested recipients", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
-        display_name: "John Jane",
+        name: "John Jane",
         email: "john@jane.be",
     });
     const fakeId = pyEnv["res.fake"].create({
@@ -57,24 +67,33 @@ test("Opening full composer in 'send message' mode should copy selected suggeste
         phone: "123456789",
         partner_ids: [partnerId],
     });
-    const { env } = await start();
-    await openFormView("res.fake", fakeId);
-    const def = makeDeferred();
-    patchWithCleanup(env.services.action, {
-        doAction(action) {
-            step("do-action");
-            assert.strictEqual(action.name, "Compose Email");
-            assert.strictEqual(action.context.default_subtype_xmlid, "mail.mt_comment");
-            assert.strictEqual(action.context.default_partner_ids.length, 2);
-            const johnTestPartnerId = pyEnv["res.partner"].search([
-                ["email", "=", "john@test.be"],
-                ["phone", "=", "123456789"],
-            ])[0];
-            assert.deepEqual(action.context.default_partner_ids, [johnTestPartnerId, partnerId]);
-            def.resolve();
-            return Promise.resolve();
-        },
+    const def = new Deferred();
+    mockService("action", () => {
+        const ogService = actionService.start(getMockEnv());
+        return {
+            ...ogService,
+            doAction(action) {
+                if (action?.res_model !== "res.fake") {
+                    step("do-action");
+                    expect(action.name).toBe("Compose Email");
+                    expect(action.context.default_subtype_xmlid).toBe("mail.mt_comment");
+                    expect(action.context.default_partner_ids.length).toBe(2);
+                    const [johnTestPartnerId] = pyEnv["res.partner"].search([
+                        ["email", "=", "john@test.be"],
+                    ]);
+                    expect(action.context.default_partner_ids).toEqual([
+                        johnTestPartnerId,
+                        partnerId,
+                    ]);
+                    def.resolve();
+                    return Promise.resolve();
+                }
+                return ogService.doAction.call(this, ...arguments);
+            },
+        };
     });
+    await start();
+    await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await contains(".o-mail-SuggestedRecipient", {
         text: "john@test.be",
@@ -89,29 +108,36 @@ test("Opening full composer in 'send message' mode should copy selected suggeste
     await assertSteps(["do-action"]);
 });
 
-test("Opening full composer in 'log note' mode should not copy selected suggested recipients", async (assert) => {
+test("Opening full composer in 'log note' mode should not copy selected suggested recipients", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
-        display_name: "John Jane",
+        name: "John Jane",
         email: "john@jane.be",
     });
     const fakeId = pyEnv["res.fake"].create({
         email_cc: "john@test.be",
         partner_ids: [partnerId],
     });
-    const { env } = await start();
-    await openFormView("res.fake", fakeId);
-    const def = makeDeferred();
-    patchWithCleanup(env.services.action, {
-        doAction(action) {
-            step("do-action");
-            assert.strictEqual(action.name, "Log note");
-            assert.strictEqual(action.context.default_subtype_xmlid, "mail.mt_note");
-            assert.deepEqual(action.context.default_partner_ids, []);
-            def.resolve();
-            return Promise.resolve();
-        },
+    const def = new Deferred();
+    mockService("action", () => {
+        const ogService = actionService.start(getMockEnv());
+        return {
+            ...ogService,
+            doAction(action) {
+                if (action?.res_model !== "res.fake") {
+                    step("do-action");
+                    expect(action.name).toBe("Log note");
+                    expect(action.context.default_subtype_xmlid).toBe("mail.mt_note");
+                    expect(action.context.default_partner_ids).toBeEmpty();
+                    def.resolve();
+                    return Promise.resolve();
+                }
+                return ogService.doAction.call(this, ...arguments);
+            },
+        };
     });
+    await start();
+    await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await contains(".o-mail-SuggestedRecipient", {
         text: "john@test.be",
@@ -138,7 +164,8 @@ test("more than 3 suggested recipients: display only 3 and 'show more' button", 
     const fakeId = pyEnv["res.fake"].create({
         partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
     });
-    await start({ serverData: { views } });
+    registerArchs(archs);
+    await start();
     await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await contains("button", { text: "Show more" });
@@ -155,7 +182,8 @@ test("more than 3 suggested recipients: show all of them on click 'show more' bu
     const fakeId = pyEnv["res.fake"].create({
         partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
     });
-    await start({ serverData: { views } });
+    registerArchs(archs);
+    await start();
     await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await click("button", { text: "Show more" });
@@ -173,7 +201,8 @@ test("more than 3 suggested recipients -> click 'show more' -> 'show less' butto
     const fakeId = pyEnv["res.fake"].create({
         partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
     });
-    await start({ serverData: { views } });
+    registerArchs(archs);
+    await start();
     await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await click("button", { text: "Show more" });
@@ -191,7 +220,8 @@ test("suggested recipients list display 3 suggested recipient and 'show more' bu
     const fakeId = pyEnv["res.fake"].create({
         partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
     });
-    await start({ serverData: { views } });
+    registerArchs(archs);
+    await start();
     await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await click("button", { text: "Show more" });
@@ -200,71 +230,58 @@ test("suggested recipients list display 3 suggested recipient and 'show more' bu
     await contains("button", { text: "Show more" });
 });
 
-test("suggest recipient on 'Send message' composer (all checked by default)", async (assert) => {
+test("suggest recipient on 'Send message' composer (all checked by default)", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
-        display_name: "John Jane",
+        name: "John Jane",
         email: "john@jane.be",
     });
     const fakeId = pyEnv["res.fake"].create({
         email_cc: "john@test.be",
         partner_ids: [partnerId],
-        phone: "123456789",
     });
-    await start({ serverData: { views } });
+    registerArchs(archs);
+    await start();
     await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await contains(".o-mail-SuggestedRecipient input:checked", { count: 2 });
-    assert.ok(
-        $(".o-mail-SuggestedRecipient:not([data-partner-id]) input[type=checkbox]")[0].checked
-    );
-    assert.ok(
+    expect(
+        $(".o-mail-SuggestedRecipient:not([data-partner-id]) input[type=checkbox]")[0]
+    ).toBeChecked();
+    expect(
         $(`.o-mail-SuggestedRecipient[data-partner-id="${partnerId}"] input[type=checkbox]`)[0]
-            .checked
-    );
+    ).toBeChecked();
     // Ensure that partner `john@test.be` is created while sending the message (not before)
-    let partner = pyEnv["res.partner"].search_read([
-        ["email", "=", "john@test.be"],
-        ["phone", "=", "123456789"],
-    ]);
-    assert.strictEqual(partner.length, 0);
+    let partners = pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]]);
+    expect(partners.length).toBe(0);
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await click(".o-mail-Composer-send");
-    await nextTick();
-    partner = pyEnv["res.partner"].search_read([
-        ["email", "=", "john@test.be"],
-        ["phone", "=", "123456789"],
-    ]);
-    assert.strictEqual(partner.length, 1);
     await contains(".o-mail-Followers-counter", { text: "2" });
+    partners = pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]]);
+    expect(partners.length).toBe(1);
 });
 
-test("suggest recipient on 'Send message' composer (recipient checked/unchecked)", async (assert) => {
+test("suggest recipient on 'Send message' composer (recipient checked/unchecked)", async () => {
     const pyEnv = await startServer();
-    const fakeId = pyEnv["res.fake"].create({
-        email_cc: "john@test.be",
-        phone: "123456789",
-    });
-    await start({ serverData: { views } });
+    const fakeId = pyEnv["res.fake"].create({ email_cc: "john@test.be" });
+    registerArchs(archs);
+    await start();
     await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await contains(".o-mail-SuggestedRecipient input:checked", { count: 1 });
-    assert.ok(
-        $(".o-mail-SuggestedRecipient:not([data-partner-id]) input[type=checkbox]")[0].checked
-    );
+    expect(
+        $(".o-mail-SuggestedRecipient:not([data-partner-id]) input[type=checkbox]")[0]
+    ).toBeChecked();
     // Ensure that partner `john@test.be` is created before sending the message
     await click(".o-mail-SuggestedRecipient input");
     await click(".o-mail-SuggestedRecipient input");
     await click(".o_dialog .o_form_button_save");
-    await nextTick();
-    const partner = pyEnv["res.partner"].search_read([
-        ["email", "=", "john@test.be"],
-        ["phone", "=", "123456789"],
-    ]);
-    assert.strictEqual(partner.length, 1);
+    await tick();
+    const partners = pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]]);
+    expect(partners.length).toBe(1);
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await click(".o-mail-Composer-send");
-    await nextTick();
+    await tick();
     await contains(".o-mail-Followers-counter", { text: "1" });
 });
 
@@ -275,7 +292,8 @@ test("display reason for suggested recipient on mouse over", async () => {
         email: "john@jane.be",
     });
     const fakeId = pyEnv["res.fake"].create({ partner_ids: [partnerId] });
-    await start({ serverData: { views } });
+    registerArchs(archs);
+    await start();
     await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await contains(
@@ -283,26 +301,24 @@ test("display reason for suggested recipient on mouse over", async () => {
     );
 });
 
-test("suggested recipients should not be notified when posting an internal note", async (assert) => {
+test("suggested recipients should not be notified when posting an internal note", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         display_name: "John Jane",
         email: "john@jane.be",
     });
     const fakeId = pyEnv["res.fake"].create({ partner_ids: [partnerId] });
-    await start({
-        serverData: { views },
-        async mockRPC(route, args) {
-            if (route === "/mail/message/post") {
-                assert.strictEqual(args.post_data.partner_ids.length, 0);
-            }
-        },
+    onRpcBefore("/mail/message/post", (args) => {
+        step("message_post");
+        expect(args.post_data.partner_ids).toBeEmpty();
     });
+    await start();
     await openFormView("res.fake", fakeId);
     await click("button", { text: "Log note" });
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message");
+    await assertSteps(["message_post"]);
 });
 
 test("suggested recipients should be added as follower when posting a message", async () => {
@@ -312,9 +328,8 @@ test("suggested recipients should be added as follower when posting a message", 
         email: "john@jane.be",
     });
     const fakeId = pyEnv["res.fake"].create({ partner_ids: [partnerId] });
-    await start({
-        serverData: { views },
-    });
+    registerArchs(archs);
+    await start();
     await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "Dummy Message");

@@ -128,8 +128,12 @@ export class VoicePlayer extends Component {
         ).then((arrayBuffer) => this.drawBuffer(arrayBuffer));
     }
 
+    _fetch(...args) {
+        return fetch(...args);
+    }
+
     async fetchFile(url) {
-        const response = await fetch(url);
+        const response = await this._fetch(url);
         if (!response.ok) {
             throw new Error("HTTP error status: " + response.status);
         }

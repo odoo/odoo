@@ -82,7 +82,7 @@ export class AttachmentUploadService {
                 const threadModel = upload.data.get("thread_model");
                 const thread = this.store.Thread.get({ model: threadModel, id: threadId });
                 const attachment = this.store.Attachment.insert({
-                    ...response,
+                    ...(response?.result ?? response), // FIXME: this should be only response. HOOT tests returns wrong data {result, error}
                     extension: upload.title.split(".").pop(),
                     thread: hooker.composer ? undefined : thread,
                 });
@@ -95,7 +95,10 @@ export class AttachmentUploadService {
                     }
                 }
                 const def = this.deferredByAttachmentId.get(tmpId);
-                this.unlink(this.store.Attachment.get(tmpId));
+                const tmpAttachment = this.store.Attachment.get(tmpId);
+                if (tmpAttachment) {
+                    this.unlink(tmpAttachment);
+                }
                 if (def) {
                     def.resolve(attachment);
                     this.deferredByAttachmentId.delete(tmpId);

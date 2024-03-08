@@ -1,28 +1,18 @@
-/** @odoo-module alias=@mail/../tests/discuss/core/web/command_palette_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
+import {
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    start,
+    startServer,
+    triggerHotkey,
+} from "../../../mail_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 
-import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { commandService } from "@web/core/commands/command_service";
-import { registry } from "@web/core/registry";
-import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
-
-const serviceRegistry = registry.category("services");
-
-QUnit.module("command palette", {
-    async beforeEach() {
-        serviceRegistry.add("command", commandService);
-        registry
-            .category("command_categories")
-            .add("default", { label: "default" })
-            .add("discuss_mentioned", { namespace: "@", name: "Mentions" }, { sequence: 10 })
-            .add("discuss_recent", { namespace: "#", name: "Recent" }, { sequence: 10 });
-    },
-});
+describe.current.tags("desktop");
+defineMailModels();
 
 test("open the chatWindow of a user from the command palette", async () => {
     await start();

@@ -1,24 +1,35 @@
-/** @odoo-module alias=@mail/../tests/discuss/call/call_tests default=false */
-const test = QUnit.test; // QUnit.test()
-
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { Command } from "@mail/../tests/helpers/command";
-import { SIZES, patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-import { mockGetMedia, openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { describe, test } from "@odoo/hoot";
 
 import { browser } from "@web/core/browser/browser";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { assertSteps, click, contains, step, triggerEvents } from "@web/../tests/utils";
+import {
+    SIZES,
+    assertSteps,
+    click,
+    contains,
+    defineMailModels,
+    mockGetMedia,
+    onRpcBefore,
+    openDiscuss,
+    patchUiSize,
+    start,
+    startServer,
+    step,
+    triggerEvents,
+} from "../../mail_test_helpers";
+import {
+    Command,
+    mockService,
+    patchWithCleanup,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 
-QUnit.module("call");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("basic rendering", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "General",
-    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
     await click("[title='Start a Call']");
@@ -43,7 +54,7 @@ test("no call with odoobot", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: pyEnv.odoobotId }),
+            Command.create({ partner_id: serverState.odoobotId }),
         ],
         channel_type: "chat",
     });
@@ -117,35 +128,31 @@ test("should display invitations", async () => {
         channel_member_id: memberId,
         channel_id: channelId,
     });
-    const { env } = await start({
-        async mockRPC(route, args, originalRpc) {
-            if (route === "/mail/action" && args.init_messaging) {
-                const res = await originalRpc(...arguments);
-                step(`/mail/action - ${JSON.stringify(args)}`);
-                return res;
-            }
-        },
+    onRpcBefore("/mail/action", (args) => {
+        if (args.init_messaging) {
+            step(`/mail/action - ${JSON.stringify(args)}`);
+        }
     });
-    patchWithCleanup(env.services["mail.sound_effects"], {
+    mockService("mail.sound_effects", () => ({
         play(name) {
             step(`play - ${name}`);
-            super.play(...arguments);
         },
         stop(name) {
             step(`stop - ${name}`);
-            super.stop(...arguments);
         },
-    });
+    }));
+    await start();
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: serverState.userId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     // send after init_messaging because bus subscription is done after init_messaging
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
+    pyEnv["bus.bus"]._sendone(partner, "mail.record/insert", {
         Thread: {
             id: channelId,
             model: "discuss.channel",
@@ -165,7 +172,7 @@ test("should display invitations", async () => {
     await contains(".o-discuss-CallInvitation");
     await assertSteps(["play - incoming-call"]);
     // Simulate stop receiving call invitation
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
+    pyEnv["bus.bus"]._sendone(partner, "mail.record/insert", {
         Thread: {
             id: channelId,
             model: "discuss.channel",
@@ -179,9 +186,7 @@ test("should display invitations", async () => {
 test("can share screen", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "General",
-    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
     await click("[title='Start a Call']");
@@ -197,9 +202,7 @@ test("can share screen", async () => {
 test("can share user camera", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "General",
-    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
     await click("[title='Start a Call']");
@@ -222,9 +225,7 @@ test("Create a direct message channel when clicking on start a meeting", async (
 test("Can share user camera and screen together", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "General",
-    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
     await click("[title='Start a Call']");
@@ -237,9 +238,7 @@ test("Can share user camera and screen together", async () => {
 test("Click on inset card should replace the inset and active stream together", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "General",
-    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
     await click("[title='Start a Call']");
@@ -256,27 +255,27 @@ test("join/leave sounds are only played on main tab", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const tab1 = await start({ asTab: true });
-    const tab2 = await start({ asTab: true });
-    patchWithCleanup(tab1.env.services["mail.sound_effects"], {
+    const env1 = await start({ asTab: true });
+    const env2 = await start({ asTab: true });
+    patchWithCleanup(env1.services["mail.sound_effects"], {
         play(name) {
             step(`tab1 - play - ${name}`);
         },
     });
-    patchWithCleanup(tab2.env.services["mail.sound_effects"], {
+    patchWithCleanup(env2.services["mail.sound_effects"], {
         play(name) {
             step(`tab2 - play - ${name}`);
         },
     });
-    await tab1.openDiscuss(channelId);
-    await tab2.openDiscuss(channelId);
-    await click("[title='Start a Call']", { target: tab1.target });
-    await contains(".o-discuss-Call", { target: tab1.target });
-    await contains(".o-discuss-Call", { target: tab2.target });
+    await openDiscuss(channelId, { target: env1 });
+    await openDiscuss(channelId, { target: env2 });
+    await click("[title='Start a Call']", { target: env1 });
+    await contains(".o-discuss-Call", { target: env1 });
+    await contains(".o-discuss-Call", { target: env2 });
     await assertSteps(["tab1 - play - channel-join"]);
-    await click("[title='Disconnect']:not([disabled])", { target: tab1.target });
-    await contains(".o-discuss-Call", { target: tab1.target, count: 0 });
-    await contains(".o-discuss-Call", { target: tab2.target, count: 0 });
+    await click("[title='Disconnect']:not([disabled])", { target: env1 });
+    await contains(".o-discuss-Call", { target: env1, count: 0 });
+    await contains(".o-discuss-Call", { target: env2, count: 0 });
     await assertSteps(["tab1 - play - channel-leave"]);
 });
 

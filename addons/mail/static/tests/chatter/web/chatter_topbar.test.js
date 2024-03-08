@@ -1,15 +1,20 @@
-/** @odoo-module alias=@mail/../tests/chatter/web/chatter_topbar_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
+import {
+    click,
+    contains,
+    defineMailModels,
+    onRpcBefore,
+    openFormView,
+    start,
+    startServer,
+} from "../../mail_test_helpers";
+import { onRpc } from "@web/../tests/web_test_helpers";
+import { Deferred, advanceTime } from "@odoo/hoot-mock";
 
-import { makeDeferred } from "@web/../tests/helpers/utils";
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.module("chatter topbar");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("base rendering", async () => {
     const pyEnv = await startServer();
@@ -29,7 +34,7 @@ test("rendering with multiple partner followers", async () => {
     const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([
         { name: "Eden Hazard" },
         { name: "Jean Michang" },
-        { message_follower_ids: [1, 2] },
+        {},
     ]);
     pyEnv["mail.followers"].create([
         {
@@ -61,11 +66,9 @@ test("log note toggling", async () => {
     await openFormView("res.partner", partnerId);
     await contains("button:not(.active)", { text: "Log note" });
     await contains(".o-mail-Composer", { count: 0 });
-
     await click("button", { text: "Log note" });
     await contains("button.active", { text: "Log note" });
     await contains(".o-mail-Composer .o-mail-Composer-input[placeholder='Log an internal note…']");
-
     await click("button", { text: "Log note" });
     await contains("button:not(.active)", { text: "Log note" });
     await contains(".o-mail-Composer", { count: 0 });
@@ -78,11 +81,9 @@ test("send message toggling", async () => {
     await openFormView("res.partner", partnerId);
     await contains("button:not(.active)", { text: "Send message" });
     await contains(".o-mail-Composer", { count: 0 });
-
     await click("button", { text: "Send message" });
     await contains("button.active", { text: "Send message" });
     await contains(".o-mail-Composer-input[placeholder='Send a message to followers…']");
-
     await click("button", { text: "Send message" });
     await contains("button:not(.active)", { text: "Send message" });
     await contains(".o-mail-Composer", { count: 0 });
@@ -96,12 +97,10 @@ test("log note/send message switching", async () => {
     await contains("button:not(.active)", { text: "Send message" });
     await contains("button:not(.active)", { text: "Log note" });
     await contains(".o-mail-Composer", { count: 0 });
-
     await click("button", { text: "Send message" });
     await contains("button.active", { text: "Send message" });
     await contains("button:not(.active)", { text: "Log note" });
     await contains(".o-mail-Composer-input[placeholder='Send a message to followers…']");
-
     await click("button", { text: "Log note" });
     await contains("button:not(.active)", { text: "Send message" });
     await contains("button.active", { text: "Log note" });
@@ -142,14 +141,8 @@ test("attachment counter with attachments", async () => {
 test("attachment counter while loading attachments", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const { advanceTime } = await start({
-        hasTimeControl: true,
-        async mockRPC(route) {
-            if (route.includes("/mail/thread/data")) {
-                await makeDeferred(); // simulate long loading
-            }
-        },
-    });
+    onRpc("/mail/thread/data", async () => await new Deferred()); // simulate long loading
+    await start();
     await openFormView("res.partner", partnerId);
     await contains("button[aria-label='Attach files']");
     await advanceTime(DELAY_FOR_SPINNER);
@@ -160,15 +153,9 @@ test("attachment counter while loading attachments", async () => {
 test("attachment counter transition when attachments become loaded", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const deferred = makeDeferred();
-    const { advanceTime } = await start({
-        hasTimeControl: true,
-        async mockRPC(route) {
-            if (route.includes("/mail/thread/data")) {
-                await deferred;
-            }
-        },
-    });
+    const deferred = new Deferred();
+    onRpcBefore("/mail/thread/data", async () => await deferred);
+    await start();
     await openFormView("res.partner", partnerId);
     await contains("button[aria-label='Attach files']");
     await advanceTime(DELAY_FOR_SPINNER);

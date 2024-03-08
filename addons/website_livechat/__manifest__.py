@@ -35,18 +35,21 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'website_livechat/static/src/**/*',
             ('remove', 'website_livechat/static/src/scss/**/*'),
         ],
+        'web.assets_unit_tests': [
+            'website_livechat/static/tests/**/*',
+            ('remove', 'website_livechat/static/tests/legacy/**/*'),
+            ('remove', 'website_livechat/static/tests/embed/**/*'),
+            ('remove', 'website_livechat/static/tests/tours/**/*'),
+        ],
         'web.assets_tests': [
             'website_livechat/static/tests/tours/**/*',
         ],
         'web.tests_assets': [
-            'website_livechat/static/tests/helpers/**/*.js',
+            'website_livechat/static/tests/legacy/helpers/**/*.js',
         ],
         'web.qunit_suite_tests': [
-            'website_livechat/static/tests/**/*',
-            ('remove', 'website_livechat/static/tests/mock_server/**/*'),
-            ('remove', 'website_livechat/static/tests/tours/**/*'),
-            ('remove', 'website_livechat/static/tests/helpers/**/*.js'),
-            ('remove', 'website_livechat/static/tests/embed/**/*'),
+            'website_livechat/static/tests/legacy/**/*',
+            ('remove', 'website_livechat/static/tests/legacy/helpers/**/*.js'),
         ],
         'im_livechat.qunit_embed_suite': [
             'website_livechat/static/tests/embed/**/*',

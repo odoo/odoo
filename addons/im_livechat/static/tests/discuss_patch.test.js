@@ -1,15 +1,23 @@
-const test = QUnit.test; // QUnit.test()
+import {
+    click,
+    contains,
+    insertText,
+    openDiscuss,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
+import { rpcWithEnv } from "@mail/utils/common/misc";
+import { describe, test } from "@odoo/hoot";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { defineLivechatModels } from "./livechat_test_helpers";
+import { mockDate } from "@odoo/hoot-mock";
+import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { click, contains, insertText } from "@web/../tests/utils";
-
-import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
-QUnit.module("discuss (patch)");
+describe.current.tags("desktop");
+defineLivechatModels();
 
 test("add livechat in the sidebar on visitor sending first message", async () => {
     const pyEnv = await startServer();
@@ -30,12 +38,13 @@ test("add livechat in the sidebar on visitor sending first message", async () =>
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: serverState.partnerId,
     });
-    await start();
+    const env = await start();
+    rpc = rpcWithEnv(env);
     await openDiscuss();
     await contains(".o-mail-DiscussSidebar");
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     // simulate livechat visitor sending a message
-    pyEnv.withGuest(guestId, () =>
+    withGuest(guestId, () =>
         rpc("/mail/message/post", {
             post_data: {
                 body: "new message",
@@ -69,6 +78,7 @@ test("invite button should be present on livechat", async () => {
 });
 
 test("livechats are sorted by last activity time in the sidebar: most recent at the top", async () => {
+    mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });

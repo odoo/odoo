@@ -1,14 +1,22 @@
-/** @odoo-module alias=@mail/../tests/chatter/web/follower_list_menu_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, expect, test } from "@odoo/hoot";
+import {
+    assertSteps,
+    click,
+    contains,
+    defineMailModels,
+    openFormView,
+    scroll,
+    start,
+    startServer,
+    step,
+} from "../../mail_test_helpers";
+import { mockService, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { MailThread } from "../../mock_server/mock_models/mail_thread";
+import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
+import { actionService } from "@web/webclient/actions/action_service";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openFormView, start } from "@mail/../tests/helpers/test_utils";
-
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { assertSteps, click, contains, scroll, step } from "@web/../tests/utils";
-
-QUnit.module("follower list menu");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("base rendering not editable", async () => {
     await start();
@@ -20,30 +28,28 @@ test("base rendering not editable", async () => {
     await contains(".o-mail-Followers-dropdown", { count: 0 });
 });
 
-test("base rendering editable", async (assert) => {
+test("base rendering editable", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    await start({
-        async mockRPC(route, args, performRPC) {
-            if (route === "/mail/thread/data") {
-                // mimic user with write access
-                const res = await performRPC(route, args);
-                res["hasWriteAccess"] = true;
-                return res;
-            }
+    patchWithCleanup(MailThread.prototype, {
+        _get_mail_thread_data() {
+            // mimic user with write access
+            const res = super._get_mail_thread_data(...arguments);
+            res["hasWriteAccess"] = true;
+            return res;
         },
     });
+    await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Followers");
     await contains(".o-mail-Followers-button");
-    assert.notOk($(".o-mail-Followers-button")[0].disabled);
+    expect($(".o-mail-Followers-button")[0]).toBeEnabled();
     await contains(".o-mail-Followers-dropdown", { count: 0 });
-
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Followers-dropdown");
 });
 
-test('click on "add followers" button', async (assert) => {
+test('click on "add followers" button', async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([
         { name: "Partner1" },
@@ -57,36 +63,42 @@ test('click on "add followers" button', async (assert) => {
         res_id: partnerId_1,
         res_model: "res.partner",
     });
-
-    const { env } = await start({
-        async mockRPC(route, args, performRPC) {
-            if (route === "/mail/thread/data") {
-                // mimic user with write access
-                const res = await performRPC(route, args);
-                res["hasWriteAccess"] = true;
-                return res;
-            }
+    patchWithCleanup(MailThread.prototype, {
+        _get_mail_thread_data() {
+            // mimic user with write access
+            const res = super._get_mail_thread_data(...arguments);
+            res["hasWriteAccess"] = true;
+            return res;
         },
     });
+    mockService("action", () => {
+        const ogService = actionService.start(getMockEnv());
+        return {
+            ...ogService,
+            doAction(action, options) {
+                if (action?.res_model === "mail.wizard.invite") {
+                    step("action:open_view");
+                    expect(action.context.default_res_model).toBe("res.partner");
+                    expect(action.context.default_res_id).toBe(partnerId_1);
+                    expect(action.res_model).toBe("mail.wizard.invite");
+                    expect(action.type).toBe("ir.actions.act_window");
+                    pyEnv["mail.followers"].create({
+                        partner_id: partnerId_3,
+                        email: "bla@bla.bla",
+                        is_active: true,
+                        name: "Wololo",
+                        res_id: partnerId_1,
+                        res_model: "res.partner",
+                    });
+                    options.onClose();
+                    return;
+                }
+                return ogService.doAction.call(this, ...arguments);
+            },
+        };
+    });
+    await start();
     await openFormView("res.partner", partnerId_1);
-    patchWithCleanup(env.services.action, {
-        doAction(action, options) {
-            step("action:open_view");
-            assert.strictEqual(action.context.default_res_model, "res.partner");
-            assert.strictEqual(action.context.default_res_id, partnerId_1);
-            assert.strictEqual(action.res_model, "mail.wizard.invite");
-            assert.strictEqual(action.type, "ir.actions.act_window");
-            pyEnv["mail.followers"].create({
-                partner_id: partnerId_3,
-                email: "bla@bla.bla",
-                is_active: true,
-                name: "Wololo",
-                res_id: partnerId_1,
-                res_model: "res.partner",
-            });
-            options.onClose();
-        },
-    });
     await contains(".o-mail-Followers");
     await contains(".o-mail-Followers-counter", { text: "1" });
     await click(".o-mail-Followers-button");
@@ -101,7 +113,7 @@ test('click on "add followers" button', async (assert) => {
     await contains(":nth-child(2 of .o-mail-Follower)", { text: "Partner3" });
 });
 
-test("click on remove follower", async (assert) => {
+test("click on remove follower", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { name: "Partner1" },
@@ -115,26 +127,25 @@ test("click on remove follower", async (assert) => {
         res_id: partnerId_1,
         res_model: "res.partner",
     });
-    await start({
-        async mockRPC(route, args, performRPC) {
-            if (route === "/mail/thread/data") {
-                // mimic user with write access
-                const res = await performRPC(route, args);
-                res["hasWriteAccess"] = true;
-                return res;
-            }
-            if (route.includes("message_unsubscribe")) {
-                step("message_unsubscribe");
-                assert.deepEqual(args.args, [[partnerId_1], [partnerId_2]]);
-            }
+    patchWithCleanup(MailThread.prototype, {
+        _get_mail_thread_data() {
+            // mimic user with write access
+            const res = super._get_mail_thread_data(...arguments);
+            res["hasWriteAccess"] = true;
+            return res;
         },
     });
+    onRpc((route, args) => {
+        if (route === "/web/dataset/call_kw/res.partner/message_unsubscribe") {
+            step("message_unsubscribe");
+            expect(args.args).toEqual([[partnerId_1], [partnerId_2]]);
+        }
+    });
+    await start();
     await openFormView("res.partner", partnerId_1);
-
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
     await contains("button[title='Remove this follower']");
-
     await click("button[title='Remove this follower']");
     await assertSteps(["message_unsubscribe"]);
     await contains(".o-mail-Follower", { count: 0 });
@@ -160,16 +171,15 @@ test('Hide "Add follower" and subtypes edition/removal buttons except own user o
             res_model: "res.partner",
         },
     ]);
-    await start({
-        async mockRPC(route, args, performRPC) {
-            if (route === "/mail/thread/data") {
-                // mimic user with no write access
-                const res = await performRPC(route, args);
-                res["hasWriteAccess"] = false;
-                return res;
-            }
+    patchWithCleanup(MailThread.prototype, {
+        _get_mail_thread_data() {
+            // mimic user with no write access
+            const res = super._get_mail_thread_data(...arguments);
+            res["hasWriteAccess"] = false;
+            return res;
         },
     });
+    await start();
     await openFormView("res.partner", partnerId_1);
     await click(".o-mail-Followers-button");
     await contains("a", { count: 0, text: "Add Followers" });
@@ -272,18 +282,16 @@ test('Show "Add follower" and subtypes edition/removal buttons on all followers 
             res_model: "res.partner",
         },
     ]);
-    await start({
-        async mockRPC(route, args, performRPC) {
-            if (route === "/mail/thread/data") {
-                // mimic user with write access
-                const res = await performRPC(...arguments);
-                res["hasWriteAccess"] = true;
-                return res;
-            }
+    patchWithCleanup(MailThread.prototype, {
+        _get_mail_thread_data() {
+            // mimic user with write access
+            const res = super._get_mail_thread_data(...arguments);
+            res["hasWriteAccess"] = true;
+            return res;
         },
     });
+    await start();
     await openFormView("res.partner", partnerId_1);
-
     await click(".o-mail-Followers-button");
     await contains("a", { text: "Add Followers" });
     await contains(":nth-child(1 of .o-mail-Follower)", {
@@ -297,18 +305,16 @@ test('Show "Add follower" and subtypes edition/removal buttons on all followers 
 test('Show "No Followers" dropdown-item if there are no followers and user does not have write access', async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    await start({
-        async mockRPC(route, args, performRPC) {
-            if (route === "/mail/thread/data") {
-                // mimic user without write access
-                const res = await performRPC(route, args);
-                res["hasWriteAccess"] = false;
-                return res;
-            }
+    patchWithCleanup(MailThread.prototype, {
+        _get_mail_thread_data() {
+            // mimic user without write access
+            const res = super._get_mail_thread_data(...arguments);
+            res["hasWriteAccess"] = false;
+            return res;
         },
     });
+    await start();
     await openFormView("res.partner", partnerId);
-
     await click(".o-mail-Followers-button");
     await contains("div.disabled", { text: "No Followers" });
 });

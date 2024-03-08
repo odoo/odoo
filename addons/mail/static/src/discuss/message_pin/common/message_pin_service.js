@@ -3,11 +3,13 @@ import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { Message as MessageModel } from "@mail/core/common/message_model";
 import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
+import { rpcWithEnv } from "@mail/utils/common/misc";
 
 import { reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
@@ -16,6 +18,7 @@ export const OTHER_LONG_TYPING = 60000;
 patch(Thread.prototype, {
     setup() {
         super.setup();
+        rpc = rpcWithEnv(this.env);
         /** @type {'loaded'|'loading'|'error'|undefined} */
         this.pinnedMessagesState = undefined;
         this.pinnedMessages = Record.many("Message");

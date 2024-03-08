@@ -1,8 +1,10 @@
 import { convertBrToLineBreak, prettifyMessageContent } from "@mail/utils/common/format";
+import { rpcWithEnv } from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 import { user } from "@web/core/user";
 
 const { DateTime } = luxon;
@@ -13,6 +15,7 @@ export class MessageService {
      * @param {Partial<import("services").Services>} services
      */
     constructor(env, services) {
+        rpc = rpcWithEnv(env);
         this.env = env;
         this.store = services["mail.store"];
         this.orm = services.orm;

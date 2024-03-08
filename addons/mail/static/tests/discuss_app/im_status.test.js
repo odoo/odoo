@@ -1,16 +1,21 @@
-/** @odoo-module alias=@mail/../tests/discuss_app/im_status_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import {
+    click,
+    contains,
+    defineMailModels,
+    openDiscuss,
+    start,
+    startServer,
+} from "../mail_test_helpers";
 
 import { UPDATE_BUS_PRESENCE_DELAY } from "@bus/im_status_service";
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Store } from "@mail/core/common/store_service";
-import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { advanceTime } from "@odoo/hoot-mock";
 
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.module("im status");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("initially online", async () => {
     const pyEnv = await startServer();
@@ -67,21 +72,22 @@ test("change icon on change partner im_status", async () => {
         ],
         channel_type: "chat",
     });
-    const { advanceTime } = await start({ hasTimeControl: true });
+    await start();
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
     await contains(".o-mail-ImStatus i[title='Online']");
-
     pyEnv["res.partner"].write([partnerId], { im_status: "offline" });
-    await advanceTime(UPDATE_BUS_PRESENCE_DELAY);
+    // advanceTime() internally mocks date, but time continues to flow.
+    // There's no reliable way to exactly wait UPDATE_BUS_PRESENCE_DELAY,
+    // And we cannot reliably predict how long it takes to reach internal timeouts
+    // Hence we have to overestimate the awaits
+    await advanceTime(UPDATE_BUS_PRESENCE_DELAY * 2);
     await contains(".o-mail-ImStatus i[title='Offline']");
-
     pyEnv["res.partner"].write([partnerId], { im_status: "away" });
-    await advanceTime(UPDATE_BUS_PRESENCE_DELAY);
+    await advanceTime(UPDATE_BUS_PRESENCE_DELAY * 2);
     await contains(".o-mail-ImStatus i[title='Idle']");
-
     pyEnv["res.partner"].write([partnerId], { im_status: "online" });
-    await advanceTime(UPDATE_BUS_PRESENCE_DELAY);
+    await advanceTime(UPDATE_BUS_PRESENCE_DELAY * 2);
     await contains(".o-mail-ImStatus i[title='Online']");
 });
 

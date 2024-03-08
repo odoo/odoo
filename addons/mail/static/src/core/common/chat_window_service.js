@@ -1,7 +1,8 @@
-import { assignDefined } from "@mail/utils/common/misc";
+import { assignDefined, rpcWithEnv } from "@mail/utils/common/misc";
 
 import { browser } from "@web/core/browser/browser";
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 import { registry } from "@web/core/registry";
 
 export const CHAT_WINDOW_END_GAP_WIDTH = 10; // for a single end, multiply by 2 for left and right together.
@@ -23,6 +24,7 @@ export class ChatWindowService {
      * @param {Partial<import("services").Services>} services
      */
     setup(env, services) {
+        rpc = rpcWithEnv(env);
         this.env = env;
         this.store = services["mail.store"];
         this.orm = services.orm;
