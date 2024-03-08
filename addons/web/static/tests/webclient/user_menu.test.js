@@ -1,4 +1,4 @@
-import { beforeEach, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
     click,
     queryAll,
@@ -13,6 +13,7 @@ import {
     mountWithCleanup,
     onRpc,
     patchWithCleanup,
+    serverState,
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -25,12 +26,15 @@ import { odooAccountItem, preferencesItem } from "@web/webclient/user_menu/user_
 
 const userMenuRegistry = registry.category("user_menuitems");
 
+describe.current.tags("desktop");
+
 beforeEach(async () => {
-    patchWithCleanup(user, { name: "Sauron", writeDate: "2024-01-01 12:00:00" });
+    serverState.partnerName = "Sauron";
     clearRegistry(userMenuRegistry);
 });
 
-test.tags("desktop")("can be rendered", async () => {
+test("can be rendered", async () => {
+    patchWithCleanup(user, { writeDate: "2024-01-01 12:00:00" });
     userMenuRegistry.add("bad_item", () => ({
         type: "item",
         id: "bad",
@@ -85,8 +89,7 @@ test.tags("desktop")("can be rendered", async () => {
         `${getOrigin()}/web/image/res.partner/17/avatar_128?unique=1704106800000`
     );
     expect(".dropdown-menu .dropdown-item").toHaveCount(0);
-    // `visible: false` due to the removed `src` by the test suite (=> size 0x0)
-    await contains("button.dropdown-toggle", { visible: false }).click();
+    await contains("button.dropdown-toggle").click();
     expect(".dropdown-menu .dropdown-item").toHaveCount(4);
     expect(".dropdown-menu .dropdown-item input.form-check-input").toHaveCount(1);
     expect("div.dropdown-divider").toHaveCount(1);
@@ -113,15 +116,15 @@ test.tags("desktop")("can be rendered", async () => {
     ]).toVerifySteps();
 });
 
-test.tags("desktop")("display the correct name in debug mode", async () => {
-    patchWithCleanup(odoo, { debug: "1" });
+test("display the correct name in debug mode", async () => {
+    serverState.debug = true;
     await mountWithCleanup(UserMenu);
     expect("img.o_user_avatar").toHaveCount(1);
     expect("small.oe_topbar_name").toHaveCount(1);
     expect(".oe_topbar_name").toHaveText("Sauron" + "\n" + "test");
 });
 
-test.tags("desktop")("can execute the callback of settings", async () => {
+test("can execute the callback of settings", async () => {
     onRpc("/web/dataset/call_kw/res.users/action_get", () => {
         return Promise.resolve({
             name: "Change My Preferences",
@@ -138,14 +141,14 @@ test.tags("desktop")("can execute the callback of settings", async () => {
 
     userMenuRegistry.add("profile", preferencesItem);
     await mountWithCleanup(UserMenu);
-    await contains("button.dropdown-toggle", { visible: false }).click();
+    await contains("button.dropdown-toggle").click();
     expect(".dropdown-menu .dropdown-item").toHaveCount(1);
     expect(".dropdown-menu .dropdown-item").toHaveText("Preferences");
     await contains(".dropdown-menu .dropdown-item").click();
     expect(["7", "Change My Preferences"]).toVerifySteps();
 });
 
-test.tags("desktop")("click on odoo account item", async () => {
+test("click on odoo account item", async () => {
     patchWithCleanup(browser, {
         open: (url) => expect.step(`open ${url}`),
     });
@@ -155,7 +158,7 @@ test.tags("desktop")("click on odoo account item", async () => {
     });
     userMenuRegistry.add("odoo_account", odooAccountItem);
     await mountWithCleanup(UserMenu);
-    await contains("button.dropdown-toggle", { visible: false }).click();
+    await contains("button.dropdown-toggle").click();
     expect(".o-dropdown--menu .dropdown-item").toHaveCount(1);
     expect(".o-dropdown--menu .dropdown-item").toHaveText("My Odoo.com account");
     await contains(".o-dropdown--menu .dropdown-item").click();
