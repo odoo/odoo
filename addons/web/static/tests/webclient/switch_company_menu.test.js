@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAllAttributes } from "@odoo/hoot-dom";
-import { Deferred } from "@odoo/hoot-mock";
+import { Deferred, runAllTimers } from "@odoo/hoot-mock";
 import {
     contains,
     getService,
@@ -12,7 +12,6 @@ import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { session } from "@web/session";
 import { SwitchCompanyMenu } from "@web/webclient/switch_company_menu/switch_company_menu";
-import { runAllTimers } from "../../lib/hoot/hoot-mock";
 
 const ORIGINAL_TOGGLE_DELAY = SwitchCompanyMenu.toggleDelay;
 
