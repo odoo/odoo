@@ -1,14 +1,16 @@
-/** @odoo-module alias=@mail/../tests/discuss/message_pin/pinned_messages_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import {
+    click,
+    contains,
+    defineMailModels,
+    openDiscuss,
+    start,
+    startServer,
+} from "../../mail_test_helpers";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.module("pinned messages");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("Pin message", async () => {
     const pyEnv = await startServer();

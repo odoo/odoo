@@ -1,14 +1,24 @@
-const test = QUnit.test; // QUnit.test()
+import {
+    assertSteps,
+    click,
+    contains,
+    insertText,
+    openDiscuss,
+    start,
+    startServer,
+    step,
+} from "@mail/../tests/mail_test_helpers";
+import { rpcWithEnv } from "@mail/utils/common/misc";
+import { describe, test } from "@odoo/hoot";
+import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
+import { defineLivechatModels } from "./livechat_test_helpers";
+import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
-import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
-import { rpc } from "@web/core/network/rpc";
-import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
-
-QUnit.module("composer (patch)");
+describe.current.tags("desktop");
+defineLivechatModels();
 
 test("Can execute help command on livechat channels", async () => {
     const pyEnv = await startServer();
@@ -22,15 +32,11 @@ test("Can execute help command on livechat channels", async () => {
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
     });
-    await start({
-        mockRPC(route, args, originalMockRPC) {
-            if (args.method === "execute_command_help") {
-                step("execute_command_help");
-                return true;
-            }
-            return originalMockRPC(route, args);
-        },
+    onRpc("/web/dataset/call_kw/discuss.channel/execute_command_help", () => {
+        step("execute_command_help");
+        return true;
     });
+    await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/help");
     await click(".o-mail-Composer-send:enabled");
@@ -49,12 +55,13 @@ test('Receives visitor typing status "is typing"', async () => {
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
     });
-    await start();
+    const env = await start();
+    rpc = rpcWithEnv(env);
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing", { text: "" });
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
-    pyEnv.withGuest(guestId, () =>
+    withGuest(guestId, () =>
         rpc("/im_livechat/notify_typing", {
             is_typing: true,
             channel_id: channel.id,

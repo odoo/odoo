@@ -1,20 +1,20 @@
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import {
+    SIZES,
+    click,
+    contains,
+    patchUiSize,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { defineLivechatModels } from "./livechat_test_helpers";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { Command } from "@mail/../tests/helpers/command";
-import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.module("mobile messaging menu (patch)", {
-    beforeEach() {
-        patchUiSize({ size: SIZES.SM });
-    },
-});
+describe.current.tags("desktop");
+defineLivechatModels();
 
 test("Livechat button is not present when there is no livechat thread", async () => {
+    patchUiSize({ size: SIZES.SM });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu");
@@ -22,12 +22,13 @@ test("Livechat button is not present when there is no livechat thread", async ()
 });
 
 test("Livechat button is present when there is at least one livechat thread", async () => {
+    patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: pyEnv.publicPartnerId }),
+            Command.create({ partner_id: serverState.publicPartnerId }),
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,

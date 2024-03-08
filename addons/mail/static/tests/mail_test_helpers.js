@@ -243,7 +243,7 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
 
 let NEXT_ENV_ID = 1;
 
-export async function startClient({ asTab = false } = {}) {
+export async function start({ asTab = false } = {}) {
     if (!MockServer.current) {
         await startServer();
     }

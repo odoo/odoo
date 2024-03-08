@@ -1,16 +1,23 @@
-/** @odoo-module alias=@mail/../tests/message/link_preview_test default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, expect, test } from "@odoo/hoot";
 
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
+import {
+    assertSteps,
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    onRpcBefore,
+    openDiscuss,
+    start,
+    startServer,
+    step,
+} from "../mail_test_helpers";
+import { rpcWithEnv } from "@mail/utils/common/misc";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains, insertText } from "@web/../tests/utils";
-import { assertSteps, step } from "@web/../tests/legacy/utils";
-
-QUnit.module("link preview");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("auto layout with link preview list", async () => {
     const pyEnv = await startServer();
@@ -249,7 +256,7 @@ test("Remove link preview image", async () => {
     await contains(".o-mail-LinkPreviewImage", { count: 0 });
 });
 
-test("No crash on receiving link preview of non-known message", async (assert) => {
+test("No crash on receiving link preview of non-known message", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({
         image_mimetype: "image/jpg",
@@ -264,12 +271,13 @@ test("No crash on receiving link preview of non-known message", async (assert) =
         model: "discuss.channel",
         res_id: channelId,
     });
-    await start();
+    const env = await start();
+    rpc = rpcWithEnv(env);
     await openDiscuss();
     rpc("/mail/link_preview", { message_id: messageId });
-    assert.ok(true);
+    expect(true).toBeTruthy();
     rpc("/mail/link_preview/hide", { link_preview_ids: [linkPreviewId] });
-    assert.ok(true);
+    expect(true).toBeTruthy();
 });
 
 test("Squash the message and the link preview when the link preview is an image and the link is the only text in the message", async () => {
@@ -378,13 +386,8 @@ test("Delete all link previews at once", async () => {
 test("link preview request is only made when message contains URL", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "Sales" });
-    await start({
-        mockRPC(route) {
-            if (route === "/mail/link_preview") {
-                step(route);
-            }
-        },
-    });
+    onRpcBefore("/mail/link_preview", () => step("/mail/link_preview"));
+    await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello, this message does not contain any link");
     await click("button:enabled", { text: "Send" });

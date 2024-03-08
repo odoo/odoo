@@ -1,20 +1,23 @@
-/** @odoo-module alias=@mail/../tests/discuss/core/web/chat_window_new_message_tests default=false */
-const test = QUnit.test; // QUnit.test()
-
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { describe, expect, test } from "@odoo/hoot";
 
 import {
     CHAT_WINDOW_END_GAP_WIDTH,
     CHAT_WINDOW_INBETWEEN_WIDTH,
     CHAT_WINDOW_WIDTH,
 } from "@mail/core/common/chat_window_service";
-import { Command } from "@mail/../tests/helpers/command";
-import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-import { start } from "@mail/../tests/helpers/test_utils";
+import {
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    patchUiSize,
+    start,
+    startServer,
+} from "../../../mail_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 
-import { click, contains, insertText } from "@web/../tests/utils";
-
-QUnit.module("chat window: new message");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("basic rendering", async () => {
     await start();
@@ -58,7 +61,7 @@ test("fold", async () => {
     await contains(".o-discuss-ChannelSelector");
 });
 
-test('open chat from "new message" chat window should open chat in place of this "new message" chat window', async (assert) => {
+test('open chat from "new message" chat window should open chat in place of this "new message" chat window', async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 131" });
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -77,11 +80,11 @@ test('open chat from "new message" chat window should open chat in place of this
         },
     ]);
     patchUiSize({ width: 1920 });
-    assert.ok(
-        CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 3 + CHAT_WINDOW_INBETWEEN_WIDTH * 2 <
-            1920,
-        "should have enough space to open 3 chat windows simultaneously"
-    );
+    expect(
+        CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 3 + CHAT_WINDOW_INBETWEEN_WIDTH * 2
+    ).toBeLessThan(1920, {
+        message: "should have enough space to open 3 chat windows simultaneously",
+    });
     await start();
     // open "new message" chat window
     await click(".o_menu_systray i[aria-label='Messages']");

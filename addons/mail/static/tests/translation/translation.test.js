@@ -1,13 +1,19 @@
-/** @odoo-module alias=@mail/../tests/translation/translation_test default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import {
+    assertSteps,
+    click,
+    contains,
+    defineMailModels,
+    onRpcBefore,
+    openFormView,
+    start,
+    startServer,
+    step,
+} from "../mail_test_helpers";
+import { serverState } from "@web/../tests/web_test_helpers";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openFormView, start } from "@mail/../tests/helpers/test_utils";
-
-import { assertSteps, click, contains, step } from "@web/../tests/utils";
-
-QUnit.module("Google Cloud Translation");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("Toggle display of original/translated version of chatter message", async () => {
     const pyEnv = await startServer();
@@ -15,17 +21,14 @@ test("Toggle display of original/translated version of chatter message", async (
     pyEnv["mail.message"].create({
         model: "res.partner",
         body: "Al mal tiempo, buena cara.",
-        author_id: pyEnv.odoobotId,
+        author_id: serverState.odoobotId,
         res_id: partnerId,
     });
-    await start({
-        mockRPC(route) {
-            if (route === "/mail/message/translate") {
-                step("Request");
-                return { body: "To bad weather, good face.", lang_name: "Spanish", error: null };
-            }
-        },
+    onRpcBefore("/mail/message/translate", () => {
+        step("Request");
+        return { body: "To bad weather, good face.", lang_name: "Spanish", error: null };
     });
+    await start();
     await openFormView("res.partner", partnerId);
     await click("button[title='Expand']");
     await contains("span[title='Translate']");
@@ -58,13 +61,10 @@ test("translation of email message", async () => {
         author_id: partnerId,
         res_id: partnerId,
     });
-    await start({
-        mockRPC(route) {
-            if (route === "/mail/message/translate") {
-                return { body: "To bad weather, good face.", lang_name: "Spanish", error: null };
-            }
-        },
+    onRpcBefore("/mail/message/translate", (args) => {
+        return { body: "To bad weather, good face.", lang_name: "Spanish", error: null };
     });
+    await start();
     await openFormView("res.partner", partnerId);
     await contains("span", {
         text: "Al mal tiempo, buena cara.",

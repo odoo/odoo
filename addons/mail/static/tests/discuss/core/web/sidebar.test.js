@@ -1,14 +1,17 @@
-/** @odoo-module alias=@mail/../tests/discuss/core/web/sidebar_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import {
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    openDiscuss,
+    start,
+    startServer,
+} from "../../../mail_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains, insertText } from "@web/../tests/utils";
-
-QUnit.module("discuss sidebar");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("sidebar find shows channels matching search term", async () => {
     const pyEnv = await startServer();
@@ -69,9 +72,7 @@ test("unknown channel can be displayed and interacted with", async () => {
     await openDiscuss(channelId);
     await contains(
         ".o-mail-DiscussSidebarCategory-channel + .o-mail-DiscussSidebarChannel.o-active",
-        {
-            text: "Not So Secret",
-        }
+        { text: "Not So Secret" }
     );
     await insertText(".o-mail-Composer-input", "Hello", { replace: true });
     await click(".o-mail-Composer-send:enabled");

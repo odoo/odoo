@@ -1,19 +1,25 @@
-const test = QUnit.test; // QUnit.test()
-
-import { rpc } from "@web/core/network/rpc";
-
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
+import { describe, test } from "@odoo/hoot";
+import {
+    click,
+    contains,
+    insertText,
+    openDiscuss,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { rpcWithEnv } from "@mail/utils/common/misc";
+import { tick } from "@odoo/hoot-mock";
 import { url } from "@web/core/utils/urls";
-import { nextTick } from "@web/../tests/helpers/utils";
 import { deserializeDateTime } from "@web/core/l10n/dates";
+import { defineLivechatModels } from "./livechat_test_helpers";
+import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 
-import { click, contains, insertText } from "@web/../tests/utils";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
-QUnit.module("discuss sidebar (patch)");
+describe.current.tags("desktop");
+defineLivechatModels();
 
 test("Unknown visitor", async () => {
     const pyEnv = await startServer();
@@ -75,20 +81,21 @@ test("Do not show channel when visitor is typing", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: serverState.partnerId,
     });
-    await start();
+    const env = await start();
+    rpc = rpcWithEnv(env);
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     // simulate livechat visitor typing
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
-    await pyEnv.withGuest(guestId, () =>
+    await withGuest(guestId, () =>
         rpc("/im_livechat/notify_typing", {
             is_typing: true,
             channel_id: channel.id,
         })
     );
     // weak test, no guaranteed that we waited long enough for the livechat to potentially appear
-    await nextTick();
+    await tick();
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
 });
 
@@ -174,12 +181,10 @@ test("No counter if category is folded and without unread messages", async () =>
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
     });
-    pyEnv["res.users.settings"].create({
-        user_id: serverState.userId,
-    });
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-livechat");
+    await click(".o-mail-DiscussSidebarCategory-livechat .btn");
     await contains(".o-mail-DiscussSidebarCategory-livechat .o-discuss-badge", { count: 0 });
 });
 
@@ -200,6 +205,7 @@ test("Counter should have correct value of unread threads if category is folded 
     });
     await start();
     await openDiscuss();
+    // first, close the live chat category
     await click(".o-mail-DiscussSidebarCategory-livechat .btn");
     await contains(".o-mail-DiscussSidebarCategory-livechat .o-discuss-badge", { text: "1" });
 });
@@ -215,9 +221,6 @@ test("Close manually by clicking the title", async () => {
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
-    });
-    pyEnv["res.users.settings"].create({
-        user_id: serverState.userId,
     });
     await start();
     await openDiscuss();
@@ -238,9 +241,6 @@ test("Open manually by clicking the title", async () => {
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
-    });
-    pyEnv["res.users.settings"].create({
-        user_id: serverState.userId,
     });
     await start();
     await openDiscuss();
@@ -328,9 +328,10 @@ test("Message unread counter", async () => {
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
     });
-    await start();
+    const env = await start();
+    rpc = rpcWithEnv(env);
     await openDiscuss();
-    pyEnv.withGuest(guestId, () =>
+    withGuest(guestId, () =>
         rpc("/mail/message/post", {
             post_data: {
                 body: "hu",
@@ -360,9 +361,7 @@ test("unknown livechat can be displayed and interacted with", async () => {
     await openDiscuss(channelId);
     await contains(
         ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel.o-active",
-        {
-            text: "Jane",
-        }
+        { text: "Jane" }
     );
     await insertText(".o-mail-Composer-input", "Hello", { replace: true });
     await click(".o-mail-Composer-send:enabled");

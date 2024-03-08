@@ -1,14 +1,17 @@
-/** @odoo-module alias=@mail/../tests/discuss/call/web/call_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import {
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    openDiscuss,
+    start,
+    startServer,
+    triggerHotkey,
+} from "../../../mail_test_helpers";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
-import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
-
-QUnit.module("call");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("no default rtc after joining a chat conversation", async () => {
     const pyEnv = await startServer();

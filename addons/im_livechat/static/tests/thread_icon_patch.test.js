@@ -1,15 +1,15 @@
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import { contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { rpcWithEnv } from "@mail/utils/common/misc";
+import { defineLivechatModels } from "./livechat_test_helpers";
+import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
-import { contains } from "@web/../tests/utils";
-
-QUnit.module("thread icon (patch)");
+describe.current.tags("desktop");
+defineLivechatModels();
 
 test("Public website visitor is typing", async () => {
     const pyEnv = await startServer();
@@ -23,12 +23,13 @@ test("Public website visitor is typing", async () => {
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
     });
-    await start();
+    const env = await start();
+    rpc = rpcWithEnv(env);
     await openDiscuss(channelId);
     await contains(".o-mail-ThreadIcon .fa.fa-comments");
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
-    pyEnv.withGuest(guestId, () =>
+    withGuest(guestId, () =>
         rpc("/im_livechat/notify_typing", {
             is_typing: true,
             channel_id: channel.id,

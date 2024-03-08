@@ -554,7 +554,7 @@ class Contains {
         this.selector = selector;
         this.options = options;
         this.options.count ??= 1;
-        this.options.targetParam = this.options.target?.target ?? this.options.target; // when OdooEnv, special key `target`. See @startClient
+        this.options.targetParam = this.options.target?.target ?? this.options.target; // when OdooEnv, special key `target`. See @start
         this.options.target = this.options.targetParam ?? getFixture();
         let selectorMessage = `${this.options.count} of "${this.selector}"`;
         if (this.options.visible !== undefined) {

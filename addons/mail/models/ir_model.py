@@ -116,6 +116,13 @@ class IrModel(models.Model):
             model_class._inherit = parents + ['mail.activity.mixin']
         return model_class
 
+    def _get_definitions(self, model_names):
+        model_definitions = super()._get_definitions(model_names)
+        for model_name, model_definition in model_definitions.items():
+            if isinstance(self.env[model_name], self.env.registry['mail.activity.mixin']):
+                model_definition["has_activities"] = True
+        return model_definitions
+
     def _get_model_definitions(self, model_names_to_fetch):
         model_definitions = super()._get_model_definitions(model_names_to_fetch)
         for model_name, model_definition in model_definitions.items():

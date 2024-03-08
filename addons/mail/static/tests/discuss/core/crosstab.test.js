@@ -1,14 +1,17 @@
-/** @odoo-module alias=@mail/../tests/discuss/core/crosstab_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import {
+    click,
+    contains,
+    defineMailModels,
+    openDiscuss,
+    start,
+    startServer,
+} from "../../mail_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.module("crosstab");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("Add member to channel", async () => {
     const pyEnv = await startServer();
@@ -41,11 +44,11 @@ test("Remove member from channel", async () => {
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { env } = await start();
+    const env = await start();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { text: "Harry" });
-    pyEnv.withUser(userId, () =>
+    withUser(userId, () =>
         env.services.orm.call("discuss.channel", "action_unfollow", [channelId])
     );
     await contains(".o-discuss-ChannelMember", { count: 0, text: "Harry" });

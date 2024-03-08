@@ -1,13 +1,10 @@
-const test = QUnit.test; // QUnit.test()
+import { click, contains, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { describe, test } from "@odoo/hoot";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { defineLivechatModels } from "./livechat_test_helpers";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { Command } from "@mail/../tests/helpers/command";
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.module("chat window (patch)");
+describe.current.tags("desktop");
+defineLivechatModels();
 
 test("closing a chat window with no message from admin side unpins it", async () => {
     const pyEnv = await startServer();

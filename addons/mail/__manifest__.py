@@ -176,7 +176,6 @@ For more specific needs, you may also assign custom-defined actions
         # Unit test files
         'web.assets_unit_tests': [
             'mail/static/tests/**/*',
-            ('remove', 'mail/static/tests/**/*.test.js'),
             ('remove', 'mail/static/tests/legacy/**/*'), # to remove when all legacy tests are ported
             ('remove', 'mail/static/tests/tours/**/*'),
         ],
@@ -187,7 +186,6 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/tests/legacy/helpers/**/*',
         ],
         'web.qunit_suite_tests': [
-            'mail/static/tests/**/*.test.js',
             'mail/static/tests/legacy/**/*',
             ('remove', 'mail/static/tests/legacy/helpers/**/*'),
         ],

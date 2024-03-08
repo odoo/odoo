@@ -1,14 +1,18 @@
-/** @odoo-module alias=@mail/../tests/chatter/web/attachment_box_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import {
+    SIZES,
+    click,
+    contains,
+    defineMailModels,
+    openFormView,
+    patchUiSize,
+    scroll,
+    start,
+    startServer,
+} from "../../mail_test_helpers";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { openFormView, start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains, scroll } from "@web/../tests/utils";
-
-QUnit.module("attachment box");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("base non-empty rendering", async () => {
     const pyEnv = await startServer();
@@ -27,18 +31,16 @@ test("base non-empty rendering", async () => {
             res_model: "res.partner",
         },
     ]);
-    const views = {
-        "res.partner,false,form": `
+    await start();
+    await openFormView("res.partner", partnerId, {
+        arch: `
             <form>
                 <sheet></sheet>
                 <div class="oe_chatter">
                     <field name="message_ids"  options="{'open_attachments': True}"/>
                 </div>
-            </form>
-        `,
-    };
-    await start({ serverData: { views } });
-    await openFormView("res.partner", partnerId);
+            </form>`,
+    });
     await contains(".o-mail-AttachmentBox");
     await contains("button", { text: "Attach files" });
     await contains(".o-mail-Chatter input[type='file']");
@@ -54,24 +56,20 @@ test("remove attachment should ask for confirmation", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const views = {
-        "res.partner,false,form": `
+    await start();
+    await openFormView("res.partner", partnerId, {
+        arch: `
             <form>
                 <sheet></sheet>
                 <div class="oe_chatter">
                     <field name="message_ids"  options="{'open_attachments': True}"/>
                 </div>
-            </form>
-        `,
-    };
-    await start({ serverData: { views } });
-    await openFormView("res.partner", partnerId);
+            </form>`,
+    });
     await contains(".o-mail-AttachmentCard");
     await contains("button[title='Remove']");
-
     await click("button[title='Remove']");
     await contains(".modal-body", { text: 'Do you really want to delete "Blah.txt"?' });
-
     // Confirm the deletion
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentImage", { count: 0 });
@@ -94,25 +92,23 @@ test("view attachments", async () => {
             res_model: "res.partner",
         },
     ]);
-    const views = {
-        "res.partner,false,form": `<form>
-            <sheet></sheet>
-            <div class="oe_chatter">
-                <field name="message_ids"  options="{'open_attachments': True}"/>
-            </div>
-        </form>`,
-    };
-    await start({ serverData: { views } });
-    await openFormView("res.partner", partnerId);
+    await start();
+    await openFormView("res.partner", partnerId, {
+        arch: `
+            <form>
+                <sheet></sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"  options="{'open_attachments': True}"/>
+                </div>
+            </form>`,
+    });
     await click('.o-mail-AttachmentCard[aria-label="Blah.txt"] .o-mail-AttachmentCard-image');
     await contains(".o-FileViewer");
     await contains(".o-FileViewer-header", { text: "Blah.txt" });
     await contains(".o-FileViewer div[aria-label='Next']");
-
     await click(".o-FileViewer div[aria-label='Next']");
     await contains(".o-FileViewer-header", { text: "Blu.txt" });
     await contains(".o-FileViewer div[aria-label='Next']");
-
     await click(".o-FileViewer div[aria-label='Next']");
     await contains(".o-FileViewer-header", { text: "Blah.txt" });
 });
@@ -159,18 +155,16 @@ test("do not auto-scroll to attachment box when initially open", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const views = {
-        "res.partner,false,form": `
+    await start();
+    await openFormView("res.partner", partnerId, {
+        arch: `
             <form>
                 ${`<sheet><field name="name"/></sheet>`.repeat(100)}
                 <div class="oe_chatter">
                     <field name="message_ids"  options="{'open_attachments': True}"/>
                 </div>
-            </form>
-        `,
-    };
-    await start({ serverData: { views } });
-    await openFormView("res.partner", partnerId);
+            </form>`,
+    });
     await contains(".o-mail-Message");
     // weak test, no guarantee that we waited long enough for the potential scroll to happen
     await contains(".o_content", { scroll: 0 });
@@ -208,19 +202,16 @@ test("attachment box auto-closed on switch to record wih no attachments", async 
             res_model: "res.partner",
         },
     ]);
-    const views = {
-        "res.partner,false,form": `
+    await start();
+    await openFormView("res.partner", partnerId_1, {
+        arch: `
             <form>
                 <sheet></sheet>
                 <div class="oe_chatter">
                     <field name="message_ids"  options="{'open_attachments': True}"/>
                 </div>
-            </form>
-        `,
-    };
-    await start({ serverData: { views } });
-    await openFormView("res.partner", partnerId_1, {
-        props: { resIds: [partnerId_1, partnerId_2] },
+            </form>`,
+        resIds: [partnerId_1, partnerId_2],
     });
     await contains(".o-mail-AttachmentBox");
     await click(".o_pager_next");

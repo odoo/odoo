@@ -1,15 +1,20 @@
-/** @odoo-module alias=@mail/../tests/discuss/core/discuss_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import {
+    assertSteps,
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    openDiscuss,
+    start,
+    startServer,
+    step,
+} from "../../mail_test_helpers";
+import { mockDate } from "@odoo/hoot-mock";
+import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/mock_websocket";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
-
-import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
-import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/helpers/mock_websocket";
-import { patchDate } from "@web/../tests/helpers/utils";
-
-QUnit.module("discuss");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("Member list and settings menu are exclusive", async () => {
     const pyEnv = await startServer();
@@ -34,7 +39,9 @@ test("bus subscription is refreshed when channel is joined", async () => {
         },
     });
     const later = luxon.DateTime.now().plus({ seconds: 2 });
-    patchDate(later.year, later.month, later.day, later.hour, later.minute, later.second);
+    mockDate(
+        `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
+    );
     await start();
     await assertSteps(["subscribe - []"]);
     await openDiscuss();
@@ -56,7 +63,9 @@ test("bus subscription is refreshed when channel is left", async () => {
         },
     });
     const later = luxon.DateTime.now().plus({ seconds: 2 });
-    patchDate(later.year, later.month, later.day, later.hour, later.minute, later.second);
+    mockDate(
+        `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
+    );
     await start();
     await assertSteps(["subscribe - []"]);
     await openDiscuss();

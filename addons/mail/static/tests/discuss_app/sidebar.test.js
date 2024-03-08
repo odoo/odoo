@@ -1,19 +1,27 @@
-/** @odoo-module alias=@mail/../tests/discuss_app/sidebar_tests default=false */
-const test = QUnit.test; // QUnit.test()
+import { describe, expect, test } from "@odoo/hoot";
 
 import { rpc } from "@web/core/network/rpc";
-
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { Command } from "@mail/../tests/helpers/command";
-import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
+import {
+    assertSteps,
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    onRpcBefore,
+    openDiscuss,
+    openFormView,
+    start,
+    startServer,
+    step,
+    triggerHotkey,
+} from "../mail_test_helpers";
+import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
-import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
-import { triggerHotkey } from "@web/../tests/helpers/utils";
 
-QUnit.module("discuss sidebar");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("toggling category button hide category items", async () => {
     const pyEnv = await startServer();
@@ -25,7 +33,6 @@ test("toggling category button hide category items", async () => {
     await openDiscuss();
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel");
-
     await click(
         ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-icon"
     );
@@ -42,7 +49,6 @@ test("toggling category button does not hide active category items", async () =>
     await openDiscuss(channelId);
     await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
     await contains(".o-mail-DiscussSidebarChannel.o-active");
-
     await click(
         ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-icon"
     );
@@ -50,18 +56,13 @@ test("toggling category button does not hide active category items", async () =>
     await contains(".o-mail-DiscussSidebarChannel.o-active");
 });
 
-test("Closing a category sends the updated user setting to the server.", async (assert) => {
-    await start({
-        mockRPC(route, args) {
-            if (route === "/web/dataset/call_kw/res.users.settings/set_res_users_settings") {
-                step(route);
-                assert.strictEqual(
-                    args.kwargs.new_settings.is_discuss_sidebar_category_channel_open,
-                    false
-                );
-            }
-        },
+test("Closing a category sends the updated user setting to the server.", async () => {
+    onRpc("/web/dataset/call_kw/res.users.settings/set_res_users_settings", (request) => {
+        const { params } = request.json();
+        step("/web/dataset/call_kw/res.users.settings/set_res_users_settings");
+        expect(params.kwargs.new_settings.is_discuss_sidebar_category_channel_open).toBe(false);
     });
+    await start();
     await openDiscuss();
     await click(
         ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-icon"
@@ -69,20 +70,18 @@ test("Closing a category sends the updated user setting to the server.", async (
     await assertSteps(["/web/dataset/call_kw/res.users.settings/set_res_users_settings"]);
 });
 
-test("Opening a category sends the updated user setting to the server.", async (assert) => {
+test("Opening a category sends the updated user setting to the server.", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users.settings"].create({
         user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    await start({
-        mockRPC(route, args) {
-            if (route === "/web/dataset/call_kw/res.users.settings/set_res_users_settings") {
-                step(route);
-                assert.ok(args.kwargs.new_settings.is_discuss_sidebar_category_channel_open);
-            }
-        },
+    onRpc("/web/dataset/call_kw/res.users.settings/set_res_users_settings", (request) => {
+        const { params } = request.json();
+        step("/web/dataset/call_kw/res.users.settings/set_res_users_settings");
+        expect(params.kwargs.new_settings.is_discuss_sidebar_category_channel_open).toBeTruthy();
     });
+    await start();
     await openDiscuss();
     await click(
         ".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-icon.oi-chevron-right"
@@ -151,7 +150,6 @@ test("channel - states: open manually by clicking the title", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-channel", { text: "Channels" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "general" });
-
     await click(".o-mail-DiscussSidebarCategory-channel .btn", { text: "Channels" });
     await contains(".o-mail-DiscussSidebarChannel", { text: "general" });
 });
@@ -180,19 +178,16 @@ test("default thread rendering", async () => {
     await contains(".o-mail-Thread", {
         text: "Your inbox is empty Change your preferences to receive new notifications in your inbox.",
     });
-
     await click("button", { text: "Starred" });
     await contains("button.o-active", { text: "Starred" });
     await contains(".o-mail-Thread", {
         text: "No starred messages  You can mark any message as 'starred', and it shows up in this mailbox.",
     });
-
     await click("button", { text: "History" });
     await contains("button.o-active", { text: "History" });
     await contains(".o-mail-Thread", {
         text: "No history messages  Messages marked as read will appear in the history.",
     });
-
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "General" });
     await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
@@ -207,21 +202,17 @@ test("sidebar quick search at 20 or more pinned channels", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { count: 20 });
     await contains(".o-mail-DiscussSidebar input[placeholder='Quick search...']");
-
     await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "1");
     await contains(".o-mail-DiscussSidebarChannel", { count: 11 });
-
     await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "12", {
         replace: true,
     });
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-DiscussSidebarChannel", { text: "channel12" });
-
     await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "123", {
         replace: true,
     });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
-
     // search should work in case-insensitive
     await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "C", {
         replace: true,
@@ -268,7 +259,7 @@ test("sidebar: open pinned channel", async () => {
     await contains(".o-mail-Discuss-threadName", { value: "General" });
 });
 
-test("sidebar: open channel and leave it", async (assert) => {
+test("sidebar: open channel and leave it", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
@@ -279,14 +270,13 @@ test("sidebar: open channel and leave it", async (assert) => {
             }),
         ],
     });
-    await start({
-        async mockRPC(route, args) {
-            if (args.method === "action_unfollow") {
-                step("action_unfollow");
-                assert.deepEqual(args.args[0], channelId);
-            }
-        },
+    onRpc((route, args) => {
+        if (route === "/web/dataset/call_kw/discuss.channel/action_unfollow") {
+            step("action_unfollow");
+            expect(args.args[0]).toBe(channelId);
+        }
     });
+    await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-Discuss-threadName", { value: "General" });
@@ -312,16 +302,14 @@ test("sidebar: unpin chat from bus", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
-
     await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     await contains(".o-mail-Composer-input[placeholder='Message Demo…']");
     await contains(".o-mail-Discuss-threadName", { value: "Demo" });
-
     // Simulate receiving a unpin chat notification
     // (e.g. from user interaction from another device or browser tab)
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "discuss.channel/unpin", { id: channelId });
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    pyEnv["bus.bus"]._sendone(partner, "discuss.channel/unpin", { id: channelId });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Demo" });
-
     await contains(".o-mail-Discuss-threadName", { count: 0, value: "Demo" });
 });
 
@@ -519,7 +507,7 @@ test("chat - counter: should not have a counter if the category is unfolded and 
     });
 });
 
-test("chat - counter: should not have a counter if the category is unfolded and with unread messagens", async () => {
+test("chat - counter: should not have a counter if the category is unfolded and with unread messages", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users.settings"].create({
         user_id: serverState.userId,
@@ -716,7 +704,7 @@ test("channel - avatar: should update avatar url from bus", async () => {
         avatarCacheKey: "notaDateCache",
         name: "test",
     });
-    const { env } = await start();
+    const env = await start();
     await openDiscuss(channelId);
     await contains(
         `img[data-src='${getOrigin()}/web/image/discuss.channel/${channelId}/avatar_128?unique=notaDateCache']`,
@@ -734,55 +722,52 @@ test("channel - avatar: should update avatar url from bus", async () => {
     );
 });
 
-test("channel - states: close should update the value on the server", async (assert) => {
+test("channel - states: close should update the value on the server", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["res.users.settings"].create({
         user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: true,
     });
-    const currentUserId = serverState.userId;
-    const { env } = await start();
+    const env = await start();
     await openDiscuss();
     const initalSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
-        [[currentUserId]]
+        [serverState.userId]
     );
-    assert.ok(initalSettings.is_discuss_sidebar_category_channel_open);
+    expect(initalSettings.is_discuss_sidebar_category_channel_open).toBeTruthy();
     await click(".o-mail-DiscussSidebarCategory .btn", { text: "Channels" });
     const newSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
-        [[currentUserId]]
+        [serverState.userId]
     );
-    assert.notOk(newSettings.is_discuss_sidebar_category_channel_open);
+    expect(newSettings.is_discuss_sidebar_category_channel_open).not.toBeTruthy();
 });
 
-test("channel - states: open should update the value on the server", async (assert) => {
+test("channel - states: open should update the value on the server", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["res.users.settings"].create({
         user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    const currentUserId = serverState.userId;
-    const { env } = await start();
+    const env = await start();
     await openDiscuss();
     const initalSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
-        [[currentUserId]]
+        [serverState.userId]
     );
-    assert.notOk(initalSettings.is_discuss_sidebar_category_channel_open);
-
+    expect(initalSettings.is_discuss_sidebar_category_channel_open).not.toBeTruthy();
     await click(".o-mail-DiscussSidebarCategory .btn", { text: "Channels" });
     const newSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
-        [[currentUserId]]
+        [serverState.userId]
     );
-    assert.ok(newSettings.is_discuss_sidebar_category_channel_open);
+    expect(newSettings.is_discuss_sidebar_category_channel_open).toBeTruthy();
 });
 
 test("channel - states: close from the bus", async () => {
@@ -796,7 +781,8 @@ test("channel - states: close from the bus", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-down");
     await contains("button", { text: "channel1" });
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "res.users.settings", {
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    pyEnv["bus.bus"]._sendone(partner, "res.users.settings", {
         id: userSettingsId,
         is_discuss_sidebar_category_channel_open: false,
     });
@@ -811,27 +797,25 @@ test("channel - states: open from the bus", async () => {
         user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    await start({
-        async mockRPC(route, args, originalRpc) {
-            if (route === "/mail/action" && args.init_messaging) {
-                const res = await originalRpc(...arguments);
-                step(`/mail/action - ${JSON.stringify(args)}`);
-                return res;
-            }
-        },
+    onRpcBefore("/mail/action", (args) => {
+        if (args.init_messaging) {
+            step(`/mail/action - ${JSON.stringify(args)}`);
+        }
     });
+    await start();
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: serverState.userId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "res.users.settings", {
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    pyEnv["bus.bus"]._sendone(partner, "res.users.settings", {
         id: userSettingsId,
         is_discuss_sidebar_category_channel_open: true,
     });
@@ -846,11 +830,9 @@ test("channel - states: the active category item should be visible even if the c
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "channel1" });
     await contains("button.o-active", { text: "channel1" });
-
     await click(".o-mail-DiscussSidebarCategory .btn", { text: "Channels" });
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
     await contains("button", { text: "channel1" });
-
     await click("button", { text: "Inbox" });
     await contains("button", { count: 0, text: "channel1" });
 });
@@ -873,60 +855,56 @@ test("chat - states: open manually by clicking the title", async () => {
     await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
 });
 
-test("chat - states: close should call update server data", async (assert) => {
+test("chat - states: close should call update server data", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["res.users.settings"].create({
         user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: true,
     });
-    const currentUserId = serverState.userId;
-    const { env } = await start();
+    const env = await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
     const initalSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
-        [[currentUserId]]
+        [serverState.userId]
     );
-    assert.ok(initalSettings.is_discuss_sidebar_category_chat_open);
-
+    expect(initalSettings.is_discuss_sidebar_category_chat_open).toBeTruthy();
     await click(".o-mail-DiscussSidebarCategory-chat .btn", { text: "Direct messages" });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
     const newSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
-        [[currentUserId]]
+        [serverState.userId]
     );
-    assert.notOk(newSettings.is_discuss_sidebar_category_chat_open);
+    expect(newSettings.is_discuss_sidebar_category_chat_open).not.toBeTruthy();
 });
 
-test("chat - states: open should call update server data", async (assert) => {
+test("chat - states: open should call update server data", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["res.users.settings"].create({
         user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    const { env } = await start();
+    const env = await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
-    const currentUserId = serverState.userId;
     const initalSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
-        [[currentUserId]]
+        [serverState.userId]
     );
-    assert.notOk(initalSettings.is_discuss_sidebar_category_chat_open);
-
+    expect(initalSettings.is_discuss_sidebar_category_chat_open).not.toBeTruthy();
     await click(".o-mail-DiscussSidebarCategory-chat .btn", { text: "Direct messages" });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
     const newSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
-        [[currentUserId]]
+        [serverState.userId]
     );
-    assert.ok(newSettings.is_discuss_sidebar_category_chat_open);
+    expect(newSettings.is_discuss_sidebar_category_chat_open).toBeTruthy();
 });
 
 test("chat - states: close from the bus", async () => {
@@ -940,7 +918,8 @@ test("chat - states: close from the bus", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
     await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "res.users.settings", {
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    pyEnv["bus.bus"]._sendone(partner, "res.users.settings", {
         id: userSettingsId,
         is_discuss_sidebar_category_chat_open: false,
     });
@@ -955,28 +934,26 @@ test("chat - states: open from the bus", async () => {
         user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    await start({
-        async mockRPC(route, args, originalRpc) {
-            if (route === "/mail/action" && args.init_messaging) {
-                const res = await originalRpc(...arguments);
-                step(`/mail/action - ${JSON.stringify(args)}`);
-                return res;
-            }
-        },
+    onRpcBefore("/mail/action", (args) => {
+        if (args.init_messaging) {
+            step(`/mail/action - ${JSON.stringify(args)}`);
+        }
     });
+    await start();
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: serverState.userId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
     await contains(".o-mail-DiscussSidebar button", { count: 0, text: "Mitchell Admin" });
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "res.users.settings", {
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    pyEnv["bus.bus"]._sendone(partner, "res.users.settings", {
         id: userSettingsId,
         is_discuss_sidebar_category_chat_open: true,
     });
@@ -991,14 +968,11 @@ test("chat - states: the active category item should be visible even if the cate
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
     await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
-
     await click(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
     await contains("button.o-active", { text: "Mitchell Admin" });
-
     await click(".o-mail-DiscussSidebarCategory-chat .btn", { text: "Direct messages" });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
     await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
-
     await click("button", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
     await contains(".o-mail-DiscussSidebar button", { count: 0, text: "Mitchell Admin" });
@@ -1020,7 +994,6 @@ test("chat - avatar: should have correct avatar", async () => {
     });
     await start();
     await openDiscuss();
-
     await contains(".o-mail-DiscussSidebarChannel img");
     await contains(
         `img[data-src='${getOrigin()}/web/image/res.partner/${partnerId}/avatar_128?unique=${
@@ -1108,14 +1081,8 @@ test("Can leave channel", async () => {
 test("Do no channel_info after unpin", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General", channel_type: "chat" });
-    await start({
-        mockRPC(route, args, originalRPC) {
-            if (route === "/discuss/channel/info") {
-                step("channel_info");
-            }
-            return originalRPC(route, args);
-        },
-    });
+    onRpcBefore("/discuss/channel/info", () => step("channel_info"));
+    await start();
     await openDiscuss(channelId);
     await click(".o-mail-DiscussSidebarChannel-commands [title='Unpin Conversation']");
     rpc("/mail/message/post", {
@@ -1185,12 +1152,12 @@ test("Update channel data via bus notification", async () => {
         channel_type: "channel",
         create_uid: serverState.userId,
     });
-    const tab1 = await start({ asTab: true });
-    const tab2 = await start({ asTab: true });
-    tab1.openDiscuss(channelId);
-    tab2.openDiscuss(channelId);
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Sales", target: tab1.target });
-    await insertText(".o-mail-Discuss-threadName", "test", { target: tab1.target });
+    const env1 = await start({ asTab: true });
+    const env2 = await start({ asTab: true });
+    await openDiscuss(channelId, { target: env1 });
+    await openDiscuss(channelId, { target: env2 });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Sales", target: env1 });
+    await insertText(".o-mail-Discuss-threadName", "test", { target: env1 });
     await triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Salestest", target: tab2.target });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Salestest", target: env2 });
 });

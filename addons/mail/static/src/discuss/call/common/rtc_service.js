@@ -1,12 +1,13 @@
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { monitorAudio } from "@mail/discuss/call/common/media_monitoring";
-import { closeStream, onChange } from "@mail/utils/common/misc";
+import { rpcWithEnv, closeStream, onChange } from "@mail/utils/common/misc";
 
 import { reactive } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { loadBundle } from "@web/core/assets";
@@ -115,6 +116,7 @@ export class Rtc {
      * @param {Partial<import("services").Services>} services
      */
     constructor(env, services) {
+        rpc = rpcWithEnv(env);
         this.env = env;
         this.store = services["mail.store"];
         this.notification = services.notification;

@@ -1,16 +1,22 @@
-/** @odoo-module alias=@mail/../tests/thread/attachment_list_tests default=false */
-const test = QUnit.test; // QUnit.test()
-
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { describe, expect, test } from "@odoo/hoot";
 
 import { getOrigin } from "@web/core/utils/urls";
-import { assertSteps, click, contains, step } from "@web/../tests/utils";
+import {
+    assertSteps,
+    click,
+    contains,
+    defineMailModels,
+    onRpcBefore,
+    openDiscuss,
+    start,
+    startServer,
+    step,
+} from "../mail_test_helpers";
 
-QUnit.module("attachment list");
+describe.current.tags("desktop");
+defineMailModels();
 
-test("simplest layout", async (assert) => {
+test("simplest layout", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -30,10 +36,10 @@ test("simplest layout", async (assert) => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message .o-mail-AttachmentList");
-    assert.hasAttrValue($(".o-mail-AttachmentCard"), "title", "test.txt");
+    expect($(".o-mail-AttachmentCard")[0]).toHaveAttribute("title", "test.txt");
     await contains(".o-mail-AttachmentCard-image");
-    assert.hasClass($(".o-mail-AttachmentCard-image"), "o_image"); // required for mimetype.scss style
-    assert.hasAttrValue($(".o-mail-AttachmentCard-image"), "data-mimetype", "text/plain"); // required for mimetype.scss style
+    expect($(".o-mail-AttachmentCard-image")[0]).toHaveClass("o_image"); // required for mimetype.scss style
+    expect($(".o-mail-AttachmentCard-image")[0]).toHaveAttribute("data-mimetype", "text/plain"); // required for mimetype.scss style
     await contains(".o-mail-AttachmentCard-aside button", { count: 2 });
     await contains(".o-mail-AttachmentCard-unlink");
     await contains(".o-mail-AttachmentCard-aside button[title='Download']");
@@ -79,20 +85,15 @@ test("clicking on the delete attachment button multiple times should do the rpc 
         res_id: channelId,
         message_type: "comment",
     });
-    await start({
-        async mockRPC(route, args) {
-            if (route === "/mail/attachment/delete") {
-                step("attachment_unlink");
-            }
-        },
-    });
+    onRpcBefore("/mail/attachment/delete", () => step("attachment_unlink"));
+    await start();
     await openDiscuss(channelId);
     await click(".o-mail-AttachmentCard-unlink");
     await click(".modal-footer .btn-primary");
     await click(".modal-footer .btn-primary");
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentCard-unlink", { count: 0 });
-    await assertSteps(["attachment_unlink"], "The unlink method must be called once");
+    await assertSteps(["attachment_unlink"]); // The unlink method must be called once
 });
 
 test("view attachment", async () => {
@@ -139,15 +140,13 @@ test("close attachment viewer", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentImage img");
-
     await click(".o-mail-AttachmentImage");
     await contains(".o-FileViewer");
-
     await click(".o-FileViewer div[aria-label='Close']");
     await contains(".o-FileViewer", { count: 0 });
 });
 
-test("[technical] does not crash when the viewer is closed before image load", async (assert) => {
+test("[technical] does not crash when the viewer is closed before image load", async () => {
     /**
      * When images are displayed using "src" attribute for the 1st time, it fetches the resource.
      * In this case, images are actually displayed (fully fetched and rendered on screen) when
@@ -179,17 +178,11 @@ test("[technical] does not crash when the viewer is closed before image load", a
     await contains(".o-FileViewer-viewImage");
     await click(".o-FileViewer div[aria-label='Close']");
     // Simulate image becoming loaded.
-    let successfulLoad;
-    try {
+    expect(() => {
         document
             .querySelector(".o-FileViewer-viewImage")
             .dispatchEvent(new Event("load", { bubbles: true }));
-        successfulLoad = true;
-    } catch {
-        successfulLoad = false;
-    } finally {
-        assert.ok(successfulLoad);
-    }
+    }).not.toThrow();
 });
 
 test("plain text file is viewable", async () => {

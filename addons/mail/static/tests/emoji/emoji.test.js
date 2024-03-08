@@ -1,15 +1,19 @@
-/** @odoo-module alias=@mail/../tests/emoji/emoji_tests default=false */
-const test = QUnit.test; // QUnit.test()
-
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
+import { describe, test } from "@odoo/hoot";
 
 import { EMOJI_PER_ROW } from "@web/core/emoji_picker/emoji_picker";
-import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
+import {
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    openDiscuss,
+    start,
+    startServer,
+    triggerHotkey,
+} from "../mail_test_helpers";
 
-QUnit.module("emoji");
+describe.current.tags("desktop");
+defineMailModels();
 
 test("search emoji from keywords", async () => {
     const pyEnv = await startServer();
@@ -41,7 +45,7 @@ test("search emoji from keywords with special regex character", async () => {
     await contains(".o-Emoji", { text: "🆎" });
 });
 
-test("updating search emoji should scroll top", async (assert) => {
+test("updating search emoji should scroll top", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
