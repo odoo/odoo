@@ -186,7 +186,7 @@ class AutomaticEntryWizard(models.TransientModel):
             source_accounts = self.move_line_ids.mapped('account_id')
             counterpart_label = len(source_accounts) == 1 and _("Transfer from %s", source_accounts.display_name) or _("Transfer counterpart")
 
-            if not counterpart_currency.is_zero(counterpart_vals['amount_currency']):
+            if not counterpart_currency.is_zero(counterpart_vals['amount_currency']) or not self.company_id.currency_id.is_zero(counterpart_vals['balance']):
                 line_vals.append({
                     'name': counterpart_label,
                     'debit': counterpart_vals['balance'] > 0 and self.company_id.currency_id.round(counterpart_vals['balance']) or 0,
