@@ -1,6 +1,6 @@
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
@@ -16,11 +16,11 @@ test('livechats should be in "chat" filter', async () => {
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: pyEnv.currentPartnerId,
+        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -38,11 +38,11 @@ test('livechats should be in "livechat" tab in mobile', async () => {
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: pyEnv.currentPartnerId,
+        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");

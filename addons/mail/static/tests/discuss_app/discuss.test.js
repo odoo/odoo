@@ -3,7 +3,7 @@ const test = QUnit.test; // QUnit.test()
 
 import { rpc } from "@web/core/network/rpc";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 import { TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
 import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferred";
@@ -32,7 +32,7 @@ import {
 QUnit.module("discuss");
 
 test("sanity check", async () => {
-    const pyEnv = await startServer();
+    await startServer();
     await start({
         mockRPC(route, args, originRPC) {
             if (route.startsWith("/mail") || route.startsWith("/discuss")) {
@@ -46,14 +46,14 @@ test("sanity check", async () => {
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
     ]);
     await openDiscuss();
     await assertSteps([
         `/mail/data - ${JSON.stringify({
             channels_as_member: true,
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
         '/mail/inbox/messages - {"limit":30}',
     ]);
@@ -66,7 +66,7 @@ test("can change the thread name of #general [REQUIRE FOCUS]", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
-        create_uid: pyEnv.currentUserId,
+        create_uid: serverState.userId,
     });
     await start({
         mockRPC(route, params) {
@@ -107,7 +107,7 @@ test("can change the thread description of #general [REQUIRE FOCUS]", async () =
         name: "general",
         channel_type: "channel",
         description: "General announcements...",
-        create_uid: pyEnv.currentUserId,
+        create_uid: serverState.userId,
     });
     await start({
         mockRPC(route, params) {
@@ -138,7 +138,7 @@ test("Message following a notification should not be squashed", async () => {
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: '<div class="o_mail_notification">created <a href="#" class="o_channel_redirect">#general</a></div>',
         model: "discuss.channel",
         res_id: channelId,
@@ -199,7 +199,7 @@ test("Message of type notification in chatter should not have inline display", a
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "testPartner" });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "<p>Line 1</p><p>Line 2</p>",
         model: "res.partner",
         res_id: partnerId,
@@ -264,21 +264,21 @@ test("sidebar: chat im_status rendering", async () => {
     pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ partner_id: partnerId_1 }),
             ],
             channel_type: "chat",
         },
         {
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ partner_id: partnerId_2 }),
             ],
             channel_type: "chat",
         },
         {
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ partner_id: partnerId_3 }),
             ],
             channel_type: "chat",
@@ -354,7 +354,7 @@ test("sidebar: chat custom name", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ custom_channel_name: "Marc", partner_id: pyEnv.currentPartnerId }),
+            Command.create({ custom_channel_name: "Marc", partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -378,7 +378,7 @@ test("reply to message from inbox (message linked to document) [REQUIRE FOCUS]",
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -407,7 +407,7 @@ test("Can reply to starred message", async () => {
     pyEnv["mail.message"].create({
         body: "not empty",
         model: "discuss.channel",
-        starred_partner_ids: [pyEnv.currentPartnerId],
+        starred_partner_ids: [serverState.partnerId],
         res_id: channelId,
     });
     await start();
@@ -428,13 +428,13 @@ test("Can reply to history message", async () => {
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         model: "discuss.channel",
-        history_partner_ids: [pyEnv.currentPartnerId],
+        history_partner_ids: [serverState.partnerId],
         res_id: channelId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
         is_read: true,
     });
     await start();
@@ -463,13 +463,13 @@ test("receive new needaction messages", async () => {
         needaction: true,
         model: "res.partner",
         res_id: partnerId,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId_1,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     const [message1] = await env.services.orm.call("mail.message", "message_format", [
         [messageId_1],
@@ -485,13 +485,13 @@ test("receive new needaction messages", async () => {
         needaction: true,
         model: "res.partner",
         res_id: partnerId,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId_2,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     const [message2] = await env.services.orm.call("mail.message", "message_format", [
         [messageId_2],
@@ -592,7 +592,7 @@ test("sidebar: channel rendering with needaction counter", async () => {
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -608,7 +608,7 @@ test("sidebar: chat rendering with unread counter", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ message_unread_counter: 100, partner_id: pyEnv.currentPartnerId }), // weak test, relies on hardcoded value for message_unread_counter but the messages do not actually exist
+            Command.create({ message_unread_counter: 100, partner_id: serverState.partnerId }), // weak test, relies on hardcoded value for message_unread_counter but the messages do not actually exist
         ],
         channel_type: "chat",
     });
@@ -629,7 +629,7 @@ test("initially load messages from inbox", async (assert) => {
         body: "not empty",
         message_type: "comment",
         model: "discuss.channel",
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
         needaction: true,
         res_id: channelId,
     });
@@ -637,7 +637,7 @@ test("initially load messages from inbox", async (assert) => {
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start({
         async mockRPC(route, args) {
@@ -682,14 +682,14 @@ test("rendering of inbox message", async () => {
         body: "not empty",
         model: "res.partner",
         needaction: true,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -710,7 +710,7 @@ test("rendering of inbox message", async () => {
 
 test("Unfollow message", async function () {
     const pyEnv = await startServer();
-    const currentPartnerId = pyEnv.currentPartnerId;
+    const currentPartnerId = serverState.partnerId;
     const [threadFollowedId, threadNotFollowedId] = pyEnv["res.partner"].create([
         { name: "Thread followed" },
         { name: "Thread not followed" },
@@ -798,12 +798,12 @@ test('messages marked as read move to "History" mailbox', async () => {
         {
             mail_message_id: messageId_1,
             notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
+            res_partner_id: serverState.partnerId,
         },
         {
             mail_message_id: messageId_2,
             notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
+            res_partner_id: serverState.partnerId,
         },
     ]);
     await start();
@@ -834,24 +834,24 @@ test('mark a single message as read should only move this message to "History" m
         {
             body: "not empty 1",
             needaction: true,
-            needaction_partner_ids: [pyEnv.currentPartnerId],
+            needaction_partner_ids: [serverState.partnerId],
         },
         {
             body: "not empty 2",
             needaction: true,
-            needaction_partner_ids: [pyEnv.currentPartnerId],
+            needaction_partner_ids: [serverState.partnerId],
         },
     ]);
     pyEnv["mail.notification"].create([
         {
             mail_message_id: messageId_1,
             notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
+            res_partner_id: serverState.partnerId,
         },
         {
             mail_message_id: messageId_2,
             notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
+            res_partner_id: serverState.partnerId,
         },
     ]);
     await start();
@@ -882,7 +882,7 @@ test('all messages in "Inbox" in "History" after marked all as read', async () =
         pyEnv["mail.notification"].create({
             mail_message_id: messageId,
             notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
+            res_partner_id: serverState.partnerId,
         });
     }
     await start();
@@ -926,8 +926,8 @@ test("post a simple message", async (assert) => {
 test("starred: unstar all", async () => {
     const pyEnv = await startServer();
     pyEnv["mail.message"].create([
-        { body: "not empty", starred_partner_ids: [pyEnv.currentPartnerId] },
-        { body: "not empty", starred_partner_ids: [pyEnv.currentPartnerId] },
+        { body: "not empty", starred_partner_ids: [serverState.partnerId] },
+        { body: "not empty", starred_partner_ids: [serverState.partnerId] },
     ]);
     await start();
     await openDiscuss("mail.box_starred");
@@ -946,7 +946,7 @@ test("auto-focus composer on opening thread [REQUIRE FOCUS]", async () => {
         { name: "General" },
         {
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ partner_id: partnerId }),
             ],
             channel_type: "chat",
@@ -985,7 +985,7 @@ test("no out-of-focus notification on receiving self messages in chat", async ()
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     // simulate receiving a new message of self with odoo out-of-focused
-    pyEnv.withUser(pyEnv.currentUserId, () =>
+    pyEnv.withUser(serverState.userId, () =>
         rpc("/mail/message/post", {
             post_data: {
                 body: "New message",
@@ -1007,7 +1007,7 @@ test("out-of-focus notif on needaction message in channel", async (assert) => {
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "channel",
@@ -1027,7 +1027,7 @@ test("out-of-focus notif on needaction message in channel", async (assert) => {
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     // simulate receiving a new needaction message with odoo out-of-focused
-    const currentPartnerId = pyEnv.currentPartnerId;
+    const currentPartnerId = serverState.partnerId;
     pyEnv.withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: {
@@ -1049,7 +1049,7 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -1089,7 +1089,7 @@ test("no out-of-focus notif on non-needaction message in channel", async (assert
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "channel",
@@ -1196,7 +1196,7 @@ test("should auto-pin chat when receiving a new DM", async () => {
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ is_pinned: false, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ is_pinned: false, partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -1233,7 +1233,7 @@ test("'Add Users' button should be displayed in the topbar of chats", async () =
     const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -1248,7 +1248,7 @@ test("'Add Users' button should be displayed in the topbar of groups", async () 
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "group",
@@ -1301,35 +1301,35 @@ test("Partner IM status is displayed as thread icon in top bar of channels of ty
     pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ partner_id: partnerId_1 }),
             ],
             channel_type: "chat",
         },
         {
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ partner_id: partnerId_2 }),
             ],
             channel_type: "chat",
         },
         {
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ partner_id: partnerId_3 }),
             ],
             channel_type: "chat",
         },
         {
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ partner_id: partnerId_4 }),
             ],
             channel_type: "chat",
         },
         {
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ partner_id: TEST_USER_IDS.odoobotId }),
             ],
             channel_type: "chat",
@@ -1379,7 +1379,7 @@ test("Do not trigger chat name server update when it is unchanged", async () => 
 test("Do not trigger channel description server update when channel has no description and editing to empty description", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
-        create_uid: pyEnv.currentUserId,
+        create_uid: serverState.userId,
         name: "General",
     });
     await start({
@@ -1460,7 +1460,7 @@ test("mark channel as seen if last message is visible when switching channels wh
             channel_member_ids: [
                 Command.create({
                     message_unread_counter: 1,
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                 }),
             ],
             name: "Bla",
@@ -1469,7 +1469,7 @@ test("mark channel as seen if last message is visible when switching channels wh
             channel_member_ids: [
                 Command.create({
                     message_unread_counter: 1,
-                    partner_id: pyEnv.currentPartnerId,
+                    partner_id: serverState.partnerId,
                 }),
             ],
             name: "Blu",
@@ -1536,7 +1536,7 @@ test("new messages separator [REQUIRE FOCUS]", async () => {
         name: "test",
         channel_member_ids: [
             Command.create({ partner_id: partnerId }),
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
         ],
     });
     let lastMessageId;
@@ -1549,7 +1549,7 @@ test("new messages separator [REQUIRE FOCUS]", async () => {
     }
     const [memberId] = pyEnv["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
-        ["partner_id", "=", pyEnv.currentPartnerId],
+        ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: lastMessageId });
     await start();
@@ -1749,7 +1749,7 @@ test("sidebar: cannot unpin channel group_based_subscription: mandatorily pinned
     pyEnv["discuss.channel"].create({
         name: "General",
         channel_member_ids: [
-            Command.create({ is_pinned: false, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ is_pinned: false, partner_id: serverState.partnerId }),
         ],
         group_ids: [Command.create({ name: "test" })],
     });
@@ -1809,7 +1809,7 @@ test("Message shows up even if channel data is incomplete", async () => {
         channel_member_ids: [
             Command.create({
                 is_pinned: true,
-                partner_id: pyEnv.currentPartnerId,
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: correspondentPartnerId }),
         ],
@@ -1856,14 +1856,14 @@ test("Chatter notification in messaging menu should open the form view even when
         body: "A needaction message to have it in messaging menu",
         author_id: pyEnv.odoobotId,
         needaction: true,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction_partner_ids: [serverState.partnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
+        res_partner_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -2043,7 +2043,7 @@ test("Newly created chat should be at the top of the direct message list", async
             Command.create({
                 is_pinned: true,
                 last_interest_dt: "2021-01-01 10:00:00",
-                partner_id: pyEnv.currentPartnerId,
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId1 }),
         ],

@@ -1,6 +1,6 @@
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
@@ -17,7 +17,7 @@ test("closing a chat window with no message from admin side unpins it", async ()
         channel_member_ids: [
             Command.create({
                 is_pinned: true,
-                partner_id: pyEnv.currentPartnerId,
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],

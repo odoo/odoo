@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/message/message_reply_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
@@ -80,7 +80,7 @@ test("reply shows correct author avatar", async (assert) => {
         res_id: channelId,
     });
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-    const partner = pyEnv["res.partner"].search_read([["id", "=", pyEnv.currentPartnerId]])[0];
+    const partner = pyEnv["res.partner"].search_read([["id", "=", serverState.partnerId]])[0];
     pyEnv["mail.message"].create({
         body: "Howdy",
         message_type: "comment",
@@ -93,7 +93,7 @@ test("reply shows correct author avatar", async (assert) => {
     await openDiscuss(channelId);
     await contains(
         `.o-mail-MessageInReply-avatar[data-src='${`${getOrigin()}/web/image/res.partner/${
-            pyEnv.currentPartnerId
+            serverState.partnerId
         }/avatar_128?unique=${deserializeDateTime(partner.write_date).ts}`}`
     );
 });

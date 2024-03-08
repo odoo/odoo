@@ -2,7 +2,7 @@ const test = QUnit.test; // QUnit.test()
 
 import { rpc } from "@web/core/network/rpc";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 
 import { Command } from "@mail/../tests/helpers/command";
@@ -44,7 +44,7 @@ test("Notify message received out of focus", async () => {
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging

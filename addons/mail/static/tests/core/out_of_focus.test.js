@@ -1,8 +1,8 @@
 /** @odoo-module alias=@mail/../tests/core/out_of_focus_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
-import { startServer } from "@bus/../tests/legacy/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
@@ -31,7 +31,7 @@ test("Spaces in notifications are not encoded", async () => {
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging

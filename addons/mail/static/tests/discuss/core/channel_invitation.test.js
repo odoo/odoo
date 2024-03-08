@@ -1,7 +1,7 @@
 /** @odoo-module alias=@mail/../tests/discuss/core/channel_invitation_tests default=false */
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
@@ -20,7 +20,7 @@ test("should display the channel invitation form after clicking on the invite bu
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChannel",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "channel",
@@ -41,7 +41,7 @@ test("can invite users in channel from chat window", async () => {
     pyEnv["discuss.channel"].create({
         name: "TestChannel",
         channel_member_ids: [
-            Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
+            Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
         ],
         channel_type: "channel",
     });
@@ -72,7 +72,7 @@ test("should be able to search for a new user to invite from an existing chat", 
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChannel",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId_1 }),
         ],
         channel_type: "channel",
@@ -96,7 +96,7 @@ test("Invitation form should display channel group restriction", async () => {
     });
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChannel",
-        channel_member_ids: [Command.create({ partner_id: pyEnv.currentPartnerId })],
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
         channel_type: "channel",
         group_public_id: groupId,
     });
@@ -124,7 +124,7 @@ test("should be able to create a new group chat from an existing chat", async ()
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChannel",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId_1 }),
         ],
         channel_type: "chat",
@@ -158,7 +158,7 @@ test("unnamed group chat should display correct name just after being invited", 
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Jane and Mitchell Admin" });
-    const currentPartnerId = pyEnv.currentPartnerId;
+    const currentPartnerId = serverState.partnerId;
     await pyEnv.withUser(userId, async () => {
         await env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
             partner_ids: [currentPartnerId],

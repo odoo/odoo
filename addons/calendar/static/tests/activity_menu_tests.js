@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
@@ -10,7 +10,7 @@ import { click, contains } from "@web/../tests/utils";
 QUnit.test("activity menu widget:today meetings", async function (assert) {
     patchDate(2018, 3, 20, 6, 0, 0);
     const pyEnv = await startServer();
-    const attendeeId = pyEnv["calendar.attendee"].create({ partner_id: pyEnv.currentPartnerId });
+    const attendeeId = pyEnv["calendar.attendee"].create({ partner_id: serverState.partnerId });
     pyEnv["calendar.event"].create([
         {
             res_model: "calendar.event",

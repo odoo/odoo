@@ -3,7 +3,7 @@ const test = QUnit.test; // QUnit.test()
 
 import { rpc } from "@web/core/network/rpc";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Store } from "@mail/core/common/store_service";
 import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/common/composer_patch";
@@ -22,7 +22,7 @@ test('receive other member typing status "is typing"', async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "channel",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
@@ -47,7 +47,7 @@ test('receive other member typing status "is typing" then "no longer is typing"'
     const channelId = pyEnv["discuss.channel"].create({
         name: "channel",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
@@ -81,7 +81,7 @@ test('assume other member typing status becomes "no longer is typing" after long
     const channelId = pyEnv["discuss.channel"].create({
         name: "channel",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
@@ -109,7 +109,7 @@ test('other member typing status "is typing" refreshes of assuming no longer typ
     const channelId = pyEnv["discuss.channel"].create({
         name: "channel",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
     });
@@ -155,7 +155,7 @@ test('receive several other members typing status "is typing"', async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "channel",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId_1 }),
             Command.create({ partner_id: partnerId_2 }),
             Command.create({ partner_id: partnerId_3 }),
@@ -296,7 +296,7 @@ test("chat: correspondent is typing", async () => {
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -333,7 +333,7 @@ test("chat: correspondent is typing in chat window", async () => {
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",

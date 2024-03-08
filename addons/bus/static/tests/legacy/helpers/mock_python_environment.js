@@ -351,3 +351,12 @@ export async function startServer({ actions, views = {} } = {}) {
 export function getPyEnv() {
     return pyEnv || startServer();
 }
+
+export const serverState = {
+    get partnerId() {
+        return pyEnv?.currentPartnerId;
+    },
+    get userId() {
+        return pyEnv?.currentUserId;
+    },
+};

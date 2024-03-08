@@ -1,6 +1,6 @@
 const test = QUnit.test; // QUnit.test()
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
@@ -19,7 +19,7 @@ test("Suggestions are shown after delimiter was used in text (:)", async () => {
         anonymous_name: "Visitor",
         channel_type: "livechat",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: pyEnv.publicPartnerId }),
         ],
     });
@@ -40,7 +40,7 @@ test("Cannot mention other channels in a livechat", async () => {
             anonymous_name: "Visitor",
             channel_type: "livechat",
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ partner_id: pyEnv.publicPartnerId }),
             ],
         },

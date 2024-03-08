@@ -6,7 +6,7 @@ import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_ut
 
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { SIZES, patchUiSize } from "../helpers/patch_ui_size";
 
 QUnit.module("Search highlight test", {});
@@ -138,7 +138,7 @@ test("Display highligthed search in Discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "not empty",
         attachment_ids: [],
         message_type: "comment",
@@ -157,7 +157,7 @@ test("Display multiple highligthed search in Discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
+        author_id: serverState.partnerId,
         body: "not prout empty",
         attachment_ids: [],
         message_type: "comment",
