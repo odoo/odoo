@@ -8,6 +8,8 @@ class Project(models.Model):
     _name = "t9n.project"
     _description = "Translation project"
 
+    name = fields.Char(required=True)
+
     src_lang_id = fields.Many2one(
         comodel_name="t9n.language",
         string="Source Language",
