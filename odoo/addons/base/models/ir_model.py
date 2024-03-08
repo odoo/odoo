@@ -558,6 +558,7 @@ class IrModelFields(models.Model):
                                                       "a list of comma-separated field names, like\n\n"
                                                       "    name, partner_id.name")
     store = fields.Boolean(string='Stored', default=True, help="Whether the value is stored in the database.")
+    became_non_stored = fields.Boolean(readonly=True)
     currency_field = fields.Char(string="Currency field", help="Name of the Many2one field holding the res.currency")
     # HTML sanitization reflection, useless for other kinds of fields
     sanitize = fields.Boolean(string='Sanitize HTML', default=True)
@@ -800,7 +801,7 @@ class IrModelFields(models.Model):
         cr.execute("SELECT name, id FROM ir_model_fields WHERE model=%s", [model_name])
         return dict(cr.fetchall())
 
-    def _drop_column(self):
+    def _drop_column(self, force=False):
         tables_to_drop = set()
 
         for field in self:
@@ -808,13 +809,15 @@ class IrModelFields(models.Model):
                 continue
             model = self.env.get(field.model)
             is_model = model is not None
-            if field.store:
+            if field.store or force:
                 # TODO: Refactor this brol in master
                 if is_model and tools.column_exists(self._cr, model._table, field.name) and \
                         tools.table_kind(self._cr, model._table) == tools.TableKind.Regular:
                     self._cr.execute(sql.SQL('ALTER TABLE {} DROP COLUMN {} CASCADE').format(
                         sql.Identifier(model._table), sql.Identifier(field.name),
                     ))
+                    if force:
+                        _logger.warning('Removed column %r from table %r', field.name, model._table)
                 if field.state == 'manual' and field.ttype == 'many2many':
                     rel_name = field.relation_table or (is_model and model._fields[field.name].relation)
                     tables_to_drop.add(rel_name)
@@ -1124,20 +1127,70 @@ class IrModelFields(models.Model):
             'strip_classes': field.strip_classes if field.type == 'html' else None,
         }
 
+    def _process_end(self):
+        cr = self._cr
+        cr.execute(
+            """
+            SELECT 1
+              FROM ir_module_module
+             WHERE state IN ('installed', 'to install', 'to upgrade')
+               AND name NOT IN %s
+             LIMIT 1
+            """,
+            [tuple(self.env.registry._init_modules)]
+        )
+        if cr.rowcount:
+            # bail out since at least one installed moduled was not loaded yet
+            # it could override fields to be stored again
+            return
+        cr.execute(
+            """
+            UPDATE ir_model_fields f
+               SET became_non_stored = False
+              FROM ir_model_data d
+             WHERE d.model = 'ir.model.fields'
+               AND d.res_id = f.id
+               AND d.module IN %s
+               AND f.became_non_stored
+               AND NOT f.store
+         RETURNING f.id
+            """,
+            [tuple(self.env.registry._init_modules)],
+        )
+        self.browse(r[0] for r in cr.fetchall())._drop_column(force=True)
+
     def _reflect_fields(self, model_names):
         """ Reflect the fields of the given models. """
         cr = self.env.cr
 
+        non_stored = {}
         for model_name in model_names:
             model = self.env[model_name]
             by_label = {}
             for field in model._fields.values():
+                if not field.store:
+                    non_stored.setdefault(field.model_name, []).append(field.name)
                 if field.string in by_label:
                     other = by_label[field.string]
                     _logger.warning('Two fields (%s, %s) of %s have the same label: %s. [Modules: %s and %s]',
                                     field.name, other.name, model, field.string, field._module, other._module)
                 else:
                     by_label[field.string] = field
+
+        # determine non stored fields that became non-stored
+        became_non_stored = []
+        if non_stored:
+            self.env.cr.execute(
+                """
+                SELECT model, name
+                  FROM ir_model_fields
+                 WHERE model IN %s
+                   AND store
+                   AND (%s::jsonb->model::text) ? name
+                """,
+                [tuple(non_stored), Json(non_stored)]
+            )
+            became_non_stored = cr.fetchall()
 
         # determine expected and existing rows
         rows = []
@@ -1160,6 +1213,12 @@ class IrModelFields(models.Model):
         rows = [row for row in expected if existing.get(row[:2]) != row]
         if rows:
             ids = upsert_en(self, cols, rows, ['model', 'name'])
+            if became_non_stored:
+                _logger.warning("Some fields became non-stored: %s", became_non_stored)
+                self.env.cr.execute(
+                    "UPDATE ir_model_fields SET became_non_stored = True WHERE (model, name) IN %s",
+                    [tuple(became_non_stored)]
+                )
             for row, id_ in zip(rows, ids):
                 field_ids[row[:2]] = id_
             self.pool.post_init(mark_modified, self.browse(ids), cols[2:])

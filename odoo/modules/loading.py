@@ -534,6 +534,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
 
             # Cleanup orphan records
             env['ir.model.data']._process_end(processed_modules)
+            env['ir.model.fields']._process_end()
             env.flush_all()
 
         for kind in ('init', 'demo', 'update'):
