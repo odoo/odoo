@@ -114,6 +114,10 @@ class Contract(models.Model):
     def _onchange_structure_type_id(self):
         default_calendar = self.structure_type_id.default_resource_calendar_id
         if default_calendar and default_calendar.company_id == self.company_id:
+            # If the contract already has a resource calendar and the form was opened from the action_open_contract action,
+            # don't change the resource calendar to suggest current employee's calendar for the new contract.
+            if self.resource_calendar_id and self.env.context.get('from_action_open_contract'):
+                return
             self.resource_calendar_id = default_calendar
 
     @api.constrains('employee_id', 'state', 'kanban_state', 'date_start', 'date_end')

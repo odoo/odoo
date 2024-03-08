@@ -41,7 +41,11 @@
                             icon="fa-book"
                             type="object"
                             groups="hr_contract.group_hr_contract_manager"
-                            context="{'default_employee_id': id}"
+                            context="{
+                                'default_employee_id': id,
+                                'default_resource_calendar_id': resource_calendar_id.id,
+                                'from_action_open_contract': True,
+                            }"
                             invisible="employee_type not in ['employee', 'student', 'trainee']">
                             <div invisible="not first_contract_date" class="o_stat_info">
                                 <span class="o_stat_text text-success" invisible="contract_warning" title="In Contract Since"> In Contract Since</span>
