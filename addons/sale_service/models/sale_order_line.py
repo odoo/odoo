@@ -4,8 +4,9 @@
 from itertools import groupby
 
 from odoo import api, fields, models
+from odoo.osv import expression
 from odoo.tools import format_amount
-from odoo.tools.sql import column_exists, create_column
+from odoo.tools.sql import column_exists, create_column, create_index
 
 
 class SaleOrderLine(models.Model):
@@ -67,6 +68,14 @@ class SaleOrderLine(models.Model):
             """)
         return super()._auto_init()
 
+    def init(self):
+        res = super().init()
+        query_domain_sale_line = expression.expression([('is_service', '=', True)], self).query
+        create_index(self._cr, 'sale_order_line_name_search_services_index',
+                     self._table, ('order_id DESC', 'sequence', 'id'),
+                     where=query_domain_sale_line.where_clause)
+        return res
+
     def _additional_name_per_id(self):
         name_per_id = super()._additional_name_per_id() if not self.env.context.get('hide_partner_ref') else {}
         if not self.env.context.get('with_price_unit'):
@@ -84,3 +93,12 @@ class SaleOrderLine(models.Model):
                 name_per_id[line.id] = f'- {name}'
 
         return name_per_id
+
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+        # optimization for a SOL services name_search, to avoid joining on sale_order with too many lines
+        if domain and ('is_service', '=', True) in domain and operator in ('like', 'ilike') and limit is not None:
+            query = self.env['sale.order.line']._search(domain, limit=limit, order=None)
+            query.order = f'{query.table}.order_id DESC, {query.table}.sequence, {query.table}.id'
+            return query
+        else:
+            return super()._name_search(name, domain, operator, limit, order)
