@@ -602,6 +602,7 @@ class ProjectProject(models.Model):
         return res
 
     def message_unsubscribe(self, partner_ids=None):
+        self.task_ids.message_unsubscribe(partner_ids=partner_ids)
         super().message_unsubscribe(partner_ids=partner_ids)
         if partner_ids:
             self.env['project.collaborator'].search([('partner_id', 'in', partner_ids), ('project_id', 'in', self.ids)]).unlink()
