@@ -114,6 +114,7 @@ class ProjectShareWizard(models.TransientModel):
             if collaborator_ids_to_add:
                 partners = project._get_new_collaborators(self.env['res.partner'].browse(collaborator_ids_to_add))
                 collaborator_ids_vals_list.extend(Command.create({'partner_id': partner_id}) for partner_id in partners.ids)
+                project.tasks.message_subscribe(partner_ids=partners.ids)
             if collaborator_ids_to_add_with_limited_access:
                 partners = project._get_new_collaborators(self.env['res.partner'].browse(collaborator_ids_to_add_with_limited_access))
                 collaborator_ids_vals_list.extend(
