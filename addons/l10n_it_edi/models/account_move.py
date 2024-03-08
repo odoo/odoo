@@ -782,6 +782,11 @@ class AccountMove(models.Model):
 
         self.move_type = move_type
 
+        if self.name and self.name != '/':
+            # the journal might've changed, so we need to recompute the name in case it was set (first entry in journal)
+            self.name = False
+            self._compute_name()
+
         # Collect extra info from the XML that may be used by submodules to further put information on the invoice lines
         extra_info, message_to_log = self._l10n_it_edi_get_extra_info(company, document_type, tree)
 
