@@ -31,6 +31,7 @@ class TestNegative(TestHrHolidaysCommon):
             'date_to': '2022-12-31',
             'number_of_days': 1,
         })
+        cls.allocation_2022.action_validate()
 
         cls.allocation_2023 = cls.env['hr.leave.allocation'].create({
             'employee_id': cls.employee_emp_id,
@@ -38,6 +39,7 @@ class TestNegative(TestHrHolidaysCommon):
             'date_from': '2023-01-01',
             'number_of_days': 5,
         })
+        cls.allocation_2023.action_validate()
 
     def test_negative_time_off(self):
         with freeze_time('2022-10-02'):

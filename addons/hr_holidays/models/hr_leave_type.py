@@ -75,12 +75,15 @@ class HolidaysType(models.Model):
         help="""Extra Days Requests Allowed: User can request an allocation for himself.\n
         Not Allowed: User cannot request an allocation.""")
     allocation_validation_type = fields.Selection([
-        ('officer', 'Approved by Time Off Officer'),
-        ('no', 'No validation needed')], default='no', string='Approval',
-        compute='_compute_allocation_validation_type', store=True, readonly=False,
+        ('no_validation', 'No Validation'),
+        ('hr', 'By Time Off Officer'),
+        ('manager', "By Employee's Approver"),
+        ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Approval',
         help="""Select the level of approval needed in case of request by employee
-        - No validation needed: The employee's request is automatically approved.
-        - Approved by Time Off Officer: The employee's request need to be manually approved by the Time Off Officer.""")
+            #     - No validation needed: The employee's request is automatically approved.
+            #     - Approved by Time Off Officer: The employee's request need to be manually approved
+            #       by the Time Off Officer, Employee's Approver or both.""")
+
     has_valid_allocation = fields.Boolean(compute='_compute_valid', search='_search_valid', help='This indicates if it is still possible to use this type of leave')
     time_type = fields.Selection([('other', 'Worked Time'), ('leave', 'Absence')], default='leave', string="Kind of Time Off",
                                  help="The distinction between working time (ex. Attendance) and absence (ex. Training) will be used in the computation of Accrual's plan rate.")
@@ -281,7 +284,7 @@ class HolidaysType(models.Model):
     def _compute_allocation_validation_type(self):
         for leave_type in self:
             if leave_type.employee_requests == 'no':
-                leave_type.allocation_validation_type = 'officer'
+                leave_type.allocation_validation_type = 'hr'
 
     def requested_display_name(self):
         return self._context.get('holiday_status_display_name', True) and self._context.get('employee_id')

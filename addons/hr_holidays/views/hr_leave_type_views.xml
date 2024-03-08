@@ -75,7 +75,7 @@
                             <field name="responsible_ids"
                                 widget="many2many_tags"
                                 placeholder="Nobody will be notified"
-                                invisible="leave_validation_type in ['no_validation', 'manager'] and (requires_allocation == 'no' or allocation_validation_type != 'officer')"/>
+                                invisible="leave_validation_type in ['no_validation', 'manager'] and (requires_allocation == 'no' or allocation_validation_type not in ['hr', 'both'])"/>
                             <field name="request_unit"/>
                             <field name="show_on_dashboard"/>
                             <field name="support_document" string="Allow To Attach Supporting Document" />
@@ -132,7 +132,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="display_name"/>
                 <field name="leave_validation_type" optional="hide" string="Time Off Approval"/>
-                <field name="responsible_ids" widget="many2many_tags" invisible="leave_validation_type in ['no_validation', 'manager'] and (requires_allocation == 'no' or allocation_validation_type != 'officer')" optional="hide"/>
+                <field name="responsible_ids" widget="many2many_tags" invisible="leave_validation_type in ['no_validation', 'manager'] and (requires_allocation == 'no' or allocation_validation_type != 'hr')" optional="hide"/>
                 <field name="requires_allocation" optional="hide"/>
                 <field name="allocation_validation_type" string="Allocation Approval"/>
                 <field name="employee_requests" optional="hide"/>

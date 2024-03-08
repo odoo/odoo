@@ -20,7 +20,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             'name': 'Paid Time Off',
             'time_type': 'leave',
             'requires_allocation': 'yes',
-            'allocation_validation_type': 'officer',
+            'allocation_validation_type': 'hr',
         })
 
     def test_frequency_hourly_attendance(self):
