@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/core/web/discuss_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -9,7 +10,7 @@ import { assertSteps, click, contains, insertText, step } from "@web/../tests/ut
 
 QUnit.module("discuss");
 
-QUnit.test("can create a new channel [REQUIRE FOCUS]", async () => {
+test("can create a new channel [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     await start({
         mockRPC(route, params) {
@@ -75,30 +76,27 @@ QUnit.test("can create a new channel [REQUIRE FOCUS]", async () => {
     ]);
 });
 
-QUnit.test(
-    "do not close channel selector when creating chat conversation after selection",
-    async () => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
-        pyEnv["res.users"].create({ partner_id: partnerId });
-        await start();
-        await openDiscuss();
-        await click("i[title='Start a conversation']");
-        await insertText(".o-discuss-ChannelSelector input", "mario");
-        await click(".o-discuss-ChannelSelector-suggestion");
-        await contains(".o-discuss-ChannelSelector span[title='Mario']");
-        await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
-        triggerHotkey("Backspace");
-        await contains(".o-discuss-ChannelSelector span[title='Mario']", { count: 0 });
-        await insertText(".o-discuss-ChannelSelector input", "mario");
-        await contains(".o-discuss-ChannelSelector-suggestion");
-        triggerHotkey("Enter");
-        await contains(".o-discuss-ChannelSelector span[title='Mario']");
-        await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
-    }
-);
+test("do not close channel selector when creating chat conversation after selection", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    await start();
+    await openDiscuss();
+    await click("i[title='Start a conversation']");
+    await insertText(".o-discuss-ChannelSelector input", "mario");
+    await click(".o-discuss-ChannelSelector-suggestion");
+    await contains(".o-discuss-ChannelSelector span[title='Mario']");
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
+    triggerHotkey("Backspace");
+    await contains(".o-discuss-ChannelSelector span[title='Mario']", { count: 0 });
+    await insertText(".o-discuss-ChannelSelector input", "mario");
+    await contains(".o-discuss-ChannelSelector-suggestion");
+    triggerHotkey("Enter");
+    await contains(".o-discuss-ChannelSelector span[title='Mario']");
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
+});
 
-QUnit.test("can join a chat conversation", async (assert) => {
+test("can join a chat conversation", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -156,7 +154,7 @@ QUnit.test("can join a chat conversation", async (assert) => {
     await assertSteps([`/discuss/channel/messages - {"channel_id":${channelId},"limit":30}`]);
 });
 
-QUnit.test("can create a group chat conversation", async () => {
+test("can create a group chat conversation", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { name: "Mario" },
@@ -178,7 +176,7 @@ QUnit.test("can create a group chat conversation", async () => {
     await contains(".o-mail-Message", { count: 0 });
 });
 
-QUnit.test("should create DM chat when adding self and another user", async () => {
+test("should create DM chat when adding self and another user", async () => {
     const pyEnv = await startServer();
     const partner_id = pyEnv["res.partner"].create([{ name: "Mario", im_status: "online" }]);
     pyEnv["res.users"].create({ partner_id });
@@ -196,7 +194,7 @@ QUnit.test("should create DM chat when adding self and another user", async () =
     await contains(".o-mail-DiscussSidebarChannel", { text: "Mario" });
 });
 
-QUnit.test("chat search should display no result when no matches found", async () => {
+test("chat search should display no result when no matches found", async () => {
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
@@ -204,7 +202,7 @@ QUnit.test("chat search should display no result when no matches found", async (
     await contains(".o-discuss-ChannelSelector-suggestion", { text: "No results found" });
 });
 
-QUnit.test("chat search should not be visible when clicking outside of the field", async () => {
+test("chat search should not be visible when clicking outside of the field", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Panda" });
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -217,7 +215,7 @@ QUnit.test("chat search should not be visible when clicking outside of the field
     await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
 });
 
-QUnit.test("sidebar: add channel", async (assert) => {
+test("sidebar: add channel", async (assert) => {
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add");
@@ -231,7 +229,7 @@ QUnit.test("sidebar: add channel", async (assert) => {
     await contains(".o-discuss-ChannelSelector input[placeholder='Add or join a channel']");
 });
 
-QUnit.test("Chat is added to discuss on other tab that the one that joined", async () => {
+test("Chat is added to discuss on other tab that the one that joined", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jerry Golay" });
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -249,7 +247,7 @@ QUnit.test("Chat is added to discuss on other tab that the one that joined", asy
     await contains(".o-mail-DiscussSidebarChannel", { target: tab2.target, text: "Jerry Golay" });
 });
 
-QUnit.test("no conversation selected when opening non-existing channel in discuss", async () => {
+test("no conversation selected when opening non-existing channel in discuss", async () => {
     await startServer();
     await start();
     await openDiscuss(200); // non-existing id

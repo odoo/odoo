@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/activity/activity_mark_done_popover_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -9,7 +10,7 @@ import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("activity mark as done popover");
 
-QUnit.test("activity mark done popover simplest layout", async () => {
+test("activity mark done popover simplest layout", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
@@ -28,7 +29,7 @@ QUnit.test("activity mark done popover simplest layout", async () => {
     await contains(".o-mail-ActivityMarkAsDone button", { text: "Discard" });
 });
 
-QUnit.test("activity with force next mark done popover simplest layout", async () => {
+test("activity with force next mark done popover simplest layout", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
@@ -48,7 +49,7 @@ QUnit.test("activity with force next mark done popover simplest layout", async (
     await contains(".o-mail-ActivityMarkAsDone button", { text: "Discard" });
 });
 
-QUnit.test("activity mark done popover mark done without feedback", async (assert) => {
+test("activity mark done popover mark done without feedback", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityId = pyEnv["mail.activity"].create({
@@ -83,7 +84,7 @@ QUnit.test("activity mark done popover mark done without feedback", async (asser
     assert.verifySteps(["action_feedback"]);
 });
 
-QUnit.test("activity mark done popover mark done with feedback", async (assert) => {
+test("activity mark done popover mark done with feedback", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityId = pyEnv["mail.activity"].create({
@@ -122,7 +123,7 @@ QUnit.test("activity mark done popover mark done with feedback", async (assert) 
     assert.verifySteps(["action_feedback"]);
 });
 
-QUnit.test("activity mark done popover mark done and schedule next", async (assert) => {
+test("activity mark done popover mark done and schedule next", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityId = pyEnv["mail.activity"].create({
@@ -167,7 +168,7 @@ QUnit.test("activity mark done popover mark done and schedule next", async (asse
     assert.verifySteps(["action_feedback_schedule_next"]);
 });
 
-QUnit.test("[technical] activity mark done & schedule next with new action", async (assert) => {
+test("[technical] activity mark done & schedule next with new action", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({

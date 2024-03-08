@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss_app/jump_to_present_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -10,7 +11,7 @@ import { SIZES, patchUiSize } from "../helpers/patch_ui_size";
 
 QUnit.module("jump to present");
 
-QUnit.test("Basic jump to present when scrolling to outdated messages", async (assert) => {
+test("Basic jump to present when scrolling to outdated messages", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     for (let i = 0; i < 20; i++) {
@@ -40,41 +41,38 @@ QUnit.test("Basic jump to present when scrolling to outdated messages", async (a
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
-QUnit.test(
-    "Basic jump to present when scrolling to outdated messages (chatter, DESC)",
-    async (assert) => {
-        patchUiSize({ size: SIZES.XXL });
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
-        for (let i = 0; i < 20; i++) {
-            pyEnv["mail.message"].create({
-                body: "Non Empty Body ".repeat(100),
-                message_type: "comment",
-                model: "res.partner",
-                res_id: partnerId,
-            });
-        }
-        await start();
-        await openFormView("res.partner", partnerId);
-        await contains(".o-mail-Message", { count: 20 });
-        await contains(".o-mail-Thread");
-        assert.ok(
-            document.querySelector(".o-mail-Thread").scrollHeight > PRESENT_THRESHOLD,
-            "should have enough scroll height to trigger jump to present"
-        );
-        await contains(".o-mail-Chatter", { scroll: 0 });
-        await scroll(".o-mail-Chatter", "bottom");
-        await contains(".o-mail-Chatter", { text: "You're viewing older messagesJump to Present" });
-        await click(".o-mail-Thread-jumpPresent");
-        await contains(".o-mail-Thread", {
-            count: 0,
-            text: "You're viewing older messagesJump to Present",
+test("Basic jump to present when scrolling to outdated messages (chatter, DESC)", async (assert) => {
+    patchUiSize({ size: SIZES.XXL });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
+    for (let i = 0; i < 20; i++) {
+        pyEnv["mail.message"].create({
+            body: "Non Empty Body ".repeat(100),
+            message_type: "comment",
+            model: "res.partner",
+            res_id: partnerId,
         });
-        await contains(".o-mail-Chatter", { scroll: 0 });
     }
-);
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Message", { count: 20 });
+    await contains(".o-mail-Thread");
+    assert.ok(
+        document.querySelector(".o-mail-Thread").scrollHeight > PRESENT_THRESHOLD,
+        "should have enough scroll height to trigger jump to present"
+    );
+    await contains(".o-mail-Chatter", { scroll: 0 });
+    await scroll(".o-mail-Chatter", "bottom");
+    await contains(".o-mail-Chatter", { text: "You're viewing older messagesJump to Present" });
+    await click(".o-mail-Thread-jumpPresent");
+    await contains(".o-mail-Thread", {
+        count: 0,
+        text: "You're viewing older messagesJump to Present",
+    });
+    await contains(".o-mail-Chatter", { scroll: 0 });
+});
 
-QUnit.test("Jump to old reply should prompt jump to present", async () => {
+test("Jump to old reply should prompt jump to present", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const oldestMessageId = pyEnv["mail.message"].create({
@@ -116,7 +114,7 @@ QUnit.test("Jump to old reply should prompt jump to present", async () => {
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
-QUnit.test("Jump to old reply should prompt jump to present (RPC small delay)", async () => {
+test("Jump to old reply should prompt jump to present (RPC small delay)", async () => {
     // same test as before but with a small RPC delay
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -162,7 +160,7 @@ QUnit.test("Jump to old reply should prompt jump to present (RPC small delay)", 
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
-QUnit.test("Post message when seeing old message should jump to present", async () => {
+test("Post message when seeing old message should jump to present", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const oldestMessageId = pyEnv["mail.message"].create({

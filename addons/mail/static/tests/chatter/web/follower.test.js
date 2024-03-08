@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/chatter/web/follower_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -9,7 +10,7 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("follower");
 
-QUnit.test("base rendering not editable", async () => {
+test("base rendering not editable", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -36,7 +37,7 @@ QUnit.test("base rendering not editable", async () => {
     await contains(".o-mail-Follower-action", { count: 0 });
 });
 
-QUnit.test("base rendering editable", async () => {
+test("base rendering editable", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -56,7 +57,7 @@ QUnit.test("base rendering editable", async () => {
     await contains("button[title='Remove this follower']");
 });
 
-QUnit.test("click on partner follower details", async (assert) => {
+test("click on partner follower details", async (assert) => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -86,7 +87,7 @@ QUnit.test("click on partner follower details", async (assert) => {
     assert.verifySteps(["do_action"], "redirect to partner profile");
 });
 
-QUnit.test("click on edit follower", async (assert) => {
+test("click on edit follower", async (assert) => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -113,7 +114,7 @@ QUnit.test("click on edit follower", async (assert) => {
     await contains(".o-mail-FollowerSubtypeDialog");
 });
 
-QUnit.test("edit follower and close subtype dialog", async (assert) => {
+test("edit follower and close subtype dialog", async (assert) => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -142,7 +143,7 @@ QUnit.test("edit follower and close subtype dialog", async (assert) => {
     await contains(".o-mail-FollowerSubtypeDialog", { count: 0 });
 });
 
-QUnit.test("remove a follower in a dirty form view", async (assert) => {
+test("remove a follower in a dirty form view", async (assert) => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["discuss.channel"].create({ name: "General", display_name: "General" });
@@ -177,7 +178,7 @@ QUnit.test("remove a follower in a dirty form view", async (assert) => {
     await contains(".o_tag", { text: "General" });
 });
 
-QUnit.test("removing a follower should reload form view", async function (assert) {
+test("removing a follower should reload form view", async function (assert) {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({

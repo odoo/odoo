@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
@@ -9,7 +11,7 @@ import { deserializeDateTime } from "@web/core/l10n/dates";
 
 QUnit.module("thread (patch)");
 
-QUnit.test("Rendering of visitor banner", async () => {
+test("Rendering of visitor banner", async () => {
     const pyEnv = await startServer();
     const countryId = pyEnv["res.country"].create({ code: "BE" });
     const visitorId = pyEnv["website.visitor"].create({
@@ -52,7 +54,7 @@ QUnit.test("Rendering of visitor banner", async () => {
     await contains("span", { text: "Home → Contact" });
 });
 
-QUnit.test("Livechat with non-logged visitor should show visitor banner", async () => {
+test("Livechat with non-logged visitor should show visitor banner", async () => {
     const pyEnv = await startServer();
     const countryId = pyEnv["res.country"].create({ code: "BE" });
     const visitorId = pyEnv["website.visitor"].create({
@@ -79,7 +81,7 @@ QUnit.test("Livechat with non-logged visitor should show visitor banner", async 
     await contains(".o-website_livechat-VisitorBanner");
 });
 
-QUnit.test("Livechat with logged visitor should show visitor banner", async () => {
+test("Livechat with logged visitor should show visitor banner", async () => {
     const pyEnv = await startServer();
     const resCountryId1 = pyEnv["res.country"].create({ code: "BE" });
     const partnerId = pyEnv["res.partner"].create({ name: "Partner Visitor" });
@@ -107,7 +109,7 @@ QUnit.test("Livechat with logged visitor should show visitor banner", async () =
     await contains(".o-website_livechat-VisitorBanner", { text: "Partner Visitor" });
 });
 
-QUnit.test("Livechat without visitor should not show visitor banner", async () => {
+test("Livechat without visitor should not show visitor banner", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Harry" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -125,7 +127,7 @@ QUnit.test("Livechat without visitor should not show visitor banner", async () =
     await contains(".o-website_livechat-VisitorBanner", { count: 0 });
 });
 
-QUnit.test("Non-livechat channel should not show visitor banner", async () => {
+test("Non-livechat channel should not show visitor banner", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();

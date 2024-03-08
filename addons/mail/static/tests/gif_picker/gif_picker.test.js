@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/gif_picker/gif_picker_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -76,7 +77,7 @@ const rpc = {
 
 QUnit.module("GIF picker");
 
-QUnit.test("composer should display a GIF button", async () => {
+test("composer should display a GIF button", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
@@ -84,7 +85,7 @@ QUnit.test("composer should display a GIF button", async () => {
     await contains("button[aria-label='GIFs']");
 });
 
-QUnit.test("Composer GIF button should open the GIF picker", async () => {
+test("Composer GIF button should open the GIF picker", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
@@ -93,7 +94,7 @@ QUnit.test("Composer GIF button should open the GIF picker", async () => {
     await contains(".o-discuss-GifPicker");
 });
 
-QUnit.test("Searching for a GIF", async () => {
+test("Searching for a GIF", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start({
@@ -110,7 +111,7 @@ QUnit.test("Searching for a GIF", async () => {
     await contains(".o-discuss-Gif", { count: 2 });
 });
 
-QUnit.test("Open a GIF category trigger the search for the category", async () => {
+test("Open a GIF category trigger the search for the category", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start({
@@ -130,7 +131,7 @@ QUnit.test("Open a GIF category trigger the search for the category", async () =
     await contains("input[placeholder='Search for a GIF']", { value: "cry" });
 });
 
-QUnit.test("Reopen GIF category list when going back", async () => {
+test("Reopen GIF category list when going back", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start({
@@ -150,7 +151,7 @@ QUnit.test("Reopen GIF category list when going back", async () => {
     await contains(".o-discuss-GifPicker div[aria-label='list']");
 });
 
-QUnit.test("Add GIF to favorite", async () => {
+test("Add GIF to favorite", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start({
@@ -173,7 +174,7 @@ QUnit.test("Add GIF to favorite", async () => {
     await contains(".o-discuss-Gif");
 });
 
-QUnit.test("Chatter should not have the GIF button", async () => {
+test("Chatter should not have the GIF button", async () => {
     const { pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
@@ -181,24 +182,21 @@ QUnit.test("Chatter should not have the GIF button", async () => {
     await contains("button[aria-label='GIFs']", { count: 0 });
 });
 
-QUnit.test(
-    "Composer GIF button should open the GIF picker keyboard for mobile device",
-    async () => {
-        const pyEnv = await startServer();
-        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-        patchUiSize({ size: SIZES.SM });
-        await start();
-        await openDiscuss(channelId);
-        await click("span", { text: "General" });
-        await click("button[aria-label='Emojis']");
-        await contains(".o-mail-PickerContent-picker .o-mail-PickerContent-emojiPicker");
-        await click("button", { text: "GIFs" });
-        await contains(".popover .o-discuss-GifPicker", { count: 0 });
-        await contains(".o-mail-Composer-footer .o-discuss-GifPicker");
-    }
-);
+test("Composer GIF button should open the GIF picker keyboard for mobile device", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss(channelId);
+    await click("span", { text: "General" });
+    await click("button[aria-label='Emojis']");
+    await contains(".o-mail-PickerContent-picker .o-mail-PickerContent-emojiPicker");
+    await click("button", { text: "GIFs" });
+    await contains(".popover .o-discuss-GifPicker", { count: 0 });
+    await contains(".o-mail-Composer-footer .o-discuss-GifPicker");
+});
 
-QUnit.test("Searching for a GIF with a failling RPC should display an error", async () => {
+test("Searching for a GIF with a failling RPC should display an error", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start({
@@ -217,36 +215,33 @@ QUnit.test("Searching for a GIF with a failling RPC should display an error", as
     await contains(".o-discuss-GifPicker-error");
 });
 
-QUnit.test(
-    "Scrolling at the bottom should trigger the search to load more gif, even after visiting the favorite.",
-    async () => {
-        patchWithCleanup(GifPicker.prototype, {
-            get style() {
-                return "width: 200px;height: 200px;background: #000";
-            },
-        });
+test("Scrolling at the bottom should trigger the search to load more gif, even after visiting the favorite.", async () => {
+    patchWithCleanup(GifPicker.prototype, {
+        get style() {
+            return "width: 200px;height: 200px;background: #000";
+        },
+    });
 
-        const pyEnv = await startServer();
-        const channelId = pyEnv["discuss.channel"].create({ name: "" });
-        await start({
-            mockRPC(route) {
-                if (route === "/discuss/gif/search") {
-                    const _rpc = rpc.search;
-                    _rpc.results = gifFactory(4);
-                    return _rpc;
-                }
-                if (route === "/discuss/gif/categories") {
-                    return rpc.categories;
-                }
-            },
-        });
-        await openDiscuss(channelId);
-        await click("button[aria-label='GIFs']");
-        await click(".o-discuss-GifPicker div[aria-label='list-item']", { text: "Favorites" });
-        await click("i[aria-label='back']");
-        await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
-        await contains(".o-discuss-Gif", { count: 4 });
-        await scroll(".o-discuss-GifPicker-content", "bottom");
-        await contains(".o-discuss-Gif", { count: 8 });
-    }
-);
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    await start({
+        mockRPC(route) {
+            if (route === "/discuss/gif/search") {
+                const _rpc = rpc.search;
+                _rpc.results = gifFactory(4);
+                return _rpc;
+            }
+            if (route === "/discuss/gif/categories") {
+                return rpc.categories;
+            }
+        },
+    });
+    await openDiscuss(channelId);
+    await click("button[aria-label='GIFs']");
+    await click(".o-discuss-GifPicker div[aria-label='list-item']", { text: "Favorites" });
+    await click("i[aria-label='back']");
+    await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
+    await contains(".o-discuss-Gif", { count: 4 });
+    await scroll(".o-discuss-GifPicker-content", "bottom");
+    await contains(".o-discuss-Gif", { count: 8 });
+});

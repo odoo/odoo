@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/chatter/web/follower_list_menu_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -9,7 +10,7 @@ import { click, contains, scroll } from "@web/../tests/utils";
 
 QUnit.module("follower list menu");
 
-QUnit.test("base rendering not editable", async () => {
+test("base rendering not editable", async () => {
     await start();
     await openFormView("res.partner", undefined, { mode: "edit" });
     await contains(".o-mail-Followers");
@@ -19,7 +20,7 @@ QUnit.test("base rendering not editable", async () => {
     await contains(".o-mail-Followers-dropdown", { count: 0 });
 });
 
-QUnit.test("base rendering editable", async (assert) => {
+test("base rendering editable", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     await start({
@@ -42,7 +43,7 @@ QUnit.test("base rendering editable", async (assert) => {
     await contains(".o-mail-Followers-dropdown");
 });
 
-QUnit.test('click on "add followers" button', async (assert) => {
+test('click on "add followers" button', async (assert) => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([
         { name: "Partner1" },
@@ -100,7 +101,7 @@ QUnit.test('click on "add followers" button', async (assert) => {
     await contains(":nth-child(2 of .o-mail-Follower)", { text: "Partner3" });
 });
 
-QUnit.test("click on remove follower", async (assert) => {
+test("click on remove follower", async (assert) => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { name: "Partner1" },
@@ -139,57 +140,51 @@ QUnit.test("click on remove follower", async (assert) => {
     await contains(".o-mail-Follower", { count: 0 });
 });
 
-QUnit.test(
-    'Hide "Add follower" and subtypes edition/removal buttons except own user on read only record',
-    async () => {
-        const pyEnv = await startServer();
-        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
-            { name: "Partner1" },
-            { name: "Partner2" },
-        ]);
-        pyEnv["mail.followers"].create([
-            {
-                is_active: true,
-                partner_id: pyEnv.currentPartnerId,
-                res_id: partnerId_1,
-                res_model: "res.partner",
-            },
-            {
-                is_active: true,
-                partner_id: partnerId_2,
-                res_id: partnerId_1,
-                res_model: "res.partner",
-            },
-        ]);
-        await start({
-            async mockRPC(route, args, performRPC) {
-                if (route === "/mail/thread/data") {
-                    // mimic user with no write access
-                    const res = await performRPC(route, args);
-                    res["hasWriteAccess"] = false;
-                    return res;
-                }
-            },
-        });
-        await openFormView("res.partner", partnerId_1);
-        await click(".o-mail-Followers-button");
-        await contains("a", { count: 0, text: "Add Followers" });
-        await contains(":nth-child(1 of .o-mail-Follower)", {
-            contains: [
-                ["button[title='Edit subscription']"],
-                ["button[title='Remove this follower']"],
-            ],
-        });
-        await contains(":nth-child(2 of .o-mail-Follower)", {
-            contains: [
-                ["button[title='Edit subscription']", { count: 0 }],
-                ["button[title='Remove this follower']", { count: 0 }],
-            ],
-        });
-    }
-);
+test('Hide "Add follower" and subtypes edition/removal buttons except own user on read only record', async () => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "Partner1" },
+        { name: "Partner2" },
+    ]);
+    pyEnv["mail.followers"].create([
+        {
+            is_active: true,
+            partner_id: pyEnv.currentPartnerId,
+            res_id: partnerId_1,
+            res_model: "res.partner",
+        },
+        {
+            is_active: true,
+            partner_id: partnerId_2,
+            res_id: partnerId_1,
+            res_model: "res.partner",
+        },
+    ]);
+    await start({
+        async mockRPC(route, args, performRPC) {
+            if (route === "/mail/thread/data") {
+                // mimic user with no write access
+                const res = await performRPC(route, args);
+                res["hasWriteAccess"] = false;
+                return res;
+            }
+        },
+    });
+    await openFormView("res.partner", partnerId_1);
+    await click(".o-mail-Followers-button");
+    await contains("a", { count: 0, text: "Add Followers" });
+    await contains(":nth-child(1 of .o-mail-Follower)", {
+        contains: [["button[title='Edit subscription']"], ["button[title='Remove this follower']"]],
+    });
+    await contains(":nth-child(2 of .o-mail-Follower)", {
+        contains: [
+            ["button[title='Edit subscription']", { count: 0 }],
+            ["button[title='Remove this follower']", { count: 0 }],
+        ],
+    });
+});
 
-QUnit.test("Load 100 followers at once", async () => {
+test("Load 100 followers at once", async () => {
     const pyEnv = await startServer();
     const partnerIds = pyEnv["res.partner"].create(
         [...Array(210).keys()].map((i) => ({ display_name: `Partner${i}`, name: `Partner${i}` }))
@@ -219,7 +214,7 @@ QUnit.test("Load 100 followers at once", async () => {
     await contains(".o-mail-Followers-dropdown span", { count: 0, text: "Load more" });
 });
 
-QUnit.test("Load 100 recipients at once", async () => {
+test("Load 100 recipients at once", async () => {
     const pyEnv = await startServer();
     const partnerIds = pyEnv["res.partner"].create(
         [...Array(210).keys()].map((i) => ({
@@ -257,75 +252,63 @@ QUnit.test("Load 100 recipients at once", async () => {
     await contains(".o-mail-RecipientList span", { count: 0, text: "Load more" });
 });
 
-QUnit.test(
-    'Show "Add follower" and subtypes edition/removal buttons on all followers if user has write access',
-    async () => {
-        const pyEnv = await startServer();
-        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
-            { name: "Partner1" },
-            { name: "Partner2" },
-        ]);
-        pyEnv["mail.followers"].create([
-            {
-                is_active: true,
-                partner_id: pyEnv.currentPartnerId,
-                res_id: partnerId_1,
-                res_model: "res.partner",
-            },
-            {
-                is_active: true,
-                partner_id: partnerId_2,
-                res_id: partnerId_1,
-                res_model: "res.partner",
-            },
-        ]);
-        await start({
-            async mockRPC(route, args, performRPC) {
-                if (route === "/mail/thread/data") {
-                    // mimic user with write access
-                    const res = await performRPC(...arguments);
-                    res["hasWriteAccess"] = true;
-                    return res;
-                }
-            },
-        });
-        await openFormView("res.partner", partnerId_1);
+test('Show "Add follower" and subtypes edition/removal buttons on all followers if user has write access', async () => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "Partner1" },
+        { name: "Partner2" },
+    ]);
+    pyEnv["mail.followers"].create([
+        {
+            is_active: true,
+            partner_id: pyEnv.currentPartnerId,
+            res_id: partnerId_1,
+            res_model: "res.partner",
+        },
+        {
+            is_active: true,
+            partner_id: partnerId_2,
+            res_id: partnerId_1,
+            res_model: "res.partner",
+        },
+    ]);
+    await start({
+        async mockRPC(route, args, performRPC) {
+            if (route === "/mail/thread/data") {
+                // mimic user with write access
+                const res = await performRPC(...arguments);
+                res["hasWriteAccess"] = true;
+                return res;
+            }
+        },
+    });
+    await openFormView("res.partner", partnerId_1);
 
-        await click(".o-mail-Followers-button");
-        await contains("a", { text: "Add Followers" });
-        await contains(":nth-child(1 of .o-mail-Follower)", {
-            contains: [
-                ["button[title='Edit subscription']"],
-                ["button[title='Remove this follower']"],
-            ],
-        });
-        await contains(":nth-child(2 of .o-mail-Follower)", {
-            contains: [
-                ["button[title='Edit subscription']"],
-                ["button[title='Remove this follower']"],
-            ],
-        });
-    }
-);
+    await click(".o-mail-Followers-button");
+    await contains("a", { text: "Add Followers" });
+    await contains(":nth-child(1 of .o-mail-Follower)", {
+        contains: [["button[title='Edit subscription']"], ["button[title='Remove this follower']"]],
+    });
+    await contains(":nth-child(2 of .o-mail-Follower)", {
+        contains: [["button[title='Edit subscription']"], ["button[title='Remove this follower']"]],
+    });
+});
 
-QUnit.test(
-    'Show "No Followers" dropdown-item if there are no followers and user does not have write access',
-    async () => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({});
-        await start({
-            async mockRPC(route, args, performRPC) {
-                if (route === "/mail/thread/data") {
-                    // mimic user without write access
-                    const res = await performRPC(route, args);
-                    res["hasWriteAccess"] = false;
-                    return res;
-                }
-            },
-        });
-        await openFormView("res.partner", partnerId);
+test('Show "No Followers" dropdown-item if there are no followers and user does not have write access', async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    await start({
+        async mockRPC(route, args, performRPC) {
+            if (route === "/mail/thread/data") {
+                // mimic user without write access
+                const res = await performRPC(route, args);
+                res["hasWriteAccess"] = false;
+                return res;
+            }
+        },
+    });
+    await openFormView("res.partner", partnerId);
 
-        await click(".o-mail-Followers-button");
-        await contains("div.disabled", { text: "No Followers" });
-    }
-);
+    await click(".o-mail-Followers-button");
+    await contains("div.disabled", { text: "No Followers" });
+});

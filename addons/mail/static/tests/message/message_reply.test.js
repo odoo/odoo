@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/message/message_reply_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -11,7 +12,7 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("message reply");
 
-QUnit.test("click on message in reply to highlight the parent message", async () => {
+test("click on message in reply to highlight the parent message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const messageId = pyEnv["mail.message"].create({
@@ -35,7 +36,7 @@ QUnit.test("click on message in reply to highlight the parent message", async ()
     await contains(".o-mail-Message.o-highlighted .o-mail-Message-content", { text: "Hey lol" });
 });
 
-QUnit.test("click on message in reply to scroll to the parent message", async () => {
+test("click on message in reply to scroll to the parent message", async () => {
     // make scroll behavior instantaneous.
     patchWithCleanup(Element.prototype, {
         scrollIntoView() {
@@ -69,7 +70,7 @@ QUnit.test("click on message in reply to scroll to the parent message", async ()
     await contains(":nth-child(1 of .o-mail-Message)", { visible: true });
 });
 
-QUnit.test("reply shows correct author avatar", async (assert) => {
+test("reply shows correct author avatar", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const messageId = pyEnv["mail.message"].create({

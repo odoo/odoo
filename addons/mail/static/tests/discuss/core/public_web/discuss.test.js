@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import {
     waitForChannels,
@@ -13,7 +15,7 @@ import { rpc } from "@web/core/network/rpc";
 
 QUnit.module("discuss");
 
-QUnit.test("bus subscription updated when joining/leaving thread as non member", async () => {
+test("bus subscription updated when joining/leaving thread as non member", async () => {
     const pyEnv = await startServer();
     const johnUser = pyEnv["res.users"].create({ name: "John" });
     const johnPartner = pyEnv["res.partner"].create({ name: "John", user_ids: [johnUser] });
@@ -27,7 +29,7 @@ QUnit.test("bus subscription updated when joining/leaving thread as non member",
     await waitForChannels([`discuss.channel_${channelId}`], { operation: "delete" });
 });
 
-QUnit.test("bus subscription updated when joining locally pinned thread", async () => {
+test("bus subscription updated when joining locally pinned thread", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [],
@@ -43,7 +45,7 @@ QUnit.test("bus subscription updated when joining locally pinned thread", async 
     await waitForChannels([`discuss.channel_${channelId}`], { operation: "delete" });
 });
 
-QUnit.test("bus subscription kept after receiving a message as non member", async () => {
+test("bus subscription kept after receiving a message as non member", async () => {
     const pyEnv = await startServer();
     const johnUser = pyEnv["res.users"].create({ name: "John" });
     const johnPartner = pyEnv["res.partner"].create({ name: "John", user_ids: [johnUser] });

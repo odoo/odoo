@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/messaging_menu/messaging_menu_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -17,14 +18,14 @@ import { assertSteps, click, contains, insertText, step, triggerEvents } from "@
 
 QUnit.module("messaging menu");
 
-QUnit.test("should have messaging menu button in systray", async () => {
+test("should have messaging menu button in systray", async () => {
     await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu", { count: 0 });
     await contains(".o_menu_systray i[aria-label='Messages'].fa-comments");
 });
 
-QUnit.test("messaging menu should have topbar buttons", async () => {
+test("messaging menu should have topbar buttons", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu");
@@ -35,7 +36,7 @@ QUnit.test("messaging menu should have topbar buttons", async () => {
     await contains("button", { text: "New Message" });
 });
 
-QUnit.test("counter is taking into account failure notification", async () => {
+test("counter is taking into account failure notification", async () => {
     patchBrowserNotification("denied");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ display_name: "general" });
@@ -61,7 +62,7 @@ QUnit.test("counter is taking into account failure notification", async () => {
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
 });
 
-QUnit.test("rendering with OdooBot has a request (default)", async () => {
+test("rendering with OdooBot has a request (default)", async () => {
     patchBrowserNotification("default");
     const pyEnv = await startServer();
     const odoobot = pyEnv.mockServer.getRecords("res.partner", [["id", "in", pyEnv.odoobotId]], {
@@ -80,7 +81,7 @@ QUnit.test("rendering with OdooBot has a request (default)", async () => {
     await contains(".o-mail-NotificationItem", { text: "OdooBot has a request" });
 });
 
-QUnit.test("rendering without OdooBot has a request (denied)", async () => {
+test("rendering without OdooBot has a request (denied)", async () => {
     patchBrowserNotification("denied");
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -88,7 +89,7 @@ QUnit.test("rendering without OdooBot has a request (denied)", async () => {
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
-QUnit.test("rendering without OdooBot has a request (accepted)", async () => {
+test("rendering without OdooBot has a request (accepted)", async () => {
     patchBrowserNotification("granted");
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -96,7 +97,7 @@ QUnit.test("rendering without OdooBot has a request (accepted)", async () => {
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
-QUnit.test("respond to notification prompt (denied)", async () => {
+test("respond to notification prompt (denied)", async () => {
     patchBrowserNotification("default", "denied");
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -109,7 +110,7 @@ QUnit.test("respond to notification prompt (denied)", async () => {
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
-QUnit.test("respond to notification prompt (granted)", async () => {
+test("respond to notification prompt (granted)", async () => {
     patchBrowserNotification("default", "granted");
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -119,7 +120,7 @@ QUnit.test("respond to notification prompt (granted)", async () => {
     });
 });
 
-QUnit.test("no 'OdooBot has a request' in mobile app", async () => {
+test("no 'OdooBot has a request' in mobile app", async () => {
     patchBrowserNotification("default");
     // simulate Android Odoo App
     patchWithCleanup(browser.navigator, {
@@ -131,7 +132,7 @@ QUnit.test("no 'OdooBot has a request' in mobile app", async () => {
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
-QUnit.test("rendering with PWA installation request", async () => {
+test("rendering with PWA installation request", async () => {
     patchWithCleanup(browser, {
         BeforeInstallPromptEvent: () => {},
     });
@@ -176,7 +177,7 @@ QUnit.test("rendering with PWA installation request", async () => {
     await assertSteps(["show prompt"]);
 });
 
-QUnit.test("installation of the PWA request can be dismissed", async () => {
+test("installation of the PWA request can be dismissed", async () => {
     patchWithCleanup(browser, {
         BeforeInstallPromptEvent: () => {},
     });
@@ -213,7 +214,7 @@ QUnit.test("installation of the PWA request can be dismissed", async () => {
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
-QUnit.test("rendering with PWA installation request (dismissed)", async () => {
+test("rendering with PWA installation request (dismissed)", async () => {
     patchWithCleanup(browser, {
         BeforeInstallPromptEvent: () => {},
     });
@@ -238,7 +239,7 @@ QUnit.test("rendering with PWA installation request (dismissed)", async () => {
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
-QUnit.test("rendering with PWA installation request (already running as PWA)", async () => {
+test("rendering with PWA installation request (already running as PWA)", async () => {
     patchWithCleanup(browser, {
         BeforeInstallPromptEvent: () => {},
     });
@@ -262,14 +263,14 @@ QUnit.test("rendering with PWA installation request (already running as PWA)", a
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
-QUnit.test("Is closed after clicking on new message", async () => {
+test("Is closed after clicking on new message", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "New Message" });
     await contains(".o-mail-MessagingMenu", { count: 0 });
 });
 
-QUnit.test("no 'New Message' button when discuss is open", async () => {
+test("no 'New Message' button when discuss is open", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains("button", { text: "New Message" });
@@ -284,7 +285,7 @@ QUnit.test("no 'New Message' button when discuss is open", async () => {
     await contains("button", { count: 0, text: "New Message" });
 });
 
-QUnit.test("grouped notifications by document", async () => {
+test("grouped notifications by document", async () => {
     const pyEnv = await startServer();
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
@@ -322,7 +323,7 @@ QUnit.test("grouped notifications by document", async () => {
     await contains(".o-mail-ChatWindow");
 });
 
-QUnit.test("grouped notifications by document model", async (assert) => {
+test("grouped notifications by document model", async (assert) => {
     const pyEnv = await startServer();
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
@@ -381,55 +382,52 @@ QUnit.test("grouped notifications by document model", async (assert) => {
     await assertSteps(["do_action"]);
 });
 
-QUnit.test(
-    "multiple grouped notifications by document model, sorted by the most recent message of each group",
-    async () => {
-        const pyEnv = await startServer();
-        const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
-            {
-                message_type: "email",
-                model: "res.partner",
-                res_id: 31,
-                res_model_name: "Partner",
-            },
-            {
-                message_type: "email",
-                model: "res.company",
-                res_id: 32,
-                res_model_name: "Company",
-            },
-        ]);
-        pyEnv["mail.notification"].create([
-            {
-                mail_message_id: messageId_1,
-                notification_status: "exception",
-                notification_type: "email",
-            },
-            {
-                mail_message_id: messageId_1,
-                notification_status: "exception",
-                notification_type: "email",
-            },
-            {
-                mail_message_id: messageId_2,
-                notification_status: "bounce",
-                notification_type: "email",
-            },
-            {
-                mail_message_id: messageId_2,
-                notification_status: "bounce",
-                notification_type: "email",
-            },
-        ]);
-        await start();
-        await click(".o_menu_systray i[aria-label='Messages']");
-        await contains(".o-mail-NotificationItem", { count: 2 });
-        await contains(":nth-child(1 of .o-mail-NotificationItem)", { text: "Company" });
-        await contains(":nth-child(2 of .o-mail-NotificationItem)", { text: "Partner" });
-    }
-);
+test("multiple grouped notifications by document model, sorted by the most recent message of each group", async () => {
+    const pyEnv = await startServer();
+    const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
+        {
+            message_type: "email",
+            model: "res.partner",
+            res_id: 31,
+            res_model_name: "Partner",
+        },
+        {
+            message_type: "email",
+            model: "res.company",
+            res_id: 32,
+            res_model_name: "Company",
+        },
+    ]);
+    pyEnv["mail.notification"].create([
+        {
+            mail_message_id: messageId_1,
+            notification_status: "exception",
+            notification_type: "email",
+        },
+        {
+            mail_message_id: messageId_1,
+            notification_status: "exception",
+            notification_type: "email",
+        },
+        {
+            mail_message_id: messageId_2,
+            notification_status: "bounce",
+            notification_type: "email",
+        },
+        {
+            mail_message_id: messageId_2,
+            notification_status: "bounce",
+            notification_type: "email",
+        },
+    ]);
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-NotificationItem", { count: 2 });
+    await contains(":nth-child(1 of .o-mail-NotificationItem)", { text: "Company" });
+    await contains(":nth-child(2 of .o-mail-NotificationItem)", { text: "Partner" });
+});
 
-QUnit.test("non-failure notifications are ignored", async () => {
+test("non-failure notifications are ignored", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const messageId = pyEnv["mail.message"].create({
@@ -447,7 +445,7 @@ QUnit.test("non-failure notifications are ignored", async () => {
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
-QUnit.test("mark unread channel as read", async () => {
+test("mark unread channel as read", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -483,7 +481,7 @@ QUnit.test("mark unread channel as read", async () => {
     await contains(".o-mail-ChatWindow", { count: 0 });
 });
 
-QUnit.test("mark failure as read", async () => {
+test("mark failure as read", async () => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create({
         message_type: "email",
@@ -518,7 +516,7 @@ QUnit.test("mark failure as read", async () => {
     });
 });
 
-QUnit.test("different discuss.channel are not grouped", async () => {
+test("different discuss.channel are not grouped", async () => {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
         { name: "Channel_1" },
@@ -567,7 +565,7 @@ QUnit.test("different discuss.channel are not grouped", async () => {
     await contains(".o-mail-ChatWindow");
 });
 
-QUnit.test("mobile: active icon is highlighted", async () => {
+test("mobile: active icon is highlighted", async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -575,7 +573,7 @@ QUnit.test("mobile: active icon is highlighted", async () => {
     await contains(".o-mail-MessagingMenu-tab.fw-bolder", { text: "Chat" });
 });
 
-QUnit.test("open chat window from preview", async () => {
+test("open chat window from preview", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "test" });
     await start();
@@ -584,7 +582,7 @@ QUnit.test("open chat window from preview", async () => {
     await contains(".o-mail-ChatWindow");
 });
 
-QUnit.test('"Start a conversation" in mobile shows channel selector (+ click away)', async () => {
+test('"Start a conversation" in mobile shows channel selector (+ click away)', async () => {
     patchUiSize({ height: 360, width: 640 });
     await start();
     await openDiscuss();
@@ -602,7 +600,7 @@ QUnit.test('"Start a conversation" in mobile shows channel selector (+ click awa
     await contains("button", { text: "Start a conversation" });
     await contains("input[placeholder='Start a conversation']", { count: 0 });
 });
-QUnit.test('"New Channel" in mobile shows channel selector (+ click away)', async () => {
+test('"New Channel" in mobile shows channel selector (+ click away)', async () => {
     patchUiSize({ height: 360, width: 640 });
     await start();
     await openDiscuss();
@@ -621,7 +619,7 @@ QUnit.test('"New Channel" in mobile shows channel selector (+ click away)', asyn
     await contains("input[placeholder='Add or join a channel']", { count: 0 });
 });
 
-QUnit.test("'Start a conversation' button should open a thread in mobile", async () => {
+test("'Start a conversation' button should open a thread in mobile", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -635,7 +633,7 @@ QUnit.test("'Start a conversation' button should open a thread in mobile", async
     await contains(".o-mail-ChatWindow", { text: "Demo" });
 });
 
-QUnit.test("Counter is updated when receiving new message", async () => {
+test("Counter is updated when receiving new message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Albert" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -664,7 +662,7 @@ QUnit.test("Counter is updated when receiving new message", async () => {
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
 });
 
-QUnit.test("basic rendering", async (assert) => {
+test("basic rendering", async (assert) => {
     patchWithCleanup(browser, {
         Notification: {
             ...browser.Notification,
@@ -698,7 +696,7 @@ QUnit.test("basic rendering", async (assert) => {
     );
 });
 
-QUnit.test("switch tab", async () => {
+test("switch tab", async () => {
     await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await contains(".o-mail-MessagingMenu button.fw-bold", { text: "All" });
@@ -718,7 +716,7 @@ QUnit.test("switch tab", async () => {
     await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Channels" });
 });
 
-QUnit.test("channel preview: basic rendering", async () => {
+test("channel preview: basic rendering", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -738,7 +736,7 @@ QUnit.test("channel preview: basic rendering", async () => {
     await contains(".o-mail-NotificationItem-text", { text: "Demo: test" });
 });
 
-QUnit.test("filtered previews", async () => {
+test("filtered previews", async () => {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
         { channel_type: "chat" },
@@ -770,7 +768,7 @@ QUnit.test("filtered previews", async () => {
     await contains(".o-mail-NotificationItem", { text: "channel1" });
 });
 
-QUnit.test("no code injection in message body preview", async () => {
+test("no code injection in message body preview", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     pyEnv["mail.message"].create({
@@ -786,7 +784,7 @@ QUnit.test("no code injection in message body preview", async () => {
     await contains(".o-mail-NotificationItem-text script", { count: 0 });
 });
 
-QUnit.test("no code injection in message body preview from sanitized message", async () => {
+test("no code injection in message body preview from sanitized message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     pyEnv["mail.message"].create({
@@ -802,7 +800,7 @@ QUnit.test("no code injection in message body preview from sanitized message", a
     await contains(".o-mail-NotificationItem-text script", { count: 0 });
 });
 
-QUnit.test("<br/> tags in message body preview are transformed in spaces", async () => {
+test("<br/> tags in message body preview are transformed in spaces", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     pyEnv["mail.message"].create({
@@ -815,7 +813,7 @@ QUnit.test("<br/> tags in message body preview are transformed in spaces", async
     await contains(".o-mail-NotificationItem-text", { text: "You: a b c d" });
 });
 
-QUnit.test("Messaging menu notification body of chat should show author name once", async () => {
+test("Messaging menu notification body of chat should show author name once", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -837,19 +835,16 @@ QUnit.test("Messaging menu notification body of chat should show author name onc
     await contains(".o-mail-NotificationItem-text", { textContent: "Hey!" });
 });
 
-QUnit.test(
-    "Group chat should be displayed inside the chat section of the messaging menu",
-    async () => {
-        const pyEnv = await startServer();
-        pyEnv["discuss.channel"].create({ channel_type: "group" });
-        await start();
-        await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-        await click(".o-mail-MessagingMenu button", { text: "Chats" });
-        await contains(".o-mail-NotificationItem");
-    }
-);
+test("Group chat should be displayed inside the chat section of the messaging menu", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ channel_type: "group" });
+    await start();
+    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+    await click(".o-mail-MessagingMenu button", { text: "Chats" });
+    await contains(".o-mail-NotificationItem");
+});
 
-QUnit.test("click on preview should mark as read and open the thread", async () => {
+test("click on preview should mark as read and open the thread", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
     const messageId = pyEnv["mail.message"].create({
@@ -876,75 +871,69 @@ QUnit.test("click on preview should mark as read and open the thread", async () 
     await contains(".o-mail-NotificationItem", { count: 0, text: "Frodo Baggins" });
 });
 
-QUnit.test(
-    "click on expand from chat window should close the chat window and open the form view",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
-        const messageId = pyEnv["mail.message"].create({
-            model: "res.partner",
-            body: "not empty",
-            author_id: pyEnv.odoobotId,
-            needaction: true,
-            needaction_partner_ids: [pyEnv.currentPartnerId],
-            res_id: partnerId,
-        });
-        pyEnv["mail.notification"].create({
-            mail_message_id: messageId,
-            notification_status: "sent",
-            notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
-        });
-        const { env } = await start();
-        patchWithCleanup(env.services.action, {
-            doAction(action) {
-                step("do_action");
-                assert.strictEqual(action.res_id, partnerId);
-                assert.strictEqual(action.res_model, "res.partner");
-            },
-        });
-        await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem", { text: "Frodo Baggins" });
-        await click(".o-mail-ChatWindow-command i.fa-expand");
-        await contains(".o-mail-ChatWindow", { count: 0 });
-        await assertSteps(["do_action"], "should have done an action to open the form view");
-    }
-);
+test("click on expand from chat window should close the chat window and open the form view", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
+    const messageId = pyEnv["mail.message"].create({
+        model: "res.partner",
+        body: "not empty",
+        author_id: pyEnv.odoobotId,
+        needaction: true,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: pyEnv.currentPartnerId,
+    });
+    const { env } = await start();
+    patchWithCleanup(env.services.action, {
+        doAction(action) {
+            step("do_action");
+            assert.strictEqual(action.res_id, partnerId);
+            assert.strictEqual(action.res_model, "res.partner");
+        },
+    });
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem", { text: "Frodo Baggins" });
+    await click(".o-mail-ChatWindow-command i.fa-expand");
+    await contains(".o-mail-ChatWindow", { count: 0 });
+    await assertSteps(["do_action"], "should have done an action to open the form view");
+});
 
-QUnit.test(
-    "preview should display last needaction message preview even if there is a more recent message that is not needaction in the thread",
-    async () => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({ name: "Stranger" });
-        const messageId = pyEnv["mail.message"].create({
-            author_id: partnerId,
-            body: "I am the oldest but needaction",
-            model: "res.partner",
-            needaction: true,
-            needaction_partner_ids: [pyEnv.currentPartnerId],
-            res_id: partnerId,
-        });
-        pyEnv["mail.message"].create({
-            author_id: pyEnv.currentPartnerId,
-            body: "I am more recent",
-            model: "res.partner",
-            res_id: partnerId,
-        });
-        pyEnv["mail.notification"].create({
-            mail_message_id: messageId,
-            notification_status: "sent",
-            notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
-        });
-        await start();
-        await click(".o_menu_systray i[aria-label='Messages']");
-        await contains(".o-mail-NotificationItem-text", {
-            text: "Stranger: I am the oldest but needaction",
-        });
-    }
-);
+test("preview should display last needaction message preview even if there is a more recent message that is not needaction in the thread", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Stranger" });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "I am the oldest but needaction",
+        model: "res.partner",
+        needaction: true,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: partnerId,
+    });
+    pyEnv["mail.message"].create({
+        author_id: pyEnv.currentPartnerId,
+        body: "I am more recent",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: pyEnv.currentPartnerId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-NotificationItem-text", {
+        text: "Stranger: I am the oldest but needaction",
+    });
+});
 
-QUnit.test("single preview for channel if it has unread and needaction messages", async () => {
+test("single preview for channel if it has unread and needaction messages", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -982,7 +971,7 @@ QUnit.test("single preview for channel if it has unread and needaction messages"
     await contains(".o-mail-NotificationItem-text", { text: "Partner1: Message with needaction" });
 });
 
-QUnit.test("chat should show unread counter on receiving new messages", async () => {
+test("chat should show unread counter on receiving new messages", async () => {
     // unread and needaction are conceptually the same in chat
     // however message_needaction_counter is not updated
     // so special care for chat to simulate needaction with unread
@@ -1015,7 +1004,7 @@ QUnit.test("chat should show unread counter on receiving new messages", async ()
     await contains(".o-mail-NotificationItem .badge", { text: "1" });
 });
 
-QUnit.test("preview for channel should show latest non-deleted message", async () => {
+test("preview for channel should show latest non-deleted message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
     const channelId = pyEnv["discuss.channel"].create({ name: "Test" });
@@ -1045,7 +1034,7 @@ QUnit.test("preview for channel should show latest non-deleted message", async (
     await contains(".o-mail-NotificationItem-text", { text: "Partner1: message-1" });
 });
 
-QUnit.test("failure notifications are shown before channel preview", async () => {
+test("failure notifications are shown before channel preview", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
     const failedMessageId = pyEnv["mail.message"].create({
@@ -1078,7 +1067,7 @@ QUnit.test("failure notifications are shown before channel preview", async () =>
     });
 });
 
-QUnit.test("messaging menu should show new needaction messages from chatter", async () => {
+test("messaging menu should show new needaction messages from chatter", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
     const { env } = await start();
@@ -1109,7 +1098,7 @@ QUnit.test("messaging menu should show new needaction messages from chatter", as
     await contains(".o-mail-NotificationItem-text", { text: "Frodo Baggins: @Mitchel Admin" });
 });
 
-QUnit.test("can open messaging menu even if messaging is not initialized", async () => {
+test("can open messaging menu even if messaging is not initialized", async () => {
     patchBrowserNotification("default");
     await startServer();
     const def = makeDeferred();
@@ -1124,7 +1113,7 @@ QUnit.test("can open messaging menu even if messaging is not initialized", async
     await contains(".o-mail-NotificationItem", { text: "OdooBot has a request" });
 });
 
-QUnit.test("can open messaging menu even if channels are not fetched", async () => {
+test("can open messaging menu even if channels are not fetched", async () => {
     patchBrowserNotification("denied");
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
@@ -1142,7 +1131,7 @@ QUnit.test("can open messaging menu even if channels are not fetched", async () 
     await contains(".o-mail-NotificationItem", { text: "General" });
 });
 
-QUnit.test("Latest needaction is shown in thread preview", async () => {
+test("Latest needaction is shown in thread preview", async () => {
     const pyEnv = await startServer();
     for (let i = 1; i <= 2; i++) {
         const messageId = pyEnv["mail.message"].create({

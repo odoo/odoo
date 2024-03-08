@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/chatter/web/chatter_search_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { openFormView, start } from "@mail/../tests/helpers/test_utils";
@@ -9,7 +10,7 @@ import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_hook";
 
 QUnit.module("chatter search");
 
-QUnit.test("Chatter should display search icon", async () => {
+test("Chatter should display search icon", async () => {
     patchUiSize({ size: SIZES.XXL });
     const { pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -17,7 +18,7 @@ QUnit.test("Chatter should display search icon", async () => {
     await contains("[title='Search Messages']");
 });
 
-QUnit.test("Click on the search icon should open the search form", async () => {
+test("Click on the search icon should open the search form", async () => {
     patchUiSize({ size: SIZES.XXL });
     const { pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -27,7 +28,7 @@ QUnit.test("Click on the search icon should open the search form", async () => {
     await contains(".o_searchview_input");
 });
 
-QUnit.test("Click again on the search icon should close the search form", async () => {
+test("Click again on the search icon should close the search form", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -45,7 +46,7 @@ QUnit.test("Click again on the search icon should close the search form", async 
     await contains(".o_searchview_input", { count: 0 });
 });
 
-QUnit.test("Search in chatter", async () => {
+test("Search in chatter", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -62,7 +63,7 @@ QUnit.test("Search in chatter", async () => {
     await contains(".o-mail-Chatter-search .o-mail-Message");
 });
 
-QUnit.test("Close button should close the search panel", async () => {
+test("Close button should close the search panel", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -81,7 +82,7 @@ QUnit.test("Close button should close the search panel", async () => {
     await contains(".o-mail-Chatter-search", { count: 0 });
 });
 
-QUnit.test("Search in chatter should be hightligted", async () => {
+test("Search in chatter should be hightligted", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -98,7 +99,7 @@ QUnit.test("Search in chatter should be hightligted", async () => {
     await contains(`.o-mail-Chatter-search .o-mail-Message .${HIGHLIGHT_CLASS}`);
 });
 
-QUnit.test("Scrolling bottom in non-aside chatter should load more searched message", async () => {
+test("Scrolling bottom in non-aside chatter should load more searched message", async () => {
     patchUiSize({ size: SIZES.LG }); // non-aside
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });

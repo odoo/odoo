@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/core/composer_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -19,7 +20,7 @@ QUnit.module("composer", {
     },
 });
 
-QUnit.test('do not send typing notification on typing "/" command', async (assert) => {
+test('do not send typing notification on typing "/" command', async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "channel" });
     await start({
@@ -34,28 +35,25 @@ QUnit.test('do not send typing notification on typing "/" command', async (asser
     assert.verifySteps([], "No rpc done");
 });
 
-QUnit.test(
-    'do not send typing notification on typing after selecting suggestion from "/" command',
-    async (assert) => {
-        const pyEnv = await startServer();
-        const channelId = pyEnv["discuss.channel"].create({ name: "channel" });
-        await start({
-            async mockRPC(route, args) {
-                if (route === "/discuss/channel/notify_typing") {
-                    assert.step(`notify_typing:${args.is_typing}`);
-                }
-            },
-        });
-        await openDiscuss(channelId);
-        await insertText(".o-mail-Composer-input", "/");
-        await click(":nth-child(1 of .o-mail-Composer-suggestion)");
-        await contains(".o-mail-Composer-suggestion strong", { count: 0 });
-        await insertText(".o-mail-Composer-input", " is user?");
-        assert.verifySteps([], "No rpc done");
-    }
-);
+test('do not send typing notification on typing after selecting suggestion from "/" command', async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "channel" });
+    await start({
+        async mockRPC(route, args) {
+            if (route === "/discuss/channel/notify_typing") {
+                assert.step(`notify_typing:${args.is_typing}`);
+            }
+        },
+    });
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "/");
+    await click(":nth-child(1 of .o-mail-Composer-suggestion)");
+    await contains(".o-mail-Composer-suggestion strong", { count: 0 });
+    await insertText(".o-mail-Composer-input", " is user?");
+    assert.verifySteps([], "No rpc done");
+});
 
-QUnit.test("add an emoji after a command", async () => {
+test("add an emoji after a command", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",

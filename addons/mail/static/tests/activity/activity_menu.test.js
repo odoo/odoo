@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/activity/activity_menu_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -8,7 +9,7 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("activity menu");
 
-QUnit.test("should update activities when opening the activity menu", async () => {
+test("should update activities when opening the activity menu", async () => {
     const pyEnv = await startServer();
     await start();
     await contains(".o_menu_systray i[aria-label='Activities']");

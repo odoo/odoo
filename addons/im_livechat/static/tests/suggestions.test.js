@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
@@ -7,7 +9,7 @@ import { contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("suggestion");
 
-QUnit.test("Suggestions are shown after delimiter was used in text (:)", async () => {
+test("Suggestions are shown after delimiter was used in text (:)", async () => {
     const pyEnv = await startServer();
     pyEnv["mail.shortcode"].create({
         source: "hello",
@@ -31,7 +33,7 @@ QUnit.test("Suggestions are shown after delimiter was used in text (:)", async (
     await contains(".o-mail-Composer-suggestion strong", { text: "hello" });
 });
 
-QUnit.test("Cannot mention other channels in a livechat", async () => {
+test("Cannot mention other channels in a livechat", async () => {
     const pyEnv = await startServer();
     const [channelId] = pyEnv["discuss.channel"].create([
         {

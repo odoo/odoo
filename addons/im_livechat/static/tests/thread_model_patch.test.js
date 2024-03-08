@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
@@ -7,7 +9,7 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("Thread model");
 
-QUnit.test("Thread name unchanged when inviting new users", async () => {
+test("Thread name unchanged when inviting new users", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "James" });
     pyEnv["res.partner"].create({

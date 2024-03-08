@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { rpc } from "@web/core/network/rpc";
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
@@ -10,7 +12,7 @@ import { assertSteps, contains, step } from "@web/../tests/utils";
 
 QUnit.module("messaging service (patch)");
 
-QUnit.test("Notify message received out of focus", async () => {
+test("Notify message received out of focus", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
     const channelId = pyEnv["discuss.channel"].create({

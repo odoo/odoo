@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
@@ -7,7 +9,7 @@ import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("transcript sender");
 
-QUnit.test("send", async (assert) => {
+test("send", async (assert) => {
     await startServer();
     await loadDefaultConfig();
     start({
@@ -30,7 +32,7 @@ QUnit.test("send", async (assert) => {
     assert.verifySteps(["send_transcript - odoobot@odoo.com"]);
 });
 
-QUnit.test("send failed", async () => {
+test("send failed", async () => {
     await startServer();
     await loadDefaultConfig();
     start({

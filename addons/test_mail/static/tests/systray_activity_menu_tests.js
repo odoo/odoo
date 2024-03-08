@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
@@ -14,7 +16,7 @@ QUnit.module("activity menu", {
     },
 });
 
-QUnit.test("menu with no records", async () => {
+test("menu with no records", async () => {
     await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
     await contains(".o-mail-ActivityMenu", {
@@ -22,7 +24,7 @@ QUnit.test("menu with no records", async () => {
     });
 });
 
-QUnit.test("do not show empty text when at least some future activities", async () => {
+test("do not show empty text when at least some future activities", async () => {
     const tomorrow = today().plus({ days: 1 });
     const pyEnv = await startServer();
     const activityId = pyEnv["mail.test.activity"].create({});
@@ -41,7 +43,7 @@ QUnit.test("do not show empty text when at least some future activities", async 
     });
 });
 
-QUnit.test("activity menu widget: activity menu with 2 models", async (assert) => {
+test("activity menu widget: activity menu with 2 models", async (assert) => {
     const tomorrow = today().plus({ days: 1 });
     const yesterday = today().plus({ days: -1 });
     const pyEnv = await startServer();
@@ -110,7 +112,7 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
     assert.verifySteps(["do_action:res.partner", "do_action:mail.test.activity"]);
 });
 
-QUnit.test("activity menu widget: close on messaging menu click", async () => {
+test("activity menu widget: close on messaging menu click", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Activities']");
     await contains(".o-mail-ActivityMenu");

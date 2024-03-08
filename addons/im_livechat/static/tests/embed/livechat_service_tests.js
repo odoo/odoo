@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
@@ -11,7 +13,7 @@ import { browser } from "@web/core/browser/browser";
 
 QUnit.module("livechat service");
 
-QUnit.test("persisted session history", async () => {
+test("persisted session history", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
@@ -41,7 +43,7 @@ QUnit.test("persisted session history", async () => {
     await contains(".o-mail-Message-content", { text: "Old message in history" });
 });
 
-QUnit.test("previous operator prioritized", async () => {
+test("previous operator prioritized", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
     const userId = pyEnv["res.users"].create({ name: "John Doe", im_status: "online" });
@@ -56,7 +58,7 @@ QUnit.test("previous operator prioritized", async () => {
     await contains(".o-mail-Message-author", { text: "John Doe" });
 });
 
-QUnit.test("Only necessary requests are made when creating a new chat", async () => {
+test("Only necessary requests are made when creating a new chat", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
     await start({

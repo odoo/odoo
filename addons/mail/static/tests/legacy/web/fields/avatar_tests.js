@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/web/fields/avatar_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 import { start } from "@mail/../tests/helpers/test_utils";
@@ -8,7 +9,7 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("avatar field");
 
-QUnit.test("basic rendering", async () => {
+test("basic rendering", async () => {
     const { env } = await start();
     await mount(Avatar, getFixture(), {
         env,

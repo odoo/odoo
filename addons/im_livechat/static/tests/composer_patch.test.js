@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
@@ -8,7 +10,7 @@ import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("composer (patch)");
 
-QUnit.test("Can execute help command on livechat channels", async (assert) => {
+test("Can execute help command on livechat channels", async (assert) => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -35,7 +37,7 @@ QUnit.test("Can execute help command on livechat channels", async (assert) => {
     assert.verifySteps(["execute_command_help"]);
 });
 
-QUnit.test('Receives visitor typing status "is typing"', async () => {
+test('Receives visitor typing status "is typing"', async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 20" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -61,7 +63,7 @@ QUnit.test('Receives visitor typing status "is typing"', async () => {
     await contains(".o-discuss-Typing", { text: "Visitor 20 is typing..." });
 });
 
-QUnit.test('display canned response suggestions on typing ":"', async () => {
+test('display canned response suggestions on typing ":"', async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -85,7 +87,7 @@ QUnit.test('display canned response suggestions on typing ":"', async () => {
     await contains(".o-mail-Composer-suggestionList .o-open");
 });
 
-QUnit.test("use a canned response", async () => {
+test("use a canned response", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -111,7 +113,7 @@ QUnit.test("use a canned response", async () => {
     await contains(".o-mail-Composer-input", { value: "Hello! How are you? " });
 });
 
-QUnit.test("use a canned response some text", async () => {
+test("use a canned response some text", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -138,7 +140,7 @@ QUnit.test("use a canned response some text", async () => {
     await contains(".o-mail-Composer-input", { value: "bluhbluh Hello! How are you? " });
 });
 
-QUnit.test("add an emoji after a canned response", async () => {
+test("add an emoji after a canned response", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 20" });
     const channelId = pyEnv["discuss.channel"].create({

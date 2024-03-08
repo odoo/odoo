@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
@@ -7,7 +9,7 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("Channel invite");
 
-QUnit.test("Can invite a partner to a livechat channel", async () => {
+test("Can invite a partner to a livechat channel", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "James" });
     pyEnv["res.partner"].create({
@@ -37,7 +39,7 @@ QUnit.test("Can invite a partner to a livechat channel", async () => {
     await contains(".o-discuss-ChannelMember", { text: "James" });
 });
 
-QUnit.test("Available operators come first", async () => {
+test("Available operators come first", async () => {
     const pyEnv = await startServer();
     pyEnv["res.partner"].create({
         name: "Harry",
@@ -70,7 +72,7 @@ QUnit.test("Available operators come first", async () => {
     await contains(":nth-child(2 of .o-discuss-ChannelInvitation-selectable)", { text: "Harry" });
 });
 
-QUnit.test("Partners invited most frequently by the current user come first", async () => {
+test("Partners invited most frequently by the current user come first", async () => {
     const pyEnv = await startServer();
     pyEnv["res.partner"].create({
         name: "John",

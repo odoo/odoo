@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { rpc } from "@web/core/network/rpc";
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
@@ -9,7 +11,7 @@ import { contains } from "@web/../tests/utils";
 
 QUnit.module("thread icon (patch)");
 
-QUnit.test("Public website visitor is typing", async () => {
+test("Public website visitor is typing", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 20" });
     const channelId = pyEnv["discuss.channel"].create({

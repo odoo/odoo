@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/core/web/messaging_menu_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -14,7 +15,7 @@ import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("messaging menu");
 
-QUnit.test('"Start a conversation" item selection opens chat', async () => {
+test('"Start a conversation" item selection opens chat', async () => {
     patchUiSize({ height: 360, width: 640 });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Gandalf" });
@@ -31,7 +32,7 @@ QUnit.test('"Start a conversation" item selection opens chat', async () => {
     await contains(".o-mail-ChatWindow", { text: "Gandalf" });
 });
 
-QUnit.test('"New channel" item selection opens channel (existing)', async () => {
+test('"New channel" item selection opens channel (existing)', async () => {
     patchUiSize({ height: 360, width: 640 });
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "Gryffindors" });
@@ -46,7 +47,7 @@ QUnit.test('"New channel" item selection opens channel (existing)', async () => 
     await contains(".o-mail-ChatWindow", { text: "Gryffindors" });
 });
 
-QUnit.test('"New channel" item selection opens channel (new)', async () => {
+test('"New channel" item selection opens channel (new)', async () => {
     patchUiSize({ height: 360, width: 640 });
     await start();
     await openDiscuss();
@@ -59,14 +60,14 @@ QUnit.test('"New channel" item selection opens channel (new)', async () => {
     await contains(".o-mail-ChatWindow", { text: "slytherins" });
 });
 
-QUnit.test("new message [REQUIRE FOCUS]", async () => {
+test("new message [REQUIRE FOCUS]", async () => {
     await start();
     await click(".o_menu_systray .dropdown-toggle i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
     await contains(".o-mail-ChatWindow .o-discuss-ChannelSelector input:focus");
 });
 
-QUnit.test("channel preview ignores empty message", async () => {
+test("channel preview ignores empty message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -91,7 +92,7 @@ QUnit.test("channel preview ignores empty message", async () => {
     await contains(".o-mail-NotificationItem-text", { text: "Demo: before last" });
 });
 
-QUnit.test("channel preview ignores transient message", async () => {
+test("channel preview ignores transient message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -112,7 +113,7 @@ QUnit.test("channel preview ignores transient message", async () => {
     await contains(".o-mail-NotificationItem-text", { text: "Demo: test" });
 });
 
-QUnit.test("channel preview ignores messages from the past", async () => {
+test("channel preview ignores messages from the past", async () => {
     // make scroll behavior instantaneous.
     patchWithCleanup(Element.prototype, {
         scrollIntoView() {
@@ -163,7 +164,7 @@ QUnit.test("channel preview ignores messages from the past", async () => {
     await contains(".o-mail-NotificationItem-text", { text: "You: new message" });
 });
 
-QUnit.test("counter is taking into account non-fetched channels", async (assert) => {
+test("counter is taking into account non-fetched channels", async (assert) => {
     patchBrowserNotification("denied");
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
@@ -192,7 +193,7 @@ QUnit.test("counter is taking into account non-fetched channels", async (assert)
     );
 });
 
-QUnit.test("counter is updated on receiving message on non-fetched channels", async (assert) => {
+test("counter is updated on receiving message on non-fetched channels", async (assert) => {
     patchBrowserNotification("denied");
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jane" });

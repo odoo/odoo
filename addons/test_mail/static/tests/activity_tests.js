@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { ActivityController } from "@mail/views/web/activity/activity_controller";
@@ -138,7 +140,7 @@ QUnit.module("test_mail", {}, function () {
         },
     });
 
-    QUnit.test("activity view: simple activity rendering", async function (assert) {
+    test("activity view: simple activity rendering", async function (assert) {
         assert.expect(14);
         const mailTestActivityIds = pyEnv["mail.test.activity"].search([]);
         const mailActivityTypeIds = pyEnv["mail.activity.type"].search([]);
@@ -257,7 +259,7 @@ QUnit.module("test_mail", {}, function () {
         );
     });
 
-    QUnit.test("activity view: Activity rendering with done activities", async function (assert) {
+    test("activity view: Activity rendering with done activities", async function (assert) {
         const activityTypeUpload = pyEnv["mail.activity.type"].create({
             category: "upload_file",
             name: "Test Upload document",
@@ -408,79 +410,71 @@ QUnit.module("test_mail", {}, function () {
         }
     });
 
-    QUnit.test(
-        "activity view: a pager can be used when there are more than the limit of 100 activities to display",
-        async function (assert) {
-            const mailActivityTypeIds = pyEnv["mail.activity.type"].search([]);
+    test("activity view: a pager can be used when there are more than the limit of 100 activities to display", async function (assert) {
+        const mailActivityTypeIds = pyEnv["mail.activity.type"].search([]);
 
-            const recordsToCreate = [];
-            const activityToCreate = [];
+        const recordsToCreate = [];
+        const activityToCreate = [];
 
-            for (let i = 0; i < 101; i++) {
-                activityToCreate.push({
-                    display_name: "An activity " + i * 2,
-                    date_deadline: serializeDate(DateTime.now().plus({ days: 3 })),
-                    can_write: true,
-                    state: "planned",
-                    activity_type_id: mailActivityTypeIds[0],
-                });
-                activityToCreate.push({
-                    display_name: "An activity " + (i * 2 + 1),
-                    date_deadline: serializeDate(DateTime.now().plus({ days: 2 })),
-                    can_write: true,
-                    state: "planned",
-                    activity_type_id: mailActivityTypeIds[1],
-                });
-            }
-            const createdActivity = pyEnv["mail.activity"].create(activityToCreate);
-            for (let i = 0; i < 101; i++) {
-                recordsToCreate.push({
-                    name: "pagerTestRecord" + i,
-                    activity_ids: [createdActivity[i * 2], createdActivity[i * 2 + 1]],
-                });
-            }
-            pyEnv["mail.test.activity"].create(recordsToCreate);
-
-            const { openView } = await start({
-                serverData,
+        for (let i = 0; i < 101; i++) {
+            activityToCreate.push({
+                display_name: "An activity " + i * 2,
+                date_deadline: serializeDate(DateTime.now().plus({ days: 3 })),
+                can_write: true,
+                state: "planned",
+                activity_type_id: mailActivityTypeIds[0],
             });
-            await openView({
-                res_model: "mail.test.activity",
-                views: [[false, "activity"]],
-                domain: [["name", "like", "pagerTestRecord"]],
+            activityToCreate.push({
+                display_name: "An activity " + (i * 2 + 1),
+                date_deadline: serializeDate(DateTime.now().plus({ days: 2 })),
+                can_write: true,
+                state: "planned",
+                activity_type_id: mailActivityTypeIds[1],
             });
-            assert.containsN(
-                document.body,
-                ".o_activity_record",
-                100,
-                "Only 100 records should have been displayed"
-            );
-            assert.containsN(
-                document.body,
-                ".o_activity_summary_cell.planned",
-                200,
-                "200 activities should have been displayed (2 per records)"
-            );
-            await click(document.querySelector(".o_pager_next"));
-            assert.containsN(
-                document.body,
-                ".o_activity_record",
-                1,
-                "Only 1 record is now displayed"
-            );
-            assert.containsN(
-                document.body,
-                ".o_activity_summary_cell.planned",
-                2,
-                "Only the 2 activities of the last record are now displayed"
-            );
-            await click(document.querySelector(".o_pager_previous"));
-            assert.containsN(document.body, ".o_activity_record", 100);
-            assert.containsN(document.body, ".o_activity_summary_cell.planned", 200);
         }
-    );
+        const createdActivity = pyEnv["mail.activity"].create(activityToCreate);
+        for (let i = 0; i < 101; i++) {
+            recordsToCreate.push({
+                name: "pagerTestRecord" + i,
+                activity_ids: [createdActivity[i * 2], createdActivity[i * 2 + 1]],
+            });
+        }
+        pyEnv["mail.test.activity"].create(recordsToCreate);
 
-    QUnit.test("activity view: no content rendering", async function () {
+        const { openView } = await start({
+            serverData,
+        });
+        await openView({
+            res_model: "mail.test.activity",
+            views: [[false, "activity"]],
+            domain: [["name", "like", "pagerTestRecord"]],
+        });
+        assert.containsN(
+            document.body,
+            ".o_activity_record",
+            100,
+            "Only 100 records should have been displayed"
+        );
+        assert.containsN(
+            document.body,
+            ".o_activity_summary_cell.planned",
+            200,
+            "200 activities should have been displayed (2 per records)"
+        );
+        await click(document.querySelector(".o_pager_next"));
+        assert.containsN(document.body, ".o_activity_record", 1, "Only 1 record is now displayed");
+        assert.containsN(
+            document.body,
+            ".o_activity_summary_cell.planned",
+            2,
+            "Only the 2 activities of the last record are now displayed"
+        );
+        await click(document.querySelector(".o_pager_previous"));
+        assert.containsN(document.body, ".o_activity_record", 100);
+        assert.containsN(document.body, ".o_activity_summary_cell.planned", 200);
+    });
+
+    test("activity view: no content rendering", async function () {
         const { openView, pyEnv } = await start({ serverData });
         // reset incompatible setup
         pyEnv["mail.activity.type"].unlink(pyEnv["mail.activity.type"].search([]));
@@ -494,7 +488,7 @@ QUnit.module("test_mail", {}, function () {
         });
     });
 
-    QUnit.test("activity view: batch send mail on activity", async function (assert) {
+    test("activity view: batch send mail on activity", async function (assert) {
         assert.expect(6);
 
         const mailTestActivityIds = pyEnv["mail.test.activity"].search([]);
@@ -543,7 +537,7 @@ QUnit.module("test_mail", {}, function () {
         ]);
     });
 
-    QUnit.test("activity view: activity_ids condition in domain", async function (assert) {
+    test("activity view: activity_ids condition in domain", async function (assert) {
         assert.expect(3);
         const { openView } = await start({
             serverData,
@@ -564,7 +558,7 @@ QUnit.module("test_mail", {}, function () {
         ]);
     });
 
-    QUnit.test("activity view: activity widget", async function (assert) {
+    test("activity view: activity widget", async function (assert) {
         assert.expect(16);
 
         const mailActivityTypeIds = pyEnv["mail.activity.type"].search([]);
@@ -692,7 +686,7 @@ QUnit.module("test_mail", {}, function () {
         ]);
     });
 
-    QUnit.test("activity view: Mark as done with keep done enabled", async function (assert) {
+    test("activity view: Mark as done with keep done enabled", async function (assert) {
         const emailActType = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
         pyEnv["mail.activity.type"].write([emailActType], {
             keep_done: true,
@@ -735,7 +729,7 @@ QUnit.module("test_mail", {}, function () {
         });
     });
 
-    QUnit.test("activity view: no group_by_menu and no comparison_menu", async function (assert) {
+    test("activity view: no group_by_menu and no comparison_menu", async function (assert) {
         assert.expect(4);
 
         serverData.actions = {
@@ -781,7 +775,7 @@ QUnit.module("test_mail", {}, function () {
         );
     });
 
-    QUnit.test("activity view: group_by in the action has no effect", async function (assert) {
+    test("activity view: group_by in the action has no effect", async function (assert) {
         assert.expect(1);
 
         patchWithCleanup(ActivityModel.prototype, {
@@ -817,76 +811,73 @@ QUnit.module("test_mail", {}, function () {
         await doAction(webClient, 1);
     });
 
-    QUnit.test(
-        "activity view: search more to schedule an activity for a record of a respecting model",
-        async function (assert) {
-            assert.expect(5);
-            const mailTestActivityId1 = pyEnv["mail.test.activity"].create({
-                name: "MailTestActivity 3",
-            });
-            Object.assign(serverData.views, {
-                "mail.test.activity,false,list":
-                    '<tree string="MailTestActivity"><field name="name"/></tree>',
-            });
-            const { env, openView } = await start({
-                mockRPC(route, args) {
-                    if (args.method === "name_search") {
-                        args.kwargs.name = "MailTestActivity";
-                    }
-                },
-                serverData,
-            });
-            await openView({
-                res_model: "mail.test.activity",
-                views: [[false, "activity"]],
-            });
-            patchWithCleanup(env.services.action, {
-                doAction(action, options) {
-                    assert.step("doAction");
-                    const expectedAction = {
-                        context: {
-                            active_ids: [mailTestActivityId1],
-                            active_id: mailTestActivityId1,
-                            active_model: "mail.test.activity",
-                        },
-                        name: "Schedule Activity",
-                        res_model: "mail.activity.schedule",
-                        target: "new",
-                        type: "ir.actions.act_window",
-                        view_mode: "form",
-                        views: [[false, "form"]],
-                    };
-                    assert.deepEqual(
-                        action,
-                        expectedAction,
-                        "should execute an action with correct params"
-                    );
-                    options.onClose();
-                    return Promise.resolve();
-                },
-            });
+    test("activity view: search more to schedule an activity for a record of a respecting model", async function (assert) {
+        assert.expect(5);
+        const mailTestActivityId1 = pyEnv["mail.test.activity"].create({
+            name: "MailTestActivity 3",
+        });
+        Object.assign(serverData.views, {
+            "mail.test.activity,false,list":
+                '<tree string="MailTestActivity"><field name="name"/></tree>',
+        });
+        const { env, openView } = await start({
+            mockRPC(route, args) {
+                if (args.method === "name_search") {
+                    args.kwargs.name = "MailTestActivity";
+                }
+            },
+            serverData,
+        });
+        await openView({
+            res_model: "mail.test.activity",
+            views: [[false, "activity"]],
+        });
+        patchWithCleanup(env.services.action, {
+            doAction(action, options) {
+                assert.step("doAction");
+                const expectedAction = {
+                    context: {
+                        active_ids: [mailTestActivityId1],
+                        active_id: mailTestActivityId1,
+                        active_model: "mail.test.activity",
+                    },
+                    name: "Schedule Activity",
+                    res_model: "mail.activity.schedule",
+                    target: "new",
+                    type: "ir.actions.act_window",
+                    view_mode: "form",
+                    views: [[false, "form"]],
+                };
+                assert.deepEqual(
+                    action,
+                    expectedAction,
+                    "should execute an action with correct params"
+                );
+                options.onClose();
+                return Promise.resolve();
+            },
+        });
 
-            const activity = $(document);
-            assert.containsOnce(
-                activity,
-                "table tfoot tr .o_record_selector",
-                "should contain search more selector to choose the record to schedule an activity for it"
-            );
-            await testUtils.dom.click(activity.find("table tfoot tr .o_record_selector"));
-            // search create dialog
-            const $modal = $(".modal-lg");
-            assert.strictEqual(
-                $modal.find(".o_data_row").length,
-                3,
-                "all mail.test.activity should be available to select"
-            );
-            // select a record to schedule an activity for it (this triggers a do_action)
-            await testUtils.dom.click($modal.find(".o_data_row:last .o_data_cell"));
-            assert.verifySteps(["doAction"]);
-        }
-    );
+        const activity = $(document);
+        assert.containsOnce(
+            activity,
+            "table tfoot tr .o_record_selector",
+            "should contain search more selector to choose the record to schedule an activity for it"
+        );
+        await testUtils.dom.click(activity.find("table tfoot tr .o_record_selector"));
+        // search create dialog
+        const $modal = $(".modal-lg");
+        assert.strictEqual(
+            $modal.find(".o_data_row").length,
+            3,
+            "all mail.test.activity should be available to select"
+        );
+        // select a record to schedule an activity for it (this triggers a do_action)
+        await testUtils.dom.click($modal.find(".o_data_row:last .o_data_cell"));
+        assert.verifySteps(["doAction"]);
+    });
 
-    QUnit.test("activity view: Domain should not reset on load", async function (assert) {
+    test("activity view: Domain should not reset on load", async function (assert) {
         Object.assign(serverData.views, {
             "mail.test.activity,false,list":
                 '<tree string="MailTestActivity"><field name="name"/></tree>',
@@ -920,70 +911,59 @@ QUnit.module("test_mail", {}, function () {
         );
     });
 
-    QUnit.test(
-        "activity view: 'scheduleActivity' does not add activity_ids condition as selectCreateDialog domain",
-        async function (assert) {
-            patchWithCleanup(ActivityController.prototype, {
-                scheduleActivity() {
-                    super.scheduleActivity();
-                    assert.step(JSON.stringify(this.getSearchProps().domain));
-                },
-            });
-            Object.assign(serverData.views, {
-                "mail.test.activity,false,list":
-                    '<tree string="MailTestActivity"><field name="name"/></tree>',
-            });
-            await openViewAndPatchDoAction(assert);
+    test("activity view: 'scheduleActivity' does not add activity_ids condition as selectCreateDialog domain", async function (assert) {
+        patchWithCleanup(ActivityController.prototype, {
+            scheduleActivity() {
+                super.scheduleActivity();
+                assert.step(JSON.stringify(this.getSearchProps().domain));
+            },
+        });
+        Object.assign(serverData.views, {
+            "mail.test.activity,false,list":
+                '<tree string="MailTestActivity"><field name="name"/></tree>',
+        });
+        await openViewAndPatchDoAction(assert);
 
-            // open search create dialog and schedule an activity
-            await click(document.querySelector(".o_activity_view .o_record_selector"));
-            await click(document.querySelectorAll(".modal-lg .o_data_row .o_data_cell")[0]);
+        // open search create dialog and schedule an activity
+        await click(document.querySelector(".o_activity_view .o_record_selector"));
+        await click(document.querySelectorAll(".modal-lg .o_data_row .o_data_cell")[0]);
 
-            // again open search create dialog
-            await click(document.querySelector(".o_activity_view .o_record_selector"));
-            assert.verifySteps(["[]", "doAction", "[]"]);
-        }
-    );
+        // again open search create dialog
+        await click(document.querySelector(".o_activity_view .o_record_selector"));
+        assert.verifySteps(["[]", "doAction", "[]"]);
+    });
 
-    QUnit.test(
-        "activity view: 'onClose' of 'openActivityFormView' does not add activity_ids condition as selectCreateDialog domain",
-        async function (assert) {
-            patchWithCleanup(ActivityController.prototype, {
-                openActivityFormView(resId, activityTypeId) {
-                    super.openActivityFormView(resId, activityTypeId);
-                    assert.step(JSON.stringify(this.getSearchProps().domain));
-                },
-            });
-            await openViewAndPatchDoAction(assert);
+    test("activity view: 'onClose' of 'openActivityFormView' does not add activity_ids condition as selectCreateDialog domain", async function (assert) {
+        patchWithCleanup(ActivityController.prototype, {
+            openActivityFormView(resId, activityTypeId) {
+                super.openActivityFormView(resId, activityTypeId);
+                assert.step(JSON.stringify(this.getSearchProps().domain));
+            },
+        });
+        await openViewAndPatchDoAction(assert);
 
-            //schedule an activity on an empty activity cell
-            await click(
-                document.querySelector(".o_activity_view .o_data_row .o_activity_empty_cell")
-            );
-            assert.verifySteps(["doAction", "[]"]);
-        }
-    );
+        //schedule an activity on an empty activity cell
+        await click(document.querySelector(".o_activity_view .o_data_row .o_activity_empty_cell"));
+        assert.verifySteps(["doAction", "[]"]);
+    });
 
-    QUnit.test(
-        "activity view: 'onReloadData' does not add activity_ids condition as selectCreateDialog domain",
-        async function (assert) {
-            patchWithCleanup(ActivityController.prototype, {
-                get rendererProps() {
-                    const rendererProps = { ...super.rendererProps };
-                    assert.step(JSON.stringify(this.getSearchProps().domain));
-                    return rendererProps;
-                },
-            });
-            await openViewAndPatchDoAction(assert);
+    test("activity view: 'onReloadData' does not add activity_ids condition as selectCreateDialog domain", async function (assert) {
+        patchWithCleanup(ActivityController.prototype, {
+            get rendererProps() {
+                const rendererProps = { ...super.rendererProps };
+                assert.step(JSON.stringify(this.getSearchProps().domain));
+                return rendererProps;
+            },
+        });
+        await openViewAndPatchDoAction(assert);
 
-            //schedule another activity on an activity cell with a scheduled activity
-            await click(document.querySelector(".today .o-mail-ActivityCell-deadline"));
-            await click($(".o-mail-ActivityListPopover button:contains(Schedule an activity)")[0]);
-            assert.verifySteps(["[]", "doAction", "[]", "[]"]);
-        }
-    );
+        //schedule another activity on an activity cell with a scheduled activity
+        await click(document.querySelector(".today .o-mail-ActivityCell-deadline"));
+        await click($(".o-mail-ActivityListPopover button:contains(Schedule an activity)")[0]);
+        assert.verifySteps(["[]", "doAction", "[]", "[]"]);
+    });
 
-    QUnit.test("Activity view: discard an activity creation dialog", async function (assert) {
+    test("Activity view: discard an activity creation dialog", async function (assert) {
         assert.expect(2);
 
         serverData.actions = {
@@ -1023,23 +1003,21 @@ QUnit.module("test_mail", {}, function () {
         await contains(".modal.o_technical_modal", { count: 0 });
     });
 
-    QUnit.test(
-        "Activity view: many2one_avatar_user widget in activity view",
-        async function (assert) {
-            assert.expect(3);
+    test("Activity view: many2one_avatar_user widget in activity view", async function (assert) {
+        assert.expect(3);
 
-            const [mailTestActivityId1] = pyEnv["mail.test.activity"].search([
-                ["name", "=", "Meeting Room Furnitures"],
-            ]);
-            const resUsersId1 = pyEnv["res.users"].create({
-                display_name: "first user",
-                avatar_128: "Atmaram Bhide",
-            });
-            pyEnv["mail.test.activity"].write([mailTestActivityId1], {
-                activity_user_id: resUsersId1,
-            });
-            Object.assign(serverData.views, {
-                "mail.test.activity,false,activity": `<activity string="MailTestActivity">
+        const [mailTestActivityId1] = pyEnv["mail.test.activity"].search([
+            ["name", "=", "Meeting Room Furnitures"],
+        ]);
+        const resUsersId1 = pyEnv["res.users"].create({
+            display_name: "first user",
+            avatar_128: "Atmaram Bhide",
+        });
+        pyEnv["mail.test.activity"].write([mailTestActivityId1], {
+            activity_user_id: resUsersId1,
+        });
+        Object.assign(serverData.views, {
+            "mail.test.activity,false,activity": `<activity string="MailTestActivity">
                 <templates>
                     <div t-name="activity-box">
                         <field name="activity_user_id" widget="many2one_avatar_user"/>
@@ -1047,32 +1025,31 @@ QUnit.module("test_mail", {}, function () {
                     </div>
                 </templates>
             </activity>`,
-            });
-            serverData.actions = {
-                1: {
-                    id: 1,
-                    name: "MailTestActivity Action",
-                    res_model: "mail.test.activity",
-                    type: "ir.actions.act_window",
-                    views: [[false, "activity"]],
-                },
-            };
+        });
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "MailTestActivity Action",
+                res_model: "mail.test.activity",
+                type: "ir.actions.act_window",
+                views: [[false, "activity"]],
+            },
+        };
 
-            const { webClient } = await start({ serverData });
-            await doAction(webClient, 1);
+        const { webClient } = await start({ serverData });
+        await doAction(webClient, 1);
 
-            await contains(".o_m2o_avatar", { count: 2 });
-            assert.containsOnce(
-                document.body,
-                `tr:nth-child(2) .o_m2o_avatar > img[data-src="/web/image/res.users/${resUsersId1}/avatar_128"]`,
-                "should have m2o avatar image"
-            );
-            // "should not have text on many2one_avatar_user if onlyImage node option is passed"
-            await contains(".o_m2o_avatar > span", { count: 0 });
-        }
-    );
+        await contains(".o_m2o_avatar", { count: 2 });
+        assert.containsOnce(
+            document.body,
+            `tr:nth-child(2) .o_m2o_avatar > img[data-src="/web/image/res.users/${resUsersId1}/avatar_128"]`,
+            "should have m2o avatar image"
+        );
+        // "should not have text on many2one_avatar_user if onlyImage node option is passed"
+        await contains(".o_m2o_avatar > span", { count: 0 });
+    });
 
-    QUnit.test("Activity view: on_destroy_callback doesn't crash", async function (assert) {
+    test("Activity view: on_destroy_callback doesn't crash", async function (assert) {
         assert.expect(3);
 
         patchWithCleanup(ActivityRenderer.prototype, {
@@ -1099,59 +1076,56 @@ QUnit.module("test_mail", {}, function () {
         assert.verifySteps(["mounted", "willUnmount"]);
     });
 
-    QUnit.test(
-        "Schedule activity dialog uses the same search view as activity view",
-        async function (assert) {
-            assert.expect(8);
-            pyEnv["mail.test.activity"].unlink(pyEnv["mail.test.activity"].search([]));
-            Object.assign(serverData.views, {
-                "mail.test.activity,false,list": `<list><field name="name"/></list>`,
-                "mail.test.activity,false,search": `<search/>`,
-                "mail.test.activity,1,search": `<search/>`,
-            });
+    test("Schedule activity dialog uses the same search view as activity view", async function (assert) {
+        assert.expect(8);
+        pyEnv["mail.test.activity"].unlink(pyEnv["mail.test.activity"].search([]));
+        Object.assign(serverData.views, {
+            "mail.test.activity,false,list": `<list><field name="name"/></list>`,
+            "mail.test.activity,false,search": `<search/>`,
+            "mail.test.activity,1,search": `<search/>`,
+        });
 
-            function mockRPC(route, args) {
-                if (args.method === "get_views") {
-                    assert.step(JSON.stringify(args.kwargs.views));
-                }
+        function mockRPC(route, args) {
+            if (args.method === "get_views") {
+                assert.step(JSON.stringify(args.kwargs.views));
             }
-
-            const { webClient } = await start({ serverData, mockRPC });
-
-            // open an activity view (with default search arch)
-            await doAction(webClient, {
-                name: "Dashboard",
-                res_model: "mail.test.activity",
-                type: "ir.actions.act_window",
-                views: [[false, "activity"]],
-            });
-
-            assert.verifySteps(['[[false,"activity"],[false,"search"]]']);
-
-            // click on "Schedule activity"
-            await click(document.querySelector(".o_activity_view .o_record_selector"));
-
-            assert.verifySteps(['[[false,"list"],[false,"search"]]']);
-
-            // open an activity view (with search arch 1)
-            await doAction(webClient, {
-                name: "Dashboard",
-                res_model: "mail.test.activity",
-                type: "ir.actions.act_window",
-                views: [[false, "activity"]],
-                search_view_id: [1, "search"],
-            });
-
-            assert.verifySteps(['[[false,"activity"],[1,"search"]]']);
-
-            // click on "Schedule activity"
-            await click(document.querySelector(".o_activity_view .o_record_selector"));
-
-            assert.verifySteps(['[[false,"list"],[1,"search"]]']);
         }
-    );
 
-    QUnit.test("Activity view: apply progressbar filter", async function (assert) {
+        const { webClient } = await start({ serverData, mockRPC });
+
+        // open an activity view (with default search arch)
+        await doAction(webClient, {
+            name: "Dashboard",
+            res_model: "mail.test.activity",
+            type: "ir.actions.act_window",
+            views: [[false, "activity"]],
+        });
+
+        assert.verifySteps(['[[false,"activity"],[false,"search"]]']);
+
+        // click on "Schedule activity"
+        await click(document.querySelector(".o_activity_view .o_record_selector"));
+
+        assert.verifySteps(['[[false,"list"],[false,"search"]]']);
+
+        // open an activity view (with search arch 1)
+        await doAction(webClient, {
+            name: "Dashboard",
+            res_model: "mail.test.activity",
+            type: "ir.actions.act_window",
+            views: [[false, "activity"]],
+            search_view_id: [1, "search"],
+        });
+
+        assert.verifySteps(['[[false,"activity"],[1,"search"]]']);
+
+        // click on "Schedule activity"
+        await click(document.querySelector(".o_activity_view .o_record_selector"));
+
+        assert.verifySteps(['[[false,"list"],[1,"search"]]']);
+    });
+
+    test("Activity view: apply progressbar filter", async function (assert) {
         assert.expect(12);
 
         const mailActivityTypeIds = pyEnv["mail.activity.type"].search([]);
@@ -1253,7 +1227,7 @@ QUnit.module("test_mail", {}, function () {
         );
     });
 
-    QUnit.test("Activity view: hide/show columns", async function (assert) {
+    test("Activity view: hide/show columns", async function (assert) {
         const { openView } = await start({
             serverData,
         });
@@ -1314,7 +1288,7 @@ QUnit.module("test_mail", {}, function () {
         }
     });
 
-    QUnit.test("Activity view: luxon in renderingContext", async function (assert) {
+    test("Activity view: luxon in renderingContext", async function (assert) {
         Object.assign(serverData.views, {
             "mail.test.activity,false,activity": `
                     <activity string="MailTestActivity">
@@ -1337,7 +1311,7 @@ QUnit.module("test_mail", {}, function () {
         await contains(".luxon", { count: 2 });
     });
 
-    QUnit.test("test displaying image (write_date field)", async (assert) => {
+    test("test displaying image (write_date field)", async (assert) => {
         // the presence of write_date field ensures that the image is reloaded when necessary
         assert.expect(2);
 
@@ -1378,7 +1352,7 @@ QUnit.module("test_mail", {}, function () {
         );
     });
 
-    QUnit.test("test node is visible with invisible attribute on node", async function (assert) {
+    test("test node is visible with invisible attribute on node", async function (assert) {
         const { target, openView } = await start({
             serverData,
         });
@@ -1395,23 +1369,20 @@ QUnit.module("test_mail", {}, function () {
         );
     });
 
-    QUnit.test(
-        "test node is not displayed with invisible attribute on node",
-        async function (assert) {
-            const { target, openView } = await start({
-                serverData,
-            });
-            await openView({
-                res_model: "mail.test.activity",
-                views: [[1, "activity"]],
-                context: { invisible: true },
-            });
+    test("test node is not displayed with invisible attribute on node", async function (assert) {
+        const { target, openView } = await start({
+            serverData,
+        });
+        await openView({
+            res_model: "mail.test.activity",
+            views: [[1, "activity"]],
+            context: { invisible: true },
+        });
 
-            assert.containsNone(
-                target,
-                ".invisible_node",
-                "The node with the invisible attribute should be displayed since `invisible` key in the context contains truly value"
-            );
-        }
-    );
+        assert.containsNone(
+            target,
+            ".invisible_node",
+            "The node with the invisible attribute should be displayed since `invisible` key in the context contains truly value"
+        );
+    });
 });

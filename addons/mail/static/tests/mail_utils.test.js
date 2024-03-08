@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/mail_utils_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -9,7 +10,7 @@ import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("Mail utils");
 
-QUnit.test("add_link utility function", function (assert) {
+test("add_link utility function", function (assert) {
     const testInputs = {
         "http://admin:password@example.com:8/%2020": true,
         "https://admin:password@example.com/test": true,
@@ -40,7 +41,7 @@ QUnit.test("add_link utility function", function (assert) {
     }
 });
 
-QUnit.test("addLink: utility function and special entities", function (assert) {
+test("addLink: utility function and special entities", function (assert) {
     const testInputs = {
         // textContent not unescaped
         "<p>https://example.com/?&amp;currency_id</p>":
@@ -71,7 +72,7 @@ QUnit.test("addLink: utility function and special entities", function (assert) {
     }
 });
 
-QUnit.test("addLink: linkify inside text node (1 occurrence)", async (assert) => {
+test("addLink: linkify inside text node (1 occurrence)", async (assert) => {
     const content = "<p>some text https://somelink.com</p>";
     const linkified = parseAndTransform(content, addLink);
     assert.ok(linkified.startsWith("<p>some text <a"));
@@ -89,7 +90,7 @@ QUnit.test("addLink: linkify inside text node (1 occurrence)", async (assert) =>
     assert.strictEqual(div.querySelector(":scope a").textContent, "https://somelink.com");
 });
 
-QUnit.test("addLink: linkify inside text node (2 occurrences)", function (assert) {
+test("addLink: linkify inside text node (2 occurrences)", function (assert) {
     // linkify may add some attributes. Since we do not care of their exact
     // stringified representation, we continue deeper assertion with query
     // selectors.
@@ -108,7 +109,7 @@ QUnit.test("addLink: linkify inside text node (2 occurrences)", function (assert
     assert.strictEqual(div.querySelectorAll(":scope a")[1].textContent, "https://somelink2.com");
 });
 
-QUnit.test("url", async () => {
+test("url", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -120,7 +121,7 @@ QUnit.test("url", async () => {
     await contains(".o-mail-Message a", { text: messageBody });
 });
 
-QUnit.test("url with comma at the end", async () => {
+test("url with comma at the end", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -132,7 +133,7 @@ QUnit.test("url with comma at the end", async () => {
     await contains(".o-mail-Message-content", { text: messageBody });
 });
 
-QUnit.test("url with dot at the end", async () => {
+test("url with dot at the end", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -144,7 +145,7 @@ QUnit.test("url with dot at the end", async () => {
     await contains(".o-mail-Message-content", { text: messageBody });
 });
 
-QUnit.test("url with semicolon at the end", async () => {
+test("url with semicolon at the end", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -156,7 +157,7 @@ QUnit.test("url with semicolon at the end", async () => {
     await contains(".o-mail-Message-content", { text: messageBody });
 });
 
-QUnit.test("url with ellipsis at the end", async () => {
+test("url with ellipsis at the end", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -168,7 +169,7 @@ QUnit.test("url with ellipsis at the end", async () => {
     await contains(".o-mail-Message-content", { text: messageBody });
 });
 
-QUnit.test("url with number in subdomain", async () => {
+test("url with number in subdomain", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();

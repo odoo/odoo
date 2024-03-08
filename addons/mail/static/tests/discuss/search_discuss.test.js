@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/search_discuss_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_hook";
@@ -9,7 +10,7 @@ import { click, contains, insertText, scroll } from "@web/../tests/utils";
 
 QUnit.module("discuss search");
 
-QUnit.test("Should have a search button", async () => {
+test("Should have a search button", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -17,7 +18,7 @@ QUnit.test("Should have a search button", async () => {
     await contains("[title='Search Messages']");
 });
 
-QUnit.test("Should open the search panel when search button is clicked", async () => {
+test("Should open the search panel when search button is clicked", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -28,7 +29,7 @@ QUnit.test("Should open the search panel when search button is clicked", async (
     await contains(".o_searchview_input");
 });
 
-QUnit.test("Search a message", async () => {
+test("Search a message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -47,7 +48,7 @@ QUnit.test("Search a message", async () => {
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
 });
 
-QUnit.test("Search should be hightlighted", async () => {
+test("Search should be hightlighted", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -66,7 +67,7 @@ QUnit.test("Search should be hightlighted", async () => {
     await contains(`.o-mail-SearchMessagesPanel .o-mail-Message .${HIGHLIGHT_CLASS}`);
 });
 
-QUnit.test("Search a starred message", async () => {
+test("Search a starred message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -86,7 +87,7 @@ QUnit.test("Search a starred message", async () => {
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
 });
 
-QUnit.test("Search a message in inbox", async () => {
+test("Search a message in inbox", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -106,7 +107,7 @@ QUnit.test("Search a message in inbox", async () => {
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
 });
 
-QUnit.test("Search a message in history", async () => {
+test("Search a message in history", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const messageId = pyEnv["mail.message"].create({
@@ -133,7 +134,7 @@ QUnit.test("Search a message in history", async () => {
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
 });
 
-QUnit.test("Should close the search panel when search button is clicked again", async () => {
+test("Should close the search panel when search button is clicked again", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -143,7 +144,7 @@ QUnit.test("Should close the search panel when search button is clicked again", 
     await contains(".o-mail-SearchMessagesPanel");
 });
 
-QUnit.test("Search a message in 60 messages should return 30 message first", async () => {
+test("Search a message in 60 messages should return 30 message first", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     for (let i = 0; i < 60; i++) {
@@ -167,7 +168,7 @@ QUnit.test("Search a message in 60 messages should return 30 message first", asy
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 30 });
 });
 
-QUnit.test("Scrolling to the bottom should load more searched message", async () => {
+test("Scrolling to the bottom should load more searched message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     for (let i = 0; i < 90; i++) {
@@ -193,34 +194,31 @@ QUnit.test("Scrolling to the bottom should load more searched message", async ()
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 60 });
 });
 
-QUnit.test(
-    "Editing the searched term should not edit the current searched term",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-        for (let i = 0; i < 60; i++) {
-            pyEnv["mail.message"].create({
-                author_id: pyEnv.currentPartnerId,
-                body: "This is a message",
-                attachment_ids: [],
-                message_type: "comment",
-                model: "discuss.channel",
-                res_id: channelId,
-            });
-        }
-        await start({
-            async mockRPC(route, args) {
-                if (route === "/discuss/channel/messages" && args.search_term) {
-                    const { search_term } = args;
-                    assert.strictEqual(search_term, "message");
-                }
-            },
+test("Editing the searched term should not edit the current searched term", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    for (let i = 0; i < 60; i++) {
+        pyEnv["mail.message"].create({
+            author_id: pyEnv.currentPartnerId,
+            body: "This is a message",
+            attachment_ids: [],
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
         });
-        await openDiscuss(channelId);
-        await click("[title='Search Messages']");
-        await insertText(".o_searchview_input", "message");
-        triggerHotkey("Enter");
-        await insertText(".o_searchview_input", "test");
-        await scroll(".o-mail-SearchMessagesPanel .o-mail-ActionPanel", "bottom");
     }
-);
+    await start({
+        async mockRPC(route, args) {
+            if (route === "/discuss/channel/messages" && args.search_term) {
+                const { search_term } = args;
+                assert.strictEqual(search_term, "message");
+            }
+        },
+    });
+    await openDiscuss(channelId);
+    await click("[title='Search Messages']");
+    await insertText(".o_searchview_input", "message");
+    triggerHotkey("Enter");
+    await insertText(".o_searchview_input", "test");
+    await scroll(".o-mail-SearchMessagesPanel .o-mail-ActionPanel", "bottom");
+});

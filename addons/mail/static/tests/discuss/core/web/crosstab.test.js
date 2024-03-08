@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/core/web/crosstab_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -9,7 +10,7 @@ import { assertSteps, click, contains, insertText, step } from "@web/../tests/ut
 
 QUnit.module("crosstab");
 
-QUnit.test("Channel subscription is renewed when channel is manually added", async () => {
+test("Channel subscription is renewed when channel is manually added", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
         { name: "my channel" },

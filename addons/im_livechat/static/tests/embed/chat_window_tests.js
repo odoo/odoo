@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
@@ -8,7 +10,7 @@ import { assertSteps, click, contains, insertText, step } from "@web/../tests/ut
 
 QUnit.module("chat window");
 
-QUnit.test("do not save fold state of temporary live chats", async () => {
+test("do not save fold state of temporary live chats", async () => {
     patchWithCleanup(LivechatButton, {
         DEBOUNCE_DELAY: 0,
     });

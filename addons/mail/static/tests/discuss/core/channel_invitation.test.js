@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/core/channel_invitation_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -9,31 +10,28 @@ import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("channel invitation form");
 
-QUnit.test(
-    "should display the channel invitation form after clicking on the invite button of a chat",
-    async () => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({
-            email: "testpartner@odoo.com",
-            name: "TestPartner",
-        });
-        pyEnv["res.users"].create({ partner_id: partnerId });
-        const channelId = pyEnv["discuss.channel"].create({
-            name: "TestChannel",
-            channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
-                Command.create({ partner_id: partnerId }),
-            ],
-            channel_type: "channel",
-        });
-        await start();
-        await openDiscuss(channelId);
-        await click(".o-mail-Discuss-header button[title='Add Users']");
-        await contains(".o-discuss-ChannelInvitation");
-    }
-);
+test("should display the channel invitation form after clicking on the invite button of a chat", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChannel",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Discuss-header button[title='Add Users']");
+    await contains(".o-discuss-ChannelInvitation");
+});
 
-QUnit.test("can invite users in channel from chat window", async () => {
+test("can invite users in channel from chat window", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -59,7 +57,7 @@ QUnit.test("can invite users in channel from chat window", async () => {
     });
 });
 
-QUnit.test("should be able to search for a new user to invite from an existing chat", async () => {
+test("should be able to search for a new user to invite from an existing chat", async () => {
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -86,7 +84,7 @@ QUnit.test("should be able to search for a new user to invite from an existing c
     await contains(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" });
 });
 
-QUnit.test("Invitation form should display channel group restriction", async () => {
+test("Invitation form should display channel group restriction", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -111,7 +109,7 @@ QUnit.test("Invitation form should display channel group restriction", async () 
     });
 });
 
-QUnit.test("should be able to create a new group chat from an existing chat", async () => {
+test("should be able to create a new group chat from an existing chat", async () => {
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -142,7 +140,7 @@ QUnit.test("should be able to create a new group chat from an existing chat", as
     });
 });
 
-QUnit.test("unnamed group chat should display correct name just after being invited", async () => {
+test("unnamed group chat should display correct name just after being invited", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "jane@example.com",

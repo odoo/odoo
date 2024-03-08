@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/call/web/call_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -9,7 +10,7 @@ import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("call");
 
-QUnit.test("no default rtc after joining a chat conversation", async () => {
+test("no default rtc after joining a chat conversation", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -26,7 +27,7 @@ QUnit.test("no default rtc after joining a chat conversation", async () => {
     await contains(".o-discuss-Call", { count: 0 });
 });
 
-QUnit.test("no default rtc after joining a group conversation", async () => {
+test("no default rtc after joining a group conversation", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { name: "Mario" },

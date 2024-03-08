@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/core/discuss_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -10,7 +11,7 @@ import { patchDate } from "@web/../tests/helpers/utils";
 
 QUnit.module("discuss");
 
-QUnit.test("Member list and settings menu are exclusive", async () => {
+test("Member list and settings menu are exclusive", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -22,7 +23,7 @@ QUnit.test("Member list and settings menu are exclusive", async () => {
     await contains(".o-discuss-ChannelMemberList", { count: 0 });
 });
 
-QUnit.test("bus subscription is refreshed when channel is joined", async () => {
+test("bus subscription is refreshed when channel is joined", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
     patchWebsocketWorkerWithCleanup({
@@ -44,7 +45,7 @@ QUnit.test("bus subscription is refreshed when channel is joined", async () => {
     await assertSteps(["subscribe - []"]);
 });
 
-QUnit.test("bus subscription is refreshed when channel is left", async () => {
+test("bus subscription is refreshed when channel is left", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     patchWebsocketWorkerWithCleanup({

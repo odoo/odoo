@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { rpc } from "@web/core/network/rpc";
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
@@ -11,7 +13,7 @@ import { browser } from "@web/core/browser/browser";
 
 QUnit.module("thread service");
 
-QUnit.test("new message from operator displays unread counter", async () => {
+test("new message from operator displays unread counter", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
@@ -60,7 +62,7 @@ QUnit.test("new message from operator displays unread counter", async () => {
     await contains(".o-mail-ChatWindow-counter", { text: "1" });
 });
 
-QUnit.test("focus on unread livechat marks it as read", async () => {
+test("focus on unread livechat marks it as read", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });

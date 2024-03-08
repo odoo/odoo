@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/core/record_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { BaseStore, Record, makeStore, modelRegistry } from "@mail/core/common/record";
 
@@ -23,7 +24,7 @@ QUnit.module("record", {
     },
 });
 
-QUnit.test("Insert by passing only single-id value (non-relational)", async (assert) => {
+test("Insert by passing only single-id value (non-relational)", async (assert) => {
     (class Persona extends Record {
         static id = "name";
         name;
@@ -33,7 +34,7 @@ QUnit.test("Insert by passing only single-id value (non-relational)", async (ass
     assert.strictEqual(john.name, "John");
 });
 
-QUnit.test("Can pass object as data for relational field with inverse as id", async (assert) => {
+test("Can pass object as data for relational field with inverse as id", async (assert) => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -50,7 +51,7 @@ QUnit.test("Can pass object as data for relational field with inverse as id", as
     assert.ok(thread.composer.thread.eq(thread));
 });
 
-QUnit.test("Assign & Delete on fields with inverses", async (assert) => {
+test("Assign & Delete on fields with inverses", async (assert) => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -113,7 +114,7 @@ QUnit.test("Assign & Delete on fields with inverses", async (assert) => {
     assert.ok(thread.messages.length === 0);
 });
 
-QUnit.test("onAdd/onDelete hooks on relational with inverse", async (assert) => {
+test("onAdd/onDelete hooks on relational with inverse", async (assert) => {
     let logs = [];
     (class Thread extends Record {
         static id = "name";
@@ -149,7 +150,7 @@ QUnit.test("onAdd/onDelete hooks on relational with inverse", async (assert) => 
     assert.deepEqual(logs, ["Thread.onDelete(John)"]);
 });
 
-QUnit.test("Computed fields", async (assert) => {
+test("Computed fields", async (assert) => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -191,7 +192,7 @@ QUnit.test("Computed fields", async (assert) => {
     assert.strictEqual(thread.type, "group chat");
 });
 
-QUnit.test("Computed fields: lazy (default) vs. eager", async (assert) => {
+test("Computed fields: lazy (default) vs. eager", async (assert) => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -248,7 +249,7 @@ QUnit.test("Computed fields: lazy (default) vs. eager", async (assert) => {
     assert.verifySteps(["LAZY"]);
 });
 
-QUnit.test("Trusted insert on html field with { html: true }", async (assert) => {
+test("Trusted insert on html field with { html: true }", async (assert) => {
     (class Message extends Record {
         static id = "body";
         body = Record.attr("", { html: true });
@@ -261,7 +262,7 @@ QUnit.test("Trusted insert on html field with { html: true }", async (assert) =>
     assert.strictEqual(world.body, "<p>world</p>");
 });
 
-QUnit.test("(Un)trusted insertion is applied even with same field value", async (assert) => {
+test("(Un)trusted insertion is applied even with same field value", async (assert) => {
     (class Message extends Record {
         static id = "id";
         id;
@@ -277,7 +278,7 @@ QUnit.test("(Un)trusted insertion is applied even with same field value", async 
     assert.notOk(message.body instanceof markup("").constructor);
 });
 
-QUnit.test("Unshift preserves order", async (assert) => {
+test("Unshift preserves order", async (assert) => {
     (class Message extends Record {
         static id = "id";
         id;
@@ -306,7 +307,7 @@ QUnit.test("Unshift preserves order", async (assert) => {
     );
 });
 
-QUnit.test("onAdd hook should see fully inserted data", async (assert) => {
+test("onAdd hook should see fully inserted data", async (assert) => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -333,7 +334,7 @@ QUnit.test("onAdd hook should see fully inserted data", async (assert) => {
     assert.verifySteps(["Thread.onAdd::John.admin.true"]);
 });
 
-QUnit.test("Can insert with relation as id, using relation as data object", async (assert) => {
+test("Can insert with relation as id, using relation as data object", async (assert) => {
     (class User extends Record {
         static id = "name";
         name;
@@ -355,7 +356,7 @@ QUnit.test("Can insert with relation as id, using relation as data object", asyn
     assert.notOk(store.User.get("Paul").settings.pushNotif);
 });
 
-QUnit.test("Set on attr should invoke onChange", async (assert) => {
+test("Set on attr should invoke onChange", async (assert) => {
     (class Message extends Record {
         static id = "id";
         id;
@@ -370,7 +371,7 @@ QUnit.test("Set on attr should invoke onChange", async (assert) => {
     assert.verifySteps(["BODY_CHANGED", "BODY_CHANGED"]);
 });
 
-QUnit.test("record list sort should be manually observable", async (assert) => {
+test("record list sort should be manually observable", async (assert) => {
     (class Thread extends Record {
         static id = "id";
         id;
@@ -416,7 +417,7 @@ QUnit.test("record list sort should be manually observable", async (assert) => {
     assert.verifySteps(["sortMessages"]);
 });
 
-QUnit.test("relation field sort should be automatically observed", async (assert) => {
+test("relation field sort should be automatically observed", async (assert) => {
     (class Thread extends Record {
         static id = "id";
         id;
@@ -451,7 +452,7 @@ QUnit.test("relation field sort should be automatically observed", async (assert
     assert.equal(`${thread.messages.map((m) => m.id)}`, "2,3");
 });
 
-QUnit.test("reading of lazy compute relation field should recompute", async (assert) => {
+test("reading of lazy compute relation field should recompute", async (assert) => {
     (class Thread extends Record {
         static id = "id";
         id;
@@ -484,7 +485,7 @@ QUnit.test("reading of lazy compute relation field should recompute", async (ass
     assert.strictEqual(`${messages2.map((m) => m.id)}`, "1,2,3,4");
 });
 
-QUnit.test("lazy compute should re-compute while they are observed", async (assert) => {
+test("lazy compute should re-compute while they are observed", async (assert) => {
     (class Channel extends Record {
         static id = "id";
         id;
@@ -539,7 +540,7 @@ QUnit.test("lazy compute should re-compute while they are observed", async (asse
     assert.verifySteps(["computing", "render many"]);
 });
 
-QUnit.test("lazy sort should re-sort while they are observed", async (assert) => {
+test("lazy sort should re-sort while they are observed", async (assert) => {
     (class Thread extends Record {
         static id = "id";
         id;
@@ -600,7 +601,7 @@ QUnit.test("lazy sort should re-sort while they are observed", async (assert) =>
     assert.verifySteps(["render 2,1"]);
 });
 
-QUnit.test("store updates can be observed", async (assert) => {
+test("store updates can be observed", async (assert) => {
     const store = await start();
     function onUpdate() {
         assert.step(`abc:${reactiveStore.abc}`);
@@ -617,7 +618,7 @@ QUnit.test("store updates can be observed", async (assert) => {
     assert.verifySteps(["abc:3"], "observable from Model.store");
 });
 
-QUnit.test("onAdd/onDelete hooks on one without inverse", async () => {
+test("onAdd/onDelete hooks on one without inverse", async () => {
     (class Thread extends Record {
         static id = "name";
     }).register();
@@ -641,7 +642,7 @@ QUnit.test("onAdd/onDelete hooks on one without inverse", async () => {
     await assertSteps(["thread.onDelete(General)"]);
 });
 
-QUnit.test("onAdd/onDelete hooks on many without inverse", async () => {
+test("onAdd/onDelete hooks on many without inverse", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -668,7 +669,7 @@ QUnit.test("onAdd/onDelete hooks on many without inverse", async () => {
     await assertSteps(["members.onDelete(John)", "members.onDelete(Jane)"]);
 });
 
-QUnit.test("record list assign should update inverse fields", async (assert) => {
+test("record list assign should update inverse fields", async (assert) => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -691,7 +692,7 @@ QUnit.test("record list assign should update inverse fields", async (assert) => 
     assert.ok(jane.notIn(general.members));
 });
 
-QUnit.test("datetime type record", async (assert) => {
+test("datetime type record", async (assert) => {
     (class Thread extends Record {
         static id = "name";
         name;

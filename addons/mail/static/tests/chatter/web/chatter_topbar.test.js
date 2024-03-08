@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/chatter/web/chatter_topbar_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -10,7 +11,7 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("chatter topbar");
 
-QUnit.test("base rendering", async () => {
+test("base rendering", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     await start();
@@ -23,7 +24,7 @@ QUnit.test("base rendering", async () => {
     await contains(".o-mail-Followers");
 });
 
-QUnit.test("rendering with multiple partner followers", async () => {
+test("rendering with multiple partner followers", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([
         { name: "Eden Hazard" },
@@ -53,7 +54,7 @@ QUnit.test("rendering with multiple partner followers", async () => {
     await contains(":nth-child(2 of .o-mail-Follower)", { text: "Eden Hazard" });
 });
 
-QUnit.test("log note toggling", async () => {
+test("log note toggling", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     await start();
@@ -70,7 +71,7 @@ QUnit.test("log note toggling", async () => {
     await contains(".o-mail-Composer", { count: 0 });
 });
 
-QUnit.test("send message toggling", async () => {
+test("send message toggling", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     await start();
@@ -87,7 +88,7 @@ QUnit.test("send message toggling", async () => {
     await contains(".o-mail-Composer", { count: 0 });
 });
 
-QUnit.test("log note/send message switching", async () => {
+test("log note/send message switching", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     await start();
@@ -107,7 +108,7 @@ QUnit.test("log note/send message switching", async () => {
     await contains(".o-mail-Composer-input[placeholder='Log an internal note…']");
 });
 
-QUnit.test("attachment counter without attachments", async () => {
+test("attachment counter without attachments", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     await start();
@@ -116,7 +117,7 @@ QUnit.test("attachment counter without attachments", async () => {
     await contains("button[aria-label='Attach files']", { count: 0, text: "0" });
 });
 
-QUnit.test("attachment counter with attachments", async () => {
+test("attachment counter with attachments", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["ir.attachment"].create([
@@ -138,7 +139,7 @@ QUnit.test("attachment counter with attachments", async () => {
     await contains("button[aria-label='Attach files']", { text: "2" });
 });
 
-QUnit.test("attachment counter while loading attachments", async () => {
+test("attachment counter while loading attachments", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { advanceTime } = await start({
@@ -156,7 +157,7 @@ QUnit.test("attachment counter while loading attachments", async () => {
     await contains("button[aria-label='Attach files']", { count: 0, text: "0" });
 });
 
-QUnit.test("attachment counter transition when attachments become loaded", async () => {
+test("attachment counter transition when attachments become loaded", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const deferred = makeDeferred();
@@ -176,43 +177,37 @@ QUnit.test("attachment counter transition when attachments become loaded", async
     await contains("button[aria-label='Attach files'] .fa-spin", { count: 0 });
 });
 
-QUnit.test(
-    "attachment icon open directly the file uploader if there is no attachment yet",
-    async () => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({});
-        await start();
-        await openFormView("res.partner", partnerId);
-        await contains(".o-mail-Chatter-fileUploader");
-        await contains(".o-mail-AttachmentBox", { count: 0 });
-    }
-);
+test("attachment icon open directly the file uploader if there is no attachment yet", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Chatter-fileUploader");
+    await contains(".o-mail-AttachmentBox", { count: 0 });
+});
 
-QUnit.test(
-    "attachment icon open the attachment box when there is at least 1 attachment",
-    async () => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({});
-        pyEnv["ir.attachment"].create([
-            {
-                mimetype: "text/plain",
-                name: "Blah.txt",
-                res_id: partnerId,
-                res_model: "res.partner",
-            },
-        ]);
-        await start();
-        await openFormView("res.partner", partnerId);
-        await contains("button[aria-label='Attach files']");
-        await contains(".o-mail-AttachmentBox", { count: 0 });
-        await contains(".o-mail-Chatter-fileUploader", { count: 0 });
-        await click("button[aria-label='Attach files']");
-        await contains(".o-mail-AttachmentBox");
-        await contains(".o-mail-Chatter-fileUploader");
-    }
-);
+test("attachment icon open the attachment box when there is at least 1 attachment", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["ir.attachment"].create([
+        {
+            mimetype: "text/plain",
+            name: "Blah.txt",
+            res_id: partnerId,
+            res_model: "res.partner",
+        },
+    ]);
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains("button[aria-label='Attach files']");
+    await contains(".o-mail-AttachmentBox", { count: 0 });
+    await contains(".o-mail-Chatter-fileUploader", { count: 0 });
+    await click("button[aria-label='Attach files']");
+    await contains(".o-mail-AttachmentBox");
+    await contains(".o-mail-Chatter-fileUploader");
+});
 
-QUnit.test("composer state conserved when clicking on another topbar button", async () => {
+test("composer state conserved when clicking on another topbar button", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     await start();

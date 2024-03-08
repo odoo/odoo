@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/core/search_highlight_test default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { HIGHLIGHT_CLASS, searchHighlight } from "@mail/core/common/message_search_hook";
 import { openDiscuss, openFormView, start } from "@mail/../tests/helpers/test_utils";
@@ -10,7 +11,7 @@ import { SIZES, patchUiSize } from "../helpers/patch_ui_size";
 
 QUnit.module("Search highlight test", {});
 
-QUnit.test("Search highlight", async (assert) => {
+test("Search highlight", async (assert) => {
     const testCases = [
         {
             input: "test odoo",
@@ -99,7 +100,7 @@ QUnit.test("Search highlight", async (assert) => {
     }
 });
 
-QUnit.test("Display highligthed search in chatter", async () => {
+test("Display highligthed search in chatter", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -116,7 +117,7 @@ QUnit.test("Display highligthed search in chatter", async () => {
     await contains(`.o-mail-Chatter-search .o-mail-Message span.${HIGHLIGHT_CLASS}`);
 });
 
-QUnit.test("Display multiple highligthed search in chatter", async () => {
+test("Display multiple highligthed search in chatter", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -133,7 +134,7 @@ QUnit.test("Display multiple highligthed search in chatter", async () => {
     await contains(`.o-mail-Chatter-search .o-mail-Message span.${HIGHLIGHT_CLASS}`, { count: 2 });
 });
 
-QUnit.test("Display highligthed search in Discuss", async () => {
+test("Display highligthed search in Discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -152,7 +153,7 @@ QUnit.test("Display highligthed search in Discuss", async () => {
     await contains(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}`);
 });
 
-QUnit.test("Display multiple highligthed search in Discuss", async () => {
+test("Display multiple highligthed search in Discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -173,7 +174,7 @@ QUnit.test("Display multiple highligthed search in Discuss", async () => {
     });
 });
 
-QUnit.test("Display highligthed with escaped character must ignore them", async () => {
+test("Display highligthed with escaped character must ignore them", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });

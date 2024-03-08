@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/chat_window/chat_window_manager_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -15,7 +16,7 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("chat window manager");
 
-QUnit.test("chat window does not fetch messages if hidden", async (assert) => {
+test("chat window does not fetch messages if hidden", async (assert) => {
     const pyEnv = await startServer();
     const [channeId1, channelId2, channelId3] = pyEnv["discuss.channel"].create([
         {
@@ -77,7 +78,7 @@ QUnit.test("chat window does not fetch messages if hidden", async (assert) => {
     assert.verifySteps(["fetch_messages", "fetch_messages"]);
 });
 
-QUnit.test("click on hidden chat window should fetch its messages", async (assert) => {
+test("click on hidden chat window should fetch its messages", async (assert) => {
     const pyEnv = await startServer();
     const [channeId1, channelId2, channelId3] = pyEnv["discuss.channel"].create([
         {
@@ -145,46 +146,40 @@ QUnit.test("click on hidden chat window should fetch its messages", async (asser
     assert.verifySteps(["fetch_messages"]);
 });
 
-QUnit.test(
-    "closing the last visible chat window should unhide the first hidden one",
-    async (assert) => {
-        const pyEnv = await startServer();
-        pyEnv["discuss.channel"].create([
-            { name: "channel-A" },
-            { name: "channel-B" },
-            { name: "channel-C" },
-            { name: "channel-D" },
-        ]);
-        patchUiSize({ width: 900 });
-        assert.ok(
-            CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 2 + CHAT_WINDOW_INBETWEEN_WIDTH <
-                900
-        );
-        assert.ok(
-            CHAT_WINDOW_END_GAP_WIDTH * 2 +
-                CHAT_WINDOW_WIDTH * 3 +
-                CHAT_WINDOW_INBETWEEN_WIDTH * 2 >
-                900
-        );
-        await start();
-        await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem", { text: "channel-A" });
-        await contains(".o-mail-ChatWindow");
-        await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem", { text: "channel-B" });
-        await contains(".o-mail-ChatWindow", { count: 2 });
-        await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem", { text: "channel-C" });
-        await contains(".o-mail-ChatWindowHiddenToggler", { text: "1" });
-        await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem", { text: "channel-D" });
-        await contains(".o-mail-ChatWindowHiddenToggler", { text: "2" });
-        await contains(":nth-child(1 of .o-mail-ChatWindow)", { text: "channel-A" });
-        await contains(":nth-child(2 of .o-mail-ChatWindow)", { text: "channel-D" });
-        await click(".o-mail-ChatWindow-command[title='Close Chat Window']", {
-            parent: [".o-mail-ChatWindow", { text: "channel-D" }],
-        });
-        await contains(":nth-child(1 of .o-mail-ChatWindow)", { text: "channel-A" });
-        await contains(":nth-child(2 of .o-mail-ChatWindow)", { text: "channel-C" });
-    }
-);
+test("closing the last visible chat window should unhide the first hidden one", async (assert) => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create([
+        { name: "channel-A" },
+        { name: "channel-B" },
+        { name: "channel-C" },
+        { name: "channel-D" },
+    ]);
+    patchUiSize({ width: 900 });
+    assert.ok(
+        CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 2 + CHAT_WINDOW_INBETWEEN_WIDTH < 900
+    );
+    assert.ok(
+        CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 3 + CHAT_WINDOW_INBETWEEN_WIDTH * 2 >
+            900
+    );
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem", { text: "channel-A" });
+    await contains(".o-mail-ChatWindow");
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem", { text: "channel-B" });
+    await contains(".o-mail-ChatWindow", { count: 2 });
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem", { text: "channel-C" });
+    await contains(".o-mail-ChatWindowHiddenToggler", { text: "1" });
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem", { text: "channel-D" });
+    await contains(".o-mail-ChatWindowHiddenToggler", { text: "2" });
+    await contains(":nth-child(1 of .o-mail-ChatWindow)", { text: "channel-A" });
+    await contains(":nth-child(2 of .o-mail-ChatWindow)", { text: "channel-D" });
+    await click(".o-mail-ChatWindow-command[title='Close Chat Window']", {
+        parent: [".o-mail-ChatWindow", { text: "channel-D" }],
+    });
+    await contains(":nth-child(1 of .o-mail-ChatWindow)", { text: "channel-A" });
+    await contains(":nth-child(2 of .o-mail-ChatWindow)", { text: "channel-C" });
+});

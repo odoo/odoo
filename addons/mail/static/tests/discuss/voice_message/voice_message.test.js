@@ -1,4 +1,5 @@
 /** @odoo-module alias=@mail/../tests/discuss/voice_message/voice_message_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -115,7 +116,7 @@ function patchAudio() {
     };
 }
 
-QUnit.test("make voice message in chat", async () => {
+test("make voice message in chat", async () => {
     const file = await createFile({
         content: Array(500).map(() => new Int8Array()), // some non-empty content
         contentType: "audio/mp3",

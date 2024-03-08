@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
@@ -8,7 +10,7 @@ import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("messaging menu (patch)");
 
-QUnit.test('livechats should be in "chat" filter', async () => {
+test('livechats should be in "chat" filter', async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
@@ -29,7 +31,7 @@ QUnit.test('livechats should be in "chat" filter', async () => {
     await contains(".o-mail-NotificationItem", { text: "Visitor 11" });
 });
 
-QUnit.test('livechats should be in "livechat" tab in mobile', async () => {
+test('livechats should be in "livechat" tab in mobile', async () => {
     patchUiSize({ height: 360, width: 640 });
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
