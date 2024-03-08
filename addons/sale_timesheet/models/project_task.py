@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.osv import expression
 
 
 class ProjectTask(models.Model):
@@ -91,18 +92,18 @@ class ProjectTask(models.Model):
         self.ensure_one()
         if not self.partner_id.commercial_partner_id or not self.allow_billable:
             return False
-        domain = [
-            ('company_id', '=?', self.company_id.id),
-            ('is_service', '=', True),
-            ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.ids),
-            ('is_expense', '=', False),
-            ('state', '=', 'sale'),
-            ('remaining_hours', '>', 0),
-            ('is_downpayment', '=', False),
-        ]
+        SaleOrderLine = self.env['sale.order.line']
+        domain = expression.AND([
+            SaleOrderLine._domain_sale_line_service(),
+            [
+                ('company_id', '=?', self.company_id.id),
+                ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.id),
+                ('remaining_hours', '>', 0),
+            ],
+        ])
         if self.project_id.pricing_type != 'task_rate' and self.project_sale_order_id and self.partner_id.commercial_partner_id == self.project_id.partner_id.commercial_partner_id:
-            domain.append(('order_id', '=?', self.project_sale_order_id.id))
-        return self.env['sale.order.line'].search(domain, limit=1)
+            domain = expression.AND([domain, [('order_id', '=?', self.project_sale_order_id.id)]])
+        return SaleOrderLine.search(domain, limit=1)
 
     def _get_timesheet(self):
         # return not invoiced timesheet and timesheet without so_line or so_line linked to task

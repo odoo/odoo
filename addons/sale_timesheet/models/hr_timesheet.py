@@ -25,13 +25,10 @@ class AccountAnalyticLine(models.Model):
     commercial_partner_id = fields.Many2one('res.partner', compute="_compute_commercial_partner")
     timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet", index='btree_not_null')
     so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False,
-        domain="""[
+        domain=lambda self: self.env['sale.order.line']._domain_sale_line_service_str("""[
             ('qty_delivered_method', 'in', ['analytic', 'timesheet']),
-            ('order_partner_id.commercial_partner_id', '=', commercial_partner_id),
-            ('is_service', '=', True),
-            ('is_expense', '=', False),
-            ('state', '=', 'sale')
-        ]""",
+            ('order_partner_id.commercial_partner_id', '=', commercial_partner_id)
+        ]""", check_is_downpayment=False),
         help="Sales order item to which the time spent will be added in order to be invoiced to your customer. Remove the sales order item for the timesheet entry to be non-billable.")
     # we needed to store it only in order to be able to groupby in the portal
     order_id = fields.Many2one(related='so_line.order_id', store=True, readonly=True, index=True)
