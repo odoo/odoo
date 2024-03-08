@@ -15,7 +15,7 @@ class ProjectProject(models.Model):
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item', copy=False,
         compute="_compute_sale_line_id", store=True, readonly=False, index='btree_not_null',
-        domain="[('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'), ('order_partner_id', '=?', partner_id), ('is_downpayment', '=', False)]",
+        domain=lambda self: self.env['sale.order.line']._domain_sale_line_service_str("[('order_partner_id', '=?', partner_id)]"),
         help="Sales order item that will be selected by default on the tasks and timesheets of this project,"
             " except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
             "It can be modified on each task and timesheet entry individually if necessary.")

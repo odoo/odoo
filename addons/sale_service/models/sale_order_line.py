@@ -14,6 +14,39 @@ class SaleOrderLine(models.Model):
     # used to know if generate a task and/or a project, depending on the product settings
     is_service = fields.Boolean("Is a Service", compute='_compute_is_service', store=True, compute_sudo=True)
 
+    def _domain_sale_line_service(self, **kwargs):
+        """
+        Get the default generic services domain for sale.order.line.
+        You can filter out domain leafs by passing kwargs of the form 'check_<leaf_field>=False'.
+        Only 'is_service' cannot be disabled.
+
+        :param kwargs: boolean kwargs of the form 'check_<leaf_field>=False'
+        :return: a valid domain
+        """
+        return [
+            ('is_service', '=', True),
+            ('is_expense', '=', False) if kwargs.get("check_is_expense", True) else expression.TRUE_LEAF,
+            ('is_downpayment', '=', False) if kwargs.get("check_is_downpayment", True) else expression.TRUE_LEAF,
+            ('state', '=', 'sale') if kwargs.get("check_state", True) else expression.TRUE_LEAF,
+        ]
+
+    def _domain_sale_line_service_str(self, domain='', op='&', **kwargs):
+        """
+        Get the str version of the domain for services sale.order.line.
+        Can be optionally aggregated with another domain for customization of the field domain definition
+
+        :param str domain: static str representing the domain for the field definition. Assumed it's a valid domain
+        :param str op: '&' or '|' depending on how the domain should be combined. Defaults to '&'
+        :param kwargs: refer to :ref:`_domain_sale_line_service`
+        :return: str version of the combined services sale.order.line domain.
+        """
+        if not domain:
+            return str(self._domain_sale_line_service(**kwargs))
+        if op not in ('&', '|'):
+            raise ValueError(f"op is expected to be '&' or '|', got '{op}' instead.")
+        domain = domain.replace('\r\n', '').replace('\n', '').strip()[1:-1].strip(", ")
+        return f"['{op}', {domain}, {str(self._domain_sale_line_service(**kwargs))[1:-1]}]"
+
     @api.depends('product_id.type')
     def _compute_is_service(self):
         for so_line in self:

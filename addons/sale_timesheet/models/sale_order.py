@@ -3,6 +3,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, _
+from odoo.osv import expression
 from odoo.tools import float_compare
 
 
@@ -70,14 +71,15 @@ class SaleOrder(models.Model):
             order.show_hours_recorded_button = order.timesheet_count or order.project_count and order.id in show_button_ids
 
     def _get_order_with_valid_service_product(self):
-        return self.env['sale.order.line']._read_group([
-            ('order_id', 'in', self.ids),
-            ('state', '=', 'sale'),
-            ('is_service', '=', True),
-            '|',
-                ('product_id.service_type', 'not in', ['milestones', 'manual']),
-                ('product_id.invoice_policy', '!=', 'delivery'),
-        ], aggregates=['order_id:array_agg'])[0][0]
+        SaleOrderLine = self.env['sale.order.line']
+        return SaleOrderLine._read_group(expression.AND([
+            SaleOrderLine._domain_sale_line_service(),
+            [
+                ('order_id', 'in', self.ids),
+                '|', ('product_id.service_type', 'not in', ['milestones', 'manual']),
+                     ('product_id.invoice_policy', '!=', 'delivery'),
+            ]
+        ]), aggregates=['order_id:array_agg'])[0][0]
 
     def _get_prepaid_service_lines_to_upsell(self):
         """ Retrieve all sols which need to display an upsell activity warning in the SO
