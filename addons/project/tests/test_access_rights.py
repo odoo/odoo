@@ -208,8 +208,8 @@ class TestAllowedUsers(TestAccessRights):
         self.project_pigs.message_unsubscribe(partner_ids=[self.user.partner_id.id])
         self.assertIn(john.partner_id, self.task.message_partner_ids)
         self.assertNotIn(john.partner_id, task.message_partner_ids)
-        # Unsubscribing to a project should not cause unsubscription of existing tasks in the project.
-        self.assertIn(self.user.partner_id, task.message_partner_ids)
+        # Unsubscribing to a project should unsubscribing of existing tasks in the project.
+        self.assertNotIn(self.user.partner_id, task.message_partner_ids)
         self.assertNotIn(self.user.partner_id, self.task.message_partner_ids)
 
     def test_visibility_changed(self):
