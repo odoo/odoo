@@ -14,9 +14,7 @@ class StockPickingBatch(models.Model):
     _description = "Batch Transfer"
     _order = "name desc"
 
-    name = fields.Char(
-        string='Batch Transfer', default='New',
-        copy=False, required=True, readonly=True)
+    name = fields.Char(string='Batch Transfer', copy=False)
     description = fields.Char("Description", size=35)
     user_id = fields.Many2one(
         'res.users', string='Responsible', tracking=True, check_company=True)
@@ -143,7 +141,7 @@ class StockPickingBatch(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('name', '/') == '/':
+            if not vals.get('name'):
                 company_id = vals.get('company_id', self.env.company.id)
                 if vals.get('is_wave'):
                     vals['name'] = self.env['ir.sequence'].with_company(company_id).next_by_code('picking.wave') or '/'
