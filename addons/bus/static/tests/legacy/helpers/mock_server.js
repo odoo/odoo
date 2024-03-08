@@ -107,7 +107,7 @@ patch(MockServer.prototype, {
                 ? this.pyEnv.cookie.get("authenticated_user_sid")
                 : undefined;
         const authenticatedUser = authenticatedUserId
-            ? this.pyEnv["res.users"].searchRead([["id", "=", authenticatedUserId]], {
+            ? this.pyEnv["res.users"].search_read([["id", "=", authenticatedUserId]], {
                   context: { active_test: false },
               })[0]
             : null;

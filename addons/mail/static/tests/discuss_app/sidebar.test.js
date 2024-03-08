@@ -726,7 +726,7 @@ test("channel - avatar: should update avatar url from bus", async () => {
         [channelId],
         { image_128: "This field does not matter" },
     ]);
-    const result = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
+    const result = pyEnv["discuss.channel"].search_read([["id", "=", channelId]]);
     const newCacheKey = result[0]["avatarCacheKey"];
     await contains(
         `img[data-src='${getOrigin()}/web/image/discuss.channel/${channelId}/avatar_128?unique=${newCacheKey}']`,
@@ -1010,7 +1010,7 @@ test("chat - avatar: should have correct avatar", async () => {
         name: "Demo",
         im_status: "offline",
     });
-    const partner = pyEnv["res.partner"].searchRead([["id", "=", partnerId]])[0];
+    const partner = pyEnv["res.partner"].search_read([["id", "=", partnerId]])[0];
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: pyEnv.currentPartnerId }),

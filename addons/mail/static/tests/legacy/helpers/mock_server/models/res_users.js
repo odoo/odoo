@@ -62,7 +62,7 @@ patch(MockServer.prototype, {
             ["partner_id", "=", user.partner_id],
         ]);
         return {
-            CannedResponse: this.pyEnv["mail.shortcode"].searchRead([], {
+            CannedResponse: this.pyEnv["mail.shortcode"].search_read([], {
                 fields: ["source", "substitution"],
             }),
             Store: {
@@ -92,7 +92,7 @@ patch(MockServer.prototype, {
      * @private
      */
     _mockResUsers_getActivityGroups() {
-        const activities = this.pyEnv["mail.activity"].searchRead([]);
+        const activities = this.pyEnv["mail.activity"].search_read([]);
         const userActivitiesByModelName = {};
         for (const activity of activities) {
             const day = serializeDate(today());

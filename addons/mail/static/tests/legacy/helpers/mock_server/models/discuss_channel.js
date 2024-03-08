@@ -158,7 +158,7 @@ patch(MockServer.prototype, {
         if (model !== "discuss.channel") {
             return;
         }
-        const [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "=", id]]);
+        const [channel] = this.pyEnv["discuss.channel"].search_read([["id", "=", id]]);
         const notifBody = `
             <span class="o_mail_notification">You are in ${
                 channel.channel_type === "channel" ? "channel" : "a private conversation with"
@@ -168,7 +168,7 @@ patch(MockServer.prototype, {
                     ? `#${channel.name}`
                     : channel.channel_member_ids.map(
                           (id) =>
-                              this.pyEnv["discuss.channel.member"].searchRead([["id", "=", id]])[0]
+                              this.pyEnv["discuss.channel.member"].search_read([["id", "=", id]])[0]
                                   .name
                       )
             }</b>.<br><br>
@@ -363,7 +363,7 @@ patch(MockServer.prototype, {
             message_type: "notification",
             subtype_xmlid: "mail.mt_comment",
         });
-        const [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "=", id]]);
+        const [channel] = this.pyEnv["discuss.channel"].search_read([["id", "=", id]]);
         this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
             Message: {
                 id: message_id,
@@ -404,7 +404,7 @@ patch(MockServer.prototype, {
             // Note: `_channel_info` on the server is supposed to be called with
             // the proper user context but this is not done here for simplicity.
             const channelInfos = this._mockDiscussChannelChannelInfo(ids);
-            const [relatedPartner] = this.pyEnv["res.partner"].searchRead([
+            const [relatedPartner] = this.pyEnv["res.partner"].search_read([
                 ["id", "=", partner_id],
             ]);
             for (const channelInfo of channelInfos) {
@@ -501,7 +501,7 @@ patch(MockServer.prototype, {
         const partners = this.getRecords("res.partner", [["id", "in", partners_to]], {
             active_test: false,
         });
-        const channels = this.pyEnv["discuss.channel"].searchRead([["channel_type", "=", "chat"]]);
+        const channels = this.pyEnv["discuss.channel"].search_read([["channel_type", "=", "chat"]]);
         for (const channel of channels) {
             const channelMemberIds = this.pyEnv["discuss.channel.member"].search([
                 ["channel_id", "=", channel.id],
@@ -888,7 +888,7 @@ patch(MockServer.prototype, {
         this.pyEnv["discuss.channel"].write([id], {
             avatarCacheKey: DateTime.utc().toFormat("yyyyMMddHHmmss"),
         });
-        const channel = this.pyEnv["discuss.channel"].searchRead([["id", "=", id]])[0];
+        const channel = this.pyEnv["discuss.channel"].search_read([["id", "=", id]])[0];
         this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
             Thread: {
                 avatarCacheKey: channel.avatarCacheKey,
@@ -905,7 +905,7 @@ patch(MockServer.prototype, {
      * @param {integer[]} known_member_ids
      */
     _mockDiscussChannelloadOlderMembers(channel_ids, known_member_ids) {
-        const members = this.pyEnv["discuss.channel.member"].searchRead(
+        const members = this.pyEnv["discuss.channel.member"].search_read(
             [
                 ["id", "not in", known_member_ids],
                 ["channel_id", "in", channel_ids],
@@ -942,7 +942,7 @@ patch(MockServer.prototype, {
                 seen_message_id: message_id,
             });
         }
-        const [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "in", ids]]);
+        const [channel] = this.pyEnv["discuss.channel"].search_read([["id", "in", ids]]);
         const [partner, guest] = this._mockResPartner__getCurrentPersona();
         let target = guest ?? partner;
         if (this._mockDiscussChannel__typesAllowingSeenInfos().includes(channel.channel_type)) {

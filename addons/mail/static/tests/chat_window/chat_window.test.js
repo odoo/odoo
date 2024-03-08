@@ -185,7 +185,7 @@ test("Mobile: opening a chat window should not update channel state on the serve
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await click(".o-mail-ChatWindow");
-    const [member] = pyEnv["discuss.channel.member"].searchRead([
+    const [member] = pyEnv["discuss.channel.member"].search_read([
         ["channel_id", "=", channelId],
         ["partner_id", "=", pyEnv.currentPartnerId],
     ]);
@@ -271,7 +271,7 @@ test("Mobile: closing a chat window should not update channel state on the serve
     await contains(".o-mail-ChatWindow");
     await click("[title='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    const [member] = pyEnv["discuss.channel.member"].searchRead([
+    const [member] = pyEnv["discuss.channel.member"].search_read([
         ["channel_id", "=", channelId],
         ["partner_id", "=", pyEnv.currentPartnerId],
     ]);
@@ -1125,7 +1125,7 @@ test("hiding/swapping hidden chat windows does not update server state", async (
     await start({
         mockRPC(route, args) {
             if (route === "/discuss/channel/fold") {
-                const [channel] = pyEnv["discuss.channel"].searchRead([
+                const [channel] = pyEnv["discuss.channel"].search_read([
                     ["id", "=", args.channel_id],
                 ]);
                 step(`${channel.name} - ${args.state}`);

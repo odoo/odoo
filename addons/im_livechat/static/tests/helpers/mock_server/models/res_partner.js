@@ -9,22 +9,22 @@ patch(MockServer.prototype, {
      */
     _mockResPartnerSearchForChannelInvite(search_term, channel_id, limit = 30) {
         const result = super._mockResPartnerSearchForChannelInvite(search_term, channel_id, limit);
-        const [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "=", channel_id]]);
+        const [channel] = this.pyEnv["discuss.channel"].search_read([["id", "=", channel_id]]);
         if (channel.channel_type !== "livechat") {
             return result;
         }
         const activeLivechatPartners = this.pyEnv["im_livechat.channel"]
-            .searchRead([])
+            .search_read([])
             .map(({ available_operator_ids }) => available_operator_ids)
             .flat()
             .map(
                 (userId) =>
-                    this.pyEnv["res.users"].searchRead([["id", "=", userId]])[0].partner_id[0]
+                    this.pyEnv["res.users"].search_read([["id", "=", userId]])[0].partner_id[0]
             );
         for (const partner of result["partners"]) {
             partner.is_available = activeLivechatPartners.includes(partner.id);
             if (partner.lang) {
-                partner.lang_name = this.pyEnv["res.lang"].searchRead([
+                partner.lang_name = this.pyEnv["res.lang"].search_read([
                     ["code", "=", partner.lang],
                 ])[0].name;
             }

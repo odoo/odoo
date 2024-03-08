@@ -44,14 +44,14 @@ test("Fold state is saved on the server", async (assert) => {
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello World!" });
-    let [member] = pyEnv["discuss.channel.member"].searchRead([
+    let [member] = pyEnv["discuss.channel.member"].search_read([
         ["guest_id", "=", pyEnv.currentGuest.id],
         ["channel_id", "=", env.services["im_livechat.livechat"].thread.id],
     ]);
     assert.strictEqual(member.fold_state, "open");
     await click(".o-mail-ChatWindow-header");
     await contains(".o-mail-Thread", { count: 0 });
-    [member] = pyEnv["discuss.channel.member"].searchRead([
+    [member] = pyEnv["discuss.channel.member"].search_read([
         ["guest_id", "=", pyEnv.currentGuest.id],
         ["channel_id", "=", env.services["im_livechat.livechat"].thread.id],
     ]);
@@ -85,7 +85,7 @@ test("Seen message is saved on the server", async (assert) => {
     await contains(".o-mail-Thread-newMessage");
     await contains(".o-mail-Composer-input", { setFocus: true });
     await contains(".o-mail-Thread-newMessage", { count: 0 });
-    const [member] = pyEnv["discuss.channel.member"].searchRead([
+    const [member] = pyEnv["discuss.channel.member"].search_read([
         ["guest_id", "=", pyEnv.currentGuest.id],
         ["channel_id", "=", env.services["im_livechat.livechat"].thread.id],
     ]);

@@ -81,7 +81,7 @@ patch(MockServer.prototype, {
             return this._mockRouteMailLinkPreview(args.message_id);
         }
         if (route === "/mail/link_preview/hide") {
-            const linkPreviews = this.pyEnv["mail.link.preview"].searchRead([
+            const linkPreviews = this.pyEnv["mail.link.preview"].search_read([
                 ["id", "in", args.link_preview_ids],
             ]);
             for (const linkPreview of linkPreviews) {
@@ -308,7 +308,7 @@ patch(MockServer.prototype, {
      */
     _mockRouteMailLinkPreview(message_id) {
         const linkPreviews = [];
-        const [message] = this.pyEnv["mail.message"].searchRead([["id", "=", message_id]]);
+        const [message] = this.pyEnv["mail.message"].search_read([["id", "=", message_id]]);
         if (message.body.includes("https://make-link-preview.com")) {
             const linkPreviewId = this.pyEnv["mail.link.preview"].create({
                 message_id: message.id,
@@ -317,7 +317,7 @@ patch(MockServer.prototype, {
                 og_type: "article",
                 source_url: "https://make-link-preview.com",
             });
-            const [linkPreview] = this.pyEnv["mail.link.preview"].searchRead([
+            const [linkPreview] = this.pyEnv["mail.link.preview"].search_read([
                 ["id", "=", linkPreviewId],
             ]);
             linkPreviews.push(this._mockMailLinkPreviewFormat(linkPreview));
@@ -351,7 +351,7 @@ patch(MockServer.prototype, {
             limit
         );
         const messagesWithNotification = res.messages.filter((message) => {
-            const notifs = this.pyEnv["mail.notification"].searchRead([
+            const notifs = this.pyEnv["mail.notification"].search_read([
                 ["mail_message_id", "=", message.id],
                 ["is_read", "=", true],
                 ["res_partner_id", "=", this.pyEnv.currentPartnerId],
@@ -537,7 +537,7 @@ patch(MockServer.prototype, {
                 rtcSessions.map((rtcSession) => rtcSession.id)
             );
         for (const [channelId, sessionsData] of Object.entries(channelInfo)) {
-            const channel = this.pyEnv["discuss.channel"].searchRead([
+            const channel = this.pyEnv["discuss.channel"].search_read([
                 ["id", "=", parseInt(channelId)],
             ])[0];
             const notificationRtcSessions = sessionsData.map((sessionsDataPoint) => {
@@ -554,8 +554,8 @@ patch(MockServer.prototype, {
         }
         for (const rtcSession of rtcSessions) {
             const target = rtcSession.guest_id
-                ? this.pyEnv["mail.guest"].searchRead([["id", "=", rtcSession.guest_id]])[0]
-                : this.pyEnv["res.partner"].searchRead([["id", "=", rtcSession.partner_id]])[0];
+                ? this.pyEnv["mail.guest"].search_read([["id", "=", rtcSession.guest_id]])[0]
+                : this.pyEnv["res.partner"].search_read([["id", "=", rtcSession.partner_id]])[0];
             notifications.push([
                 target,
                 "discuss.channel.rtc.session/ended",
@@ -571,10 +571,10 @@ patch(MockServer.prototype, {
      * @param {object} values
      */
     async _mockRouteMailRtcSessionUpdateAndBroadcast(session_id, values) {
-        const [session] = this.pyEnv["discuss.channel.rtc.session"].searchRead([
+        const [session] = this.pyEnv["discuss.channel.rtc.session"].search_read([
             ["id", "=", session_id],
         ]);
-        const [currentChannelMember] = this.pyEnv["discuss.channel.member"].searchRead([
+        const [currentChannelMember] = this.pyEnv["discuss.channel.member"].search_read([
             ["id", "=", session.channel_member_id[0]],
         ]);
         if (session && currentChannelMember.partner_id[0] === this.pyEnv.currentPartnerId) {
@@ -596,14 +596,14 @@ patch(MockServer.prototype, {
             id: thread_id,
             model: thread_model,
         };
-        const thread = this.pyEnv[thread_model].searchRead([["id", "=", thread_id]])[0];
+        const thread = this.pyEnv[thread_model].search_read([["id", "=", thread_id]])[0];
         if (!thread) {
             res["hasReadAccess"] = false;
             return res;
         }
         res["canPostOnReadonly"] = thread_model === "discuss.channel"; // model that have attr _mail_post_access='read'
         if (this.pyEnv.mockServer.models[thread_model].has_activities) {
-            const activities = this.pyEnv["mail.activity"].searchRead([
+            const activities = this.pyEnv["mail.activity"].search_read([
                 ["id", "in", thread.activity_ids || []],
             ]);
             res["activities"] = this._mockMailActivityActivityFormat(
@@ -611,7 +611,7 @@ patch(MockServer.prototype, {
             );
         }
         if (request_list.includes("attachments")) {
-            const attachments = this.pyEnv["ir.attachment"].searchRead([
+            const attachments = this.pyEnv["ir.attachment"].search_read([
                 ["res_id", "=", thread.id],
                 ["res_model", "=", thread_model],
             ]); // order not done for simplicity
@@ -631,7 +631,7 @@ patch(MockServer.prototype, {
                 ["res_model", "=", thread_model],
             ];
             res["followersCount"] = (thread.message_follower_ids || []).length;
-            const selfFollower = this.pyEnv["mail.followers"].searchRead(
+            const selfFollower = this.pyEnv["mail.followers"].search_read(
                 domain.concat([["partner_id", "=", this.pyEnv.currentPartnerId]])
             )[0];
             res["selfFollower"] = selfFollower

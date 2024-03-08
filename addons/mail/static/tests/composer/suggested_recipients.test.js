@@ -223,7 +223,7 @@ test("suggest recipient on 'Send message' composer (all checked by default)", as
             .checked
     );
     // Ensure that partner `john@test.be` is created while sending the message (not before)
-    let partner = pyEnv["res.partner"].searchRead([
+    let partner = pyEnv["res.partner"].search_read([
         ["email", "=", "john@test.be"],
         ["phone", "=", "123456789"],
     ]);
@@ -231,7 +231,7 @@ test("suggest recipient on 'Send message' composer (all checked by default)", as
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await click(".o-mail-Composer-send");
     await nextTick();
-    partner = pyEnv["res.partner"].searchRead([
+    partner = pyEnv["res.partner"].search_read([
         ["email", "=", "john@test.be"],
         ["phone", "=", "123456789"],
     ]);
@@ -257,7 +257,7 @@ test("suggest recipient on 'Send message' composer (recipient checked/unchecked)
     await click(".o-mail-SuggestedRecipient input");
     await click(".o_dialog .o_form_button_save");
     await nextTick();
-    const partner = pyEnv["res.partner"].searchRead([
+    const partner = pyEnv["res.partner"].search_read([
         ["email", "=", "john@test.be"],
         ["phone", "=", "123456789"],
     ]);

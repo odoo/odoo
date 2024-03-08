@@ -13,7 +13,7 @@ patch(MockServer.prototype, {
             this._mockDiscussChannelRtcSession_DiscussChannelRtcSessionFormatByChannel(sessionIds);
         const notifications = [];
         for (const [channelId, sessionData] of Object.entries(channelInfo)) {
-            const [channel] = this.pyEnv["discuss.channel"].searchRead([
+            const [channel] = this.pyEnv["discuss.channel"].search_read([
                 ["id", "=", Number(channelId)],
             ]);
             notifications.push([
@@ -86,7 +86,7 @@ patch(MockServer.prototype, {
     _mockDiscussChannelRtcSession__updateAndBroadcast(id, values) {
         this.pyEnv["discuss.channel.rtc.session"].write([id], values);
         const sessionData = this._mockDiscussChannelRtcSession_DiscussChannelRtcSessionFormat(id);
-        const [channel] = this.pyEnv["discuss.channel"].searchRead([
+        const [channel] = this.pyEnv["discuss.channel"].search_read([
             ["id", "=", sessionData.channelMember.thread.id],
         ]);
         this.pyEnv["bus.bus"]._sendone(

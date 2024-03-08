@@ -27,7 +27,7 @@ test("chat request opens chat window", async () => {
         livechat_channel_id: livechatId,
         livechat_operator_id: pyEnv.adminPartnerId,
     });
-    const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
+    const [channel] = pyEnv["discuss.channel"].search_read([["id", "=", channelId]]);
     patchWithCleanup(session.livechatData, {
         options: {
             ...session.livechatData.options,

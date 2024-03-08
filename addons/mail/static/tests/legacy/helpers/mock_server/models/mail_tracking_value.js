@@ -81,10 +81,10 @@ patch(MockServer.prototype, {
                 break;
             case "many2one":
                 initialValue = initialValue
-                    ? this.pyEnv[field.relation].searchRead([["id", "=", initialValue]])[0]
+                    ? this.pyEnv[field.relation].search_read([["id", "=", initialValue]])[0]
                     : initialValue;
                 newValue = newValue
-                    ? this.pyEnv[field.relation].searchRead([["id", "=", newValue]])[0]
+                    ? this.pyEnv[field.relation].search_read([["id", "=", newValue]])[0]
                     : newValue;
                 values["old_value_integer"] = initialValue ? initialValue.id : 0;
                 values["new_value_integer"] = newValue ? newValue.id : 0;

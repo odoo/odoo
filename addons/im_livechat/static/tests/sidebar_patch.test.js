@@ -80,7 +80,7 @@ test("Do not show channel when visitor is typing", async () => {
     await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     // simulate livechat visitor typing
-    const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
+    const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     await pyEnv.withGuest(guestId, () =>
         rpc("/im_livechat/notify_typing", {
             is_typing: true,
@@ -106,7 +106,7 @@ test("Smiley face avatar for livechat item linked to a guest", async () => {
     });
     await start();
     await openDiscuss();
-    const guest = pyEnv["mail.guest"].searchRead([["id", "=", guestId]])[0];
+    const guest = pyEnv["mail.guest"].search_read([["id", "=", guestId]])[0];
     await contains(
         `.o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel img[data-src='${url(
             `/web/image/mail.guest/${guestId}/avatar_128?unique=${
@@ -129,7 +129,7 @@ test("Partner profile picture for livechat item linked to a partner", async () =
     });
     await start();
     await openDiscuss(channelId);
-    const partner = pyEnv["res.partner"].searchRead([["id", "=", partnerId]])[0];
+    const partner = pyEnv["res.partner"].search_read([["id", "=", partnerId]])[0];
     await contains(
         `.o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel img[data-src='${url(
             `/web/image/res.partner/${partnerId}/avatar_128?unique=${

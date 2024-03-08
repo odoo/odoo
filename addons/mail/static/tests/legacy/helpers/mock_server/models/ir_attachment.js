@@ -64,7 +64,7 @@ patch(MockServer.prototype, {
         if (!this.models[attachment.res_model].fields["message_main_attachment_id"]) {
             return true; // dummy value for mock server
         }
-        const [record] = this.pyEnv[attachment.res_model].searchRead([
+        const [record] = this.pyEnv[attachment.res_model].search_read([
             ["id", "=", attachment.res_id],
         ]);
         if (force || !record.message_main_attachment_id) {
