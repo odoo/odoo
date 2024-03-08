@@ -84,7 +84,7 @@ patch(MockServer.prototype, {
             return false;
         }
         if (!persisted) {
-            const [operatorPartner] = this.pyEnv["res.partner"].searchRead([
+            const [operatorPartner] = this.pyEnv["res.partner"].search_read([
                 ["id", "=", channelVals.livechat_operator_id],
             ]);
             const res = this._mockResUsers__init_store_data();
@@ -133,7 +133,7 @@ patch(MockServer.prototype, {
      * @param {Object} [context={}]
      */
     _mockRouteImLivechatNotifyTyping(channelId, is_typing) {
-        const [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
+        const [channel] = this.pyEnv["discuss.channel"].search_read([["id", "=", channelId]]);
         const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(
             channel.id
         );
@@ -145,7 +145,7 @@ patch(MockServer.prototype, {
      * @param {string} channelId
      */
     _mockRouteVisitorLeaveSession(channelId) {
-        const channel = this.pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
+        const channel = this.pyEnv["discuss.channel"].search_read([["id", "=", channelId]]);
         if (!channel) {
             return;
         }
@@ -161,7 +161,7 @@ patch(MockServer.prototype, {
      * @returns
      */
     _mockRouteImLivechatFeedback(channelId, rate, reason) {
-        let [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
+        let [channel] = this.pyEnv["discuss.channel"].search_read([["id", "=", channelId]]);
         if (!channel) {
             return false;
         }
@@ -179,7 +179,7 @@ patch(MockServer.prototype, {
         } else {
             this.pyEnv["rating.rating"].write([channel.rating_ids[0]], values);
         }
-        [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
+        [channel] = this.pyEnv["discuss.channel"].search_read([["id", "=", channelId]]);
         return channel.rating_ids[0];
     },
 
@@ -187,7 +187,7 @@ patch(MockServer.prototype, {
      * Simulates the `/im_livechat/chat_history` route.
      */
     _mockRouteImLivechatChatHistory(channelId, lastId, limit = 20) {
-        const [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
+        const [channel] = this.pyEnv["discuss.channel"].search_read([["id", "=", channelId]]);
         if (!channel) {
             return [];
         }

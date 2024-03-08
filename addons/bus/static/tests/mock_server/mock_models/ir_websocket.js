@@ -45,7 +45,7 @@ export class IrWebSocket extends models.ServerModel {
         const channels = ["broadcast"];
         const authenticatedUserId = this.env.cookie.get("authenticated_user_sid");
         const authenticatedPartner = authenticatedUserId
-            ? this.env["res.partner"].searchRead([["user_ids", "in", [authenticatedUserId]]], {
+            ? this.env["res.partner"].search_read([["user_ids", "in", [authenticatedUserId]]], {
                   context: { active_test: false },
               })[0]
             : null;

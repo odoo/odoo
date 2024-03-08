@@ -20,7 +20,7 @@ patch(MockServer.prototype, {
         if (guestIds) {
             imStatus["Persona"] = imStatus["Persona"].concat(
                 this.pyEnv["mail.guest"]
-                    .searchRead([["id", "in", guestIds]], {
+                    .search_read([["id", "in", guestIds]], {
                         context: { active_test: false },
                         fields: ["im_status"],
                     })
@@ -37,7 +37,7 @@ patch(MockServer.prototype, {
         const guest = this._mockMailGuest__getGuestFromContext();
         const authenticatedUserId = this.pyEnv.cookie.get("authenticated_user_sid");
         const authenticatedPartner = authenticatedUserId
-            ? this.pyEnv["res.partner"].searchRead([["user_ids", "in", [authenticatedUserId]]], {
+            ? this.pyEnv["res.partner"].search_read([["user_ids", "in", [authenticatedUserId]]], {
                   context: { active_test: false },
               })[0]
             : null;
@@ -54,12 +54,12 @@ patch(MockServer.prototype, {
         channels = channels.filter(
             (c) => typeof c !== "string" || !c.startsWith("discuss.channel_")
         );
-        const allChannels = this.pyEnv["discuss.channel"].searchRead([
+        const allChannels = this.pyEnv["discuss.channel"].search_read([
             [
                 "id",
                 "in",
                 this.pyEnv["discuss.channel.member"]
-                    .searchRead([
+                    .search_read([
                         "|",
                         guest
                             ? ["guest_id", "=", guest.id]

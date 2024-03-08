@@ -60,7 +60,7 @@ patch(MockServer.prototype, {
                 });
             }
             const [activityType] = record.activity_type_id
-                ? this.pyEnv["mail.activity.type"].searchRead([
+                ? this.pyEnv["mail.activity.type"].search_read([
                       ["id", "=", record.activity_type_id[0]],
                   ])
                 : [false];
@@ -71,7 +71,7 @@ patch(MockServer.prototype, {
             if (record.summary) {
                 record.display_name = record.summary;
             }
-            const user = this.pyEnv["res.users"].searchRead([["id", "=", record.user_id[0]]])[0];
+            const user = this.pyEnv["res.users"].search_read([["id", "=", record.user_id[0]]])[0];
             record.persona = this._mockResPartnerMailPartnerFormat([user.partner_id[0]]).get(
                 user.partner_id[0]
             );

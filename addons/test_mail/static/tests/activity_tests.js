@@ -295,11 +295,11 @@ QUnit.module("test_mail", {}, function () {
             )
         );
         const [meetingRecord, officeRecord] = pyEnv["mail.test.activity"].search([]);
-        const uploadDoneActs = pyEnv["mail.activity"].searchRead([
+        const uploadDoneActs = pyEnv["mail.activity"].search_read([
             ["activity_type_id", "=", activityTypeUpload],
             ["active", "=", false],
         ]);
-        const uploadPlannedActs = pyEnv["mail.activity"].searchRead([
+        const uploadPlannedActs = pyEnv["mail.activity"].search_read([
             ["activity_type_id", "=", activityTypeUpload],
         ]);
         pyEnv["mail.test.activity"].write([meetingRecord], {

@@ -200,7 +200,7 @@ test("'channel_fetch' notification received is correctly handled", async () => {
     await contains(".o-mail-Message");
     await contains(".o-mail-MessageSeenIndicator i", { count: 0 });
 
-    const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
+    const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     // Simulate received channel fetched notification
     pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
         id: pyEnv["discuss.channel.member"].search([
@@ -236,7 +236,7 @@ test("'channel_seen' notification received is correctly handled", async () => {
     await contains(".o-mail-Message");
     await contains(".o-mail-MessageSeenIndicator i", { count: 0 });
 
-    const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
+    const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     // Simulate received channel seen notification
     pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/seen", {
         id: pyEnv["discuss.channel.member"].search([
@@ -272,7 +272,7 @@ test("'channel_fetch' notification then 'channel_seen' received are correctly ha
     await contains(".o-mail-Message");
     await contains(".o-mail-MessageSeenIndicator i", { count: 0 });
 
-    const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
+    const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     // Simulate received channel fetched notification
     pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
         id: pyEnv["discuss.channel.member"].search([

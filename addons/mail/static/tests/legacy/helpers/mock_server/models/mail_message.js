@@ -32,9 +32,9 @@ patch(MockServer.prototype, {
      * @param {number} messageId
      */
     _mockMailMessage__busNotificationTarget(messageId) {
-        const [message] = this.pyEnv["mail.message"].searchRead([["id", "=", messageId]]);
+        const [message] = this.pyEnv["mail.message"].search_read([["id", "=", messageId]]);
         if (message.model === "discuss.channel") {
-            return this.pyEnv["discuss.channel"].searchRead([["id", "=", message.res_id]])[0];
+            return this.pyEnv["discuss.channel"].search_read([["id", "=", message.res_id]])[0];
         }
         if (this.pyEnv.currentUser?._is_public()) {
             this._mockMailGuest__getGuestFromContext();
@@ -45,7 +45,7 @@ patch(MockServer.prototype, {
      * Simulates `_message_reaction` on `mail.message`.
      */
     _mockMailMessage_messageReaction(messageId, content, action) {
-        const [reaction] = this.pyEnv["mail.message.reaction"].searchRead([
+        const [reaction] = this.pyEnv["mail.message.reaction"].search_read([
             ["content", "=", content],
             ["message_id", "=", messageId],
             ["partner_id", "=", this.pyEnv.currentPartnerId],
@@ -320,7 +320,7 @@ patch(MockServer.prototype, {
             }
             let guestAuthor;
             if (message.author_guest_id) {
-                const [guest] = this.pyEnv["mail.guest"].searchRead([
+                const [guest] = this.pyEnv["mail.guest"].search_read([
                     ["id", "=", message.author_guest_id],
                 ]);
                 guestAuthor = { id: guest.id, name: guest.name, type: "guest" };

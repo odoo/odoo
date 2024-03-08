@@ -13,7 +13,7 @@ QUnit.module("out of focus");
 test("Spaces in notifications are not encoded", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
-    const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
+    const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     await start({
         async mockRPC(route, args, originalRpc) {
             if (route === "/mail/action" && args.init_messaging) {
