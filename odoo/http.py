@@ -1816,6 +1816,8 @@ class Request:
 
             return self._transactioning(_serve_fallback, readonly=True)
         else:
+            self._set_request_dispatcher(rule)
+
             ro = rule.endpoint.routing['readonly']
             if callable(ro):
                 ro = ro(registry, request)
@@ -1826,7 +1828,6 @@ class Request:
             return self._transactioning(_serve_ir_http, readonly=ro)
 
     def _serve_ir_http(self, rule, args):
-        self._set_request_dispatcher(rule)
         self.registry['ir.http']._authenticate(rule.endpoint)
         self.registry['ir.http']._pre_dispatch(rule, args)
         response = self.dispatcher.dispatch(rule.endpoint, args)
