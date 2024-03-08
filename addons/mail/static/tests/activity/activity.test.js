@@ -542,7 +542,7 @@ test("Activity avatar should have a unique timestamp", async () => {
         res_model: "res.partner",
     });
     await start();
-    const partner = pyEnv["res.partner"].searchRead([["id", "=", pyEnv.currentPartnerId]])[0];
+    const partner = pyEnv["res.partner"].search_read([["id", "=", pyEnv.currentPartnerId]])[0];
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity");
     await contains(

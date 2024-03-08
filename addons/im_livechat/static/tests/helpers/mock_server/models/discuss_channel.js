@@ -26,7 +26,7 @@ patch(MockServer.prototype, {
                     );
                 }
                 channelInfo.livechatChannel = this.pyEnv["im_livechat.channel"]
-                    .searchRead([["id", "=", channel.livechat_channel_id]])
+                    .search_read([["id", "=", channel.livechat_channel_id]])
                     .map((c) => ({
                         id: c.id,
                         name: c.name,

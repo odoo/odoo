@@ -38,7 +38,7 @@ test("Rendering of visitor banner", async () => {
     await start();
     await openDiscuss(channelId);
     await contains("img.o-website_livechat-VisitorBanner-avatar");
-    const guest = pyEnv["mail.guest"].searchRead([["id", "=", guestId]])[0];
+    const guest = pyEnv["mail.guest"].search_read([["id", "=", guestId]])[0];
     await contains(
         `img.o-website_livechat-VisitorBanner-avatar[data-src='${url(
             `/web/image/mail.guest/${guestId}/avatar_128?unique=${

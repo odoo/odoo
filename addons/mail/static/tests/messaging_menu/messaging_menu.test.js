@@ -147,7 +147,7 @@ test("rendering with PWA installation request", async () => {
         },
     });
     const pyEnv = await startServer();
-    const odoobot = pyEnv["res.partner"].searchRead([["id", "in", pyEnv.odoobotId]], {
+    const odoobot = pyEnv["res.partner"].search_read([["id", "in", pyEnv.odoobotId]], {
         context: { active_test: false },
     })[0];
     const { env } = await start();
@@ -990,7 +990,7 @@ test("chat should show unread counter on receiving new messages", async () => {
     await contains(".o-mail-NotificationItem .badge", { count: 0, text: "1" });
 
     // simulate receiving a new message
-    const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
+    const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     pyEnv["bus.bus"]._sendone(channel, "discuss.channel/new_message", {
         id: channelId,
         message: {
