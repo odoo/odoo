@@ -4,6 +4,7 @@
 import json
 
 from odoo import models, fields
+from odoo.tools import SQL
 from collections import defaultdict
 
 
@@ -15,7 +16,13 @@ class Project(models.Model):
             return {}
         can_see_expense = with_action and self.user_has_groups('hr_expense.group_hr_expense_team_approver')
         query = self.env['hr.expense']._search([('state', 'in', ['approved', 'done'])])
-        query.add_where('hr_expense.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+        query.add_where(
+            SQL(
+                "%s && %s",
+                [str(self.analytic_account_id.id)],
+                self.env['hr.expense']._query_analytic_accounts(),
+            )
+        )
         query_string, query_param = query.select('sale_order_id', 'product_id', 'currency_id', 'array_agg(id) as ids', 'SUM(untaxed_amount_currency) as untaxed_amount_currency')
         query_string = f"{query_string} GROUP BY sale_order_id, product_id, currency_id"
         self._cr.execute(query_string, query_param)
