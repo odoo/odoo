@@ -288,9 +288,9 @@ export class SelfOrder extends Reactive {
             newLine.delete();
         }
     }
-    async confirmationPage(screen_mode, device) {
+    async confirmationPage(screen_mode, device, access_token = "") {
         this.router.navigate("confirmation", {
-            orderAccessToken: this.currentOrder.access_token,
+            orderAccessToken: access_token || this.currentOrder.access_token,
             screenMode: screen_mode,
         });
         if (device === "kiosk") {
@@ -328,8 +328,16 @@ export class SelfOrder extends Reactive {
         // if the amount is 0, we don't need to go to the payment page
         // this directive works for both mode each and meal
         if (order.amount_total === 0 && order.lines.length > 0) {
+<<<<<<< HEAD
             await this.sendDraftOrderToServer();
             this.router.navigate("default");
+||||||| parent of a285506fd7fd (temp)
+            await this.sendDraftOrderToServer();
+            this.confirmationPage("order", device);
+=======
+            const order = await this.sendDraftOrderToServer();
+            this.confirmationPage("order", device, order.access_token);
+>>>>>>> a285506fd7fd (temp)
             return;
         }
 
@@ -358,11 +366,49 @@ export class SelfOrder extends Reactive {
     }
 
     get currentOrder() {
+<<<<<<< HEAD
         const orderAvailable = (o) => {
             const isDraft = o.state === "draft";
             const isPaid = o.state === "paid";
             const isZeroAmount = o.amount_total === 0;
             const isKiosk = this.config.self_ordering_mode === "kiosk";
+||||||| parent of a285506fd7fd (temp)
+        if (
+            this.editedOrder &&
+            (this.editedOrder.state === "draft" ||
+                (this.editedOrder.state === "paid" &&
+                    this.editedOrder.amount_total === 0 &&
+                    this.config.self_ordering_mode === "kiosk"))
+        ) {
+            return this.editedOrder;
+        }
+        const existingOrder = this.orders.find(
+            (o) =>
+                o.state === "draft" ||
+                (o.state === "paid" &&
+                    o.amount_total === 0 &&
+                    this.config.self_ordering_mode === "kiosk")
+        );
+        if (!existingOrder) {
+            const newOrder = new Order({
+                pos_config_id: this.pos_config_id,
+            });
+=======
+        if (this.editedOrder && this.editedOrder.state === "draft") {
+            return this.editedOrder;
+        }
+        const existingOrder = this.orders.find(
+            (o) =>
+                o.state === "draft" ||
+                (o.state === "paid" &&
+                    o.amount_total === 0 &&
+                    this.config.self_ordering_mode === "kiosk")
+        );
+        if (!existingOrder) {
+            const newOrder = new Order({
+                pos_config_id: this.pos_config_id,
+            });
+>>>>>>> a285506fd7fd (temp)
 
             return isDraft || (isPaid && isZeroAmount && isKiosk);
         };
@@ -571,6 +617,7 @@ export class SelfOrder extends Reactive {
         }
 
         try {
+<<<<<<< HEAD
             const data = await rpc(
                 `/pos-self-order/process-order/${this.config.self_ordering_mode}`,
                 {
@@ -582,6 +629,41 @@ export class SelfOrder extends Reactive {
             this.models.replaceDataByKey("uuid", data);
             for (const order of data["pos.order"]) {
                 this.subscribeToOrderChannel(order);
+||||||| parent of a285506fd7fd (temp)
+            const rpcUrl = this.currentOrder.isAlreadySent
+                ? "/pos-self-order/update-existing-order"
+                : `/pos-self-order/process-new-order/${this.config.self_ordering_mode}`;
+
+            const order = await rpc(rpcUrl, {
+                order: this.currentOrder,
+                access_token: this.access_token,
+                table_identifier: this.table ? this.table.identifier : null,
+            });
+
+            this.editedOrder.access_token = order.access_token;
+            this.updateOrdersFromServer([order], [order.access_token]);
+            this.editedOrder.updateLastChanges();
+
+            if (this.config.self_ordering_pay_after === "each") {
+                this.editedOrder = null;
+=======
+            const rpcUrl = this.currentOrder.isAlreadySent
+                ? "/pos-self-order/update-existing-order"
+                : `/pos-self-order/process-new-order/${this.config.self_ordering_mode}`;
+
+            const order = await rpc(rpcUrl, {
+                order: this.currentOrder,
+                access_token: this.access_token,
+                table_identifier: this.table ? this.table.identifier : null,
+            });
+
+            this.editedOrder.access_token = order.access_token;
+            this.updateOrdersFromServer([order], [order.access_token]);
+            this.editedOrder.updateLastChanges();
+
+            if (this.config.self_ordering_pay_after === "each" && order.amount_total > 0) {
+                this.editedOrder = null;
+>>>>>>> a285506fd7fd (temp)
             }
 
             if (this.config.self_ordering_pay_after === "each") {
@@ -646,7 +728,10 @@ export class SelfOrder extends Reactive {
         this.notification.add(message, {
             type: "success",
         });
-        this.router.navigate("default");
+
+        if (this.router.activeSlot !== "confirmation") {
+            this.router.navigate("default");
+        }
     }
 
     updateOrderFromServer(order) {
