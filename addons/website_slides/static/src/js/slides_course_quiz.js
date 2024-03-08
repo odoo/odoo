@@ -193,10 +193,9 @@
          * @private
          */
         _reorderQuestions: function () {
-            rpc('/web/dataset/resequence', {
-                model: "slide.question",
-                ids: this._getQuestionsIds()
-            }).then(this._modifyQuestionsSequence.bind(this))
+            this.orm
+                .webResequence("slide.question", this._getQuestionsIds())
+                .then(this._modifyQuestionsSequence.bind(this))
         },
         /*
          * @private

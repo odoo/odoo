@@ -2588,6 +2588,28 @@ export class Model extends Array {
 
     /**
      * @param {MaybeIterable<number>} idOrIds
+     * @param {Record<string, any>} specification
+     * @param {string} fieldName
+     * @param {number} offset
+     */
+    web_resequence(idOrIds, specification, fieldName, offset) {
+        const kwargs = getKwArgs(arguments, "ids", "field_name", "offset", "specification");
+        ({ ids: idOrIds, field_name: fieldName, offset = 0, specification } = kwargs);
+
+        if (!(fieldName in this._fields)) {
+            return [];
+        }
+
+        const ids = ensureArray(idOrIds);
+        for (const [index, id] of ids.entries()) {
+            this.write(id, { [fieldName]: offset + index });
+        }
+
+        return this.web_read(ids, specification);
+    }
+
+    /**
+     * @param {MaybeIterable<number>} idOrIds
      * @param {Partial<ModelRecord>} values
      * @param {Record<string, any>} specification
      * @param {MaybeIterable<number>} [nextId]

@@ -37,28 +37,3 @@ class DataSet(http.Controller):
         if isinstance(action, dict) and action.get('type') != '':
             return clean_action(action, env=request.env)
         return False
-
-    @http.route('/web/dataset/resequence', type='jsonrpc', auth="user")
-    def resequence(self, model, ids, field='sequence', offset=0, context=None):
-        """ Re-sequences a number of records in the model, by their ids
-
-        The re-sequencing starts at the first model of ``ids``, the sequence
-        number is incremented by one after each record and starts at ``offset``
-
-        :param ids: identifiers of the records to resequence, in the new sequence order
-        :type ids: list(id)
-        :param str field: field used for sequence specification, defaults to
-                          "sequence"
-        :param int offset: sequence number for first record in ``ids``, allows
-                           starting the resequencing from an arbitrary number,
-                           defaults to ``0``
-        """
-        if context:
-            request.update_context(**context)
-        m = request.env[model]
-        if not m.fields_get([field]):
-            return False
-        # python 2.6 has no start parameter
-        for i, record in enumerate(m.browse(ids)):
-            record.write({field: i + offset})
-        return True

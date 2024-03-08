@@ -260,6 +260,24 @@ export class ORM {
 
     /**
      * @param {string} model
+     * @param {number[]} ids
+     * @param {object} [kwargs={}]
+     * @param {object} [kwargs.context]
+     * @param {string} [kwargs.field_name]
+     * @param {number} [kwargs.offset]
+     * @param {object} [kwargs.specification]
+     * @returns {Promise<any[]>}
+     */
+    webResequence(model, ids, kwargs = {}) {
+        validatePrimitiveList("ids", "number", ids);
+        return this.call(model, "web_resequence", [ids], {
+            ...kwargs,
+            specification: kwargs.specification || {},
+        });
+    }
+
+    /**
+     * @param {string} model
      * @param {import("@web/core/domain").DomainListRepr} domain
      * @param {any} [kwargs={}]
      * @returns {Promise<any[]>}
@@ -320,6 +338,7 @@ export const ormService = {
         "search",
         "searchRead",
         "unlink",
+        "webResequence",
         "webSearchRead",
         "write",
     ],

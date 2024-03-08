@@ -328,14 +328,12 @@ export class DynamicList extends DataPoint {
             getSequence,
             getResId,
         });
-        if (resequencedRecords) {
-            for (const dpData of resequencedRecords) {
-                const dp = originalList.find((d) => getResId(d) === dpData.id);
-                if (dp instanceof Record) {
-                    dp._applyValues(dpData);
-                } else {
-                    dp[handleField] = dpData[handleField];
-                }
+        for (const dpData of resequencedRecords) {
+            const dp = originalList.find((d) => getResId(d) === dpData.id);
+            if (dp instanceof Record) {
+                dp._applyValues(dpData);
+            } else {
+                dp[handleField] = dpData[handleField];
             }
         }
     }
