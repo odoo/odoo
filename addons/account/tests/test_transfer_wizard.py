@@ -410,3 +410,38 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         created_moves = self.env['account.move'].browse(wizard_res['domain'][0][2])
         adjustment_move = created_moves[1]  # There are 2 created moves; the adjustment move is the second one.
         self.assertRecordValues(adjustment_move, [{'date': fields.Date.to_date('2019-03-31')}])
+
+    def test_transfer_wizard_amount_currency_is_zero(self):
+        """ Tests that the transfer wizard create a transfer move when the amount_currency is zero.
+        """
+        move = self.env['account.move'].create({
+            'journal_id': self.company_data['default_journal_misc'].id,
+            'date': '2019-01-01',
+            'line_ids': [
+                Command.create({'account_id': self.accounts[2].id, 'currency_id': self.company.currency_id.id, 'amount_currency': 1000, 'debit': 1000, }),
+                Command.create({'account_id': self.receivable_account.id, 'currency_id': self.test_currency_1.id, 'amount_currency': 0, 'credit': 1000, }),
+            ]
+        })
+        move.action_post()
+
+        active_move_lines = move.line_ids.filtered(lambda line: line.account_id.id == self.receivable_account.id)
+        context = {'active_model': 'account.move.line', 'active_ids': active_move_lines.ids}
+        with Form(self.env['account.automatic.entry.wizard'].with_context(context)) as wizard_form:
+            wizard_form.action = 'change_account'
+            wizard_form.destination_account_id = self.accounts[0]
+            wizard_form.journal_id = self.company_data['default_journal_misc']
+
+        wizard = wizard_form.save()
+
+        transfer_move_id = wizard.do_action()['res_id']
+        transfer_move = self.env['account.move'].browse(transfer_move_id)
+
+        source_line = transfer_move.line_ids.filtered(lambda x: x.account_id == self.receivable_account)
+        destination_line = transfer_move.line_ids.filtered(lambda x: x.account_id == self.accounts[0])
+
+        self.assertRecordValues(source_line, [
+            {'account_id': self.receivable_account.id, 'amount_currency': 0.0, 'currency_id': self.test_currency_1.id, 'balance': 1000}
+        ])
+        self.assertRecordValues(destination_line, [
+              {'account_id': self.accounts[0].id, 'amount_currency': 0.0, 'currency_id': self.test_currency_1.id, 'balance': -1000}
+        ])
