@@ -61,3 +61,74 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_remove", {
     trigger: "iframe #wrap:not(:has(.s_image_gallery))",
     run: () => null,
 }]);
+
+wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
+    test: true,
+    url: "/",
+    edition: true,
+}, [
+    wTourUtils.dragNDrop({
+        id: "s_image_gallery",
+        name: "Image Gallery",
+    }),
+{
+    content: "Click on the first image of the snippet",
+    trigger: "iframe .s_image_gallery .carousel-item.active img",
+},
+    wTourUtils.changeOption('ImageTools', 'we-select:contains("Filter") we-toggler'),
+    wTourUtils.changeOption('ImageTools', '[data-gl-filter="blur"]'),
+{
+    content: "Check that the image has the correct filter",
+    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
+    run: () => null, // This is a check.
+}, {
+    content: "Click on move to next",
+    trigger: ".snippet-option-gallery_img we-button[data-position='next']",
+}, {
+    content: "Check that the image has been moved",
+    trigger: "iframe .s_image_gallery .carousel-item.active img[data-index='1']",
+    run: () => null, // This is a check.
+}, {
+    content: "Click on the footer to reload the editor panel",
+    trigger: "iframe #footer",
+}, {
+    content: "Check that the footer options have been loaded",
+    trigger: ".snippet-option-HideFooter we-button:contains('Page Visibility')",
+    run: () => null, // This is a check.
+}, {
+    content: "Click on the moved image",
+    trigger: "iframe .s_image_gallery .carousel-item.active img[data-index='1'][data-gl-filter='blur']",
+}, {
+    content: "Check that the image still has the correct filter",
+    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
+    run: () => null, // This is a check.
+}]);
+
+wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", {
+    test: true,
+    url: "/",
+    edition: true,
+}, [
+    wTourUtils.dragNDrop({
+        id: "s_image_gallery",
+        name: "Image Gallery",
+    }),
+    wTourUtils.clickOnSnippet({
+        id: "s_image_gallery",
+        name: "Image Gallery",
+    }),
+    wTourUtils.changeOption("gallery", "we-button[data-add-images]"),
+{
+    content: "Click on the default image",
+    trigger: ".o_select_media_dialog img[title='s_default_image.jpg']",
+},
+    wTourUtils.addMedia(),
+{
+    content: "Check that the new image has been added",
+    trigger: "iframe .s_image_gallery:has(img[data-index='3'])",
+    run: () => null, // This is a check.
+}, {
+    content: "Check that the thumbnail of the first image has not been changed",
+    trigger: "iframe .s_image_gallery ul.carousel-indicators li:first-child[style='background-image: url(/web/image/website.library_image_08)']",
+    run: () => null, // This is a check.
+}]);

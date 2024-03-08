@@ -1502,11 +1502,18 @@ class Picking(models.Model):
                 })
         return package
 
-    def _package_move_lines(self):
+    def _package_move_lines(self, batch_pack=False):
         picking_move_lines = self.move_line_ids
+        # in theory, the following values in the "if" statement after this should always be the same
+        # (i.e. for batch transfers), but customizations may bypass it and cause unexpected behavior
+        # so we avoid allowing those situations
+        if len(self.picking_type_id) > 1:
+            raise UserError(_("You cannot pack products into the same package when they are from different transfers with different operation types."))
+        if len(set(self.mapped("immediate_transfer"))) > 1:
+            raise UserError(_("You cannot pack products into the same package when they are from both immediate and planned transfers."))
         if (
             not self.picking_type_id.show_reserved
-            and not self.immediate_transfer
+            and any(not p.immediate_transfer for p in self)
             and not self.env.context.get('barcode_view')
         ):
             picking_move_lines = self.move_line_nosuggest_ids

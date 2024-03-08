@@ -53,7 +53,7 @@ describe('applyColor', () => {
     it('should apply a background color on empty selection', async () => {
         await testEditor(BasicEditor, {
             contentBefore: '<p>[<br></p><p><br></p><p>]<br></p>',
-            stepFunction: setColor('rgb(255, 0, 0)', 'background-color'),
+            stepFunction: setColor('rgb(255, 0, 0)', 'backgroundColor'),
             contentAfterEdit: '<p>[<font data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>' +
                               '<p><font data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>' +
                               '<p>]<font data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>',
@@ -95,7 +95,7 @@ describe('applyColor', () => {
                     <tr><td contenteditable="false">cd]</td></tr>
                 </tbody></table>
             `),
-            stepFunction: setColor('rgb(255, 0, 0)', 'background-color'),
+            stepFunction: setColor('rgb(255, 0, 0)', 'backgroundColor'),
             contentAfter: unformat(`
                 <table><tbody>
                     <tr><td style="background-color: rgb(255, 0, 0);">[]ab</td></tr>

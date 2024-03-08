@@ -86,6 +86,7 @@ class Manager(Thread):
         """
 
         helpers.start_nginx_server()
+        _logger.info("IoT Box Image version: %s", helpers.get_version())
         if platform.system() == 'Linux' and helpers.get_odoo_server_url():
             helpers.check_git_branch()
             helpers.generate_password()

@@ -179,6 +179,7 @@ class ProductTemplate(models.Model):
 
         sales_prices = pricelist._get_products_price(self, 1.0)
         show_discount = pricelist.discount_policy == 'without_discount'
+        show_strike_price = self.env.user.has_group('website_sale.group_product_price_comparison')
 
         base_sales_prices = self.price_compute('list_price', currency=pricelist.currency_id)
 
@@ -196,7 +197,7 @@ class ProductTemplate(models.Model):
             base_price = None
             price_list_contains_template = pricelist.currency_id.compare_amounts(price_reduce, base_sales_prices[template.id]) != 0
 
-            if template.compare_list_price:
+            if template.compare_list_price and show_strike_price:
                 # The base_price becomes the compare list price and the price_reduce becomes the price
                 base_price = template.compare_list_price
                 if not price_list_contains_template:

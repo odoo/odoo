@@ -147,6 +147,7 @@ def check_git_branch():
                 db_branch = 'master'
 
             local_branch = subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
+            _logger.info("Current IoT Box local git branch: %s / Associated Odoo database's git branch: %s", local_branch, db_branch)
 
             if db_branch != local_branch:
                 with writable():
@@ -198,13 +199,15 @@ def generate_password():
     """
     alphabet = 'abcdefghijkmnpqrstuvwxyz23456789'
     password = ''.join(secrets.choice(alphabet) for i in range(12))
-    shadow_password = crypt.crypt(password, crypt.mksalt())
-    subprocess.call(('sudo', 'usermod', '-p', shadow_password, 'pi'))
-
-    with writable():
-        subprocess.call(('sudo', 'cp', '/etc/shadow', '/root_bypass_ramdisks/etc/shadow'))
-
-    return password
+    try:
+        shadow_password = crypt.crypt(password, crypt.mksalt())
+        subprocess.run(('sudo', 'usermod', '-p', shadow_password, 'pi'), check=True)
+        with writable():
+            subprocess.run(('sudo', 'cp', '/etc/shadow', '/root_bypass_ramdisks/etc/shadow'), check=True)
+        return password
+    except subprocess.CalledProcessError as e:
+        _logger.error("Failed to generate password: %s", e.output)
+        return 'Error: Check IoT log'
 
 
 def get_certificate_status(is_first=True):

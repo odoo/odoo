@@ -4,6 +4,7 @@ import { registry } from '@web/core/registry';
 
 import { formView } from '@web/views/form/form_view';
 import { FormController } from '@web/views/form/form_controller';
+import { session } from '@web/session';
 
 export class InterviewerFormController extends FormController {
 
@@ -17,7 +18,7 @@ export class InterviewerFormController extends FormController {
             return result;
         }
         result["o_applicant_interviewer_form"] = root.data.interviewer_ids.records.findIndex(
-            interviewer => interviewer.data.id === root.data.user_id[0]) > -1;
+            interviewer => interviewer.data.id === session.uid) > -1;
         return result;
     }
 }

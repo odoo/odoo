@@ -373,3 +373,26 @@ class TestCreateEvents(TestCommon):
         # Ensure that event was successfully created in Odoo (no ACL error was triggered blocking creation).
         portal_user_events = self.env['calendar.event'].search([('user_id', '=', portal_user.id)])
         self.assertEqual(len(portal_user_events), 1)
+
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_create_simple_event_from_outlook_without_organizer(self, mock_get_events):
+        """
+        Allow creation of an event without organizer in Outlook and sync it in Odoo.
+        """
+
+        # arrange
+        outlook_event = self.simple_event_from_outlook_attendee
+        outlook_event = dict(self.simple_event_from_outlook_attendee, organizer=None)
+        expected_event = dict(self.expected_odoo_event_from_outlook, user_id=False)
+
+        mock_get_events.return_value = (MicrosoftEvent([outlook_event]), None)
+        existing_records = self.env["calendar.event"].search([])
+
+        # act
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+
+        # assert
+        records = self.env["calendar.event"].search([])
+        new_records = (records - existing_records)
+        self.assertEqual(len(new_records), 1)
+        self.assert_odoo_event(new_records, expected_event)

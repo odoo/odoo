@@ -620,6 +620,71 @@ class TestCRMLead(TestCrmCommon):
         # self.assertFalse(new_team.alias_id.alias_name)
         # self.assertFalse(new_team.alias_name)
 
+    @users('user_sales_manager')
+    def test_crm_team_alias_helper(self):
+        """Test that the help message is the right one if we are on multiple team with different settings."""
+        # archive other teams
+        self.env['crm.team'].search([]).active = False
+
+        self._activate_multi_company()
+        team_other_comp = self.team_company2
+
+        user_team_leads, team_leads, user_team_opport, team_opport = self.env['crm.team'].create([{
+            'name': 'UserTeamLeads',
+            'use_leads': True,
+            'member_ids': [(6, 0, [self.env.user.id])],
+        }, {
+            'name': 'TeamLeads',
+            'use_leads': True,
+            'member_ids': [],
+        }, {
+            'name': 'UserTeamOpportunities',
+            'use_leads': False,
+            'member_ids': [(6, 0, [self.env.user.id])],
+        }, {
+            'name': 'TeamOpportunities',
+            'use_leads': False,
+            'member_ids': [],
+        }])
+
+        self.env['crm.lead'].create([{
+            'name': 'LeadOurTeam',
+            'team_id': user_team_leads.id,
+            'type': 'lead',
+        }, {
+            'name': 'LeadTeam',
+            'team_id': team_leads.id,
+            'type': 'lead',
+        }, {
+            'name': 'OpportunityOurTeam',
+            'team_id': user_team_opport.id,
+            'type': 'opportunity',
+        }, {
+            'name': 'OpportunityTeam',
+            'team_id': team_opport.id,
+            'type': 'opportunity',
+        }])
+        self.env['crm.lead'].with_user(self.user_sales_manager_mc).create({
+            'name': 'LeadOtherComp',
+            'team_id': team_other_comp.id,
+            'type': 'lead',
+            'company_id': self.company_2.id,
+        })
+
+        # archive our team one by one and check that we have the correct help message
+        teams = [user_team_leads, team_leads, user_team_opport, team_opport, team_other_comp]
+        for team in teams:
+            team.alias_id.sudo().write({'alias_name': team.name})
+
+        for team in teams:
+            with self.subTest(team=team):
+                team_mail = f"{team.alias_name}@{team.alias_domain}"
+                if team != team_other_comp:
+                    self.assertIn(f"<a href='mailto:{team_mail}'>{team_mail}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
+                else:
+                    self.assertNotIn(f"<a href='mailto:{team_mail}'>{team_mail}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
+                team.active = False
+
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_mailgateway(self):
         new_lead = self.format_and_process(

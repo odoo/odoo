@@ -9,7 +9,7 @@ class ProductProduct(models.Model):
     @api.onchange('standard_price')
     def _compute_standard_price_update_warning(self):
         undone_expenses = self.env['hr.expense']._read_group(
-            domain=[('state', 'in', ['draft', 'reported', 'approved']), ('product_id', 'in', self.ids)],
+            domain=[('state', '=', 'draft'), ('product_id', 'in', self.ids)],
             fields=['unit_amount:array_agg'],
             groupby=['product_id'],
             )
@@ -23,6 +23,6 @@ class ProductProduct(models.Model):
                 rounded_price = self.env.company.currency_id.round(product.standard_price)
                 if rounded_price and (len(unit_amounts_no_warning) > 1 or (len(unit_amounts_no_warning) == 1 and rounded_price not in unit_amounts_no_warning)):
                     product.standard_price_update_warning = _(
-                            "There are unposted expenses linked to this category. Updating the category cost will change expense amounts. "
+                            "There are unsubmitted expenses linked to this category. Updating the category cost will change expense amounts. "
                             "Make sure it is what you want to do."
                         )

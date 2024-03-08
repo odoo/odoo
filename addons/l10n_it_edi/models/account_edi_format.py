@@ -903,6 +903,7 @@ class AccountEdiFormat(models.Model):
             return {
                 'post': self._post_fattura_pa,
                 'post_batching': lambda move: (move.move_type, bool(move.l10n_it_edi_transaction)),
+                'batching_limit': 50,
             }
 
     def _l10n_it_edi_export_invoice_as_xml(self, invoice):

@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 from psycopg2 import OperationalError
 import base64
 import logging
+from collections import defaultdict
 
 _logger = logging.getLogger(__name__)
 
@@ -84,6 +85,9 @@ class AccountEdiDocument(models.Model):
         to_process = {}
         for state, edi_flow in (('to_send', 'post'), ('to_cancel', 'cancel')):
             documents = self.filtered(lambda d: d.state == state and d.blocking_level != 'error')
+            # This is a dict that for each batching key gives the value that should be appended to the batching key,
+            # in order to enforce a limit of documents per batch.
+            batching_limit_keys = defaultdict(lambda: 0)
             for edi_doc in documents:
                 edi_format = edi_doc.edi_format_id
                 move = edi_doc.move_id
@@ -96,11 +100,18 @@ class AccountEdiDocument(models.Model):
                 else:
                     batching_key.append(move.id)
 
+                if move_applicability.get('batching_limit'):
+                    batching_key_without_limit = tuple(batching_key)
+                    batching_key.append(batching_limit_keys[batching_key_without_limit])
+
                 batch = to_process.setdefault(tuple(batching_key), {
                     'documents': self.env['account.edi.document'],
                     'method_to_call': move_applicability.get(edi_flow),
                 })
                 batch['documents'] |= edi_doc
+
+                if move_applicability.get('batching_limit') and len(batch['documents']) >= move_applicability['batching_limit']:
+                    batching_limit_keys[batching_key_without_limit] += 1
 
         return list(to_process.values())
 
@@ -130,6 +141,11 @@ class AccountEdiDocument(models.Model):
                         'error': False,
                         'blocking_level': False,
                     })
+                    if move.is_invoice(include_receipts=True):
+                        reconciled_lines = move.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
+                        reconciled_amls = reconciled_lines.mapped('matched_debit_ids.debit_move_id') \
+                                          | reconciled_lines.mapped('matched_credit_ids.credit_move_id')
+                        reconciled_amls.move_id._update_payments_edi_documents()
                 else:
                     document.write({
                         'error': move_result.get('error', False),

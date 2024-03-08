@@ -3,7 +3,7 @@
 # 	* google_gmail
 # 
 # Translators:
-# jabelchi, 2022
+# Josep Anton Belchi, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # Eric Antones <eantones@users.noreply.github.com>, 2022
 # Martin Trigaux, 2022
@@ -11,14 +11,14 @@
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
 # marcescu, 2022
 # Ivan Espinola, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2023
 # martioodo hola, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: martioodo hola, 2023\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -81,6 +81,7 @@ msgid "Access Token Expiration Timestamp"
 msgstr "Data de caducitat del token d'accés"
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/controllers/main.py:0
 #: code:addons/google_gmail/controllers/main.py:0
 #, python-format
@@ -88,6 +89,7 @@ msgid "An error occur during the authentication process."
 msgstr "S'ha produït un error durant el procés d'autenticació."
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token."
@@ -111,6 +113,7 @@ msgid "Config Settings"
 msgstr "Ajustos de configuració"
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/fetchmail_server.py:0
 #, python-format
 msgid ""
@@ -121,6 +124,7 @@ msgstr ""
 "Se us redirigirà a la pàgina d'inici de sessió de Gmail on haureu d'acceptar el permís."
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -167,6 +171,7 @@ msgid "Incoming Mail Server"
 msgstr "Servidor de Correu entrant"
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -182,18 +187,21 @@ msgid "Mail Server"
 msgstr "Servidor de correu"
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Only the administrator can link a Gmail mail server."
 msgstr "Només l'administrador pot enllaçar un servidor de correu Gmail."
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Please configure your Gmail credentials."
 msgstr "Configureu les vostres credencials de Gmail."
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -206,6 +214,7 @@ msgstr ""
 "compte que s'utilitza per al testimoni d'autenticació Gmail."
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -258,16 +267,6 @@ msgstr ""
 #: model:ir.model.fields,help:google_gmail.field_ir_mail_server__google_gmail_uri
 msgid "The URL to generate the authorization code from Google"
 msgstr "L'URL per generar el codi d'autorització de Google"
-
-#. module: google_gmail
-#: code:addons/google_gmail/models/ir_mail_server.py:0
-#, python-format
-msgid ""
-"This server %r can only be used for your personal email address. Please fill"
-" the \"from_filter\" field with %r."
-msgstr ""
-"Aquest servidor %r només es pot utilitzar per a la vostra adreça d'interès "
-"personal. Si us plau, completeu el camp 'from_filter' amb %r."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_uri

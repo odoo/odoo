@@ -5,15 +5,16 @@
 # Translators:
 # Martin Trigaux, 2022
 # JH CHOI <hwangtog@gmail.com>, 2022
-# Sarah Park, 2023
+# Sarah Park, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -140,6 +141,13 @@ msgstr "쿠폰 포인트"
 #, python-format
 msgid "Current Balance:"
 msgstr "현재 잔액:"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/xml/OrderReceipt.xml:0
+#, python-format
+msgid "Customer"
+msgstr "고객"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -320,7 +328,14 @@ msgstr "이 쿠폰으로 리워드를 신청할 수 없습니다."
 #: code:addons/pos_loyalty/static/src/js/ControlButtons/RewardButton.js:0
 #, python-format
 msgid "No rewards available."
-msgstr ""
+msgstr "지급할 보상 없음"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid "No valid eWallet found"
+msgstr "유효한 이월렛을 찾을 수 없음"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -729,6 +744,14 @@ msgstr "이미 판매가 완료된 기프트 카드는 판매할 수 없습니�
 #, python-format
 msgid "You cannot set negative quantity or price to gift card or ewallet."
 msgstr "기프트 카드나 e월렛의 수량이나 가격은 음수로 설정할 수 없습니다."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid ""
+"You either have not created an eWallet or all your eWallets have expired."
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-python

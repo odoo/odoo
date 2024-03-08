@@ -57,10 +57,14 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             vals.pop('registration_name', None)
             vals.pop('registration_address_vals', None)
 
-            # /!\ For Australian companies, the ABN is encoded on the VAT field, but doesn't have the 2 digits prefix,
-            # causing a validation error
-            if partner.country_id.code == "AU" and partner.vat and not partner.vat.upper().startswith("AU"):
-                vals['company_id'] = "AU" + partner.vat
+            # Some extra european countries use Bis 3 but do not prepend their VAT with the country code (i.e.
+            # Australia). Allow them to use Bis 3 without raising BR-CO-09.
+            if (
+                partner.country_id
+                and partner.country_id not in self.env.ref('base.europe').country_ids
+                and not partner.vat[:2].isalpha()
+            ):
+                vals['company_id'] = partner.country_id.code + partner.vat
 
         # sources:
         #  https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_applying_foretaksregisteret
@@ -110,11 +114,11 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         vals['endpoint_id'] = partner.vat
         vals['endpoint_id_attrs'] = {'schemeID': COUNTRY_EAS.get(partner.country_id.code)}
 
-        if partner.country_code == 'NO' and 'l10n_no_bronnoysund_number' in partner._fields:
-            vals.update({
-                'endpoint_id': partner.l10n_no_bronnoysund_number,
-                'endpoint_id_attrs': {'schemeID': '0192'},
-            })
+        if partner.country_code == 'NO':
+            if 'l10n_no_bronnoysund_number' in partner._fields:
+                vals['endpoint_id'] = partner.l10n_no_bronnoysund_number
+            else:
+                vals['endpoint_id'] = partner.vat.replace("NO", "").replace("MVA", "")
         # [BR-NL-1] Dutch supplier registration number ( AccountingSupplierParty/Party/PartyLegalEntity/CompanyID );
         # With a Dutch supplier (NL), SchemeID may only contain 106 (Chamber of Commerce number) or 190 (OIN number).
         # [BR-NL-10] At a Dutch supplier, for a Dutch customer ( AccountingCustomerParty ) the customer registration
@@ -138,6 +142,8 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             })
         if partner.country_id.code == "LU" and 'l10n_lu_peppol_identifier' in partner._fields and partner.l10n_lu_peppol_identifier:
             vals['endpoint_id'] = partner.l10n_lu_peppol_identifier
+        if partner.country_id.code == "SE" and partner.vat:
+            vals['endpoint_id'] = partner.vat.replace("SE", "")[:-2]
 
         return vals
 
@@ -220,8 +226,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
         for vals in vals_list:
             vals.pop('name')
-            # [UBL-CR-601]-A UBL invoice should not include the InvoiceLine Item ClassifiedTaxCategory TaxExemptionReason
-            #vals.pop('tax_exemption_reason')
 
         return vals_list
 
@@ -236,6 +240,17 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 subtotal_vals['currency_dp'] = 2
 
         return vals_list
+
+    def _get_invoice_line_item_vals(self, line, taxes_vals):
+        # EXTENDS account.edi.xml.ubl_21
+        line_item_vals = super()._get_invoice_line_item_vals(line, taxes_vals)
+
+        for val in line_item_vals['classified_tax_category_vals']:
+            # [UBL-CR-601] TaxExemptionReason must not appear in InvoiceLine Item ClassifiedTaxCategory
+            # [BR-E-10] TaxExemptionReason must only appear in TaxTotal TaxSubtotal TaxCategory
+            val.pop('tax_exemption_reason')
+
+        return line_item_vals
 
     def _get_invoice_line_allowance_vals_list(self, line, tax_values_list=None):
         # EXTENDS account.edi.xml.ubl_21
@@ -368,6 +383,20 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
                 # /!\ exception: possible to have any number of ecotaxes (fixed tax) with a regular percentage tax
                 constraints.update({'cen_en16931_tax_line': _("Each invoice line shall have one and only one tax.")})
+
+        for role in ('supplier', 'customer'):
+            constraints[f'cen_en16931_{role}_country'] = self._check_required_fields(vals[role], 'country_id')
+            scheme_vals = vals['vals'][f'accounting_{role}_party_vals']['party_vals']['party_tax_scheme_vals'][-1:]
+            if (
+                not (scheme_vals and scheme_vals[0]['company_id'] and scheme_vals[0]['company_id'][:2].isalpha())
+                and (scheme_vals and scheme_vals[0]['tax_scheme_id'] == 'VAT')
+                and self._name in ('account.edi.xml.ubl_bis3', 'account.edi.xml.ubl_nl', 'account.edi.xml.ubl_de')
+            ):
+                # [BR-CO-09]-The Seller VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63)
+                # and the Buyer VAT identifier (BT-48) shall have a prefix in accordance with ISO code ISO 3166-1
+                # alpha-2 by which the country of issue may be identified. Nevertheless, Greece may use the prefix ‘EL’.
+                constraints.update({f'cen_en16931_{role}_vat_country_code': _(
+                    "The VAT of the %s should be prefixed with its country code.", role)})
 
         return constraints
 

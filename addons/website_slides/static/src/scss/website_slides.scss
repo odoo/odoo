@@ -725,6 +725,15 @@ $line-height-truncate: 1.25em;
     .oe_slide_embed_option {
         @include o-position-absolute(0,0,0,0);
     }
+
+    .disabled {
+        // remove JS events for disabled elements
+        pointer-events: none;
+    }
+
+    .o_slide_navigation_buttons {
+        user-select: none;
+    }
 }
 
 .oe_slides_share_bar{

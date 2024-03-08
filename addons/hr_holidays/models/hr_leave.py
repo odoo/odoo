@@ -89,9 +89,9 @@ class HolidaysRequest(models.Model):
 
         if 'state' in fields_list and not defaults.get('state'):
             lt = self.env['hr.leave.type'].browse(defaults.get('holiday_status_id'))
-            defaults['state'] = 'confirm'
+            defaults['state'] = 'confirm' if lt and lt.leave_validation_type != 'no_validation' else 'draft'
 
-        if 'date_from' and 'date_to' in fields_list:
+        if 'date_from' and 'date_to' in fields_list and not ('request_date_from' and 'request_date_to' in defaults):
             now = fields.Datetime.now()
             if 'date_from' not in defaults:
                 defaults['date_from'] = now.replace(hour=0, minute=0, second=0)
@@ -1456,8 +1456,8 @@ class HolidaysRequest(models.Model):
     def _split_leave_on_gto(self, gto): #gto = global time off
         self.ensure_one()
 
-        leave_start = date_utils.start_of(self.date_from, 'day')
-        leave_end = date_utils.end_of(self.date_to - timedelta(seconds=1), 'day')
+        leave_start = self.date_from
+        leave_end = self.date_to - timedelta(seconds=1)
         gto_start = date_utils.start_of(gto['date_from'], 'day')
         gto_end = date_utils.end_of(gto['date_to'], 'day')
         leave_tz = timezone(self.employee_id.resource_id.tz)
@@ -1490,6 +1490,12 @@ class HolidaysRequest(models.Model):
                         .astimezone(UTC).replace(tzinfo=None)
             })
             return self.env['hr.leave']
+        # If none of the cases above is detected, that means the
+        # leave was entirely covered by the public time off.
+        self._force_cancel(
+            _('a public holiday that previously covered this leave has been cancelled or amended.')
+        )
+        return self.env['hr.leave']
 
     def split_leave(self, time_domain_dict):
         self.ensure_one()

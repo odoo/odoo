@@ -49,6 +49,9 @@ export function useInputField(params) {
         if (component.props.setDirty) {
             component.props.setDirty(isDirty);
         }
+        if (component.props.record && !component.props.record.isValid) {
+            component.props.record.resetFieldValidity(component.props.name);
+        }
     }
 
     /**
@@ -56,30 +59,32 @@ export function useInputField(params) {
      * However, if the field is invalid, the new value will not be committed to the model.
      */
     function onChange(ev) {
-        isDirty = false;
-        let isInvalid = false;
-        let val = ev.target.value;
-        if (params.parse) {
-            try {
-                val = params.parse(val);
-            } catch (_e) {
-                if (component.props.record) {
-                    component.props.record.setInvalidField(component.props.name);
+        if (isDirty) {
+            isDirty = false;
+            let isInvalid = false;
+            let val = ev.target.value;
+            if (params.parse) {
+                try {
+                    val = params.parse(val);
+                } catch (_e) {
+                    if (component.props.record) {
+                        component.props.record.setInvalidField(component.props.name);
+                    }
+                    isInvalid = true;
                 }
-                isInvalid = true;
             }
-        }
 
-        if (!isInvalid) {
-            pendingUpdate = true;
-            Promise.resolve(component.props.update(val)).then(() => {
-                pendingUpdate = false;
-            });
-            lastSetValue = ev.target.value;
-        }
+            if (!isInvalid) {
+                pendingUpdate = true;
+                Promise.resolve(component.props.update(val)).then(() => {
+                    pendingUpdate = false;
+                });
+                lastSetValue = ev.target.value;
+            }
 
-        if (component.props.setDirty) {
-            component.props.setDirty(isDirty);
+            if (component.props.setDirty) {
+                component.props.setDirty(isDirty);
+            }
         }
     }
     function onKeydown(ev) {

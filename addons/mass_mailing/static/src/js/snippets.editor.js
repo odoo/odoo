@@ -49,11 +49,13 @@ const MassMailingSnippetsMenu = snippetsEditor.SnippetsMenu.extend({
         // To prevent unnecessary tab shifting, we provide a selection for this specific case.
         if (srcElement.classList.contains('o_mail_wrapper') || srcElement.querySelector('.o_mail_wrapper')) {
             const selection = this.options.wysiwyg.odooEditor.document.getSelection();
-            const parent = selection.anchorNode.parentElement;
-            if (parent) {
-                srcElement = parent;
+            if (selection.anchorNode) {
+                const parent = selection.anchorNode.parentElement;
+                if (parent) {
+                    srcElement = parent;
+                }
+                this._activateSnippet($(srcElement));
             }
-            this._activateSnippet($(srcElement));
         }
     },
     /**

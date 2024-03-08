@@ -819,10 +819,6 @@ $-transition-duration: 200ms;
     }
 }
 
-.o_hoverable_dropdown .nav-link.dropdown-toggle:focus {
-    outline: none;
-}
-
 // Navbar
 .navbar .o_extra_menu_items > .show {
     > li {
@@ -1061,6 +1057,9 @@ header {
                     // Hide the language switcher button because it does not
                     // make sense to show it if the dropdown is always open.
                     display: none;
+                }
+                @if o-website-value('header-template') == 'slogan' {
+                    justify-content: unset !important;
                 }
             }
             @if o-website-value('header-template') == 'vertical' {

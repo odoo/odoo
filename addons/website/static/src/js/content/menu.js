@@ -33,6 +33,10 @@ const BaseAnimatedHeader = animations.Animation.extend({
      * @override
      */
     start: function () {
+        // Used to prevent the editor's unbreakable protection from restoring
+        // the menu's auto-hide updates in edit mode.
+        this.el.addEventListener("autoMoreMenu.willAdapt", () => this.options.wysiwyg
+            && this.options.wysiwyg.odooEditor.unbreakableStepUnactive());
         this.$main = this.$el.next('main');
         this.isOverlayHeader = !!this.$el.closest('.o_header_overlay, .o_header_overlay_theme').length;
         this.$dropdowns = this.$el.find('.dropdown, .dropdown-menu');
@@ -656,9 +660,21 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
                 return;
             }
         }
+        // Get the previously focused element of the page.
+        const focusedEl = this.el.ownerDocument.querySelector(":focus")
+            || window.frameElement && window.frameElement.ownerDocument.querySelector(":focus");
+
         // The user must click on the dropdown if he is on mobile (no way to
         // hover) or if the dropdown is the extra menu ('+').
         this._updateDropdownVisibility(ev, 'show');
+
+        // Keep the focus on the previously focused element if any, otherwise do
+        // not focus the dropdown on hover.
+        if (focusedEl) {
+            focusedEl.focus();
+        } else {
+            ev.currentTarget.querySelector(".dropdown-toggle").blur();
+        }
     },
     /**
      * @private

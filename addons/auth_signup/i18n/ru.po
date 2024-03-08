@@ -12,6 +12,7 @@
 # Martin Trigaux, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
 # Sergey Vernyayev, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Sergey Vernyayev, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -503,6 +504,12 @@ msgid "Let your customers log in to see their documents"
 msgstr "Разрешите клиентам логиниться, чтобы видеть свои документы"
 
 #. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "Multiple accounts found for this login"
+msgstr "Для этого логина найдено несколько учетных записей"
+
+#. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Never Connected"
 msgstr "Никогда не подключался"
@@ -512,7 +519,7 @@ msgstr "Никогда не подключался"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "No account found for this login"
-msgstr ""
+msgstr "Учетная запись для этого логина не найдена"
 
 #. module: auth_signup
 #. odoo-python
@@ -546,7 +553,7 @@ msgstr "Сброс пароля"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Password reset instructions sent to your email"
-msgstr ""
+msgstr "Инструкции по сбросу пароля отправлены на вашу электронную почту"
 
 #. module: auth_signup
 #. odoo-python
@@ -558,7 +565,7 @@ msgstr "Пароли не совпадают; пожалуйста, введит
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login_successful
 msgid "Registration successful."
-msgstr ""
+msgstr "Регистрация прошла успешно."
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
@@ -587,16 +594,18 @@ msgstr "Отправить Email с приглашением"
 msgid ""
 "Sent automatically to admin if new user haven't responded to the invitation"
 msgstr ""
+"Автоматически отправляется администратору, если новый пользователь не "
+"ответил на приглашение"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.set_password_email
 msgid "Sent to new user after you invited them"
-msgstr ""
+msgstr "Отправлено новому пользователю после того, как вы его пригласили"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.mail_template_user_signup_account_created
 msgid "Sent to portal user who registered themselves"
-msgstr ""
+msgstr "Отправлено пользователю портала, который зарегистрировался сам"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.reset_password_email
@@ -606,17 +615,17 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
 msgid "Settings: New Portal Signup"
-msgstr ""
+msgstr "Настройки: Регистрация на новом портале"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
 msgid "Settings: New User Invite"
-msgstr ""
+msgstr "Настройки: Приглашение нового пользователя"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
 msgid "Settings: Unregistered User Reminder"
-msgstr ""
+msgstr "Настройки: Напоминание о незарегистрированном пользователе"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.reset_password_email
@@ -743,7 +752,7 @@ msgstr "Пользователи: уведомление о незарегист
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to {{ object.company_id.name }}!"
-msgstr ""
+msgstr "Добро пожаловать в {{ object.company_id.name }}!"
 
 #. module: auth_signup
 #. odoo-python
@@ -774,3 +783,5 @@ msgid ""
 "{{ object.create_uid.name }} from {{ object.company_id.name }} invites you "
 "to connect to Odoo"
 msgstr ""
+"{{ object.create_uid.name }} из {{ object.company_id.name }} приглашает вас "
+"подключиться к Odoo"

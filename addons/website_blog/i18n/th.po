@@ -8,14 +8,15 @@
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-03 16:41+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,6 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_blog.py:0
 #, python-format
 msgid "%s (copy)"
@@ -88,7 +90,7 @@ msgstr ""
 " Wal-Mart"
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "<b>Publish your blog post</b> to make it visible to your visitors."
@@ -116,7 +118,7 @@ msgstr ""
 "และทดลองใช้งานก่อนที่คุณจะเสียเงินไปกับการตั้งค่าด้วยตัวคุณเอง"
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid ""
@@ -199,6 +201,8 @@ msgid ""
 "<i class=\"fa fa-clock-o me-1\" role=\"img\" aria-label=\"Post date\" "
 "title=\"Post date\"/>"
 msgstr ""
+"<i class=\"fa fa-clock-o me-1\" role=\"รูปภาพ\" aria-label=\"วันที่โพสต์\" "
+"title=\"วันที่โพสต์\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
@@ -257,6 +261,8 @@ msgid ""
 "<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-1\">Read "
 "Next</span>"
 msgstr ""
+"<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 "
+"rounded-1\">อ่านต่อไป</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_read_next
@@ -272,12 +278,12 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "<span class=\"me-1\">Show:</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">แสดง:</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 msgid "<span class=\"nav-link disabled ps-0\">Blogs:</span>"
-msgstr ""
+msgstr "<span class=\"nav-link disabled ps-0\">บล็อก:</span>"
 
 #. module: website_blog
 #: model:blog.post,subtitle:website_blog.blog_post_2
@@ -372,6 +378,7 @@ msgid "All blogs"
 msgstr "บล็อกทั้งหมด"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Alone in the ocean"
@@ -383,7 +390,7 @@ msgid "Along those lines, how difficult is the set up and break down?"
 msgstr "ตลอดเส้นทางนั้น การตั้งค่าและการแยกส่วนประกอบยากแค่ไหน?"
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/website_blog.js:0
 #, python-format
 msgid "Amazing blog article: %s! Check it live: %s"
@@ -501,6 +508,7 @@ msgid "Avatar"
 msgstr "อวตาร"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Awesome hotel rooms"
@@ -571,6 +579,7 @@ msgid "Beyond The Eye"
 msgstr "เหนือกว่าดวงตา"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website.py:0
 #: model:ir.model,name:website_blog.model_blog_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__blog_id
@@ -591,7 +600,7 @@ msgstr "ชื่อบล็อก"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Blog Page"
-msgstr ""
+msgstr "หน้าบล็อก"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_blog_post
@@ -608,7 +617,7 @@ msgstr "ปกบล็อกโพสต์"
 #. module: website_blog
 #: model:ir.actions.act_window,name:website_blog.action_blog_post
 msgid "Blog Post Pages"
-msgstr ""
+msgstr "หน้าโพสต์บล็อก"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
@@ -671,12 +680,12 @@ msgstr "บล็อก"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Blogs List"
-msgstr ""
+msgstr "รายการบล็อก"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Blogs Page"
-msgstr ""
+msgstr "หน้าบล็อก"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
@@ -741,14 +750,14 @@ msgid "Children’s’ Facilities"
 msgstr "สิ่งอำนวยความสะดวกของเด็ก"
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Choose an image from the library."
 msgstr "เลือกรูปภาพจากคลัง"
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Click here to add new content to your website."
@@ -781,7 +790,7 @@ msgstr "ความคิดเห็น"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Comments/Views Stats"
-msgstr ""
+msgstr "สถิติ ความคิดเห็น/การดู"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__content
@@ -871,7 +880,7 @@ msgstr "แสดงชื่อ"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Drop Zone for Building Blocks"
-msgstr ""
+msgstr "วางโซนสำหรับบล็อกสำเร็จรูป"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_2
@@ -914,18 +923,18 @@ msgid "Edit the 'Filter Results' page header."
 msgstr "แก้ไขส่วนหัวของหน้า \"ตัวกรองผลลัพธ์\""
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Edit your title, the subtitle is optional."
-msgstr ""
+msgstr "แก้ไขชื่อของคุณ คำบรรยายเป็นทางเลือก"
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Enter your post's title"
-msgstr ""
+msgstr "กรอกชื่อโพสต์ของคุณ"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
@@ -1064,7 +1073,7 @@ msgstr "เคล็ดลับวันหยุด"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "Hover effect"
-msgstr ""
+msgstr "เอฟเฟกต์โฮเวอร์"
 
 #. module: website_blog
 #: model:blog.post,name:website_blog.blog_post_4
@@ -1160,7 +1169,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Increase Readability"
-msgstr ""
+msgstr "เพิ่มความสามารถในการอ่าน"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_is_follower
@@ -1174,6 +1183,7 @@ msgid "Is Published"
 msgstr "เผยแพร่"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Islands"
@@ -1230,6 +1240,7 @@ msgstr ""
 "มันน่าทึ่งยิ่งกว่าเดิมเมื่อคุณตระหนักว่าท้องฟ้าที่คุณกำลังมองขึ้นไปนั้นเป็นท้องฟ้าสำหรับผู้ร่วมอุดมการณ์เดียวกันรวมถึงบรรพบุรุษของเราที่มีความสุขเมื่อหลายร้อยหลายพันปีก่อนเมื่อพวกเขาเงยหน้าขึ้นมอง"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Jungle"
@@ -1246,7 +1257,7 @@ msgid "Know when to look"
 msgstr "รู้ว่าเมื่อใดควรดู"
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/options.js:0
 #, python-format
 msgid "Large"
@@ -1406,7 +1417,7 @@ msgstr ""
 "และครอบครัวเห็นสิ่งมหัศจรรย์ทั้งหมดที่คุณเห็นขณะพักร้อน"
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/options.js:0
 #, python-format
 msgid "Medium"
@@ -1484,7 +1495,7 @@ msgstr "ชื่อ"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Name / Latest Post"
-msgstr ""
+msgstr "ชื่อ / โพสต์ล่าสุด"
 
 #. module: website_blog
 #: model:ir.actions.act_window,name:website_blog.blog_post_action_add
@@ -1494,12 +1505,12 @@ msgstr "บล็อกโพสต์ใหม่"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Next Article"
-msgstr ""
+msgstr "บทความถัดไป"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "No Cover"
-msgstr ""
+msgstr "ไม่มีปก"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
@@ -1617,7 +1628,7 @@ msgstr ""
 " (ที่ถูกแปลแล้ว)"
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid ""
@@ -1701,7 +1712,7 @@ msgstr "โพสต์"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Posts List"
-msgstr ""
+msgstr "รายการโพสต์"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
@@ -1738,6 +1749,11 @@ msgstr "ตัวเลือกการเผยแพร่"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__post_date
 msgid "Publishing date"
 msgstr "วันที่เผยแพร่"
+
+#. module: website_blog
+#: model:ir.model,name:website_blog.model_ir_qweb_field
+msgid "Qweb Field"
+msgstr "ฟิลด์ QWeb"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post
@@ -1787,25 +1803,28 @@ msgid "Sample"
 msgstr "ตัวอย่าง"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Satellites"
 msgstr "ดาวเทียม"
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Search for an image. (eg: type \"business\")"
 msgstr "ค้นหารูปภาพ (เช่น พิมพ์ \"ธุรกิจ\")"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Seaside vs mountain side"
 msgstr "ฝั่งทะเล vs ฝั่งภูเขา"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Seeing the world from above"
@@ -1817,14 +1836,14 @@ msgid "Select Blog"
 msgstr "เลือกบล็อก"
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Select the blog you want to add the post to."
 msgstr "เลือกบล็อกที่คุณต้องการเพิ่มโพสต์"
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Select this menu item to create a new blog post."
@@ -1833,12 +1852,12 @@ msgstr "เลือกรายการเมนูนี้เพื่อส
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Select to Comment"
-msgstr ""
+msgstr "เลือกแสดงความคิดเห็น"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Select to Tweet"
-msgstr ""
+msgstr "เลือกเพื่อทวีต"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__seo_name
@@ -1853,7 +1872,7 @@ msgid "Separate every keyword with a comma"
 msgstr "แยกแต่ละคีย์เวิร์ดด้วยเครื่องหมายจุลภาค"
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Set a blog post <b>cover</b>."
@@ -1922,6 +1941,7 @@ msgid "Silly-Chico"
 msgstr "Silly-Chico"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Skies"
@@ -1995,12 +2015,14 @@ msgstr ""
 "คนที่มีชื่อเสียงใน <cite title=\"ชื่อแหล่งที่มา\">ชื่อของแหล่งที่มา</cite>"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Spotting the fauna"
 msgstr "ส่องสัตว์ต่าง ๆ"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_blog.py:0
 #, python-format
 msgid "Start writing here..."
@@ -2074,9 +2096,10 @@ msgstr "แท็ก"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Tags List"
-msgstr ""
+msgstr "รายการแท็ก"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Taking pictures in the dark"
@@ -2090,7 +2113,7 @@ msgstr "ทีเซอร์"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Teaser & Tags"
-msgstr ""
+msgstr "ทีเซอร์และแท็ก"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__teaser_manual
@@ -2316,14 +2339,14 @@ msgid "This box will not be visible to your visitors"
 msgstr "ผู้เยี่ยมชมของคุณจะไม่เห็นกล่องนี้"
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/options.js:0
 #, python-format
 msgid "This tag already exists"
 msgstr "มีแท็กนี้แล้ว"
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/options.js:0
 #, python-format
 msgid "Tiny"
@@ -2338,12 +2361,12 @@ msgstr "ชื่อเรื่อง"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Title Above Cover"
-msgstr ""
+msgstr "ชื่อเรื่องเหนือปก"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Title Inside Cover"
-msgstr ""
+msgstr "ชื่อเรื่องในหน้าปก"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_7
@@ -2429,7 +2452,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Top Banner"
-msgstr ""
+msgstr "แบนเนอร์ด้านบน"
 
 #. module: website_blog
 #: model:blog.blog,name:website_blog.blog_blog_1
@@ -2452,7 +2475,7 @@ msgid "Untitled Post"
 msgstr "โพสต์ที่ไม่มีชื่อ"
 
 #. module: website_blog
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Use this icon to preview your blog post on <b>mobile devices</b>."
@@ -2464,6 +2487,7 @@ msgid "Used in:"
 msgstr "ใช้ใน:"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "Viewpoints"
@@ -2487,7 +2511,7 @@ msgstr "ปรากฏบนเว็บไซต์ปัจจุบัน"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content
 msgid "WRITE HERE OR DRAG BUILDING BLOCKS"
-msgstr ""
+msgstr "เขียนที่นี่หรือลากบล็อกสำเร็จรูป"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_website
@@ -2571,6 +2595,7 @@ msgstr ""
 "ต่อไปนี้คือขั้นตอนบางส่วนที่คุณสามารถทำได้เพื่อทำให้ช่วงเวลาที่คุณอุทิศให้กับงานอดิเรกทางดาราศาสตร์ได้อย่างสนุกสนานยิ่งขึ้น"
 
 #. module: website_blog
+#. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 #, python-format
 msgid "With a View"
@@ -2697,6 +2722,8 @@ msgid ""
 "|\n"
 "                            <i class=\"fa fa-comment text-muted me-1\"/>"
 msgstr ""
+"|\n"
+"                            <i class=\"fa fa-comment text-muted me-1\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover

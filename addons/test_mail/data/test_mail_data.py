@@ -196,7 +196,7 @@ X-Attachment-Id: f_hkpb27k00
 dGVzdAo=
 --089e01536c4ed4d17204e49b8e96--"""
 
-MAIL_MULTIPART_MIXED_TWO = """X-Original-To: raoul@grosbedon.fr
+MAIL_MULTIPART_MIXED_TWO = r"""X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
 Received: by mail1.grosbedon.com (Postfix, from userid 10002)
     id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)
@@ -401,7 +401,7 @@ PEludm9pY2U+Q2hhdXNzw6llIGRlIEJydXhlbGxlczwvSW52b2ljZT4=
 """
 
 
-MAIL_SINGLE_BINARY = """X-Original-To: raoul@grosbedon.fr
+MAIL_SINGLE_BINARY = r"""X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
 Received: by mail1.grosbedon.com (Postfix, from userid 10002)
     id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)

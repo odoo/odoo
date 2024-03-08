@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:26+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -56,7 +56,7 @@ msgstr "คำตอบ"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__once_per_order
 msgid "Ask once per order"
-msgstr ""
+msgstr "ถามหนึ่งครั้งต่อคำสั่งซื้อ"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration__registration_answer_ids
@@ -240,16 +240,11 @@ msgid "Question Type"
 msgstr "ประเภทคำถาม"
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid "Question cannot be linked to both an Event and an Event Type."
 msgstr "คำถามไม่สามารถเชื่อมโยงกับทั้งกิจกรรมและประเภทกิจกรรมได้"
-
-#. module: website_event_questions
-#: code:addons/website_event_questions/models/event_question.py:0
-#, python-format
-msgid "Question cannot belong to both the event category and itself."
-msgstr "คำถามต้องไม่อยู่ในทั้งหมวดหมู่อีเวนต์และตัวมันเอง"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__question_ids
@@ -278,7 +273,7 @@ msgstr "การขาย"
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_view_tree
 msgid "Selected Answers"
-msgstr ""
+msgstr "คำตอบที่เลือก"
 
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_tree
@@ -348,6 +343,7 @@ msgid "Yes"
 msgstr "ใช่"
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""
@@ -355,6 +351,7 @@ msgid ""
 msgstr "คุณไม่สามารถเปลี่ยนประเภทคำถามของคำถามที่มีคำตอบอยู่แล้ว!"
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""
@@ -362,6 +359,7 @@ msgid ""
 msgstr "คุณไม่สามารถลบคำถามที่ผู้เข้าร่วมตอบไปแล้วได้"
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""

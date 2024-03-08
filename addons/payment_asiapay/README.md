@@ -1,37 +1,42 @@
 # AsiaPay
 
-## Implementation details
+## Technical details
 
-### Supported features
+API: Client Post Through Browser version `3.67`
 
-- Payment with redirection flow.
-- Webhook.
-- Several payment methods including credit cards, chinese payment methods such as Alipay, and 
-  [others](https://www.asiapay.com/payment.html#option).
+This module integrates AsiaPay using the generic payment with redirection flow based on form
+submission provided by the `payment` module.
 
-In addition, AsiaPay also allows to implement manual capture, refunds, express checkout, and
-multi-currency processing.
+The entire API reference and the integration guide can be found on the
+[Integration Guide](https://www.paydollar.com/pdf/op/enpdintguide.pdf).
 
-### API and gateway
+## Supported features
 
-We choose to integrate with the Client Post Through Browser gateway which covers the best our needs,
-out of the three that AsiaPay offers as of August 2022.
+- Payment with redirection flow
+- Webhook notifications
 
-The entire API reference and the integration guides can be found on the [Integration Guide]
-(https://www.paydollar.com/pdf/op/enpdintguide.pdf).
+## Not implemented features
 
-The version of the API implemented by this module is v3.67.
+- Manual capture
+- Full and partial refunds
+- Express checkout
+- Multi-currency processing
 
-## Merge details
+## Module history
 
-The first version of the module was specified in task
-[2845428](https://www.odoo.com/web#id=2845428&model=project.task) and merged with PR
-odoo/odoo#98441 in `saas-15.5`.
+- `16.0`
+  - The first version of the module is merged. odoo/odoo#98441
 
 ## Testing instructions
 
-Card Number: `4335900000140045`
-Expiry Date: `07/2030`
-Name: `testing card`
-CVC: `123`
-3DS Password: `password`
+### VISA
+
+**Card Number**: `4335900000140045`
+
+**Expiry Date**: `07/2030`
+
+**CVC Code**: `123`
+
+**Name**: `testing card`
+
+**3DS Password**: `password`

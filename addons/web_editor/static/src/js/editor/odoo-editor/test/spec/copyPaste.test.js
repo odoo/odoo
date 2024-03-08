@@ -404,6 +404,24 @@ describe('Paste', () => {
                                   '<p>d[]<br></p>',
                 });
             });
+            it('should paste text and understand \\n newlines within UNBREAKABLE node', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div>[]<br></div>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'a\nb\nc\nd');
+                    },
+                    contentAfter: '<div>a<br>b<br>c<br>d[]<br></div>',
+                });
+            });
+            it('should paste text and understand \\n newlines within UNBREAKABLE node(2)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div><span style="font-size: 9px;">a[]</span></div>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'b\nc\nd');
+                    },
+                    contentAfter: '<div><span style="font-size: 9px;">ab<br>c<br>d[]<br></span></div>',
+                });
+            });
         });
         describe('range not collapsed', async () => {
             it('should paste a text in a p', async () => {

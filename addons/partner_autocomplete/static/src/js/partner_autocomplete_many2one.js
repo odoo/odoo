@@ -19,7 +19,7 @@ export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
 
     get sources() {
         const sources = super.sources;
-        if (!this.props.quickCreate)
+        if (!this.props.canCreate)
         {
             return sources;
         }
@@ -67,7 +67,14 @@ export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
 
 }
 
-export class PartnerAutoCompleteMany2one extends Many2OneField {}
+export class PartnerAutoCompleteMany2one extends Many2OneField {
+    get Many2XAutocompleteProps() {
+        return {
+            ...super.Many2XAutocompleteProps,
+            canCreate: this.props.canCreate,
+        };
+    }
+}
 
 PartnerAutoCompleteMany2one.components = {
     ...Many2OneField.components,

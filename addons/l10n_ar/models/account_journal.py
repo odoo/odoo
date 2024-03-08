@@ -87,12 +87,15 @@ class AccountJournal(models.Model):
         receipt_m_code = ['54']
         receipt_codes = ['4', '9', '15']
         expo_codes = ['19', '20', '21']
+        zeta_codes = ['80', '83']
         if afip_pos_system == 'II_IM':
             # pre-printed invoice
             return usual_codes + receipt_codes + expo_codes + invoice_m_code + receipt_m_code
-        elif afip_pos_system in ['RAW_MAW', 'RLI_RLM']:
+        elif afip_pos_system == 'RAW_MAW':
             # electronic/online invoice
             return usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes
+        elif afip_pos_system == 'RLI_RLM':
+            return usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes + zeta_codes
         elif afip_pos_system in ['CPERCEL', 'CPEWS']:
             # invoice with detail
             return usual_codes + invoice_m_code

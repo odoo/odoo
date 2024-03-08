@@ -94,6 +94,12 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         return [{'actual_delivery_date': invoice.l10n_sa_delivery_date,
                  'delivery_address_vals': self._get_partner_address_vals(shipping_address) if shipping_address else {},}]
 
+    def _get_partner_contact_vals(self, partner):
+        res = super()._get_partner_contact_vals(partner)
+        if res.get('telephone'):
+            res['telephone'] = res['telephone'].replace(' ', '')
+        return res
+
     def _get_partner_party_identification_vals_list(self, partner):
         """ Override to include/update values specific to ZATCA's UBL 2.1 specs """
         return [{
@@ -153,7 +159,11 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
                 - 381: Credit Note
                 - 388: Invoice
         """
-        return 383 if invoice.debit_origin_id else 381 if invoice.move_type == 'out_refund' else 388
+        return (
+            383 if invoice.debit_origin_id else
+            381 if invoice.move_type == 'out_refund' else
+            386 if invoice._is_downpayment() else 388
+        )
 
     def _l10n_sa_get_billing_reference_vals(self, invoice):
         """ Get the billing reference vals required to render the BillingReference for credit/debit notes """
@@ -208,36 +218,65 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         # We use base_amount_currency + tax_amount_currency instead of amount_total because we do not want to include
         # withholding tax amounts in our calculations
         total_amount = abs(vals['taxes_vals']['base_amount_currency'] + vals['taxes_vals']['tax_amount_currency'])
-
+        line_extension_amount = vals['vals']['legal_monetary_total_vals']['line_extension_amount']
         tax_inclusive_amount = total_amount
         tax_exclusive_amount = abs(vals['taxes_vals']['base_amount_currency'])
         prepaid_amount = 0
         payable_amount = total_amount
-
         # - When we calculate the tax values, we filter out taxes and invoice lines linked to downpayments.
         #   As such, when we calculate the TaxInclusiveAmount, it already accounts for the tax amount of the downpayment
         #   Same goes for the TaxExclusiveAmount, and we do not need to add the Tax amount of the downpayment
         # - The payable amount does not account for the tax amount of the downpayment, so we add it
         downpayment_vals = self._l10n_sa_get_prepaid_amount(invoice, vals)
-
+        allowance_charge_vals = vals['vals']['allowance_charge_vals']
+        allowance_total_amount = sum(a['amount'] for a in allowance_charge_vals if a['charge_indicator'] == 'false')
         if downpayment_vals:
-            # Makes no sense, but according to ZATCA, if there is a downpayment, the TotalInclusiveAmount
-            # should include the total amount of the invoice (including downpayment amount) PLUS the downpayment
-            # total amount, AGAIN.
-            prepaid_amount = tax_inclusive_amount + downpayment_vals['total_amount']
-            payable_amount = - downpayment_vals['total_amount']
-
+            # - BR-KSA-80: To calculate prepaid, we need to sum up the amounts of standard lines (neither a down-payments, nor a discount)
+            #   then we add the total amount of the down-payment.
+            # - BR-CO-16: To calculate payable amount, we substract the calculated prepaid amount from the total tax inclusive amount of the invoice
+            regular_line_vals = invoice._prepare_edi_tax_details(
+                filter_invl_to_apply=lambda line: (line.price_subtotal > 0 and not line._get_downpayment_lines())
+            )
+            prepaid_amount = abs(regular_line_vals['base_amount_currency'] + regular_line_vals['tax_amount_currency']) + downpayment_vals['total_amount']
+            payable_amount = tax_inclusive_amount - prepaid_amount
         return {
+            'line_extension_amount': line_extension_amount - allowance_total_amount,
             'tax_inclusive_amount': tax_inclusive_amount,
             'tax_exclusive_amount': tax_exclusive_amount,
             'prepaid_amount': prepaid_amount,
-            'payable_amount': payable_amount
+            'payable_amount': payable_amount,
+            'allowance_total_amount': allowance_total_amount
         }
 
     def _get_tax_category_list(self, invoice, taxes):
         """ Override to filter out withholding taxes """
         non_retention_taxes = taxes.filtered(lambda t: not t.l10n_sa_is_retention)
         return super()._get_tax_category_list(invoice, non_retention_taxes)
+
+    def _get_document_allowance_charge_vals_list(self, invoice):
+        """
+        Charge Reasons & Codes (As per ZATCA):
+        https://unece.org/fileadmin/DAM/trade/untdid/d16b/tred/tred5189.htm
+        As far as ZATCA is concerned, we calculate Allowance/Charge vals for global discounts as
+        a document level allowance, and we do not include any other charges or allowances
+        """
+        res = super()._get_document_allowance_charge_vals_list(invoice)
+        for line in invoice.invoice_line_ids.filtered(lambda l: l._is_global_discount_line()):
+            taxes = line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')
+            res.append({
+                'charge_indicator': 'false',
+                'allowance_charge_reason_code': "95",
+                'allowance_charge_reason': "Discount",
+                'amount': abs(line.price_subtotal),
+                'currency_dp': 2,
+                'currency_name': invoice.currency_id.name,
+                'tax_category_vals': [{
+                    'id': tax['id'],
+                    'percent': tax['percent'],
+                    'tax_scheme_id': 'VAT',
+                } for tax in self._get_tax_category_list(line.move_id, taxes)],
+            })
+        return res
 
     def _export_invoice_vals(self, invoice):
         """ Override to include/update values specific to ZATCA's UBL 2.1 specs """
@@ -267,8 +306,20 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         })
 
         vals['vals']['legal_monetary_total_vals'].update(self._l10n_sa_get_monetary_vals(invoice, vals))
+        self._l10n_sa_postprocess_line_vals(vals)
 
         return vals
+
+    def _l10n_sa_postprocess_line_vals(self, vals):
+        """
+            Postprocess vals to remove negative line amounts, as those will be used to compute
+            document level allowances (global discounts)
+        """
+        final_line_vals = []
+        for line_vals in vals['vals']['invoice_line_vals']:
+            if line_vals['price_vals']['price_amount'] >= 0:
+                final_line_vals.append(line_vals)
+        vals['vals']['invoice_line_vals'] = final_line_vals
 
     def _l10n_sa_get_additional_tax_total_vals(self, invoice, vals):
         """

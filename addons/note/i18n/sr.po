@@ -11,9 +11,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: コフスタジオ, 2024\n"
 "Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
@@ -99,14 +99,14 @@ msgid "Add a new tag"
 msgstr "Dodaj novu oznaku"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Add a note"
 msgstr "Dodajte belešku"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Add new note"
@@ -128,7 +128,7 @@ msgid "By sticky note Category"
 msgstr ""
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Channel"
@@ -250,7 +250,6 @@ msgstr "Ako je označeno, nove poruke zahtevaju vašu pažnju."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
-#: model:ir.model.fields,help:note.field_note_note__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Ako je označeno, neke poruke imaju grešku u isporuci."
 
@@ -363,6 +362,7 @@ msgid "Note Tag"
 msgstr ""
 
 #. module: note
+#. odoo-python
 #: code:addons/note/models/res_users.py:0
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
@@ -411,7 +411,7 @@ msgid "Related Note"
 msgstr ""
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Remember..."
@@ -429,16 +429,11 @@ msgid "Responsible User"
 msgstr "Odgovorni korisnik"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "SAVE"
 msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "Greška u dostavi SMS-a"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
@@ -519,7 +514,7 @@ msgid "Tags"
 msgstr "Oznake"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/models/activity_menu_view.js:0
 #, python-format
 msgid "Today"
@@ -544,13 +539,3 @@ msgstr "Zabeležen tip aktivnosti izuzeća."
 #: model:ir.model,name:note.model_res_users
 msgid "User"
 msgstr "Korisnik"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__website_message_ids
-msgid "Website Messages"
-msgstr "Website poruke"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__website_message_ids
-msgid "Website communication history"
-msgstr "Istorija website komunikacije"

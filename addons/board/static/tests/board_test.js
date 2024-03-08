@@ -6,6 +6,8 @@ import { click, dragAndDrop, getFixture, patchWithCleanup } from "@web/../tests/
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
+import AbstractModel from "web.AbstractModel";
+import AbstractView from "web.AbstractView";
 import ListView from "web.ListView";
 import legacyViewRegistry from "web.view_registry";
 
@@ -731,6 +733,54 @@ QUnit.module("Board", (hooks) => {
                     }
                 },
             });
+        }
+    );
+
+    QUnit.test(
+        "Dashboard should pass groupbys to legacy views",
+        async function (assert) {
+            assert.expect(2);
+            const TestModel = AbstractModel.extend({
+                __load: function (params) {
+                    assert.deepEqual(params.groupedBy, ["bar"]);
+                }
+            });
+            const TestGridView = AbstractView.extend({
+                viewType: 'test_grid',
+                config: Object.assign({}, AbstractView.prototype.config, {
+                    Model: TestModel,
+                }),
+                init: function (viewInfo, params) {
+                    this._super.apply(this, arguments);
+                    assert.deepEqual(params.groupBy, ["bar"]);
+                    this.loadParams.groupedBy = params.groupBy;
+                }
+            });
+            legacyViewRegistry.add("test_grid", TestGridView);
+            serverData.views["partner,false,test_grid"] = `<div/>`;
+
+            await makeView({
+                serverData,
+                type: "form",
+                resModel: "board",
+                arch: `
+                <form string="My Dashboard" js_class="board">
+                    <board style="2-1">
+                        <column>
+                            <action context="{'group_by': 'bar'}" string="ABC" name="51"></action>
+                        </column>
+                    </board>
+                </form>`,
+                mockRPC(route, args) {
+                    if (route === "/web/action/load") {
+                        return Promise.resolve({
+                            res_model: "partner",
+                            views: [[false, "test_grid"]],
+                        });
+                    }
+                },
+            });
+            delete legacyViewRegistry.map.test_grid
         }
     );
 

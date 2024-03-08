@@ -384,16 +384,28 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         """
         Test That we can update the quantity of a purchase order line with a subcontracted product
         """
-        po = self.env['purchase.order'].create({
-            'partner_id': self.subcontractor_partner1.id,
-            'order_line': [Command.create({
-                'name': 'finished',
-                'product_id': self.finished.id,
-                'product_qty': 3.0,
-                'product_uom': self.finished.uom_id.id,
-                'price_unit': 50.0}
-            )],
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        buy_route = self.env['stock.route'].search([('name', '=', 'Buy')])
+        mto_route.active = True
+        self.finished.route_ids = mto_route.ids + buy_route.ids
+        seller = self.env['product.supplierinfo'].create({
+            'partner_id': self.vendor.id,
+            'price': 12.0,
+            'delay': 0
         })
+        self.finished.seller_ids = [(6, 0, [seller.id])]
+
+        mo = self.env['mrp.production'].create({
+            'product_id': self.finished2.id,
+            'product_qty': 3.0,
+            'move_raw_ids': [(0, 0, {
+                'product_id': self.finished.id,
+                'product_uom_qty': 3.0,
+                'product_uom': self.finished.uom_id.id,
+            })]
+        })
+        mo.action_confirm()
+        po = self.env['purchase.order.line'].search([('product_id', '=', self.finished.id)]).order_id
         po.button_confirm()
         self.assertEqual(len(po.picking_ids), 1)
         picking = po.picking_ids

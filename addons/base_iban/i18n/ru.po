@@ -8,14 +8,15 @@
 # Vasiliy Korobatov <korobatov@gmail.com>, 2022
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # Irina Fedulova <istartlin@gmail.com>, 2022
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 15:12+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2022\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,18 +25,18 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: base_iban
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_iban/static/src/js/legacy_iban_widget.js:0
 #, python-format
 msgid "Account isn't IBAN compliant."
 msgstr "Аккаунт не поддерживает IBAN."
 
 #. module: base_iban
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_iban/static/src/components/iban_widget/iban_widget.xml:0
 #, python-format
 msgid "Account isn't a valid IBAN"
-msgstr ""
+msgstr "Счет не является действительным IBAN"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -43,18 +44,21 @@ msgid "Bank Accounts"
 msgstr "Банковские счета"
 
 #. module: base_iban
+#. odoo-python
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "Cannot compute the BBAN because the account number is not an IBAN."
 msgstr "Нельзя вычислить BBAN, потому что номер счета не является IBAN."
 
 #. module: base_iban
+#. odoo-python
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "IBAN"
 msgstr "Код IBAN"
 
 #. module: base_iban
+#. odoo-python
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid ""
@@ -65,18 +69,21 @@ msgstr ""
 "Где B = Национальный банковский код S = Код Филиала, C = № счета, k = Контрольная цифра"
 
 #. module: base_iban
+#. odoo-python
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
 msgstr "IBAN является недействительным, он должен начинаться с кода страны"
 
 #. module: base_iban
+#. odoo-python
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "There is no IBAN code."
 msgstr "Код IBAN отсутствует."
 
 #. module: base_iban
+#. odoo-python
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it."

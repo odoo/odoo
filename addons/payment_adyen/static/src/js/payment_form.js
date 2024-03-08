@@ -56,7 +56,7 @@ odoo.define('payment_adyen.payment_form', require => {
         _dropinOnError: function (error) {
             this._displayError(
                 _t("Incorrect Payment Details"),
-                error.message.data.message
+                _t("Please verify your payment details."),
             );
         },
 
