@@ -464,13 +464,9 @@ patch(MockServer.prototype, {
     _mockDiscussChannelChannelCreate(name, group_id) {
         const id = this.pyEnv["discuss.channel"].create({
             channel_member_ids: [
-                [
-                    0,
-                    0,
-                    {
-                        partner_id: this.pyEnv.currentPartnerId,
-                    },
-                ],
+                Command.create({
+                    partner_id: this.pyEnv.currentPartnerId,
+                }),
             ],
             channel_type: "channel",
             name,
@@ -519,13 +515,11 @@ patch(MockServer.prototype, {
             }
         }
         const id = this.pyEnv["discuss.channel"].create({
-            channel_member_ids: partners.map((partner) => [
-                0,
-                0,
-                {
+            channel_member_ids: partners.map((partner) =>
+                Command.create({
                     partner_id: partner.id,
-                },
-            ]),
+                })
+            ),
             channel_type: "chat",
             name: partners.map((partner) => partner.name).join(", "),
         });

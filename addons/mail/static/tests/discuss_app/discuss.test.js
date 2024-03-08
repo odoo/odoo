@@ -1458,27 +1458,19 @@ test("mark channel as seen if last message is visible when switching channels wh
     const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
-                [
-                    0,
-                    0,
-                    {
-                        message_unread_counter: 1,
-                        partner_id: pyEnv.currentPartnerId,
-                    },
-                ],
+                Command.create({
+                    message_unread_counter: 1,
+                    partner_id: pyEnv.currentPartnerId,
+                }),
             ],
             name: "Bla",
         },
         {
             channel_member_ids: [
-                [
-                    0,
-                    0,
-                    {
-                        message_unread_counter: 1,
-                        partner_id: pyEnv.currentPartnerId,
-                    },
-                ],
+                Command.create({
+                    message_unread_counter: 1,
+                    partner_id: pyEnv.currentPartnerId,
+                }),
             ],
             name: "Blu",
         },
@@ -1815,14 +1807,10 @@ test("Message shows up even if channel data is incomplete", async () => {
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [
-                0,
-                0,
-                {
-                    is_pinned: true,
-                    partner_id: pyEnv.currentPartnerId,
-                },
-            ],
+            Command.create({
+                is_pinned: true,
+                partner_id: pyEnv.currentPartnerId,
+            }),
             Command.create({ partner_id: correspondentPartnerId }),
         ],
         channel_type: "chat",

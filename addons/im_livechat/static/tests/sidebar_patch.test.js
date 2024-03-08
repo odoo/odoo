@@ -21,7 +21,7 @@ test("Unknown visitor", async () => {
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -45,8 +45,8 @@ test("Known user with country", async () => {
     });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -65,14 +65,10 @@ test("Do not show channel when visitor is typing", async () => {
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [
-                0,
-                0,
-                {
-                    is_pinned: false,
-                    partner_id: pyEnv.currentPartnerId,
-                },
-            ],
+            Command.create({
+                is_pinned: false,
+                partner_id: pyEnv.currentPartnerId,
+            }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -102,7 +98,7 @@ test("Smiley face avatar for livechat item linked to a guest", async () => {
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -125,8 +121,8 @@ test("Partner profile picture for livechat item linked to a partner", async () =
     const partnerId = pyEnv["res.partner"].create({ name: "Jean" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -149,14 +145,10 @@ test("No counter if the category is unfolded and with unread messages", async ()
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            [
-                0,
-                0,
-                {
-                    message_unread_counter: 10,
-                    partner_id: pyEnv.currentPartnerId,
-                },
-            ],
+            Command.create({
+                message_unread_counter: 10,
+                partner_id: pyEnv.currentPartnerId,
+            }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -176,7 +168,7 @@ test("No counter if category is folded and without unread messages", async () =>
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -197,14 +189,10 @@ test("Counter should have correct value of unread threads if category is folded 
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            [
-                0,
-                0,
-                {
-                    message_unread_counter: 10,
-                    partner_id: pyEnv.currentPartnerId,
-                },
-            ],
+            Command.create({
+                message_unread_counter: 10,
+                partner_id: pyEnv.currentPartnerId,
+            }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -222,7 +210,7 @@ test("Close manually by clicking the title", async () => {
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -245,7 +233,7 @@ test("Open manually by clicking the title", async () => {
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -273,7 +261,7 @@ test("Category item should be invisible if the category is closed", async () => 
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -294,7 +282,7 @@ test("Active category item should be visible even if the category is closed", as
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -316,7 +304,7 @@ test("Clicking on unpin button unpins the channel", async () => {
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: pyEnv["mail.guest"].create({ name: "Visitor 11" }) }),
         ],
         channel_type: "livechat",
@@ -334,7 +322,7 @@ test("Message unread counter", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -360,7 +348,7 @@ test("unknown livechat can be displayed and interacted with", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
     const channelId = pyEnv["discuss.channel"].create({
-        channel_member_ids: [[0, 0, { partner_id: partnerId }]],
+        channel_member_ids: [Command.create({ partner_id: partnerId })],
         channel_type: "livechat",
         livechat_operator_id: partnerId,
     });
