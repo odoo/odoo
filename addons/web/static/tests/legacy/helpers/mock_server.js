@@ -593,8 +593,6 @@ export class MockServer {
                 return this.mockLoadAction(args);
             case "/web/action/load_breadcrumbs":
                 return this.mockLoadBreadcrumbs(args);
-            case "/web/dataset/resequence":
-                return this.mockResequence(args);
         }
         if (
             route.indexOf("/web/image") >= 0 ||
@@ -2084,19 +2082,6 @@ export class MockServer {
             length: nbRecords,
             records,
         };
-    }
-
-    mockResequence(args) {
-        const offset = args.offset ? Number(args.offset) : 0;
-        const field = args.field || "sequence";
-        if (!(field in this.models[args.model].fields)) {
-            return false;
-        }
-        for (const index in args.ids) {
-            const record = this.models[args.model].records.find((r) => r.id === args.ids[index]);
-            record[field] = Number(index) + offset;
-        }
-        return true;
     }
 
     mockWrite(modelName, args) {

@@ -395,7 +395,6 @@ export class MockServer {
             this.callKw,
             { final: true }
         );
-        this._onRoute(["/web/dataset/resequence"], this.resequence);
         this._onRoute(["/web/image/<string:model>/<int:id>/<string:field>"], this.loadImage, {
             pure: true,
         });
@@ -1205,23 +1204,6 @@ export class MockServer {
             modules: this.modules,
             multi_lang: serverState.multiLang,
         };
-    }
-
-    /**
-     * @type {RouteCallback}
-     */
-    async resequence(request) {
-        const { params } = await request.json();
-        const offset = params.offset ? Number(params.offset) : 0;
-        const field = params.field || "sequence";
-        if (!(field in this.env[params.model]._fields)) {
-            return false;
-        }
-        for (const index in params.ids) {
-            const record = this.env[params.model].find((r) => r.id === params.ids[index]);
-            record[field] = Number(index) + offset;
-        }
-        return true;
     }
 }
 
