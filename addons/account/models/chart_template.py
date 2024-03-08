@@ -657,8 +657,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': _("Liquidity Transfer"),
                 'prefix': company.transfer_account_code_prefix,
                 'code_digits': code_digits,
-                'account_type': 'asset_current',
-                'reconcile': True,
+                'account_type': 'asset_cash',
+                'reconcile': False,
             },
         }
 
