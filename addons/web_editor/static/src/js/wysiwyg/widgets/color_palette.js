@@ -1065,4 +1065,13 @@ export class ColorPalette extends Component {
         this._updateGradient();
         this._activateGradientSlider($(this.pickers['custom_gradient'].querySelector('.o_slider_multi input')));
     }
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onColorpickerClick(ev) {
+        if (ev.target.matches(".o_colorpicker_section, .o_colorpicker_sections")) {
+            ev.stopPropagation();
+        }
+    }
 }
