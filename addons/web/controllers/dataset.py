@@ -60,9 +60,6 @@ class DataSet(http.Controller):
         if context:
             request.update_context(**context)
         m = request.env[model]
-        if not m.fields_get([field]):
-            return False
-        # python 2.6 has no start parameter
-        for i, record in enumerate(m.browse(ids)):
-            record.write({field: i + offset})
-        return True
+        return m.browse(ids).web_resequence(field, offset, {
+            field: {},
+        })

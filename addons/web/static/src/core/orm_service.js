@@ -176,6 +176,21 @@ export class ORM {
 
     /**
      * @param {string} model
+     * @param {number[]} ids
+     * @param {string} field
+     * @param {number} offset
+     * @param {any} [kwargs={}]
+     * @param {Object} [kwargs.specification]
+     * @param {Object} [kwargs.context]
+     * @returns {Promise<any[]>}
+     */
+    resequence(model, ids, field, offset, kwargs = {}) {
+        validatePrimitiveList("ids", "number", ids);
+        return this.call(model, "web_resequence", [ids, field, offset], kwargs);
+    }
+
+    /**
+     * @param {string} model
      * @param {import("@web/core/domain").DomainListRepr} domain
      * @param {any} [kwargs={}]
      * @returns {Promise<any[]>}
