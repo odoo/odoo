@@ -19,7 +19,8 @@
             <t t-set="input_classes" t-value="'p-0 border-0 text-center font-monospace bg-transparent'" />
 
             <div class="o_hex_div px-1 d-flex align-items-baseline">
-                <input type="text" t-attf-class="o_hex_input {{input_classes}}" data-color-method="hex" size="1"/>
+                <input type="text" t-attf-class="o_hex_input {{input_classes}}" data-color-method="hex" size="1"
+                    t-on-input="_onHexColorInput"/>
                 <label class="flex-grow-0 ms-1 mb-0">hex</label>
             </div>
             <div class="o_rgba_div px-1 d-flex align-items-baseline">
