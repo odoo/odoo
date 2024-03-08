@@ -60,7 +60,7 @@
     </t>
 
     <!-- options -->
-    <div t-name="web_editor.ColorPalette" class="colorpicker" t-ref="el">
+    <div t-name="web_editor.ColorPalette" class="colorpicker" t-ref="el" t-on-click="this._onColorpickerClick">
         <div class="o_we_colorpicker_switch_panel d-flex justify-content-end px-2">
             <t t-set="first_button_name"><t t-if="props.withCombinations">Theme</t><t t-else="">Solid</t></t>
             <button type="button" tabindex="1" class="o_we_colorpicker_switch_pane_btn" t-attf-data-target="#{props.withCombinations ? 'color-combinations' : 'theme-colors'}"
