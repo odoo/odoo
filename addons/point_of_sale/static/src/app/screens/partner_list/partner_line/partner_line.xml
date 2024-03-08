@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.PartnerLine">
-        <tr class="partner-line gap-2 gap-lg-0 align-top" t-att-class="{'alert-primary': props.isSelected}" t-att-data-id="props.partner.id"
+        <tr class="partner-line gap-2 gap-lg-0 align-top" t-att-class="{'bg-primary-subtle': props.isSelected}" t-att-data-id="props.partner.id"
             t-on-click="() => this.props.onClickPartner(props.partner)">
             <td>
                 <b t-esc="props.partner.name or ''" />

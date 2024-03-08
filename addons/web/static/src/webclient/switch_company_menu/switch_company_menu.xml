@@ -52,7 +52,7 @@
                 t-att-title="'Switch to ' + props.company.name "
                 tabindex="0"
                 class="d-flex flex-grow-1 align-items-center py-0 log_into ps-2"
-                t-att-class="isCurrent ? 'alert-primary' : 'btn fw-normal border-0 ' + (isCompanyAllowed ? 'btn-link text-primary' : 'disabled')"
+                t-att-class="isCurrent ? 'bg-primary-subtle' : 'btn fw-normal border-0 ' + (isCompanyAllowed ? 'btn-link text-primary' : 'disabled')"
                 t-on-click="() => this.logIntoCompany()">
 
                 <span
