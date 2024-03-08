@@ -3415,9 +3415,6 @@ test("search more in many2one: resequence inside dialog", async () => {
     onRpc("web_search_read", ({ kwargs }) => {
         expect(kwargs.domain).toEqual([]);
     });
-    onRpc("/web/dataset/resequence", () => {
-        expect.step("/web/dataset/resequence");
-    });
     onRpc(({ method }) => {
         expect.step(method);
     });
@@ -3446,8 +3443,7 @@ test("search more in many2one: resequence inside dialog", async () => {
         "get_views", // list view in dialog
         "web_search_read", // to display results in the dialog
         "has_group",
-        "/web/dataset/resequence", // resequencing lines
-        "read",
+        "web_resequence", // resequencing lines
     ]);
 });
 

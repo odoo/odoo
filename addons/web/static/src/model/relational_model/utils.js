@@ -14,7 +14,6 @@ import { omit } from "@web/core/utils/objects";
 import { effect } from "@web/core/utils/reactive";
 import { batched } from "@web/core/utils/timing";
 import { orderByToString } from "@web/search/utils/order_by";
-import { rpc } from "@web/core/network/rpc";
 
 /**
  * @param {boolean || string} value boolean or string encoding a python expression
@@ -810,30 +809,17 @@ export async function resequence({
 
     const resIds = toReorder.map((d) => getResId(d)).filter((id) => id && !isNaN(id));
     const sequences = toReorder.map(getSequence);
-    const offset = sequences.length && Math.min(...sequences);
+    const offset = Math.min(...sequences) || 0;
 
     // Try to write new sequences on the affected records/groups
-    const params = {
-        model: resModel,
-        ids: resIds,
-        context: context,
-        field: fieldName,
-    };
-    if (offset) {
-        params.offset = offset;
-    }
     try {
-        const wasResequenced = await rpc("/web/dataset/resequence", params);
-        if (!wasResequenced) {
-            return;
-        }
+        return await orm.webResequence(resModel, resIds, fieldName, offset, {
+            context,
+            specification: { [fieldName]: {} },
+        });
     } catch (error) {
         // If the server fails to resequence, rollback the original list
         records.splice(0, records.length, ...originalOrder);
         throw error;
     }
-
-    // Read the actual values set by the server and update the records/groups
-    const kwargs = { context };
-    return orm.read(resModel, resIds, [fieldName], kwargs);
 }
