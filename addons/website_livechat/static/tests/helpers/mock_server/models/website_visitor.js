@@ -15,9 +15,9 @@ patch(MockServer.prototype, {
                 ? this.getRecords("res.country", [["id", "=", visitor.country_id]])
                 : undefined;
             const visitor_name = `${visitor.display_name}${country ? `(${country.name})` : ""}`;
-            const membersToAdd = [[0, 0, { partner_id: this.pyEnv.currentPartnerId }]];
+            const membersToAdd = [Command.create({ partner_id: this.pyEnv.currentPartnerId })];
             if (visitor.partner_id) {
-                membersToAdd.push([0, 0, { partner_id: visitor.partner_id }]);
+                membersToAdd.push(Command.create({ partner_id: visitor.partner_id }));
             }
             const livechatId = this.pyEnv["discuss.channel"].create({
                 anonymous_name: visitor_name,

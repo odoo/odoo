@@ -1,3 +1,5 @@
+import { Command } from "@mail/../tests/helpers/command";
+
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
@@ -33,14 +35,10 @@ patch(MockServer.prototype, {
         }
         // partner to add to the discuss.channel
         const membersToAdd = [
-            [
-                0,
-                0,
-                {
-                    is_pinned: false,
-                    partner_id: operator.partner_id,
-                },
-            ],
+            Command.create({
+                is_pinned: false,
+                partner_id: operator.partner_id,
+            }),
         ];
         const membersName = [
             this.pyEnv.currentUser ? this.pyEnv.currentUser.display_name : anonymous_name,

@@ -2,6 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
+import { Command } from "@mail/../tests/helpers/command";
 import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { contains } from "@web/../tests/utils";
@@ -16,8 +17,8 @@ QUnit.test("thread icon of a chat when correspondent is on leave & online", asyn
     });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
@@ -37,8 +38,8 @@ QUnit.test("thread icon of a chat when correspondent is on leave & away", async 
     });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
@@ -58,8 +59,8 @@ QUnit.test("thread icon of a chat when correspondent is on leave & offline", asy
     });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });

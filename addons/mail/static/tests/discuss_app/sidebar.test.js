@@ -1036,28 +1036,20 @@ test("chat should be sorted by last activity time [REQUIRE FOCUS]", async () => 
     pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
-                [
-                    0,
-                    0,
-                    {
-                        last_interest_dt: "2021-01-01 10:00:00",
-                        partner_id: pyEnv.currentPartnerId,
-                    },
-                ],
+                Command.create({
+                    last_interest_dt: "2021-01-01 10:00:00",
+                    partner_id: pyEnv.currentPartnerId,
+                }),
                 Command.create({ partner_id: demo_id }),
             ],
             channel_type: "chat",
         },
         {
             channel_member_ids: [
-                [
-                    0,
-                    0,
-                    {
-                        last_interest_dt: "2021-02-01 10:00:00",
-                        partner_id: pyEnv.currentPartnerId,
-                    },
-                ],
+                Command.create({
+                    last_interest_dt: "2021-02-01 10:00:00",
+                    partner_id: pyEnv.currentPartnerId,
+                }),
                 Command.create({ partner_id: yoshi_id }),
             ],
             channel_type: "chat",

@@ -28,7 +28,7 @@ test("Rendering of visitor banner", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: `Visitor #${visitorId}`,
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -69,7 +69,7 @@ test("Livechat with non-logged visitor should show visitor banner", async () => 
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor #11",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
@@ -96,8 +96,8 @@ test("Livechat with logged visitor should show visitor banner", async () => {
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -115,8 +115,8 @@ test("Livechat without visitor should not show visitor banner", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor #11",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,

@@ -17,7 +17,7 @@ test("Public website visitor is typing", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 20",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
