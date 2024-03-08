@@ -28,6 +28,7 @@ class TestSnippets(HttpCase):
             's_facebook_page',  # avoid call to external services (facebook.com)
             's_map',  # avoid call to maps.google.com
             's_instagram_page',  # avoid call to instagram.com
+            's_image',  # Avoid specific case where the media dialog opens on drop
         ]
         snippets_names = ','.join(set(el.attrib['data-snippet'] for el in data_snippet_els if el.attrib['data-snippet'] not in blacklist))
         snippets_names_encoded = url_encode({'snippets_names': snippets_names})
@@ -129,3 +130,14 @@ class TestSnippets(HttpCase):
 
     def test_dropdowns_and_header_hide_on_scroll(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'dropdowns_and_header_hide_on_scroll', login='admin')
+
+    def test_snippet_image(self):
+        IrAttachment = self.env['ir.attachment']
+        base = 'http://%s:%s' % (HOST, config['http_port'])
+        IrAttachment.create({
+            'public': True,
+            'name': 's_default_image.jpg',
+            'type': 'url',
+            'url': base + '/web/image/website.s_banner_default_image',
+        })
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_image', login='admin')
