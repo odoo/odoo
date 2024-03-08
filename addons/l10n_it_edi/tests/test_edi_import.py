@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import uuid
+from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields, sql_db, tools
@@ -70,6 +71,30 @@ class TestItEdiImport(TestItEdi):
                 'price_unit': 1.0,
             }],
         }])
+
+    def test_receive_bill_sequence(self):
+        """ Ensure that the received bill gets assigned the right sequence. """
+        def mock_commit(self):
+            pass
+
+        invoices = self.env['account.move'].with_company(self.company).search([('name', '=', 'BILL/2019/01/0001')])
+        self.assertEqual(len(invoices), 0)
+
+        filename = 'IT01234567890_FPR02.xml'
+        with (patch.object(self.proxy_user.__class__, '_decrypt_data', return_value=self.fake_test_content),
+              patch.object(sql_db.Cursor, "commit", mock_commit),
+              freeze_time('2019-01-01')):
+            self.env['account.move'].with_company(self.company)._l10n_it_edi_process_downloads({
+                '999999999': {
+                    'filename': filename,
+                    'file': self.fake_test_content,
+                    'key': str(uuid.uuid4()),
+                }},
+                self.proxy_user,
+            )
+
+        invoices = self.env['account.move'].with_company(self.company).search([('name', '=', 'BILL/2019/01/0001')])
+        self.assertEqual(len(invoices), 1)
 
     def test_receive_same_vendor_bill_twice(self):
         """ Test that the second time we are receiving an SdiCoop invoice, the second is discarded """
