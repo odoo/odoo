@@ -204,10 +204,14 @@ class Warehouse(models.Model):
 
             if 'active' in vals:
                 picking_type_ids = self.env['stock.picking.type'].with_context(active_test=False).search([('warehouse_id', '=', warehouse.id)])
+                orderpoint_ids = self.env['stock.warehouse.orderpoint'].with_context(active_test=False).search([('warehouse_id', '=', warehouse.id)])
                 move_ids = self.env['stock.move'].search([
                     ('picking_type_id', 'in', picking_type_ids.ids),
                     ('state', 'not in', ('done', 'cancel')),
                 ])
+                if orderpoint_ids:
+                    raise UserError(_('You still have ongoing operations for order point %s in warehouse %s') %
+                                    (', '.join(orderpoint_ids.mapped('name')), warehouse.name))
                 if move_ids:
                     raise UserError(_('You still have ongoing operations for picking types %s in warehouse %s') %
                                     (', '.join(move_ids.mapped('picking_type_id.name')), warehouse.name))
