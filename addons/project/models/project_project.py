@@ -524,24 +524,6 @@ class Project(models.Model):
 
         return super()._order_field_to_sql(alias, field_name, direction, nulls, query)
 
-    def message_subscribe(self, partner_ids=None, subtype_ids=None):
-        """
-        Subscribe to newly created task but not all existing active task when subscribing to a project.
-        User update notification preference of project its propagated to all the tasks that the user is
-        currently following.
-        """
-        res = super(Project, self).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
-        if subtype_ids:
-            project_subtypes = self.env['mail.message.subtype'].browse(subtype_ids)
-            task_subtypes = (project_subtypes.mapped('parent_id') | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids
-            if task_subtypes:
-                for task in self.task_ids:
-                    partners = set(task.message_partner_ids.ids) & set(partner_ids)
-                    if partners:
-                        task.message_subscribe(partner_ids=list(partners), subtype_ids=task_subtypes)
-                self.update_ids.message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
-        return res
-
     def _alias_get_creation_values(self):
         values = super(Project, self)._alias_get_creation_values()
         values['alias_model_id'] = self.env['ir.model']._get('project.task').id
@@ -946,11 +928,18 @@ class Project(models.Model):
         if not new_collaborators:
             # Then we have nothing to do
             return
+        # Subscribe to all existing active tasks when subscribing to a project
+        self.mapped('tasks').message_subscribe(partner_ids=new_collaborators.ids)
         self.write({'collaborator_ids': [
             Command.create({
                 'partner_id': collaborator.id,
             }) for collaborator in new_collaborators],
         })
+
+    def message_unsubscribe(self, partner_ids=None):
+        super().message_unsubscribe(partner_ids=partner_ids)
+        if partner_ids:
+            self.env['project.collaborator'].search([('partner_id', 'in', partner_ids), ('project_id', '=', self.id)]).unlink()
 
     def _add_followers(self, partners):
         self.ensure_one()
