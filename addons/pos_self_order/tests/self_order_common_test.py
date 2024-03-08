@@ -10,6 +10,7 @@ from odoo.addons.point_of_sale.tests.common import archive_products
 class SelfOrderCommonTest(odoo.tests.HttpCase):
     browser_size = "375x667"
     touch_enabled = True
+    allow_inherited_tests_method = True
 
     @classmethod
     def setUpClass(cls):

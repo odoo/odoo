@@ -23,10 +23,11 @@ def get_module_test_cases(module):
             continue
         if not issubclass(obj, case.TestCase):
             continue
+        if obj.__module__ != module.__name__:
+            continue
 
         test_case_class = obj
         test_cases = test_case_class.__dict__.items()
-
         if getattr(test_case_class, 'allow_inherited_tests_method', False):
             # keep iherited method for specific classes.
             # This is likely to be removed once a better solution is found
