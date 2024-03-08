@@ -16,7 +16,7 @@ class StockPickingBatch(models.Model):
 
     name = fields.Char(
         string='Batch Transfer', default='New',
-        copy=False, required=True, readonly=True)
+        copy=False, required=True)
     description = fields.Char(size=35)
     user_id = fields.Many2one(
         'res.users', string='Responsible', tracking=True, check_company=True)
