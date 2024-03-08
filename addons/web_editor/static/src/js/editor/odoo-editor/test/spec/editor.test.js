@@ -5516,9 +5516,9 @@ X[]
                             contentBefore: '<p>a[bc</p><table><tbody><tr><td>a]b</td><td>cd</td><td>ef</td></tr></tbody></table>',
                             contentAfterEdit: '<p>a[bc</p>' +
                                             '<table class="o_selected_table"><tbody><tr>' +
-                                                '<td class="o_selected_td">a]b</td>' +
+                                                '<td class="o_selected_td">ab</td>' +
                                                 '<td class="o_selected_td">cd</td>' +
-                                                '<td class="o_selected_td">ef</td>' +
+                                                '<td class="o_selected_td">ef]</td>' +
                                             '</tr></tbody></table>',
                         });
                     });
@@ -5548,9 +5548,9 @@ X[]
                                             '<td class="o_selected_td">cd</td>' +
                                             '<td class="o_selected_td">ef</td></tr></tbody></table>' +
                                             '<p>abc</p><table class="o_selected_table"><tbody><tr>' +
-                                            '<td class="o_selected_td">a]b</td>' +
+                                            '<td class="o_selected_td">ab</td>' +
                                             '<td class="o_selected_td">cd</td>' +
-                                            '<td class="o_selected_td">ef</td></tr></tbody></table>',
+                                            '<td class="o_selected_td">ef]</td></tr></tbody></table>',
                         });
                     });
                     it('should select some characters, a table, some more characters, another table and some more characters', async () => {
@@ -5703,13 +5703,13 @@ X[]
                                     <tbody>
                                         <tr>
                                             <td class="o_selected_td">
-                                                <font style="color: aquamarine;">a]b</font>
+                                                <font style="color: aquamarine;">ab</font>
                                             </td>
                                             <td class="o_selected_td">
                                                 <font style="color: aquamarine;">cd</font>
                                             </td>
                                             <td class="o_selected_td">
-                                                <font style="color: aquamarine;">ef</font>
+                                                <font style="color: aquamarine;">ef]</font>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -5813,13 +5813,13 @@ X[]
                                 <table class="o_selected_table">
                                     <tbody><tr>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">a]b</font>
+                                            <font style="color: aquamarine;">ab</font>
                                         </td>
                                         <td class="o_selected_td">
                                             <font style="color: aquamarine;">cd</font>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">ef</font>
+                                            <font style="color: aquamarine;">ef]</font>
                                         </td>
                                     </tr></tbody>
                                 </table>`),
@@ -7511,9 +7511,9 @@ X[]
                         <div data-oe-protected="false">
                             <p>a[bc</p>
                             <table class="o_selected_table"><tbody><tr>
-                                <td class="o_selected_td">a]b</td>
+                                <td class="o_selected_td">ab</td>
                                 <td class="o_selected_td">cd</td>
-                                <td class="o_selected_td">ef</td>
+                                <td class="o_selected_td">ef]</td>
                             </tr></tbody></table>
                         </div>
                     </div>
