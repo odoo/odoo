@@ -5,6 +5,7 @@ import json
 from collections import defaultdict
 
 from odoo import models, _lt
+from odoo.tools import SQL
 from odoo.tools.misc import OrderedSet
 
 
@@ -29,7 +30,13 @@ class Project(models.Model):
         """ This method is used in sale_project and project_purchase. Since project_account is the only common module (except project), we create the method here. """
         # calculate the cost of bills without a purchase order
         query = self.env['account.move.line'].sudo()._search(domain)
-        query.add_where('account_move_line.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+        query.add_where(
+            SQL(
+                "%s && %s",
+                [str(self.analytic_account_id.id)],
+                self.env['account.move.line'].sudo()._query_analytic_accounts(),
+            )
+        )
         # account_move_line__move_id is the alias of the joined table account_move in the query
         # we can use it, because of the "move_id.move_type" clause in the domain of the query, which generates the join
         # this is faster than a search_read followed by a browse on the move_id to retrieve the move_type of each account.move.line
@@ -45,7 +52,11 @@ class Project(models.Model):
                 price_subtotal = self.env['res.currency'].browse(moves_read['currency_id']).with_prefetch(currency_ids)._convert(
                     from_amount=moves_read['price_subtotal'], to_currency=self.currency_id,
                 )
-                analytic_contribution = moves_read['analytic_distribution'][str(self.analytic_account_id.id)] / 100.
+                # an analytic account can appear several time in an analytic distribution with different repartition percentage
+                analytic_contribution = sum(
+                    percentage for ids, percentage in moves_read['analytic_distribution'].items()
+                    if str(self.analytic_account_id.id) in ids.split(',')
+                ) / 100.
                 move_ids.add(moves_read['move_id'])
                 if moves_read['parent_state'] == 'draft':
                     if moves_read['move_type'] == 'in_invoice':
