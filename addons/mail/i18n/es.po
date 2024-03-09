@@ -8,6 +8,7 @@
 # Ana Sanjuán, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
+# Fernanda Alvarez, 2024
 # Larissa Manderfeld, 2024
 # Wil Odoo, 2024
 # 
@@ -428,7 +429,7 @@ msgstr "<span class=\"d-block w-75 py-2\">Color del encabezado</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr ""
+msgstr "<span class=\"me-1 oe_inline\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -663,7 +664,7 @@ msgstr "Acción requerida"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr "Vista de acción de ventana"
+msgstr "Vista de la ventana de acción"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
@@ -1082,7 +1083,7 @@ msgstr "Estado del alias evaluado en el último mensaje recibido."
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_model_id
 msgid "Aliased Model"
-msgstr "Modelo con seudónimo"
+msgstr "Modelo con alias"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_alias_action
@@ -1802,12 +1803,12 @@ msgstr "Cancelado"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_shortcode
 msgid "Canned Response / Shortcode"
-msgstr "Respuesta preparada / código corto"
+msgstr "Respuesta predefinida/código corto"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
 msgid "Canned Responses"
-msgstr "Respuestas preparadas"
+msgstr "Respuestas predefinidas"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_shortcode_view_search
@@ -1822,10 +1823,10 @@ msgid ""
 "                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
 msgstr ""
-"Las respuestas predefinidas te permiten insertar mensajes pre-escritas en\n"
-"                tus mensajes al escribir <i>:atajo</i>. El atajo es\n"
-"                remplazado directamente en tu mensaje, para que puedas editarlo\n"
-"                antes de mandarlo."
+"Las respuestas predefinidas le permiten insertar mensajes creados previamente en\n"
+"                sus mensajes al escribir <i>:atajo</i>. El atajo es\n"
+"                remplazado directamente en su mensaje, para que pueda editarlo\n"
+"                antes de enviarlo."
 
 #. module: mail
 #. odoo-python
@@ -2149,6 +2150,7 @@ msgstr "Compañías"
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
 msgid "Companies using this domain as default for sending mails"
 msgstr ""
+"Empresas que usan este dominio de forma predeterminada para enviar correos"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
@@ -2742,6 +2744,10 @@ msgid ""
 " local-part e.g. 'notifications' either a complete email address e.g. "
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
+"Por defecto de cuando no coincide con los filtros del servidor saliente. "
+"Puede ser una parte local, por ejemplo \"notificaciones\" o una dirección de"
+" correo electrónico completa, por ejemplo \"notificaciones@ejemplo.com\", "
+"para anular todos los correos electrónicos salientes."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
@@ -3433,6 +3439,8 @@ msgstr "Asistente de redacción de correo electrónico"
 #: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
 msgstr ""
+"Dominio de correo electrónico, por ejemplo \"ejemplo.com\" en "
+"\"odoo@ejemplo.com\"."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -5399,6 +5407,8 @@ msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
 msgstr ""
+"Parte local del correo electrónico que se utiliza como \"Respuesta a\" para "
+"recibir respuestas, por ejemplo, \"catchall\" en \"catchall@ejemplo.com\""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -5406,6 +5416,9 @@ msgid ""
 "Local-part of email used for Return-Path used when emails bounce e.g. "
 "'bounce' in 'bounce@example.com'"
 msgstr ""
+"Parte local del correo electrónico que se utiliza como \"ruta de retorno\" "
+"en caso de que los correos se devuelvan, por ejemplo, \"devolucion\" en "
+"\"devolucion@ejemplo.com\""
 
 #. module: mail
 #. odoo-javascript
@@ -5571,7 +5584,7 @@ msgstr "Sesión de comunicación en tiempo real por correo"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_render_mixin
 msgid "Mail Render Mixin"
-msgstr "Mail Render Mixin"
+msgstr "Mixin de renderización de correo"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_mail_server
@@ -9836,6 +9849,13 @@ msgstr "Unidad de retraso"
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/mail_tracking_value.py:0
+#, python-format
+msgid "Unknown"
+msgstr "Desconocido"
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/mail_notification.py:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__unknown
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__unknown
@@ -10355,7 +10375,7 @@ msgstr ""
 #: code:addons/mail/static/src/views/web/fields/list_activity/list_activity.js:0
 #, python-format
 msgid "Warning"
-msgstr "Alerta"
+msgstr "Advertencia"
 
 #. module: mail
 #. odoo-python
@@ -11010,12 +11030,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"bounce\""
-msgstr ""
+msgstr "Por ejemplo, \"devolucion\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"catchall\""
-msgstr ""
+msgstr "Por ejemplo, \"catchall\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -11025,7 +11045,7 @@ msgstr "ej. \"miempresa.com\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"notifications\""
-msgstr ""
+msgstr "p. ej. \"notificaciones\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -11053,7 +11073,7 @@ msgstr "Por ejemplo, conversación de una propuesta"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "e.g. Onboarding"
-msgstr "Por ejemplo, Acogida"
+msgstr "p. ej. Incorporación"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form

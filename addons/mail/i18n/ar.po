@@ -424,7 +424,7 @@ msgstr "<span class=\"d-block w-75 py-2\">لون الترويسة</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr ""
+msgstr "<span class=\"me-1 oe_inline\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2124,6 +2124,8 @@ msgstr "الشركات"
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
 msgid "Companies using this domain as default for sending mails"
 msgstr ""
+"الشركات التي تستخدم هذا النطاق كالنطاق الافتراضي لإرسال رسائل البريد "
+"الإلكتروني "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
@@ -2714,6 +2716,9 @@ msgid ""
 " local-part e.g. 'notifications' either a complete email address e.g. "
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
+"الافتراضي عندما لا يطابق فلاتر خادم البريد الصادر. إما أن يكون جزءاً محلياً "
+"(مثال: \"الإشعارات\") أو عنوان بريد إلكتروني كامل (مثال: "
+"\"notifications@example.com\") لتجاوز كافة رسائل البريد الإلكتروني الصادرة. "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
@@ -3398,7 +3403,7 @@ msgstr "معالج تأليف رسالة بريد إلكتروني"
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
 #: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "نطاق البريد الإلكتروني مثال: 'example.com' في 'odoo@example.com' "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -5344,6 +5349,8 @@ msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
 msgstr ""
+"الجزء العام من البريد الإلكتروني المستخدَم لـ \"الرد على\" لتجميع الإجابات. "
+"مثال: 'catchall' في 'catchall@example.com' "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -5351,6 +5358,8 @@ msgid ""
 "Local-part of email used for Return-Path used when emails bounce e.g. "
 "'bounce' in 'bounce@example.com'"
 msgstr ""
+"الجزء المحلي من البريد الإلكتروني الذي يُستخدَم \"لمسار العودة\" عندما ترتد "
+"رسائل البريد الإلكتروني  مثال: 'bounce' في 'bounce@example.com' "
 
 #. module: mail
 #. odoo-javascript
@@ -9729,6 +9738,13 @@ msgstr "وحدة التأخير"
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/mail_tracking_value.py:0
+#, python-format
+msgid "Unknown"
+msgstr "غير معروف"
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/mail_notification.py:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__unknown
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__unknown
@@ -10890,12 +10906,12 @@ msgstr "مثال: \"مرحباً بك في شركتي\" أو \"يسرنا الت
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"bounce\""
-msgstr ""
+msgstr "مثال: \"مرتدة\" "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"catchall\""
-msgstr ""
+msgstr "مثال: \"catchall\" "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -10905,7 +10921,7 @@ msgstr "مثال: \"mycompany.com\" "
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"notifications\""
-msgstr ""
+msgstr "مثال: \"الإشعارات\" "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
