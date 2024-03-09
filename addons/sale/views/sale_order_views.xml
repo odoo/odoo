@@ -314,11 +314,13 @@
                                placeholder="Type to find a customer..." readonly="state in ['cancel', 'sale']"/>
                         <field name="partner_invoice_id"
                               groups="account.group_delivery_invoice_address"
-                              context="{'default_type':'invoice', 'show_address': False, 'show_vat': False}"
+                              options="{'no_quick_create': True}"
+                              context="{'default_type':'invoice', 'show_address': False, 'show_vat': False, 'default_parent_id': partner_id}"
                               readonly="state == 'cancel' or locked"/>
                         <field name="partner_shipping_id"
                               groups="account.group_delivery_invoice_address"
-                              context="{'default_type':'delivery', 'show_address': False, 'show_vat': False}"
+                              options="{'no_quick_create': True}"
+                              context="{'default_type':'delivery', 'show_address': False, 'show_vat': False, 'default_parent_id': partner_id}"
                               readonly="state == 'cancel' or locked"/>
                     </group>
                     <group name="order_details">
