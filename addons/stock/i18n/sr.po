@@ -34,6 +34,9 @@ msgid ""
 "\n"
 "Transfers %s: You need to supply a Lot/Serial number for products %s."
 msgstr ""
+"\n"
+"\n"
+"Potrebno je da obezbedite broj serije za proizvode %s prilikom transfera %s."
 
 #. module: stock
 #. odoo-python
@@ -43,6 +46,8 @@ msgid ""
 "\n"
 "(%s) exists in location %s"
 msgstr ""
+"\n"
+"(%s) postoji na lokaciji %s"
 
 #. module: stock
 #. odoo-python
@@ -53,6 +58,9 @@ msgid ""
 "The quantity done for the product %s doesn't respect the rounding precision defined on the unit of measure %s.\n"
 "Please change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"\n"
+"Količina uneta za proizvod %s ne poštuje preciznost zaokruživanja definisanu na jedinici mere %s.\n"
+"Molimo promenite količinu  ili preciznost zaokruživanja vaše jedinice mere."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -7682,6 +7690,14 @@ msgid ""
 msgstr ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
