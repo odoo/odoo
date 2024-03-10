@@ -3878,7 +3878,7 @@ msgstr "عرض هذا الموقع الإلكتروني عندما يزور ال
 msgid ""
 "Do not copy/paste code you do not understand, this could put your data at "
 "risk."
-msgstr ""
+msgstr "لا تقم بنسخ/لصق كود لا تفهمه. قد يُعرّض ذلك بياناتك للخطر. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -9531,6 +9531,15 @@ msgid "The chosen name already exists"
 msgstr "الاسم الذي اخترته موجود بالفعل "
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_company.py:0
+#, python-format
+msgid ""
+"The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
+"Change that website's company first."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "The company this website belongs to"
 msgstr "المؤسسة التي ينتمي إليها هذا الموقع الإلكتروني "
@@ -11425,6 +11434,8 @@ msgid ""
 "Your Embed Code snippet doesn't have anything to display. Click on Edit to "
 "modify it."
 msgstr ""
+"Your Embed Code snippet doesn't have anything to display. Click on Edit to "
+"modify it."
 
 #. module: website
 #. odoo-javascript

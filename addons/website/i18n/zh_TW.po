@@ -3797,7 +3797,7 @@ msgstr "當使用者連至此網域時顯示這個網站"
 msgid ""
 "Do not copy/paste code you do not understand, this could put your data at "
 "risk."
-msgstr ""
+msgstr "不要複製貼上你不理解的程式碼，這可能會使您的數據處於危險之中."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -4871,7 +4871,7 @@ msgstr "Google Search Console"
 msgid ""
 "Google doesn't need to be pinged anymore. It will automatically fetch your "
 "/sitemap.xml."
-msgstr ""
+msgstr "不需要再通知（ping）Google 了，它會自動獲取你的 /sitemap.xml。"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
@@ -9377,6 +9377,15 @@ msgstr "謝謝！"
 #, python-format
 msgid "The chosen name already exists"
 msgstr "所選名稱已存在"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/res_company.py:0
+#, python-format
+msgid ""
+"The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
+"Change that website's company first."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form

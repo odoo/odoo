@@ -1825,6 +1825,11 @@ msgstr ""
 "kategorie. Převod bude proveden na základě vzájemných poměrů."
 
 #. module: stock
+#: model:ir.actions.server,name:stock.stock_quant_stock_move_line_desynchronization
+msgid "Correct inconsistencies for reservation"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
 msgid "Corridor (X)"
 msgstr "Chodba (X)"
@@ -2988,6 +2993,13 @@ msgid "First SN"
 msgstr "První SN"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Fix discrepancies"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
 msgid "Fixed"
 msgstr "Pevné"
@@ -4052,6 +4064,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -9998,6 +10011,24 @@ msgid ""
 msgstr ""
 "Nelze přesunout stejný obsah balíku více než jednou ve stejném přenosu nebo "
 "rozdělit stejný balíček do dvou umístění."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from both "
+"immediate and planned transfers."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
 
 #. module: stock
 #. odoo-python

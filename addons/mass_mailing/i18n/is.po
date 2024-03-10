@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# jonasyngvi, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
+"Last-Translator: jonasyngvi, 2024\n"
+"Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,6 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);\n"
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #, python-format
 msgid " %i duplicates have been ignored."
@@ -64,18 +66,23 @@ msgid "%Click (Total)"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #, python-format
 msgid "%i Contacts have been imported."
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing_list.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr ""
+"%s (afrit)\n"
+" "
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 #, python-format
 msgid "%s Mailing Contacts have been added. "
@@ -87,6 +94,7 @@ msgid "&amp;nbsp;&amp;nbsp;"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/ir_mail_server.py:0
 #, python-format
 msgid "(scheduled for %s)"
@@ -109,6 +117,7 @@ msgid "24H Stat Mailing Reports"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
@@ -543,6 +552,7 @@ msgid "<span>​</span>"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "A campaign should be set when A/B test is enabled"
@@ -610,6 +620,7 @@ msgid "A/B Test Winner"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "A/B Test: %s"
@@ -632,6 +643,7 @@ msgid "A/B Testing percentage"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
@@ -645,6 +657,7 @@ msgid "A/B Tests to review"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "A/B test option has not been enabled"
@@ -696,7 +709,10 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
+#, python-format
 msgid "Add"
 msgstr ""
 
@@ -736,8 +752,20 @@ msgid "Add to Templates"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
+#, python-format
+msgid "Add to favorite filters"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Advanced"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Alert"
 msgstr ""
 
 #. module: mass_mailing
@@ -853,7 +881,7 @@ msgid "Amazing pages"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
@@ -867,7 +895,7 @@ msgid "An error occurred. Please try again later or contact us."
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
@@ -916,6 +944,7 @@ msgid "Archived"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing_list.py:0
 #, python-format
 msgid ""
@@ -996,6 +1025,11 @@ msgid "Beautiful snippets"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Big Boxes"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__is_blacklisted
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__is_blacklisted
 msgid "Blacklist"
@@ -1030,6 +1064,11 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.mail_blacklist_mm_menu
 msgid "Blacklisted Email Addresses"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Blockquote"
 msgstr ""
 
 #. module: mass_mailing
@@ -1077,6 +1116,7 @@ msgid "Bounce (%)"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -1107,6 +1147,7 @@ msgid "Bounced Ratio"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Business Benefits on %(expected)i %(mailing_type)s Sent"
@@ -1118,7 +1159,7 @@ msgid "Button Label"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "By using the <b>Breadcrumb</b>, you can navigate back to the overview."
@@ -1127,6 +1168,11 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__calendar_date
 msgid "Calendar Date"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Call to Action"
 msgstr ""
 
 #. module: mass_mailing
@@ -1197,6 +1243,11 @@ msgid "Center"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Centered Logo"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
 msgid "Change Icons"
 msgstr ""
@@ -1232,14 +1283,14 @@ msgid "Check out all our furniture"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Check the email address and click send."
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
@@ -1252,21 +1303,21 @@ msgid "Choose your mailing subscriptions"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/xml/mass_mailing.xml:0
 #, python-format
 msgid "Click on the ⭐ next to the subject to save this mailing as a"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Click on this button to add this mailing to your templates."
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
@@ -1317,6 +1368,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Columns"
 msgstr ""
@@ -1328,6 +1380,7 @@ msgid "Come Back"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -1345,8 +1398,8 @@ msgid "Company Name"
 msgstr ""
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.layout
-msgid "Company name"
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Comparisons"
 msgstr ""
 
 #. module: mass_mailing
@@ -1365,7 +1418,7 @@ msgid "Configure Outgoing Mail Servers"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Congratulations, I love your first mailing. :)"
@@ -1416,8 +1469,10 @@ msgid "Continue reading <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 msgstr ""
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.layout
-msgid "Copyright &amp;copy;"
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "Could not retrieve URL: %s"
 msgstr ""
 
 #. module: mass_mailing
@@ -1432,8 +1487,8 @@ msgid "Country"
 msgstr ""
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.layout
-msgid "Create a"
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Cover"
 msgstr ""
 
 #. module: mass_mailing
@@ -1512,7 +1567,7 @@ msgid "Custom"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mass_mailing_html_field.js:0
 #, python-format
 msgid "DRAG BUILDING BLOCKS HERE"
@@ -1598,7 +1653,7 @@ msgid "Delivered to"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/snippets.editor.js:0
 #, python-format
 msgid "Design Options"
@@ -1610,12 +1665,14 @@ msgid "Design a striking email, define recipients and track its results."
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Design added to the %s Templates!"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Design removed from the %s Templates!"
@@ -1630,6 +1687,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
 msgid "Discard"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Discount Offer"
 msgstr ""
 
 #. module: mass_mailing
@@ -1686,7 +1748,7 @@ msgid "Don't forget to send your preferred version"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Don't worry, the mailing contact we created is an internal user."
@@ -1748,7 +1810,7 @@ msgid "Edit Styles"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mass_mailing_html_field.js:0
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__email
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__email
@@ -1769,6 +1831,7 @@ msgid "Email Content"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/res_users.py:0
 #: model:ir.ui.menu,name:mass_mailing.mass_mailing_menu_root
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
@@ -1777,6 +1840,7 @@ msgid "Email Marketing"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -1794,6 +1858,7 @@ msgid "Email composition wizard"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Emails"
@@ -1805,6 +1870,7 @@ msgid "Emails Statistics"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Engagement on %(expected)i %(mailing_type)s Sent"
@@ -1813,6 +1879,11 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__error
 msgid "Error"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Event"
 msgstr ""
 
 #. module: mass_mailing
@@ -1903,9 +1974,28 @@ msgid "Feature Two"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Features"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Features Grid"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Feedback from %(email)s: %(feedback)s"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "File size exceeds configured maximum (%s bytes)"
 msgstr ""
 
 #. module: mass_mailing
@@ -1967,6 +2057,16 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Footer Center"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Footer Left"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Footers"
 msgstr ""
 
@@ -1974,7 +2074,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
 msgid ""
 "Founder and chief visionary, Tony is the driving force behind the company. "
-"He lovesto keep his hands full by participating in the development of the "
+"He loves to keep his hands full by participating in the development of the "
 "software, marketing, and customer experience strategies."
 msgstr ""
 
@@ -2022,6 +2122,11 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 msgid "Group By..."
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_http
+msgid "HTTP Routing"
 msgstr ""
 
 #. module: mass_mailing
@@ -2154,8 +2259,21 @@ msgid "Ignored"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Image - Text"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
 msgid "Image Text Image"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
 msgstr ""
 
 #. module: mass_mailing
@@ -2164,7 +2282,7 @@ msgid "Images"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/views/mass_mailing_views.xml:0
 #: code:addons/mass_mailing/static/src/views/mass_mailing_views.xml:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -2178,6 +2296,7 @@ msgid "Import Contacts"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #: model:ir.actions.act_window,name:mass_mailing.mailing_contact_import_action
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -2186,6 +2305,7 @@ msgid "Import Mailing Contacts"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing_contact.py:0
 #, python-format
 msgid "Import Template for Mailing List Contacts"
@@ -2248,6 +2368,11 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Italic"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Items"
 msgstr ""
 
 #. module: mass_mailing
@@ -2345,7 +2470,17 @@ msgid "Left"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Left Logo"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Left Text"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
@@ -2364,6 +2499,7 @@ msgid "Link Tracker Click"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -2425,14 +2561,12 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.actions.server,name:mass_mailing.ir_cron_mass_mailing_ab_testing_ir_actions_server
 #: model:ir.cron,cron_name:mass_mailing.ir_cron_mass_mailing_ab_testing
-#: model:ir.cron,name:mass_mailing.ir_cron_mass_mailing_ab_testing
 msgid "Mail Marketing: A/B Testing"
 msgstr ""
 
 #. module: mass_mailing
 #: model:ir.actions.server,name:mass_mailing.ir_cron_mass_mailing_queue_ir_actions_server
 #: model:ir.cron,cron_name:mass_mailing.ir_cron_mass_mailing_queue
-#: model:ir.cron,name:mass_mailing.ir_cron_mass_mailing_queue
 msgid "Mail Marketing: Process queue"
 msgstr ""
 
@@ -2604,6 +2738,7 @@ msgid "Mailing Type Description"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_mailing_test.py:0
 #, python-format
 msgid "Mailing addresses incorrect: %s"
@@ -2674,6 +2809,11 @@ msgid "Marketing Content"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Masonry"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__name
 msgid "Mass Mail"
 msgstr ""
@@ -2694,6 +2834,7 @@ msgid "Mass Mailing"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/ir_mail_server.py:0
 #, python-format
 msgid "Mass Mailing \"%s\""
@@ -2743,6 +2884,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__mailing_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__mailing_mail_ids
 msgid "Mass Mailings"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Media List"
 msgstr ""
 
 #. module: mass_mailing
@@ -2830,7 +2976,7 @@ msgid "Missing email address"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mass_mailing_html_field.js:0
 #, python-format
 msgid "Mobile Preview"
@@ -2852,6 +2998,7 @@ msgid "More Details"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "More Info"
@@ -2900,6 +3047,7 @@ msgid "New Mailing List Name"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #, python-format
 msgid "New contacts imported"
@@ -2931,36 +3079,42 @@ msgid "Next Activity Type"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No %s address bounced yet!"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No %s clicked your mailing yet!"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No %s opened your mailing yet!"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No %s received your mailing yet!"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No %s replied to your mailing yet!"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #, python-format
 msgid ""
@@ -2979,12 +3133,14 @@ msgid "No data yet!"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No mailing campaign has been found"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -3010,6 +3166,7 @@ msgid "No support"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #, python-format
 msgid "No valid email address found."
@@ -3090,7 +3247,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_needaction_counter
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr ""
 
 #. module: mass_mailing
@@ -3100,19 +3257,20 @@ msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Numbers"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
 msgid "ON YOUR NEXT ORDER!"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "OPENED (%i)"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.layout
-msgid "Odoo"
 msgstr ""
 
 #. module: mass_mailing
@@ -3255,10 +3413,15 @@ msgid "Pick a dedicated outgoing mail server for your mass mailings"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Pick the <b>email subject</b>."
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Picture"
 msgstr ""
 
 #. module: mass_mailing
@@ -3267,7 +3430,7 @@ msgid "Plain Text"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_m2o_filter.js:0
 #, python-format
 msgid "Please provide a name for the filter"
@@ -3299,6 +3462,11 @@ msgid "Primary Buttons"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Promo Code"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_highlight
 msgid "Put the focus on what you have to say!"
 msgstr ""
@@ -3309,15 +3477,22 @@ msgid "Quality"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "RECEIVED (%i)"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "REPLIED (%i)"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Rating"
 msgstr ""
 
 #. module: mass_mailing
@@ -3327,7 +3502,7 @@ msgid "Read More"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Ready for take-off!"
@@ -3394,6 +3569,11 @@ msgid "Redeem Discount!"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "References"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_event
 msgid "Register Now"
 msgstr ""
@@ -3409,7 +3589,14 @@ msgid "Reload a favorite filter"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
+#, python-format
+msgid "Remove from Favorites"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/xml/mass_mailing.xml:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #, python-format
@@ -3469,18 +3656,21 @@ msgid "Reporting"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Requested blacklisting via unsubscribe link."
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Requested blacklisting via unsubscription page."
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Requested de-blacklisting via unsubscription page."
@@ -3532,6 +3722,13 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_mailing_test
 msgid "Sample Mail Wizard"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
+#, python-format
+msgid "Save as Favorite Filter"
 msgstr ""
 
 #. module: mass_mailing
@@ -3596,6 +3793,7 @@ msgid "Score"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/ir_model.py:0
 #, python-format
 msgid ""
@@ -3735,6 +3933,7 @@ msgid "Sent Date"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Sent Mailings"
@@ -3753,6 +3952,11 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Sent on #{record.sent_date.value}"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Separator"
 msgstr ""
 
 #. module: mass_mailing
@@ -3775,6 +3979,11 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__is_public
 msgid "Show In Preferences"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Showcase"
 msgstr ""
 
 #. module: mass_mailing
@@ -3835,7 +4044,7 @@ msgid "Start From Scratch"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Start by creating your first <b>Mailing</b>."
@@ -3904,6 +4113,11 @@ msgid "Take Future Schedule Date"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Team"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__mail_server_available
 msgid ""
 "Technical field used to know if the user has activated the outgoing mail "
@@ -3926,25 +4140,28 @@ msgid "Test"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Test Mailing"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_mailing_test.py:0
 #, python-format
 msgid "Test mailing could not be sent to %s:<br>%s"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_mailing_test.py:0
 #, python-format
 msgid "Test mailing successfully sent to %s"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Test this mailing by sending a copy to yourself."
@@ -3956,11 +4173,18 @@ msgid "Tested"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Text"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Text - Image"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_highlight
 msgid "Text Highlight"
 msgstr ""
@@ -3976,7 +4200,7 @@ msgid "Thank you for joining us!"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid "Thank you! Your feedback has been sent successfully!"
@@ -4003,6 +4227,7 @@ msgid "The contact has chosen not to receive mails anymore from this list"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing_filter.py:0
 #, python-format
 msgid "The filter domain is not valid for this recipients."
@@ -4031,18 +4256,21 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "The recipient <strong>subscribed to %s</strong> mailing list(s)"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "The recipient <strong>unsubscribed from %s</strong> mailing list(s)"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -4051,6 +4279,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/utm_campaign.py:0
 #, python-format
 msgid ""
@@ -4070,6 +4299,7 @@ msgid "Then on"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "There are no recipients selected."
@@ -4086,6 +4316,7 @@ msgid "This"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -4145,6 +4376,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__title_id
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Title"
 msgstr ""
 
@@ -4157,6 +4389,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -4164,6 +4397,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -4171,6 +4405,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -4290,12 +4525,6 @@ msgid "Unsubscription Date"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mailing.py:0
-#, python-format
-msgid "Unsupported mass mailing model %s"
-msgstr ""
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
 msgid "Update my subscriptions"
 msgstr ""
@@ -4369,11 +4598,13 @@ msgid "Vertical Alignment"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_view
 msgid "View Online"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid ""
@@ -4507,7 +4738,7 @@ msgid "Write what the customer would like to know, not what you want to show."
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
@@ -4527,12 +4758,14 @@ msgid "You can edit colors and backgrounds to highlight features."
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_list_merge.py:0
 #, python-format
 msgid "You can only apply this action from Mailing Lists."
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/utm_medium.py:0
 #, python-format
 msgid ""
@@ -4541,6 +4774,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/utm_source.py:0
 #, python-format
 msgid ""
@@ -4557,21 +4791,21 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid "You have been <strong>successfully unsubscribed from %s</strong>."
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid "You have been <strong>successfully unsubscribed</strong>."
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid ""
@@ -4580,7 +4814,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid ""
@@ -4594,12 +4828,14 @@ msgid "You have been successfully <strong>unsubscribed</strong>!"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #, python-format
 msgid "You have to much emails, please upload a file."
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing_contact.py:0
 #, python-format
 msgid ""
@@ -4620,10 +4856,17 @@ msgid "Your Title"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid "Your changes have been saved."
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
+#, python-format
+msgid "e.g. \"VIP Customers\""
 msgstr ""
 
 #. module: mass_mailing
@@ -4652,11 +4895,6 @@ msgstr ""
 msgid ""
 "email1@example.com\n"
 "email2@example.com"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.layout
-msgid "free website"
 msgstr ""
 
 #. module: mass_mailing
@@ -4692,7 +4930,7 @@ msgid "schedule a mailing"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/xml/mass_mailing.xml:0
 #, python-format
 msgid "template"
@@ -4721,11 +4959,6 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "will receive this"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.layout
-msgid "with"
 msgstr ""
 
 #. module: mass_mailing
