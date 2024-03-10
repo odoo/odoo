@@ -8,9 +8,6 @@
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # María Florencia Frigieri Parma, 2022
 # Óscar Fonseca <tecnico@pyming.com>, 2023
-# Sergio Del Castillo Baranda, 2023
-# Carlos Gómez, 2023
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Ethan Hildick, 2023
 # Jolien De Paepe, 2023
 # Ana Sanjuán, 2023
@@ -20,6 +17,9 @@
 # Wil Odoo, 2024
 # Loida Vilaplana, 2024
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
+# Sergio Del Castillo Baranda, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Jairo Llopis <yajo.sk8@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024\n"
+"Last-Translator: Jairo Llopis <yajo.sk8@gmail.com>, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1842,6 +1842,11 @@ msgstr ""
 "establecidos."
 
 #. module: stock
+#: model:ir.actions.server,name:stock.stock_quant_stock_move_line_desynchronization
+msgid "Correct inconsistencies for reservation"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
 msgid "Corridor (X)"
 msgstr "Pasillo (X)"
@@ -3013,6 +3018,13 @@ msgid "First SN"
 msgstr "Primer NS"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Fix discrepancies"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
 msgid "Fixed"
 msgstr "Fijo"
@@ -3098,7 +3110,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"Cantidad prevista (calculada como Cantidad disponible - cantidad reservada)\n"
+"Cantidad disponible (calculada como Cantidad a mano - cantidad reservada)\n"
 "En un contexto con una única Ubicación de inventario, esto incluye bienes almacenados en esta ubicación, o cualquiera de sus ubicaciones secundarias.\n"
 "En un contexto con un único Almacén, esto incluye bienes almacenados en la Ubicación de inventario de este Almacén, o cualquiera de sus hijos.\n"
 "De lo contrario, esto incluye bienes almacenados en cualquier ubicación de stock con tipo 'interno'."
@@ -3187,24 +3199,24 @@ msgstr "Formatear"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__free_qty
 msgid "Free Qty"
-msgstr "Ctd. libre"
+msgstr "Ctd. disponible"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Free Stock"
-msgstr "Stock libre"
+msgstr "Stock disponible"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
 msgid "Free To Use Quantity "
-msgstr "Cantidad de Uso Libre"
+msgstr "Cantidad disponible"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Free to Use"
-msgstr "Disponible para usar"
+msgstr "Disponible"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_id
@@ -4086,14 +4098,21 @@ msgid ""
 "The correction will remove the reservation of the impacted operations on all companies.\n"
 "If the error persists, or you see this message appear often, please submit a Support Ticket at https://www.odoo.com/help"
 msgstr ""
+"No es posible reservar más productos que los %s que tiene en sus existencias.\n"
+"\n"
+"Haga clic en el botón que se encuentra abajo para corregir las discrepancias.\n"
+"ADVERTENCIA: La corrección eliminará la reserva de las operaciones afectadas en todas las compañías y es algo que puede bloquear otros procesos. Mejor no realizarlo por parte de un usuario."
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock.\n"
 "Please contact your system administrator to rectify this issue."
 msgstr ""
+"No es posible anular la reserva de más productos que los %s que tiene en sus existencias.\n"
+"Contacte al administrador del sistema para corregir este error."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -4698,8 +4717,8 @@ msgstr "Gestionar las categorías de almacenamiento"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)"
 msgstr ""
-"Administrar empaquetados de productos (por ejemplo, paquete de 6 botellas, "
-"caja de 10 unidades)"
+"Administrar envases de productos (por ejemplo, paquete de 6 botellas, caja "
+"de 10 unidades)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__manual
@@ -5774,7 +5793,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_id
 msgid "Packaging"
-msgstr "Empaquetado"
+msgstr "Envase"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__height
@@ -6182,18 +6201,18 @@ msgstr "Movimientos de Producto (Stock Move Line)"
 #. module: stock
 #: model:ir.model,name:stock.model_product_packaging
 msgid "Product Packaging"
-msgstr "Empaquetado del producto"
+msgstr "Envase del producto"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_packaging
 msgid "Product Packaging (ZPL)"
-msgstr "Empaquetado del producto (ZPL)"
+msgstr "Envase del producto (ZPL)"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packagings
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Product Packagings"
-msgstr "Empaquetados del producto"
+msgstr "Envases de productos"
 
 #. module: stock
 #. odoo-python
@@ -6991,7 +7010,7 @@ msgstr "Reserva"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
 msgid "Reserve Only Full Packagings"
-msgstr "Reservar solo empaquetados completos"
+msgstr "Reservar solo paquetes completos"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category__packaging_reserve_method
@@ -10109,6 +10128,24 @@ msgid ""
 msgstr ""
 "No puede mover el mismo contenido del paquete más de una vez en la misma "
 "transferencia o dividir el mismo paquete en dos ubicaciones."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from both "
+"immediate and planned transfers."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
 
 #. module: stock
 #. odoo-python

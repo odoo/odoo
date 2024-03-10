@@ -800,7 +800,7 @@ msgstr "Acción"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_needaction
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_needaction
 msgid "Action Needed"
-msgstr "Acción requerida"
+msgstr "Se requiere una acción"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__replenish_location
@@ -1835,6 +1835,11 @@ msgid ""
 msgstr ""
 "La conversión entre las unidades de medidas solo puede ocurrir si pertenecen"
 " a la misma categoría. La conversión se basará en los cambios establecidos."
+
+#. module: stock
+#: model:ir.actions.server,name:stock.stock_quant_stock_move_line_desynchronization
+msgid "Correct inconsistencies for reservation"
+msgstr "Corrija las inconsistencias de la reservación"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -3011,6 +3016,13 @@ msgid "First SN"
 msgstr "Primer NS"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Fix discrepancies"
+msgstr "Solucione las discrepancias"
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
 msgid "Fixed"
 msgstr "Fijo"
@@ -4095,6 +4107,7 @@ msgstr ""
 "Si el error continúa o si este mensaje aparece con frecuencia, envíe un ticket de soporte a https://www.odoo.com/help"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -7223,7 +7236,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Rule %s belongs to %s while the route belongs to %s."
-msgstr "La ruta %s pertenece a %s mientras que la ruta pertenece a %s."
+msgstr "La regla %s pertenece a %s, mientras que la ruta pertenece a %s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -10118,6 +10131,28 @@ msgid ""
 msgstr ""
 "No puede mover el mismo contenido del paquete más de una vez en el mismo "
 "traslado o dividir el mismo paquete en dos ubicaciones."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from both "
+"immediate and planned transfers."
+msgstr ""
+"No es posible empaquetar productos en el mismo paquete cuando son de "
+"traslados inmediatos y planeados."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+"No es posible empaquetar productos en el mismo paquete cuando pertenecen a "
+"distintos traslados con diferentes tipos de operación."
 
 #. module: stock
 #. odoo-python

@@ -1830,6 +1830,11 @@ msgstr ""
 "Kategorie angehören. Die Umrechnung erfolgt auf Basis der Kennzahlen."
 
 #. module: stock
+#: model:ir.actions.server,name:stock.stock_quant_stock_move_line_desynchronization
+msgid "Correct inconsistencies for reservation"
+msgstr "Inkonsistenzen für Reservierung korrigieren"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
 msgid "Corridor (X)"
 msgstr "Lagergang (X)"
@@ -3012,6 +3017,13 @@ msgid "First SN"
 msgstr "Erste SN"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Fix discrepancies"
+msgstr "Ungereimtheiten beheben"
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
 msgid "Fixed"
 msgstr "Fest"
@@ -4104,6 +4116,7 @@ msgstr ""
 "Wenn der Fehler weiterhin besteht oder diese Meldung häufig auftritt, senden Sie bitte ein Supportticket an https://www.odoo.com/help"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -10144,6 +10157,28 @@ msgid ""
 msgstr ""
 "Es ist nicht möglich, denselben Paketinhalt mehr als einmal in derselben "
 "Bewegung zu verschieben oder dasselbe Paket auf zwei Orte aufzuteilen."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from both "
+"immediate and planned transfers."
+msgstr ""
+"Sie können keine Produkte in ein und dasselbe Paket packen, wenn sie sowohl "
+"aus sofortigen als auch aus geplanten Transfers stammen."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+"Sie können keine Produkte in ein und dasselbe Paket packen, wenn sie aus "
+"verschiedenen Transfers mit unterschiedlichen Vorgangsarten stammen."
 
 #. module: stock
 #. odoo-python

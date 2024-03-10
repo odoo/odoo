@@ -26,6 +26,7 @@
 # Maitê Dietze, 2023
 # Daniel Reis, 2023
 # Rita Bastos, 2024
+# Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024
 # 
 msgid ""
 msgstr ""
@@ -33,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Rita Bastos, 2024\n"
+"Last-Translator: Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1306,7 +1307,7 @@ msgstr "Opções Avançadas"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Africa"
-msgstr ""
+msgstr "África"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_exception_decoration__warning
@@ -1564,7 +1565,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Asia"
-msgstr ""
+msgstr "Ásia"
 
 #. module: mail
 #. odoo-javascript
@@ -2014,7 +2015,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "Pode Editar Corpo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
@@ -2759,7 +2760,9 @@ msgstr "Moeda"
 #: model:ir.model.fields,help:mail.field_mail_mail__starred
 #: model:ir.model.fields,help:mail.field_mail_message__starred
 msgid "Current user has a starred notification linked to this message"
-msgstr "Usuário atual marcou uma notificação ligada a esta mensagem"
+msgstr ""
+"O utilizador atual tem uma notificação com destaque vinculada a esta "
+"mensagem"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_bounced_content
@@ -4847,7 +4850,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_mail_template_editor
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "É Editor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_is_follower
@@ -5985,10 +5988,10 @@ msgid ""
 "on its wall."
 msgstr ""
 "Subtipos de mensagem proporcionam um tipo mais preciso nas mensagens, "
-"especialmente para sistemas de notificação. Por exemplo, podem ser uma "
-"notificação relacionada a um novo registro (Novo), ou a uma mudança de "
-"estágio em um processo (Mudança de Estágio). Elas permitem refinar as "
-"notificações que o usuário quer receber em ser mural."
+"especialmente para notificações de sistema. Por exemplo, pode ser uma "
+"notificação relacionada com um novo registo (Novo), ou a uma mudança de "
+"estado num processo (Mudança de Estado). Os subtipos de mensagem permitem "
+"refinar as notificações que o utilizador quer receber no seu mural."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
@@ -6001,8 +6004,8 @@ msgid ""
 "Message subtypes followed, meaning subtypes that will be pushed onto the "
 "user's Wall."
 msgstr ""
-"Subtipos de mensagem seguidos, são subtipos que serão enviados ao Mural do "
-"usuário."
+"Subtipos de mensagem seguidos, são subtipos que serão enviados para o Mural "
+"do utilizador."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__message_type
@@ -6013,8 +6016,8 @@ msgid ""
 "comment for other messages such as user replies"
 msgstr ""
 "Tipo de mensagem: e-mail para mensagens de e-mail, notificação para "
-"mensagens do sistema e comentário para outros tipos como respostas de "
-"usuário."
+"mensagens do sistema e comentário para outras mensagens do tipo respostas de"
+" utilizador."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__message_id
@@ -6370,7 +6373,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Next (Right-Arrow)"
-msgstr ""
+msgstr "Seguinte (Seta p/ Direita)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
@@ -7011,6 +7014,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Idioma de tradução (ISO code) opcional para selecionar no envio de um "
+"e-mail. Se não atribuído, a versão inglesa será utilizada. Deverá usualmente"
+" ser uma expressão substituta que providencie o idioma apropriado, ex. {{ "
+"object.partner_id.lang }}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_mode
@@ -7523,7 +7530,7 @@ msgstr "Antevisão de"
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Previous (Left-Arrow)"
-msgstr ""
+msgstr "Anterior (Seta p/ Esquerda)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__previous_activity_type_id
@@ -7915,7 +7922,7 @@ msgstr "Remover este Seguidor"
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__render_model
 #: model:ir.model.fields,field_description:mail.field_mail_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Modelo de Renderização"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
@@ -9621,7 +9628,7 @@ msgstr "Hoje:"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Tokyo"
-msgstr ""
+msgstr "Tóquio"
 
 #. module: mail
 #. odoo-javascript
@@ -9852,6 +9859,8 @@ msgstr ""
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
+"Incapaz de submeter a mensagem, por favor configure o endereço de e-mail do "
+"remetente."
 
 #. module: mail
 #. odoo-python
@@ -10234,7 +10243,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Viewer"
-msgstr ""
+msgstr "Visualizador"
 
 #. module: mail
 #. odoo-javascript

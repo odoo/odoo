@@ -2086,7 +2086,7 @@ msgstr "Acción"
 #: model:ir.model.fields,field_description:account.field_res_company__message_needaction
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__message_needaction
 msgid "Action Needed"
-msgstr "Acción requerida"
+msgstr "Se requiere una acción"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_actions
@@ -16908,6 +16908,13 @@ msgid ""
 msgstr ""
 "No puede crear un movimiento directamente en estado publicado. Cree un "
 "borrador de movimiento y publíquelo después."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr "No puede crear grupos recursivos."
 
 #. module: account
 #. odoo-python
