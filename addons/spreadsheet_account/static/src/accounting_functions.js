@@ -5,6 +5,8 @@ import { sprintf } from "@web/core/utils/strings";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { EvaluationError } from "@odoo/o-spreadsheet";
+import { isLoadingError } from "@spreadsheet/o_spreadsheet/errors";
+import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
 const { functionRegistry } = spreadsheet.registries;
 const { arg, toBoolean, toString, toNumber, toJsDate } = spreadsheet.helpers;
 
@@ -163,16 +165,13 @@ functionRegistry.add("ODOO.CREDIT", {
         const _dateRange = parseAccountingDate(dateRange?.value, this.locale);
         const _companyId = companyId?.value;
         const _includeUnposted = toBoolean(includeUnposted);
-        return {
-            value: this.getters.getAccountPrefixCredit(
-                _accountCodes,
-                _dateRange,
-                _offset,
-                _companyId,
-                _includeUnposted
-            ),
-            format: this.getters.getCompanyCurrencyFormat(_companyId) || "#,##0.00",
-        };
+        return this.getters.getAccountPrefixCredit(
+            _accountCodes,
+            _dateRange,
+            _offset,
+            _companyId,
+            _includeUnposted
+        );
     },
 });
 
@@ -196,16 +195,13 @@ functionRegistry.add("ODOO.DEBIT", {
         const _dateRange = parseAccountingDate(dateRange?.value, this.locale);
         const _companyId = companyId?.value;
         const _includeUnposted = toBoolean(includeUnposted);
-        return {
-            value: this.getters.getAccountPrefixDebit(
-                _accountCodes,
-                _dateRange,
-                _offset,
-                _companyId,
-                _includeUnposted
-            ),
-            format: this.getters.getCompanyCurrencyFormat(_companyId) || "#,##0.00",
-        };
+        return this.getters.getAccountPrefixDebit(
+            _accountCodes,
+            _dateRange,
+            _offset,
+            _companyId,
+            _includeUnposted
+        );
     },
 });
 
@@ -229,24 +225,31 @@ functionRegistry.add("ODOO.BALANCE", {
         const _dateRange = parseAccountingDate(dateRange?.value, this.locale);
         const _companyId = companyId?.value;
         const _includeUnposted = toBoolean(includeUnposted);
-        const value =
-            this.getters.getAccountPrefixDebit(
-                _accountCodes,
-                _dateRange,
-                _offset,
-                _companyId,
-                _includeUnposted
-            ) -
-            this.getters.getAccountPrefixCredit(
-                _accountCodes,
-                _dateRange,
-                _offset,
-                _companyId,
-                _includeUnposted
-            );
-        return { value, format: this.getters.getCompanyCurrencyFormat(_companyId) || "#,##0.00" };
+        const debit = this.getters.getAccountPrefixDebit(
+            _accountCodes,
+            _dateRange,
+            _offset,
+            _companyId,
+            _includeUnposted
+        );
+        const credit = this.getters.getAccountPrefixCredit(
+            _accountCodes,
+            _dateRange,
+            _offset,
+            _companyId,
+            _includeUnposted
+        );
+        if (isLoadingError(debit) || isLoadingError(credit)) {
+            return LOADING_ERROR;
+        }
+        return {
+            value: debit.value - credit.value,
+            format: debit.format || "#,##0.00",
+        };
     },
 });
+
+const FISCAL_YEAR_NOT_FOUND = _t("The company fiscal year could not be found.");
 
 functionRegistry.add("ODOO.FISCALYEAR.START", {
     description: _t("Returns the starting date of the fiscal year encompassing the provided date."),
@@ -261,6 +264,12 @@ functionRegistry.add("ODOO.FISCALYEAR.START", {
             toJsDate(date, this.locale),
             companyId.value === null ? null : toNumber(companyId, this.locale)
         );
+        if (startDate.value === false) {
+            return {
+                value: spreadsheet.CellErrorType.GenericError,
+                message: FISCAL_YEAR_NOT_FOUND,
+            };
+        }
         return {
             value: toNumber(startDate, this.locale),
             format: this.locale.dateFormat,
@@ -281,6 +290,12 @@ functionRegistry.add("ODOO.FISCALYEAR.END", {
             toJsDate(date, this.locale),
             companyId.value === null ? null : toNumber(companyId, this.locale)
         );
+        if (endDate.value === false) {
+            return {
+                value: spreadsheet.CellErrorType.GenericError,
+                message: FISCAL_YEAR_NOT_FOUND,
+            };
+        }
         return {
             value: toNumber(endDate, this.locale),
             format: this.locale.dateFormat,
@@ -294,7 +309,6 @@ functionRegistry.add("ODOO.ACCOUNT.GROUP", {
     category: "Odoo",
     returns: ["NUMBER"],
     compute: function (accountType) {
-        const accountTypes = this.getters.getAccountGroupCodes(toString(accountType));
-        return accountTypes.join(",");
+        return this.getters.getAccountGroupCodes(toString(accountType));
     },
 });

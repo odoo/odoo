@@ -41,7 +41,8 @@ export class LoadableDataSource {
         this._loadPromise = undefined;
         this._isFullyLoaded = false;
         this._isValid = true;
-        this._loadErrorMessage = "";
+        /** @type {string} */
+        this.loadingErrorMessage = "";
     }
 
     get _orm() {
@@ -71,12 +72,12 @@ export class LoadableDataSource {
         if (!this._loadPromise) {
             this._isFullyLoaded = false;
             this._isValid = true;
-            this._loadErrorMessage = "";
+            this.loadingErrorMessage = "";
             this._loadPromise = this._concurrency
                 .add(this._load())
                 .catch((e) => {
                     this._isValid = false;
-                    this._loadErrorMessage = e instanceof RPCError ? e.data.message : e.message;
+                    this.loadingErrorMessage = e instanceof RPCError ? e.data.message : e.message;
                 })
                 .finally(() => {
                     this._lastUpdate = Date.now();
@@ -98,16 +99,30 @@ export class LoadableDataSource {
         return this._isFullyLoaded;
     }
 
+    isLoading() {
+        if (this._isFullyLoaded) {
+            return false;
+        }
+        this.load();
+        return true;
+    }
+
+    hasLoadingFailed() {
+        if (this._isFullyLoaded && !this._isValid) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * @protected
      */
     _assertDataIsLoaded() {
-        if (!this._isFullyLoaded) {
-            this.load();
+        if (this.isLoading()) {
             throw LOADING_ERROR;
         }
-        if (!this._isValid) {
-            throw new EvaluationError(this._loadErrorMessage);
+        if (this.hasLoadingFailed()) {
+            throw new EvaluationError(this.loadingErrorMessage);
         }
     }
 

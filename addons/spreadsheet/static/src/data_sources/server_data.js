@@ -1,8 +1,7 @@
 /** @odoo-module */
 // @ts-check
 
-import { EvaluationError } from "@odoo/o-spreadsheet";
-import { LoadingDataError, isLoadingError } from "../o_spreadsheet/errors";
+import { Loadable } from "./loadable";
 
 /**
  * @param {T[]} array
@@ -97,15 +96,13 @@ export class ServerData {
         this.orm = orm;
         /** @type {(promise: Promise<any>) => void} */
         this.startLoadingCallback = whenDataStartLoading ?? (() => {});
-        /** @type {Record<string, unknown>}*/
+        /** @type {Record<string, Loadable<unknown>>}*/
         this.cache = {};
-        /** @type {Record<string, Promise<unknown>>}*/
-        this.asyncCache = {};
         this.batchEndpoints = {};
     }
 
     /**
-     * @returns {{get: (resModel:string, method: string, args: unknown) => any}}
+     * @returns {{get: (resModel:string, method: string, args: unknown) => Loadable<any>}}
      */
     get batch() {
         return { get: (resModel, method, args) => this._getBatchItem(resModel, method, args) };
@@ -116,43 +113,34 @@ export class ServerData {
      * @param {string} resModel
      * @param {string} method
      * @param  {unknown} args
-     * @returns {any}
+     * @returns {Loadable<unknown>}
      */
     _getBatchItem(resModel, method, args) {
         const request = new Request(resModel, method, [args]);
         if (!(request.key in this.cache)) {
-            const error = new LoadingDataError();
-            this.cache[request.key] = error;
+            const loadable = new Loadable();
+            this.cache[request.key] = loadable;
             this._batch(request);
-            throw error;
+            return loadable;
         }
-        return this._getOrThrowCachedResponse(request);
+        return this.cache[request.key];
     }
 
     /**
      * @param {string} resModel
      * @param {string} method
      * @param  {unknown[]} args
-     * @returns {any}}
+     * @returns {Loadable<any>}
      */
     get(resModel, method, args) {
         const request = new Request(resModel, method, args);
         if (!(request.key in this.cache)) {
-            const error = new LoadingDataError();
-            this.cache[request.key] = error;
-            const promise = this.orm
-                .call(resModel, method, args)
-                .then((result) => (this.cache[request.key] = result))
-                .catch(
-                    (error) =>
-                        (this.cache[request.key] = new EvaluationError(
-                            error.data?.message || error.message
-                        ))
-                );
-            this.startLoadingCallback(promise);
-            throw error;
+            const promise = this.orm.call(resModel, method, args);
+            const loadable = new Loadable(promise);
+            this.cache[request.key] = loadable;
+            this.startLoadingCallback(loadable.deferred);
         }
-        return this._getOrThrowCachedResponse(request);
+        return this.cache[request.key];
     }
 
     /**
@@ -164,10 +152,13 @@ export class ServerData {
      */
     async fetch(resModel, method, args) {
         const request = new Request(resModel, method, args);
-        if (!(request.key in this.asyncCache)) {
-            this.asyncCache[request.key] = this.orm.call(resModel, method, args);
+        if (!(request.key in this.cache)) {
+            const promise = this.orm.call(resModel, method, args);
+            const loadable = new Loadable(promise);
+            this.cache[request.key] = loadable;
+            this.startLoadingCallback(loadable.deferred);
         }
-        return this.asyncCache[request.key];
+        return this.cache[request.key].deferred;
     }
 
     /**
@@ -178,19 +169,6 @@ export class ServerData {
     _batch(request) {
         const endpoint = this._getBatchEndPoint(request.resModel, request.method);
         endpoint.call(request);
-    }
-
-    /**
-     * @private
-     * @param {Request} request
-     * @return {unknown}
-     */
-    _getOrThrowCachedResponse(request) {
-        const data = this.cache[request.key];
-        if (data instanceof Error || isLoadingError({ value: data })) {
-            throw data;
-        }
-        return data;
     }
 
     /**
@@ -216,13 +194,8 @@ export class ServerData {
     _createBatchEndpoint(resModel, method) {
         return new BatchEndpoint(this.orm, resModel, method, {
             whenDataStartLoading: (promise) => this.startLoadingCallback(promise),
-            successCallback: (request, result) => {
-                this.cache[request.key] = result;
-            },
-            failureCallback: (request, error) =>
-                (this.cache[request.key] = new EvaluationError(
-                    error.data?.message || error.message
-                )),
+            successCallback: (request, result) => this.cache[request.key].deferred.resolve(result),
+            failureCallback: (request, error) => this.cache[request.key].deferred.reject(error),
         });
     }
 }

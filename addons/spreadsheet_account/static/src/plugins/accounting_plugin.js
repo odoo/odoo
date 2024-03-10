@@ -8,6 +8,8 @@ import { camelToSnakeObject, toServerDateString } from "@spreadsheet/helpers/hel
 
 /**
  * @typedef {import("../accounting_functions").DateRange} DateRange
+ *
+ * @typedef {import("@odoo/o-spreadsheet").FPayload} FPayload
  */
 
 export class AccountingPlugin extends OdooUIPlugin {
@@ -44,11 +46,17 @@ export class AccountingPlugin extends OdooUIPlugin {
      * @param {number} offset end  date of the period to look
      * @param {number | null} companyId specific company to target
      * @param {boolean} includeUnposted wether or not select unposted entries
-     * @returns {number}
+     * @returns {FPayload}
      */
     getAccountPrefixCredit(codes, dateRange, offset, companyId, includeUnposted) {
-        const data = this._fetchAccountData(codes, dateRange, offset, companyId, includeUnposted);
-        return data.credit;
+        const format = this.getters.getCompanyCurrencyFormat(companyId);
+        return this._fetchAccountData(
+            codes,
+            dateRange,
+            offset,
+            companyId,
+            includeUnposted
+        ).toEvaluationValueWithFormat(format, "credit");
     }
 
     /**
@@ -58,37 +66,51 @@ export class AccountingPlugin extends OdooUIPlugin {
      * @param {number} offset end  date of the period to look
      * @param {number | null} companyId specific company to target
      * @param {boolean} includeUnposted wether or not select unposted entries
-     * @returns {number}
+     * @returns {FPayload}
      */
     getAccountPrefixDebit(codes, dateRange, offset, companyId, includeUnposted) {
-        const data = this._fetchAccountData(codes, dateRange, offset, companyId, includeUnposted);
-        return data.debit;
+        const format = this.getters.getCompanyCurrencyFormat(companyId);
+        return this._fetchAccountData(
+            codes,
+            dateRange,
+            offset,
+            companyId,
+            includeUnposted
+        ).toEvaluationValueWithFormat(format, "debit");
     }
 
     /**
      * @param {Date} date Date included in the fiscal year
      * @param {number | null} companyId specific company to target
-     * @returns {string | undefined}
+     * @returns {FPayload}
      */
     getFiscalStartDate(date, companyId) {
-        return this._fetchCompanyData(date, companyId).start;
+        return this._fetchCompanyData(date, companyId).toEvaluationValue("start");
     }
 
     /**
      * @param {Date} date Date included in the fiscal year
      * @param {number | undefined} companyId specific company to target
-     * @returns {string | undefined}
+     * @returns {FPayload}
      */
     getFiscalEndDate(date, companyId) {
-        return this._fetchCompanyData(date, companyId).end;
+        return this._fetchCompanyData(date, companyId).toEvaluationValue("end");
     }
 
     /**
      * @param {string} accountType
-     * @returns {string[]}
+     * @returns {FPayload}
      */
     getAccountGroupCodes(accountType) {
-        return this.serverData.batch.get("account.account", "get_account_group", accountType);
+        const codes = this.serverData.batch.get(
+            "account.account",
+            "get_account_group",
+            accountType
+        );
+        if (codes.isResolved()) {
+            return { value: codes.value.join(",") };
+        }
+        return codes.toEvaluationValue();
     }
 
     /**
@@ -99,10 +121,11 @@ export class AccountingPlugin extends OdooUIPlugin {
      * @param {number} offset end  date of the period to look
      * @param {number | null} companyId specific companyId to target
      * @param {boolean} includeUnposted wether or not select unposted entries
-     * @returns {{ debit: number, credit: number }}
+     * @returns {import("@spreadsheet/data_sources/loadable").Loadable}
      */
     _fetchAccountData(codes, dateRange, offset, companyId, includeUnposted) {
         dateRange.year += offset;
+        // TODO move this ?
         // Excel dates start at 1899-12-30, we should not support date ranges
         // that do not cover dates prior to it.
         // Unfortunately, this check needs to be done right before the server
@@ -123,16 +146,12 @@ export class AccountingPlugin extends OdooUIPlugin {
      * @private
      * @param {Date} date
      * @param {number | null} companyId
-     * @returns {{start: string, end: string}}
+     * @returns {import("@spreadsheet/data_sources/loadable").Loadable}
      */
     _fetchCompanyData(date, companyId) {
-        const result = this.serverData.batch.get("res.company", "get_fiscal_dates", {
+        return this.serverData.batch.get("res.company", "get_fiscal_dates", {
             date: toServerDateString(date),
             company_id: companyId,
         });
-        if (result === false) {
-            throw new EvaluationError(_t("The company fiscal year could not be found."));
-        }
-        return result;
     }
 }

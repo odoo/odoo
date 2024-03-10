@@ -4,9 +4,11 @@ import { _t } from "@web/core/l10n/translation";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { sprintf } from "@web/core/utils/strings";
 import { EvaluationError } from "@odoo/o-spreadsheet";
+import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
 
 const { arg, toString, toNumber } = spreadsheet.helpers;
 const { functionRegistry } = spreadsheet.registries;
+const { CellErrorType } = spreadsheet;
 
 //--------------------------------------------------------------------------
 // Spreadsheet functions
@@ -31,8 +33,14 @@ const ODOO_LIST = {
         const position = toNumber(index, this.locale) - 1;
         const _fieldName = toString(fieldName);
         assertListsExists(id, this.getters);
+        const dataSource = this.getters.getListDataSource(id);
+        if (dataSource.isLoading()) {
+            return LOADING_ERROR;
+        } else if (dataSource.hasLoadingFailed()) {
+            return { value: CellErrorType.GenericError, message: dataSource.loadingErrorMessage };
+        }
         const value = this.getters.getListCellValue(id, position, _fieldName);
-        const field = this.getters.getListDataSource(id).getField(_fieldName);
+        const field = dataSource.getField(_fieldName);
         return {
             value,
             format: odooListFormat(id, position, field, this.getters, this.locale),
@@ -74,6 +82,12 @@ const ODOO_LIST_HEADER = {
         const id = toString(listId);
         const field = toString(fieldName);
         assertListsExists(id, this.getters);
+        const dataSource = this.getters.getListDataSource(id);
+        if (dataSource.isLoading()) {
+            return LOADING_ERROR;
+        } else if (dataSource.hasLoadingFailed()) {
+            return { value: CellErrorType.GenericError, message: dataSource.loadingErrorMessage };
+        }
         return this.getters.getListHeaderValue(id, field);
     },
     returns: ["NUMBER", "STRING"],
