@@ -25,6 +25,7 @@
 # Manuela Silva <mmsrs@sky.com>, 2023
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
 # Rita Bastos, 2024
+# Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024
 # 
 msgid ""
 msgstr ""
@@ -32,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-08-23 09:22+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Rita Bastos, 2024\n"
+"Last-Translator: Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -951,6 +952,10 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"Aumente as suas vendas com vários tipos de programas: Cupões, Promoções, "
+"Cartão Oferta, Fidelidade. Condições específicas podem ser definidas "
+"(produtos, clientes, valor mínimo de compra, período). As recompensas podem "
+"ser descontos (% ou valor) ou produtos gratuitos."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -963,7 +968,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__limited_partners_loading
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_limited_partners_loading
 msgid ""
-"By default, 100 partners are loaded.\n"
+"By default, 10000 partners are loaded.\n"
 "When the session is open, we keep on loading all remaining partners in the background.\n"
 "In the meantime, you can use the 'Load Customers' button to load partners from database."
 msgstr ""
@@ -1193,7 +1198,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_chairs
 msgid "Chairs"
-msgstr ""
+msgstr "Cadeiras"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1991,7 +1996,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_desks
 msgid "Desks"
-msgstr ""
+msgstr "Secretárias"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__account_id
@@ -3743,6 +3748,12 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Only administrators can edit receipt headers and footers"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_only_round_cash_method
 msgid "Only apply rounding on cash"
@@ -5368,7 +5379,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
 #, python-format
 msgid "Resume Order"
-msgstr ""
+msgstr "Retomar Encomenda"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5396,6 +5407,7 @@ msgstr "Devolvido"
 #, python-format
 msgid "Reversal of POS closing entry %s for order %s from session %s"
 msgstr ""
+"Reversão do lançamento de fecho do PDV %s para o pedido %s da sessão %s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7415,7 +7427,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.whiteboard_product_template
 msgid "Whiteboard"
-msgstr ""
+msgstr "Quadro Branco"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.whiteboard_pen_product_template

@@ -7,9 +7,9 @@
 # Cécile Collart <cco@odoo.com>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Martin Trigaux, 2023
-# Lucia Pacheco, 2023
 # Iran Villalobos López, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Lucia Pacheco, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -1160,7 +1160,7 @@ msgstr "Logros"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_needaction
 msgid "Action Needed"
-msgstr "Acción requerida"
+msgstr "Se requiere una acción"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__active
@@ -4428,6 +4428,12 @@ msgstr "En cuanto acabe, no olvide <b>publicar</b> su curso."
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__public
 msgid "Open"
 msgstr "Abierto"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/mail.py:0
+#, python-format
+msgid "Only a single review can be posted per course."
+msgstr "Solo se puede publicar una valoración por curso."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__lang

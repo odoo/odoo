@@ -7,11 +7,11 @@
 # Kevin Harrings <kha@odoo.com>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Aimée Mendoza Sánchez, 2023
-# Lucia Pacheco, 2023
 # Martin Trigaux, 2024
 # Iran Villalobos López, 2024
 # Wil Odoo, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Lucia Pacheco, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -1925,7 +1925,7 @@ msgstr "Acción"
 #: model:ir.model.fields,field_description:account.field_res_company__message_needaction
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__message_needaction
 msgid "Action Needed"
-msgstr "Acción requerida"
+msgstr "Se requiere una acción"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_actions
@@ -16123,6 +16123,13 @@ msgid ""
 msgstr ""
 "No puede crear un movimiento directamente en estado publicado. Cree un "
 "borrador de movimiento y publíquelo después."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr "No puede crear grupos recursivos."
 
 #. module: account
 #. odoo-python
