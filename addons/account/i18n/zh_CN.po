@@ -6,6 +6,7 @@
 # Chloe Wang, 2024
 # Yazi Tian, 2024
 # Wil Odoo, 2024
+# Minggui He <heccjj@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-07 10:22+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Minggui He <heccjj@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1032,7 +1033,7 @@ msgstr ""
 msgid ""
 "<span invisible=\"state != 'draft' or name != '/' or posted_before or "
 "quick_edit_mode\">Draft</span>"
-msgstr ""
+msgstr "草稿"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1220,7 +1221,7 @@ msgstr "<span>查看</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>Warning: this bill might be a duplicate of</span>"
-msgstr ""
+msgstr "警告：该账单可能是其副本"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2913,7 +2914,7 @@ msgstr "账单"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Bill"
-msgstr ""
+msgstr "返回订单"
 
 #. module: account
 #. odoo-javascript
@@ -5717,7 +5718,7 @@ msgstr "草稿"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft (%(currency_amount)s)"
-msgstr ""
+msgstr "草稿 (%(currency_amount)s)"
 
 #. module: account
 #. odoo-python
@@ -7293,7 +7294,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_date
 msgid "Ignore Abnormal Date"
-msgstr ""
+msgstr "忽略异常日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__ignore_abnormal_invoice_amount
@@ -15417,7 +15418,7 @@ msgstr "视图"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
 msgid "View Partner(s)"
-msgstr ""
+msgstr "查看合作伙伴"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__warning
@@ -15904,6 +15905,13 @@ msgid ""
 "You cannot create a move already in the posted state. Please create a draft "
 "move and post it after."
 msgstr "不能创建处于已过账状态的分录。请创建分录草稿，并之后过账。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr ""
 
 #. module: account
 #. odoo-python

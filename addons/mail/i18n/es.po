@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
+# Fernanda Alvarez, 2024
 # Larissa Manderfeld, 2024
 # Wil Odoo, 2024
 # 
@@ -391,7 +392,7 @@ msgstr "<span class=\"d-block w-75 py-2\">Color del encabezado</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr ""
+msgstr "<span class=\"me-1 oe_inline\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2029,6 +2030,7 @@ msgstr "Compañías"
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
 msgid "Companies using this domain as default for sending mails"
 msgstr ""
+"Empresas que usan este dominio de forma predeterminada para enviar correos"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
@@ -2591,6 +2593,10 @@ msgid ""
 " local-part e.g. 'notifications' either a complete email address e.g. "
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
+"Por defecto de cuando no coincide con los filtros del servidor saliente. "
+"Puede ser una parte local, por ejemplo \"notificaciones\" o una dirección de"
+" correo electrónico completa, por ejemplo \"notificaciones@ejemplo.com\", "
+"para anular todos los correos electrónicos salientes."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
@@ -3250,6 +3256,8 @@ msgstr "Asistente de redacción de correo electrónico"
 #: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
 msgstr ""
+"Dominio de correo electrónico, por ejemplo \"ejemplo.com\" en "
+"\"odoo@example.com\"."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -5122,6 +5130,8 @@ msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
 msgstr ""
+"Parte local del correo electrónico que se utiliza como \"Respuesta a\" para "
+"recibir respuestas, por ejemplo, \"catchall\" en \"catchall@ejemplo.com\""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -5129,6 +5139,9 @@ msgid ""
 "Local-part of email used for Return-Path used when emails bounce e.g. "
 "'bounce' in 'bounce@example.com'"
 msgstr ""
+"Parte local del correo electrónico que se utiliza como \"ruta de retorno\" "
+"en caso de que los correos se devuelvan, por ejemplo, \"devolucion\" en "
+"\"devolucion@ejemplo.com\""
 
 #. module: mail
 #. odoo-javascript
@@ -9341,6 +9354,13 @@ msgstr "Unidad de retraso"
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/mail_tracking_value.py:0
+#, python-format
+msgid "Unknown"
+msgstr "Desconocido"
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/mail_notification.py:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__unknown
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__unknown
@@ -10419,12 +10439,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"bounce\""
-msgstr ""
+msgstr "Por ejemplo, \"devolucion\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"catchall\""
-msgstr ""
+msgstr "Por ejemplo, \"catchall\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -10434,7 +10454,7 @@ msgstr "ej. \"miempresa.com\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"notifications\""
-msgstr ""
+msgstr "p. ej. \"notificaciones\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
