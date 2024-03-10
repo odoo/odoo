@@ -92,8 +92,9 @@ class AccountJournal(models.Model):
     default_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
         string='Default Account',
-        domain="[('deprecated', '=', False),"
-               "'|', ('account_type', '=', default_account_type), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]")
+        domain="[('deprecated', '=', False), ('account_type', '=like', default_account_type)]",
+    )
+
     suspense_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True,
         compute='_compute_suspense_account_id',
@@ -300,15 +301,12 @@ class AccountJournal(models.Model):
         default_account_id_types = {
             'bank': 'asset_cash',
             'cash': 'asset_cash',
-            'sale': 'income',
-            'purchase': 'expense'
+            'sale': 'income%',
+            'purchase': 'expense%',
         }
 
         for journal in self:
-            if journal.type in default_account_id_types:
-                journal.default_account_type = default_account_id_types[journal.type]
-            else:
-                journal.default_account_type = False
+            journal.default_account_type = default_account_id_types.get(journal.type, '%')
 
     @api.depends('type', 'currency_id')
     def _compute_inbound_payment_method_line_ids(self):
