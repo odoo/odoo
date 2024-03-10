@@ -91,10 +91,6 @@ class AccountTax(models.Model):
     _check_company_domain = models.check_company_domain_parent_of
 
     name = fields.Char(string='Tax Name', required=True, translate=True, tracking=True)
-    name_searchable = fields.Char(store=False, search='_search_name',
-          help="This dummy field lets us use another search method on the field 'name'."
-               "This allows more freedom on how to search the 'name' compared to 'filter_domain'."
-               "See '_search_name' and '_parse_name_search' for why this is not possible with 'filter_domain'.")
     type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Type', required=True, default="sale", tracking=True,
         help="Determines where the tax is selectable. Note: 'None' means a tax can't be used by itself, however it can still be used in a group. 'adjustment' is used to perform tax adjustment.")
     tax_scope = fields.Selection([('service', 'Services'), ('consu', 'Goods')], string="Tax Scope", help="Restrict the use of taxes to a type of product.")
@@ -429,16 +425,10 @@ class AccountTax(models.Model):
                 list_name[i] = '%'.join(re.sub(r"\W+", "", name))
         return ''.join(list_name)
 
-    @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+    def _search_display_name(self, name, operator='ilike'):
         if operator in ("ilike", "like"):
             name = AccountTax._parse_name_search(name)
-        return super()._name_search(name, domain, operator, limit, order)
-
-    def _search_name(self, operator, value):
-        if operator not in ("ilike", "like") or not isinstance(value, str):
-            return [('name', operator, value)]
-        return [('name', operator, AccountTax._parse_name_search(value))]
+        return super()._search_display_name(name, operator)
 
     def _check_repartition_lines(self, lines):
         self.ensure_one()

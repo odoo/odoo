@@ -138,14 +138,6 @@ class MaintenanceEquipment(models.Model):
             else:
                 record.display_name = record.name
 
-    @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        domain = domain or []
-        query = None
-        if name and operator not in expression.NEGATIVE_TERM_OPERATORS and operator != '=':
-            query = self._search([('name', '=', name)] + domain, limit=limit, order=order)
-        return query or super()._name_search(name, domain, operator, limit, order)
-
     name = fields.Char('Equipment Name', required=True, translate=True)
     active = fields.Boolean(default=True)
     owner_user_id = fields.Many2one('res.users', string='Owner', tracking=True)

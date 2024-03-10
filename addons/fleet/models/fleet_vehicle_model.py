@@ -47,12 +47,10 @@ class FleetVehicleModel(models.Model):
     vehicle_properties_definition = fields.PropertiesDefinition('Vehicle Properties')
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        domain = domain or []
+    def _search_display_name(self, name, operator='ilike'):
         if operator != 'ilike' or (name or '').strip():
-            name_domain = ['|', ('name', 'ilike', name), ('brand_id.name', 'ilike', name)]
-            domain = expression.AND([name_domain, domain])
-        return self._search(domain, limit=limit, order=order)
+            return ['|', ('name', 'ilike', name), ('brand_id.name', 'ilike', name)]
+        return super()._search_display_name(name, operator)
 
     @api.depends('brand_id')
     def _compute_display_name(self):

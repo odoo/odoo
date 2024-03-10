@@ -244,7 +244,7 @@ class MetaModel(api.Meta):
 
             add('id', fields.Id(automatic=True))
             add_default('display_name', fields.Char(
-                string='Display Name', automatic=True, compute='_compute_display_name'))
+                string='Display Name', automatic=True, compute='_compute_display_name', search='_search_display_name'))
 
             if attrs.get('_log_access', self._auto):
                 add_default('create_uid', fields.Many2one(
@@ -1689,6 +1689,27 @@ class BaseModel(metaclass=MetaModel):
             for record in self:
                 record.display_name = f"{record._name},{record.id}"
 
+    def _search_display_name(self, name, operator='ilike'):
+        """
+        Returns a domain that matches records whose display name matches the
+        given ``name`` pattern when compared with the given ``operator``.
+
+        This method is used to implement the search on the ``display_name``
+        field, and can be overridden to change the search criteria.
+        """
+        if name == '' and operator in ('like', 'ilike'):
+            return []
+
+        if not self._rec_name and not self._rec_names_search:
+            _logger.error("Cannot execute _search_display_name, no _rec_name or _rec_names_search defined on %s", self._name)
+
+        aggregator = expression.OR
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            aggregator = expression.AND
+
+        search_fnames = self._rec_names_search or ([self._rec_name] if self._rec_name else [])
+        return aggregator([[(field_name, operator, name)] for field_name in search_fnames])
+
     def name_get(self):
         """Returns a textual representation for the records in ``self``, with
         one item output per input record, in the same order.
@@ -1776,14 +1797,7 @@ class BaseModel(metaclass=MetaModel):
 
         No default is applied for parameters ``limit`` and ``order``.
         """
-        domain = list(domain or ())
-        search_fnames = self._rec_names_search or ([self._rec_name] if self._rec_name else [])
-        if not search_fnames:
-            _logger.warning("Cannot execute name_search, no _rec_name or _rec_names_search defined on %s", self._name)
-        # optimize out the default criterion of ``like ''`` that matches everything
-        elif not (name == '' and operator in ('like', 'ilike')):
-            aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
-            domain += aggregator([[(field_name, operator, name)] for field_name in search_fnames])
+        domain = list(domain or ()) + self._search_display_name(name, operator)
         return self._search(domain, limit=limit, order=order)
 
     @api.model
@@ -7042,7 +7056,6 @@ class BaseModel(metaclass=MetaModel):
         if create_values:
             records_batches.append(self.create(create_values))
         return self.concat(*records_batches)
-
 
 collections.abc.Set.register(BaseModel)
 # not exactly true as BaseModel doesn't have index or count

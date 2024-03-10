@@ -357,6 +357,18 @@ def distribute_not(domain):
     return result
 
 
+def _anyfy_one2many(left, operator, right, model):
+    if isinstance(right, int):
+        return (left, operator, right)
+    elif model._name_search == BaseModel._name_search:
+        subdomain = model._search_display_name(right, operator)
+        return (left, 'any', _anyfy_leaves(subdomain, model))
+    else:
+        # BAILOUT: _name_search was overloaded and _search_display_name
+        # can't be trusted to match the intent of the developer
+        # to_ids() will take care of it instead
+        return None
+
 def _anyfy_leaves(domain, model):
     """ Return the domain where all conditions on field sequences have been
     transformed into 'any' conditions.
@@ -376,13 +388,15 @@ def _anyfy_leaves(domain, model):
         field = model._fields.get(path[0])
         if not field:
             raise ValueError(f"Invalid field {model._name}.{path[0]} in leaf {item}")
+        comodel = model.env[field.comodel_name] if field.relational else None
+
         if len(path) > 1 and field.relational:  # skip properties
             subdomain = [(path[1], operator, right)]
-            comodel = model.env[field.comodel_name]
             result.append((path[0], 'any', _anyfy_leaves(subdomain, comodel)))
         elif operator in ('any', 'not any'):
-            comodel = model.env[field.comodel_name]
             result.append((left, operator, _anyfy_leaves(right, comodel)))
+        elif len(path) == 1 and field.relational:
+            result.append(_anyfy_one2many(path[0], operator, right, comodel) or item)
         else:
             result.append(item)
 
@@ -1142,6 +1156,8 @@ class expression(object):
                 if not field.search:
                     # field does not support search!
                     _logger.error("Non-stored field %s cannot be searched.", field, exc_info=True)
+                    _logger.error(f"More infos: {leaf}")
+                    _logger.error(''.join(traceback.format_stack())) # TODO: remove this line
                     if _logger.isEnabledFor(logging.DEBUG):
                         _logger.debug(''.join(traceback.format_stack()))
                     # Ignore it: generate a dummy leaf.

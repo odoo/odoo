@@ -449,8 +449,8 @@ class CurrencyRate(models.Model):
                 raise ValidationError("Currency rates should only be created for main companies")
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        return super()._name_search(parse_date(self.env, name), domain, operator, limit, order)
+    def _search_display_name(self, name, operator='ilike'):
+        return super()._search_display_name(parse_date(self.env, name), operator)
 
     @api.model
     def _get_view_cache_key(self, view_id=None, view_type='form', **options):

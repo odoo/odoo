@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.osv import expression
 
 def selection_fn(self):
     return [
@@ -51,11 +52,11 @@ for name, field in MODELS:
                 record.display_name = f"{self._name}:{record.value}"
 
         @api.model
-        def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+        def _search_display_name(self, name, operator='ilike'):
             if isinstance(name, str) and name.split(':')[0] == self._name:
-                return self._search([('value', operator, int(name.split(':')[1]))], limit=limit, order=order)
+                return [('value', operator, int(name.split(':')[1]))]
             else:
-                return []
+                return expression.FALSE_DOMAIN
 
 class One2ManyChild(models.Model):
     _name = 'export.one2many.child'
@@ -73,11 +74,11 @@ class One2ManyChild(models.Model):
             record.display_name = f"{self._name}:{record.value}"
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+    def _search_display_name(self, name, domain=None, operator='ilike', limit=None, order=None):
         if isinstance(name, str) and name.split(':')[0] == self._name:
-            return self._search([('value', operator, int(name.split(':')[1]))], limit=limit, order=order)
+            return [('value', operator, int(name.split(':')[1]))]
         else:
-            return []
+            return expression.FALSE_DOMAIN
 
 
 class One2ManyMultiple(models.Model):
@@ -132,11 +133,11 @@ class Many2ManyChild(models.Model):
             record.display_name = f"{self._name}:{record.value}"
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+    def _search_display_name(self, name, operator='ilike'):
         if isinstance(name, str) and name.split(':')[0] == self._name:
-            return self._search([('value', operator, int(name.split(':')[1]))], limit=limit, order=order)
+            return [('value', operator, int(name.split(':')[1]))]
         else:
-            return []
+            return expression.FALSE_DOMAIN
 
 
 class SelectionWithDefault(models.Model):

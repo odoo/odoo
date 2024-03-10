@@ -155,7 +155,7 @@
                             </h2>
                         </div>
                         <group name="phone_numbers">
-                            <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                             <label for="groups_id" string="Access Rights"
                                     invisible="id &gt; 0" groups="base.group_no_one"/>
                             <div invisible="id &gt; 0" groups="base.group_no_one">
@@ -221,7 +221,7 @@
                             <page name="access_rights" string="Access Rights">
                                 <group string="Multi Companies" invisible="companies_count &lt;= 1">
                                     <field string="Allowed Companies" name="company_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
-                                    <field string="Default Company" name="company_id" context="{'user_preference': 0}"/>
+                                    <field string="Default Company" name="company_id"/>
                                     <field string="Companies count" name="companies_count" invisible="1"/>
                                 </group>
                                 <field name="groups_id"/>
