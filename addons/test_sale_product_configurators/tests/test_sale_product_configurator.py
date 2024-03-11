@@ -226,3 +226,40 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
             order.order_line.product_custom_attribute_value_ids.custom_value,
             "123456",
         )
+
+    def test_product_attribute_multi_type(self):
+        """The goal of this test is to verify that the product configurator dialog box opens
+            correctly when the product attribute display type is set to "multi" and only a
+            single value can be chosen.
+        """
+
+        attribute_topping = self.env['product.attribute'].create({
+            'name': 'Toppings',
+            'display_type': 'multi',
+            'create_variant': 'no_variant',
+            'value_ids': [
+                (0, 0, {'name': 'Cheese'}),
+            ]
+        })
+        attribute_topping_cheese = attribute_topping.value_ids
+
+        product_template = self.env['product.template'].create({
+            'name': 'Big Burger',
+            'attribute_line_ids': [
+                (0, 0, {
+                    'attribute_id': attribute_topping.id,
+                    'value_ids': [(6, 0, [attribute_topping_cheese.id])],
+                }),
+            ],
+        })
+
+        self.start_tour("/web", 'product_attribute_multi_type', login="salesman")
+
+        sol = self.env['sale.order.line'].search([
+            ('product_id', '=', product_template.product_variant_id.id),
+        ])
+        self.assertTrue(sol)
+        self.assertEqual(
+            sol.product_no_variant_attribute_value_ids,
+            product_template.attribute_line_ids.product_template_value_ids,
+        )
