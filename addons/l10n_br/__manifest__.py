@@ -52,7 +52,7 @@ Same as the l10n_br_avatax module with the extension to the sales order module.
     'author': 'Akretion, Odoo Brasil',
     'depends': [
         'account',
-        'base_vat',
+        'account_qr_code_emv',
         'l10n_latam_base',
         'l10n_latam_invoice_document',
     ],
@@ -66,6 +66,7 @@ Same as the l10n_br_avatax module with the extension to the sales order module.
         'views/res_company_views.xml',
         'views/res_partner_views.xml',
         'views/account_journal_views.xml',
+        'views/res_bank_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
