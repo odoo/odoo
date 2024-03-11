@@ -59,3 +59,17 @@
 .oi-text-effect:before { content: '\e827'; }
 .oi-smile-add:before { content: '\e84e'; }
 .oi-close:before { content: '\e852'; }
+
+/* RTL adaptations. */
+/* Flip directional icons by 180 degree. */
+/* ---------------------------------------------------------------------------- */
+.o_rtl .oi-chevron-left,
+.o_rtl .oi-chevron-right,
+.o_rtl .oi-arrow-down-left,
+.o_rtl .oi-arrow-down-right,
+.o_rtl .oi-arrow-left,
+.o_rtl .oi-arrow-right,
+.o_rtl .oi-arrow-up-left,
+.o_rtl .oi-arrow-up-right {
+  transform: rotate(180deg);
+}
