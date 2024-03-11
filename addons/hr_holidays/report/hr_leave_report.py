@@ -13,6 +13,7 @@ class LeaveReport(models.Model):
 
     employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
     leave_id = fields.Many2one('hr.leave', string="Time Off Request", readonly=True)
+    allocation_id = fields.Many2one('hr.leave.allocation', string="Allocation Request", readonly=True)
     name = fields.Char('Description', readonly=True)
     number_of_days = fields.Float('Number of Days', readonly=True)
     number_of_hours = fields.Float('Number of Hours', readonly=True)
@@ -46,6 +47,7 @@ class LeaveReport(models.Model):
             CREATE or REPLACE view hr_leave_report as (
                 SELECT row_number() over(ORDER BY leaves.employee_id) as id,
                 leaves.leave_id as leave_id,
+                leaves.allocation_id as allocation_id,
                 leaves.employee_id as employee_id, leaves.name as name,
                 leaves.number_of_days as number_of_days, leaves.leave_type as leave_type,
                 leaves.number_of_hours as number_of_hours,
@@ -54,6 +56,7 @@ class LeaveReport(models.Model):
                 leaves.holiday_type as holiday_type, leaves.date_from as date_from,
                 leaves.date_to as date_to, leaves.company_id
                 from (select
+                    allocation.id as allocation_id,
                     null as leave_id,
                     allocation.employee_id as employee_id,
                     allocation.private_name as name,
@@ -73,6 +76,7 @@ class LeaveReport(models.Model):
                 where employee.active IS True
                 union all select
                     request.id as leave_id,
+                    null as allocation_id,
                     request.employee_id as employee_id,
                     request.private_name as name,
                     (request.number_of_days * -1) as number_of_days,
@@ -99,6 +103,6 @@ class LeaveReport(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
-            'res_id': self.leave_id.id,
-            'res_model': 'hr.leave',
+            'res_id': self.leave_id.id if self.leave_id else self.allocation_id.id,
+            'res_model': 'hr.leave' if self.leave_id else 'hr.leave.allocation',
         }
