@@ -515,6 +515,10 @@ class expression(object):
                     _logger.warning("Unexpected domain [%s], interpreted as False", leaf)
                     return []
                 return [value]
+            elif isinstance(value, NewId):
+                if not value.origin:
+                    return []
+                return [value.origin]
             if names:
                 return list({
                     rid
