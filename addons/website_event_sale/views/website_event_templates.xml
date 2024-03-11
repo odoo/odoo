@@ -39,7 +39,8 @@
         <span t-else="" class="badge text-bg-secondary text-uppercase fs-6">Free</span>
     </xpath>
     <xpath expr="//div[hasclass('o_wevent_price_range')]" position="inside">
-        <t t-set="all_prices" t-value="event.event_ticket_ids.mapped('price_reduce')"/>
+        <t t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" t-set="all_prices" t-value="event.event_ticket_ids.mapped('price_reduce')"/>
+        <t t-else="" t-set="all_prices" t-value="event.event_ticket_ids.mapped('price_reduce_taxinc')"/>
         <t t-set="lowest_price" t-value="min(all_prices)"/>
         <t t-set="highest_price" t-value="max(all_prices)"/>
         <t t-if="highest_price > 0">
