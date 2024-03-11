@@ -2,6 +2,10 @@
 .o_kanban_view {
     @include media-breakpoint-down(md) {
         --ControlPanel-border-bottom: none;
+
+        &.o_field_x2many_kanban .o_kanban_ghost {
+            display: none;
+        }
     }
 }
 
