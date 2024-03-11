@@ -246,7 +246,7 @@
     <template id="portal_docs_entry" name="My Portal Docs Entry">
         <div t-att-class="'o_portal_index_card ' +  ('' if config_card else 'd-none ') + ('col-12 order-0' if show_count else 'col-md-6 order-2')">
             <a t-att-href="url" t-att-title="title" t-attf-class="d-flex gap-2 gap-md-3 py-3 pe-2 px-md-3 h-100 rounded text-decoration-none #{bg_color if bg_color else 'bg-100'}">
-                <div t-if="icon" class="o_portal_icon align-self-start">
+                <div t-if="icon" class="o_portal_icon d-none">
                     <img t-attf-src="#{icon}"/>
                 </div>
                 <div t-att-class="'alert-link' if bg_color else ''">
@@ -261,6 +261,12 @@
                 </div>
             </a>
         </div>
+    </template>
+
+    <template id="portal_docs_entry_layout" inherit_id="portal.portal_docs_entry" active="True" customize_show="True" name="Use Pictograms">
+        <xpath expr="//div[hasclass('o_portal_icon')]" position="attributes">
+            <attribute name="class" remove="d-none" add="d-block align-self-start" separator=" "/>
+        </xpath>
     </template>
 
     <template id="portal_table" name="My Portal Table">
