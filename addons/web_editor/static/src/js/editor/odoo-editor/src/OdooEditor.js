@@ -2642,7 +2642,7 @@ export class OdooEditor extends EventTarget {
         const selection = this.document.getSelection();
         const startTable = closestElement(selection.anchorNode, 'table');
         const endTable = closestElement(selection.focusNode, 'table');
-        if (!(startTable && endTable) || startTable !== endTable) {
+        if (!(startTable || endTable)) {
             return;
         }
         if (selection.rangeCount > 1) {
@@ -2667,6 +2667,29 @@ export class OdooEditor extends EventTarget {
         // Handle selection for the single cell.
         if (startTd === endTd && !startTd.classList.contains('o_selected_td')) {
             this._setSingleCellSelection(ev, selection, startTd);
+            return;
+        }
+        if (startTable !== endTable) {
+            // Deselect the table at once if it is fully selected.
+            if (endTable) {
+                const direction = getCursorDirection(selection.anchorNode, selection.anchorOffset, selection.focusNode, selection.focusOffset);
+                const deselectingBackward = ['ArrowLeft', 'ArrowUp'].includes(ev.key) && direction === DIRECTIONS.RIGHT;
+                const deselectingForward = ['ArrowRight', 'ArrowDown'].includes(ev.key) && direction === DIRECTIONS.LEFT;
+                if (deselectingBackward) {
+                    const prevElement = endTable.previousElementSibling;
+                    if (prevElement) {
+                        setSelection(selection.anchorNode, selection.anchorOffset, prevElement, nodeSize(prevElement));
+                        ev.preventDefault();
+                    }
+                }
+                else if (deselectingForward) {
+                    const nextElement = endTable.nextElementSibling;
+                    if (nextElement) {
+                        setSelection(selection.anchorNode, selection.anchorOffset, nextElement, 0);
+                        ev.preventDefault();
+                    }
+                }
+            }
             return;
         }
         const endCellPosition = { x: getRowIndex(endTd), y: getColumnIndex(endTd) };
