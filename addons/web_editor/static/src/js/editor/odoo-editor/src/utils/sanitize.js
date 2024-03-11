@@ -21,6 +21,8 @@ import {
     EMAIL_REGEX,
     URL_REGEX_WITH_INFOS,
     unwrapContents,
+    padLinkWithZws,
+    getTraversedNodes,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -225,6 +227,39 @@ function sanitizeNode(node, root) {
                 }
             }
         }
+    } else if (node.nodeName === 'A') {
+        // Ensure links have ZWNBSPs so the selection can be set at their edges.
+        padLinkWithZws(root, node);
+    } else if (
+        node.nodeType === Node.TEXT_NODE &&
+        node.textContent.includes('\uFEFF') &&
+        !closestElement(node, 'a') &&
+        !(
+            closestElement(root, '[contenteditable=true]') &&
+            getTraversedNodes(closestElement(root, '[contenteditable=true]')).includes(node)
+        )
+    ) {
+        // Remove link ZWNBSP not in selection.
+        const startsWithLegitZws = node.textContent.startsWith('\uFEFF') && node.previousSibling && node.previousSibling.nodeName === 'A';
+        const endsWithLegitZws = node.textContent.endsWith('\uFEFF') && node.nextSibling && node.nextSibling.nodeName === 'A';
+        let newText = node.textContent.replace(/\uFEFF/g, '');
+        if (startsWithLegitZws) {
+            newText = '\uFEFF' + newText;
+        }
+        if (endsWithLegitZws) {
+            newText = newText + '\uFEFF';
+        }
+        if (newText !== node.textContent) {
+            // We replace the text node with a new text node with the
+            // update text rather than just changing the text content of
+            // the node because these two methods create different
+            // mutations and at least the tour system breaks if all we
+            // send here is a text content change.
+            const newTextNode = document.createTextNode(newText);
+            node.before(newTextNode);
+            node.remove();
+            node = newTextNode;
+        }
     }
     return node;
 }
@@ -282,10 +317,12 @@ export function sanitize(nodeToSanitize, root = nodeToSanitize) {
 
         // Update link URL if label is a new valid link.
         const startEl = start && closestElement(start, 'a');
-        if (startEl && root.contains(startEl)) {
-            const url = deduceURLfromLabel(startEl);
-            if (url) {
-                startEl.setAttribute('href', url);
+        if (startEl) {
+            if (root.contains(startEl)) {
+                const url = deduceURLfromLabel(startEl);
+                if (url) {
+                    startEl.setAttribute('href', url);
+                }
             }
         }
     }
