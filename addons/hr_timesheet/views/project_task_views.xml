@@ -67,7 +67,7 @@
                                         <div class="row">
                                             <div class="col-6 d-flex">
                                                 <field name="employee_id" class="me-1" widget="many2one_avatar_employee" context="{'active_test': True}" readonly="readonly_timesheet"/>
-                                                <strong><span><t t-esc="record.employee_id.value"/></span></strong>
+                                                <strong><span class="ps-1"><t t-esc="record.employee_id.value"/></span></strong>
                                             </div>
                                             <div class="col-6 float-end text-end">
                                                 <strong><t t-esc="record.date.value"/></strong>
