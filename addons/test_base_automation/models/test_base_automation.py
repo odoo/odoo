@@ -24,6 +24,20 @@ class LeadTest(models.Model):
     deadline = fields.Boolean(compute='_compute_employee_deadline', store=True)
     is_assigned_to_admin = fields.Boolean(string='Assigned to admin user')
 
+    stage_id = fields.Many2one(
+        'test_base_automation.stage', string='Stage',
+        compute='_compute_stage_id', readonly=False, store=True)
+
+    @api.depends('state')
+    def _compute_stage_id(self):
+        Stage = self.env['test_base_automation.stage']
+        for task in self:
+            if not task.stage_id and task.state == 'draft':
+                task.stage_id = (
+                    Stage.search([('name', 'ilike', 'new')], limit=1)
+                    or Stage.create({'name': 'New'})
+                )
+
     @api.depends('partner_id.employee', 'priority')
     def _compute_employee_deadline(self):
         # this method computes two fields on purpose; don't split it
