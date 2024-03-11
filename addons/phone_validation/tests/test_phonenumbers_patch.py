@@ -48,6 +48,30 @@ class TestPhonenumbersPatch(BaseCase):
         self.assertEqual(parsed_phonenumber_2.national_number, 22522586, "The national part of the phonenumber should be 22522586")
         self.assertEqual(parsed_phonenumber_2.country_code, 225, "The country code of Ivory Coast is 225")
 
+    def test_region_MU_monkey_patch(self):
+        """Makes sure that patch for Mauritius phone numbers work"""
+        if not phonenumbers:
+            self.skipTest('Cannot test without phonenumbers module installed.')
+
+        # check that _local_load_region is set to `odoo.addons.phone_validation.lib.phonenumbers_patch._local_load_region`
+        # check that you can load a new Mauritius phone number without error
+        for test_number, country_region, exp_national_number, exp_country_code in [
+            (
+                "+23057654321", "", 57654321, 230,
+            ), (
+                "+2305 76/54 3-21 ", "", 57654321, 230,
+            ), (
+                "57654321", "MU", 57654321, 230,
+            ), (
+                "5 76/54 3-21 ", "MU", 57654321, 230,
+            ),
+        ]:
+            with self.subTest(exp_national_number=exp_national_number, exp_country_code=exp_country_code):
+                parsed_phonenumber = phonenumbers.parse(test_number, region=country_region, keep_raw_input=True)
+                self.assertTrue(phonenumbers.is_valid_number(parsed_phonenumber))
+                self.assertEqual(parsed_phonenumber.national_number, exp_national_number)
+                self.assertEqual(parsed_phonenumber.country_code, exp_country_code)
+
     def test_region_PA_monkey_patch(self):
         """Makes sure that patch for Panama's phone numbers work"""
         if not phonenumbers:
