@@ -193,25 +193,22 @@
                                 <div t-if="task.user_ids">
                                     <h6 class="flex-basis-100"><small class="text-muted">Assignees</small></h6>
                                     <t t-foreach="task.user_ids" t-as="user">
-                                        <div t-attf-class="o_portal_contact_details d-flex flex-column gap-2 {{ 'mb-3' if len(task.user_ids) > 1 else '' }}">
-                                            <div class="d-flex justify-content-start gap-2">
-                                                <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(user.avatar_128)"/>
-                                                <h6 class="mb-0" t-field="user.name"></h6>
-                                            </div>
+                                        <t t-call="portal.portal_my_contact">
+                                            <t t-set="_spacingClass" t-value="'mb-3' if len(task.user_ids) > 1 else ''"/>
+                                            <t t-set="_contactAvatar" t-value="image_data_uri(user.avatar_128)"/>
+                                            <t t-set="_contactName" t-value="user.name"/>
                                             <div t-out="user" t-options='{"widget": "contact", "fields": ["email", "phone"]}'/>
-                                        </div>
+                                        </t>
                                     </t>
                                 </div>
                                 <div class="col-12 d-flex flex-column" t-if="task.partner_id">
                                     <h6><small class="text-muted">Customer</small></h6>
                                     <t t-if="task.partner_id">
-                                        <div class="o_portal_contact_details d-flex flex-column gap-2">
-                                            <div class="d-flex justify-content-start gap-2">
-                                                <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(task.partner_id.avatar_512)"/>
-                                                <h6 class="mb-0" t-out="task.partner_id.name"></h6>
-                                            </div>
+                                        <t t-call="portal.portal_my_contact">
+                                            <t t-set="_contactAvatar" t-value="image_data_uri(task.partner_id.avatar_512)"/>
+                                            <t t-set="_contactName" t-value="task.partner_id.name"/>
                                             <div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone"]}'/>
-                                        </div>
+                                        </t>
                                     </t>
                                 </div>
                             </div>
