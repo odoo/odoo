@@ -1,6 +1,5 @@
-import { OdooEditor } from '../../src/OdooEditor.js';
+import { OdooEditor, insertCharsAt } from '../../src/OdooEditor.js';
 import {
-    insertCharsAt,
     parseMultipleTextualSelection,
     setTestSelection,
     targetDeepest,
