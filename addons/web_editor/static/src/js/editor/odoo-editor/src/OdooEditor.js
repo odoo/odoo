@@ -2684,7 +2684,7 @@ export class OdooEditor extends EventTarget {
         const selection = this.document.getSelection();
         const startTable = closestElement(selection.anchorNode, 'table');
         const endTable = closestElement(selection.focusNode, 'table');
-        if (!(startTable && endTable) || startTable !== endTable) {
+        if (!(startTable || endTable)) {
             return;
         }
         if (selection.rangeCount > 1) {
@@ -2704,6 +2704,29 @@ export class OdooEditor extends EventTarget {
             selection.extend(endRange.startContainer, 0);
         } else {
             getDeepRange(this.editable, { select: true });
+        }
+        if (startTable !== endTable) {
+            // Deselect the table if it was fully selected.
+            if (endTable) {
+                const direction = getCursorDirection(selection.anchorNode, selection.anchorOffset, selection.focusNode, selection.focusOffset);
+                const deselectingBackward = ['ArrowLeft', 'ArrowUp'].includes(ev.key) && direction === DIRECTIONS.RIGHT;
+                const deselectingForward = ['ArrowRight', 'ArrowDown'].includes(ev.key) && direction === DIRECTIONS.LEFT;
+                if (deselectingBackward) {
+                    const prevElement = endTable.previousElementSibling;
+                    if (prevElement) {
+                        setSelection(selection.anchorNode, selection.anchorOffset, prevElement, nodeSize(prevElement));
+                        ev.preventDefault();
+                    }
+                }
+                else if (deselectingForward) {
+                    const nextElement = endTable.nextElementSibling;
+                    if (nextElement) {
+                        setSelection(selection.anchorNode, selection.anchorOffset, nextElement, 0);
+                        ev.preventDefault();
+                    }
+                }
+            }
+            return;
         }
         const [startTd, endTd] = [closestElement(selection.anchorNode, 'td'), closestElement(selection.focusNode, 'td')];
         // Handle selection for the single cell.
