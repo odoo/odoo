@@ -371,9 +371,9 @@ class StockWarehouseOrderpoint(models.Model):
         path = {loc.id: loc.parent_path for loc in self.env['stock.location'].with_context(active_test=False).search([('id', 'child_of', all_replenish_location_ids.ids)])}
         for loc in all_replenish_location_ids:
             for product in all_product_ids:
-                qty_available = sum(q[1] for q in quants.get(product.id, [(0, 0)]) if q[0] and path[q[0]] in loc.parent_path)
-                incoming_qty = sum(m[1] for m in moves_in.get(product.id, [(0, 0)]) if m[0] and path[m[0]] in loc.parent_path)
-                outgoing_qty = sum(m[1] for m in moves_out.get(product.id, [(0, 0)]) if m[0] and path[m[0]] in loc.parent_path)
+                qty_available = sum(q[1] for q in quants.get(product.id, [(0, 0)]) if q[0] and loc.parent_path in path[q[0]])
+                incoming_qty = sum(m[1] for m in moves_in.get(product.id, [(0, 0)]) if m[0] and loc.parent_path in path[m[0]])
+                outgoing_qty = sum(m[1] for m in moves_out.get(product.id, [(0, 0)]) if m[0] and loc.parent_path in path[m[0]])
                 if float_compare(qty_available + incoming_qty - outgoing_qty, 0, precision_rounding=rounding[product.id]) < 0:
                     # group product by lead_days and location in order to read virtual_available
                     # in batch
