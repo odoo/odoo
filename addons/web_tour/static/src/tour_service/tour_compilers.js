@@ -9,7 +9,6 @@ import { queryAll } from "@odoo/hoot-dom";
 import {
     callWithUnloadCheck,
     getConsumeEventType,
-    getNodesFromSelector,
     getScrollParent,
     RunningTourActionHelper,
 } from "./tour_utils";
@@ -47,7 +46,7 @@ function findTrigger(selector, shadowDOM, inModal) {
         }
     }
     if (!nodes) {
-        nodes = getNodesFromSelector(selector, target);
+        nodes = queryAll(selector, { root: target });        
     }
     return nodes;
 }

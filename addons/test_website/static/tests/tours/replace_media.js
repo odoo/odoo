@@ -113,7 +113,7 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "wait for preview to appear",
         // "about:blank" because the VideoWidget was patched at the start of this tour
-        trigger: ".o_select_media_dialog div.media_iframe_video iframe[src='about:blank']",
+        trigger: ".o_select_media_dialog div.media_iframe_video [src='about:blank']:iframe body",
         run: function () {}, // check
     },
     {

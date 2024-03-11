@@ -1,6 +1,7 @@
 /** @odoo-modules */
 
 import wTourUtils from '@website/js/tours/tour_utils';
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 wTourUtils.registerWebsitePreviewTour('website_sale_restricted_editor_ui', {
     test: true,
@@ -22,9 +23,10 @@ wTourUtils.registerWebsitePreviewTour('website_sale_restricted_editor_ui', {
         // Wait for the possibility to edit to appear
         extra_trigger: '.o_menu_systray .o_edit_website_container a',
     },
+    stepUtils.waitIframeIsReady(),
     {
         content: "Navigate to the first product",
-        trigger: 'iframe .oe_product_image_link',
+        trigger: ':iframe .oe_product_image_link',
     },
     {
         content: "Click on publish/unpublish",
