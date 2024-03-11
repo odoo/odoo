@@ -364,7 +364,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         total_fixed_tax_amount = sum(
             vals['amount']
             for vals in allowance_charge_vals_list
-            if vals['allowance_charge_reason_code'] == 'AEO'
+            if vals.get('charge_indicator') == 'true'
         )
         return {
             'currency': line.currency_id,
