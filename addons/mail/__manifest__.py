@@ -136,6 +136,7 @@ For more specific needs, you may also assign custom-defined actions
             ('remove', 'mail/static/lib/odoo_sfu/odoo_sfu.js'),
             ('remove', 'mail/static/lib/lame/lame.js'),
             'mail/static/src/js/**/*',
+            'mail/static/src/model/**/*',
             'mail/static/src/core/common/**/*',
             'mail/static/src/core/web_portal/**/*',
             'mail/static/src/core/web/**/*',
@@ -217,6 +218,7 @@ For more specific needs, you may also assign custom-defined actions
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
 
+            'mail/static/src/model/**/*',
             'mail/static/src/core/common/**/*',
             'mail/static/src/**/common/**/*',
             'mail/static/src/**/public/**/*',
