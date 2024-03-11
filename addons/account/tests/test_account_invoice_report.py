@@ -120,3 +120,24 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
             [            20,            -20,       -1,            0,             800], # price_unit = 60,   currency.rate = 3.0
             [           600,           -600,       -1,            0,             800], # price_unit = 1200, currency.rate = 2.0
         ])
+
+    def test_invoice_report_multicompany_product_cost(self):
+        """
+        In a multicompany environment, if you define one product with different standard price per company
+        the invoice analysis report should only display the product from the company
+        Standard Price in Company A: 800 (default setup)
+        Standard Price in Company B: 700
+        -> invoice report for Company A should remain the same
+        """
+        self.product_a.with_company(self.company_data_2.get('company')).write({'standard_price': 700.0})
+        self.assertInvoiceReportValues([
+            # pylint: disable=bad-whitespace
+            # price_average, price_subtotal, quantity, price_margin, inventory_value
+            [          2000,           2000,        1,         1200,            -800], # price_unit = 6000, currency.rate = 3.0
+            [          1000,           1000,        1,          200,            -800], # price_unit = 3000, currency.rate = 3.0
+            [           250,            750,        3,        -1650,           -2400], # price_unit = 750,  currency.rate = 2.0
+            [             6,              6,        1,            0,            -800], # price_unit = 12,   currency.rate = 2.0
+            [            20,            -20,       -1,            0,             800], # price_unit = 60,   currency.rate = 3.0
+            [            20,            -20,       -1,            0,             800], # price_unit = 60,   currency.rate = 3.0
+            [           600,           -600,       -1,            0,             800], # price_unit = 1200, currency.rate = 2.0
+        ])
