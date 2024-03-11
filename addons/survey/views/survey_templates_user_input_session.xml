@@ -103,8 +103,8 @@
             t-att-data-is-session-closed="is_session_closed">
             <div t-if="not is_session_closed" class="o_survey_question_header flex-wrap px-3 w-100 d-flex justify-content-between align-items-center position-absolute">
                 <h3>
-                    <span>To join: <span class="text-info o_survey_session_copy" t-esc="survey.session_link"/></span>
-                    <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey.session_link" />
+                    <span>To join: <span class="text-info o_survey_session_copy o_survey_session_copy_url" t-esc="survey.session_link"/></span>
+                    <input class="d-none" type="text" t-att-value="survey.session_link" />
                 </h3>
                 <h1 t-if="question.is_time_limited" class="o_survey_timer_container">
                     <span class="o_survey_timer d-inline-block"/>
