@@ -12,7 +12,11 @@
                 <li t-att-data-attribute_id="attribute.id"
                     t-att-data-attribute_name="attribute.name"
                     t-att-data-attribute_display_type="attribute.display_type"
-                    t-attf-class="variant_attribute #{'d-none' if single and not ptavs[0].is_custom else ''}">
+                    t-attf-class="variant_attribute #{
+                        'd-none' if single
+                        and not ptavs[0].is_custom
+                        and not attribute.display_type == 'multi' else ''
+                    }">
 
                     <!-- Used to customize layout if the only available attribute value is custom -->
                     <t t-set="single_and_custom" t-value="single and ptavs[0].is_custom"/>
@@ -56,7 +60,7 @@
                                                 t-att-data-value_name="ptav.name"
                                                 t-att-data-attribute_name="attribute.name"
                                                 t-att-data-is_custom="ptav.is_custom"
-                                                t-att-data-is_single="single"
+                                                t-att-data-is_single="single if ptal.attribute_id.display_type != 'multi' else False"
                                                 t-att-data-is_single_and_custom="single_and_custom"/>
                                             <div class="radio_input_value form-check-label">
                                                 <span t-field="ptav.name"/>
