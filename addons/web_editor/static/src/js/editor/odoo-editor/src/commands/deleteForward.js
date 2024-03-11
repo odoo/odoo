@@ -71,7 +71,7 @@ export function deleteText(charSize, offset, direction, alreadyMoved) {
                 parentElement.oDeleteForward(firstSplitOffset, alreadyMoved);
             }
         }
-        if (isZWS) {
+        if (isZWS && parentElement.isConnected) {
             fillEmpty(parentElement);
         }
         return;
@@ -113,6 +113,13 @@ HTMLElement.prototype.oDeleteForward = function (offset) {
         this.parentElement.remove();
         restore();
         HTMLElement.prototype.oDeleteForward.call(grandparent, parentIndex);
+        return;
+    } else if (
+        firstLeafNode &&
+        firstLeafNode.nodeType === Node.TEXT_NODE &&
+        firstLeafNode.textContent === '\ufeff'
+    ) {
+        firstLeafNode.oDeleteForward(1);
         return;
     }
     if (
