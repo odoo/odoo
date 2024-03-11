@@ -15,7 +15,6 @@ _logger = logging.getLogger(__name__)
 ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*))?(.*)')
 ACCOUNT_CODE_REGEX = re.compile(r'^[A-Za-z0-9.]+$')
 ACCOUNT_CODE_NUMBER_REGEX = re.compile(r'(.*?)(\d*)(\D*?)$')
-EXCLUDE_INITIAL_BALANCE_TYPES = ('income', 'income_other', 'expense', 'expense_depreciation', 'expense_direct_cost', 'off_balance')
 
 class AccountAccount(models.Model):
     _name = "account.account"
@@ -511,14 +510,14 @@ class AccountAccount(models.Model):
     @api.depends('account_type')
     def _compute_include_initial_balance(self):
         for account in self:
-            account.include_initial_balance = account.account_type not in EXCLUDE_INITIAL_BALANCE_TYPES
+            account.include_initial_balance = account.internal_group not in ['income', 'expense']
 
     def _search_include_initial_balance(self, operator, value):
         if operator not in ['=', '!='] or not isinstance(value, bool):
             raise UserError(_('Operation not supported'))
         if operator != '=':
             value = not value
-        return [('account_type', 'not in' if value else 'in', EXCLUDE_INITIAL_BALANCE_TYPES)]
+        return [('internal_group', 'not in' if value else 'in', ['income', 'expense'])]
 
     def _get_internal_group(self, account_type):
         return account_type.split('_', maxsplit=1)[0]
