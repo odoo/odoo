@@ -5,6 +5,8 @@ var core = require('web.core');
 var utils = require('web.utils');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
+var timingUtils = require('@web/core/utils/timing');
+var debounce = timingUtils.debounce;
 
 var _t = core._t;
 
@@ -425,7 +427,7 @@ var ColorpickerWidget = Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onChangeInputs: function (ev) {
+    _onChangeInputs: debounce(function (ev) {
         switch ($(ev.target).data('colorMethod')) {
             case 'hex':
                 this._updateHex(this.$('.o_hex_input').val());
@@ -450,7 +452,7 @@ var ColorpickerWidget = Widget.extend({
         }
         this._updateUI();
         this._colorSelected();
-    },
+    }, 10, true),
 });
 
 //--------------------------------------------------------------------------
