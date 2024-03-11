@@ -1681,7 +1681,8 @@ describe('Paste', () => {
                 });
                 const imageUrl = 'https://download.odoocdn.com/icons/website/static/description/icon.png';
                 await testEditor(BasicEditor, {
-                    contentBefore: '<p>xy<a href="#" oe-zws-empty-inline="">\u200B[]</a>z</p>',
+                    contentBefore: '<p>xy<a href="#">[]</a>z</p>',
+                    contentBeforeEdit: '<p>xy\ufeff<a href="#" class="o_link_in_selection">[]\ufeff</a>\ufeffz</p>',
                     stepFunction: async editor => {
                         await pasteText(editor, imageUrl);
                         // Ensure the powerbox is active
