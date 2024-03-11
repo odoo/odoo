@@ -60,4 +60,21 @@
         </label>
     </template>
 
+    <template id="portal_my_details_fields" name="portal_my_details_fields" inherit_id="portal.portal_my_details_fields">
+        <xpath expr="//input[@name='vat']/.." position="before">
+            <t t-if="res_company.country_code == 'AR'">
+                <t t-call="l10n_ar_website_sale.partner_info"/>
+            </t>
+        </xpath>
+
+        <label for="vat" position="replace">
+            <t t-if="res_company.country_id.code != 'AR'">$0</t>
+            <t t-else="">
+                <label class="col-form-label label-optional" for="vat">
+                    Identification Number
+                </label>
+            </t>
+        </label>
+    </template>
+
 </odoo>
