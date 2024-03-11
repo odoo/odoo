@@ -128,7 +128,11 @@ export class Chatter extends Component {
                             return;
                         }
                     }
-                    files.forEach((file) => this.attachmentUploader.uploadFile(file));
+                    Promise.all(files.map((file) => this.attachmentUploader.uploadFile(file))).then(() => {
+                        if (this.props.hasParentReloadOnAttachmentsChanged) {
+                            this.reloadParentView();
+                        }
+                    })
                     this.state.isAttachmentBoxOpened = true;
                 }
             },
