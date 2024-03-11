@@ -247,6 +247,17 @@ export function _isMobile(){
     return matchMedia('(max-width: 767px)').matches;
 }
 
+/**
+ * Remove all check-ids from the test container (checklists, stars)
+ *
+ * @param {Element} testContainer
+ */
+function removeCheckIds(testContainer) {
+    for (const li of testContainer.querySelectorAll('li[id^="checkId-"]')) {
+        li.removeAttribute('id');
+    }
+}
+
 export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     hasMobileTest = false;
     isMobileTest = options.isMobile;
@@ -292,6 +303,9 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
         sanitize(editor.editable);
 
         if (spec.contentBeforeEdit) {
+            if (spec.removeCheckIds) {
+                removeCheckIds(testContainer);
+            }
             renderTextualSelection();
             const beforeEditValue = testNode.innerHTML;
             window.chai.expect(beforeEditValue).to.be.equal(
@@ -316,6 +330,9 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
 
         if (spec.contentAfterEdit) {
             renderTextualSelection();
+            if (spec.removeCheckIds) {
+                removeCheckIds(testContainer);
+            }
             const afterEditValue = testNode.innerHTML;
             window.chai.expect(afterEditValue).to.be.equal(
                 spec.contentAfterEdit,
@@ -338,14 +355,9 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
         try {
             if (spec.contentAfter) {
                 renderTextualSelection();
-
-                // remove all check-ids (checklists, stars)
                 if (spec.removeCheckIds) {
-                    for (const li of document.querySelectorAll('#editor-test-container li[id^=checkId-')) {
-                        li.removeAttribute('id');
-                    }
+                    removeCheckIds(testContainer);
                 }
-
                 const value = testNode.innerHTML;
                 window.chai.expect(value).to.be.equal(
                     spec.contentAfter,
