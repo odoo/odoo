@@ -1,4 +1,8 @@
 .odoo-editor-editable {
+    .btn {
+        user-select: auto;
+        cursor: text !important;
+    }
     ::selection {
         /* For color conversion over white background, use X = (Y-(1-P)*255)/P where
             X = converted color component (R, G, B) (0 <= X <= 255)
