@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Employee -->
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.hr.fleet</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form" />
+        <field name="priority" eval="60" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_open_employee_cars" type="object"
+                        class="oe_stat_button" icon="fa-car" groups="fleet.fleet_group_manager"
+                        attrs="{'invisible': [('employee_cars_count', '=', 0)]}">
+                    <field name="employee_cars_count" widget="statinfo" />
+                </button>
+            </div>
+            <group name="application_group" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </group>
+            <group name="application_group" position="inside">
+                <field name="mobility_card" string="Fleet Mobility Card"/>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_employee_filter" model="ir.ui.view">
+        <field name="name">hr.employee.filter.inherit.hr.fleet</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='job_id']" position="after">
+                <field name="car_ids" string="License Plate"
+                    filter_domain="[('car_ids.license_plate', 'ilike', self)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_users_view_form_preferences" model="ir.ui.view">
+        <field name="name">hr.user.preferences.form.inherit.hr.fleet</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_employee_cars" type="object"
+                        class="oe_stat_button" icon="fa-car" groups="fleet.fleet_group_manager"
+                        attrs="{'invisible': [('employee_cars_count','=', 0)]}">
+                    <field name="employee_cars_count" widget="statinfo" />
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

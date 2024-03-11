@@ -1,0 +1,81 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_iban
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Jolien De Paepe, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-27 15:12+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_iban
+#. openerp-web
+#: code:addons/base_iban/static/src/js/legacy_iban_widget.js:0
+#, python-format
+msgid "Account isn't IBAN compliant."
+msgstr "Rekening is niet IBAN-compatibel."
+
+#. module: base_iban
+#. openerp-web
+#: code:addons/base_iban/static/src/components/iban_widget/iban_widget.xml:0
+#, python-format
+msgid "Account isn't a valid IBAN"
+msgstr "Rekening is geen geldig IBAN-nummer."
+
+#. module: base_iban
+#: model:ir.model,name:base_iban.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Bankrekeningen"
+
+#. module: base_iban
+#: code:addons/base_iban/models/res_partner_bank.py:0
+#, python-format
+msgid "Cannot compute the BBAN because the account number is not an IBAN."
+msgstr ""
+"BBAN kan niet berekend worden omdat het rekeningnummer geen IBAN-nummer is."
+
+#. module: base_iban
+#: code:addons/base_iban/models/res_partner_bank.py:0
+#, python-format
+msgid "IBAN"
+msgstr "IBAN"
+
+#. module: base_iban
+#: code:addons/base_iban/models/res_partner_bank.py:0
+#, python-format
+msgid ""
+"The IBAN does not seem to be correct. You should have entered something like this %s\n"
+"Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
+msgstr ""
+"Het IBAN-nummer lijkt onjuist te zijn. Het nummer zou er ongeveer als volgt moeten uitzien %s\n"
+"waarbij B = nationale bankcode, S = branchcode, C = rekeningnummer, k = controlecijfer"
+
+#. module: base_iban
+#: code:addons/base_iban/models/res_partner_bank.py:0
+#, python-format
+msgid "The IBAN is invalid, it should begin with the country code"
+msgstr "De IBAN  is ongeldig. Het zou moeten beginnen met de landcode"
+
+#. module: base_iban
+#: code:addons/base_iban/models/res_partner_bank.py:0
+#, python-format
+msgid "There is no IBAN code."
+msgstr "Er is geen IBAN code."
+
+#. module: base_iban
+#: code:addons/base_iban/models/res_partner_bank.py:0
+#, python-format
+msgid "This IBAN does not pass the validation check, please verify it."
+msgstr "Dit IBAN-nummer kon niet bevestigd worden, controleer deze."

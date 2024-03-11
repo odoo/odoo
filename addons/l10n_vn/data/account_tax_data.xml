@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tax Definitions -->
+    <!-- for purchase -->
+    <record id="tax_purchase_vat10" model="account.tax.template">
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Deductible VAT 10%</field>
+        <field name="description">Deductible VAT 10%</field>
+        <field name="amount" eval="10"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('account_tax_report_line_03_02_01_vn_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart1331'),
+                    'plus_report_expression_ids': [ref('account_tax_report_line_03_01_01_vn_tag')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('account_tax_report_line_03_02_01_vn_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart1331'),
+                    'minus_report_expression_ids': [ref('account_tax_report_line_03_01_01_vn_tag')],
+                }),
+            ]"/>
+    </record>
+    <record id="tax_purchase_vat5" model="account.tax.template">
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Deductible VAT 5%</field>
+        <field name="description">Deductible VAT 5%</field>
+        <field name="amount" eval="5"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_5"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('account_tax_report_line_02_02_01_vn_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart1331'),
+                    'plus_report_expression_ids': [ref('account_tax_report_line_02_01_01_vn_tag')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('account_tax_report_line_02_02_01_vn_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart1331'),
+                    'minus_report_expression_ids': [ref('account_tax_report_line_02_01_01_vn_tag')],
+                }),
+            ]"/>
+    </record>
+    <record id="tax_purchase_vat0" model="account.tax.template">
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Deductible VAT 0%</field>
+        <field name="description">Deductible VAT 0%</field>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('account_tax_report_line_01_02_01_vn_tag')],
+                }),
+                (0,0, {'repartition_type': 'tax'}),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('account_tax_report_line_01_02_01_vn_tag')],
+                }),
+                (0,0, {'repartition_type': 'tax'}),
+            ]"/>
+    </record>
+    <!-- for sale -->
+    <record id="tax_sale_vat10" model="account.tax.template">
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Value Added Tax (VAT) 10%</field>
+        <field name="description">Value Added Tax (VAT) 10%</field>
+        <field name="amount" eval="10"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('account_tax_report_line_03_02_02_vn_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart33311'),
+                    'plus_report_expression_ids': [ref('account_tax_report_line_03_01_02_vn_tag')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('account_tax_report_line_03_02_02_vn_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart33311'),
+                    'minus_report_expression_ids': [ref('account_tax_report_line_03_01_02_vn_tag')],
+                }),
+            ]"/>
+    </record>
+    <record id="tax_sale_vat5" model="account.tax.template">
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Value Added Tax (VAT) 5%</field>
+        <field name="description">Value Added Tax (VAT) 5%</field>
+        <field name="amount" eval="5"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_5"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('account_tax_report_line_02_02_02_vn_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart33311'),
+                    'plus_report_expression_ids': [ref('account_tax_report_line_02_01_02_vn_tag')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('account_tax_report_line_02_02_02_vn_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('chart33311'),
+                    'minus_report_expression_ids': [ref('account_tax_report_line_02_01_02_vn_tag')],
+                }),
+            ]"/>
+    </record>
+    <record id="tax_sale_vat0" model="account.tax.template">
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Value Added Tax (VAT) 0%</field>
+        <field name="description">Value Added Tax (VAT) 0%</field>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('account_tax_report_line_01_02_02_vn_tag')],
+                }),
+                (0,0, {'repartition_type': 'tax'}),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('account_tax_report_line_01_02_02_vn_tag')],
+                }),
+                (0,0, {'repartition_type': 'tax'}),
+            ]"/>
+    </record>
+</odoo>

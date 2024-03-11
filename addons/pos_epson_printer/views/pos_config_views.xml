@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_iot_config_view_form" model="ir.ui.view">
+        <field name="name">pos.iot.config.form.view</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='other_devices']//div[hasclass('o_setting_right_pane')]" position="inside">
+                <div class="content-group" attrs="{'invisible' : [('other_devices', '=', False)]}">
+                    <field name="epson_printer_ip" placeholder="Epson Receipt Printer IP Address" />
+                    <div class="row" attrs="{'invisible': [('epson_printer_ip', 'in', [False, ''])]}">
+                        <label string="Cashdrawer" for="iface_cashdrawer" class="col-lg-3 o_light_label"/>
+                        <field name="iface_cashdrawer"/>
+                    </div>
+                </div>
+                <div role="alert" class="alert alert-warning" attrs="{'invisible': ['|', '|', ('iface_print_via_proxy', '!=', True), ('other_devices', '!=', True), ('epson_printer_ip', 'in', [False, ''])]}">
+                    The Epson receipt printer will be used instead of the receipt printer connected to the IoT Box.
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

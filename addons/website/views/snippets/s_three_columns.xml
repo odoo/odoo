@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_three_columns" name="Columns">
+    <section class="s_three_columns o_cc o_cc2 pt32 pb32" data-vcss="001">
+        <div class="container">
+            <div class="row d-flex align-items-stretch">
+                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16">
+                    <div class="card text-bg-white h-100">
+                        <img class="card-img-top" src="/web/image/website.s_three_columns_default_image_1" alt=""/>
+                        <div class="card-body">
+                            <h3 class="card-title">Feature One</h3>
+                            <p class="card-text">Adapt these three columns to fit your design need. To duplicate, delete or move columns, select the column and use the top icons to perform your action.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16">
+                    <div class="card text-bg-white h-100">
+                        <img class="card-img-top" src="/web/image/website.s_three_columns_default_image_2" alt=""/>
+                        <div class="card-body">
+                            <h3 class="card-title">Feature Two</h3>
+                            <p class="card-text">To add a fourth column, reduce the size of these three columns using the right icon of each block. Then, duplicate one of the columns to create a new one as a copy.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16">
+                    <div class="card text-bg-white h-100">
+                        <img class="card-img-top" src="/web/image/website.s_three_columns_default_image_3" alt=""/>
+                        <div class="card-body">
+                            <h3 class="card-title">Feature Three</h3>
+                            <p class="card-text">Delete the above image or replace it with a picture that illustrates your message. Click on the picture to change its <em>rounded corner</em> style.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<record id="website.s_three_columns_000_scss" model="ir.asset">
+    <field name="name">Three columns 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_three_columns/000.scss</field>
+    <field name="active" eval="False"/>
+    </record>
+
+</odoo>

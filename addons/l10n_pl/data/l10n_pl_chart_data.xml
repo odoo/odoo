@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <!-- Chart template -->
+
+        <record id="pl_chart_template" model="account.chart.template">
+            <field name="name">Polska - Plan kont</field>
+            <field name="code_digits">8</field>
+            <field name="currency_id" ref="base.PLN"/>
+            <field name="bank_account_code_prefix">11.000.00</field>
+            <field name="cash_account_code_prefix">12.000.00</field>
+            <field name="transfer_account_code_prefix">11.090.00</field>
+            <field name="country_id" ref="base.pl"/>
+            <field name="use_storno_accounting" eval="True"/>
+        </record>
+
+</data>
+</odoo>

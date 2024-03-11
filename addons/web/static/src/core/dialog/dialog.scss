@@ -1,0 +1,19 @@
+.modal.o_technical_modal .modal-footer {
+    // FIXME: These selectors should not be necessary if we used buttons
+    // as direct children of the modal-footer as normally required
+    footer, .o_form_buttons_edit, .o_form_buttons_view {
+        display: flex;
+        flex-wrap: wrap;
+        flex: 1 1 auto;
+        justify-content: flex-start;
+        gap: map-get($spacers, 1);
+
+        @include media-breakpoint-down(md) {
+            justify-content: space-around;
+        }
+    }
+
+    button {
+        margin: 0; // Reset boostrap.
+    }
+}

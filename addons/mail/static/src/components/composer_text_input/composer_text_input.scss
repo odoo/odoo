@@ -1,0 +1,35 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ComposerTextInput {
+    min-width: 0;
+}
+
+.o_ComposerTextInput_mirroredTextarea {
+    height: 0;
+    top: -10000px;
+}
+
+.o_ComposerTextInput_textareaStyle {
+    padding-top: 10px; // carefully crafted to have the text in the middle in chat window
+    padding-bottom: 10px;
+    min-height: $o-mail-composer-text-input-height;
+    resize: none;
+
+    &::placeholder {
+        @include text-truncate();
+    }
+
+    &.o-composer-is-compact {
+        // Chat window height should be taken into account to choose this value
+        // ideally this should be less than the third of chat window height
+        max-height: 100px;
+    }
+
+    &:not(.o-composer-is-compact) {
+        // Don't allow the input to take the whole height when it's not compact
+        // (like in chatter for example) but allow it to take some more place
+        max-height: 400px;
+    }
+}

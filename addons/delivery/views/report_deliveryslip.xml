@@ -1,0 +1,76 @@
+<odoo>
+    <template id="report_delivery_document2" inherit_id="stock.report_delivery_document">
+        <xpath expr="//div[@name='div_sched_date']" position="after">
+            <div t-if="o.picking_type_id.code == 'outgoing' and o.carrier_id" class="col-auto">
+                <strong>Carrier:</strong>
+                <p t-field="o.carrier_id"/>
+            </div>
+            <div t-if="o.shipping_weight" class="col-auto">
+                <strong>Total Weight:</strong>
+                <br/>
+                <span t-field="o.shipping_weight"/>
+                <span t-field="o.weight_uom_name"/>
+            </div>
+            <div t-if="o.carrier_tracking_ref" class="col-auto" style="max-width:30%;">
+                <strong>Tracking Number:</strong>
+                <p t-field="o.carrier_tracking_ref"/>
+            </div>
+            <t t-set="has_hs_code" t-value="o.move_ids.filtered(lambda l: l.product_id.hs_code)"/>
+        </xpath>
+
+        <xpath expr="//table[@name='stock_move_line_table']/thead/tr" position="inside">
+            <th t-if="has_hs_code"><strong>HS Code</strong></th>
+        </xpath>
+        <xpath expr="//table[@name='stock_move_table']/thead/tr" position="inside">
+            <th t-if="has_hs_code"><strong>HS Code</strong></th>
+        </xpath>
+        <xpath expr="//table[@name='stock_move_table']/tbody/tr" position="inside">
+            <td t-if="has_hs_code">
+                <span t-field="move.product_id.hs_code"/>
+            </td>
+        </xpath>
+    </template>
+
+    <!--  HS Code to table rows-->
+    <template id="stock_report_delivery_has_serial_move_line_inherit_delivery" inherit_id="stock.stock_report_delivery_has_serial_move_line">
+        <xpath expr="//td[@name='move_line_lot_qty_done']" position="after">
+            <td t-if="has_hs_code"><span t-field="move_line.product_id.hs_code"/></td>
+        </xpath>
+    </template>
+    <template id="stock_report_delivery_aggregated_move_lines_inherit_delivery" inherit_id="stock.stock_report_delivery_aggregated_move_lines">
+        <xpath expr="//td[@name='move_line_aggregated_qty_done']" position="after">
+            <td t-if="has_hs_code"><span t-esc="aggregated_lines[line]['hs_code']"/></td>
+        </xpath>
+    </template>
+
+    <!-- package related "section lines" -->
+    <template id="stock_report_delivery_package_section_line_inherit_delivery" inherit_id="stock.stock_report_delivery_package_section_line">
+        <!--  Add additional Package section line info -->
+        <xpath expr="//td[@name='package_info']" position="inside">
+            <t t-if="package.shipping_weight or package.weight">
+                <!-- assume manually typed in value = priority -->
+                <t t-if="package.shipping_weight">
+                    <span> - Weight: </span>
+                    <span t-field="package.shipping_weight"/>
+                    <span t-field="package.weight_uom_name"/>
+                </t>
+                <!-- otherwise default to calculated value -->
+                <t t-else="">
+                    <span> - Weight (estimated): </span>
+                    <span t-field="package.weight"/>
+                    <span t-field="package.weight_uom_name"/>
+                </t>
+            </t>
+        </xpath>
+    </template>
+    <template id="delivery_stock_report_delivery_no_package_section_line" inherit_id="stock.stock_report_delivery_no_package_section_line">
+         <!-- Add additional No Package section line info -->
+        <xpath expr="//td[@name='no_package_info']" position="inside">
+            <t t-if="o.weight_bulk">
+                <span> - Weight: </span>
+                <span t-field="o.weight_bulk"/>
+                <span t-field="o.weight_uom_name"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ThreadView" owl="1">
+        <t t-if="threadView">
+            <div class="o_ThreadView position-relative d-flex flex-column bg-100"
+                t-att-class="threadView.extraClass"
+                t-attf-class="{{ className }}"
+                t-att-data-correspondent-id="threadView.thread.channel and threadView.thread.channel.correspondent and threadView.thread.channel.correspondent.id"
+                t-att-data-thread-id="threadView.thread and threadView.thread.id"
+                t-att-data-thread-model="threadView.thread and threadView.thread.model"
+                t-on-focusin="threadView.onFocusin"
+                t-ref="root"
+            >
+                <t t-if="threadView.topbar">
+                    <ThreadViewTopbar className="'border-bottom'" record="threadView.topbar"/>
+                </t>
+                <div class="o_ThreadView_bottomPart d-flex flex-grow-1" t-att-class="{ 'border-start border-end': threadView.threadViewer.chatWindow }">
+                    <div class="o_ThreadView_core d-flex flex-column flex-grow-1">
+                        <t t-if="threadView.callView">
+                            <CallView record="threadView.callView"/>
+                        </t>
+                        <t t-if="threadView.isLoading and !threadView.threadCache.isLoaded" name="loadingCondition">
+                            <div class="o_ThreadView_loading d-flex align-self-center flex-grow-1 align-items-center">
+                                <span><i class="o_ThreadView_loadingIcon fa fa-circle-o-notch fa-spin me-1" title="Loading..." role="img"/>Loading...</span>
+                            </div>
+                        </t>
+                        <t t-elif="threadView.messageListView">
+                            <MessageList
+                                className="'o_ThreadView_messageList flex-grow-1'"
+                                record="threadView.messageListView"
+                            />
+                        </t>
+                        <t t-elif="threadView.threadCache.hasLoadingFailed">
+                            <div class="o_ThreadView_loadingFailed d-flex flex-grow-1 align-items-center justify-content-center flex-column">
+                                <div class="o_ThreadView_loadingFailedText">
+                                    An error occurred while fetching messages.
+                                </div>
+                                <button class="o_ThreadView_loadingFailedRetryButton btn btn-link" t-on-click="threadView.onClickRetryLoadMessages">
+                                    Click here to retry
+                                </button>
+                            </div>
+                        </t>
+                        <t t-elif="threadView.composerView">
+                            <div class="flex-grow-1"/>
+                        </t>
+                        <t t-if="threadView.composerView">
+                            <Composer
+                                className="'o_ThreadView_composer flex-shrink-0'"
+                                record="threadView.composerView"
+                            />
+                        </t>
+                    </div>
+                    <t t-if="threadView.channelMemberListView">
+                        <ChannelMemberList className="'o_ThreadView_channelMemberList flex-shrink-0 border-start'" record="threadView.channelMemberListView"/>
+                    </t>
+                    <t t-if="threadView.isCallSettingsMenuOpen and threadView.thread.hasCallFeature">
+                        <CallSettingsMenu className="'o_ThreadView_callSettingsMenu flex-shrink-0 border-start'" record="threadView.callSettingsMenu"/>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

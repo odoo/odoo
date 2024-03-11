@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DiscussSidebar" owl="1">
+        <t t-if="discussView">
+            <div name="root" class="o_DiscussSidebar d-flex flex-column overflow-auto" t-attf-class="{{ className }}" t-ref="root">
+                <div class="d-flex justify-content-center">
+                    <button class="o_DiscussSidebar_startAMeetingButton btn btn-primary rounded" title="Start a meeting" t-on-click="discussView.onClickStartAMeetingButton">
+                        Start a meeting
+                    </button>
+                </div>
+                <hr class="o_DiscussSidebar_separator w-100 border-top"/>
+                <div class="o_DiscussSidebar_category o_DiscussSidebar_categoryMailbox d-flex flex-column flex-grow-0">
+                    <DiscussSidebarMailbox record="discussView.inboxView"/>
+                    <DiscussSidebarMailbox record="discussView.starredView"/>
+                    <DiscussSidebarMailbox record="discussView.historyView"/>
+                </div>
+                <hr class="o_DiscussSidebar_separator w-100 border-top"/>
+                <t t-if="messaging.models['Thread'].all(thread => thread.isPinned and thread.model === 'mail.channel').length > 19">
+                    <input class="o_DiscussSidebar_quickSearch form-control mx-4 mb-2 rounded-3 w-auto" t-on-input="discussView.onInputQuickSearch" placeholder="Quick search..." t-ref="quickSearchInput" t-esc="discussView.discuss.sidebarQuickSearchValue"/>
+                </t>
+                <DiscussSidebarCategory
+                    t-if="discussView.discuss.categoryChannel"
+                    className="'o_DiscussSidebar_category o_DiscussSidebar_categoryChannel'"
+                    record="discussView.discuss.categoryChannel"
+                />
+                <t name="beforeCategoryChat"/>
+                <DiscussSidebarCategory
+                    t-if="discussView.discuss.categoryChat"
+                    className="'o_DiscussSidebar_category o_DiscussSidebar_categoryChat'"
+                    record="discussView.discuss.categoryChat"
+                />
+            </div>
+        </t>
+    </t>
+
+</templates>

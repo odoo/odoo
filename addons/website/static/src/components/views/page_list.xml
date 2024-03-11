@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.PageListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow" owl="1">
+    <xpath expr="//Field//ancestor::td/*[1]" position="before">
+        <t t-if="column.name === 'name' and record.data.is_homepage and record.mode !== 'edit'">
+            <i class="fa fa-fw fa-home fa-lg" title="Home page of the current website"/>
+        </t>
+    </xpath>
+    <!-- TODO master: remove this xpath -->
+    <xpath expr="//tr[@class='o_data_row']" position="attributes">
+        <attribute name="t-if">recordFilter(record, list.records)</attribute>
+        <attribute name="t-if"/><!-- stable way to cancel the above `t-if` -->
+    </xpath>
+</t>
+
+<t t-name="website.PageListView" t-inherit="web.ListView" owl="1">
+    <!-- TODO master: remove this xpath -->
+    <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+        <attribute name="activeWebsite">state.activeWebsite</attribute>
+    </xpath>
+    <xpath expr="//Layout" position="inside">
+        <t t-set-slot="control-panel-website-extra-actions">
+            <t t-call="website.RecordFilter"/>
+        </t>
+    </xpath>
+</t>
+
+<t t-name="website.ControlPanel.Regular" t-inherit="web.ControlPanel.Regular" t-inherit-mode="extension" owl="1">
+    <xpath expr="//div[hasclass('o_search_options')]/*[last()]" position="after">
+        <t t-slot="control-panel-website-extra-actions"/>
+    </xpath>
+</t>
+
+<t t-name="website.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary" owl="1">
+    <xpath expr="//t[@t-call='web.ControlPanel.Regular']" position="replace">
+        <t t-call="website.ControlPanel.Regular"/>
+    </xpath>
+</t>
+
+<t t-name="website.RecordFilter" owl="1">
+    <div class="btn-group" role="toolbar" aria-label="Main actions" t-if="websiteSelection.length > 1">
+        <button class="btn btn-light dropdown-toggle o-no-caret" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="me-1 fa fa-globe"/><span t-esc="state.activeWebsite.name"/>
+        </button>
+        <div class="dropdown-menu">
+            <t t-foreach="websiteSelection" t-as="website" t-key="website.id">
+                <a role="menuitem" href="#" class="dropdown-item" t-on-click="() => this.onSelectWebsite(website)"><t t-esc="website.name"/></a>
+                <div t-if="!website.id" class="dropdown-divider"/>
+            </t>
+        </div>
+    </div>
+</t>
+
+</templates>

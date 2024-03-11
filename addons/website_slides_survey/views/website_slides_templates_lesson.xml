@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="slide_content_detailed" inherit_id="website_slides.slide_content_detailed">
+            <xpath expr="//div[hasclass('o_wslides_lesson_content_type')]" position="inside">
+                <div t-if="slide.slide_category == 'certification' and not channel_progress[slide.id].get('completed')" class="col mt32 mb8 text-center">
+                    <a role="button"
+                        class="btn btn-primary btn-lg"
+                        id="start_certification"
+                        t-att-href="'/slides_survey/slide/get_certification_url?slide_id=%s' %(slide.id)"
+                        target="_blank">
+                        <i class="fa fa-fw fa-graduation-cap" role="img"/>
+                        <t t-if="slide.channel_id.is_member and slide.channel_id.active">Begin Certification</t>
+                        <t t-else="">Test Certification</t>
+                    </a>
+                </div>
+                <div t-if="slide.slide_category == 'certification' and channel_progress[slide.id].get('completed')" class="col mt32 mb8 text-center">
+                    <h4 class="mb-3">Congratulations, you passed the Certification!</h4>
+                    <a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/%s/get_certification' % slide.survey_id.id">
+                        <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/> Download certification
+                    </a>
+                </div>
+                <div t-if="slide.slide_category == 'certification' and slide.channel_id.can_upload" class="col mb8 d-flex justify-content-center">
+                    <a class="my-4" t-att-href="'/web#id=' + str(slide.survey_id.id)  + '&amp;model=survey.survey&amp;view_type=form'">
+                        <i class="fa fa-arrow-right me-1"/>Add Questions to this Survey
+                    </a>
+                </div>
+            </xpath>
+            <xpath expr="//a[hasclass('o_wslides_done_button')][1]" position="after">
+                <a t-elif="not slide_completed and slide.slide_category == 'certification'"
+                    role="button"
+                    t-attf-class="o_wslides_done_button btn btn-primary border text-white me-2"
+                    href="#start_certification">
+                    Take Quiz
+                </a>
+            </xpath>
+            <xpath expr="//a[hasclass('o_wslides_undone_button')][1]" position="after">
+                <a t-elif="slide_completed and slide.slide_category == 'certification'"
+                    class="o_wslides_undone_button btn btn-primary border text-white me-2 disabled"
+                    aria-disabled="true" title="Certifications you have passed cannot be marked as not done">
+                    Mark To Do
+                </a>
+            </xpath>
+        </template>
+    </data>
+</odoo>

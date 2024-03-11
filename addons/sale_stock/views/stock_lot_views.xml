@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_production_lot_view_form" model="ir.ui.view">
+        <field name="name">stock.production.lot.view.form</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]/button" position="before">
+                <button class="oe_stat_button" name="action_view_so"
+                        type="object" icon="fa-pencil-square-o" help="Sale Orders"
+                        attrs="{'invisible': ['|', ('sale_order_count', '=', 0), ('display_complete', '=', False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="sale_order_count" widget="statinfo" nolabel="1" class="mr4"/>
+                        </span>
+                        <span class="o_stat_text">Sales</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//group[@name='main_group']" position="after">
+                <group>
+                    <field name="sale_order_ids" widget="many2many" readonly="True"
+                           attrs="{'invisible': ['|', ('sale_order_ids', '=', []), ('display_complete', '=', True)]}">
+                        <tree>
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <field name="date_order"/>
+                            <field name="state" invisible="1"/>
+                        </tree>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

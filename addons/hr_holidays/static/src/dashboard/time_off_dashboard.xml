@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <div t-name="hr_holidays.TimeOffDashboard" owl="1" class="o_timeoff_dashboard">
+        <t t-foreach="state.holidays" t-as="holiday" t-key="holiday[3]">
+            <TimeOffCard name="holiday[0]" data="holiday[1]" requires_allocation="holiday[2] == 'yes'" id="holiday[3]"/>
+        </t>
+    </div>
+</templates>

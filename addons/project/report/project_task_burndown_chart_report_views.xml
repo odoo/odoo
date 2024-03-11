@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_task_burndown_chart_report_view_search" model="ir.ui.view">
+        <field name="name">project.task.burndown.chart.report.view.search</field>
+        <field name="model">project.task.burndown.chart.report</field>
+        <field name="arch" type="xml">
+            <search string="Burndown Chart">
+                <field name="stage_id" />
+                <field name="project_id" />
+                <field name="user_ids" />
+                <field name="milestone_id" groups="project.group_project_milestone"/>
+                <field name="date_assign"/>
+                <field name="date_deadline"/>
+                <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
+                <separator/>
+                <filter name="filter_date" date="date" string="Date" default_period="this_year,last_year" />
+                <filter name="filter_date_deadline" date="date_deadline"/>
+                <filter name="filter_date_assign" date="date_assign"/>
+                <filter string="Last Month" invisible="1" name="last_month" domain="[('date','&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Open tasks" name="open_tasks" domain="[('is_closed', '=', False)]"/>
+                <filter string="Late Milestones" name="late_milestone" domain="[('is_closed', '=', False), ('has_late_and_unreached_milestone', '=', True)]" groups="project.group_project_milestone"/>
+                <group expand="0" string="Group By">
+                    <filter string="Date" name="date" context="{'group_by': 'date'}" />
+                    <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}" invisible="1"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="project_task_burndown_chart_report_view_graph" model="ir.ui.view">
+        <field name="name">project.task.burndown.chart.report.view.graph</field>
+        <field name="model">project.task.burndown.chart.report</field>
+        <field name="arch" type="xml">
+            <graph string="Burndown Chart" type="line" sample="1" disable_linking="1" js_class="burndown_chart">
+                <field name="date" string="Date" interval="month"/>
+                <field name="stage_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_project_task_burndown_chart_report" model="ir.actions.act_window">
+        <field name="name">Burndown Chart</field>
+        <field name="res_model">project.task.burndown.chart.report</field>
+        <field name="view_mode">graph</field>
+        <field name="search_view_id" ref="project_task_burndown_chart_report_view_search"/>
+        <field name="context">{'search_default_project_id': active_id, 'search_default_date': 1, 'search_default_stage': 1, 'search_default_filter_date': 1, 'search_default_open_tasks': 1}</field>
+        <field name="domain">[('display_project_id', '!=', False)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data yet!
+            </p>
+            <p>Analyze how quickly your team is completing your project's tasks and check if everything is progressing according to plan.</p>
+        </field>
+    </record>
+
+</odoo>

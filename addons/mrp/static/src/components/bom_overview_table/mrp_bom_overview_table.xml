@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div t-name="mrp.BomOverviewTable" class="o_content" owl="1">
+        <div class="o_mrp_bom_report_page py-3 py-lg-5 px-0 overflow-auto border-bottom bg-view">
+            <div t-if="!!data.components || !!data.lines || !!data.operations" class="container-fluid">
+                <div class="d-flex mb-5">
+                    <div class="me-auto">
+                        <h2><a href="#" t-on-click.prevent="goToProduct" t-esc="data.name"/></h2>
+                        <hr t-if="data.bom_code"/>
+                        <h6 t-if="data.bom_code">Reference: <t t-esc="data.bom_code"/></h6>
+                    </div>
+                    <div class="text-center">
+                        <h3><t t-esc="formatFloat(data.quantity_available, {'digits': [false, precision]})"/> <t t-if="showUom" t-esc="props.uomName"/></h3>
+                        <span>Free to Use</span>
+                    </div>
+                    <div t-if="data.hasOwnProperty('earliest_capacity')" class="ps-5 text-center">
+                        <h3><t t-esc="formatFloat(data.earliest_capacity)"/> <t t-if="showUom" t-esc="props.uomName"/></h3>
+                        <span t-esc="data.earliest_date"/>
+                    </div>
+                    <div t-if="data.hasOwnProperty('leftover_capacity')" class="ps-5 text-center">
+                        <h3><t t-esc="formatFloat(data.leftover_capacity)"/> <t t-if="showUom" t-esc="props.uomName"/></h3>
+                        <span t-esc="data.leftover_date"/>
+                    </div>
+                </div>
+                <table class="o_mrp_bom_expandable table">
+                    <thead>
+                        <tr>
+                            <th name="th_mrp_bom_h">Product</th>
+                            <th t-attf-class="{{ showUom ? 'text-center' : 'text-end' }}" t-attf-colspan="{{ showUom ? 2 : 1 }}">Quantity</th>
+                            <th t-if="showAvailabilities" class="text-end">Ready to Produce</th>
+                            <th t-if="showAvailabilities" class="text-end" title="Availabilities on products.">Free to Use / On Hand</th>
+                            <th t-if="showAvailabilities" class="text-center" title="Reception time estimation.">Availability</th>
+                            <th t-if="showLeadTimes" class="text-end" title="Resupply lead time.">Lead Time</th>
+                            <th>Route</th>
+                            <th t-if="showCosts" class="text-end" title="This is the cost based on the BoM of the product. It is computed by summing the costs of the components and operations needed to build the product.">BoM Cost</th>
+                            <th t-if="showCosts" class="text-end" title="This is the cost defined on the product.">Product Cost</th>
+                            <th t-if="showAttachments" class="text-center" title="Files attached to the product.">Attachments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <BomOverviewLine
+                            showOptions="props.showOptions"
+                            currentWarehouseId="props.currentWarehouseId"
+                            data="data"
+                            precision="props.precision"
+                            />
+
+                        <BomOverviewComponentsBlock
+                            showOptions="props.showOptions"
+                            currentWarehouseId="props.currentWarehouseId"
+                            data="data"
+                            precision="props.precision"
+                            changeFolded.bind="props.changeFolded"/>
+                    </tbody>
+                    <tfoot t-if="showCosts">
+                        <tr>
+                            <td name="td_mrp_bom_f" class="text-end">
+                                <span t-if="!!data.byproducts &amp;&amp; data.byproducts.length > 0" t-esc="data.name"/>
+                            </td>
+                            <td class="text-end"><strong>Unit Cost</strong></td>
+                            <td t-if="showUom"/>
+                            <td t-if="showAvailabilities"/>
+                            <td t-if="showAvailabilities"/>
+                            <td t-if="showAvailabilities"/>
+                            <td t-if="showLeadTimes"/>
+                            <td/>
+                            <td class="text-end" t-esc="formatMonetary(data.bom_cost / data.quantity)"/>
+                            <td class="text-end" t-esc="formatMonetary(data.prod_cost / data.quantity)"/>
+                            <td t-if="showAttachments"/>
+                        </tr>
+                        <t t-if="data.byproducts &amp;&amp; data.byproducts.length > 0" t-foreach="data.byproducts" t-as="byproduct" t-key="byproduct.id">
+                            <tr>
+                                <td name="td_mrp_bom_b" class="text-end" t-esc="byproduct.name"/>
+                                <td class="text-end"><strong>Unit Cost</strong></td>
+                                <td t-if="showUom"/>
+                                <td t-if="showAvailabilities"/>
+                                <td t-if="showAvailabilities"/>
+                                <td t-if="showAvailabilities"/>
+                                <td t-if="showLeadTimes"/>
+                                <td/>
+                                <td class="text-end" t-esc="formatMonetary(byproduct.bom_cost / byproduct.quantity)"/>
+                                <td class="text-end" t-esc="formatMonetary(byproduct.prod_cost / byproduct.quantity)"/>
+                                <td t-if="showAttachments"/>
+                            </tr>
+                        </t>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div t-else="" class="d-flex align-items-center justify-content-center h-50">
+                <h4 class="text-muted">No data available.</h4>
+            </div>
+        </div>
+    </div>
+
+</templates>

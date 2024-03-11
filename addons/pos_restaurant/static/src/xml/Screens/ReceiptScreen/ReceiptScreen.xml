@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ReceiptScreen" t-inherit="point_of_sale.ReceiptScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('receipt-screen')]" position="inside">
+            <t t-portal="'.pos .back-to-floor-portal'" position="before">
+                <BackToFloorButton mobileSearchBarIsShown="props.mobileSearchBarIsShown"
+                                   onClick.bind="onBackToFloorButtonClick"
+                />
+            </t>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="calendar.AttendeeCalendarCommonPopover.body" t-inherit="web.CalendarCommonPopover.body" t-inherit-mode="primary" owl="1">
+        <xpath expr="//ul[hasclass('o_cw_popover_fields_secondary')]" position="attributes">
+            <attribute name="t-if">isEventDetailsVisible</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="calendar.AttendeeCalendarCommonPopover.footer" t-inherit="web.CalendarCommonPopover.footer" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-if='isEventDeletable']" position="after">
+            <a t-if="isEventArchivable and isEventDetailsVisible" href="#" class="btn btn-secondary o_cw_popover_archive_g" t-on-click="onClickArchive">Delete</a>
+            <div t-if="displayAttendeeAnswerChoice" class="d-inline-block">
+                <Dropdown togglerClass="'btn btn-secondary'">
+                    <t t-set-slot="toggler">
+                        <i t-attf-class="fa fa-circle o-calendar-attendee-status-icon #{selectedStatusInfo.color}"/> <span class="o-calendar-attendee-status-text" t-esc="selectedStatusInfo.text"></span>
+                    </t>
+                    <DropdownItem onSelected="() => this.changeAttendeeStatus('accepted')">
+                        <i class="fa fa-circle text-success"/> Accept
+                    </DropdownItem>
+                    <DropdownItem onSelected="() => this.changeAttendeeStatus('declined')">
+                        <i class="fa fa-circle text-danger"/> Decline
+                    </DropdownItem>
+                    <DropdownItem onSelected="() => this.changeAttendeeStatus('tentative')">
+                        <i class="fa fa-circle text-muted"/> Uncertain
+                    </DropdownItem>
+                </Dropdown>
+            </div>
+        </xpath>
+    </t>
+</templates>

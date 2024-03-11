@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="point_of_sale.qunit_suite_assets">
+    <t t-if="request.httprequest.cookies.get('color_scheme') == 'dark'">
+        <t t-call-assets="web.dark_mode_assets_backend" t-js="false"/>
+    </t>
+    <t t-else="">
+        <t t-call-assets="web.assets_backend" t-js="false"/>
+    </t>
+    <t t-call-assets="point_of_sale.tests_assets" t-js="false"/>
+    <t t-call-assets="point_of_sale.tests_assets" t-css="false"/>
+    <style>
+        body {
+            position: relative;
+        }
+        body:not(.debug) .modal-backdrop, body:not(.debug) .modal, body:not(.debug) .ui-autocomplete {
+            opacity: 0 !important;
+        }
+        #qunit-testrunner-toolbar label {
+            font-weight: inherit;
+            margin-bottom: inherit;
+        }
+        #qunit-testrunner-toolbar input[type=text] {
+            width: inherit;
+            display: inherit;
+        }
+    </style>
+</template>
+
+<template id="point_of_sale.qunit_suite">
+    <t t-call="web.layout">
+        <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
+        <t t-set="title">Point of Sale Tests</t>
+        <t t-set="head">
+            <!-- we need session_info in order to properly instantiate PosGlobalState -->
+            <script type="text/javascript">
+                var odoo = <t t-out="json.dumps({
+                    'csrf_token': request.csrf_token(None),
+                    '__session_info__': session_info,
+                    'debug': debug,
+                    'pos_session_id': pos_session_id,
+                })"/>;
+            </script>
+
+            <t t-call="point_of_sale.assets_common" />
+            <t t-call="point_of_sale.qunit_suite_assets" />
+            <t t-call-assets="point_of_sale.qunit_suite_tests" />
+        </t>
+
+        <div id="qunit"/>
+        <div id="qunit-fixture"/>
+    </t>
+</template>
+
+</odoo>

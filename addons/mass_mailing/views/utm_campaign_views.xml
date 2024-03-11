@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="utm_campaign_view_form">
+        <field name="name">utm.campaign.view.form</field>
+        <field name="model">utm.campaign</field>
+        <field name="inherit_id" ref="utm.utm_campaign_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="is_mailing_campaign_activated" invisible="1"/>
+                <button name="%(action_create_mass_mailings_from_campaign)d"
+                    type="action" class="oe_highlight" attrs="{'invisible': [('is_mailing_campaign_activated', '=', False)]}"
+                    groups="mass_mailing.group_mass_mailing_user" string="Send Mailing"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="%(action_view_mass_mailings_from_campaign)d"
+                    type="action" class="oe_stat_button order-9" icon="fa-envelope-o"
+                    attrs="{'invisible': ['|', ('mailing_mail_count', '=', 0), ('is_mailing_campaign_activated', '=', False)]}"
+                    groups="mass_mailing.group_mass_mailing_user">
+                    <field name="mailing_mail_count" widget="statinfo" string="Mailings"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Mailings" name="mailings"
+                    attrs="{'invisible': ['|', ('mailing_mail_count', '=', 0), ('is_mailing_campaign_activated', '=', False)]}"
+                    groups="mass_mailing.group_mass_mailing_user">
+                    <field name="mailing_mail_ids" nolabel="1">
+                        <tree>
+                            <field name="calendar_date" string="Date"/>
+                            <field name="subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                            <field name="mailing_model_id" string="Recipients" optional="hide"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="ab_testing_enabled" string="A/B Test"
+                                groups="mass_mailing.group_mass_mailing_campaign"
+                                attrs="{'column_invisible': [('parent.ab_testing_mailings_count', '=', 0)]}"/>
+                            <field name="campaign_id" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign" optional="hide"/>
+                            <field name="received_ratio" string="Delivered (%)" avg="Average of Delivered"/>
+                            <field name="opened_ratio" string="Opened (%)" avg="Average of Opened"/>
+                            <field name="bounced_ratio" string="Bounced (%)" optional="hide" avg="Average of Bounced"/>
+                            <field name="clicks_ratio" string="Clicked (%)" avg="Average of Clicked"/>
+                            <field name="replied_ratio" string="Replied (%)" avg="Average of Replied"/>
+                            <field name="state" decoration-info="state in ('draft', 'in_queue')" decoration-success="state in ('sending', 'done')" widget="badge"/>
+                            <button name="action_duplicate" type="object" string="Duplicate"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//notebook" position="after">
+                <field name="ab_testing_mailings_count" invisible="1"/>
+                <group name="ab_test_group" groups="mass_mailing.group_mass_mailing_campaign" attrs="{'invisible': [('ab_testing_mailings_count', '=', 0)]}">
+                    <group string="A/B Test">
+                        <field name="ab_testing_completed" invisible="1"/>
+                        <field name="ab_testing_winner_selection" attrs="{'readonly': [('ab_testing_completed', '=', True)]}"/>
+                        <field name="ab_testing_schedule_datetime"
+                            attrs="{'invisible': [('ab_testing_winner_selection', '=', 'manual')], 'readonly': [('ab_testing_completed', '=', True)]}"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="utm_campaign_view_kanban">
+        <field name="name">utm.campaign.view.kanban</field>
+        <field name="model">utm.campaign</field>
+        <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="mailing_mail_ids" groups="mass_mailing.group_mass_mailing_user"/>
+                <field name="is_mailing_campaign_activated"/>
+            </xpath>
+            <xpath expr="//ul[@id='o_utm_actions']">
+                <a name="%(action_view_mass_mailings_from_campaign)d" type="action"
+                    t-attf-class="oe_mailings #{record.mailing_mail_ids.raw_value.length === 0 ? 'text-muted' : ''}"
+                    t-if="record.is_mailing_campaign_activated.raw_value"
+                    groups="mass_mailing.group_mass_mailing_user">
+                    <t t-out="record.mailing_mail_ids.raw_value.length"/> Mailings
+                </a>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_view_utm_campaigns" model="ir.actions.act_window">
+        <field name="name">Campaigns</field>
+        <field name="res_model">utm.campaign</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a mailing campaign
+            </p><p>
+            Campaigns are the perfect tool to track results across multiple mailings.
+            </p>
+        </field>
+        <field name="domain">[('is_auto_campaign', '=', False)]</field>
+    </record>
+</odoo>

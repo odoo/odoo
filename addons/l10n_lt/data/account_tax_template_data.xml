@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sales -->
+    <!-- 0% VAT -->
+    <record id="account_tax_template_sales_0_vat5" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="name">Sale 0% (VAT5) Tax Exempt in LT</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_sales_0_vat12" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="name">Sale 0% (VAT12) export</field>
+        <field name="description">0% VAT</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_sales_0_vat13" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="name">Sale 0% (VAT13)</field>
+        <field name="description">0% VAT</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_sales_0_vat15" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="name">Sale 0% (VAT15) Service not in EU</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+    </record>
+    <!-- 5% VAT -->
+    <record id="account_tax_template_sales_5" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_5"/>
+        <field name="name">Sale 5% (VAT3)</field>
+        <field name="description">5% VAT</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount" eval="5.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+    </record>
+    <!-- 21% VAT -->
+    <record id="account_tax_template_sales_21" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_21"/>
+        <field name="name">Sale 21% (VAT1)</field>
+        <field name="description">21% VAT</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount" eval="21.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="1"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+    </record>
+    <!-- Reversed Taxes -->
+    <record id="account_tax_template_sales_reversed_21" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_21"/>
+        <field name="name">Reversed Sale 21% (VAT25)</field>
+        <field name="description">21% VAT</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount" eval="21.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+           (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+           (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+    </record>
+    <!-- Purchases -->
+    <!-- 0% VAT -->
+    <record id="account_tax_template_purchase_0_vat5" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="name">Purchase 0% (VAT5) Tax Exempt LT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_purchase_0_vat14" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="name">Purchase 0% (VAT14) export, transportation</field>
+        <field name="description">0% VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_purchase_0" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="name">Purchase 0% (VAT15)</field>
+        <field name="description">0% VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_purchase_0_vat42" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="name">Purchase 0% (VAT42)</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_purchase_0_vat100" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="name">Purchase 0% (VAT100) other cases</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+        ]"/>
+    </record>
+    <!-- 5% VAT -->
+    <record id="account_tax_template_purchase_5" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_5"/>
+        <field name="name">Purchase 5% (VAT3)</field>
+        <field name="description">5% VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="5.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+        ]"/>
+    </record>
+    <!-- 9% VAT -->
+    <record id="account_tax_template_purchase_not_deductible_9" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_9"/>
+        <field name="name">Purchase 9% (VAT2) not deductible</field>
+        <field name="description">9% VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="9.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_63081'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_63081'),
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_purchase_9" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_9"/>
+        <field name="name">Purchase 9% (VAT2)</field>
+        <field name="description">9% VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="9.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+        ]"/>
+    </record>
+    <!-- 21% VAT -->
+    <record id="account_tax_template_purchase_not_deductible_21" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_21"/>
+        <field name="name">Purchase 21% (VAT1) not deductible</field>
+        <field name="description">21% VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="21.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_63081'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_63081'),
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_purchase_21" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_21"/>
+        <field name="name">Purchase 21% (VAT1)</field>
+        <field name="description">21% VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="21.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="1"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+        ]"/>
+    </record>
+    <!-- Reversed Taxes -->
+    <record id="account_tax_template_purchase_reversed_21" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_21"/>
+        <field name="name">Reversed Purchase 21% (VAT25)</field>
+        <field name="description">21% VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="21.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="90"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+           (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+           (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+    </record>
+    <!-- Assumed Taxes -->
+    <!-- 21% (VAT16) -->
+    <record id="account_tax_template_purchase_assumed_21_vat16" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_21"/>
+        <field name="name">Assumed Purchase 21% (VAT16) from EU</field>
+        <field name="description">Assumed 21% VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="21"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="100"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+           (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+           (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+    </record>
+    <!-- 21% (VAT20) -->
+    <record id="account_tax_template_purchase_assumed_21_vat20" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_21"/>
+        <field name="name">Assumed Purchase 21% (VAT20)</field>
+        <field name="description">Assumed 21% VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="21.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="110"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+           (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+           (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+    </record>
+    <!-- 21% (VAT21) -->
+    <record id="account_tax_template_purchase_assumed_21" model="account.tax.template">
+        <field name="tax_group_id" ref="tax_group_vat_21"/>
+        <field name="name">Assumed Purchase 21% (VAT21) Goods/Services</field>
+        <field name="description">Assumed 21% VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="21.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="120"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_2441'),
+            }),
+           (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_account_template_4492'),
+            }),
+        ]"/>
+    </record>
+</odoo>

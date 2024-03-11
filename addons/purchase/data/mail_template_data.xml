@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="email_template_edi_purchase" model="mail.template">
+            <field name="name">Purchase: Request For Quotation</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="subject">{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="description">Sent manually to vendor to request a quotation</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear <t t-out="object.partner_id.name or ''">Brandon Freeman</t>
+        <t t-if="object.partner_id.parent_id">
+            (<t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>)
+        </t>
+        <br/><br/>
+        Here is in attachment a request for quotation <span style="font-weight:bold;" t-out="object.name or ''">P00015</span>
+        <t t-if="object.partner_ref">
+            with reference: <t t-out="object.partner_ref or ''">REF_XXX</t>
+        </t>
+        from <t t-out="object.company_id.name or ''">YourCompany</t>.
+        <br/><br/>
+        If you have any questions, please do not hesitate to contact us.
+        <br/><br/>
+        Best regards,
+        <t t-if="not is_html_empty(object.user_id.signature)">
+            <br/><br/>
+            <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
+        </t>
+    </p>
+</div></field>
+            <field name="report_template" ref="report_purchase_quotation"/>
+            <field name="report_name">RFQ_{{ (object.name or '').replace('/','_') }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_template_edi_purchase_done" model="mail.template">
+            <field name="name">Purchase: Purchase Order</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="subject">{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="description">Sent to vendor with the purchase order in attachment</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear <t t-out="object.partner_id.name or ''">Brandon Freeman</t>
+        <t t-if="object.partner_id.parent_id">
+            (<t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>)
+        </t>
+        <br/><br/>
+        Here is in attachment a purchase order <span style="font-weight:bold;" t-out="object.name or ''">P00015</span>
+        <t t-if="object.partner_ref">
+            with reference: <t t-out="object.partner_ref or ''">REF_XXX</t>
+        </t>
+        amounting in <span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span>
+        from <t t-out="object.company_id.name or ''">YourCompany</t>. 
+        <br/><br/>
+        <t t-if="object.date_planned">
+            The receipt is expected for <span style="font-weight:bold;" t-out="format_date(object.get_localized_date_planned()) or ''">05/05/2021</span>.
+            <br/><br/>
+            Could you please acknowledge the receipt of this order?
+        </t>
+        <t t-if="not is_html_empty(object.user_id.signature)">
+            <br/><br/>
+            <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
+        </t>
+        <br/><br/>
+    </p>
+</div></field>
+            <field name="report_template" ref="action_report_purchase_order"/>
+            <field name="report_name">PO_{{ (object.name or '').replace('/','_') }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_template_edi_purchase_reminder" model="mail.template">
+            <field name="name">Purchase: Vendor Reminder</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="subject">{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="description">Sent to vendors before expected arrival, based on the purchase order setting</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear <t t-out="object.partner_id.name or ''">Brandon Freeman</t>
+        <t t-if="object.partner_id.parent_id">
+            (<t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>)
+        </t>
+        <br/><br/>
+        Here is a reminder that the delivery of the purchase order <span style="font-weight:bold;" t-out="object.name or ''">P00015</span>
+        <t t-if="object.partner_ref">
+            <span style="font-weight:bold;">(<t t-out="object.partner_ref or ''">REF_XXX</t>)</span>
+        </t>
+        is expected for 
+        <t t-if="object.date_planned">
+            <span style="font-weight:bold;" t-out="format_date(object.get_localized_date_planned()) or ''">05/05/2021</span>.
+        </t>
+         <t t-else="">
+            <span style="font-weight:bold;">undefined</span>.
+        </t>
+        Could you please confirm it will be delivered on time?
+        <t t-if="not is_html_empty(object.user_id.signature)">
+            <br/><br/>
+            <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
+        </t>
+        <br/><br/>
+    </p>
+</div></field>
+            <field name="report_template" ref="action_report_purchase_order"/>
+            <field name="report_name">PO_{{ (object.name or '').replace('/','_') }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!--=================-->
+    <!-- Edition Iframe -->
+    <!--=================-->
+    <t t-name="wysiwyg.iframeContent"><head>
+            <meta charset="utf-8"/>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+            <t t-foreach="assets || []" t-as="asset">
+                <t t-foreach="asset.cssLibs || []" t-as="cssLib">
+                    <link type="text/css" rel="stylesheet" t-att-href="cssLib"/>
+                </t>
+                <t t-foreach="asset.cssContents || []" t-as="cssContent">
+                    <style type="text/css" t-out="cssContent"/>
+                </t>
+                <t t-foreach="asset.jsLibs || []" t-as="jsLib">
+                    <script type="text/javascript" t-att-src="jsLib"/>
+                </t>
+                <t t-foreach="asset.jsContents || []" t-as="jsContent" t-if="jsContent.indexOf('inline asset') !== -1">
+                    <script type="text/javascript" t-out="jsContent"/>
+                </t>
+            </t>
+            <script type="text/javascript">
+                odoo.define('web.session', function () {
+                    return window.top.odoo.__DEBUG__.services['web.session'];
+                });
+
+                odoo.define('root.widget', function (require) {
+                    'use strict';
+                    var Widget = require('web.Widget');
+                    var widget = new Widget();
+                    widget.appendTo(document.body);
+                    return widget;
+                });
+
+                odoo.define('web.core.top', function (require) {
+                    var core = require('web.core');
+                    core.qweb.templates = window.top.odoo.__DEBUG__.services['web.core'].qweb.templates;
+                });
+            </script>
+        </head>
+        <body class="o_in_iframe">
+            <div id="iframe_target"/>
+            <script type="text/javascript">
+                odoo.define('web_editor.wysiwyg.iniframe', function (require) {
+                    'use strict';
+                    if (window.top.<t t-esc="updateIframeId"/>) {
+                        window.top.<t t-esc="updateIframeId"/>(<t t-esc="avoidDoubleLoad"/>);
+                    }
+                });
+            </script>
+        </body>
+    </t>
+
+    <!--=================-->
+    <!-- Edition Dialogs -->
+    <!--=================-->
+
+    <!-- Alt Dialog (allows to change alt and title of page images) -->
+    <form t-name="wysiwyg.widgets.alt" action="#">
+        <div class="mb-3 row">
+            <label class="col-md-3 col-form-label" for="alt"
+                   title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">
+               Description <small>(ALT Tag)</small>
+            </label>
+            <div class="col-md-8">
+                <input class="form-control" id="alt" required="required" t-att-value="widget.alt" type="text"/>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label class="col-md-3 col-form-label" for="title"
+                   title="'Title tag' is shown as a tooltip when you hover the picture.">
+               Tooltip  <small>(TITLE Tag)</small>
+            </label>
+            <div class="col-md-8">
+                <input class="form-control" id="title" required="required" t-att-value="widget.tag_title" type="text"/>
+            </div>
+        </div>
+    </form>
+
+    <!-- Link Dialog (allows to choose a style and content for a link on the page) -->
+    <div t-name="wysiwyg.widgets.link" class="o_link_dialog">
+        <div class="row">
+            <form class="col-lg-8">
+                <div t-attf-class="mb-3 row#{widget.needLabel ? '' : ' d-none'}">
+                    <label class="col-form-label col-md-3" for="o_link_dialog_label_input">Link Label</label>
+                    <div class="col-md-9">
+                        <input type="text" name="label" class="form-control" id="o_link_dialog_label_input" required="required" t-att-value="widget.data.content"/>
+                    </div>
+                </div>
+                <div t-attf-class="mb-3 row o_url_input#{widget.isButton ? ' d-none' : ''}">
+                    <label class="col-form-label col-md-3" for="o_link_dialog_url_input">URL or Email</label>
+                    <div class="col-md-9">
+                        <input type="text" name="url" class="form-control" id="o_link_dialog_url_input" required="required"/>
+                        <div class="form-check o_strip_domain d-none">
+                            <input type="checkbox" id="o_link_dialog_url_strip_domain" checked="checked" class="form-check-input"/>
+                            <label for="o_link_dialog_url_strip_domain" class="form-check-label fw-normal">
+                                Autoconvert to relative link
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label class="col-form-label col-md-3">Type</label>
+                    <div class="col-md-9 d-flex align-items-center">
+                        <div t-attf-class="#{widget.colorCombinationClass ? ('p-2 ' + widget.colorCombinationClass) : ''}">
+                            <t t-foreach="widget.colorsData" t-as="colorData">
+                                <label role="button" class="m-0 me-2" t-if="colorData.type !== 'custom'">
+                                    <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="colorData.type"/>
+                                    <span t-esc="colorData.label"
+                                            t-attf-class="o_btn_preview btn btn-sm btn-#{colorData.btnPreview} #{colorData.type ? '' : 'px-0'}"/>
+                                </label>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <div id="o_link_dialog_button_opts_collapse" class="collapse">
+                    <div class="mb-3 row">
+                        <label class="col-form-label col-md-3">Size</label>
+                        <div class="col-md-9">
+                            <select name="link_style_size" class="form-select link-style">
+                                <option value="sm">Small</option>
+                                <option value="" selected="selected">Medium</option>
+                                <option value="lg">Large</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label class="col-form-label col-md-3">Style</label>
+                        <div class="col-md-9">
+                            <select name="link_style_shape" class="form-select link-style">
+                                <option value="" selected="selected">Default</option>
+                                <option value="rounded-circle">Default + Rounded</option>
+                                <option value="outline">Outline</option>
+                                <option value="outline,rounded-circle">Outline + Rounded</option>
+                                <option value="fill">Fill</option>
+                                <option value="fill,rounded-circle">Fill + Rounded</option>
+                                <option value="flat">Flat</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row" t-if="!widget.isButton &amp;&amp; !widget.options.forceNewWindow">
+                    <div class="offset-md-3 col-md-9">
+                        <label class="o_switch">
+                            <input type="checkbox" name="is_new_window" t-att-checked="widget.data.isNewWindow ? 'checked' : undefined"/>
+                            <span/>
+                            Open in new window
+                        </label>
+                    </div>
+                </div>
+            </form>
+            <div class="col-lg-4 o_link_dialog_preview">
+                <div class="mb-3 text-center">
+                    <label>Preview</label>
+                    <div t-attf-class="#{widget.colorCombinationClass ? ('p-2 ' + widget.colorCombinationClass) : ''}"
+                         style="overflow-x: auto; max-width: 100%; max-height: 200px;">
+                        <a href="#" id="link-preview" aria-label="Preview" title="Preview"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link Edition : Popover -->
+    <div t-name="wysiwyg.widgets.link.edit.tooltip" class="d-flex">
+        <span class="me-2 o_we_preview_favicon"><i class="fa fa-globe"/><img class="align-baseline d-none"/></span>
+        <div class="w-100">
+            <div class="d-flex">
+                <a href="#" target="_blank" class="o_we_url_link fw-bold flex-grow-1 text-truncate" t-esc="widget.href" title="Open in a new tab"/>
+                <a href="#" class="mx-1 o_we_copy_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy Link">
+                    <i class="fa fa-clone"/>
+                </a>
+                <a href="#" class="mx-1 o_we_edit_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Link">
+                    <i class="fa fa-edit"/>
+                </a>
+                <a href="#" class="ms-1 o_we_remove_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove Link">
+                    <i class="fa fa-chain-broken"/>
+                </a>
+            </div>
+            <a href="#" target="_blank" class="o_we_full_url mt-1 text-muted d-none" t-esc="widget.href" title="Open in a new tab"/>
+        </div>
+    </div>
+    <we-customizeblock-option t-name="wysiwyg.widgets.linkTools">
+        <we-row t-attf-class="o_we_sublevel_1 {{widget.needLabel ? '' : 'd-none'}}">
+            <we-title>Link Label</we-title>
+            <we-input class="o_we_user_value_widget">
+                <div>
+                    <input name="label" id="o_link_dialog_label_input" t-att-value="widget.data.content" type="text"/>
+                </div>
+            </we-input>
+        </we-row>
+        <we-row id="url_row" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
+            <we-input class="o_we_user_value_widget o_we_sublevel_1">
+                <we-title class="o_short_title"></we-title>
+                <div class="o_url_input">
+                    <input name="url" id="o_link_dialog_url_input" type="text" placeholder="Your URL"/>
+                </div>
+            </we-input>
+        </we-row>
+        <we-row class="o_strip_domain d-none" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
+            <we-button class="o_we_user_value_widget o_we_checkbox_wrapper o_we_sublevel_1 active">
+                <we-title class="o_long_title">Autoconvert to relative link</we-title>
+                    <div class="o_switch">
+                        <we-checkbox name="do_strip_domain" t-att-checked="widget.data.doStripDomain ? 'checked' : undefined"/>
+                    </div>
+            </we-button>
+        </we-row>
+        <we-row>
+            <we-select class="o_we_user_value_widget o_we_sublevel_1">
+                <we-title>Style</we-title>
+                <div class="dropdown">
+                    <button class="dropdown-toggle"
+                        data-bs-toggle="dropdown" title="" tabindex="-1"
+                        data-bs-original-title="Link Style" aria-expanded="false">
+                        <we-toggler/>
+                    </button>
+                    <we-selection-items class="dropdown-menu" name="link_style_color">
+                        <t t-foreach="widget.colorsData" t-as="colorData">
+                            <we-button class="dropdown-item" href="#" t-att-data-value="colorData.type">
+                                <t t-esc="colorData.label"/>
+                            </we-button>
+                        </t>
+                    </we-selection-items>
+                    <span class="o_we_dropdown_caret"></span>
+                </div>
+            </we-select>
+        </we-row>
+        <we-row class="link-custom-color link-custom-color-text">
+            <we-select title="Color" class="o_we_user_value_widget o_we_so_color_palette o_we_sublevel_2">
+                <we-title>Text Color</we-title>
+                <div class="dropdown">
+                    <span data-bs-toggle="dropdown" data-css-property="color" class="o_we_color_preview"></span>
+                    <we-selection-items class="dropdown-menu" name="link_text_color"/>
+                </div>
+            </we-select>
+        </we-row>
+        <we-row class="link-custom-color link-custom-color-fill">
+            <we-select title="Color" class="o_we_user_value_widget o_we_so_color_palette o_we_sublevel_2">
+                <we-title>Fill Color</we-title>
+                <div class="dropdown">
+                    <span data-bs-toggle="dropdown" data-css-property="background-color" class="o_we_color_preview"></span>
+                    <we-selection-items class="dropdown-menu" name="link_fill_color"/>
+                </div>
+            </we-select>
+        </we-row>
+        <we-row class="link-custom-color link-custom-color-border o_we_sublevel_2">
+            <we-title>Border</we-title>
+            <div>
+                <we-input class="o_we_user_value_widget" title="Border Width">
+                    <div class="o_custom_border_width_input">
+                        <input name="custom_border_width" type="text" class="text-end" size="2"/>
+                        <span>px</span>
+                    </div>
+                </we-input>
+                <we-select class="o_we_user_value_widget" title="Border Style">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle"
+                            data-bs-toggle="dropdown" title="" tabindex="-1"
+                            data-bs-original-title="Link Border Style" aria-expanded="false">
+                            <we-toggler/>
+                        </button>
+                        <we-selection-items class="dropdown-menu" name="link_border_style">
+                            <we-button title="Solid" class="dropdown-item" data-value="solid"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></we-button>
+                            <we-button title="Dashed" class="dropdown-item" data-value="dashed"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></we-button>
+                            <we-button title="Dotted" class="dropdown-item" data-value="dotted"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></we-button>
+                            <we-button title="Double" class="dropdown-item" data-value="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></we-button>
+                        </we-selection-items>
+                    </div>
+                </we-select>
+                <we-select title="Border Color" class="o_we_user_value_widget o_we_so_color_palette">
+                    <div class="dropdown">
+                        <span data-bs-toggle="dropdown" data-css-property="border-color" class="o_we_color_preview"></span>
+                        <we-selection-items class="dropdown-menu" name="link_border_color"/>
+                    </div>
+                </we-select>
+            </div>
+        </we-row>
+        <we-row class="link-size-row">
+            <we-select class="o_we_user_value_widget o_we_sublevel_1">
+                <we-title>Size</we-title>
+                <div>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle"
+                            data-bs-toggle="dropdown" title="" tabindex="-1"
+                            data-bs-original-title="Link Size" aria-expanded="false">
+                            <we-toggler>
+                                Medium
+                            </we-toggler>
+                        </button>
+                        <we-selection-items name="link_style_size" class="dropdown-menu link-style">
+                            <we-button class="dropdown-item" href="#" data-value="sm">
+                                Small
+                            </we-button>
+                            <we-button class="dropdown-item active" href="#" data-value="">
+                                Medium
+                            </we-button>
+                            <we-button class="dropdown-item" href="#" data-value="lg">
+                                Large
+                            </we-button>
+                        </we-selection-items>
+                        <span class="o_we_dropdown_caret"></span>
+                    </div>
+                </div>
+            </we-select>
+        </we-row>
+        <we-row class="link-shape-row">
+            <we-select class="o_we_user_value_widget o_we_sublevel_1">
+                <we-title>Shape</we-title>
+                <div>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle"
+                            data-bs-toggle="dropdown" title="" tabindex="-1"
+                            data-bs-original-title="Link Shape" aria-expanded="false">
+                            <we-toggler>
+                                Default
+                            </we-toggler>
+                        </button>
+                        <we-selection-items name="link_style_shape" class="dropdown-menu link-style">
+                            <we-button class="dropdown-item active" data-value="">Default</we-button>
+                            <we-button class="dropdown-item" data-value="rounded-circle">Default + Rounded</we-button>
+                            <we-button class="dropdown-item" data-value="outline">Outline</we-button>
+                            <we-button class="dropdown-item" data-value="outline,rounded-circle">Outline + Rounded</we-button>
+                            <we-button class="dropdown-item" data-value="fill">Fill</we-button>
+                            <we-button class="dropdown-item" data-value="fill,rounded-circle">Fill + Rounded</we-button>
+                            <we-button class="dropdown-item" data-value="flat">Flat</we-button>
+                        </we-selection-items>
+                    </div>
+                </div>
+            </we-select>
+        </we-row>
+        <we-row  t-if="!widget.isButton &amp;&amp; !widget.options.forceNewWindow">
+            <we-button t-attf-class="o_we_user_value_widget o_we_checkbox_wrapper o_we_sublevel_1 #{widget.data.isNewWindow ? 'active' : ''}">
+                <we-title class="o_long_title">Open in new window</we-title>
+                    <div class="o_switch">
+                        <we-checkbox name="is_new_window" t-att-checked="widget.data.isNewWindow ? 'checked' : undefined"/>
+                    </div>
+            </we-button>
+        </we-row>
+    </we-customizeblock-option>
+
+    <!-- ImageCropWidget controls (allows to crop images on the page) -->
+    <div t-name="wysiwyg.widgets.crop" class="o_we_crop_widget" contenteditable="false">
+        <div class="o_we_cropper_wrapper">
+            <img class="o_we_cropper_img"/>
+            <div class="o_we_crop_buttons text-center mt16 position-fixed o_we_no_overlay" contenteditable="false">
+                <div class="btn-group btn-group-toggle" title="Aspect Ratio" data-bs-toggle="buttons">
+                    <t t-foreach="widget.aspectRatios" t-as="ratio">
+                        <t t-set="is_active" t-value="ratio === widget.aspectRatio"/>
+                        <label t-attf-class="btn #{is_active and 'active' or ''}" data-action="ratio" t-att-data-value="ratio">
+                            <input type="radio" /><t t-esc="ratio_value.label"/>
+                        </label>
+                    </t>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Zoom In" data-action="zoom" data-value="0.1"><i class="fa fa-fw fa-search-plus"/></button>
+                    <button type="button" title="Zoom Out" data-action="zoom" data-value="-0.1"><i class="fa fa-fw fa-search-minus"/></button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Rotate Left" data-action="rotate" data-value="-90"><i class="fa fa-fw fa-rotate-left"/></button>
+                    <button type="button" title="Rotate Right" data-action="rotate" data-value="90"><i class="fa fa-fw fa-rotate-right"/></button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Flip Horizontal" data-action="flip" data-scale-direction="scaleX"><i class="fa fa-fw fa-arrows-h"/></button>
+                    <button type="button" title="Flip Vertical" data-action="flip" data-scale-direction="scaleY"><i class="fa fa-fw fa-arrows-v"/></button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Reset Image" data-action="reset"><i class="fa fa-refresh"/> Reset Image</button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Apply" data-action="apply" class="btn btn-primary"><i class="fa fa-check"/> Apply</button>
+                    <button type="button" title="Discard" data-action="discard" class="btn btn-danger"><i class="fa fa-times"/> Discard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</templates>

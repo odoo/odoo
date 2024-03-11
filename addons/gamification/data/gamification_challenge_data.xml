@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- goal definitions -->
+        <record model="gamification.goal.definition" id="definition_base_timezone">
+            <field name="name">Set your Timezone</field>
+            <field name="description">Configure your profile and specify your timezone</field>
+            <field name="computation_mode">count</field>
+            <field name="display_mode">boolean</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="domain">[('partner_id.tz', '!=', False)]</field>
+            <field name="action_id" ref="base.action_res_users_my"/>
+            <field name="res_id_field">user.id</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" ref="base.field_res_users__id"/>
+            <field name="batch_user_expression">user.id</field>
+        </record>
+
+        <record model="gamification.goal.definition" id="definition_base_company_data">
+            <field name="name">Set your Company Data</field>
+            <field name="description">Write some information about your company (specify at least a name)</field>
+            <field name="computation_mode">count</field>
+            <field name="display_mode">boolean</field>
+            <field name="model_id" ref="base.model_res_company"/>
+            <field name="domain">[('user_ids', 'in', [user.id]), ('name', '=', 'YourCompany')]</field>
+            <field name="condition">lower</field>
+            <field name="action_id" ref="base.action_res_company_form"/>
+            <field name="res_id_field">user.company_id.id</field>
+        </record>
+
+        <record model="gamification.goal.definition" id="definition_base_company_logo">
+            <field name="name">Set your Company Logo</field>
+            <field name="computation_mode">count</field>
+            <field name="display_mode">boolean</field>
+            <field name="model_id" ref="base.model_res_company"/>
+            <field name="domain">[('user_ids', 'in', [user.id]),('logo', '!=', False)]</field>
+            <field name="action_id" ref="base.action_res_company_form"/>
+            <field name="res_id_field">user.company_id.id</field>
+        </record>
+
+        <record model="gamification.goal.definition" id="definition_base_invite">
+            <field name="name">Invite new Users</field>
+            <field name="description">Create at least another user</field>
+            <field name="display_mode">boolean</field>
+            <field name="computation_mode">count</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="domain">[('id', '!=', user.id)]</field>
+            <field name="action_id" ref="action_new_simplified_res_users"/>
+        </record>
+
+        <!-- challenges -->
+        <record model="gamification.challenge" id="challenge_base_discover">
+            <field name="name">Complete your Profile</field>
+            <field name="period">once</field>
+            <field name="visibility_mode">personal</field>
+            <field name="report_message_frequency">never</field>
+            <field name="user_domain" eval="str([('groups_id.id', '=', ref('base.group_user'))])" />
+            <field name="state">inprogress</field>
+            <field name="challenge_category">other</field>
+        </record>
+
+        <record model="gamification.challenge" id="challenge_base_configure">
+            <field name="name">Setup your Company</field>
+            <field name="period">once</field>
+            <field name="visibility_mode">personal</field>
+            <field name="report_message_frequency">never</field>
+            <field name="user_domain" eval="str([('groups_id.id', '=', ref('base.group_erp_manager'))])" />
+            <field name="state">inprogress</field>
+            <field name="challenge_category">other</field>
+        </record>
+
+        <!-- lines -->
+        <record model="gamification.challenge.line" id="line_base_discover1">
+            <field name="definition_id" ref="definition_base_timezone"/>
+            <field name="target_goal">1</field>
+            <field name="challenge_id" ref="challenge_base_discover"/>
+        </record>
+
+        <record model="gamification.challenge.line" id="line_base_admin2">
+            <field name="definition_id" ref="definition_base_company_logo"/>
+            <field name="target_goal">1</field>
+            <field name="challenge_id" ref="challenge_base_configure"/>
+        </record>
+        <record model="gamification.challenge.line" id="line_base_admin1">
+            <field name="definition_id" ref="definition_base_company_data"/>
+            <field name="target_goal">0</field>
+            <field name="challenge_id" ref="challenge_base_configure"/>
+        </record>
+        <record model="gamification.challenge.line" id="line_base_admin3">
+            <field name="definition_id" ref="definition_base_invite"/>
+            <field name="target_goal">1</field>
+            <field name="challenge_id" ref="challenge_base_configure"/>
+        </record>
+    </data>
+
+</odoo>

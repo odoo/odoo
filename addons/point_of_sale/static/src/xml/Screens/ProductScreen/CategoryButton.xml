@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="CategoryButton" owl="1">
+        <span class="category-button" t-on-click="() => this.trigger('switch-category', props.category.id)">
+            <div class="category-img">
+                <img t-att-src="imageUrl" alt="Category" />
+            </div>
+            <div class="category-name">
+                <t t-esc="props.category.name" />
+            </div>
+        </span>
+    </t>
+
+</templates>

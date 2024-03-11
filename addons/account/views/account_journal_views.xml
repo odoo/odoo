@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_journal_tree" model="ir.ui.view">
+            <field name="name">account.journal.tree</field>
+            <field name="model">account.journal</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree string="Account Journal">
+                    <field name='sequence' widget='handle'/>
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="journal_group_ids" widget="many2many_tags" readonly="1" optional="show"/>
+                    <field name="currency_id" groups="base.group_multi_currency" optional="hide"/>
+                    <field name="code" optional="show"/>
+                    <field name="default_account_id" optional="show"/>
+                    <field name="active" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                    <field name="company_id" groups="!base.group_multi_company" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_journal_form" model="ir.ui.view">
+            <field name="name">account.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Account Journal">
+                    <field name="company_id" invisible="1"/>
+                    <field name="bank_statements_source" invisible="1"/>
+                    <sheet>
+                        <div name="button_box" class="oe_button_box">
+                            <button class="oe_stat_button" type="action"
+                                    name="%(action_account_moves_all_a)d" icon="fa-book" string="Journal Entries"
+                                    context="{'search_default_journal_id':active_id}"/>
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" placeholder="e.g. Customer Invoices"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="active" invisible="1"/>
+                                <field name="type"/>
+                            </group>
+                            <group>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="country_code" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="bank_account" string="Journal Entries">
+                                <group>
+                                    <group string="Accounting Information">
+                                        <field name="default_account_type" invisible="1"/>
+                                        <label for="default_account_id" string="Bank Account"
+                                               attrs="{'invisible': [('type', '!=', 'bank')]}" groups="account.group_account_readonly"/>
+                                        <label for="default_account_id" string="Cash Account"
+                                               attrs="{'invisible': [('type', '!=', 'cash')]}" groups="account.group_account_readonly"/>
+                                        <label for="default_account_id" string="Default Income Account"
+                                               attrs="{'invisible': [('type', '!=', 'sale')]}" groups="account.group_account_readonly"/>
+                                        <label for="default_account_id" string="Default Expense Account"
+                                               attrs="{'invisible': [('type', '!=', 'purchase')]}" groups="account.group_account_readonly"/>
+                                        <field name="default_account_id" nolabel="1"
+                                               attrs="{'required': ['|', '&amp;', ('id', '!=', False), ('type', 'in', ('bank', 'cash')), ('type', 'in', ('sale', 'purchase'))],
+                                                       'invisible': [('type', 'in', (False, 'general'))]}"
+                                               options="{'no_quick_create': True}"
+                                               groups="account.group_account_readonly"/>
+                                        <field name="suspense_account_id"
+                                               attrs="{'required': [('type', 'in', ('bank', 'cash'))], 'invisible': [('type', 'not in', ('bank', 'cash'))]}"
+                                               options="{'no_quick_create': True}"
+                                               groups="account.group_account_readonly"/>
+                                        <field name="profit_account_id" attrs="{'invisible': ['!', ('type', 'in', ('cash', 'bank'))]}"/>
+                                        <field name="loss_account_id" attrs="{'invisible': ['!', ('type', 'in', ('cash', 'bank'))]}"/>
+                                        <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
+                                        <field name="payment_sequence" attrs="{'invisible': [('type', 'not in', ('bank', 'cash'))]}"/>
+                                        <field name="code" placeholder="e.g. INV"/>
+                                        <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                                    </group>
+                                    <group name="bank_account_number" string="Bank Account Number" attrs="{'invisible': [('type', '!=', 'bank')]}">
+                                        <field name="company_partner_id" invisible="1"/>
+                                        <field name="bank_account_id" string="Account Number" context="{'default_partner_id': company_partner_id}"/>
+                                        <field name="bank_id" attrs="{'invisible': [('bank_account_id', '=', False)]}"/>
+                                        <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')]}"  groups="account.group_account_readonly"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page id="inbound_payment_settings" string="Incoming Payments" attrs="{'invisible': [('type', 'not in', ['cash', 'bank'])]}">
+                                <field name="available_payment_method_ids" invisible="1"/>
+                                <field name="inbound_payment_method_line_ids" nolabel="1" context="{'default_payment_type': 'inbound'}">
+                                    <tree string="Payment Methods" editable="bottom">
+                                        <field name="available_payment_method_ids" invisible="1"/>
+                                        <field name="payment_type" invisible="1"/>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="payment_method_id" options="{'no_create': True, 'no_open': True}"/>
+                                        <field name="name"/>
+                                        <field name="payment_account_id"
+                                               placeholder="Leave empty to use the default outstanding account"
+                                               string="Outstanding Receipts accounts"
+                                               optional="hide"
+                                               options="{'no_quick_create': True}"
+                                               groups="account.group_account_readonly"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page id="outbound_payment_settings" string="Outgoing Payments" attrs="{'invisible': [('type', 'not in', ['cash', 'bank'])]}">
+                                    <field name="outbound_payment_method_line_ids" nolabel="1" context="{'default_payment_type': 'outbound'}">
+                                        <tree string="Payment Methods" editable="bottom" nolabel="1">
+                                            <field name="available_payment_method_ids" invisible="1"/>
+                                            <field name="payment_type" invisible="1"/>
+                                            <field name="company_id" invisible="1"/>
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="payment_method_id" options="{'no_create': True, 'no_open': True}"/>
+                                            <field name="name"/>
+                                            <field name="payment_account_id"
+                                                   placeholder="Leave empty to use the default outstanding account"
+                                                   string="Outstanding Payments accounts"
+                                                   optional="hide"
+                                                   options="{'no_quick_create': True}"
+                                                   groups="account.group_account_readonly"/>
+                                        </tree>
+                                    </field>
+                                    <field name="selected_payment_method_codes" invisible="1"/>
+                                    <group name="outgoing_payment" />
+                            </page>
+                            <page name="advanced_settings" string="Advanced Settings">
+                                <group>
+                                    <group string="Control-Access" groups="account.group_account_manager">
+                                        <div class="text-muted" colspan="2">Keep empty for no control</div>
+                                        <field name="account_control_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                                        <field name="restrict_mode_hash_table" groups="account.group_account_readonly" attrs="{'invisible': [('type', 'in', ['bank', 'cash'])]}"/>
+                                    </group>
+                                    <!-- email alias -->
+                                    <group class="oe_read_only" name="group_alias_ro" string="Create Invoices upon Emails" attrs="{'invisible': ['|', ('type', 'not in',  ('sale' ,'purchase')), ('alias_domain', '=', False)]}">
+                                       <field name="alias_id"/>
+                                    </group>
+                                    <group name="group_alias_no_domain" string="Create Invoices upon Emails" attrs="{'invisible': ['|', ('type', 'not in',  ('sale' ,'purchase')), ('alias_domain', '!=', False)]}">
+                                        <div class="content-group" colspan="2">
+                                            <a type='action' name='%(action_open_settings)d' class="btn btn-link" role="button"><i class="fa fa-fw o_button_icon fa-arrow-right"/> Configure Email Servers</a>
+                                        </div>
+                                    </group>
+                                    <group class="oe_edit_only" name="group_alias_edit" string="Create Invoices upon Emails" attrs="{'invisible': ['|', ('type', 'not in',  ('sale' ,'purchase')), ('alias_domain', '=', False)]}">
+                                        <label string="Email Alias" for="alias_name"/>
+                                        <div class="oe_inline" name="edit_alias" style="display: inline;" >
+                                            <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                        </div>
+                                    </group>
+                                    <!-- email alias end -->
+                                    <group string="Payment Communications" attrs="{'invisible': [('type', '!=', 'sale')]}">
+                                        <field name="invoice_reference_type"/>
+                                        <field name="invoice_reference_model" attrs="{'invisible': [('invoice_reference_type', '=', 'none')]}"/>
+                                    </group>
+                                    <group string="Follow Customer Payments" attrs="{'invisible': [('type', '!=', 'sale')]}">
+                                        <field name="sale_activity_type_id" options="{'no_quick_create': True}"/>
+                                        <field name="sale_activity_user_id" attrs="{'invisible': [('sale_activity_type_id', '=', False)]}" options="{'no_quick_create': True}"/>
+                                        <field name="sale_activity_note" placeholder="e.g. Give a phone call, check with others , ..."  attrs="{'invisible': [('sale_activity_type_id', '=', False)]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_journal_view_kanban" model="ir.ui.view">
+            <field name="name">account.journal.kanban</field>
+            <field name="model">account.journal</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="float-end"><field name="type"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_account_journal_search" model="ir.ui.view">
+            <field name="name">account.journal.search</field>
+            <field name="model">account.journal</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <search string="Search Account Journal">
+                    <field name="name" string="Journal" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                    <filter name="dashboard" string="Favorites" domain="[('show_on_dashboard', '=', True)]"/>
+                    <separator/>
+                    <filter name="sales" string="Sales" domain="[('type', '=', 'sale')]"/>
+                    <filter name="purchases" string="Purchases" domain="[('type', '=', 'purchase')]"/>
+                    <filter name="liquidity" string="Liquidity" domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]"/>
+                    <filter name="miscellaneous" string="Miscellaneous" domain="[('type', 'not in', ['sale', 'purchase', 'cash', 'bank'])]"/>
+                    <separator/>
+                    <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_account_journal_form" model="ir.actions.act_window">
+            <field name="name">Journals</field>
+            <field name="res_model">account.journal</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_account_journal_tree')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('account_journal_view_kanban')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('view_account_journal_form')})]"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a journal
+              </p><p>
+                A journal is used to record transactions of all accounting data
+                related to the day-to-day business.
+              </p>
+            </field>
+        </record>
+
+        <record id="view_account_journal_group_tree" model="ir.ui.view">
+            <field name="name">account.journal.group.tree</field>
+            <field name="model">account.journal.group</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="company_id" invisible="1"/>
+                    <field name="sequence"  widget="handle"/>
+                    <field name="name"/>
+                    <field name="excluded_journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_journal_group_form" model="ir.ui.view">
+            <field name="name">account.journal.group.form</field>
+            <field name="model">account.journal.group</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Journal Groups">
+                    <sheet>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="name" placeholder="e.g. GAAP, IFRS, ..."/>
+                            <field name="excluded_journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="sequence" groups="base.group_no_one"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_journal_group_list" model="ir.actions.act_window">
+            <field name="name">Journal Groups</field>
+            <field name="res_model">account.journal.group</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a journal group
+              </p><p>
+                Journal group are used in reporting to display relevant data together.
+              </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

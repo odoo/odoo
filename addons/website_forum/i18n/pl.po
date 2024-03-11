@@ -1,0 +1,4127 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_forum
+# 
+# Translators:
+# Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2022
+# Ludwik Trammer <ludwik@gmail.com>, 2022
+# Dawid Prus, 2022
+# zieloo <zieloo@gmail.com>, 2022
+# Mariusz, 2022
+# Zdzisław Krajewski <zdzichucb@gmail.com>, 2022
+# Rafał Kozak <rafal.kozak@openglobe.pl>, 2022
+# Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2022
+# Tomasz Leppich <t.leppich@gmail.com>, 2022
+# Piotr Strębski <strebski@gmail.com>, 2022
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2022
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2022
+# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2022
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
+# Karol Rybak <karolrybak85@gmail.com>, 2022
+# Dariusz Żbikowski <darek@krokus.com.pl>, 2022
+# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2022
+# Paweł Wodyński <pw@myodoo.pl>, 2022
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
+# Natalia Gros <nag@odoo.com>, 2022
+# Martin Trigaux, 2022
+# Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2023
+# Maksym <ms@myodoo.pl>, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-12-15 12:45+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid " Flag"
+msgstr "Flaga"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid " Flagged"
+msgstr "Oflagowane"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
+msgid "# Answers"
+msgstr "# Odpowiedzi"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_favorites
+msgid "# Favorites"
+msgstr "# Ulubione"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_posts
+msgid "# Posts"
+msgstr "# Posty"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_views
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
+msgid "# Views"
+msgstr "# Odsłon"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to accept or refuse an answer."
+msgstr "%d karma wymagana do zaakceptowania lub odrzucenia odpowiedzi."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to answer a question."
+msgstr "%d karma wymagana do udzielenia odpowiedzi na pytanie."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to close or reopen a post."
+msgstr "%d karma wymagana do zamknięcia lub ponownego otwarcia posta."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to comment."
+msgstr "%d karma wymagana do komentowania."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to convert a comment to an answer."
+msgstr "%d karma wymagana do przekształcenia komentarza w odpowiedź."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to convert an answer to a comment."
+msgstr "%d karma wymagana do przekonwertowania odpowiedzi na komentarz."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to convert your comment to an answer."
+msgstr "%d karma wymagana do przekształcenia komentarza w odpowiedź."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to create a new Tag."
+msgstr "%d karma wymagana do utworzenia nowego tagu."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to create a new question."
+msgstr "%d karma wymagana do utworzenia nowego pytania."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to delete or reactivate a post."
+msgstr "%d karma wymagana do usunięcia lub ponownej aktywacji posta."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to downvote."
+msgstr "%d karma wymagana do głosowania w dół."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to edit a post."
+msgstr "%d karma wymagana do edycji postu."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to flag a post."
+msgstr "%d karma wymagana do oflagowania postu."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/controllers/main.py:0
+#: code:addons/website_forum/controllers/main.py:0
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to mark a post as offensive."
+msgstr "%d karma wymagana do oznaczenia postu jako obraźliwy."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to post an image or link."
+msgstr "%d karma wymagana do opublikowania obrazu lub linku."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to refuse a post."
+msgstr "%d karma wymagana do odmowy przyjęcia postu."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to retag."
+msgstr "%d karma wymagana do retagowania."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to unlink a comment."
+msgstr "%d karma wymagana do odlinkowania komentarza."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to unlink a post."
+msgstr "%d karma wymagana do odlinkowania postu."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to upvote."
+msgstr "%d karma wymagana do polubienia."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "%d karma required to validate a post."
+msgstr "%d karma wymagana do zatwierdzenia postu."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "&amp;nbsp;and&amp;nbsp;"
+msgstr "&amp;nbsp;i&amp;nbsp;"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "(The above section was adapted from Stackoverflow’s FAQ.)"
+msgstr "(Powyższa sekcja została zaadoptowana z Stackoverflow FAQ.)"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "(votes - 1) **"
+msgstr "(votes - 1) **"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid ", by"
+msgstr ", przez"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid ", consider <b>adding an example</b>."
+msgstr ", rozważ <b>dodanie przykładu</b>."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "/ (days + 2) **"
+msgstr "/ (days + 2) **"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "0 Answers"
+msgstr "0 Odpowiedzi"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#, python-format
+msgid "45% of questions shared"
+msgstr "45% z zadanych pytań"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#, python-format
+msgid ""
+"65% more chance to get an\n"
+"        answer"
+msgstr ""
+"65% więcej szans na zdobycie\n"
+"        odpowiedzi"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid ""
+"<b class=\"d-block\">You have a pending post</b>\n"
+"                        Please wait for a moderator to validate your previous post to be allowed replying questions."
+msgstr ""
+"<b class=\"d-block\">Masz oczekujący post</b>\n"
+"Poczekaj na zatwierdzenie poprzedniego postu przez moderatora, aby móc odpowiadać na pytania."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
+msgid "<b> [Offensive]</b>"
+msgstr "<b> [Ofensywny]</b>"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"<b>Answers should not add or expand questions</b>. Instead either edit the "
+"question or add a question comment."
+msgstr ""
+"<b>Odpowiedzi nie powinny zawierać kolejnych pytań ani rozszerzać "
+"istniejącego</b>. Zamiast tego wyedytuj pytanie albo dodaj komentarz z "
+"pytaniem."
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"<b>Answers should not add or expand questions</b>. Instead, either edit the "
+"question or add a comment."
+msgstr ""
+"<b>Odpowiedzi nie powinny dodawać ani rozszerzać pytań</b>. Zamiast tego "
+"należy edytować pytanie lub dodać komentarz."
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"<b>Answers should not comment other answers</b>. Instead add a comment on "
+"the other answers."
+msgstr ""
+"<b>Odpowiedzi nie powinny komentować innych odpowiedzi</b>. Zamiast tego "
+"dodaj komentarz do pozostałych odpowiedzi."
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"<b>Answers should not start debates</b> This community Q&amp;A is not a "
+"discussion group. Please avoid holding debates in your answers as they tend "
+"to dilute the essence of questions and answers. For brief discussions please"
+" use commenting facility."
+msgstr ""
+"<b>Odpowiedzi nie powinny rozpoczynać debat </b>Ta społeczność Q&amp;A nie "
+"jest grupą dyskusyjną. Prosimy o unikanie debat w odpowiedziach, ponieważ "
+"mają one tendencję do osłabiania istoty pytań i odpowiedzi. W przypadku "
+"krótkich dyskusji prosimy o korzystanie z funkcji komentowania."
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"<b>Answers shouldn't just point to other Questions</b>. Instead add a "
+"question comment indication \"Possible duplicate of...\". However, it's ok "
+"to include links to other questions or answers providing relevant additional"
+" information."
+msgstr ""
+"<b>Odpowiedzi nie powinny wskazywać tylko na inne pytania</b>. Zamiast tego "
+"dodaj komentarz do pytania \"Możliwy duplikat ...\". Można jednak dołączyć "
+"linki do innych pytań lub odpowiedzi, dostarczając odpowiednich dodatkowych "
+"informacji."
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"<b>Answers shouldn't just point to other questions</b>.Instead add a comment"
+" indicating <i>\"Possible duplicate of...\"</i>. However, it's fine to "
+"include links to other questions or answers providing relevant additional "
+"information."
+msgstr ""
+"<b>Odpowiedzi nie powinny po prostu wskazywać na inne pytania.</b> Zamiast "
+"tego dodaj komentarz wskazujący <i>\"Możliwy duplikat...\"</i>. W porządku "
+"jest jednak dołączanie linków do innych pytań lub odpowiedzi zawierających "
+"istotne dodatkowe informacje."
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"<b>Answers shouldn't just provide a link a solution</b>. Instead provide the"
+" solution description text in your answer, even if it's just a copy/paste. "
+"Links are welcome, but should be complementary to answer, referring sources "
+"or additional reading."
+msgstr ""
+"<b>Odpowiedzi nie powinny jedynie zawierać linku do rozwiązania</b>. Zamiast"
+" tego podaj tekst opisu rozwiązania w swojej odpowiedzi, nawet jeśli jest to"
+" tylko kopiowanie / wklejanie. Linki są mile widziane, ale powinny być "
+"komplementarne w stosunku do odpowiedzi, źródeł odsyłających lub dodatkowej "
+"lektury."
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"<b>Before you ask - please make sure to search for a similar question.</b> "
+"You can search questions by their title or tags. It’s also OK to answer your"
+" own question."
+msgstr ""
+"<b>Zanim zadasz pytanie - upewnij się, że wyszukałeś podobne pytanie. "
+"</b>Pytania można wyszukiwać według tytułu lub tagów. Można również "
+"odpowiedzieć na własne pytanie."
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"<b>Please avoid asking questions that are too subjective and "
+"argumentative</b> or not relevant to this community."
+msgstr ""
+"<b>Prosimy o unikanie zadawania pytań, które są zbyt subiektywne i "
+"kłótliwe</b> lub nie mają związku z tą społecznością."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answer
+msgid ""
+"<b>Please try to give a substantial answer.</b> If you wanted to comment on the question or answer, just\n"
+"            <b>use the commenting tool.</b> Please remember that you can always <b>revise your answers</b>\n"
+"            - no need to answer the same question twice. Also, please <b>don't forget to vote</b>\n"
+"            - it really helps to select the best questions and answers!"
+msgstr ""
+"<b>Postaraj się udzielić merytorycznej odpowiedzi. </b>Jeśli chcesz skomentować pytanie lub odpowiedź, po prostu\n"
+"<b>użyj narzędzia do komentowania.</b> Pamiętaj, że zawsze możesz <b>zmienić swoje odpowiedzi</b>\n"
+"- nie trzeba odpowiadać dwa razy na to samo pytanie. <b>Nie zapomnij również zagłosować</b>\n"
+"- to naprawdę pomaga wybrać najlepsze pytania i odpowiedzi!"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "<b>Tags</b> I Follow"
+msgstr "<b>Tagi</b>, które śledzę"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid ""
+"<b>This forum is empty.</b><br/>\n"
+"                    Be the first one asking a question"
+msgstr ""
+"<b>To forum jest puste.</b><br/>\n"
+"Bądź pierwszym zadającym pytanie"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "<b>What kinds of questions can I ask here?</b>"
+msgstr "<b>Jakie pytania mogę tutaj zadać?</b>"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "<b>What should I avoid in my answers?</b>"
+msgstr "<b>Czego powinienem unikać w moich odpowiedziach?</b>"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "<b>What should I avoid in my questions?</b>"
+msgstr "<b>Czego powinienem unikać w moich pytaniach?</b>"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+#: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
+msgid "<b>Why can other people edit my questions/answers?</b>"
+msgstr "<b>Dlaczego inne osoby mogą edytować moje pytania/odpowiedzi?</b>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "<b>You already have a pending post.</b><br/>"
+msgstr "<b>Masz już oczekujący post.</b><br/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
+msgid "<b>[Answer]</b>"
+msgstr "<b>[Odpowiedź]</b>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.contact
+msgid ""
+"<b>|</b>\n"
+"                    <span class=\"fa fa-trophy bg-gold ms-2\" role=\"img\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
+msgstr ""
+"<b>|</b>\n"
+"<span class=\"fa fa-trophy bg-gold ms-2\" role=\"img\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.tag
+msgid "<em class=\"d-block mb-2\">or</em>"
+msgstr "<em class=\"d-block mb-2\">lub</em>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<i class=\" fa fa-comment text-muted me-1\"/>Comment"
+msgstr "<i class=\" fa fa-comment text-muted me-1\"/>Komentarz"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+msgid "<i class=\"fa fa-bell fa-fw\"/> Followed Posts"
+msgstr "<i class=\"fa fa-bell fa-fw\"/>Obserwowane posty"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"fa fa-bug\"/> Filter Tool"
+msgstr "<i class=\"fa fa-bug\"/>Narzędzie filtrowania"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<i class=\"fa fa-check fa-fw me-1\"/>Accept"
+msgstr "<i class=\"fa fa-check fa-fw me-1\"/>Akceptuj"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid ""
+"<i class=\"fa fa-check text-success d-block display-2\"/>\n"
+"            <b>You've Completely Caught Up!</b><br/>"
+msgstr ""
+"<i class=\"fa fa-check text-success d-block display-2\"/>\n"
+"<b>Całkowicie nadrobiłeś zaległości!</b><br/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "<i class=\"fa fa-check\"/> How to configure TPS and TVQ's canadian taxes?"
+msgstr ""
+"<i class=\"fa fa-check\"/> Jak skonfigurować kanadyjskie podatki TPS i TVQ?"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+msgid "<i class=\"fa fa-check-square-o fa-fw\"/> To Validate"
+msgstr "<i class=\"fa fa-check-square-o fa-fw\"/> Do zweryfikowania"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "<i class=\"fa fa-chevron-left me-1\"/>Back"
+msgstr "<i class=\"fa fa-chevron-left me-1\"/> Powrót"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "<i class=\"fa fa-chevron-left me-2\"/>Back to All Topics"
+msgstr "<i class=\"fa fa-chevron-left me-2\"/> Powrót do wszystkich tematów"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_sub_nav
+msgid "<i class=\"fa fa-chevron-left small\"/> Back"
+msgstr "<i class=\"fa fa-chevron-left small\"/>Powrót"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
+msgid "<i class=\"fa fa-comments-o me-1\" title=\"Forum\"/>"
+msgstr "<i class=\"fa fa-comments-o me-1\" title=\"Forum\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
+msgid "<i class=\"fa fa-eye me-1\" title=\"Views\"/>"
+msgstr "<i class=\"fa fa-eye me-1\" title=\"Views\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+msgid "<i class=\"fa fa-flag fa-fw\"/> Flagged"
+msgstr "<i class=\"fa fa-flag fa-fw\"/>Oznaczone flagą"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid ""
+"<i class=\"fa fa-flag ms-4 mr4\"/>\n"
+"                                    Flagged"
+msgstr ""
+"<i class=\"fa fa-flag ms-4 mr4\"/>\n"
+"Oznaczone flagą"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"fa fa-flag\"/> Country"
+msgstr "<i class=\"fa fa-flag\"/>Kraj"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
+msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
+msgstr "<i class=\"fa fa-globe me-1\" title=\"Strona\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+msgid ""
+"<i class=\"fa fa-pencil\"/>\n"
+"                                Edit<span class=\"d-none d-lg-inline\"> your answer</span>"
+msgstr ""
+"<i class=\"fa fa-pencil\"/>\n"
+"Edytuj <span class=\"d-none d-lg-inline\">swoją odpowiedź</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+msgid "<i class=\"fa fa-question-circle-o fa-fw\"/> My Posts"
+msgstr "<i class=\"fa fa-question-circle-o fa-fw\"/> Moje posty"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<i class=\"fa fa-reply me-1\"/>Answer"
+msgstr "<i class=\"fa fa-reply me-1\"/> Odpowiedź"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<i class=\"fa fa-share-alt text-muted me-1\"/>Share"
+msgstr "<i class=\"fa fa-share-alt text-muted me-1\"/> Udostępnij"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+msgid ""
+"<i class=\"fa fa-share-alt text-muted\"/>\n"
+"                                Share"
+msgstr ""
+"<i class=\"fa fa-share-alt text-muted\"/>\n"
+"Udostępnij"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+msgid "<i class=\"fa fa-star fa-fw\"/> Favourites"
+msgstr "<i class=\"fa fa-star fa-fw\"/>Ulubione"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+msgid "<i class=\"fa fa-tags fa-fw\"/> Followed Tags"
+msgstr "<i class=\"fa fa-tags fa-fw\"/>Śledzone tagi"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid ""
+"<i class=\"fa fa-thumbs-down text-danger ms-3\" role=\"img\" aria-"
+"label=\"Negative votes\" title=\"Negative votes\"/>"
+msgstr ""
+"<i class=\"fa fa-thumbs-down text-danger ms-3\" role=\"img\" aria-"
+"label=\"Negative votes\" title=\"Negative votes\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid ""
+"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive"
+" votes\" title=\"Positive votes\"/>"
+msgstr ""
+"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive"
+" votes\" title=\"Positive votes\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<i class=\"fa fa-times fa-fw me-1\"/>Reject"
+msgstr "<i class=\"fa fa-times fa-fw me-1\"/>Odrzuć"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"<i class=\"fa fa-times\"/> Good morning to all! Please, can someone help "
+"solve my tax computation problem in Canada? Thanks!"
+msgstr ""
+"<i class=\"fa fa-times\"/>Dzień dobry wszystkim! Proszę, czy ktoś może pomóc"
+" rozwiązać mój problem z obliczeniem podatku w Kanadzie? Dzięki!"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"fa fa-user\"/> User"
+msgstr "<i class=\"fa fa-user\"/>Użytkownik"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "<small class=\"fw-bold\">Votes</small>"
+msgstr "<small class=\"fw-bold\">Głosy</small>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
+msgid ""
+"<small class=\"text-muted\">\n"
+"                    Flagged\n"
+"                </small>"
+msgstr ""
+"<small class=\"text-muted\">\n"
+"                    taflowanie\n"
+"                </small>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<span class=\"badge text-bg-info\">Closed</span>"
+msgstr "<span class=\"badge text-bg-info\">Zamknięte</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.contact
+msgid ""
+"<span class=\"fa fa-trophy bg-bronze ms-2\" role=\"img\" aria-label=\"Bronze"
+" badge\" title=\"Bronze badge\"/>"
+msgstr ""
+"<span class=\"fa fa-trophy bg-bronze ms-2\" role=\"img\" aria-label=\"Bronze"
+" badge\" title=\"Bronze badge\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.contact
+msgid ""
+"<span class=\"fa fa-trophy bg-silver ms-2\" role=\"img\" aria-label=\"Silver"
+" badge\" title=\"Silver badge\"/>"
+msgstr ""
+"<span class=\"fa fa-trophy bg-silver ms-2\" role=\"img\" aria-label=\"Silver"
+" badge\" title=\"Silver badge\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "<span class=\"fw-bold\">No answer posted yet.</span>"
+msgstr "<span class=\"fw-bold\">Nie opublikowano jeszcze odpowiedzi.</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "<span class=\"fw-bold\">No question posted yet.</span>"
+msgstr "<span class=\"fw-bold\">Nie opublikowano jeszcze żadnego pytania.</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "<span class=\"mx-1 d-none d-sm-inline\">&amp;nbsp;|</span>"
+msgstr "<span class=\"mx-1 d-none d-sm-inline\">&amp;nbsp;|</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "<span class=\"mx-1 text-400 d-none d-lg-block\">|</span>"
+msgstr "<span class=\"mx-1 text-400 d-none d-lg-block\">|</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "<span class=\"mx-1\">|</span>"
+msgstr "<span class=\"mx-1\">|</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid ""
+"<span class=\"mx-1\">|</span>\n"
+"                    <i class=\"fa fa-star\"/>"
+msgstr ""
+"<span class=\"mx-1\">|</span>\n"
+"<i class=\"fa fa-star\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "<span class=\"mx-3  mx-lg-2 text-400 d-none d-md-inline\">|</span>"
+msgstr "<span class=\"mx-3  mx-lg-2 text-400 d-none d-md-inline\">|</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "<span class=\"navbar-text me-1\">Go to:</span>"
+msgstr "<span class=\"navbar-text me-1\">Przejdź do:</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.tag
+msgid "<span class=\"navbar-text me-3\">Show Tags Starting By</span>"
+msgstr "<span class=\"navbar-text me-3\">Pokaż tagi zaczynając od</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "<span class=\"o_stat_text\">Favorites</span>"
+msgstr "<span class=\"o_stat_text\">Ulubione</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
+msgid "<span class=\"o_stat_text\">Go to <br/>Website</span>"
+msgstr "<span class=\"o_stat_text\">Idź do witryny <br/>  </span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "<span class=\"o_stat_text\">Posts</span>"
+msgstr "<span class=\"o_stat_text\">Posty</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+msgid ""
+"<span class=\"o_wforum_answer_correct_badge border small border-success rounded-pill fw-bold text-success ms-2 px-2\">\n"
+"                            Best Answer\n"
+"                        </span>"
+msgstr ""
+"<span class=\"o_wforum_answer_correct_badge border small border-success rounded-pill fw-bold text-success ms-2 px-2\">\n"
+"Najlepsza odpowiedź\n"
+"</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<span>By </span>"
+msgstr "<span>przez </span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "A clear, explicit and concise title"
+msgstr "Jasny, wyraźny i zwięzły tytuł"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
+msgid "A new answer on"
+msgstr "Nowa odpowiedź na"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
+msgid "A new question"
+msgstr "Nowe pytanie"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "About"
+msgstr "O programie"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_answer_accept_own
+msgid "Accept an answer on own questions"
+msgstr "Akceptuj odpowiedzi na własne pytania"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_answer_accept_all
+msgid "Accept an answer to all questions"
+msgstr "Akceptuj odpowiedzi na wszystkie pytania"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Accepted Answer"
+msgstr "Zaakceptowana odpowiedź"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_accept
+msgid "Accepting an answer"
+msgstr "Akceptuję odpowiedź"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid "Access Denied"
+msgstr "Brak dostępu"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_needaction
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_needaction
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_needaction
+msgid "Action Needed"
+msgstr "Wymagane działanie"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__active
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__active
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__active
+msgid "Active"
+msgstr "Aktywne"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "Activities"
+msgstr "Czynności"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "Activity"
+msgstr "Czynność"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__allow_share
+msgid ""
+"After posting the user will be proposed to share its question or answer on "
+"social networks, enabling social network propagation of the forum content."
+msgstr ""
+"Po opublikowaniu użytkownik zostanie poproszony o udostępnienie swojego "
+"pytania lub odpowiedzi w sieciach społecznościowych, umożliwiając "
+"propagowanie treści forum na portalach społecznościowych."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#, python-format
+msgid "All"
+msgstr "Wszystko"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "All Forums"
+msgstr "Wszystkie fora"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "All Tags"
+msgstr "Wszystkie tagi"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "All Topics"
+msgstr "Wszystkie tematy"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "All forums"
+msgstr "Wszystkie fora"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_bump
+msgid "Allow Bump"
+msgstr "Zezwól podbicia"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Amazing! There are no unanswered questions left!"
+msgstr "Niesamowite! Nie ma już pytań bez odpowiedzi!"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Answer"
+msgstr "Odpowiedź"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#: model:mail.message.subtype,description:website_forum.mt_answer_edit
+#: model:mail.message.subtype,name:website_forum.mt_answer_edit
+#, python-format
+msgid "Answer Edited"
+msgstr "Odpowiedź edytowana"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_accepted
+msgid "Answer accepted"
+msgstr "Odpowiedź zaakceptowana"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_a_6
+msgid "Answer accepted with 15 or more votes"
+msgstr "Odpowiedź zaakceptowana przez 15 lub więcej głosów"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_downvote
+msgid "Answer downvoted"
+msgstr "Odpowiedź otrzymała głos przeciw"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_flagged
+msgid "Answer flagged"
+msgstr "Odpowiedź oznaczona"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_answer
+msgid "Answer questions"
+msgstr "Odpowiedz na pytania"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_upvote
+msgid "Answer upvoted"
+msgstr "Odpowiedź otrzymała głos za"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_a_4
+msgid "Answer voted up 15 times"
+msgstr "Odpowiedź z 15 głosami"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_a_2
+msgid "Answer voted up 4 times"
+msgstr "Odpowiedź z 4 głosami"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_a_3
+msgid "Answer voted up 6 times"
+msgstr "Odpowiedzi udzielono aż 6 razy"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_a_5
+msgid "Answer was accepted with 3 or more votes"
+msgstr "Odpowiedź została zaakceptowana z 3 lub więcej głosów"
+
+#. module: website_forum
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__child_count_desc
+msgid "Answered"
+msgstr "Z odpowiedzią"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Answered Posts"
+msgstr "Posty z odpowiedziami"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
+msgid "Answered by"
+msgstr "odpowiedź przez"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_a_8
+msgid "Answered own question with at least 4 up votes"
+msgstr "Odpowiedziano na własne pytanie z conajmniej 4 głosami"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__child_count
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Answers"
+msgstr "Odpowiedzi"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_gamification_challenge__challenge_category
+msgid "Appears in"
+msgstr "Pojawia się w"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_view_search
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Archived"
+msgstr "Zarchiwizowane"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_ask
+msgid "Ask questions"
+msgstr "Zapytaj"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_post
+msgid "Ask questions without validation"
+msgstr "Zadawaj pytania bez sprawdzania poprawności"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_26
+msgid "Asked a question and accepted an answer"
+msgstr "Zadano pytanie i zaakceptowano odpowiedź"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_q_1
+msgid "Asked a question with at least 150 views"
+msgstr "Zadano pytanie z conajmniej 150 wyświetleniami"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_q_2
+msgid "Asked a question with at least 250 views"
+msgstr "Zadano pytanie z conajmniej 250 wyświetleniami"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_q_3
+msgid "Asked a question with at least 500 views"
+msgstr "Zadano pytanie z conajmniej 500 wyświetleniami"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_q_7
+msgid "Asked first question with at least one up vote"
+msgstr "Zadano pierwsze pytanie z przynajmniej jednym głosem"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__create_date
+msgid "Asked on"
+msgstr "Data pytania"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_new
+msgid "Asking a question"
+msgstr "Zadaję pytanie"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_ir_attachment
+msgid "Attachment"
+msgstr "Załącznik"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_attachment_count
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_attachment_count
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_attachment_count
+msgid "Attachment Count"
+msgstr "Liczba załączników"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Author"
+msgstr "Autor"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__authorized_group_id
+msgid "Authorized Group"
+msgstr "Grupa upoważniona"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_p_1
+msgid "Autobiographer"
+msgstr "Autobiografista"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.author_box
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answer
+#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+msgid "Avatar"
+msgstr "Awatar"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "Back"
+msgstr "Powrót"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "Back to Question"
+msgstr "Powrót do pytania"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/controllers/main.py:0
+#: code:addons/website_forum/controllers/main.py:0
+#, python-format
+msgid "Bad Request"
+msgstr "Nieprawidłowe żądanie"
+
+#. module: website_forum
+#: model:ir.ui.menu,name:website_forum.menu_forum_badges
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "Badges"
+msgstr "Odznaki"
+
+#. module: website_forum
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_post_reason__reason_type__basic
+msgid "Basic"
+msgstr "Podstawowe"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Be less specific in your wording for a wider search result"
+msgstr ""
+"Mniej precyzyjne sformułowania w celu uzyskania szerszych wyników "
+"wyszukiwania."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Browse All"
+msgstr "Przeglądaj wszystko"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__bump_date
+msgid "Bumped on"
+msgstr "Wpadł na to"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#, python-format
+msgid "By sharing you answer, you will get additional"
+msgstr "Poprzez rozpowszechnianie swoich pytań dostaniesz dodatkowo"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__can_accept
+msgid "Can Accept"
+msgstr "Może akceptować"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__can_answer
+msgid "Can Answer"
+msgstr "Może odpowiadać"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__can_ask
+msgid "Can Ask"
+msgstr "Może pytać"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__can_post
+msgid "Can Automatically be Validated"
+msgstr "Może zostać automatycznie zweryfikowane"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__can_close
+msgid "Can Close"
+msgstr "Może zamykać"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__can_comment
+msgid "Can Comment"
+msgstr "Może komentować"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__can_comment_convert
+msgid "Can Convert to Comment"
+msgstr "Może konwertować do komentarza"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__can_downvote
+msgid "Can Downvote"
+msgstr "Można oddać głos negatywny"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__can_edit
+msgid "Can Edit"
+msgstr "Może edytować"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__can_flag
+msgid "Can Flag"
+msgstr "Można oflagować"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__can_moderate
+msgid "Can Moderate"
+msgstr "Może moderować"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__can_unlink
+msgid "Can Unlink"
+msgstr "Można odlinkować"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__can_upvote
+msgid "Can Upvote"
+msgstr "Można oddać głos pozytywny"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__can_use_full_editor
+msgid "Can Use Full Editor"
+msgstr "Może korzystać z pełnego edytora"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__can_view
+msgid "Can View"
+msgstr "Może widzieć"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_edit_retag
+msgid "Change question tags"
+msgstr "Zmień tagi pytania"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__allow_bump
+msgid ""
+"Check this box to display a popup for posts older than 10 days without any "
+"given answer. The popup will offer to share it on social networks. When "
+"shared, a question is bumped at the top of the forum."
+msgstr ""
+"Zaznacz to pole, aby wyświetlić wyskakujące okienko dla postów starszych niż"
+" 10 dni bez żadnej odpowiedzi. Pop-up zaoferuje udostępnienie go w sieciach "
+"społecznościowych. Po udostępnieniu na górze forum pojawia się pytanie."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Check your spelling and try again"
+msgstr "Sprawdź pisownię i spróbuj ponownie"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_p_4
+#: model:gamification.challenge,name:website_forum.challenge_chief_commentator
+msgid "Chief Commentator"
+msgstr "Główny komentator"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
+#, python-format
+msgid "Click here to accept this answer."
+msgstr "Kliknij tutaj aby zaakceptować tą odpowiedź."
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
+#, python-format
+msgid "Click to answer."
+msgstr "Kliknij, aby odpowiedzieć."
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
+#, python-format
+msgid "Click to post your answer."
+msgstr "Kliknij aby opublikować swoją odpowiedź"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
+#, python-format
+msgid "Click to post your question."
+msgstr "Kliknij aby opublikować swoje pytanie."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+msgid "Close"
+msgstr "Zamknij"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "Close Post"
+msgstr "Zamknij post"
+
+#. module: website_forum
+#: model:ir.ui.menu,name:website_forum.menu_forum_post_reasons
+msgid "Close Reasons"
+msgstr "Powody zamknięcia"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_close_all
+msgid "Close all posts"
+msgstr "Zamknij wszystkie posty"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_close_own
+msgid "Close own posts"
+msgstr "Zamknij swoje posty"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
+msgid "Close post"
+msgstr "Zamknij post"
+
+#. module: website_forum
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__close
+msgid "Closed"
+msgstr "Zamknięte"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__closed_uid
+msgid "Closed by"
+msgstr "Zamknięte przez"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__closed_date
+msgid "Closed on"
+msgstr "Zamknięte dnia"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
+msgid "Closing"
+msgstr "Zamknięcie"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__name
+msgid "Closing Reason"
+msgstr "Powód zamknięcia"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Comment"
+msgstr "Komentarz"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_all
+msgid "Comment all posts"
+msgstr "Komentuj wszystkie posty"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_own
+msgid "Comment own posts"
+msgstr "Komentuj własne posty"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Comment this post..."
+msgstr "Skomentuj ten post..."
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_p_2
+#: model:gamification.challenge,name:website_forum.challenge_commentator
+#: model:gamification.goal.definition,name:website_forum.definition_commentator
+msgid "Commentator"
+msgstr "Komentator"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
+#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Comments"
+msgstr "Komentarz"
+
+#. module: website_forum
+#: model:gamification.challenge,name:website_forum.challenge_configure_profile
+msgid "Complete own biography"
+msgstr "Napisz swoją biografię"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_configure_profile
+#: model_terms:gamification.badge,description:website_forum.badge_p_1
+msgid "Completed own biography"
+msgstr "Napisano swoją biografię"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_7
+msgid "Contains offensive or malicious remarks"
+msgstr "Zawiera obraźliwe lub złośliwe uwagi"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__content
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Content"
+msgstr "Zawartość"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_convert_all
+msgid "Convert all answers to comments and vice versa"
+msgstr "Zamień wszystkie odpowiedzi na komentarze i odwrotnie"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Convert as a answer"
+msgstr "Ustaw jako odpowiedź"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+msgid "Convert as a comment"
+msgstr "Konwertuj jako komentarz"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_accept
+msgid "Convert comment to answer"
+msgstr "Konwertuj komentarz na odpowiedź"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_convert_own
+msgid "Convert own answers to comments and vice versa"
+msgstr "Konwertuj własne odpowiedzi na komentarze i odwrotnie"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__is_correct
+msgid "Correct"
+msgstr "Popraw"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_post__is_correct
+msgid "Correct answer or answer accepted"
+msgstr "Poprawna odpowiedź albo odpowiedź zaakceptowana"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__create_date
+#: model:ir.model.fields,field_description:website_forum.field_res_users__create_date
+msgid "Create Date"
+msgstr "Data utworzenia"
+
+#. module: website_forum
+#: model_terms:ir.actions.act_window,help:website_forum.action_forum_post
+msgid "Create a new forum post"
+msgstr "Utwórz nowy wątek"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
+#, python-format
+msgid "Create a new post in this forum by clicking on the button."
+msgstr "Utwórz nowy post na tym forum, klikając przycisk."
+
+#. module: website_forum
+#: model_terms:ir.actions.act_window,help:website_forum.forum_tag_action
+msgid "Create a new tag"
+msgstr "Utwórz nowy tag"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_tag_create
+msgid "Create new tags"
+msgstr "Utwórz nowe tagi"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_32
+msgid "Created a tag used by 15 questions"
+msgstr "Utworzono tag używany przez 15 pytań"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__create_uid
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__create_uid
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__create_uid
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__create_uid
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__create_uid
+msgid "Created by"
+msgstr "Utworzył(a)"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__create_date
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__create_date
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__create_date
+msgid "Created on"
+msgstr "Data utworzenia"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_4
+#: model:gamification.challenge,name:website_forum.challenge_favorite_question_1
+msgid "Credible Question"
+msgstr "Wiarygodne pytanie"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_5
+#: model:gamification.challenge,name:website_forum.challenge_critic
+#: model:gamification.goal.definition,name:website_forum.definition_critic
+msgid "Critic"
+msgstr "Krytyk"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
+msgid "Date"
+msgstr "Data"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
+msgid "Date (high to low)"
+msgstr "Data (od najwyższej do najniższej)"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
+msgid "Date (low to high)"
+msgstr "Data (od najniższej do najwyższej)"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__default_order
+msgid "Default"
+msgstr "Domyślny"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "Default Sort"
+msgstr "Domyślne sortowanie"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_gamification_challenge__challenge_category
+msgid "Define the visibility of the challenge through menus"
+msgstr "Definiuj widoczność wyzwania w menu"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+msgid "Delete"
+msgstr "Usuń"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_unlink_all
+msgid "Delete all posts"
+msgstr "Usuń wszystkie posty"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_unlink_own
+msgid "Delete own posts"
+msgstr "Usuń swoje posty"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Deleted"
+msgstr "Usunięty"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_23
+msgid "Deleted own post with 3 or more downvotes"
+msgstr "Usunięto własny post z 3 lub więcej głosami przeciw"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_6
+msgid "Deleted own post with 3 or more upvotes"
+msgstr "Usunięto własny post z 3 lub więcej głosami za"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__description
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "Description"
+msgstr "Opis"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "Description visible on website"
+msgstr "Opis widoczny na stronie internetowej"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answer
+#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Discard"
+msgstr "Odrzuć"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_6
+#: model:gamification.challenge,name:website_forum.challenge_disciplined
+#: model:gamification.goal.definition,name:website_forum.definition_disciplined
+msgid "Disciplined"
+msgstr "Zdyscyplinowany"
+
+#. module: website_forum
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__mode__discussions
+msgid "Discussions (multiple answers)"
+msgstr "Dyskusje (wiele odpowiedzi)"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__display_name
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__display_name
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__display_name
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__display_name
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__display_name
+msgid "Display Name"
+msgstr "Nazwa wyświetlana"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_user_bio
+msgid "Display detailed user biography"
+msgstr "Wyświetl szczegółową biografię użytkownika"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_downvote
+msgid "Downvote"
+msgstr "Głos przeciw"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_1
+msgid "Duplicate post"
+msgstr "Zduplikowany post"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+msgid "Edit"
+msgstr "Edytuj"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "Edit Answer"
+msgstr "Edytuj odpowiedź"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "Edit Forum in Backend"
+msgstr "Edycja forum na zapleczu"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "Edit Question"
+msgstr "Edytuj pytanie"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_edit_all
+msgid "Edit all posts"
+msgstr "Edytuj wszystkie posty"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_edit_own
+msgid "Edit own posts"
+msgstr "Edytuj swoje posty"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+msgid "Edit your Post"
+msgstr "Edytuj swój post"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_7
+#: model:gamification.challenge,name:website_forum.challenge_editor
+#: model:gamification.goal.definition,name:website_forum.definition_editor
+msgid "Editor"
+msgstr "Edytor"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_editor
+#: model:ir.model.fields,help:website_forum.field_forum_post__can_use_full_editor
+msgid "Editor Features: image and links"
+msgstr "Funkcje edytora: obraz i linki"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_5
+#: model:gamification.challenge,name:website_forum.challenge_enlightened
+#: model:gamification.goal.definition,name:website_forum.definition_enlightened
+msgid "Enlightened"
+msgstr "Oświecony"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"Example\n"
+"                        <i class=\"fa fa-question-circle\"/>"
+msgstr ""
+"Przykład\n"
+"<i class=\"fa fa-question-circle\"/>"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_3
+#: model:gamification.challenge,name:website_forum.challenge_famous_question
+msgid "Famous Question"
+msgstr "Popularne pytanie"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__favourite_count
+msgid "Favorite"
+msgstr "Ulubiony"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_5
+#: model:gamification.challenge,name:website_forum.challenge_favorite_question_5
+msgid "Favorite Question"
+msgstr "Ulubione pytanie"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__favourite_ids
+msgid "Favourite"
+msgstr "Ulubione"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_favorite_question_1
+msgid "Favourite Question (1)"
+msgstr "Ulubione pytanie (1)"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_stellar_question_25
+msgid "Favourite Question (25)"
+msgstr "Ulubione pytanie (25)"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_favorite_question_5
+msgid "Favourite Question (5)"
+msgstr "Ulubione pytanie (5)"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "Favourite Questions"
+msgstr "Ulubione pytania"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "Favourites"
+msgstr "Ulubione"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Filter by:"
+msgstr "Filtruj według:"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__relevancy_post_vote
+msgid "First Relevance Parameter"
+msgstr "Pierwszy parametr relewancji"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_5
+msgid "First downvote"
+msgstr "Najpierw zagłosuj"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_7
+msgid "First edit"
+msgstr "Najpierw edytuj"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_31
+msgid "First upvote"
+msgstr "najpierw zagłosuj"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+msgid "Flag"
+msgstr "Oznacz"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_flag
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_flag
+msgid "Flag a post as offensive"
+msgstr "Oznacz post jako obraźliwy"
+
+#. module: website_forum
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__flagged
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+msgid "Flagged"
+msgstr "taflowy"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__flag_user_id
+msgid "Flagged by"
+msgstr "Oznaczone przez"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "Followed Questions"
+msgstr "Obserwowane pytania"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_follower_ids
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_follower_ids
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_follower_ids
+msgid "Followers"
+msgstr "Obserwatorzy"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_partner_ids
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_partner_ids
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Obserwatorzy (partnerzy)"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "Following"
+msgstr "Obserwujący"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"For example, if you ask an interesting question or give a helpful answer, "
+"your input will be upvoted. On the other hand if the answer is misleading - "
+"it will be downvoted. Each vote in favor will generate 10 points, each vote "
+"against will subtract 2 points. There is a limit of 200 points that can be "
+"accumulated for a question or answer per day. The table given at the end "
+"explains reputation point requirements for each type of moderation task."
+msgstr ""
+"Na przykład, jeśli zadasz interesujące pytanie lub udzielisz pomocnej "
+"odpowiedzi, Twój wpis zostanie oceniony pozytywnie. Z drugiej strony, jeśli "
+"odpowiedź jest myląca - zostanie odrzucona. Każdy głos za wygeneruje 10 "
+"punktów, każdy głos przeciw odejmie 2 punkty. Istnieje limit 200 punktów, "
+"które można zgromadzić za pytanie lub odpowiedź dziennie. Tabela podana na "
+"końcu wyjaśnia wymagania dotyczące punktów reputacji dla każdego typu "
+"zadania moderacyjnego."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/website.py:0
+#: code:addons/website_forum/models/website.py:0
+#: model:ir.actions.act_url,name:website_forum.action_open_forum
+#: model:ir.model,name:website_forum.model_forum_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__forum_id
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__forum_id
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__forum_id
+#: model:ir.ui.menu,name:website_forum.menu_website_forum_global
+#: model:website.menu,name:website_forum.menu_website_forums
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_view_search
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+#, python-format
+msgid "Forum"
+msgstr "Forum"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form_add
+msgid "Forum Mode"
+msgstr "Tryb forum"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__name
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form_add
+msgid "Forum Name"
+msgstr "Nazwa forum"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
+msgid "Forum Page"
+msgstr "Strona forum"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_post
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
+msgid "Forum Post"
+msgstr "Post na forum"
+
+#. module: website_forum
+#: model:ir.actions.act_window,name:website_forum.action_forum_post
+msgid "Forum Post Pages"
+msgstr "Strony postów na forum"
+
+#. module: website_forum
+#: model:ir.ui.menu,name:website_forum.menu_forum_post_pages
+msgid "Forum Posts"
+msgstr "Posty na forum"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_tag
+msgid "Forum Tag"
+msgstr "Tag dla forum"
+
+#. module: website_forum
+#: model:ir.actions.act_window,name:website_forum.action_forum_forum
+#: model:ir.ui.menu,name:website_forum.menu_forum_global
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_list
+msgid "Forums"
+msgstr "Fora"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_website__forums_count
+msgid "Forums Count"
+msgstr "Licznik forów"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_gamification_challenge
+msgid "Gamification Challenge"
+msgstr "Wyzwanie"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
+#, python-format
+msgid "Give your post title."
+msgstr "Nadaj tytuł swojemu postowi."
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_3
+#: model:gamification.challenge,name:website_forum.challenge_good_answer
+msgid "Good Answer"
+msgstr "Dobra odpowiedź"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_good_answer
+msgid "Good Answer (6)"
+msgstr "Dobra odpowiedź (6)"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_9
+#: model:gamification.challenge,name:website_forum.challenge_good_question
+msgid "Good Question"
+msgstr "Dobre pytanie"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_graph
+msgid "Graph of Posts"
+msgstr "Wykres postów"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_4
+#: model:gamification.challenge,name:website_forum.challenge_great_answer
+msgid "Great Answer"
+msgstr "Wspaniała odpowiedź"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_great_answer
+msgid "Great Answer (15)"
+msgstr "Wspaniała odpowiedź (15)"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_10
+#: model:gamification.challenge,name:website_forum.challenge_great_question
+msgid "Great Question"
+msgstr "Wspaniałe pytanie"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
+msgid "Grid"
+msgstr "Siatka"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Group By"
+msgstr "Grupuj wg"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__faq
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "Guidelines"
+msgstr "Wytyczne"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_6
+#: model:gamification.challenge,name:website_forum.challenge_guru
+msgid "Guru"
+msgstr "Guru"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_guru
+msgid "Guru (15)"
+msgstr "Guru (15)"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__uid_has_answered
+msgid "Has Answered"
+msgstr "Odpowiedział/a"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__has_message
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__has_message
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__has_message
+msgid "Has Message"
+msgstr "Ma wiadomość"
+
+#. module: website_forum
+#: model:forum.forum,name:website_forum.forum_help
+msgid "Help"
+msgstr "Pomoc"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "Here a table with the privileges and the karma level"
+msgstr "Oto tabela z uprawnieniami i poziomem karmy"
+
+#. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Hide Intro"
+msgstr "Ukryj Intro"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "I'm <b>Following</b>"
+msgstr "<b>Śledzę</b>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "I'm Following"
+msgstr "Śledzę"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__id
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__id
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__id
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__id
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__message_needaction
+#: model:ir.model.fields,help:website_forum.field_forum_post__message_needaction
+#: model:ir.model.fields,help:website_forum.field_forum_tag__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jeśli zaznaczone, nowe wiadomości wymagają twojej uwagi."
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__message_has_error
+#: model:ir.model.fields,help:website_forum.field_forum_forum__message_has_sms_error
+#: model:ir.model.fields,help:website_forum.field_forum_post__message_has_error
+#: model:ir.model.fields,help:website_forum.field_forum_post__message_has_sms_error
+#: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error
+#: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+"Jeśli zaznaczone, niektóre wiadomości napotkały błędy podczas doręczenia."
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__karma_dofollow
+msgid ""
+"If the author has not enough karma, a nofollow attribute is added to links"
+msgstr ""
+"Jeśli autor nie ma wystarczającej ilości karmy, do linków dodawany jest "
+"atrybut nofollow"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+#: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
+msgid "If this approach is not for you, please respect the community."
+msgstr "Jeśli to podejście nie jest dla Ciebie, uszanuj społeczność."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
+msgid ""
+"If you close this post, it will be hidden for most users. Only\n"
+"            users having a high karma can see closed posts to moderate\n"
+"            them."
+msgstr ""
+"Jeśli zamkniesz ten post, zostanie on ukryty przed większością użytkowników. Tylko\n"
+"użytkownicy o wysokiej karmie widzą zamknięte posty, aby móc je\n"
+"moderować."
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"If you fit in one of these example or if your motivation for asking the "
+"question is “I would like to participate in a discussion about ______”, then"
+" you should not be asking here but on our mailing lists. However, if your "
+"motivation is “I would like others to explain ______ to me”, then you are "
+"probably OK."
+msgstr ""
+"Jeśli pasujesz do jednego z tych przykładów lub jeśli twoją motywacją do "
+"zadania pytania jest \"Chciałbym wziąć udział w dyskusji na temat ______\", "
+"to nie powinieneś pytać tutaj, ale na naszych listach mailingowych. Jeśli "
+"jednak twoją motywacją jest \"chciałbym, aby inni wyjaśnili mi ______\", to "
+"prawdopodobnie wszystko jest w porządku."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
+msgid ""
+"If you mark this post as offensive, it will be hidden for most users. Only\n"
+"            users having a high karma can see offensive posts to moderate\n"
+"            them."
+msgstr ""
+"Jeśli zamkniesz ten post, zostanie ono ukryte przed większością użytkowników. Tylko\n"
+"            użytkownicy o wysokiej karmie widzą zamknięte posty, aby móc je\n"
+"            moderować."
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_1920
+msgid "Image"
+msgstr "Obraz"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_1024
+msgid "Image 1024"
+msgstr "Obraz 1024"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_128
+msgid "Image 128"
+msgstr "Obraz 128"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_256
+msgid "Image 256"
+msgstr "Obraz 256"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_512
+msgid "Image 512"
+msgstr "Obraz 512"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_13
+msgid "Inappropriate and unacceptable statements"
+msgstr "Niewłaściwe i niedopuszczalne stwierdzenia"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
+#, python-format
+msgid "Insert tags related to your question."
+msgstr "Wstaw tagi związane z Twoim pytaniem."
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_11
+msgid "Insulting and offensive language"
+msgstr "Obraźliwy i obelżywy język"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__user_favourite
+msgid "Is Favourite"
+msgstr "Ulubione"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_is_follower
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_is_follower
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_is_follower
+msgid "Is Follower"
+msgstr "Jest obserwatorem"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__has_validated_answer
+msgid "Is answered"
+msgstr "Z odpowiedzią"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__can_display_biography
+msgid "Is the author's biography visible from his post"
+msgstr "Czy biografia autora jest widoczna z jego postu"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "It is not allowed to modify someone else's vote."
+msgstr "Nie można zmieniać czyjegoś głosu."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "It is not allowed to vote for its own post."
+msgstr "Nie można głosować na własny post."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "Karma"
+msgstr "Karma"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid "Karma Error"
+msgstr "Błąd Karmy"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "Karma Gains"
+msgstr "Karma zyskana"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "Karma Related Rights"
+msgstr "Prawa związane z karmą"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_close
+msgid "Karma to close"
+msgstr "Karma do zamknięcia"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_comment
+msgid "Karma to comment"
+msgstr "Karma do komentarza"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_comment_convert
+msgid "Karma to convert comment to answer"
+msgstr "Karma do konwersji komentarza na odpowiedź"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_edit
+msgid "Karma to edit"
+msgstr "Karma do edycji"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_unlink
+msgid "Karma to unlink"
+msgstr "Karma do odlinkowania"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum____last_update
+#: model:ir.model.fields,field_description:website_forum.field_forum_post____last_update
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason____last_update
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote____last_update
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag____last_update
+msgid "Last Modified on"
+msgstr "Data ostatniej modyfikacji"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__last_post_id
+#: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
+msgid "Last Post"
+msgstr "Ostatni post"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_options
+msgid "Last Post:"
+msgstr "Ostatni post:"
+
+#. module: website_forum
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__write_date_desc
+msgid "Last Updated"
+msgstr "Ostatnio zaktualizowany"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__write_uid
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__write_uid
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__write_uid
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__write_uid
+msgid "Last Updated by"
+msgstr "Ostatnio aktualizowane przez"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__write_date
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__write_date
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__write_date
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__write_date
+msgid "Last Updated on"
+msgstr "Data ostatniej aktualizacji"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Last activity date"
+msgstr "Data ostatniej aktywności"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
+msgid "Layout"
+msgstr "Układ"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_25
+msgid "Left 10 answers with score of 10 or more"
+msgstr "Pozostało 10 odpowiedzi z wynikiem 10 lub więcej"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
+msgid "List"
+msgstr "Lista"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_main_attachment_id
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_main_attachment_id
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Główny załącznik"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+msgid "Mark as Best Answer"
+msgstr "Oznacz jako najlepszą odpowiedź"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
+msgid "Mark as Offensive"
+msgstr "Oznacz jako obraźliwe"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Mark as offensive"
+msgstr "Oznacz jako obraźliwe"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Mark as spam"
+msgstr "Oznacz jako spam"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__menu_id
+msgid "Menu"
+msgstr "Menu"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_error
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error
+msgid "Message Delivery error"
+msgstr "Błąd doręczenia wiadomości"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_ids
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_ids
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_ids
+msgid "Messages"
+msgstr "Wiadomości"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__mode
+msgid "Mode"
+msgstr "Tryb"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_moderate
+msgid "Moderate posts"
+msgstr "Moderuj posty"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "Moderation"
+msgstr "Moderowanie"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+msgid "Moderation tools"
+msgstr "Narzędzia moderacji"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+msgid "More"
+msgstr "Więcej"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "More over:"
+msgstr "Co więcej:"
+
+#. module: website_forum
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__vote_count_desc
+msgid "Most Voted"
+msgstr "Najczęściej głosowane"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Most answered"
+msgstr "Z największą liczbą odpowiedzi"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Most voted"
+msgstr "Najczęściej głosowane"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#, python-format
+msgid ""
+"Move this question to the top of the list by sharing it on social networks."
+msgstr ""
+"Przenieś to pytanie na górę listy, udostępniając je w sieciach "
+"społecznościowych."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "My <b>Favourites</b>"
+msgstr "Moje <b>ulubione</b>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "My <b>Posts</b>"
+msgstr "Moje <b>posty</b>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "My Favourites"
+msgstr "Moje ulubione"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "My Posts"
+msgstr "Moje wpisy"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__user_vote
+msgid "My Vote"
+msgstr "Mój głos"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+msgid "My profile"
+msgstr "Mój profil"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__name
+msgid "Name"
+msgstr "Nazwa"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_votes
+#: model_terms:ir.ui.view,arch_db:website_forum.vote
+msgid "Negative vote"
+msgstr "Głos negatywny"
+
+#. module: website_forum
+#: model:mail.message.subtype,description:website_forum.mt_answer_new
+#: model:mail.message.subtype,name:website_forum.mt_answer_new
+#: model:mail.message.subtype,name:website_forum.mt_forum_answer_new
+msgid "New Answer"
+msgstr "Nowa odpowiedź"
+
+#. module: website_forum
+#: model:ir.actions.act_window,name:website_forum.forum_forum_action_add
+msgid "New Forum"
+msgstr "Nowe Forum"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "New Post"
+msgstr "Nowy post"
+
+#. module: website_forum
+#: model:mail.message.subtype,description:website_forum.mt_question_new
+#: model:mail.message.subtype,name:website_forum.mt_forum_question_new
+#: model:mail.message.subtype,name:website_forum.mt_question_new
+msgid "New Question"
+msgstr "Nowe pytanie"
+
+#. module: website_forum
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__create_date_desc
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Newest"
+msgstr "Najnowsze"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_2
+#: model:gamification.challenge,name:website_forum.challenge_nice_answer
+msgid "Nice Answer"
+msgstr "Miła odpowiedź"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_nice_answer
+msgid "Nice Answer (4)"
+msgstr "Miła odpowiedź (4)"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_8
+#: model:gamification.challenge,name:website_forum.challenge_nice_question
+msgid "Nice Question"
+msgstr "Miłe pytanie"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_activities
+msgid "No activities yet!"
+msgstr "Nie ma jeszcze żadnej aktywności!"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "No favourite questions in this forum (yet).<br/>"
+msgstr "Brak ulubionych pytań na tym forum (jeszcze). <br/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "No flagged posts"
+msgstr "Brak oflagowanych postów"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all
+msgid "No forum is available yet."
+msgstr "Forum nie jest jeszcze dostępne."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "No post to be validated"
+msgstr "Brak postów do zatwierdzenia"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.tag
+msgid "No tags"
+msgstr "Brak tagów"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_votes
+msgid "No vote given by you yet!"
+msgstr "Nie oddałeś jeszcze żadnego głosu!"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_dofollow
+msgid "Nofollow links"
+msgstr "Linki nofollow"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_4
+msgid "Not a real post"
+msgstr "To nie jest prawdziwy post"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_6
+msgid "Not relevant or out dated"
+msgstr "Nieistotne lub przestarzałe"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_2
+#: model:gamification.challenge,name:website_forum.challenge_notable_question
+msgid "Notable Question"
+msgstr "Pytanie godne uwagi"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_needaction_counter
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_needaction_counter
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Liczba akcji"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__posts_count
+msgid "Number of Posts"
+msgstr "Liczba postów"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_error_counter
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error_counter
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error_counter
+msgid "Number of errors"
+msgstr "Liczba błędów"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_flagged_posts
+msgid "Number of flagged posts"
+msgstr "Liczba oznaczonych postów"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__message_needaction_counter
+#: model:ir.model.fields,help:website_forum.field_forum_post__message_needaction_counter
+#: model:ir.model.fields,help:website_forum.field_forum_tag__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Liczba wiadomości wymagających akcji"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__message_has_error_counter
+#: model:ir.model.fields,help:website_forum.field_forum_post__message_has_error_counter
+#: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Liczba wiadomości z błędami przy doręczeniu"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_posts_waiting_validation
+msgid "Number of posts waiting for validation"
+msgstr "Liczba postów oczekujących na walidację"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_2
+msgid "Off-topic or not relevant"
+msgstr "Nie na temat lub nieistotne"
+
+#. module: website_forum
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__offensive
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_post_reason__reason_type__offensive
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Offensive"
+msgstr "Obraźliwy"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+#, python-format
+msgid "Offensive Post"
+msgstr "Obraźliwy post"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#, python-format
+msgid "On average,"
+msgstr "Średnio,"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+msgid "Only one answer per question is allowed"
+msgstr "Dozwolona jest tylko jedna odpowiedź na pytanie"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "Options"
+msgstr "Opcje"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "Order and Visibility"
+msgstr "Porządek i widoczność"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Order by"
+msgstr "Uporządkuj według"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
+msgid "Our forums"
+msgstr "Nasze fora"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_23
+#: model:gamification.challenge,name:website_forum.challenge_peer_pressure
+#: model:gamification.goal.definition,name:website_forum.definition_peer_pressure
+msgid "Peer Pressure"
+msgstr "Presja grupy"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "People"
+msgstr "Ludzie"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__plain_content
+msgid "Plain Content"
+msgstr "Zwykła treść"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"Please wait for a moderator to validate your previous post before "
+"continuing."
+msgstr ""
+"Przed kontynuowaniem poczekaj, aż moderator zweryfikuje Twój poprzedni post."
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_1
+#: model:gamification.challenge,name:website_forum.challenge_popular_question
+msgid "Popular Question"
+msgstr "Popularne pytanie"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_popular_question
+msgid "Popular Question (150)"
+msgstr "Popularne pytanie (150)"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_notable_question
+msgid "Popular Question (250)"
+msgstr "Popularne pytanie (250)"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_famous_question
+msgid "Popular Question (500)"
+msgstr "Popularne pytanie (500)"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_votes
+#: model_terms:ir.ui.view,arch_db:website_forum.vote
+msgid "Positive vote"
+msgstr "Pozytywny głos"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__post_id
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Post"
+msgstr "Zapostuj"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answer
+#: model_terms:ir.ui.view,arch_db:website_forum.post_reply
+msgid "Post Answer"
+msgstr "Opublikuj odpowiedź"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__child_ids
+msgid "Post Answers"
+msgstr "Odpowiedzi na post"
+
+#. module: website_forum
+#: model:ir.actions.act_window,name:website_forum.forum_post_reasons_action
+msgid "Post Close Reasons"
+msgstr "Powody zamknięcia postu"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_post_reason
+msgid "Post Closing Reason"
+msgstr "Powód zamknięcia postu"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Post Comment"
+msgstr "Opublikuj komentarz"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
+msgid "Post Count"
+msgstr "Liczba postów"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_post_vote
+msgid "Post Vote"
+msgstr "Głos"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "Post Your Question"
+msgstr "Zamieść swoje pytanie"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
+msgid "Post:"
+msgstr "Opublikuj:"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_p_2
+msgid "Posted 10 comments"
+msgstr "Opublikowano 10 komentarzy"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_p_4
+msgid "Posted 100 comments"
+msgstr "Opublikowano 100 komentarzy"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "Posting answer on a [Deleted] or [Closed] question is not possible."
+msgstr ""
+"Udzielanie odpowiedzi na pytanie [Deleted] lub [Closed] nie jest możliwe."
+
+#. module: website_forum
+#: model:ir.actions.act_window,name:website_forum.action_forum_posts
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__post_ids
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__post_ids
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Posts"
+msgstr "Posty"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_options
+msgid "Posts:"
+msgstr "Posty:"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__privacy
+msgid "Privacy"
+msgstr "Prywatność"
+
+#. module: website_forum
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__privacy__public
+msgid "Public"
+msgstr "Publiczne"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__privacy
+msgid ""
+"Public: Forum is public\n"
+"Signed In: Forum is visible for signed in users\n"
+"Some users: Forum and their content are hidden for non members of selected group"
+msgstr ""
+"Publiczne: Forum jest publiczne\n"
+"Zalogowany: Forum jest widoczne dla zalogowanych użytkowników\n"
+"Niektórzy użytkownicy: Forum i jego zawartość są ukryte dla użytkowników spoza wybranej grupy."
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_25
+#: model:gamification.challenge,name:website_forum.challenge_pundit
+#: model:gamification.goal.definition,name:website_forum.definition_pundit
+msgid "Pundit"
+msgstr "Ekspert"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
+#, python-format
+msgid "Put your answer here."
+msgstr "Tutaj umieść swoją odpowiedź."
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/tours/website_forum.js:0
+#, python-format
+msgid "Put your question here."
+msgstr "Umieść tutaj swoje pytanie."
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__parent_id
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Question"
+msgstr "Pytanie"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#: model:mail.message.subtype,description:website_forum.mt_question_edit
+#: model:mail.message.subtype,name:website_forum.mt_question_edit
+#, python-format
+msgid "Question Edited"
+msgstr "Pytanie edytowane"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+msgid "Question by"
+msgstr "Pytanie od"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_downvote
+msgid "Question downvoted"
+msgstr "Pytanie otrzymało głos przeciw"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.404
+msgid "Question not found!"
+msgstr "Pytanie nie znalezione!"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_q_4
+msgid "Question set as favorite by 1 user"
+msgstr "Pytanie ustawione jako ulubione przez 1 użytkownika"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_q_6
+msgid "Question set as favorite by 25 users"
+msgstr "Pytanie ustawione jako ulubione przez 25 użytkowników"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_q_5
+msgid "Question set as favorite by 5 users"
+msgstr "Pytanie ustawione jako ulubione przez 5 użytkowników"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/controllers/main.py:0
+#, python-format
+msgid "Question should not be empty."
+msgstr "Pytanie nie powinno być puste."
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_upvote
+msgid "Question upvoted"
+msgstr "Pytanie otrzymało głos za"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_q_10
+msgid "Question voted up 15 times"
+msgstr "Pytanie otrzymało głos 15 razy"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_q_8
+msgid "Question voted up 4 times"
+msgstr "Pytanie otrzymało głos 4 razy"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_q_9
+msgid "Question voted up 6 times"
+msgstr "Pytanie otrzymało głos 6 razy"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "Questions"
+msgstr "Pytania"
+
+#. module: website_forum
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__mode__questions
+msgid "Questions (1 answer)"
+msgstr "Pytania (1 odpowiedź)"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__mode
+msgid ""
+"Questions mode: only one answer allowed\n"
+" Discussions mode: multiple answers allowed"
+msgstr ""
+"Tryb pytań: dozwolona tylko jedna odpowiedź\n"
+"Tryb dyskusji: dozwolone wiele odpowiedzi"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_15
+msgid "Racist and hate speech"
+msgstr "Rasizm i mowa nienawiści"
+
+#. module: website_forum
+#: model:ir.ui.menu,name:website_forum.menu_forum_rank_global
+msgid "Ranks"
+msgstr "Rankingi"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "Re: %s"
+msgstr "Re: %s"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid "Read the guidelines to know how to gain karma."
+msgstr "Przeczytaj wytyczne, aby dowiedzieć się, jak zdobyć karmę."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "Read: #{question.name}"
+msgstr "Czytaj: #{question.name}"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__closed_reason_id
+msgid "Reason"
+msgstr "Przyczyna"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__reason_type
+msgid "Reason Type"
+msgstr "Typ przyczyny"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
+msgid "Reason:"
+msgstr "Powód:"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_reason_view_list
+msgid "Reasons"
+msgstr "Powody"
+
+#. module: website_forum
+#: model_terms:gamification.badge,description:website_forum.badge_a_1
+msgid "Received at least 3 upvote for an answer for the first time"
+msgstr "Otrzymał co najmniej 3 głosy za na odpowiedź po raz pierwszy"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Refuse"
+msgstr "Odmów"
+
+#. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Register"
+msgstr "Zarejestruj"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__relevancy
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__relevancy_desc
+msgid "Relevance"
+msgstr "Trafność"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "Relevance Computation"
+msgstr "Obliczanie trafności"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+msgid "Reopen"
+msgstr "Otwórz ponownie"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/controllers/main.py:0
+#, python-format
+msgid "Reply should not be empty."
+msgstr "Odpowiedź nie może być pusta."
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__self_reply
+msgid "Reply to own question"
+msgstr "Odpowiedz na własne pytanie"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__website_id
+#: model:ir.model.fields,help:website_forum.field_forum_post__website_id
+msgid "Restrict publishing to this website."
+msgstr "Ogranicz publikowanie do tej strony."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.private_profile
+msgid "Return to the forum."
+msgstr "Powróć do forum."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.404
+msgid "Return to the question list."
+msgstr "Powrót do listy pytań"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__moderator_id
+msgid "Reviewed by"
+msgstr "Zrecenzowany przez"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__is_seo_optimized
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__is_seo_optimized
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__is_seo_optimized
+msgid "SEO optimized"
+msgstr "Zoptymalizowane SEO"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_sms_error
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_sms_error
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Błąd dostarczenia wiadomości SMS"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+msgid "Save Changes"
+msgstr "Zapisz zmiany"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_26
+#: model:gamification.challenge,name:website_forum.challenge_scholar
+#: model:gamification.goal.definition,name:website_forum.definition_scholar
+msgid "Scholar"
+msgstr "Naukowiec"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Search Tips"
+msgstr "Wskazówki wyszukiwania"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Search in Post"
+msgstr "Szukaj w poście"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Search..."
+msgstr "Szukaj..."
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__relevancy_time_decay
+msgid "Second Relevance Parameter"
+msgstr "Drugi parametr trafności"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.tag
+msgid "See"
+msgstr "Zobacz"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
+msgid "See post"
+msgstr "Zobacz post"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
+msgid "See question"
+msgstr "Zobacz pytanie"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Select All"
+msgstr "Zaznacz wszystko"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_8
+#: model:gamification.challenge,name:website_forum.challenge_self_learner
+#: model:gamification.goal.definition,name:website_forum.definition_self_learner
+msgid "Self-Learner"
+msgstr "Samouk"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__seo_name
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__seo_name
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__seo_name
+msgid "Seo name"
+msgstr "Nazwa SEO"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__sequence
+msgid "Sequence"
+msgstr "Sekwencja"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#, python-format
+msgid ""
+"Share this content to increase your chances to be featured on the front page"
+" and attract more visitors."
+msgstr ""
+"Udostępnij tę zawartość, aby zwiększyć swoje szanse na pojawienie się na "
+"pierwszej stronie i przyciągnięcie więcej odwiedzających."
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_share
+msgid "Sharing Options"
+msgstr "Opcje współdzielenia"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Show"
+msgstr "Pokaż"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.tag
+msgid "Show Tags Starting By"
+msgstr "Pokaż tagi zaczynając od"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Showing results for"
+msgstr "Wyświetlanie wyników dla"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Sign in"
+msgstr "Zaloguj się"
+
+#. module: website_forum
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__privacy__connected
+msgid "Signed In"
+msgstr "Zalogowany"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Solved"
+msgstr "Rozwiązane"
+
+#. module: website_forum
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__privacy__private
+msgid "Some users"
+msgstr "Niektórzy użytkownicy"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid "Sorry you must be logged in to perform this action"
+msgstr "Przepraszamy, musisz być zalogowany, aby wykonać tę akcję"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid "Sorry you must be logged to flag a post"
+msgstr "Przepraszamy, musisz być zalogowany, aby oznaczyć post"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid "Sorry you must be logged to vote"
+msgstr "Przepraszamy, musisz być zalogowany, aby głosować"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid "Sorry, anonymous users cannot choose correct answer."
+msgstr ""
+"Niestety, anonimowi użytkownicy nie mogą wybrać prawidłowej odpowiedzi."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.404
+msgid "Sorry, this question is not available anymore."
+msgstr "Przepraszamy, to pytanie nie jest już dostępne."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Sorry, we could not find any <b>%s</b> result <b>%s</b> %s%s%s."
+msgstr ""
+"Przepraszamy, nie mogliśmy znaleźć żadnego <b>%s</b> wyniku <b>%s</b>%s%s%s."
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid "Sorry, you cannot vote for your own posts"
+msgstr "Niestety, nie możesz głosować na własne posty"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Spam all post"
+msgstr "Spamuj wszystkie posty"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_8
+msgid "Spam or advertising"
+msgstr "Spam lub reklama"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__state
+msgid "Status"
+msgstr "Status"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_6
+#: model:gamification.challenge,name:website_forum.challenge_stellar_question_25
+msgid "Stellar Question"
+msgstr "Fantastyczne pytanie"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_7
+#: model:gamification.challenge,name:website_forum.challenge_student
+msgid "Student"
+msgstr "Uczeń"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_31
+#: model:gamification.challenge,name:website_forum.challenge_supporter
+#: model:gamification.goal.definition,name:website_forum.definition_supporter
+msgid "Supporter"
+msgstr "Wspierający"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_tag_view_form
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Tag"
+msgstr "Tag"
+
+#. module: website_forum
+#: model:ir.model.constraint,message:website_forum.constraint_forum_tag_name_uniq
+msgid "Tag name already exists !"
+msgstr "Taki tag już istnieje!"
+
+#. module: website_forum
+#: model:ir.actions.act_window,name:website_forum.forum_tag_action
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__tag_ids
+#: model:ir.ui.menu,name:website_forum.menu_forum_tag_global
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_tag_view_list
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "Tags"
+msgstr "Tagi"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "Tags I Follow"
+msgstr "Tagi, które śledzę"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_32
+#: model:gamification.challenge,name:website_forum.challenge_taxonomist
+#: model:gamification.goal.definition,name:website_forum.definition_taxonomist
+msgid "Taxonomist"
+msgstr "Systematyk"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_1
+#: model:gamification.challenge,name:website_forum.challenge_teacher
+#: model:gamification.goal.definition,name:website_forum.definition_teacher
+msgid "Teacher"
+msgstr "Nauczyciel"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__teaser
+msgid "Teaser"
+msgstr "Zwiastun"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_post__bump_date
+msgid ""
+"Technical field allowing to bump a question. Writing on this field will "
+"trigger a write on write_date and therefore bump the post. Directly writing "
+"on write_date is currently not supported and this field is a workaround."
+msgstr ""
+"Pole techniczne pozwalające wybić pytanie. Pisanie w tym polu spowoduje "
+"zapisanie na write_date, a zatem wybije post. Bezpośrednie pisanie na "
+"write_date nie jest obecnie obsługiwane i to pole jest obejściem problemu."
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#, python-format
+msgid "Thanks for posting!"
+msgstr "Dzięki za publikację!"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+#: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
+msgid ""
+"The goal of this site is create a relevant knowledge base that would answer "
+"questions related to Odoo."
+msgstr ""
+"Celem tej strony jest stworzenie odpowiedniej bazy wiedzy, która "
+"odpowiadałaby na pytania związane z Odoo."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "The question has been closed"
+msgstr "To pytanie zostało zamknięte"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+#: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
+msgid ""
+"Therefore questions and answers can be edited like wiki pages by experienced"
+" users of this site in order to improve the overall quality of the knowledge"
+" base content. Such privileges are granted based on user karma level: you "
+"will be able to do the same once your karma gets high enough."
+msgstr ""
+"Dlatego pytania i odpowiedzi mogą być edytowane jak strony wiki przez "
+"doświadczonych użytkowników tej witryny w celu poprawy ogólnej jakości "
+"zawartości bazy wiedzy. Takie uprawnienia są przyznawane na podstawie "
+"poziomu karmy użytkownika: będziesz mógł robić to samo, gdy twoja karma "
+"stanie się wystarczająco wysoka."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
+msgid ""
+"This community is for professional and enthusiast users, partners and "
+"programmers."
+msgstr ""
+"Ta społeczność jest przeznaczona dla profesjonalnych i entuzjastycznych "
+"użytkowników, partnerów i programistów."
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"This community is for professional and enthusiast users, partners and "
+"programmers. You can ask questions about:"
+msgstr ""
+"Ta społeczność jest przeznaczona dla profesjonalnych i entuzjastycznych "
+"użytkowników, partnerów i programistów. Możesz zadawać pytania dotyczące:"
+
+#. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid ""
+"This community is for professionals and enthusiasts of our products and services.\n"
+"                                        <br>Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
+msgstr ""
+"Ta społeczność jest przeznaczona dla profesjonalistów i entuzjastów naszych produktów i usług.\n"
+"<br>Dziel się i dyskutuj o najlepszych treściach i nowych pomysłach marketingowych, buduj swój profil zawodowy i razem stań się lepszym marketerem."
+
+#. module: website_forum
+#: model:forum.forum,description:website_forum.forum_help
+msgid ""
+"This community is for professionals and enthusiasts of our products and "
+"services. Share and discuss the best content and new marketing ideas, build "
+"your professional profile and become a better marketer together."
+msgstr ""
+"Ta społeczność jest przeznaczona dla profesjonalistów i entuzjastów naszych "
+"produktów i usług. Dziel się i dyskutuj o najlepszych treściach i nowych "
+"pomysłach marketingowych, buduj swój profil zawodowy i stań się lepszym "
+"sprzedawcą."
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__relevancy_post_vote
+msgid ""
+"This formula is used in order to sort by relevance. The variable 'votes' "
+"represents number of votes for a post, and 'days' is number of days since "
+"the post creation"
+msgstr ""
+"Ta formuła jest używana w celu sortowania według trafności. Zmienna "
+"\"głosy\" reprezentuje liczbę głosów dla postu, a \"dni\" to liczba dni od "
+"utworzenia postu"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "This forum has been archived."
+msgstr "To forum zostało zarchiwizowane."
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid "This post can not be flagged"
+msgstr "Tego posta nie można oznaczyć"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid "This post is already flagged"
+msgstr "Ten post jest już oznaczony"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid ""
+"This post is currently awaiting moderation and it's not published yet.<br/>\n"
+"                Do you want <b>Accept</b> or <b>Reject</b> this post ?"
+msgstr ""
+"Ten post oczekuje na moderację i nie został jeszcze opublikowany. <br/>\n"
+"Czy chcesz <b>zaakceptować</b> lub <b>odrzucić</b> ten post?"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_14
+msgid "Threatening language"
+msgstr "Groźny język"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__name
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "Title"
+msgstr "Tytuł"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "Title must not be empty"
+msgstr "Tytuł nie może być pusty"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/controllers/main.py:0
+#, python-format
+msgid "Title should not be empty."
+msgstr "Tytuł nie powinien być pusty."
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__recipient_id
+msgid "To"
+msgstr "Do"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "To Validate"
+msgstr "Do zatwierdzenia"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"To prevent your question from being flagged and possibly removed, avoid "
+"asking subjective questions where …"
+msgstr ""
+"Aby zapobiec oflagowaniu i ewentualnemu usunięciu pytania, unikaj zadawania "
+"subiektywnych pytań, w których ..."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Toggle favorite status"
+msgstr "Przełączanie statusu ulubionych"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_9
+msgid "Too localized"
+msgstr "Zbyt zlokalizowane"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_3
+msgid "Too subjective and argumentative"
+msgstr "Zbyt subiektywne i kłótliwe"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.tag
+msgid "Toolbar with button groups"
+msgstr "Pasek narzędzi z grupami przycisków"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "Topics"
+msgstr "Tematy"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
+msgid "Total Answers"
+msgstr "Łączna liczba odpowiedzi"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_list
+msgid "Total Posts"
+msgstr "Posty łącznie"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_list
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
+msgid "Total Views"
+msgstr "Całkowita liczba Wyświetleń"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_count
+msgid "Total Votes"
+msgstr "Suma głosów"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Trending"
+msgstr "Trendy"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Try searching for one or two words"
+msgstr "Spróbuj wyszukać jedno lub dwa słowa"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Unanswered"
+msgstr "Bez odpowiedzi"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+msgid "Undelete"
+msgstr "Przywróć"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_all
+msgid "Unlink all comments"
+msgstr "Odłącz wszystkie komentarze"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_own
+msgid "Unlink own comments"
+msgstr "Odłącz własne komentarze"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+msgid "Unmark as Best Answer"
+msgstr "Odznacz jako najlepszą odpowiedź"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Unsolved"
+msgstr "Nierozwiązany"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__write_uid
+msgid "Updated by"
+msgstr "Zaktualizowane przez"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__write_date
+msgid "Updated on"
+msgstr "Zaktualizowano na"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_upvote
+msgid "Upvote"
+msgstr "Głos za"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_student
+msgid "Upvoted question (1)"
+msgstr "Wysoko głosowane pytanie (1)"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_great_question
+msgid "Upvoted question (15)"
+msgstr "Wysoko głosowane pytanie (15)"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_nice_question
+msgid "Upvoted question (4)"
+msgstr "Wysoko głosowane pytanie (4)"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_good_question
+msgid "Upvoted question (6)"
+msgstr "Wysoko głosowane pytanie (6)"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+msgid "Use a clear, explicit and concise title"
+msgstr "Użyj jasnego, wyraźnego i zwięzłego tytułu"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_res_users
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__user_id
+msgid "User"
+msgstr "Użytkownik"
+
+#. module: website_forum
+#: model:ir.actions.act_window,name:website_forum.action_forum_favorites
+msgid "Users favorite posts"
+msgstr "Ulubione posty użytkowników"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
+msgid "Validate"
+msgstr "Zatwierdź"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
+msgid "Validate question"
+msgstr "Zatwierdź pytanie"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "View"
+msgstr "Widok"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__views
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "Views"
+msgstr "Widoki"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_12
+msgid "Violent language"
+msgstr "Brutalny język"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__vote
+msgid "Vote"
+msgstr "Głosuj"
+
+#. module: website_forum
+#: model:ir.model.constraint,message:website_forum.constraint_forum_post_vote_vote_uniq
+msgid "Vote already exists !"
+msgstr "Głos już dodany !"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_ids
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid "Votes"
+msgstr "Głosy"
+
+#. module: website_forum
+#: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__pending
+msgid "Waiting Validation"
+msgstr "Oczekiwanie na sprawdzenie"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Waiting for validation"
+msgstr "Oczekiwanie na weryfikację"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users__forum_waiting_posts_count
+msgid "Waiting post"
+msgstr "Oczekujący post"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_website
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_id
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__website_id
+msgid "Website"
+msgstr "Strona internetowa"
+
+#. module: website_forum
+#: model:ir.model.fields.selection,name:website_forum.selection__gamification_challenge__challenge_category__forum
+msgid "Website / Forum"
+msgstr "Strona internetowa/forum"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_message_ids
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__website_message_ids
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_message_ids
+msgid "Website Messages"
+msgstr "Wiadomości"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__website_url
+msgid "Website URL"
+msgstr "Adres strony internetowej"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__website_message_ids
+#: model:ir.model.fields,help:website_forum.field_forum_post__website_message_ids
+#: model:ir.model.fields,help:website_forum.field_forum_tag__website_message_ids
+msgid "Website communication history"
+msgstr "Historia komunikacji"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_description
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_description
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_description
+msgid "Website meta description"
+msgstr "Opis strony - meta"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_keywords
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_keywords
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Słowa kluczowe dla strony - meta"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_title
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_title
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_title
+msgid "Website meta title"
+msgstr "Tytuł strony - meta"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_og_img
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_og_img
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_og_img
+msgid "Website opengraph image"
+msgstr "Obrazek typu opengraph dla strony"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__welcome_message
+msgid "Welcome Message"
+msgstr "Wiadomość powitalna"
+
+#. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Welcome!"
+msgstr "Witaj!"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"When a question or answer is upvoted, the user who posted them will gain "
+"some points, which are called \"karma points\". These points serve as a "
+"rough measure of the community trust to him/her. Various moderation tasks "
+"are gradually assigned to the users based on those points."
+msgstr ""
+"Gdy pytanie lub odpowiedź są lajkowane, użytkownik, który je opublikował, "
+"otrzymuje punkty, które nazywane są \"punktami karmy\". Punkty te służą jako"
+" przybliżona miara zaufania społeczności do niego/niej. Różne zadania "
+"moderacyjne są stopniowo przydzielane użytkownikom na podstawie tych "
+"punktów."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "You already have a pending post"
+msgstr "Masz już oczekujący post"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#, python-format
+msgid "You can share your question once it has been validated"
+msgstr "Możesz udostępnić swoje pytanie po jego zatwierdzeniu"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum.py:0
+#, python-format
+msgid "You cannot create recursive forum posts."
+msgstr "Nie można tworzyć rekurencyjnych postów na forum."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answer
+msgid "You cannot post an empty answer"
+msgstr "Nie możesz opublikować pustej odpowiedzi"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "You have no posts in this forum (yet)."
+msgstr "Nie masz jeszcze postów na tym forum."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "You may now participate in our forums."
+msgstr "Możesz teraz uczestniczyć w naszych forach."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+msgid "You need to have sufficient karma to edit tags"
+msgstr "Musisz mieć wystarczającą karmę, aby edytować tagi"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"You should only ask practical, answerable questions based on actual problems"
+" that you face. Chatty, open-ended questions diminish the usefulness of this"
+" site and push other questions off the front page."
+msgstr ""
+"Powinieneś zadawać tylko praktyczne pytania, na które można odpowiedzieć, "
+"oparte na rzeczywistych problemach, z którymi się borykasz. Czcze, otwarte "
+"pytania zmniejszają użyteczność tej strony i spychają inne pytania z "
+"pierwszej strony."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "You're not following any topic in this forum (yet).<br/>"
+msgstr "Nie śledzisz (jeszcze) żadnego tematu na tym forum.<br/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answer
+msgid "Your Answer"
+msgstr "Twoja odpowiedź"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_reply
+msgid "Your Reply"
+msgstr "Twoja odpowiedź"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "Your favourite"
+msgstr "Twoje ulubione"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "[Closed]"
+msgstr "[Zamknięty]"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "[Deleted]"
+msgstr "[Usunięty]"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "[Offensive]"
+msgstr "[Ofensywny]"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
+msgid "accept any answer"
+msgstr "zaakceptuj każdą odpowiedź"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "activity date"
+msgstr "data aktywności"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "and join this Forum"
+msgstr "i dołącz do tego forum"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "breadcrumb"
+msgstr "okruszek"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "by"
+msgstr "przez"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
+msgid "close any posts"
+msgstr "zamknąć jakikolwiek post"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
+msgid "delete any comment"
+msgstr "usunąć jakikolwiek komentarz"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
+msgid "delete any question or answer"
+msgstr "usunąć jakiekolwiek pytanie lub odpowiedź"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
+msgid "delete own comment"
+msgstr "usuń własny komentarz"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
+msgid "downvote"
+msgstr "głos przeciw"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "e.g. Help"
+msgstr "np. Pomoc"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form_add
+msgid "e.g. Technical Assistance"
+msgstr "np. pomoc techniczna"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
+msgid "e.g. When should I plant my tomatoes?"
+msgstr "np. Kiedy zasadzić pomidory?"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
+msgid "edit any post, view offensive flags"
+msgstr "edytuj dowolny post, zobacz obraźliwe oznaczenia"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "every answer is equally valid: “What’s your favorite ______?”"
+msgstr "każda odpowiedź jest równie ważna: \"Jaki jest twój ulubiony ______?\""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
+msgid "flag offensive, close own questions"
+msgstr "oznacz obraźliwe, zamknij własne pytania"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "for reason:"
+msgstr "z powodu:"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
+msgid ""
+"has been posted and require your validation. Click here to access the "
+"question :"
+msgstr ""
+"został opublikowany i wymaga Twojej weryfikacji. Kliknij tutaj, aby uzyskać "
+"dostęp do pytania:"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
+msgid "has been posted. Click here to access the post :"
+msgstr "został opublikowany. Kliknij tutaj, aby przejść do postu:"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
+msgid "has been posted. Click here to access the question :"
+msgstr "zostało opublikowane. Kliknij tutaj, aby uzyskać dostęp do pytania:"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#, python-format
+msgid "here"
+msgstr "tu"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "how to configure or customize Odoo to specific business needs,"
+msgstr ""
+"jak skonfigurować lub dostosować Odoo do konkretnych potrzeb biznesowych,"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "how to develop modules for your own need,"
+msgstr "jak tworzyć moduły dla własnych potrzeb,"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "how to install Odoo on a specific infrastructure,"
+msgstr "jak zainstalować Odoo na konkretnej infrastrukturze,"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#, python-format
+msgid ""
+"if your\n"
+"        answer is selected as the right one. See what you can do with karma"
+msgstr ""
+"jeśli twoja\n"
+"        odpowiedź jest wybrana jako właściwa. Zobacz, co możesz zrobić z karmą"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "in your favourites"
+msgstr "w ulubionych"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "in your followed list"
+msgstr "na liście obserwowanych"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "in your posts"
+msgstr "w twoich postach"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
+msgid "insert text link, upload files"
+msgstr "wstaw odnośnik tekstowy, prześlij pliki"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "instead."
+msgstr "zamiast tego."
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "it is a rant disguised as a question: “______ sucks, am I right?”"
+msgstr "jest to tyrada pod postacią pytania: \"______ jest do kitu, mam rację?\""
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#, python-format
+msgid "karma points"
+msgstr "punkty karmy"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "matching \""
+msgstr "pasujące \""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "most answered"
+msgstr "najwięcej odpowiedzi"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "most voted"
+msgstr "najczęściej głosowane"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "newest"
+msgstr "najnowsze"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "on"
+msgstr "na"
+
+#. module: website_forum
+#. odoo-javascript
+#: code:addons/website_forum/static/src/xml/public_templates.xml:0
+#, python-format
+msgid ""
+"on social networks get an answer within\n"
+"        5 hours. Questions shared on two social networks have"
+msgstr ""
+"w sieciach społecznościowych uzyskaj odpowiedź w ciągu\n"
+"        5 godzin. Pytania udostępnione w dwóch sieciach społecznościowych mają"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.tag
+msgid "post"
+msgstr "post"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "solved"
+msgstr "rozwiązane"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "specific questions about Odoo service offers, etc."
+msgstr "szczegółowe pytania dotyczące ofert usług Odoo itp."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "tag"
+msgstr "tag"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"there is no actual problem to be solved: “I’m curious if other people feel "
+"like I do.”"
+msgstr ""
+"nie ma rzeczywistego problemu do rozwiązania: \"Ciekawy jestem, czy inni "
+"czują się tak, jak ja.\""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "to partecipate"
+msgstr "do wzięcia udziału"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "trending"
+msgstr "popularne"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "unanswered"
+msgstr "bez odpowiedzi"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "unsolved"
+msgstr "nierozwiązane"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
+msgid "upvote, add comments"
+msgstr "głosuj za, dodawaj komentarze"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "using the"
+msgstr "używając"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"we are being asked an open-ended, hypothetical question: “What if ______ "
+"happened?”"
+msgstr ""
+"zadano nam otwarte, hipotetyczne pytanie: \"Co się stanie, jeśli zdarzy się "
+"_____?\""
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid "what's the best way to use Odoo for a specific business need,"
+msgstr ""
+"jaki jest najlepszy sposób korzystania z Odoo dla określonej potrzeby "
+"biznesowej,"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.author_box
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+msgid "xp"
+msgstr "xp"
+
+#. module: website_forum
+#: model_terms:forum.forum,faq:website_forum.forum_help
+#: model_terms:ir.ui.view,arch_db:website_forum.default_faq
+msgid ""
+"your answer is provided along with the question, and you expect more "
+"answers: “I use ______ for ______, what do you use?”"
+msgstr ""
+"twoja odpowiedź jest dostarczana wraz z pytaniem i oczekujesz więcej "
+"odpowiedzi: \"Używam ______ dla ______, z czego korzystasz?\""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
+msgid "your biography can be seen as tooltip"
+msgstr "Twoja biografia może być postrzegana jako podpowiedź"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "| Flagged"
+msgstr "| oflagowane"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "圾 Text"
+msgstr "圾 Tekst"

@@ -1,0 +1,42 @@
+.o_field_selector:not(.o_legacy_field_selector) {
+    position: relative;
+
+    > .o_field_selector_value {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        height: 100%;
+        min-height: 20px; // needed when there is no value in it and used standalone
+        &:active, &:focus, &:active:focus {
+            outline: none;
+        }
+
+        > .o_field_selector_chain_part {
+            padding: 0px 1px;
+            border: 1px solid darken($o-brand-lightsecondary, 10%);
+            background: $o-brand-lightsecondary;
+            margin-bottom: 1px;
+        }
+        > i {
+            align-self: center;
+            margin: 0 2px;
+            font-size: 10px;
+        }
+    }
+    > .o_field_selector_controls {
+        @include o-position-absolute(0, 0, 1px);
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    &.o_edit_mode {
+        > .o_field_selector_controls::after {
+            @include o-caret-down;
+        }
+
+        > .o_field_selector_popover {
+            @include o-position-absolute($top: 100%, $left: 0);
+        }
+    }
+}

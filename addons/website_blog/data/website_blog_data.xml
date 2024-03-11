@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="blog_blog_1" model="blog.blog">
+            <field name="name">Our blog</field>
+            <field name="subtitle">We are a team of passionate people whose goal is to improve everyone's life.</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_5.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}</field>
+        </record>
+
+        <record id="menu_blog" model="website.menu">
+            <field name="name">Blog</field>
+            <field name="url">/blog</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">40</field>
+        </record>
+
+        <!-- Blog-related subtypes for messaging / Chatter -->
+        <record id="mt_blog_blog_published" model="mail.message.subtype">
+            <field name="name">Published Post</field>
+            <field name="res_model">blog.blog</field>
+            <field name="default" eval="True"/>
+            <field name="description">Published Post</field>
+        </record>
+
+    </data>
+
+    <data>
+
+        <!-- jump to blog at install -->
+        <record id="action_open_website" model="ir.actions.act_url">
+            <field name="name">Website Blogs</field>
+            <field name="target">self</field>
+            <field name="url" eval="'/blog/'"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_open_website"/>
+            <field name="state">open</field>
+        </record>
+
+    </data>
+</odoo>

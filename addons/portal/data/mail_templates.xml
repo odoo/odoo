@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+
+    <template id="portal_share_template">
+        <div>
+            <p>Dear <span t-esc="partner.name"/>,</p>
+            <p>You have been invited to access the following document:</p>
+            <br/>
+            <a t-attf-href="#{share_link}" style="background-color: #875A7B; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 12px;"><strong>Open </strong><strong t-esc="record.display_name"/></a><br/>
+            <br/>
+            <p t-if="note" style="white-space: pre-wrap;" t-esc="note"/>
+        </div>
+    </template>
+
+</data></odoo>

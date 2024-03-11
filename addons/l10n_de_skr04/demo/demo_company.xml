@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_demo_company_de_skr04" model="res.partner">
+        <field name="name">DE04 Company</field>
+        <field name="vat">DE407959610</field>
+        <field name="street">21 Turmstraße</field>
+        <field name="city">Mitte</field>
+        <field name="country_id" ref="base.de"/>
+
+        <field name="zip">10559</field>
+        <field name="phone">+49 1512 3456789</field>
+        <field name="email">info@company.de_skr04example.com</field>
+        <field name="website">www.de_skr04example.com</field>
+    </record>
+
+    <record id="demo_company_de_skr04" model="res.company">
+        <field name="name">DE04 Company</field>
+        <field name="partner_id" ref="partner_demo_company_de_skr04"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('demo_company_de_skr04')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('l10n_de_skr04.demo_company_de_skr04'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[ref('l10n_de_skr04.l10n_chart_de_skr04')]"/>
+        <value model="res.company" eval="obj().env.ref('l10n_de_skr04.demo_company_de_skr04')"/>
+    </function>
+</odoo>

@@ -1,0 +1,34 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_CallMainView {
+    min-width: 0;
+}
+
+.o_CallMainView_gridParticipantCard {
+    width: var(--width);
+    height: var(--height);
+    min-width: var(--width);
+    min-height: var(--height);
+    aspect-ratio: 16/9;
+}
+
+.o_CallMainView_sidebarButton {
+    font-size: 1.2rem;
+    padding: map-get($spacers, 2);
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_CallMainView_sidebarButton {
+    color: white;
+    border-radius: 10px 0px 0px 10px;
+    border-right: 0px;
+    background-color: lighten(black, 10%);
+}

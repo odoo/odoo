@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_server_action_form_template">
+            <field name="name">ir.actions.server.form</field>
+            <field name="model">ir.actions.server</field>
+            <field name="inherit_id" ref="base.view_server_action_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='page_object']" position="after">
+                    <page string="Activity" name="next_activity" autofocus="autofocus" attrs="{'invisible': [('state', '!=', 'next_activity')]}">
+                        <group>
+                            <group>
+                                <field name="activity_type_id" options="{'no_create': True, 'no_open': True}"
+                                       attrs="{'required': [('state', '=', 'next_activity')]}"/>
+                                <field name="activity_summary" placeholder="e.g. Discuss proposal"/>
+                            </group>
+                            <group>
+                                <label for="activity_date_deadline_range"/>
+                                <div class="o_row">
+                                    <field name="activity_date_deadline_range"/>
+                                    <field name="activity_date_deadline_range_type" attrs="{
+                                        'required': [('state', '=', 'next_activity'), ('activity_date_deadline_range', '>', 0)]
+                                    }"/>
+                                </div>
+                                <field name="activity_user_type" attrs="{
+                                    'required': [('state', '=', 'next_activity')]
+                                }"/>
+                                <field name="activity_user_field_name" attrs="{
+                                    'invisible': [('activity_user_type', '=', 'specific')],
+                                    'required': [('state', '=', 'next_activity'), ('activity_user_type', '=', 'generic')]
+                                }"/>
+                                <field name="activity_user_id" attrs="{
+                                    'invisible': [('activity_user_type', '=', 'generic')],
+                                    'required': [('state', '=', 'next_activity'), ('activity_user_type', '=', 'specific')]
+                                }"/>
+                            </group>
+                        </group>
+                        <field name="activity_note" class="oe-bordered-editor" placeholder="Log a note..."/>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='link_field_id']" position="after">
+                    <field name="partner_ids" widget="many2many_tags"
+                           attrs="{'invisible': [('state', '!=', 'followers')]}"/>
+                    <field name="template_id"
+                           attrs="{'invisible': [('state', '!=', 'mail_post')],
+                                   'required': [('state', '=', 'mail_post')]}"
+                           context="{'default_model': model_name,
+                                     'default_use_default_to': True}"/>
+                    <field name="mail_post_method"
+                           attrs="{'invisible': [('state', '!=', 'mail_post')],
+                                   'required': [('state', '=', 'mail_post')]}"/>
+                    <field name="mail_post_autofollow" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

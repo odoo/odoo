@@ -1,0 +1,145 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_adyen
+# 
+# Translators:
+# Martin Trigaux, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2018\n"
+"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:187
+#, python-format
+msgid "; multiple order found"
+msgstr ", βρέθηκαν πολλαπλές παραγγελίες"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:185
+#, python-format
+msgid "; no order found"
+msgstr ", δεν βρέθηκε παραγγελία"
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:229
+#, python-format
+msgid "Adyen: feedback error"
+msgstr "Adyen: σφάλμα επιστροφής"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:197
+#, python-format
+msgid "Adyen: invalid merchantSig, received %s, computed %s"
+msgstr "Adyen: λανθασμένη υπογραφή εμπόρου, λήφθηκε %s, υπολογίστηκε %s"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:183
+#, python-format
+msgid "Adyen: received data for reference %s"
+msgstr "Adyen: λήφθηκαν δεδομένα για την αναφορά %s"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:176
+#, python-format
+msgid ""
+"Adyen: received data with missing reference (%s) or missing pspReference "
+"(%s)"
+msgstr ""
+"Adyen: λήφθηκαν δεδομένα αλλά λείπει η αναφορά (%s) ή λείπει το pspReference"
+" (%s)"
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_adyen
+#: model_terms:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
+msgid "How to configure your Adyen account?"
+msgstr "Πως να ρυθμίσετε τον Adyen λογαριασμό σας;"
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Μη αυτόματη διαμόρφωση"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_merchant_account
+msgid "Merchant Account"
+msgstr "Λογαριασμός Εμπόρου"
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Αποδέκτης Πληρωμής"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Συναλλαγή Πληρωμής"
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Πάροχος"
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_code
+msgid "Skin Code"
+msgstr "Κωδικός Εμφάνισης"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_hmac_key
+msgid "Skin HMAC Key"
+msgstr "Κλειδί HMAC Εμφάνισης"
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Έμβασμα"

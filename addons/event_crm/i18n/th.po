@@ -1,0 +1,451 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* event_crm
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
+# Wichanon Jamwutthipreecha, 2022
+# Rasareeyar Lappiam, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_event__lead_count
+#: model:ir.model.fields,field_description:event_crm.field_event_registration__lead_count
+msgid "# Leads"
+msgstr "# ลูกค้าเป้าหมาย"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_count
+msgid "# Registrations"
+msgstr "# การลงทะเบียน"
+
+#. module: event_crm
+#: code:addons/event_crm/models/event_registration.py:0
+#, python-format
+msgid "(updated)"
+msgstr "(อัปเดตแล้ว)"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_view_form
+msgid "<span class=\"o_stat_text\"> Attendees</span>"
+msgstr "<span class=\"o_stat_text\"> ผู้เข้าร่วม</span>"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_registration_view_form
+#: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
+msgid "<span class=\"o_stat_text\"> Leads</span>"
+msgstr "<span class=\"o_stat_text\"> ลูกค้าเป้าหมาย</span>"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__active
+msgid "Active"
+msgstr "เปิดใช้งาน"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Archived"
+msgstr "เก็บถาวรแล้ว"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__confirm
+msgid "Attendees are confirmed"
+msgstr "ผู้เข้าร่วมได้รับการยืนยัน"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__create
+msgid "Attendees are created"
+msgstr "ผู้เข้าร่วมถูกสร้างขึ้น"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__done
+msgid "Attendees attended"
+msgstr "ผู้เข้าร่วมร่วมแล้ว"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_tag_ids
+msgid "Automatically add these tags to the created leads."
+msgstr "เพิ่มแท็กเหล่านี้ไปยังลูกค้าเป้าหมายที่สร้างขึ้นโดยอัตโนมัติ"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_sales_team_id
+msgid "Automatically assign the created leads to this Sales Team."
+msgstr "กำหนดลูกค้าเป้าหมายที่สร้างขึ้นให้กับทีมขายนี้โดยอัตโนมัติ"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_user_id
+msgid "Automatically assign the created leads to this Salesperson."
+msgstr "กำหนดลูกค้าเป้าหมายที่สร้างขึ้นโดยอัตโนมัติให้กับพนักงานขายรายนี้"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__company_id
+msgid "Company"
+msgstr "บริษัทเดียว"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_crm_lead__registration_count
+msgid "Counter for the registrations linked to this lead"
+msgstr "เคาน์เตอร์สำหรับการลงทะเบียนที่เชื่อมโยงกับลูกค้าเป้าหมายนี้"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_basis
+msgid "Create"
+msgstr "สร้าง"
+
+#. module: event_crm
+#: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
+msgid "Create a Lead Generation Rule"
+msgstr "สร้างกฎการสร้างลูกค้าเป้าหมาย"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_ids
+msgid "Created Leads"
+msgstr "สร้างลูกค้าเป้าหมาย"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Creation Type"
+msgstr "ประเภทการสร้าง"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_creation_trigger
+msgid ""
+"Creation: at attendee creation;\n"
+"Confirmation: when attendee is confirmed, manually or automatically;\n"
+"Attended: when attendance is confirmed and registration set to done;"
+msgstr ""
+"การสร้าง: ที่การสร้างผู้เข้าร่วม;\n"
+"การยืนยัน: เมื่อผู้เข้าร่วมได้รับการยืนยัน ด้วยตนเองหรือโดยอัตโนมัติ\n"
+"เข้าร่วม: เมื่อยืนยันการเข้าร่วมและตั้งค่าการลงทะเบียนเป็นเสร็จสิ้น"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_type
+msgid "Default lead type when this rule is applied."
+msgstr "ประเภทลูกค้าเป้าหมายเริ่มต้นเมื่อใช้กฎนี้"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_event_event
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_id
+msgid "Event"
+msgstr "อีเวนต์"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_type_ids
+msgid "Event Categories"
+msgstr "หมวดหมู่เอีเวนต์"
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_event_lead_rule
+msgid "Event Lead Rules"
+msgstr "กฎลูกค้าเป้าหมายอีเวนต์"
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_event_registration
+msgid "Event Registration"
+msgstr "การลงทะเบียนอีเวนต์"
+
+#. module: event_crm
+#: model:ir.actions.act_window,name:event_crm.event_registration_action_from_lead
+msgid "Event registrations"
+msgstr "การลงทะเบียนอีเวนต์"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_crm_lead__event_id
+msgid "Event triggering the rule that created this lead"
+msgstr "อีเวนต์ที่เรียกกฎที่สร้างโอกาสในการขายนี้"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_merge_summary_inherit_event_crm
+msgid "Event:"
+msgstr "งาน:"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_registration_filter
+msgid "Filter the attendees that will or not generate leads."
+msgstr "กรองผู้เข้าร่วมที่จะสร้างหรือไม่สร้างโอกาสในการขาย"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_type_ids
+msgid ""
+"Filter the attendees to include those of this specific event category. If "
+"not set, no event category restriction will be applied."
+msgstr ""
+"กรองผู้เข้าร่วมเพื่อรวมผู้ที่อยู่ในหมวดหมู่อีเวนต์เฉพาะนี้ หากไม่ได้ตั้งค่า "
+"จะไม่มีการจำกัดหมวดหมู่อีเวนต์"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_id
+msgid ""
+"Filter the attendees to include those of this specific event. If not set, no"
+" event restriction will be applied."
+msgstr ""
+"กรองผู้เข้าร่วมเพื่อรวมผู้เข้าร่วมอีเวนต์เฉพาะนี้ หากไม่ได้ตั้งค่า "
+"จะไม่มีการจำกัดอีเวนต์"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "For any of these Events"
+msgstr "สำหรับอีเวนต์เหล่านี้"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "If the Attendees meet these Conditions"
+msgstr "ถ้าผู้เข้าร่วมมีคุณสมบัติตรงตามเงื่อนไขเหล่านี้"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule____last_update
+msgid "Last Modified on"
+msgstr "แก้ไขครั้งล่าสุดเมื่อ"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__lead
+msgid "Lead"
+msgstr "ลูกค้าเป้าหมาย"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
+msgid "Lead Creation Type"
+msgstr "ประเภทการสร้างลูกค้าเป้าหมาย"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "Lead Default Values"
+msgstr "ค่าลูกค้าเป้าหมายเริ่มต้น"
+
+#. module: event_crm
+#: model:ir.ui.menu,name:event_crm.event_lead_rule_menu
+msgid "Lead Generation"
+msgstr "การสร้างลูกค้าเป้าหมาย"
+
+#. module: event_crm
+#: model:ir.actions.act_window,name:event_crm.event_lead_rule_action
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "Lead Generation Rule"
+msgstr "กฎการสร้างลูกค้าเป้าหมาย"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
+msgid "Lead Generation Rules"
+msgstr "กฎการสร้างลูกค้าเป้าหมาย"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_type
+msgid "Lead Type"
+msgstr "ประเภทลูกค้าเป้ากมาย"
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "ลูกค้าเป้าหมาย / โอกาส"
+
+#. module: event_crm
+#: model:ir.actions.act_window,name:event_crm.crm_lead_action_from_event
+#: model:ir.actions.act_window,name:event_crm.crm_lead_action_from_registration
+#: model:ir.model.fields,field_description:event_crm.field_event_event__lead_ids
+#: model:ir.model.fields,field_description:event_crm.field_event_registration__lead_ids
+msgid "Leads"
+msgstr "ลูกค้าเป้าหมาย"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_event__lead_ids
+msgid "Leads generated from this event"
+msgstr "ลูกค้าเป้าหมายที่สร้างจาดอีเวนต์"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: event_crm
+#: code:addons/event_crm/models/event_lead_rule.py:0
+#, python-format
+msgid "New registrations"
+msgstr "การลงทะเบียนใหม่"
+
+#. module: event_crm
+#: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_event
+#: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_registration
+msgid "No leads found"
+msgstr "ไม่พบลูกค้าเป้าหมาย"
+
+#. module: event_crm
+#: model_terms:ir.actions.act_window,help:event_crm.event_registration_action_from_lead
+msgid "No registration found"
+msgstr "ไม่พบการลงทะเบียน"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__opportunity
+msgid "Opportunity"
+msgstr "โอกาสการขาย"
+
+#. module: event_crm
+#: code:addons/event_crm/models/event_registration.py:0
+#: code:addons/event_crm/models/event_registration.py:0
+#, python-format
+msgid "Participants"
+msgstr "ผู้มีส่วนร่วม"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__attendee
+msgid "Per Attendee"
+msgstr "ต่อผู้เข้าร่วม"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_creation_basis
+msgid ""
+"Per Attendee : A Lead is created for each Attendee (B2C).\n"
+"Per Order : A single Lead is created per Ticket Batch/Sale Order (B2B)"
+msgstr ""
+"ต่อผู้เข้าร่วม : สร้างโอกาสในการขายสำหรับผู้เข้าร่วมแต่ละราย (B2C)\n"
+"ต่อคำสั่ง : สร้างลูกค้าเป้าหมายเดี่ยวต่อ ชุดทิกเก็ต/คำสั่งขาย (B2B)"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__order
+msgid "Per Order"
+msgstr "ต่อคำสั่ง"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_lead_rule_id
+msgid "Registration Rule"
+msgstr "กฎการลงทะเบียน"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_merge_summary_inherit_event_crm
+msgid "Registration Rule:"
+msgstr "กฎการลงทะเบียน:"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_registration_filter
+msgid "Registrations Domain"
+msgstr "โดเมนการลงทะเบียน"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_crm_lead__registration_ids
+msgid "Registrations triggering the rule that created this lead"
+msgstr "การลงทะเบียนทำให้เกิดกฎที่สร้างลูดค้าเป้าหมายนี้"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__company_id
+msgid ""
+"Restrict the trigger of this rule to events belonging to a specific company.\n"
+"If not set, no company restriction will be applied."
+msgstr ""
+"จำกัดการเรียกของกฎนี้เฉพาะของอีเวนต์ที่เป็นของบริษัท\n"
+"หากไม่ได้ตั้งค่าไว้ จะไม่มีการจำกัดบริษัท"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__name
+msgid "Rule Name"
+msgstr "ชื่อกฎ"
+
+#. module: event_crm
+#: model:event.lead.rule,name:event_crm.event_lead_rule_0
+msgid "Rule on @example.com"
+msgstr "กฏบน @example.com"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_crm_lead__event_lead_rule_id
+msgid "Rule that created this lead"
+msgstr "กฎที่สร้างลูกค้าเป้าหมายนี้"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_sales_team_id
+msgid "Sales Team"
+msgstr "ทีมขาย"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_user_id
+msgid "Salesperson"
+msgstr "พนักงานขาย"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Search Lead Generation Rules"
+msgstr "กฎค้นหาการสร้างลูกค้าเป้าหมาย"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
+msgid "Source Event"
+msgstr "แหล่งที่มาอีเวนต์"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_ids
+msgid "Source Registrations"
+msgstr "แหล่งที่มาการลงทะเบียน"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_tag_ids
+msgid "Tags"
+msgstr "แท็ก"
+
+#. module: event_crm
+#: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
+msgid "Those automatically create leads when attendees register."
+msgstr ""
+"สิ่งเหล่านี้จะสร้างลูกค้าเป้าหมายโดยอัตโนมัติเมื่อผู้เข้าร่วมลงทะเบียน"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Trigger Type"
+msgstr "ประเภททริกเกอร์"
+
+#. module: event_crm
+#: code:addons/event_crm/models/event_registration.py:0
+#: code:addons/event_crm/models/event_registration.py:0
+#, python-format
+msgid "Updated registrations"
+msgstr "อัปเดตการลงทะเบียน"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_trigger
+msgid "When"
+msgstr "เมื่อ"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "e.g. B2B Fairs"
+msgstr "เช่น งานแสดง B2B"

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+        <record id="smartmode" model="res.partner">
+            <field name="name">SmartMode LTD</field>
+            <field name="is_company">1</field>
+            <field name="street">12, Hill Lane</field>
+            <field name="zip">HA4 7JW</field>
+            <field name="city">Ruislip</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="phone">+44 845 643 4548</field>
+            <field name="website">http://www.smartmode.co.uk</field>
+            <field name="email">smartmode@yourcompany.example.com</field>
+        </record>
+
+        <record id="res_partner_address_1" model="res.partner">
+            <field name="name">Vadim Chobanu</field>
+            <field name="parent_id" ref="smartmode"/>
+            <field name="email">vadim@smartmode.example.com</field>
+            <field name="active">1</field>
+            <field name="type">contact</field>
+            <field name="street">88 Wood Street, 10th floor</field>
+            <field name="zip">EC2V 7RS</field>
+            <field name="city">London</field>
+            <field name="country_id" ref="base.uk"/>
+        </record>
+    </data>
+</odoo>

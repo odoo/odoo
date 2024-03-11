@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="product_supplierinfo_form_view" model="ir.ui.view">
+        <field name="name">product.supplierinfo.form.view</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="arch" type="xml">
+            <form string="Vendor Information">
+                <sheet>
+                    <group>
+                        <group name="vendor" string="Vendor">
+                            <field name="product_variant_count" invisible="1"/>
+                            <field name="partner_id" context="{'res_partner_search_mode': 'supplier'}"/>
+                            <field name="product_name"/>
+                            <field name="product_code"/>
+                            <label for="delay"/>
+                            <div>
+                                <field name="delay" class="oe_inline"/> days
+                            </div>
+                        </group>
+                        <group string="Pricelist">
+                            <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/>
+                            <field name="product_id" groups="product.group_product_variant" options="{'no_create': True}"/>
+                            <label for="min_qty"/>
+                            <div class="o_row">
+                                <field name="min_qty"/>
+                                <field name="product_uom" groups="uom.group_uom"/>
+                            </div>
+                            <label for="price" string="Unit Price"/>
+                            <div class="o_row">
+                                <field name="price" class="oe_inline" /><field name="currency_id" groups="base.group_multi_currency"/>
+                            </div>
+                            <label for="date_start" string="Validity"/>
+                            <div class="o_row"><field name="date_start" class="oe_inline"/> to <field name="date_end" class="oe_inline"/></div>
+                            <field name="company_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_supplierinfo_search_view" model="ir.ui.view">
+        <field name="name">product.supplierinfo.search.view</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="arch" type="xml">
+            <search string="Vendor">
+                <field name="partner_id"/>
+                <field name="product_tmpl_id"/>
+                <filter string="Active Products" name="active_products" domain="['|', ('product_tmpl_id.active', '=', True),('product_id.active', '=', True)]"/>
+                <separator />
+                <filter string="Active" name="active" domain="['|', ('date_end', '=', False), ('date_end', '&gt;=',  (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Archived" name="archived" domain="[('date_end', '&lt;',  (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Product" name="groupby_product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
+                    <filter string="Vendor" name="groupby_vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="product_supplierinfo_view_kanban" model="ir.ui.view">
+        <field name="name">product.supplierinfo.kanban</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="min_qty"/>
+                <field name="delay"/>
+                <field name="price"/>
+                <field name="partner_id"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="row mb4">
+                                <strong class="col-6">
+                                    <span t-esc="record.partner_id.value"/>
+                                </strong>
+                                <strong class="col-6 text-end">
+                                    <strong><field name="price" widget="monetary"/></strong>
+                                </strong>
+                                <div class="col-6">
+                                    <span t-esc="record.min_qty.value"/>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <span t-esc="record.delay.value"/> days
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="product_supplierinfo_tree_view" model="ir.ui.view">
+        <field name="name">product.supplierinfo.tree.view</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="arch" type="xml">
+            <tree string="Vendor Information" multi_edit="1">
+                <field name="sequence" widget="handle"/>
+                <field name="partner_id" readonly="1"/>
+                <field name="product_id" readonly="1" optional="hide"
+                    invisible="context.get('product_template_invisible_variant', False)"
+                    groups="product.group_product_variant"/>
+                <field name="product_tmpl_id" string="Product" readonly="1"
+                    invisible="context.get('visible_product_tmpl_id', True)"/>
+                <field name="product_name" optional="hide"/>
+                <field name="product_code" optional="hide"/>
+                <field name="date_start" optional="hide"/>
+                <field name="date_end" optional="hide"/>
+                <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                <field name="min_qty" optional="hide"/>
+                <field name="product_uom" groups="uom.group_uom" optional="hide"/>
+                <field name="price" string="Price"/>
+                <field name="currency_id" groups="base.group_multi_currency"/>
+                <field name="delay" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_supplierinfo_type_action" model="ir.actions.act_window">
+        <field name="name">Vendor Pricelists</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.supplierinfo</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="context">{'visible_product_tmpl_id': False, 'search_default_active_products': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No vendor pricelist found
+            </p><p>
+                Register the prices requested by your vendors for each product, based on the quantity and the period.
+            </p>
+        </field>
+    </record>
+
+</odoo>

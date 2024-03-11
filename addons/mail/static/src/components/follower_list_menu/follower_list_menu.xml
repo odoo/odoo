@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.FollowerListMenu" owl="1">
+        <t t-if="followerListMenuView">
+            <div class="o_FollowerListMenu position-relative d-flex" t-attf-class="{{ className }}" t-on-keydown="followerListMenuView.onKeydown" t-ref="root">
+                <div class="o_FollowerListMenu_followers d-flex" t-ref="dropdown">
+                    <button t-ref="toggler" class="o_FollowerListMenu_buttonFollowers o_ChatterTopbar_button btn btn-light" t-att-disabled="!followerListMenuView.chatterOwner.isTemporary and followerListMenuView.isDisabled" t-att-aria-expanded="followerListMenuView.isDropdownOpen ? 'true' : 'false'" t-on-click="followerListMenuView.onClickFollowersButton" aria-label="Show Followers">
+                        <i class="fa fa-user-o" role="img"/>
+                        <span class="o_FollowerListMenu_buttonFollowersCount ps-1" t-esc="followerListMenuView.followerViews.length"/>
+                    </button>
+
+                    <t t-if="followerListMenuView.isDropdownOpen">
+                        <div class="o_FollowerListMenu_dropdown o-dropdown-menu flex-column d-flex" role="menu" t-ref="popper"> <!-- necessary for usePosition() -->
+                            <t t-if="followerListMenuView.chatterOwner.thread.model !== 'channel' and followerListMenuView.chatterOwner.thread.hasWriteAccess">
+                                <a class="o_FollowerListMenu_addFollowersButton dropdown-item" href="#" role="menuitem" t-on-click="followerListMenuView.onClickAddFollowers">
+                                    Add Followers
+                                </a>
+                                <t t-if="followerListMenuView.followerViews.length > 0">
+                                    <div role="separator" class="dropdown-divider"/>
+                                </t>
+                            </t>
+                            <t t-if="followerListMenuView.followerViews.length > 0">
+                                <Follower
+                                    t-foreach="followerListMenuView.followerViews" t-as="followerView" t-key="followerView.localId"
+                                    className="'o_FollowerMenu_follower dropdown-item'"
+                                    record="followerView"
+                                />
+                            </t>
+                            <t t-elif="!followerListMenuView.chatterOwner.thread.hasWriteAccess">
+                                <div class="o_FollowerListMenu_noFollowers dropdown-item disabled">
+                                    No Followers
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

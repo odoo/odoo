@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.proxy.user</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='account_vendor_bills']" position="after">
+                <div attrs="{'invisible':[('country_code', '!=', 'IT')]}">
+                    <h2>Electronic Document Invoicing</h2>
+                    <div class="row mt16 o_settings_container" id='account_edi'>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <div class="group-content">
+                                    <field name="l10n_it_edi_proxy_current_state" invisible="1"/>
+                                    <span class="o_form_label">
+                                        Fattura Elettronica mode
+                                    </span>
+                                    <div class="text-muted">
+                                        In demo mode Odoo will just simulate the sending of invoices to the government.<br/>
+                                        In test mode (experimental) Odoo will send the invoices to a non-production service.
+                                        Saving this change will direct all companies on this database to this use this configuration.
+                                        Once registered for testing or official, the mode cannot be changed.
+                                    </div>
+                                    <field name="l10n_it_edi_sdicoop_demo_mode"
+                                           widget="radio"
+                                           options="{'horizontal': true}"/>
+                                </div>
+                                <div class="mt8 content-group" attrs="{'invisible': ['|',('l10n_it_edi_proxy_current_state','=','active'), '&amp;', ('l10n_it_edi_proxy_current_state','=','demo'), ('l10n_it_edi_sdicoop_demo_mode','=','demo')]}">
+                                    <span class="o_form_label">Allow Odoo to process invoices</span>
+                                    <div class="text-muted">
+                                        By checking this box, I accept that Odoo may process my invoices.
+                                    </div>
+                                    <div class="content-group">
+                                        <field name="l10n_it_edi_sdicoop_register"/>
+                                    </div>
+
+                                </div>
+                                <div class="text-success mt8" attrs="{'invisible': [('l10n_it_edi_proxy_current_state','in', ['inactive', 'demo'])]}">
+                                    An Official or Test service has been registered.
+                                </div>
+                                <div class="text-success mt8" attrs="{'invisible': ['|',('l10n_it_edi_proxy_current_state','!=', 'demo'), ('l10n_it_edi_sdicoop_demo_mode', '!=', 'demo')]}">
+                                    A Demo service is in use.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

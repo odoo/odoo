@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CalendarController" owl="1">
+        <div t-att-class="className" t-ref="root">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="props.display">
+                <t t-set-slot="layout-buttons">
+                    <t t-call="{{ props.buttonTemplate }}"/>
+                </t>
+
+                <div class="o_calendar_container">
+                    <MobileFilterPanel t-if="env.isSmall" t-props="mobileFilterPanelProps" />
+                    <t t-if="showCalendar" t-component="props.Renderer" t-props="rendererProps" />
+                    <div t-if="showSideBar" class="o_calendar_sidebar_container d-md-block">
+                        <div class="o_calendar_sidebar">
+                            <DatePicker t-if="!env.isSmall" t-props="datePickerProps" />
+                            <FilterPanel t-props="filterPanelProps" />
+                        </div>
+                    </div>
+                </div>
+            </Layout>
+        </div>
+    </t>
+
+    <t t-name="web.CalendarController.controlButtons" owl="1">
+        <div class="o_calendar_buttons">
+            <span t-if="!env.isSmall" class="o_calendar_navigation_buttons me-1">
+                <button
+                    class="btn btn-primary o_calendar_button_prev"
+                    title="Previous"
+                    aria-label="Previous"
+                    t-on-click.stop="() => this.setDate('previous')"
+                >
+                    <i class="fa fa-arrow-left" />
+                </button>
+                <button
+                    class="btn btn-primary mx-1 o_calendar_button_today"
+                    t-on-click.stop="() => this.setDate('today')"
+                >
+                    Today
+                </button>
+                <button
+                    class="btn btn-primary o_calendar_button_next"
+                    title="Next"
+                    aria-label="Next"
+                    t-on-click.stop="() => this.setDate('next')"
+                >
+                    <i class="fa fa-arrow-right" />
+                </button>
+            </span>
+            <span class="o_calendar_scale_buttons">
+                <Dropdown class="'btn-group'" togglerClass="'btn btn-secondary scale_button_selection text-uppercase'" hotkey="'v'" showCaret="true">
+                    <t t-set-slot="toggler">
+                        <t t-esc="scaleLabels[model.scale]" />
+                    </t>
+                    <t t-foreach="model.scales" t-as="scale" t-key="scale">
+                        <DropdownItem
+                            class="`o_calendar_button_${scale} btn btn-secondary text-uppercase`"
+                            hotkey="scale[0]"
+                            onSelected="() => this.setScale(scale)"
+                        >
+                            <t t-esc="scaleLabels[scale]" />
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </span>
+            <button t-if="env.isSmall" class="o_cp_today_button btn btn-sm btn-link" t-on-click="() => this.setDate('today')">
+                <span class="fa-stack o_calendar_button_today">
+                    <i class="fa fa-calendar-o fa-stack-2x" role="img" aria-label="Today" title="Today" />
+                    <strong class="o_calendar_text fa-stack-1x" t-esc="getTodayDay()" />
+                </span>
+            </button>
+        </div>
+    </t>
+
+</templates>

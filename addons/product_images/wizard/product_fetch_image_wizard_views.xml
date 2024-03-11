@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_fetch_image_wizard_view_form" model="ir.ui.view">
+        <field name="name">product.fetch.image.wizard.view</field>
+        <field name="model">product.fetch.image.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <p>
+                        You selected <field name="nb_products_selected"/> products,
+                        <field name="nb_products_to_process"/> of which will be processed.
+                        <span attrs="{'invisible': [('nb_products_unable_to_process', '=', 0)]}">
+                            <field name="nb_products_unable_to_process"/> products will not be
+                            processed because they either already have an image or their barcode
+                            number is not set.
+                        </span>
+                        <span attrs="{'invisible': [('nb_products_selected', '&lt;=', 10000)]}">
+                            As only 10,000 products can be processed per day, the remaining will be
+                            done tomorrow.
+                        </span>
+                    </p>
+                    <p attrs="{'invisible': [('nb_products_to_process', '=', 0)]}">
+                        Please note that some images might not be royalty-free. You should not
+                        publish these on your website.
+                    </p>
+                    <footer>
+                        <button name="action_fetch_image"
+                                type="object"
+                                string="Get Pictures"
+                                class="oe_highlight"
+                                attrs="{'invisible': [('nb_products_to_process', '=', 0)]}"/>
+                        <button special="cancel"
+                                string="Cancel"
+                                attrs="{'invisible': [('nb_products_to_process', '=', 0)]}"/>
+                        <button special="cancel"
+                                string="Cancel"
+                                class="oe_highlight"
+                                attrs="{'invisible': [('nb_products_to_process', '!=', 0)]}"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_template_action_get_pic_with_barcode" model="ir.actions.act_window">
+        <field name="name">Get Pictures from Google Images</field>
+        <field name="res_model">product.fetch.image.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+    </record>
+
+    <record id="product_product_action_get_pic_with_barcode" model="ir.actions.act_window">
+        <field name="name">Get Pictures from Google Images</field>
+        <field name="res_model">product.fetch.image.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="product.model_product_product"/>
+    </record>
+
+</odoo>

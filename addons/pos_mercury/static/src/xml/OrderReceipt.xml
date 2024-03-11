@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_mercury.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-foreach='receipt.paymentlines']" position="inside">
+            <t t-if="line.mercury_data">
+                <div class="pos-receipt-left-padding">
+                    <span>APPROVAL CODE: </span>
+                    <span>
+                        <t t-esc="line.mercury_auth_code" />
+                    </span>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('pos-receipt-order-data')]" position="after">
+            <div t-if="hasPosMercurySignature">
+                <br />
+                <div>CARDHOLDER WILL PAY CARD ISSUER</div>
+                <div>ABOVE AMOUNT PURSUANT</div>
+                <div>TO CARDHOLDER AGREEMENT</div>
+                <br />
+                <br />
+                <div>X______________________________</div>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

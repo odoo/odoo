@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Multi - Company Rules -->
+    <record id="sale_order_comp_rule" model="ir.rule">
+        <field name="name">Sales Order multi-company</field>
+        <field name="model_id" ref="model_sale_order"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="sale_order_line_comp_rule" model="ir.rule">
+        <field name="name">Sales Order Line multi-company</field>
+        <field name="model_id" ref="model_sale_order_line"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="sale_order_report_comp_rule" model="ir.rule">
+        <field name="name">Sales Order Analysis multi-company</field>
+        <field name="model_id" ref="model_sale_report"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <!-- Portal Access Rules -->
+    <record id="sale_order_rule_portal" model="ir.rule">
+        <field name="name">Portal Personal Quotations/Sales Orders</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="domain_force">[('message_partner_ids','child_of',[user.commercial_partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="False"/>
+    </record>
+
+    <record id="sale_order_line_rule_portal" model="ir.rule">
+        <field name="name">Portal Sales Orders Line</field>
+        <field name="model_id" ref="sale.model_sale_order_line"/>
+        <field name="domain_force">[('order_id.message_partner_ids','child_of',[user.commercial_partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <!-- Multi - Salesmen sales order assignation rules -->
+
+    <record id="sale_order_personal_rule" model="ir.rule">
+        <field name="name">Personal Orders</field>
+        <field ref="model_sale_order" name="model_id"/>
+        <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+    <record id="sale_order_see_all" model="ir.rule">
+        <field name="name">All Orders</field>
+        <field ref="model_sale_order" name="model_id"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+
+    <record id="sale_order_report_personal_rule" model="ir.rule">
+        <field name="name">Personal Orders Analysis</field>
+        <field ref="model_sale_report" name="model_id"/>
+        <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="sale_order_report_see_all" model="ir.rule">
+        <field name="name">All Orders Analysis</field>
+        <field ref="model_sale_report" name="model_id"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+
+    <record id="sale_order_line_personal_rule" model="ir.rule">
+        <field name="name">Personal Order Lines</field>
+        <field ref="model_sale_order_line" name="model_id"/>
+        <field name="domain_force">['|',('salesman_id','=',user.id),('salesman_id','=',False)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="sale_order_line_see_all" model="ir.rule">
+        <field name="name">All Orders Lines</field>
+        <field ref="model_sale_order_line" name="model_id"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+
+    <record id="account_invoice_report_rule_see_personal" model="ir.rule">
+        <field name="name">Personal Invoices Analysis</field>
+        <field name="model_id" ref="model_account_invoice_report"/>
+        <field name="domain_force">['|', ('invoice_user_id', '=', user.id), ('invoice_user_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="account_invoice_report_rule_see_all" model="ir.rule">
+        <field name="name">All Invoices Analysis</field>
+        <field name="model_id" ref="model_account_invoice_report"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+
+    <!-- Payment transactions and tokens access rules -->
+
+    <record id="payment_transaction_salesman_rule" model="ir.rule">
+        <field name="name">Access every payment transaction</field>
+        <field name="model_id" ref="payment.model_payment_transaction"/>
+        <!-- Reset the domain defined by payment.transaction_user_rule -->
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="payment_token_salesman_rule" model="ir.rule">
+        <field name="name">Access every payment token</field>
+        <field name="model_id" ref="payment.model_payment_token"/>
+        <!-- Reset the domain defined by payment.token_user_rule -->
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <!-- Multi - Salesmen invoice and account move assignation rules -->
+    <record id="account_invoice_rule_see_personal" model="ir.rule">
+        <field name="name">Personal Invoices</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="domain_force">[('move_type', 'in', ('out_invoice', 'out_refund')), '|', ('invoice_user_id', '=', user.id), ('invoice_user_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="account_invoice_rule_see_all" model="ir.rule">
+        <field name="name">All Invoices</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="domain_force">[('move_type', 'in', ('out_invoice', 'out_refund'))]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+
+    <record id="account_invoice_line_rule_see_personal" model="ir.rule">
+        <field name="name">Personal Invoice Lines</field>
+        <field name="model_id" ref="model_account_move_line"/>
+        <field name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_id.invoice_user_id', '=', user.id), ('move_id.invoice_user_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="account_invoice_line_rule_see_all" model="ir.rule">
+        <field name="name">All Invoice Lines</field>
+        <field name="model_id" ref="model_account_move_line"/>
+        <field name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund'))]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+
+    <!-- Wizard access rules -->
+    <record id="account_invoice_send_rule_see_personal" model="ir.rule">
+        <field name="name">Personal Invoice Send and Print</field>
+        <field name="model_id" ref="account.model_account_invoice_send"/>
+        <field name="domain_force">[('invoice_ids.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('invoice_ids.invoice_user_id', '=', user.id), ('invoice_ids.invoice_user_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="account_invoice_send_rule_see_all" model="ir.rule">
+        <field name="name">All Invoice Send and Print</field>
+        <field name="model_id" ref="account.model_account_invoice_send"/>
+        <field name="domain_force">[('invoice_ids.move_type', 'in', ('out_invoice', 'out_refund'))]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+
+    <record id="sale_payment_provider_onboarding_wizard_rule" model="ir.rule">
+        <field name="name">Payment Provider Onboarding Wizard Rule</field>
+        <field name="model_id" ref="model_sale_payment_provider_onboarding_wizard"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+    </record>
+
+    <record id="sale_advance_payment_inv_rule" model="ir.rule">
+        <field name="name">Sales Advance Payment Invoice Rule</field>
+        <field name="model_id" ref="model_sale_advance_payment_inv"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+    </record>
+
+    <record id="sale_order_cancel_rule" model="ir.rule">
+        <field name="name">Sales Order Cancel Rule</field>
+        <field name="model_id" ref="model_sale_order_cancel"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+    </record>
+
+</odoo>

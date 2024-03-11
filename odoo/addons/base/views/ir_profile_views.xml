@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ir_profile_view_search" model="ir.ui.view">
+        <field name="name">IR Profile Search</field>
+        <field name="model">ir.profile</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Name"/>
+                <field name="session" string="Session"/>
+                <filter name="group_session" string="Session" context="{'group_by':'session'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="ir_profile_view_list" model="ir.ui.view">
+        <field name="name">IR Profile List</field>
+        <field name="model">ir.profile</field>
+        <field name="arch" type="xml">
+            <tree string="Profile Session" default_order="session desc, id desc">
+                <field name="create_date"/>
+                <field name="session"/>
+                <field name="name"/>
+                <field name="entry_count"/>
+                <field name="sql_count" optional="hide"/>
+                <field name="speedscope_url" widget="url"/>
+                <field name="duration"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ir_profile_view_form" model="ir.ui.view">
+        <field name="name">IR Profile Form</field>
+        <field name="model">ir.profile</field>
+        <field name="arch" type="xml">
+            <form string="IR Profile">
+                <group>
+                    <field name="name"/>
+                    <field name="session"/>
+                    <field name="entry_count"/>
+                    <!-- Do not rely on sql field for the invisible attrs to avoid fetching whole trace from server. -->
+                    <field name="sql_count" attrs="{'invisible': [('sql_count', '=', 0)]}"/>
+                    <field name="speedscope_url" widget="url"/>
+                </group>
+                <group attrs="{'invisible': [('qweb','=', False)]}">
+                    <field name="qweb" widget="profiling_qweb_view" nolabel="1" colspan="2"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="enable_profiling_wizard" model="ir.ui.view">
+        <field name="name">Enable profiling</field>
+        <field name="model">base.enable.profiling.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Enable profiling">
+                <div class="alert alert-warning" role="alert">
+                    <h3>Profiling is currently disabled.</h3>
+                    Profiling is a developer feature that should be used with caution on production database.
+                    It may add some load on the server, and potentially make it less responsive.
+                    Enabling the profiling here allows all users to activate profiling on their session.
+                    Profiling can be disabled at any moment in the settings.
+                </div>
+                <group>
+                    <field name="duration"/>
+                    <field name="expiration"/>
+                </group>
+                <footer>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    <button string="Enable profiling" type="object" name="submit" class="btn btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_menu_ir_profile" model="ir.actions.act_window">
+        <field name="name">Ir profile</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ir.profile</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_group_session': 1}</field>
+    </record>
+
+    <menuitem
+        name="Profiling"
+        action="action_menu_ir_profile"
+        id="menu_ir_profile"
+        parent="base.next_id_9"/>
+
+</odoo>

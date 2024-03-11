@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 3. lande -->
+    <record id="fiscal_position_account_salgvare_3" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_3lande"/>
+        <field name="account_src_id" ref="a1010"/>
+        <field name="account_dest_id" ref="a1030"/>
+    </record>
+    <record id="fiscal_position_account_salgydelser_3" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_3lande"/>
+        <field name="account_src_id" ref="a1011"/>
+        <field name="account_dest_id" ref="a1031"/>
+    </record>
+    <record id="fiscal_position_account_koebvare_3" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_3lande"/>
+        <field name="account_src_id" ref="a2010"/>
+        <field name="account_dest_id" ref="a2030"/>
+    </record>
+    <record id="fiscal_position_account_koebydelser_3" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_3lande"/>
+        <field name="account_src_id" ref="a2011"/>
+        <field name="account_dest_id" ref="a2031"/>
+    </record>
+
+    <!-- EU lande -->
+    <record id="fiscal_position_account_salgvare_eu" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_eu_taxid"/>
+        <field name="account_src_id" ref="a1010"/>
+        <field name="account_dest_id" ref="a1020"/>
+    </record>
+    <record id="fiscal_position_account_salgydelser_eu" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_eu_taxid"/>
+        <field name="account_src_id" ref="a1011"/>
+        <field name="account_dest_id" ref="a1021"/>
+    </record>
+    <record id="fiscal_position_account_koebvare_eu" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_eu_taxid"/>
+        <field name="account_src_id" ref="a2010"/>
+        <field name="account_dest_id" ref="a2020"/>
+    </record>
+    <record id="fiscal_position_account_koebydelser_eu_taxid" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_eu_taxid"/>
+        <field name="account_src_id" ref="a2011"/>
+        <field name="account_dest_id" ref="a2021"/>
+    </record>
+</odoo>

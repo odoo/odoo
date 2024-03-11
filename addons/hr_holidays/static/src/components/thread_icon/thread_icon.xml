@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ThreadIcon" t-inherit-mode="extension">
+        <xpath expr="//*[@name='noImStatusCondition']" position="before">
+            <t t-elif="thread.channel.correspondent.im_status === 'leave_online'">
+                <div class="o_ThreadIcon_online fa fa-fw fa-plane" title="Online"/>
+            </t>
+            <t t-elif="thread.channel.correspondent.im_status === 'leave_away'">
+                <div class="o_ThreadIcon_away fa fa-fw fa-plane text-warning" title="Away"/>
+            </t>
+            <t t-elif="thread.channel.correspondent.im_status === 'leave_offline'">
+                <div class="o_ThreadIcon_offline fa fa-fw fa-plane" title="Out of office"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

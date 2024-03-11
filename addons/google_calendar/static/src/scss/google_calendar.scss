@@ -1,0 +1,25 @@
+.o_calendar_sidebar {
+    .bg-primary {
+        background-color: $o-enterprise-primary-color;
+    }
+    .o_google_sync_button {
+        padding: 0;
+        cursor: pointer;
+        font-size: 0.9em;
+    }
+    .o_google_sync_button_configured {
+        color: white;
+        height: 2em;
+
+        &:hover {
+            #google_check {
+                display: none;
+            }
+        }
+        &:not(:hover) {
+            #google_stop {
+                display: none;
+            }
+        }
+    }
+}

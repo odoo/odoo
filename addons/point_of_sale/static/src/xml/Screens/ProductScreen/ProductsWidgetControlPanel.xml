@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ProductsWidgetControlPanel" owl="1">
+        <div class="products-widget-control">
+            <div class="rightpane-header">
+                <t t-if="!props.hasNoCategories">
+                    <div class="categories-header">
+                    <!-- Breadcrumbs -->
+                        <div class="breadcrumbs">
+                            <span class="breadcrumb">
+                                <span class="breadcrumb-button breadcrumb-home" t-on-click="() => this.trigger('switch-category', 0)">
+                                    <i class="fa fa-home" role="img" aria-label="Home" title="Home"></i>
+                                </span>
+                            </span>
+                            <t t-foreach="props.breadcrumbs" t-as="category" t-key="category.id">
+                                <span class="breadcrumb">
+                                    <i class="breadcrumb-arrow fa fa-caret-right" aria-hidden="true"/>
+                                    <span class="breadcrumb-button"
+                                        t-on-click="() => this.trigger('switch-category', category.id)">
+                                        <t t-esc="category.name"></t>
+                                    </span>
+                                </span>
+                            </t>
+                        </div>
+                        <!-- Subcategories -->
+                        <div t-if="props.subcategories.length > 0 and !displayCategImages"  class="category-list simple">
+                            <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
+                                <span class="category-simple-button"
+                                    t-on-click="() => this.trigger('switch-category', category.id)">
+                                    <t t-esc="category.name" />
+                                </span>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+                <div class="search-bar-container sb-product">
+                    <span t-if="env.isMobile" class="oe_status oe_icon icon" t-on-click="_toggleMobileSearchbar">
+                        <i t-attf-class="fa {{props.mobileSearchBarIsShown ? 'fa-arrow-left' : 'fa-search'}}"/>
+                    </span>
+                    <t t-if="!env.isMobile || props.mobileSearchBarIsShown">
+                        <div class="pos-search-bar">
+                            <i class="fa fa-search" />
+                            <input t-ref="search-word-input-product" placeholder="Search Products..." type="text" autofocus="autofocus" t-on-keyup="updateSearch" />
+                            <i class="fa fa-times search-clear-partner" t-on-click="_clearSearch"/>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <t t-if="props.subcategories.length > 0 and displayCategImages">
+                <div class="categories">
+                    <div class="category-list-scroller">
+                        <div class="category-list">
+                            <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
+                                <CategoryButton category="category" />
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

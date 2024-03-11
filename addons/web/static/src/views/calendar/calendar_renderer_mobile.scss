@@ -1,0 +1,34 @@
+@include media-breakpoint-down(md) {
+
+    .o_calendar_renderer {
+        .fc-view {
+            &.fc-timeGrid-view {
+                .fc-axis {
+                    padding-left: 0;
+                }
+                .fc-week-number.fc-widget-header {
+                    font-weight: normal;
+                    white-space: normal;
+                }
+            }
+            &:not(.fc-timeGridDay-view) {
+                .fc-day-header, .fc-week-number.fc-widget-header {
+                    word-spacing: 250px; // force line break in week mode
+                    text-align: center;
+                }
+            }
+            &.fc-dayGridMonth-view {
+                padding-left: 0;
+                .fc-week-number:not(.fc-widget-header) {
+                    background-color: $gray-400;
+                    color: $gray-800;
+                }
+            }
+        }
+
+        .fc-more-popover .fc-close {
+            padding: 5px;
+        }
+    }
+
+}

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<odoo>
+
+        <!-- Partner kanban view inherit -->
+        <record id="res_partner_kanban_view" model="ir.ui.view">
+            <field name="name">res.partner.view.kanban.calendar</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <field name="mobile" position="after">
+                    <field name="meeting_count"/>
+                </field>
+                <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
+                    <a t-if="record.meeting_count.value>0" data-type="object" data-name="schedule_meeting"
+                       href="#" class="oe_kanban_action oe_kanban_action_a me-1">
+                        <span class="badge rounded-pill">
+                            <i class="fa fa-fw fa-calendar" aria-label="Meetings" role="img" title="Meetings"/>
+                            <t t-out="record.meeting_count.value"/>
+                        </span>
+                    </a>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Add contextual button on partner form view -->
+        <record id="view_partners_form" model="ir.ui.view">
+            <field name="name">res_partner.view.form.calendar</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <data>
+                    <div name="button_box" position="inside">
+                        <button class="oe_stat_button" type="object"
+                            name="schedule_meeting"
+                            icon="fa-calendar"
+                            context="{'partner_id': active_id, 'partner_name': name}">
+                            <field string="Meetings" name="meeting_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                </data>
+            </field>
+        </record>
+
+</odoo>

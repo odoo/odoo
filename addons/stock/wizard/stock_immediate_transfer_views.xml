@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_immediate_transfer" model="ir.ui.view">
+        <field name="name">stock.immediate.transfer.view.form</field>
+        <field name="model">stock.immediate.transfer</field>
+        <field name="arch" type="xml">
+            <form string="Immediate transfer?">
+                <p>You have not recorded <i>done</i> quantities yet, by clicking on <i>apply</i> Odoo will process all the quantities.</p>
+
+                <!-- Added to ensure a correct default_get behavior
+
+                The wizard is always opened with default_pick_ids values in context,
+                which are used to generate the backorder_confirmation_line_ids.
+
+                To ensure default_pick_ids is correctly converted from the context
+                by default_get, the field has to be present in the view.
+                -->
+                <field name="pick_ids" invisible="1"/>
+
+                <field name="show_transfers" invisible="1"/>
+                <field name="immediate_transfer_line_ids" nolabel="1" attrs="{'invisible': [('show_transfers', '=', False)]}">>
+                    <tree create="0" delete="0" editable="top">
+                        <field name="picking_id"/>
+                        <field name="to_immediate" widget="boolean_toggle" options="{'autosave': False}"/>
+                    </tree>
+                </field>
+
+                <footer>
+                    <button name="process" string="Apply" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

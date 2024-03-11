@@ -1,0 +1,1587 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Fiscal Position Templates -->
+
+    <record id="fiscal_position_template_ab_en" model="account.fiscal.position.template">
+        <field name="name">Alberta (AB)</field>
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_ab')])]"/>
+    </record>
+
+    <record id="fiscal_position_template_bc_en" model="account.fiscal.position.template">
+        <field name="name">British Columbia (BC)</field>
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_bc')])]"/>
+    </record>
+
+    <record id="fiscal_position_template_mb_en" model="account.fiscal.position.template">
+        <field name="name">Manitoba (MB)</field>
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_mb')])]"/>
+    </record>
+
+    <record id="fiscal_position_template_nb_en" model="account.fiscal.position.template">
+        <field name="name">New Brunswick (NB)</field>
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_nb')])]"/>
+    </record>
+
+    <record id="fiscal_position_template_nl_en" model="account.fiscal.position.template">
+        <field name="name">Newfoundland and Labrador (NL)</field>
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_nl')])]"/>
+    </record>
+
+    <record id="fiscal_position_template_ns_en" model="account.fiscal.position.template">
+        <field name="name">Nova Scotia (NS)</field>
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_ns')])]"/>
+    </record>
+
+    <record id="fiscal_position_template_nt_en" model="account.fiscal.position.template">
+        <field name="name">Northwest Territories (NT)</field>
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_nt')])]"/>
+    </record>
+
+    <record id="fiscal_position_template_nu_en" model="account.fiscal.position.template">
+        <field name="name">Nunavut (NU)</field>
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_nu')])]"/>
+    </record>
+
+    <record id="fiscal_position_template_on_en" model="account.fiscal.position.template">
+        <field name="name">Ontario (ON)</field>
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_on')])]"/>
+    </record>
+
+    <record id="fiscal_position_template_pe_en" model="account.fiscal.position.template">
+        <field name="name">Prince Edward Islands (PE)</field>
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_pe')])]"/>
+    </record>
+
+    <record id="fiscal_position_template_qc_en" model="account.fiscal.position.template">
+        <field name="name">Quebec (QC)</field>
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_qc')])]"/>
+    </record>
+
+    <record id="fiscal_position_template_sk_en" model="account.fiscal.position.template">
+        <field name="name">Saskatchewan (SK)</field>
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_sk')])]"/>
+    </record>
+
+    <record id="fiscal_position_template_yt_en" model="account.fiscal.position.template">
+        <field name="name">Yukon (YT)</field>
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ca"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ca_yt')])]"/>
+    </record>
+
+    <record id="fiscal_position_template_intl_en" model="account.fiscal.position.template">
+        <field name="sequence">1</field>
+        <field name="name">International (INTL)</field>
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="auto_apply" eval="True"/>
+    </record>
+
+    <!--  Company is in Alberta (default is gst) -->
+
+    <record id="fiscal_position_tax_template_ab2nb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nb_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ab2nl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nl_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ab2ns_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ns_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ab2on_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_on_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ab2pe_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_pe_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ab2intl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+    </record>
+
+    <!-- Purchases -->
+
+    <record id="fiscal_position_tax_template_intl2ab_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="gst_purc_en"/>
+    </record>
+
+    <!-- Company is in British Columbia (default is gstpst_bc) -->
+
+    <!-- Sale taxes -->
+
+    <record id="fiscal_position_tax_template_bc2ab_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ab_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_bc2mb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_mb_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_bc2nb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nb_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_bc2nl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nl_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_bc2ns_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ns_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_bc2nt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nt_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_bc2nu_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nu_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_bc2on_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_on_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_bc2pe_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_pe_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_bc2qc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_qc_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_bc2sk_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_sk_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_bc2yt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_yt_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_bc2intl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_sale_en"/>
+    </record>
+
+    <!-- Purchase taxes -->
+
+    <record id="fiscal_position_tax_template_ab2bc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ab_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_mb2bc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_mb_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nb2bc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nb_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nl2bc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nl_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ns2bc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ns_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nt2bc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nt_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nu2bc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nu_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_on2bc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_on_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_pe2bc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_pe_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_qc2bc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_qc_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_sk2bc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_sk_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_yt2bc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_yt_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_intl2bc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="gstpst_bc_purc_en"/>
+    </record>
+
+    <!-- Company is in Manitoba (default is gstpst_mb) -->
+
+    <!-- Sale Taxes -->
+
+    <record id="fiscal_position_tax_template_mb2ab_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ab_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_mb2bc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_bc_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_mb2nb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nb_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_mb2nl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nl_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_mb2ns_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ns_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_mb2nt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nt_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_mb2nu_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nu_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_mb2on_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_on_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_mb2pe_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_pe_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_mb2qc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_qc_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_mb2sk_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_sk_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_mb2yt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_yt_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_mb2intl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_sale_en"/>
+    </record>
+
+    <!-- Purchase Taxes -->
+
+    <record id="fiscal_position_tax_template_ab2mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ab_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_bc2mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_bc_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nb2mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nb_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nl2mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nl_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ns2mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ns_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nt2mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nt_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nu2mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nu_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_on2mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_on_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_pe2mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_pe_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_qc2mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_qc_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_sk2mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_sk_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_yt2mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_yt_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_yt2intl_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="gstpst_mb_purc_en"/>
+    </record>
+
+    <!--  Company is in New Brunswick (default is hst13) -->
+
+    <record id="fiscal_position_tax_template_nb2ab_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ab_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nb2bc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_bc_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nb2mb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_mb_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nb2nl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nl_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nb2ns_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ns_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nb2nt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nt_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nb2nu_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nu_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nb2pe_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_pe_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nb2qc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_qc_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nb2sk_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_sk_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nb2yt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_yt_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nb2intl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+    </record>
+
+    <!-- Purchases -->
+
+    <record id="fiscal_position_tax_template_intl2nb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="hst13_purc_en"/>
+    </record>
+
+    <!--  Company is in Newfoundland and Labrador (default is hst13) -->
+    
+    <!-- Already created by nb2ab_sale
+    <record id="fiscal_position_tax_template_nl2ab_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ab_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by nb2bc_sale
+    <record id="fiscal_position_tax_template_nl2bc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_bc_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by nb2mb_sale
+    <record id="fiscal_position_tax_template_nl2mb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_mb_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already creted by nb2ns_sale
+    <record id="fiscal_position_tax_template_nl2ns_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ns_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    Already creted by nb2nt_sale
+    <record id="fiscal_position_tax_template_nl2nt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nt_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created nb2nu_sale
+    <record id="fiscal_position_tax_template_nl2nu_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nu_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by nb2pe_sale
+    <record id="fiscal_position_tax_template_nl2pe_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_pe_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    Already created by nb2qc_sale
+    <record id="fiscal_position_tax_template_nl2qc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_qc_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by nb2sk_sale
+    <record id="fiscal_position_tax_template_nl2sk_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_sk_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by nb2yt_sale
+    <record id="fiscal_position_tax_template_nl2yt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_yt_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by nb2intl_sale
+    <record id="fiscal_position_tax_template_nl2intl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+    </record>
+    -->
+
+    <!-- Purchases -->
+
+    <!-- Already created by intl2nb_purc
+    <record id="fiscal_position_tax_template_intl2nl_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="hst13_purc_en"/>
+    </record>
+    -->
+
+    <!--  Company is in Nova Scotia (default is hst15) -->
+
+    <record id="fiscal_position_tax_template_ns2ab_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ab_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ns2bc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_bc_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ns2mb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_mb_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ns2nb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nb_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ns2nl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nl_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ns2nt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nt_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ns2nu_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nu_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ns2on_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_on_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ns2qc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_qc_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ns2sk_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_sk_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ns2yt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_yt_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ns2intl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+    </record>
+
+    <!-- Purchases -->
+
+    <record id="fiscal_position_tax_template_intl2ns_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="hst15_purc_en"/>
+    </record>
+
+    <!--  Company is in Northwest Territories (default is gst) -->
+
+    <!-- Already created by ab2nb_sale
+    <record id="fiscal_position_tax_template_nt2nb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nb_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    Already created by ab2nl_sale
+    <record id="fiscal_position_tax_template_nt2nl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nl_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    Already created by ab2ns_sale
+    <record id="fiscal_position_tax_template_nt2ns_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ns_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    Already created by ab2on_sale
+    <record id="fiscal_position_tax_template_nt2on_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_on_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    Already created by ab2pe_sale
+    <record id="fiscal_position_tax_template_nt2pe_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_pe_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    Already created by ab2intl_sale
+    <record id="fiscal_position_tax_template_nt2intl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+    </record>
+    -->
+
+    <!-- Purchases -->
+
+    <!-- Already created by intl2ab_purc
+    <record id="fiscal_position_tax_template_intl2nt_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="gst_purc_en"/>
+    </record>
+    -->
+
+    <!--  Company is in Nunavut (default is gst) -->
+
+    <!-- Already created by ab2nb_sale
+    <record id="fiscal_position_tax_template_nu2nb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nb_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    Already created by ab2nl_sale
+    <record id="fiscal_position_tax_template_nu2nl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nl_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    Already created by ab2ns_sale
+    <record id="fiscal_position_tax_template_nu2ns_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ns_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    Already created by ab2on_sale
+    <record id="fiscal_position_tax_template_nu2on_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_on_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    Already created by ab2pe_sale
+    <record id="fiscal_position_tax_template_nu2pe_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_pe_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    Already created by ab2intl_sale
+    <record id="fiscal_position_tax_template_nu2intl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+    </record>
+    -->
+
+    <!-- Purchases -->
+
+    <!-- Already created by intl2ab_purc
+    <record id="fiscal_position_tax_template_intl2nu_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="gst_purc_en"/>
+    </record>
+    -->
+
+    <!--  Company is in Ontario (default is hst13) -->
+
+    <!-- Already created nb2ab_sale
+    <record id="fiscal_position_tax_template_on2ab_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ab_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by nb2bc_sale
+    <record id="fiscal_position_tax_template_on2bc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_bc_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by nb2mb_sale
+    <record id="fiscal_position_tax_template_on2mb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_mb_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by nb2ns_sale
+    <record id="fiscal_position_tax_template_on2ns_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ns_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    Already created by nb2nt_sale
+    <record id="fiscal_position_tax_template_on2nt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nt_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created nb2nu_sale
+    <record id="fiscal_position_tax_template_on2nu_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nu_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by nb2pe_sale
+    <record id="fiscal_position_tax_template_on2pe_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_pe_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    Already created by nb2qc_sale
+    <record id="fiscal_position_tax_template_on2qc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_qc_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by nb2sk_sale
+    <record id="fiscal_position_tax_template_on2sk_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_sk_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by nb2yt_sale
+    <record id="fiscal_position_tax_template_on2yt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_yt_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by nb2intl_sale
+    <record id="fiscal_position_tax_template_on2intl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="hst13_sale_en"/>
+    </record>
+    -->
+
+    <!-- Purchases --> 
+
+    <!-- Already created by intl2nb_purc
+    <record id="fiscal_position_tax_template_intl2on_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="hst13_purc_en"/>
+    </record>
+    -->
+
+    <!--  Company is in Prince Edward Islands (default is hst15) -->
+
+    <!-- Already created by ns2ab_sale
+    <record id="fiscal_position_tax_template_pe2ab_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ab_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by ns2bc_sale
+    <record id="fiscal_position_tax_template_pe2bc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_bc_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by ns2mb_sale
+    <record id="fiscal_position_tax_template_pe2mb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_mb_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by ns2nb_sale
+    <record id="fiscal_position_tax_template_pe2nb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nb_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    Already created by ns2nl_sale
+    <record id="fiscal_position_tax_template_pe2nl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nl_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    Already created by ns2nt_sale
+    <record id="fiscal_position_tax_template_pe2nt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nt_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by ns2nu_sale
+    <record id="fiscal_position_tax_template_pe2nu_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nu_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by ns2on_sale
+    <record id="fiscal_position_tax_template_pe2on_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_on_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    Already created by ns2qc_sale
+    <record id="fiscal_position_tax_template_pe2qc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_qc_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by ns2sk_sale
+    <record id="fiscal_position_tax_template_pe2sk_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_sk_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by ns2yt_sale
+    <record id="fiscal_position_tax_template_pe2yt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_yt_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    Already created by ns2intl_sale
+    <record id="fiscal_position_tax_template_pe2intl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="hst15_sale_en"/>
+    </record>
+    -->
+
+    <!-- Purchases -->
+
+    <!-- Already created by intl2ns_purc
+    <record id="fiscal_position_tax_template_intl2pe_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="hst15_purc_en"/>
+    </record>
+    -->
+
+    <!--  Company is in Quebec (default is gstqst) -->
+
+    <!-- Sale Taxes -->
+
+    <record id="fiscal_position_tax_template_qc2ab_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ab_en"/>
+        <field name="tax_src_id" ref="gstqst_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_qc2bc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_bc_en"/>
+        <field name="tax_src_id" ref="gstqst_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_qc2mb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_mb_en"/>
+        <field name="tax_src_id" ref="gstqst_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_qc2nb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nb_en"/>
+        <field name="tax_src_id" ref="gstqst_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_qc2nl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nl_en"/>
+        <field name="tax_src_id" ref="gstqst_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_qc2ns_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ns_en"/>
+        <field name="tax_src_id" ref="gstqst_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_qc2nt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nt_en"/>
+        <field name="tax_src_id" ref="gstqst_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_qc2nu_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nu_en"/>
+        <field name="tax_src_id" ref="gstqst_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_qc2on_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_on_en"/>
+        <field name="tax_src_id" ref="gstqst_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_qc2pe_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_pe_en"/>
+        <field name="tax_src_id" ref="gstqst_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_qc2sk_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_sk_en"/>
+        <field name="tax_src_id" ref="gstqst_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_qc2yt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_yt_en"/>
+        <field name="tax_src_id" ref="gstqst_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_qc2intl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="gstqst_sale_en"/>
+    </record>
+
+    <!-- Purchase Taxes -->
+
+    <record id="fiscal_position_tax_template_ab2qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ab_en"/>
+        <field name="tax_src_id" ref="gstqst_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_bc2qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_bc_en"/>
+        <field name="tax_src_id" ref="gstqst_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_mb2qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_mb_en"/>
+        <field name="tax_src_id" ref="gstqst_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nb2qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nb_en"/>
+        <field name="tax_src_id" ref="gstqst_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nl2qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nl_en"/>
+        <field name="tax_src_id" ref="gstqst_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ns2qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ns_en"/>
+        <field name="tax_src_id" ref="gstqst_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nt2qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nt_en"/>
+        <field name="tax_src_id" ref="gstqst_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nu2qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nu_en"/>
+        <field name="tax_src_id" ref="gstqst_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_on2qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_on_en"/>
+        <field name="tax_src_id" ref="gstqst_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_pe2qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_pe_en"/>
+        <field name="tax_src_id" ref="gstqst_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_sk2qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_sk_en"/>
+        <field name="tax_src_id" ref="gstqst_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_yt2qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_yt_en"/>
+        <field name="tax_src_id" ref="gstqst_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_intl2qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="gstqst_purc_en"/>
+    </record>
+
+    <!--  Company is in Saskatchewan (default is gstpst_sk) -->
+
+    <!-- Sale Taxes -->
+
+    <record id="fiscal_position_tax_template_sk2ab_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ab_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_sk2bc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_bc_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_sk2mb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_mb_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_sk2nb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nb_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_sk2nl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nl_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_sk2ns_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ns_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_sk2nt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nt_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_sk2nu_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nu_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_sk2on_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_on_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_sk2pe_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_pe_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_sk2qc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_qc_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_sk2yt_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_yt_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_sale_en"/>
+        <field name="tax_dest_id" ref="gst_sale_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_sk2intl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_sale_en"/>
+    </record>
+
+    <!-- Purchase Taxes -->
+
+    <record id="fiscal_position_tax_template_ab2sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ab_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_bc2sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_bc_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_mb2sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_mb_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nb2sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nb_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nl2sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nl_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_ns2sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ns_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nt2sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nt_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_nu2sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nu_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_on2sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_on_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_pe2sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_pe_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_qc2sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_qc_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_yt2sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_yt_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_purc_en"/>
+        <field name="tax_dest_id" ref="gst_purc_en"/>
+    </record>
+
+    <record id="fiscal_position_tax_template_intl2yt_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="gstpst_sk_purc_en"/>
+    </record>
+
+    <!--  Company is in Yukon (default is gst) -->
+
+    <!-- Already created by ab2nb_sale
+    <record id="fiscal_position_tax_template_yt2nb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nb_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    Already created by ab2nl_sale
+    <record id="fiscal_position_tax_template_yt2nl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_nl_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    Already created by ab2ns_sale
+    <record id="fiscal_position_tax_template_yt2ns_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ns_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    Already created by ab2on_sale
+    <record id="fiscal_position_tax_template_yt2on_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_on_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst13_sale_en"/>
+    </record>
+
+    Already created by ab2pe_sale
+    <record id="fiscal_position_tax_template_yt2pe_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_pe_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+        <field name="tax_dest_id" ref="hst15_sale_en"/>
+    </record>
+
+    Already created by ab2intl_sale
+    <record id="fiscal_position_tax_template_yt2intl_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="gst_sale_en"/>
+    </record>
+    -->
+
+    <!-- Purchases -->
+
+    <!-- Already created by intl2ab_purc
+    <record id="fiscal_position_tax_template_intl2yt_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="tax_src_id" ref="gst_purc_en"/>
+    </record>
+    -->
+
+    <!-- Accounts mapping -->
+
+    <!-- Alberta fiscal position -->
+
+    <record id="fiscal_position_account_template_2ab_sale_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_ab_en"/>
+        <field name="account_src_id" ref="chart411_en"/>
+        <field name="account_dest_id" ref="chart413_en"/>
+    </record>
+
+    <record id="fiscal_position_account_template_ab2_purc_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_ab_en"/>
+        <field name="account_src_id" ref="chart5111_en"/>
+        <field name="account_dest_id" ref="chart5113_en"/>
+    </record>
+
+    <!-- British Columbia fiscal position -->
+
+    <record id="fiscal_position_account_template_2bc_sale_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_bc_en"/>
+        <field name="account_src_id" ref="chart411_en"/>
+        <field name="account_dest_id" ref="chart413_en"/>
+    </record>
+
+    <record id="fiscal_position_account_template_bc2_purc_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_bc_en"/>
+        <field name="account_src_id" ref="chart5111_en"/>
+        <field name="account_dest_id" ref="chart5113_en"/>
+    </record>
+
+    <!-- Manitoba fiscal position -->
+
+    <record id="fiscal_position_account_template_2mb_sale_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_mb_en"/>
+        <field name="account_src_id" ref="chart411_en"/>
+        <field name="account_dest_id" ref="chart413_en"/>
+    </record>
+
+    <record id="fiscal_position_account_template_mb2_purc_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_mb_en"/>
+        <field name="account_src_id" ref="chart5111_en"/>
+        <field name="account_dest_id" ref="chart5113_en"/>
+    </record>
+
+    <!-- New Brunswick fiscal position -->
+
+    <record id="fiscal_position_account_template_2nb_sale_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_nb_en"/>
+        <field name="account_src_id" ref="chart411_en"/>
+        <field name="account_dest_id" ref="chart412_en"/>
+    </record>
+
+    <record id="fiscal_position_account_template_nb2_purc_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_nb_en"/>
+        <field name="account_src_id" ref="chart5111_en"/>
+        <field name="account_dest_id" ref="chart5112_en"/>
+    </record>
+
+    <!-- Newfoundland and Labrador fiscal position -->
+
+    <record id="fiscal_position_account_template_2nl_sale_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_nl_en"/>
+        <field name="account_src_id" ref="chart411_en"/>
+        <field name="account_dest_id" ref="chart412_en"/>
+    </record>
+
+    <record id="fiscal_position_account_template_nl2_purc_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_nl_en"/>
+        <field name="account_src_id" ref="chart5111_en"/>
+        <field name="account_dest_id" ref="chart5112_en"/>
+    </record>
+
+    <!-- Nova Scotia fiscal position -->
+
+    <record id="fiscal_position_account_template_2ns_sale_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_ns_en"/>
+        <field name="account_src_id" ref="chart411_en"/>
+        <field name="account_dest_id" ref="chart412_en"/>
+    </record>
+
+    <record id="fiscal_position_account_template_ns2_purc_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_ns_en"/>
+        <field name="account_src_id" ref="chart5111_en"/>
+        <field name="account_dest_id" ref="chart5112_en"/>
+    </record>
+
+    <!-- Nunavut fiscal position -->
+
+    <record id="fiscal_position_account_template_2nu_sale_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_nu_en"/>
+        <field name="account_src_id" ref="chart411_en"/>
+        <field name="account_dest_id" ref="chart413_en"/>
+    </record>
+
+    <record id="fiscal_position_account_template_nu2_purc_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_nu_en"/>
+        <field name="account_src_id" ref="chart5111_en"/>
+        <field name="account_dest_id" ref="chart5113_en"/>
+    </record>
+
+    <!-- Northwest Territories fiscal position -->
+
+    <record id="fiscal_position_account_template_2nt_sale_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_nt_en"/>
+        <field name="account_src_id" ref="chart411_en"/>
+        <field name="account_dest_id" ref="chart413_en"/>
+    </record>
+
+    <record id="fiscal_position_account_template_nt2_purc_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_nt_en"/>
+        <field name="account_src_id" ref="chart5111_en"/>
+        <field name="account_dest_id" ref="chart5113_en"/>
+    </record>
+
+    <!-- Ontario fiscal position -->
+
+    <record id="fiscal_position_account_template_2on_sale_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_on_en"/>
+        <field name="account_src_id" ref="chart411_en"/>
+        <field name="account_dest_id" ref="chart412_en"/>
+    </record>
+
+    <record id="fiscal_position_account_template_on2_purc_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_on_en"/>
+        <field name="account_src_id" ref="chart5111_en"/>
+        <field name="account_dest_id" ref="chart5112_en"/>
+    </record>
+
+    <!-- Prince Edward Islands fiscal position -->
+
+    <record id="fiscal_position_account_template_2pe_sale_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_pe_en"/>
+        <field name="account_src_id" ref="chart411_en"/>
+        <field name="account_dest_id" ref="chart412_en"/>
+    </record>
+
+    <record id="fiscal_position_account_template_pe2_purc_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_pe_en"/>
+        <field name="account_src_id" ref="chart5111_en"/>
+        <field name="account_dest_id" ref="chart5112_en"/>
+    </record>
+
+    <!-- Quebec fiscal position -->
+
+    <record id="fiscal_position_account_template_2qc_sale_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_qc_en"/>
+        <field name="account_src_id" ref="chart411_en"/>
+        <field name="account_dest_id" ref="chart413_en"/>
+    </record>
+
+    <record id="fiscal_position_account_template_qc2_purc_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_qc_en"/>
+        <field name="account_src_id" ref="chart5111_en"/>
+        <field name="account_dest_id" ref="chart5113_en"/>
+    </record>
+
+    <!-- Saskatchewan fiscal position -->
+
+    <record id="fiscal_position_account_template_2sk_sale_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_sk_en"/>
+        <field name="account_src_id" ref="chart411_en"/>
+        <field name="account_dest_id" ref="chart413_en"/>
+    </record>
+
+    <record id="fiscal_position_account_template_sk2_purc_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_sk_en"/>
+        <field name="account_src_id" ref="chart5111_en"/>
+        <field name="account_dest_id" ref="chart5113_en"/>
+    </record>
+
+    <!-- Yukon fiscal position -->
+
+    <record id="fiscal_position_account_template_2yt_sale_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_yt_en"/>
+        <field name="account_src_id" ref="chart411_en"/>
+        <field name="account_dest_id" ref="chart413_en"/>
+    </record>
+
+    <record id="fiscal_position_account_template_yt2_purc_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_yt_en"/>
+        <field name="account_src_id" ref="chart5111_en"/>
+        <field name="account_dest_id" ref="chart5113_en"/>
+    </record>
+
+    <!-- International fiscal position -->
+
+    <record id="fiscal_position_account_template_ab2intl_sale_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="account_src_id" ref="chart411_en"/>
+        <field name="account_dest_id" ref="chart414_en"/>
+    </record>
+
+    <record id="fiscal_position_account_template_intl2_purc_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_intl_en"/>
+        <field name="account_src_id" ref="chart5111_en"/>
+        <field name="account_dest_id" ref="chart5114_en"/>
+    </record>
+</odoo>

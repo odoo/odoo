@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Account Tax Templates -->
+
+        <record id="view_account_tax_template_form" model="ir.ui.view">
+            <field name="name">account.tax.template.form</field>
+            <field name="model">account.tax.template</field>
+            <field name="arch" type="xml">
+                <form string="Account Tax Template">
+                    <sheet>
+                        <group name="main_group">
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="type_tax_use"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="definition" string="Definition">
+                                <group name="tax_definitions">
+                                    <group>
+                                        <field name="amount_type" />
+                                        <label for="amount" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                        <div attrs="{'invisible':[('amount_type','=', 'group')]}">
+                                            <field name="amount" class="oe_inline" />
+                                            <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}">%</span>
+                                        </div>
+                                    </group>
+                                </group>
+                                <field name="children_tax_ids"
+                                    attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','none')]}"
+                                    domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">
+                                    <tree string="Children Taxes">
+                                        <field name="sequence" widget="handle" />
+                                        <field name="name"/>
+                                        <field name="amount_type" />
+                                        <field name="amount" />
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="advanced_options" string="Advanced Options">
+                                <group name="advanced_definitions">
+                                    <group>
+                                        <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                        <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
+                                    </group>
+                                    <group name="price_definitions">
+                                        <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
+                                        <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
+                                        <field name="is_base_affected"
+                                               attrs="{'invisible': ['|', ('amount_type','=', 'group'), ('price_include', '=', True)]}"/>
+                                    </group>
+                                    <group name="tax_configuration">
+                                        <field name="active" groups="base.group_no_one"/>
+                                        <field name="tax_exigibility" widget="radio" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                        <field name="cash_basis_transition_account_id" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_tax_template_tree" model="ir.ui.view">
+            <field name="name">account.tax.template.tree</field>
+            <field name="model">account.tax.template</field>
+            <field name="arch" type="xml">
+                <tree string="Account Tax Template">
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_tax_template_search" model="ir.ui.view">
+            <field name="name">account.tax.template.search</field>
+            <field name="model">account.tax.template</field>
+            <field name="arch" type="xml">
+                <search string="Search Tax Templates">
+                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('description', 'ilike', self)]" string="Tax Template"/>
+                    <field name="chart_template_id"/>
+                    <filter string="Sale" name="sale" domain="[('type_tax_use', '=', 'sale')]" help="Taxes used in Sales"/>
+                    <filter string="Purchase" name="purchase" domain="[('type_tax_use', '=', 'purchase')]" help="Taxes used in Purchases"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_account_tax_template_form" model="ir.actions.act_window">
+            <field name="name">Tax Templates</field>
+            <field name="res_model">account.tax.template</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_account_tax_template_search"/>
+        </record>
+
+         <!-- Fiscal Position Templates -->
+
+        <record id="view_account_position_template_search" model="ir.ui.view">
+            <field name="name">account.fiscal.position.template.search</field>
+            <field name="model">account.fiscal.position.template</field>
+            <field name="arch" type="xml">
+                <search string="Fiscal Position">
+                    <field name="name" string="Fiscal Position Template"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_account_position_template_form" model="ir.ui.view">
+            <field name="name">account.fiscal.position.template.form</field>
+            <field name="model">account.fiscal.position.template</field>
+            <field name="arch" type="xml">
+                <form string="Fiscal Position Template">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="chart_template_id"/>
+                    </group>
+                    <field name="tax_ids">
+                        <tree string="Taxes Mapping" editable="bottom">
+                            <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]"/>
+                            <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]"/>
+                        </tree>
+                        <form string="Taxes Mapping">
+                            <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]"/>
+                            <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]"/>
+                        </form>
+                    </field>
+                    <field name="account_ids">
+                        <tree string="Accounts Mapping" editable="bottom">
+                            <field name="account_src_id"/>
+                            <field name="account_dest_id"/>
+                        </tree>
+                        <form string="Accounts Mapping">
+                            <field name="account_src_id"/>
+                            <field name="account_dest_id"/>
+                        </form>
+                    </field>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_position_template_tree" model="ir.ui.view">
+            <field name="name">account.fiscal.position.template.tree</field>
+            <field name="model">account.fiscal.position.template</field>
+            <field name="arch" type="xml">
+                <tree string="Fiscal Position">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

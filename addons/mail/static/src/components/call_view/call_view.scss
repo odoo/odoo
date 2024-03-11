@@ -1,0 +1,14 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_CallView {
+    height: 50%; // ensures that the view returns to the right height when resized
+    min-height: 50%;
+    background: var(--CallView-background-color, #{$dark});
+
+    &.o-isMinimized {
+        height: 20%; // ensures that the view returns to the right height when resized
+        min-height: #{"max(20%, 130px)"};
+    }
+}

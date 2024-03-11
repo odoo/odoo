@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="asset_view_form" model="ir.ui.view">
+        <field name="model">ir.asset</field>
+        <field name="arch" type="xml">
+            <form string="Assets">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="bundle"/>
+                            <field name="directive"/>
+                            <field name="sequence"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name="target" attrs="{ 'invisible': [('directive', '!=', 'replace')] }"/>
+                            <field name="path"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="asset_view_tree" model="ir.ui.view">
+        <field name="model">ir.asset</field>
+        <field name="arch" type="xml">
+            <tree string="Assets">
+                <field name="name"/>
+                <field name="bundle"/>
+                <field name="sequence"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="asset_view_search" model="ir.ui.view">
+        <field name="model">ir.asset</field>
+        <field name="arch" type="xml">
+            <search string="Assets">
+                <field name="name"/>
+                <field name="bundle"/>
+                <field name="directive"/>
+                <field name="sequence"/>
+                <field name="path"/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_asset" model="ir.actions.act_window">
+        <field name="name">Assets</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ir.asset</field>
+        <field name="view_id" ref="asset_view_tree"/>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+
+    <menuitem action="action_asset" id="menu_action_asset" parent="base.next_id_9"/>
+</odoo>

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- EVENT FOLDABLE BADGE -->
+
+<template id="event_report_template_foldable_badge">
+    <div class="o_event_foldable_badge_container">
+        <div class="row">
+            <!-- Front -->
+            <div class="page p-1 col-6 o_event_foldable_badge_top">
+                <div class="oe_structure"/>
+            </div>
+            <!-- Back -->
+            <div class="page col-6 o_event_foldable_badge_top o_event_foldable_badge_ticket pt-4">
+                <div class="oe_structure"/>
+                <div class="o_event_foldable_badge_ticket_wrapper p-2">
+                    <div class="o_event_foldable_badge_ticket_wrapper_top page">
+                        <h5 class="o_event_foldable_badge_event_name text-odoo fw-bold text-center" t-field="event.name"/>
+                        <div class="text-center o_event_foldable_badge_font_small">
+                            <span itemprop="startDate" t-field="event.date_begin"
+                                t-options='{"widget": "datetime", "date_only": True}'
+                                class="fw-bold"/>
+                            <span itemprop="startDateTime" t-field="event.date_begin"
+                                class="fw-bold"
+                                t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
+                            <span class="fa fa-arrow-right o_event_foldable_badge_font_faded"/>
+                            <span t-if="not event.is_one_day"
+                                itemprop="endDate" t-field="event.date_end"
+                                t-options='{"widget": "datetime", "date_only": True}'
+                                class="fw-bold"/>
+                            <span itemprop="endDateTime" t-field="event.date_end"
+                                class="fw-bold"
+                                t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
+                        </div>
+                        <div class="o_event_foldable_badge_font_faded o_event_foldable_badge_font_small text-center">
+                            (<span itemprop="timezone" t-out="event.date_tz"/>)
+                        </div>
+                        <div t-if="event.address_id" class="o_event_foldable_badge_font_faded o_event_foldable_badge_font_small text-center">
+                            <t t-call="event.event_report_template_formatted_event_address"/>
+                        </div>
+                        <div class="text-center mt-5 pt-2">
+                            <h2 t-if="attendee" t-field="attendee.name"/>
+                            <h2 t-elif="not attendee"><span>John Doe</span></h2>
+                            <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
+                            <div t-if="attendee" class="o_event_foldable_badge_font_faded" t-field="attendee.event_ticket_id"/>
+                            <div t-elif="first_ticket" t-out="first_ticket.name"
+                                class="o_event_foldable_badge_font_faded"/>
+                        </div>
+                    </div>
+                    <div class="o_event_foldable_badge_barcode mt-2">
+                        <div class="o_event_foldable_badge_barcode_container">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Inner left -->
+            <div class="page o_event_foldable_badge_bottom o_event_foldable_badge_left p-1 px-2 col-6 overflow-hidden">
+                <div class="oe_structure"/>
+                <div t-field="event.ticket_instructions" class="p-4"></div>
+            </div>
+            <!-- Inner right -->
+            <div class="page o_event_foldable_badge_bottom o_event_foldable_badge_right col-6 text-center">
+                <div class="oe_structure"/>
+                <div class="h-50 col-12 row m-0">
+                    <div class="col-6 h-100 p-0">
+                        <div class="o_event_foldable_badge_step fw-bold">1</div>
+                        <img src="/event/static/src/img/how_to_fold_1.png" class="w-100 h-100" alt="How to Fold (1)"/>
+                    </div>
+                    <div class="col-6 h-100 p-0">
+                        <div class="o_event_foldable_badge_step fw-bold">2</div>
+                        <img src="/event/static/src/img/how_to_fold_2.png" class="w-100 h-100" alt="How to Fold (2)"/>
+                    </div>
+                </div>
+                <div class="h-50 col-12 row m-0">
+                    <div class="col-6 h-100 p-0">
+                        <div class="o_event_foldable_badge_step fw-bold">3</div>
+                        <img src="/event/static/src/img/how_to_fold_3.png" class="w-100 h-100" alt="How to Fold (3)"/>
+                    </div>
+                    <div class="col-6 h-100 p-0">
+                        <div class="o_event_foldable_badge_step fw-bold">4</div>
+                        <img src="/event/static/src/img/how_to_fold_4.png" class="w-100 h-100" alt="How to Fold (4)"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="event_registration_report_template_foldable_badge">
+    <t t-call="web.basic_layout">
+        <t t-foreach="docs" t-as="attendee">
+            <t t-set="event" t-value="attendee.event_id.with_context(tz=attendee.event_id.date_tz)"/>
+            <t t-call="event.event_report_template_foldable_badge"/>
+        </t>
+    </t>
+</template>
+
+<template id="event_event_report_template_foldable_badge">
+    <t t-call="web.basic_layout">
+        <t t-foreach="docs" t-as="event">
+            <t t-set="event" t-value="event.with_context(tz=event.date_tz)"/>
+            <t t-call="event.event_report_template_foldable_badge"/>
+        </t>
+    </t>
+</template>
+
+<!-- EVENT FULL PAGE TICKET -->
+
+<template id="event_report_template_full_page_ticket">
+    <div class="row page">
+        <div class="o_event_full_page_ticket_container page w-100">
+            <div class="o_event_full_page_ticket_wrapper">
+                <div class="o_event_full_page_ticket_details row">
+                    <div class="col-10">
+                        <div class="row">
+                            <div class="col-8 page">
+                                <div class="o_event_full_page_ticket_font_faded">
+                                    Event Ticket For
+                                </div>
+                                <h5 class="o_event_full_page_ticket_event_name text-odoo fw-bold py-0 my-0" t-field="event.name"/>
+                                <span itemprop="startDate" t-field="event.date_begin"
+                                     t-options='{"widget": "datetime", "date_only": True}'
+                                     class="fw-bold"/>
+                                <span itemprop="startDateTime" t-field="event.date_begin"
+                                    class="fw-bold"
+                                    t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz}'/>
+                                <span class="fa fa-arrow-right o_event_full_page_ticket_font_faded"/>
+                                <span t-if="not event.is_one_day"
+                                    itemprop="endDate" t-field="event.date_end"
+                                    t-options='{"widget": "datetime", "date_only": True}'
+                                    class="fw-bold"/>
+                                <span itemprop="endDateTime" t-field="event.date_end"
+                                    class="fw-bold"
+                                    t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz}'/>
+                                <span itemprop="timeZone" class="o_event_full_page_ticket_font_faded small">(<t t-out="event.date_tz"/>)</span>
+                                <div t-if="event.address_id" class="o_event_full_page_ticket_font_faded">
+                                    <t t-call="event.event_report_template_formatted_event_address"/>
+                                </div>
+                                <br/>
+                                <h5 t-if="attendee" t-field="attendee.name"></h5>
+                                <h5 t-elif="not attendee"><span>John Doe</span></h5>
+                                <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
+                                <div t-if="attendee" class="o_event_full_page_ticket_font_faded" t-field="attendee.event_ticket_id"/>
+                                <div t-elif="first_ticket" t-out="first_ticket.name"
+                                    class="o_event_full_page_ticket_font_faded"/>
+                            </div>
+                            <div class="col-4 o_event_full_page_ticket_side_info page">
+                                <span t-if="event.organizer_id.image_128">
+                                    <img t-att-src="image_data_uri(event.organizer_id.image_128)" class="o_event_full_page_ticket_event_logo mb-2"/>
+                                </span>
+                                <div t-if="attendee and attendee.partner_id" class="mb-2 o_event_full_page_ticket_side_info_booked_by">
+                                    <div class="o_event_full_page_ticket_font_faded o_event_full_page_ticket_small_caps fw-bold">Booked By</div>
+                                    <div class="o_event_full_page_ticket_small" t-field="attendee.partner_id"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="o_event_full_page_ticket_barcode col-2">
+                        <div class="o_event_full_page_ticket_barcode_container">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="page oe_structure"/>
+            <div t-field="event.ticket_instructions" class="o_event_full_page_extra_instructions px-2 pt-3"></div>
+        </div>
+    </div>
+</template>
+
+<template id="event_report_full_page_ticket_layout">
+    <!-- Inspired from "external_layout_standard" to get a repeated footer element. -->
+    <div class="article"
+        t-att-data-oe-model="main_object and main_object._name"
+        t-att-data-oe-id="main_object and main_object.id"
+        t-att-data-oe-lang="main_object and main_object.env.context.get('lang')">
+        <main>
+            <t t-out="0"/>
+        </main>
+    </div>
+
+    <div class="row footer o_event_full_page_ticket_footer d-block">
+        <div class="o_event_full_page_ticket_powered_by bg-odoo text-white text-center p-2 w-100">
+            <t t-if="event.organizer_id">
+                <span class="fw-bold" t-field="event.organizer_id.name"></span>
+                <span t-if="event.organizer_id.phone" class="ps-3 fa fa-phone"/>
+                <span t-if="event.organizer_id.phone" t-field="event.organizer_id.phone"/>
+                <span t-if="event.organizer_id.email_normalized" class="ps-3 fa fa-envelope"/>
+                <span t-if="event.organizer_id.email_normalized" t-field="event.organizer_id.email_normalized"/>
+                <span t-if="event.organizer_id.website" class="ps-3 fa fa-globe"/>
+                <span t-if="event.organizer_id.website" t-field="event.organizer_id.website"/>
+            </t>
+            <t t-else="">
+                <span t-out="event.name"/> <!-- Force some content to avoid messing the layout -->
+            </t>
+        </div>
+    </div>
+</template>
+
+<template id="event_registration_report_template_full_page_ticket">
+    <t t-foreach="docs" t-as="attendee">
+        <t t-call="web.html_container">
+            <t t-set="event" t-value="attendee.event_id._set_tz_context()"/>
+            <t t-set="main_object" t-value="attendee"/>
+            <t t-call="event.event_report_full_page_ticket_layout">
+                <t t-call="event.event_report_template_full_page_ticket"/>
+            </t>
+        </t>
+    </t>
+</template>
+
+<template id="event_event_report_template_full_page_ticket">
+    <t t-foreach="docs" t-as="event">
+        <t t-call="web.html_container">
+            <t t-set="event" t-value="event._set_tz_context()"/>
+            <t t-set="main_object" t-value="event"/>
+            <t t-call="event.event_report_full_page_ticket_layout">
+                <t t-call="event.event_report_template_full_page_ticket"/>
+            </t>
+        </t>
+    </t>
+</template>
+
+<!-- MISC -->
+
+<template id="event_report_template_formatted_event_address">
+    <!-- Small utility template to display "Venue" as:
+    fa-map-marker PartnerName
+    RestOfAddress -->
+    <span class="fa fa-map-marker"/>
+    <t t-if="event.address_id.contact_address.strip()">
+        <t t-set="address_bits" t-value="event.address_id.contact_address.split('\n')"/>
+        <t t-if="address_bits">
+            <t t-set="partner_name" t-value="address_bits[0]"/>
+            <span t-out="partner_name"/>
+        </t>
+        <t t-if="len(address_bits) > 1">
+            <br/>
+        </t>
+        <t t-set="remaining_bits" t-value="address_bits[1:]"/>
+        <t t-foreach="remaining_bits" t-as="address_bit">
+            <t t-if="address_bit and address_bit.strip()">
+                <span t-out="address_bit"/>
+            </t>
+        </t>
+    </t>
+    <t t-else="" t-out="event.address_id.name"/>
+</template>
+
+</odoo>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tcs_report" model="account.report">
+        <field name="name">TCS Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.in"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tcs_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+                <field name="sequence" eval="1"/>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tcs_report_line_section_206c_1_alfhc" model="account.report.line">
+                <field name="name">Section 206C(1): Alcoholic Liquor for human consumption</field>
+                <field name="sequence" eval="1"/>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_206c_1_alfhc_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">206C(1) Alcoholic Liquor</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_206c_1_tl" model="account.report.line">
+                <field name="name">Section 206C(1): Tendu leaves</field>
+                <field name="sequence" eval="2"/>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_206c_1_tl_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">206C(1) Tendu leaves</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_206c_1_touafl" model="account.report.line">
+                <field name="name">Section 206C(1): Timber obtained under a forest lease</field>
+                <field name="sequence" eval="3"/>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_206c_1_touafl_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">206C(1) Timber (forest lease)</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_206c_1_tobaotuafl" model="account.report.line">
+                <field name="name">Section 206C(1): Timber obtained by any mode other than under a forest lease</field>
+                <field name="sequence" eval="4"/>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_206c_1_tobaotuafl_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">206C(1) Timber (other than under a forest lease)</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_206c_1_aofpnbtotl" model="account.report.line">
+                <field name="name">Section 206C(1): Any other forest produce not being timber or tendu leaves</field>
+                <field name="sequence" eval="5"/>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_206c_1_aofpnbtotl_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">206C(1) other forest produce</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_206c_1_s" model="account.report.line">
+                <field name="name">Section 206C(1): Scrap</field>
+                <field name="sequence" eval="6"/>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_206c_1_s_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">206C(1) Scrap</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_206c_1_mbcoloio" model="account.report.line">
+                <field name="name">Section 206C(1): Minrals, being coal or lignite or iron ore</field>
+                <field name="sequence" eval="7"/>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_206c_1_mbcoloio_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">206C(1) Minrals</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_206c_1c_pl" model="account.report.line">
+                <field name="name">Section 206C(1C): Parking lot</field>
+                <field name="sequence" eval="8"/>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_206c_1c_pl_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">206C(1C) Parking lot</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_206c_1c_tp" model="account.report.line">
+                <field name="name">Section 206C(1C): Toll plaza</field>
+                <field name="sequence" eval="9"/>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_206c_1c_tp_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">206C(1C) Toll plaza</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_206c_1c_maq" model="account.report.line">
+                <field name="name">Section 206C(1C): Mining and quarrying</field>
+                <field name="sequence" eval="10"/>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_206c_1c_maq_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">206C(1C) Mining and quarrying</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_206c_1f_mv" model="account.report.line">
+                <field name="name">Section 206C(1F): Motor Vehicle</field>
+                <field name="sequence" eval="11"/>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_206c_1f_mv_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">206C(1F)</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_206c_1g_som" model="account.report.line">
+                <field name="name">Section 206C(1G): Sum of money (above 7 lakhs) for remittance out of India</field>
+                <field name="sequence" eval="12"/>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_206c_1g_som_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">206C(1G) remittance out of India</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_206c_1g_soaotpp" model="account.report.line">
+                <field name="name">Section 206C(1G): Seller of an overseas tour program package</field>
+                <field name="sequence" eval="13"/>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_206c_1g_soaotpp_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">206C(1G) overseas tour program</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_line_section_206c_1h_sog" model="account.report.line">
+                <field name="name">Section 206C(1H): Sale of Goods</field>
+                <field name="sequence" eval="14"/>
+                <field name="expression_ids">
+                    <record id="tcs_report_line_section_206c_1h_sog_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">206C(1H)</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

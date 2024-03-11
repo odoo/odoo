@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Account Chart Template -->
+        <record id="l10n_hr_chart_template_rrif" model="account.chart.template">
+            <field name="name">RRIF-ov računski plan za poduzetnike</field>
+            <field name="bank_account_code_prefix">101</field>
+            <field name="cash_account_code_prefix">102</field>
+            <field name="transfer_account_code_prefix">1009</field>
+            <field name="currency_id" ref="base.HRK"/>
+            <field name="code_digits">0</field>
+            <field name="country_id" ref="base.hr"/>
+            <field name="use_storno_accounting" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

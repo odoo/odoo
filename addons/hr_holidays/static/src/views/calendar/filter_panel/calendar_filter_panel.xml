@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_holidays.CalendarFilterPanel" t-inherit="web.CalendarFilterPanel" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-foreach='props.model.filterSections']" position="after">
+            <div class="o_calendar_filter">
+                <h5>Legend</h5>
+
+                <div class="d-flex flex-column">
+                    <span><img class="o_calendar_filter_plain" src="/hr/static/src/img/icons/plain.svg"/> Validated</span>
+                    <span><img class="o_calendar_filter_hatched" src="/hr/static/src/img/icons/hatched.svg"/> To Approve</span>
+                    <span><img class="o_calendar_filter_line" src="/hr/static/src/img/icons/line.svg"/> Refused</span>
+                    <span><span class="o_timeoff_legend o_timeoff_legend_bankholiday">13</span> Public Holiday</span>
+                    <span><span class="o_timeoff_legend o_timeoff_legend_stressday text-odoo">13</span> Stress Day</span>
+                </div>
+
+                <div class="d-flex flex-column mt-4" t-if="leaveState.stressDays.length">
+                    <h5>Stress Days</h5>
+                    <ul class="ps-2">
+                        <li t-foreach="leaveState.stressDays" t-as="stressDay" t-key="stressDay.id" class="mt-2 list-unstyled">
+                            <strong
+                                t-esc="getFormattedDateSpan(stressDay.start, stressDay.end)"
+                                t-att-class="'hr_stress_day_'+stressDay.colorIndex"/>
+                            : <t t-esc="stressDay.title"/>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="d-flex flex-column mt-4" t-if="leaveState.bankHolidays.length">
+                    <h5>Public Holidays</h5>
+                    <ul class="ps-2">
+                        <li t-foreach="leaveState.bankHolidays" t-as="bankHoliday" t-key="bankHoliday.id" class="mt-2 list-unstyled">
+                            <strong
+                                t-esc="getFormattedDateSpan(bankHoliday.start, bankHoliday.end)"/>
+                            : <t t-esc="bankHoliday.title"/>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+
+    <t t-name="hr_holidays.CalendarFilterPanel.filter" t-inherit="web.CalendarFilterPanel.filter" t-inherit-mode="primary" owl="1">
+        <xpath expr="//span[@t-esc='filter.label']" position="replace">
+            <span class="o_cw_filter_title text-truncate flex-grow">
+                <t t-esc="filter.label"/>
+
+                <t t-if="env.isSmall">
+                    <t t-set="holiday" t-value="leaveState.holidays[filter.value]"/>
+                    <TimeOffCardMobile t-if="holiday" name="holiday[0]" id="holiday[3]" data="holiday[1]" requires_allocation="holiday[2] === 'yes'" />
+                </t>
+            </span>
+        </xpath>
+    </t>
+</templates>

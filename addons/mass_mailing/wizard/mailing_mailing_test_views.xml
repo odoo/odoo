@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<odoo>
+
+        <record model="ir.ui.view" id="view_mail_mass_mailing_test_form">
+            <field name="name">mailing.mailing.test.form</field>
+            <field name="model">mailing.mailing.test</field>
+            <field name="arch" type="xml">
+                <form string="Send a Sample Mail">
+                    <p class="text-muted">
+                        Send a sample mailing for testing purpose to the address below.
+                    </p>
+                    <group>
+                        <field name="email_to" placeholder="email1@example.com&#10;email2@example.com"/>
+                    </group>
+                    <footer>
+                        <button string="Send" name="send_mail_test" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_mail_mass_mailing_test" model="ir.actions.act_window">
+            <field name="name">Mailing Test</field>
+            <field name="res_model">mailing.mailing.test</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+</odoo>

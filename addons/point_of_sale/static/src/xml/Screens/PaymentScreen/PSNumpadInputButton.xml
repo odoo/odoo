@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="PSNumpadInputButton" owl="1">
+        <button t-attf-class="{{ _class }}"
+                t-on-click="() => this.trigger('input-from-numpad', { key: props.value })">
+            <t t-slot="default">
+                <t t-if="props.text">
+                    <t t-esc="props.text" />
+                </t>
+                <t t-else="">
+                    <t t-esc="props.value" />
+                </t>
+            </t>
+        </button>
+    </t>
+
+</templates>

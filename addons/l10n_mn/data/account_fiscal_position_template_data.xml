@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- = = = = = = = = = = = = = = = -->
+    <!-- Fiscal Position Templates     -->
+    <!-- = = = = = = = = = = = = = = = -->
+    <record id="fiscal_position_vat0" model="account.fiscal.position.template">
+        <field name="name">Дотоодын борлуулалт - Худалдан авалт</field>
+        <field name="chart_template_id" ref="mn_chart_1"/>
+        <field name="auto_apply" eval="True" />
+        <field name="country_id" ref="base.mn"/>
+    </record>
+
+    <record id="fiscal_position_vat2" model="account.fiscal.position.template">
+        <field name="name">НӨАТ 0% (3000000)</field>
+        <field name="chart_template_id" ref="mn_chart_1"/>
+    </record>
+
+    <record id="fiscal_position_vat3" model="account.fiscal.position.template">
+        <field name="name">НӨАТ-гүй (2000000)</field>
+        <field name="chart_template_id" ref="mn_chart_1"/>
+    </record>
+
+    <record id="fiscal_position_vat4" model="account.fiscal.position.template">
+        <field name="name">Гадаад борлуулалт - Худалдан авалт</field>
+        <field name="chart_template_id" ref="mn_chart_1"/>
+        <field name="auto_apply" eval="True" />
+    </record>
+
+    <!-- = = = = = = = = = = = = = = = -->
+    <!-- Fiscal Position Tax Templates -->
+    <!-- = = = = = = = = = = = = = = = -->
+
+    <record id="fp_tax_template_vat2_sale_vat1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat1" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat2_sale_vat4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat4" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat2_sale_vat5" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat5" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat2_sale_vat6" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat6" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat2_sale_vat7" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat7" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat2_sale_vat9" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat9" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat2_sale_vat10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat10" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat2_sale_vat11" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat11" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat2_sale_vat12" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat12" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+        <record id="fp_tax_template_vat2_sale_vat13" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat13" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat2_sale_vat14" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat14" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat2_sale_vat15" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat15" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat2_sale_vat16" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat16" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat2_sale_vat17" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat17" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat2_sale_vat18" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat18" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat2_sale_vat19" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat19" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat2_sale_vat20" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat20" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat2_sale_vat21" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat21" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat2_sale_vat22" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat2" />
+        <field name="tax_src_id" ref="account_tax_sale_vat22" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat2" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat1" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat4" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat5" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat5" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat6" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat6" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat7" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat7" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat9" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat9" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat10" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat11" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat11" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat12" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat12" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat13" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat13" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat14" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat14" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat15" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat15" />
+        <field name="tax_src_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat16" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat16" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat17" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat17" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat18" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat18" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat19" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat19" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat20" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat20" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat21" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat21" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat3_sale_vat22" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat3" />
+        <field name="tax_src_id" ref="account_tax_sale_vat22" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat3" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat1" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat23" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat4" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat23" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat5" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat5" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat23" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat6" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat6" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat23" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat7" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat7" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat23" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat9" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat9" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat24" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat10" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat24" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat11" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat11" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat24" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat12" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat12" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat24" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat13" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat13" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat24" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat14" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat14" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat24" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat15" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat15" />
+        <field name="tax_src_id" ref="account_tax_sale_vat24" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat16" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat16" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat24" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat17" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat17" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat24" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat18" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat18" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat24" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat19" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat19" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat24" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat20" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat20" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat24" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat21" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat21" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat24" />
+    </record>
+
+    <record id="fp_tax_template_vat4_sale_vat22" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_sale_vat22" />
+        <field name="tax_dest_id" ref="account_tax_sale_vat24" />
+    </record>
+
+    <record id="fp_tax_template_vat4_purchase_vat1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_vat4" />
+        <field name="tax_src_id" ref="account_tax_purchase_vat1" />
+        <field name="tax_dest_id" ref="account_tax_purchase_vat2" />
+    </record>
+
+</odoo>

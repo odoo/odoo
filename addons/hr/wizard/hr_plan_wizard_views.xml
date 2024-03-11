@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="plan_wizard" model="ir.ui.view">
+            <field name="name">plan wizard</field>
+            <field name="model">hr.plan.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="department_id" attrs="{'invisible': [('department_id', '=', False)]}"/>
+                            <field name="plan_id"/>
+                            <field name="employee_ids" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                        <div role="alert" class="alert alert-danger mb8" attrs="{'invisible': [('warning', '=', False)]}">
+                            <field name="warning"/>
+                        </div>
+                    </sheet>
+                    <footer>
+                        <button name="action_launch" string="Launch Plan" type="object" class="oe_highlight" attrs="{'invisible': [('warning', '!=', False)]}" groups="hr.group_hr_user" data-hotkey="q"/>
+                        <button name="action_launch" string="Launch Plan" type="object" class="oe_highlight disabled" attrs="{'invisible': [('warning', '=', False)]}" groups="hr.group_hr_user" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="plan_wizard_action" model="ir.actions.act_window">
+            <field name="name">Launch Plan</field>
+            <field name="res_model">hr.plan.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

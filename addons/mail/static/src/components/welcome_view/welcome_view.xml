@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.WelcomeView" owl="1">
+        <t t-if="welcomeView">
+            <div class="o_WelcomeView h-100 d-flex flex-column justify-content-center align-items-center bg-light" t-attf-class="{{ className }}" t-ref="root">
+                <h1 class="fw-light">
+                    <span t-if="welcomeView.callDemoView">You've been invited to a meeting!</span>
+                    <span t-if="!welcomeView.callDemoView">You've been invited to a chat!</span>
+                </h1>
+                <h2 class="m-5" t-esc="messaging.companyName"/>
+                <div class="d-flex justify-content-center">
+                    <CallDemoView t-if="welcomeView.callDemoView" className="'me-5'" record="welcomeView.callDemoView"/>
+                    <div class="d-flex flex-column justify-content-center">
+                        <t t-if="messaging.currentGuest">
+                            <label class="o_WelcomeView_guestNameInputLabel text-center fs-4" t-att-for="welcomeView.guestNameInputUniqueId">What's your name?</label>
+                            <input class="form-control mb-3" type="text" placeholder="Your name" t-att-name="welcomeView.guestNameInputUniqueId" t-att-id="welcomeView.guestNameInputUniqueId" t-att-value="welcomeView.pendingGuestName" t-ref="guestNameInput" t-on-input="welcomeView.onInputGuestNameInput" t-on-keydown="welcomeView.onKeydownGuestNameInput"/>
+                        </t>
+                        <t t-if="messaging.currentUser">
+                            <p class="o_WelcomeView_loggedAsStatus fs-4" t-esc="loggedInAsText"/>
+                        </t>
+                        <button class="o_WelcomeView_joinButton btn btn-success fa-stack align-self-end p-0 rounded-circle fs-1 shadow" title="Join Channel" t-att-disabled="welcomeView.isJoinButtonDisabled" t-on-click="welcomeView.onClickJoinButton">
+                            <i class="fa fa-phone fa-stack"/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

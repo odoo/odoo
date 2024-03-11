@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_holidays.FormViewDialog.buttons" t-inherit="web.FormViewDialog.ToOne.buttons" owl="1">
+        <xpath expr="//button[contains(@class, 'o_form_button_save')]" position="replace">
+            <button class="btn btn-primary o_form_button_save" t-on-click="saveButtonClicked" data-hotkey="c">Save</button>
+        </xpath>
+
+        <xpath expr="//button[contains(@class, 'o_form_button_cancel')]" position="after">
+            <button class="btn btn-secondary" t-if="canDelete" t-on-click="deleteRecord" data-hotkey="x">Delete</button>
+        </xpath>
+    </t>
+
+</templates>

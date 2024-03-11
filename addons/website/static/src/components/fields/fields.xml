@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+<t t-name="website.PageUrlField" owl="1">
+    <t t-if="props.readonly">
+        <a class="o_form_uri o_text_overflow" t-att-href="props.value" t-esc="props.value || ''"/>
+    </t>
+    <t t-else="">
+        <div class="d-flex">
+            <div
+                class="input-group-text rounded-start text-lowercase border-0"
+                t-esc="serverUrl.length > 30 ? serverUrl.slice(0,14) + '..' + serverUrl.slice(-14) : serverUrl"
+            />
+            <input
+                class="o_input"
+                type="text"
+                t-att-placeholder="props.placeholder"
+                t-att-required="props.required"
+                t-att-id="props.id"
+                t-model="state.url"
+                t-ref="input"
+            />
+        </div>
+        <div t-if="enableRedirect">
+            <div class="mt-4">
+                <Switch
+                    extraClasses="'me-auto'"
+                    label="'Redirect Old URL'"
+                    value="state.redirect_old_url"
+                    onChange="(value) => this.onChangeRedirectOldUrl(value)"
+                />
+                <PageDependencies resIds="[props.record.resId]" resModel="'website.page'" mode="'popover'"/>
+            </div>
+            <div t-if="state.redirect_old_url" class="d-flex mt-4">
+                <label class="my-0 me-4 fw-bold" for="redirect_type">Type</label>
+                <select class="o_input w-50" id="redirect_type" t-model="state.redirect_type" t-on-change="updateValues">
+                    <option value="301">301 Moved permanently</option>
+                    <option value="302">302 Moved temporarily</option>
+                </select>
+            </div>
+        </div>
+    </t>
+</t>
+
+<t t-name="website.FieldImageRadio" owl="1">
+    <div class="d-flex">
+        <t t-foreach="values" t-as="option" t-key="option">
+            <div class="flex-fill text-center">
+                <img t-attf-class="o_image_radio_option w-50 {{option[0] === props.value ? 'active' : ''}}" t-att-src="option[2]" t-on-click="() => this.onSelectValue(option[0])"/>
+            </div>
+        </t>
+    </div>
+</t>
+
+</templates>

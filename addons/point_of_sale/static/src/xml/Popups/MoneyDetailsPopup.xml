@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="MoneyDetailsPopup" owl="1">
+        <div class="popup money-details">
+            <main class="body">
+                <div class="money-details-title">
+                    Coins/Bills
+                </div>
+                <div class="money-details-info">
+                    <div t-foreach="[firstHalfMoneyDetails, lastHalfMoneyDetails]" t-as="moneyDetailsList" t-key="moneyDetailsList_index">
+                        <t t-foreach="moneyDetailsList" t-as="moneyValue" t-key="moneyValue">
+                            <div class="money-details-value" t-on-input="updateMoneyDetailsAmount">
+                                <input class="pos-input" t-att-id="moneyValue" type="number" t-model.number="state.moneyDetails[moneyValue]"/>
+                                <CurrencyAmount forTarget="moneyValue" currency="currency" amount="moneyValue"/>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                <div class="total-section">
+                    <span>Total </span>
+                    <CurrencyAmount currency="currency" amount="env.pos.format_currency_no_symbol(state.total)"/>
+                </div>
+            </main>
+            <footer class="footer">
+                <div class="button" t-on-click="discard">Discard</div>
+                <div class="button" t-on-click="confirm">Confirm</div>
+            </footer>
+        </div>
+    </t>
+</templates>

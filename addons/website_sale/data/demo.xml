@@ -1,0 +1,782 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+        <record model="website" id="website.website2">
+            <field name="salesteam_id" ref="sales_team.salesteam_website_sales"/>
+        </record>
+
+        <record id="product.product_attribute_2" model="product.attribute">
+            <field name="visibility">hidden</field>
+        </record>
+
+        <record id="product.product_product_24" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="product.product_product_5" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="product.product_product_12" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="product.product_product_10" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="product.product_product_13" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="product.product_product_25" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="product.consu_delivery_02" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="product.product_delivery_01" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="product.product_product_3" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="product.product_product_22" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="product.consu_delivery_03" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="product.product_product_27" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="product.product_delivery_02" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="product.product_product_16" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="product.consu_delivery_01" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="product.product_order_01" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+
+        <record id="product.product_product_4" model="product.product">
+            <field name="is_published" eval="True"/>
+            <field name="website_sequence">9950</field>
+            <field name="website_description" type="html">
+                <section class="s_text_image pt32 pb32 o_colored_level o_cc o_cc1" data-snippet="s_text_image" data-name="Text - Image">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="pt16 pb16 col-lg-6">
+                                <h2>Ergonomic</h2>
+                                <p>Press a button and watch your desk glide effortlessly from sitting to standing height in seconds.</p>
+                                <p>The minimum height is 65 cm, and for standing work the maximum height position is 125 cm.</p>
+                            </div>
+                            <div class="pt16 pb16 col-lg-6">
+                                <img src="/website/static/src/img/snippets_demo/s_text_image.jpg" class="img img-fluid mx-auto" alt=""/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="s_text_image pt32 pb32 o_colored_level o_cc o_cc1" data-snippet="s_image_text" data-name="Image - Text">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="pt16 pb16 col-lg-6">
+                                <img src="/website_sale/static/src/img/carpentry.jpg" class="img img-fluid mx-auto" alt=""/>
+                            </div>
+                            <div class="pt16 pb16 col-lg-6">
+                                <h2>Locally handmade</h2>
+                                <p>We pay special attention to detail, which is why our desks are of a superior quality.</p>
+                                <p>Looking for a custom bamboo stain to match existing furniture? Contact us for a quote.</p>
+                                <p><a href="/contactus" class="mb-2 btn btn-primary">Contact Us</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </field>
+        </record>
+
+        <record id="product.product_product_6" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+
+        <record id="product.product_product_7" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+
+        <record id="product.product_product_8" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+
+        <record id="product.product_product_9" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+
+        <record id="product.product_product_11" model="product.product">
+            <field name="is_published" eval="True"/>
+            <field name="accessory_product_ids" eval="[(6, 0, [ref('product.product_product_7')])]"/>
+        </record>
+
+        <record id="item1" model="product.pricelist.item">
+            <field name="base">list_price</field>
+            <field name="applied_on">1_product</field>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="product_tmpl_id" ref="product.product_product_4_product_template"/>
+            <field name="price_discount">20</field>
+            <field name="min_quantity">2</field>
+            <field name="compute_price">formula</field>
+        </record>
+
+    <!-- product.public.category -->
+
+        <record id="public_category_desks" model="product.public.category">
+          <field name="name">Desks</field>
+          <field name="sequence">15</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/desks.jpg"/>
+        </record>
+        <record id="public_category_furnitures" model="product.public.category">
+          <field name="name">Furnitures</field>
+          <field name="sequence">17</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/furnitures.jpg"/>
+        </record>
+        <record id="public_category_boxes" model="product.public.category">
+            <field name="name">Boxes</field>
+            <field name="sequence">20</field>
+            <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/boxes.jpg"/>
+        </record>
+        <record id="public_category_drawers" model="product.public.category">
+          <field name="name">Drawers</field>
+          <field name="sequence">21</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/drawers.jpg"/>
+        </record>
+        <record id="public_category_cabinets" model="product.public.category">
+          <field name="name">Cabinets</field>
+          <field name="sequence">22</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/cabinets.jpg"/>
+        </record>
+        <record id="public_category_bins" model="product.public.category">
+          <field name="name">Bins</field>
+          <field name="sequence">23</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/bins.jpg"/>
+        </record>
+        <record id="public_category_lamps" model="product.public.category">
+          <field name="name">Lamps</field>
+          <field name="sequence">24</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/lamps.jpg"/>
+        </record>
+        <record id="services" model="product.public.category">
+          <field name="name">Services</field>
+          <field name="sequence">25</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/warranty.jpg"/>
+        </record>
+        <record id="public_category_multimedia" model="product.public.category">
+          <field name="name">Multimedia</field>
+          <field name="sequence">26</field>
+          <field name="image_1920" type="base64" file="product/static/img/product_product_43-image.jpg"/>
+        </record>
+
+        <!-- subcategories -->
+        <record id="public_category_desks_components" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_desks')"/>
+          <field name="name">Components</field>
+          <field name="sequence">16</field>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/desk_components.jpg"/>
+        </record>
+        <record id="public_category_furnitures_chairs" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_furnitures')"/>
+          <field name="name">Chairs</field>
+          <field name="sequence">18</field>
+        </record>
+        <record id="public_category_furnitures_couches" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_furnitures')"/>
+          <field name="name">Couches</field>
+          <field name="sequence">19</field>
+        </record>
+
+        <record id="product.product_product_1_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('services')])]"/>
+        </record>
+        <record id="product.product_product_2_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('services')])]"/>
+        </record>
+        <record id="product.product_product_3_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks_components')])]"/>
+        </record>
+        <record id="product.consu_delivery_03_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks')])]"/>
+        </record>
+        <record id="product.product_product_4_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks')])]"/>
+        </record>
+        <record id="product.product_product_5_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks')])]"/>
+        </record>
+        <record id="product.product_product_6_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_cabinets')])]"/>
+        </record>
+        <record id="product.product_product_7_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_boxes')])]"/>
+        </record>
+        <record id="product.product_product_8_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks')])]"/>
+        </record>
+        <record id="product.product_product_9_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_bins')])]"/>
+        </record>
+        <record id="product.product_product_10_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_cabinets')])]"/>
+        </record>
+        <record id="product.product_product_11_product_template" model="product.template">
+            <field name="website_sequence">9990</field>
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_furnitures_chairs')])]"/>
+        </record>
+        <record id="product.product_product_12_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_furnitures_chairs')])]"/>
+        </record>
+        <record id="product.product_product_13_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks')])]"/>
+        </record>
+        <record id="product.product_product_16_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_drawers')])]"/>
+        </record>
+        <record id="product.product_product_20_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks_components')])]"/>
+        </record>
+        <record id="product.product_product_22_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks_components')])]"/>
+        </record>
+        <record id="product.product_product_25_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks_components')])]"/>
+        </record>
+        <record id="product.product_product_27_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_drawers')])]"/>
+        </record>
+        <record id="product.product_order_01_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_multimedia')])]"/>
+        </record>
+        <record id="product.consu_delivery_01_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_furnitures_couches')])]"/>
+        </record>
+        <record id="product.consu_delivery_02_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks')])]"/>
+        </record>
+        <record id="product.consu_delivery_03_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks')])]"/>
+        </record>
+        <record id="product.product_delivery_01_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_furnitures_chairs')])]"/>
+        </record>
+        <record id="product.product_delivery_02_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_lamps')])]"/>
+        </record>
+
+        <record model="product.pricelist" id="product.list0">
+            <field name="selectable" eval="True" />
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="benelux" model="res.country.group">
+            <field name="name">BeNeLux</field>
+            <field name="country_ids" eval="[(6,0,[
+                ref('base.be'),ref('base.lu'),ref('base.nl')])]"/>
+        </record>
+
+        <record id="list_christmas" model="product.pricelist">
+            <field name="name">Christmas</field>
+            <field name="selectable" eval="False" />
+            <field name="website_id" ref="website.default_website" />
+            <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
+            <field name="sequence">20</field>
+        </record>
+        <record id="item_christmas" model="product.pricelist.item">
+            <field name="pricelist_id" ref="list_christmas"/>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="price_discount">20</field>
+        </record>
+
+        <record id="list_benelux" model="product.pricelist">
+            <field name="name">Benelux</field>
+            <field name="selectable" eval="False" />
+            <field name="website_id" ref="website.default_website" />
+            <field name="country_group_ids" eval="[(6,0,[ref('benelux')])]" />
+            <field name="sequence">2</field>
+        </record>
+        <record id="item_benelux" model="product.pricelist.item">
+            <field name="pricelist_id" ref="list_benelux"/>
+            <field name="compute_price">percentage</field>
+            <field name="base">list_price</field>
+            <field name="percent_price">10</field>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+
+
+        <record id="list_europe" model="product.pricelist">
+            <field name="name">EUR</field>
+            <field name="selectable" eval="True" />
+            <field name="website_id" ref="website.default_website" />
+            <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
+            <field name="sequence">3</field>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="item_europe" model="product.pricelist.item">
+            <field name="pricelist_id" ref="list_europe"/>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+        </record>
+
+        <record id="item_us" model="product.pricelist.item">
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+        </record>
+
+        <!-- Add demo-data for pretty website sales graph (for the sales dashboard) -->
+        <record id="website_sale_order_1" model="sale.order">
+            <field name="create_date" eval="datetime.now() - timedelta(days=8)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">sale</field>
+        </record>
+
+        <record id="website_sale_order_line_1" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_1"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_6').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_6"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">599.0</field>
+        </record>
+
+        <record id="website_sale_order_2" model="sale.order">
+            <field name="create_date" eval="datetime.now() - timedelta(days=8)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">sale</field>
+        </record>
+
+        <record id="website_sale_order_line_2" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_2"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_4').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_4"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">900</field>
+        </record>
+
+        <record id="website_sale_order_3" model="sale.order">
+            <field name="create_date" eval="datetime.now() - timedelta(days=8)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor2'))]"/>
+            <field name="state">sale</field>
+        </record>
+
+        <record id="website_sale_order_line_3" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_3"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_4').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_4"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">750</field>
+        </record>
+
+        <record id="website_sale_order_4" model="sale.order">
+            <field name="create_date" eval="datetime.now() - timedelta(days=8)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">sale</field>
+        </record>
+
+        <record id="website_sale_order_line_4" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_4"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_8').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_8"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">1199.0</field>
+        </record>
+
+        <record id="website_sale_order_5" model="sale.order">
+            <field name="create_date" eval="datetime.now() - timedelta(days=8)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">sale</field>
+        </record>
+
+        <record id="website_sale_order_line_5" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_5"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_4').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_4"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">349.0</field>
+        </record>
+
+        <record id="website_sale_order_6" model="sale.order">
+            <field name="create_date" eval="datetime.now() - timedelta(days=8)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">sale</field>
+        </record>
+
+        <record id="website_sale_order_line_6" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_6"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_8').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_8"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">1599.00</field>
+        </record>
+
+        <record id="website_sale_order_7" model="sale.order">
+            <field name="create_date" eval="datetime.now() - timedelta(days=8)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="website_id" ref="website.default_website"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">sale</field>
+        </record>
+
+        <record id="website_sale_order_line_7" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_7"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_8').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_8"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">1349.00</field>
+        </record>
+
+        <record id="website_sale_order_8" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="website_id" ref="website.default_website"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="datetime.now()"/>
+            <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor1'))]"/>
+            <field name="state">sale</field>
+        </record>
+
+        <record id="website_sale_order_line_8" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_8"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_8').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_8"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">1799.00</field>
+        </record>
+
+        <record id="website_sale_order_9" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="website_id" ref="website.default_website"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(hours=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="website_sale_order_line_9" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_9"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">295.00</field>
+        </record>
+
+        <record id="website_sale_order_line_10" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_9"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_12').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">120.50</field>
+        </record>
+
+        <!-- Active Carts -->
+        <record id="website_sale_order_10" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="website_id" ref="website.default_website"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="datetime.now()"/>
+            <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor5'))]"/>
+        </record>
+
+        <record id="website_sale_order_line_11" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_10"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_11').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_11"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">33</field>
+        </record>
+
+        <!-- Abandoned Carts -->
+        <record id="website_sale_order_11" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="website_id" ref="website.default_website"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="website_sale_order_line_12" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_11"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_9').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_9"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">47.0</field>
+        </record>
+
+        <!-- Payments to Capture -->
+        <record id="website_sale_order_13" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="website_id" ref="website.default_website"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="payment_term_id" ref="account.account_payment_term_immediate"/>
+            <field name="date_order" eval="(datetime.now()-timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">sent</field>
+        </record>
+
+        <record id="website_sale_order_line_14" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_13"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_8').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_8"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">1799.0</field>
+        </record>
+
+        <!-- Order to Invoice -->
+        <record id="website_sale_order_14" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="website_id" ref="website.default_website"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+        </record>
+
+        <record id="website_sale_order_line_15" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_14"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_16').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_16"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">25.0</field>
+        </record>
+
+        <record id="website_sale_order_16" model="sale.order">
+            <field name="create_date" eval="datetime.now() - relativedelta(months=1)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="website_id" ref="website.default_website"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="datetime.now()-relativedelta(months=1)"/>
+            <field name="state">sale</field>
+        </record>
+
+        <record id="website_sale_order_line_16" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_16"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_8').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_8"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">1799.0</field>
+        </record>
+
+        <record id="website_sale_order_17" model="sale.order">
+            <field name="create_date" eval="datetime.now() - relativedelta(months=1, days=2)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="website_id" ref="website.default_website"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="datetime.now()-relativedelta(months=1, days=2)"/>
+        </record>
+
+        <record id="website_sale_order_line_17" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_17"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_9').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_9"/>
+            <field name="product_uom_qty">7</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">47.0</field>
+            <field name="invoice_status">to invoice</field>
+        </record>
+
+        <record id="website_sale_order_18" model="sale.order">
+            <field name="create_date" eval="datetime.now() - relativedelta(months=2)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="website_id" ref="website.default_website"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="datetime.now()-relativedelta(months=2)"/>
+        </record>
+
+        <record id="website_sale_order_line_18" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_18"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_9').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_9"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">47.0</field>
+            <field name="invoice_status">to invoice</field>
+        </record>
+
+
+        <!-- action_confirm for confirmation date -->
+        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_14')]]"/>
+
+        <record id="product_product_1_product_template" model="product.template">
+            <field name="name">Warranty</field>
+            <field name="list_price">20.0</field>
+            <field name="website_sequence">9980</field>
+            <field name="is_published" eval="True"/>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="description_sale">Warranty, issued to the purchaser of an article by its manufacturer, promising to repair or replace it if necessary within a specified period of time.</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="invoice_policy">delivery</field>
+            <field name="public_categ_ids" eval="[(6, 0, [ref('website_sale.services')])]"/>
+            <field name="image_1920" type="base64" file="website_sale/static/src/img/warranty.jpg"/>
+        </record>
+
+        <record id="product_1_attribute_3_product_template_attribute_line" model="product.template.attribute.line">
+            <field name="product_tmpl_id" ref="website_sale.product_product_1_product_template"/>
+            <field name="attribute_id" ref="product.product_attribute_3"/>
+            <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_5'), ref('product.product_attribute_value_6')])]"/>
+        </record>
+
+        <!-- Handle automatically created product.template.attribute.value -->
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'website_sale.product_1_attribute_3_value_1',
+                'record': obj().env.ref('website_sale.product_1_attribute_3_product_template_attribute_line').product_template_value_ids[0],
+                'noupdate': True,
+            }, {
+                'xml_id': 'website_sale.product_1_attribute_3_value_2',
+                'record': obj().env.ref('website_sale.product_1_attribute_3_product_template_attribute_line').product_template_value_ids[1],
+                'noupdate': True,
+            }]"/>
+        </function>
+
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'website_sale.product_product_1',
+                'record': obj().env.ref('website_sale.product_product_1_product_template')._get_variant_for_combination(obj().env.ref('website_sale.product_1_attribute_3_value_1')),
+                'noupdate': True,
+            }, {
+                'xml_id': 'website_sale.product_product_1b',
+                'record': obj().env.ref('website_sale.product_product_1_product_template')._get_variant_for_combination(obj().env.ref('website_sale.product_1_attribute_3_value_2')),
+                'noupdate': True,
+            },]"/>
+        </function>
+
+        <record id="product_product_1" model="product.product">
+            <field name="default_code">SERV_125889</field>
+        </record>
+        <record id="product_product_1b" model="product.product">
+            <field name="default_code">SERV_125890</field>
+        </record>
+
+        <record id="website_sale.product_1_attribute_3_value_2" model="product.template.attribute.value">
+            <field name="price_extra">18.00</field>
+        </record>
+
+        <record id="website_sale_activity_1" model="mail.activity">
+            <field name="res_id" ref="website_sale.website_sale_order_3"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="create_uid" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="website_sale_activity_2" model="mail.activity">
+            <field name="res_id" ref="website_sale.website_sale_order_8"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="summary">Follow-up on satisfaction</field>
+            <field name="create_uid" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="website_sale_activity_3" model="mail.activity">
+            <field name="res_id" ref="website_sale.website_sale_order_9"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="summary">Confirm quote</field>
+            <field name="create_uid" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="website_sale_activity_5" model="mail.activity">
+            <field name="res_id" ref="website_sale.website_sale_order_11"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
+            <field name="date_deadline" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="summary">Send updated pricelist</field>
+            <field name="create_uid" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+
+</odoo>

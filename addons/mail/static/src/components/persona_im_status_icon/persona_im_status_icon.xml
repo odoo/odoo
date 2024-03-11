@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.PersonaImStatusIcon" owl="1">
+            <span class="o_PersonaImStatusIcon d-flex flex-column fa-stack"
+                t-att-class="{
+                    'o-away': personaImStatusIconView.persona.im_status === 'away',
+                    'o-bot': messaging.partnerRoot.persona === personaImStatusIconView.persona,
+                    'o-has-open-chat cursor-pointer': props.hasOpenChat,
+                    'o-offline': personaImStatusIconView.persona.im_status === 'offline',
+                    'o-online': personaImStatusIconView.persona.im_status === 'online',
+                }"
+                t-attf-class="{{ className }}"
+                t-on-click="_onClick"
+                t-ref="root"
+                name="root"
+            >
+                <t t-if="props.hasBackground">
+                    <i class="o_PersonaImStatusIcon_outerBackground fa fa-circle fa-stack-1x"/>
+                    <i class="o_PersonaImStatusIcon_innerBackground fa fa-circle fa-stack-1x"/>
+                </t>
+                <t t-if="personaImStatusIconView.persona.im_status === 'online'">
+                    <i class="o_PersonaImStatusIcon_icon o-online fa fa-circle fa-stack-1x text-primary" title="Online" role="img" aria-label="User is online"/>
+                </t>
+                <t t-if="personaImStatusIconView.persona.im_status === 'away'">
+                    <i class="o_PersonaImStatusIcon_icon o-away fa fa-circle fa-stack-1x text-warning" title="Idle" role="img" aria-label="User is idle"/>
+                </t>
+                <t t-if="personaImStatusIconView.persona.im_status === 'offline'">
+                    <i class="o_PersonaImStatusIcon_icon o-offline fa fa-circle-o fa-stack-1x text-700" title="Offline" role="img" aria-label="User is offline"/>
+                </t>
+                <t t-if="personaImStatusIconView.persona === messaging.partnerRoot.persona">
+                    <i class="o_PersonaImStatusIcon_icon o-bot fa fa-heart fa-stack-1x text-primary" title="Bot" role="img" aria-label="User is a bot"/>
+                </t>
+            </span>
+    </t>
+
+</templates>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DomainSelectorDialog" owl="1">
+        <Dialog title="dialogTitle">
+            <DomainSelector t-props="domainSelectorProps" />
+            <t t-set-slot="footer">
+                <t t-if="props.readonly">
+                    <button class="btn btn-secondary" t-on-click="() => props.close()">Close</button>
+                </t>
+                <t t-else="">
+                    <button class="btn btn-primary" t-on-click="onSave">Save</button>
+                    <button class="btn btn-secondary" t-on-click="onDiscard">Discard</button>
+                </t>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

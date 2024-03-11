@@ -1,0 +1,28 @@
+<odoo>
+    <template id="auth_totp_mail_form" inherit_id="auth_totp.auth_totp_form">
+        <xpath expr="//form/div[1]" position="attributes">
+            <attribute name="t-if">user._mfa_type() == 'totp'</attribute>
+        </xpath>
+        <xpath expr="//form/div[1]" position="after">
+            <div t-if="user._mfa_type() == 'totp_mail'" class="mb-2 mt-2 text-muted">
+                <i class="fa fa-envelope-o"/>
+                To login, enter below the six-digit authentication code just sent via email to <t t-out="user.email"/>.
+                <br/>
+            </div>
+        </xpath>
+        <xpath expr="//form[1]" position="after">
+            <form method="POST" t-if="user._mfa_type() == 'totp_mail'">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <input type="hidden" name="send_email" value="1"/>
+                <button type="submit" class="btn btn-secondary btn-block">Re-send email</button>
+            </form>
+        </xpath>
+        <xpath expr="//div[hasclass('border-top')]" position="before">
+            <div class="mb-2" t-if="user._mfa_type() == 'totp_mail'">
+                We strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.
+                <br/>
+                <a href="https://www.odoo.com/documentation/16.0/applications/general/auth/2fa.html" title="Learn More" target="_blank">Learn More</a>
+            </div>
+        </xpath>
+    </template>
+</odoo>

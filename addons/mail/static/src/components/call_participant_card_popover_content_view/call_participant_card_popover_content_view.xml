@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.CallParticipantCardPopoverContentView" owl="1">
+        <div class="d-flex flex-column p-3">
+            <input type="range" min="0.0" max="1" step="0.01" t-att-value="callParticipantCardPopoverContentView.callParticipantCard.rtcSession.volume" t-on-change="callParticipantCardPopoverContentView.onChangeVolume" class="form-range"/>
+            <t t-if="callParticipantCardPopoverContentView.hasConnectionInfo">
+                <hr class="o_CallParticipantCardPopoverContentView_volumeMenuAnchorSeparator w-100 border-top"/>
+                <div t-esc="callParticipantCardPopoverContentView.inboundConnectionTypeText"/>
+                <div t-esc="callParticipantCardPopoverContentView.outboundConnectionTypeText"/>
+            </t>
+        </div>
+    </t>
+</templates>

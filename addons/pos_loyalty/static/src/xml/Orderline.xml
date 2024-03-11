@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_loyalty.Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
+        <xpath expr="//ul[hasclass('info-list')]" position="attributes">
+            <attribute name="t-if">!_isGiftCardOrEWalletReward()</attribute>
+        </xpath>
+        <xpath expr="//ul[hasclass('info-list')]" position="after">
+            <ul t-else="" class="info-list">
+                Current Balance: <span t-esc="_getGiftCardOrEWalletBalance()"/>
+            </ul>
+        </xpath>
+    </t>
+</templates>

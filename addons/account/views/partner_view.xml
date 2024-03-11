@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_position_form" model="ir.ui.view">
+            <field name="name">account.fiscal.position.form</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="arch" type="xml">
+                <form string="Fiscal Position">
+                    <div groups="account.group_account_manager"
+                         class="alert alert-info mb-0"
+                         role="alert"
+                         attrs="{'invisible': [('foreign_vat_header_mode', '=', False)]}">
+
+                        <div attrs="{'invisible': [('foreign_vat_header_mode', '!=', 'templates_found')]}">
+                            Click
+                            <button
+                                string="here"
+                                type="object"
+                                name="action_create_foreign_taxes"
+                                class="oe_link"
+                                style="padding: 0; vertical-align: baseline;"/>
+                            to create the taxes for this country.
+                        </div>
+
+                        <span attrs="{'invisible': [('foreign_vat_header_mode', '!=', 'no_template')]}">
+                            No tax template found for this country. Please install the corresponding localization module.
+                            <button
+                                string="Install new module"
+                                type="action"
+                                name="account.open_account_charts_modules"
+                                class="oe_link"
+                                groups="base.group_system"
+                                style="padding: 0; vertical-align: baseline;"/>
+                        </span>
+                    </div>
+
+                    <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="states_count" invisible="1"/>
+                            <field name="company_country_id" invisible="1"/>
+                            <field name="foreign_vat_header_mode" invisible="1"/>
+                            <field name="name"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="auto_apply"/>
+                            <field name="vat_required" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
+                            <field name="foreign_vat"/>
+                            <field name="country_group_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
+                            <field name="country_id"
+                                attrs="{'required': [('foreign_vat', '!=', False)]}"
+                                options="{'no_open': True, 'no_create': True}"/>
+                            <field name="state_ids" widget="many2many_tags" domain="[('country_id', '=', country_id)]"
+                                attrs="{'invisible': ['|', '|', '&amp;', ('auto_apply', '!=', True), ('foreign_vat', '=', False), ('country_id', '=', False), ('states_count', '=', 0)]}"/>
+                            <label for="zip_from" string="Zip Range"
+                                attrs="{'invisible': ['|', ('auto_apply', '!=', True), ('country_id', '=', False)]}"/>
+                            <div attrs="{'invisible': ['|', ('auto_apply', '!=', True), ('country_id', '=', False)]}">
+                                <span> From </span>
+                                <field name="zip_from" class="oe_inline"/>
+                                <div class="oe_edit_only"/>
+                                <span> To </span>
+                                <field name="zip_to" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="tax_mapping" string="Tax Mapping">
+                            <field name="tax_ids" widget="one2many" nolabel="1" context="{'append_type_to_tax_name': True}">
+                                <tree name="tax_map_tree" string="Tax Mapping" editable="bottom" no_open="1" decoration-muted="tax_dest_id and not tax_dest_active">
+                                    <field name="tax_dest_active" invisible="1"/>
+                                    <field name="tax_src_id"
+                                        domain="[
+                                            ('type_tax_use', '!=', 'none'),
+                                            ('country_id', '=', parent.company_country_id),
+                                            '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
+                                        ]"
+                                        context="{'append_type_to_tax_name': True}"
+                                    />
+
+                                    <field name="tax_dest_id"
+                                        domain="[
+                                            ('type_tax_use', '!=', 'none'),
+                                            ('country_id', '=', parent.country_id if parent.foreign_vat else parent.company_country_id),
+                                            '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
+                                        context="{'append_type_to_tax_name': True}"
+                                    />
+                                </tree>
+                                <form name="tax_map_form" string="Tax Mapping">
+                                    <group>
+                                        <field name="tax_src_id" domain="[('type_tax_use', '!=', 'none')]" context="{'append_type_to_tax_name': True}"/>
+                                        <field name="tax_dest_id" domain="[('type_tax_use', '!=', 'none')]" context="{'append_type_to_tax_name': True}"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page name="account_mapping" string="Account Mapping" groups="account.group_account_readonly">
+                            <field name="account_ids" widget="one2many" nolabel="1">
+                                <tree string="Account Mapping" editable="bottom">
+                                    <field name="account_src_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                    <field name="account_dest_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                </tree>
+                                <form string="Account Mapping">
+                                    <field name="account_src_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                    <field name="account_dest_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                    <field name="note" class="oe-bordered-editor" placeholder="Legal Notes..."/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_account_position_filter" model="ir.ui.view">
+            <field name="name">account.fiscal.position.filter</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="arch" type="xml">
+                <search string="Search Fiscal Positions">
+                    <field name="name" string="Fiscal Position"/>
+                    <filter name="active" string="Archived" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+        <record id="view_account_position_tree" model="ir.ui.view">
+            <field name="name">account.fiscal.position.tree</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="arch" type="xml">
+                <tree string="Fiscal Position">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="partner_view_buttons">
+            <field name="name">partner.view.buttons</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="11"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button type="object" class="oe_stat_button" icon="fa-pencil-square-o" name="action_view_partner_invoices"
+                        groups="account.group_account_invoice,account.group_account_readonly"
+                        context="{'default_partner_id': active_id}">
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="currency_id" invisible="1"/>
+                                <field name="total_invoiced" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            </span>
+                            <span class="o_stat_text">Invoiced</span>
+                        </div>
+                    </button>
+                </div>
+
+                <page name="internal_notes" position="inside">
+                    <group groups="account.group_account_invoice,account.group_account_readonly">
+                        <group groups="account.group_warning_account" col="2">
+                            <separator string="Warning on the Invoice" colspan="2"/>
+                            <field name="invoice_warn" nolabel="1" colspan="2" required="1"/>
+                            <field name="invoice_warn_msg" placeholder="Type a message..." colspan="2" nolabel="1"
+                                attrs="{'required':[('invoice_warn','!=', False), ('invoice_warn','!=','no-message')], 'invisible':[('invoice_warn','in',(False,'no-message'))]}"/>
+                        </group>
+                    </group>
+                </page>
+            </field>
+        </record>
+
+        <record id="action_account_fiscal_position_form" model="ir.actions.act_window">
+            <field name="name">Fiscal Positions</field>
+            <field name="res_model">account.fiscal.position</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="search_view_id" ref="view_account_position_filter"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new fiscal position
+              </p>
+            </field>
+        </record>
+
+        <!--
+        Partners Extension
+        -->
+
+        <record id="view_partner_property_form" model="ir.ui.view">
+            <field name="name">res.partner.property.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="priority">2</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="before">
+                    <div groups="account.group_account_invoice,account.group_account_readonly" class="alert alert-warning" role="alert" style="margin-bottom:0px;"
+                         attrs="{'invisible': [('duplicated_bank_account_partners_count', '=', 0)]}">
+                        One or more Bank Accounts set on this partner are also used by other <bold><button class="alert-link" type="object" name="action_view_partner_with_same_bank" role="button" string="Partners" style="padding: 0;vertical-align: baseline;"/></bold>. Please make sure that this is a wanted behavior.
+                    </div>
+                </xpath>
+                <page name="sales_purchases" position="after">
+                    <page string="Invoicing" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}" groups="account.group_account_invoice,account.group_account_readonly">
+                        <field name="duplicated_bank_account_partners_count" invisible="1"/>
+                        <field name="show_credit_limit" invisible="1"/>
+                        <group>
+                            <group string="Bank Accounts" name="banks" groups="account.group_account_invoice,account.group_account_readonly">
+                                <field name="bank_ids" nolabel="1" colspan="2" context="{'default_allow_out_payment': True}">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="bank_id"/>
+                                        <field name="acc_number"/>
+                                        <field name="allow_out_payment" widget="boolean_toggle"/>
+                                        <field name="acc_holder_name" invisible="1"/>
+                                    </tree>
+                                </field>
+                                <button type="action" class="btn-link"
+                                    name="%(base.action_res_partner_bank_account_form)d"
+                                    context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}"
+                                    string="View accounts detail"
+                                    colspan="2"
+                                />
+                            </group>
+                            <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_readonly">
+                                <field name="currency_id" invisible="1"/>
+                                <field name="property_account_receivable_id"/>
+                                <field name="property_account_payable_id"/>
+                            </group>
+                            <group string="Credit Limits"
+                                   name="credit_limits"
+                                   groups="account.group_account_invoice,account.group_account_readonly"
+                                   attrs="{'invisible': [('show_credit_limit', '=', False)]}">
+                                <field name="credit"/>
+                                <label for="use_partner_credit_limit"/>
+                                <div class="o_row">
+                                    <field name="use_partner_credit_limit"/>
+                                    <field name="credit_limit" class="oe_inline" attrs="{'invisible': [('use_partner_credit_limit', '=', False)]}"/>
+                                </div>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Invoicing" name="accounting_disabled" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}" groups="account.group_account_invoice,account.group_account_readonly">
+                        <div>
+                            <p>Accounting-related settings are managed on <button name="open_commercial_entity" type="object" string="the parent company" class="oe_link"/></p>
+                        </div>
+                    </page>
+                </page>
+                <xpath expr="//group[@name='misc']" position="before">
+                    <group string="Fiscal Information" name="fiscal_information" priority="5" groups="account.group_account_invoice,account.group_account_readonly">
+                        <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
+                    </group>
+                </xpath>
+                <group name="sale" position="inside">
+                    <field string="Payment Terms" name="property_payment_term_id" options="{'no_open': True, 'no_create': True}" groups="account.group_account_invoice,account.group_account_readonly"/>
+                </group>
+                <group name="purchase" position="inside">
+                    <field string="Payment Terms" name="property_supplier_payment_term_id" options="{'no_open': True, 'no_create': True}" groups="account.group_account_invoice,account.group_account_readonly"/>
+                </group>
+            </field>
+        </record>
+
+        <record id="res_partner_view_search" model="ir.ui.view">
+            <field name="name">res.partner.search.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='inactive']" position="before">
+                   <filter string="Customer Invoices" name="customer" domain="[('customer_rank','>', 0)]"/>
+                   <filter string="Vendor Bills" name="supplier" domain="[('supplier_rank','>', 0)]"/>
+                   <separator/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_partner_action_customer" model="ir.actions.act_window">
+            <field name="name">Customers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_customer': 1,'res_partner_search_mode': 'customer', 'default_is_company': True, 'default_customer_rank': 1}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new customer in your address book
+              </p><p>
+                Odoo helps you easily track all activities related to a customer.
+              </p>
+            </field>
+        </record>
+
+        <record id="res_partner_action_supplier" model="ir.actions.act_window">
+            <field name="name">Vendors</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_supplier': 1,'res_partner_search_mode': 'supplier', 'default_is_company': True, 'default_supplier_rank': 1}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new supplier in your address book
+              </p><p>
+                Odoo helps you easily track all activities related to a supplier.
+              </p>
+            </field>
+        </record>
+    </data>
+</odoo>

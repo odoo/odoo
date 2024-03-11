@@ -1,0 +1,17 @@
+// ------- Graph renderer -------
+.o_graph_renderer canvas {
+    background-color: $o-view-background-color;
+}
+
+.o_graph_view {
+    .o_cp_bottom_left {
+        display: block;
+    }
+}
+
+// ------- Sample mode -------
+.o_graph_view .o_view_sample_data {
+    .o_graph_renderer {
+        @include o-sample-data-disabled;
+    }
+}

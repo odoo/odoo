@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_warehouse_orderpoint_kanban" model="ir.ui.view">
+        <field name="name">stock.warehouse.orderpoint.kanban</field>
+        <field name="model">stock.warehouse.orderpoint</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="trigger"/>
+                <field name="product_min_qty"/>
+                <field name="product_max_qty"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title"><t t-esc="record.name.value"/></strong>
+                                </div>
+                                <span class="badge rounded-pill"><strong>Min qty :</strong><t t-esc="record.product_min_qty.value"/></span>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <span><t t-esc="record.product_id.value"/></span>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <span class="badge rounded-pill"><strong>Max qty :</strong><t t-esc="record.product_max_qty.value"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_warehouse_orderpoint_tree_editable" model="ir.ui.view">
+        <field name="name">stock.warehouse.orderpoint.tree.editable</field>
+        <field name="model">stock.warehouse.orderpoint</field>
+        <field name="arch" type="xml">
+            <tree string="Reordering Rules" editable="bottom" js_class="stock_orderpoint_list" sample="1" multi_edit="1" export_xlsx="0">
+                <field name="active" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="product_category_id" invisible="1"/>
+                <field name="product_tmpl_id" invisible="1"/>
+                <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}" force_save="1"/>
+                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide"/>
+                <field name="qty_on_hand" force_save="1"/>
+                <field name="qty_forecast" force_save="1"/>
+                <button name="action_product_forecast_report" type="object" icon="fa-area-chart" title="Forecast Report" attrs="{'invisible': [('id', '=', False)]}"/>
+                <field name="visibility_days" optional="hidden"/>
+                <field name="route_id" options="{'no_create': True, 'no_open': True}"/>
+                <button name="action_stock_replenishment_info" type="object" icon="fa-info-circle" title="Replenishment Information" attrs="{'invisible': [('id', '=', False)]}"/>
+                <field name="trigger" optional="hide"/>
+                <field name="group_id" optional="hide" groups="stock.group_adv_location"/>
+                <field name="product_min_qty" optional="show"/>
+                <field name="product_max_qty" optional="show"/>
+                <field name="qty_multiple" optional="hide"/>
+                <field name="qty_to_order"/>
+                <field name="product_uom_name" string="UoM" groups="uom.group_uom"/>
+                <field name="company_id" optional="hide" readonly="1" groups="base.group_multi_company"/>
+                <button name="action_replenish" string="Order Once" type="object" class="o_replenish_buttons" icon="fa-truck"
+                    attrs="{'invisible': [('qty_to_order', '&lt;=', 0.0)]}"/>
+                <button name="action_replenish_auto" string="Automate Orders" type="object" class="o_replenish_buttons" icon="fa-refresh"
+                    attrs="{'invisible': ['|', ('qty_to_order', '&lt;=', 0.0), ('trigger', '=', 'auto')]}"/>
+                <button name="%(action_orderpoint_snooze)d" string="Snooze" type="action" class="text-warning" icon="fa-bell-slash"
+                    attrs="{'invisible': [('trigger', '!=', 'manual')]}" context="{'default_orderpoint_ids': [id]}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="stock_reorder_report_search">
+        <field name="name">stock.warehouse.orderpoint.reorder.search</field>
+        <field name="model">stock.warehouse.orderpoint</field>
+        <field name="arch" type="xml">
+            <search string="Replenishment Report Search">
+                <field name="name" string="Reordering Rule"/>
+                <field name="product_id"/>
+                <field name="trigger"/>
+                <field name="product_category_id"/>
+                <field name="group_id" groups="stock.group_adv_location"/>
+                <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
+                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                <filter string="Trigger Manual" name="filter_creation_trigger" domain="[('trigger', '=', 'manual')]"/>
+                <separator/>
+                <filter string="To Reorder" name="filter_to_reorder" domain="[('qty_to_order', '&gt;', 0.0)]"/>
+                <separator/>
+                <filter string="Not Snoozed" name="filter_not_snoozed" domain="['|', ('snoozed_until', '=', False), ('snoozed_until', '&lt;=', datetime.date.today().strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Warehouse" name="groupby_warehouse" domain="[]"  context="{'group_by': 'warehouse_id'}" groups="stock.group_stock_multi_warehouses"/>
+                    <filter string="Location" name="groupby_location" domain="[]" context="{'group_by': 'location_id'}" groups="stock.group_stock_multi_locations"/>
+                    <filter string="Product" name="groupby_product" domain="[]" context="{'group_by': 'product_id'}"/>
+                    <filter string="Category" name="groupby_category" domain="[]" context="{'group_by': 'product_category_id'}"/>
+                </group>
+                <searchpanel>
+                    <field name="location_id" string="Locations" groups="stock.group_stock_multi_locations" enable_counters="1"/>
+                    <field name="trigger" string="Trigger" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="warehouse_orderpoint_search">
+        <field name="name">stock.warehouse.orderpoint.search</field>
+        <field name="model">stock.warehouse.orderpoint</field>
+        <field name="arch" type="xml">
+            <search string="Reordering Rules Search">
+                <field name="name" string="Reordering Rule"/>
+                <field name="product_id"/>
+                <field name="trigger"/>
+                <field name="group_id" groups="stock.group_adv_location"/>
+                <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
+                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Warehouse" name="warehouse" domain="[]"  context="{'group_by': 'warehouse_id'}" groups="stock.group_stock_multi_warehouses"/>
+                    <filter string="Location" name="location" domain="[]" context="{'group_by': 'location_id'}" groups="stock.group_stock_multi_locations"/>
+                    <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_warehouse_orderpoint_form" model="ir.ui.view">
+        <field name="name">stock.warehouse.orderpoint.form</field>
+        <field name="model">stock.warehouse.orderpoint</field>
+        <field name="arch" type="xml">
+            <form string="Reordering Rules">
+                <div class="alert alert-info" role="alert">
+                    <a style="cursor: pointer" class="alert-link o_form_uri" type="action" name="%(action_procurement_compute)d">Run the scheduler</a> manually to trigger the reordering rules right now.
+                </div>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="route_id" invisible="1"/>
+                            <field name="product_id"/>
+                            <label for="product_min_qty"/>
+                            <div class="o_row">
+                                <field name="product_min_qty"/>
+                                <field name="product_uom_name"/>
+                                <button name="stock.action_stock_replenishment_info" string="Forecast Description" type="action" icon="fa-area-chart" attrs="{'invisible': [('id', '=', False)]}"/>
+                            </div>
+                            <label for="product_max_qty"/>
+                            <div class="o_row">
+                                <field name="product_max_qty"/>
+                                <field name="product_uom_name"/>
+                            </div>
+                            <field name="qty_multiple" string="Quantity Multiple"/>
+                        </group>
+                        <group>
+                            <field name="allowed_location_ids" invisible="1"/>
+                            <field name="warehouse_id" options="{'no_open': True, 'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                            <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('id', 'in', allowed_location_ids)]"/>
+                            <label for="group_id" groups="base.group_no_one"/>
+                            <div groups="base.group_no_one">
+                                <field name="group_id" groups="stock.group_adv_location"/>
+                            </div>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="visibility_days"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_orderpoint_replenish" model="ir.actions.act_window">
+        <field name="name">Replenishment</field>
+        <field name="res_model">stock.warehouse.orderpoint</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_warehouse_orderpoint_tree_editable"/>
+        <field name="search_view_id" ref="stock_reorder_report_search"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_replenishment">
+            You are good, no replenishment to perform!
+          </p><p>
+            You'll find here smart replenishment propositions based on inventory forecasts.
+            Choose the quantity to buy or manufacture and launch orders in a click.
+            To save time in the future, set the rules as "automated".
+          </p>
+        </field>
+    </record>
+
+    <record id="action_orderpoint" model="ir.actions.act_window">
+        <field name="name">Reordering Rules</field>
+        <field name="res_model">stock.warehouse.orderpoint</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_id" ref="view_warehouse_orderpoint_tree_editable"/>
+        <field name="search_view_id" ref="warehouse_orderpoint_search"/>
+        <field name="context">{'search_default_trigger': 'auto'}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No reordering rule found
+          </p><p>
+            Define a minimum stock rule so that Odoo automatically creates requests for quotations or confirmed manufacturing orders to resupply your stock.
+          </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_replenishment">
+        <field name="name">Replenishment</field>
+        <field name="model_id" ref="model_stock_warehouse_orderpoint"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.with_context(
+                search_default_filter_to_reorder=True,
+                search_default_filter_not_snoozed=True,
+                default_trigger='manual',
+                searchpanel_default_trigger='manual'
+            ).action_open_orderpoints()
+        </field>
+    </record>
+
+
+    <menuitem
+        id="menu_reordering_rules_replenish"
+        action="action_replenishment"
+        name="Replenishment" parent="menu_stock_warehouse_mgmt" sequence="5"
+        groups="stock.group_stock_manager"/>
+    <menuitem
+        id="menu_reordering_rules_config"
+        action="action_orderpoint"
+        name="Reordering Rules" parent="menu_product_in_config_stock" sequence="10"/>
+</odoo>

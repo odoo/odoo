@@ -1,0 +1,159 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_hr
+# 
+# Translators:
+# ILMIR <karamov@it-projects.info>, 2022
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2022
+# Irina Fedulova <istartlin@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Allowed Employees"
+msgstr "Разрешенные сотрудники"
+
+#. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_form_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_list_select_inherit
+msgid "Cashier"
+msgstr "Кассир"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
+#, python-format
+msgid "Change Cashier"
+msgstr "Изменить кассира"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_res_config_settings
+msgid "Config Settings"
+msgstr "Конфигурационные настройки"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_hr_employee
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
+#: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__employee_id
+#: model_terms:ir.ui.view,arch_db:pos_hr.view_report_pos_order_search_inherit
+msgid "Employee"
+msgstr "Сотрудник"
+
+#. module: pos_hr
+#. odoo-python
+#: code:addons/pos_hr/models/hr_employee.py:0
+#, python-format
+msgid "Employee: %s - PoS Config(s): %s \n"
+msgstr "Сотрудник: %s - PoS Config(s): %s\n"
+
+#. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_employee_ids
+msgid "Employees with access"
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_employee_ids
+msgid "If left empty, all employees can log in to the PoS session"
+msgstr ""
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
+#, python-format
+msgid "Incorrect Password"
+msgstr "Неверный пароль"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#, python-format
+msgid "Log in to"
+msgstr "Войдите в систему"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
+#, python-format
+msgid "Password ?"
+msgstr "Пароль ?"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
+msgid ""
+"Person who uses the cash register. It can be a reliever, a student or an "
+"interim employee."
+msgstr ""
+"Лицо, использующее кассовый аппарат. Это может быть питчер, ученик или "
+"временный работник."
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Конфигурация точки продаж"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Заказы точки продажи"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_report_pos_order
+msgid "Point of Sale Orders Report"
+msgstr "Отчет заказов точки продаж"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Смена"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#, python-format
+msgid "Scan your badge"
+msgstr "Сканировать свой бейдж"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#, python-format
+msgid "Select Cashier"
+msgstr "Выберите кассира"
+
+#. module: pos_hr
+#. odoo-python
+#: code:addons/pos_hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"You cannot delete an employee that may be used in an active PoS session, "
+"close the session(s) first: \n"
+msgstr ""
+"Вы не можете удалить сотрудника, который может быть использован в активной "
+"сессии PoS, сначала закройте сессию(и):\n"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#, python-format
+msgid "or"
+msgstr "или"

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0"
+             xmlns:a="http://relaxng.org/ns/annotation/1.0"
+             datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <!-- Handling of element overloading when inheriting from a base
+         template
+    -->
+    <rng:include href="common.rng"/>
+
+    <rng:define name="searchpanel">
+        <rng:element name="searchpanel">
+            <rng:ref name="overload"/>
+            <rng:optional><rng:attribute name="view_types"/></rng:optional>
+            <rng:optional><rng:attribute name="class"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:ref name="field" />
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="search">
+        <rng:element name="search">
+            <rng:ref name="overload"/>
+            <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="field"/>
+                    <rng:ref name="group"/>
+                    <rng:ref name="separator"/>
+                    <rng:ref name="filter"/>
+                    <rng:element name="newline"><rng:empty/></rng:element>
+                    <rng:ref name="searchpanel"/>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+    <rng:start>
+        <rng:choice>
+            <rng:ref name="search" />
+        </rng:choice>
+    </rng:start>
+</rng:grammar>

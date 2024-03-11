@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.Chatter" owl="1">
+        <t t-if="chatter">
+            <div class="o_Chatter position-relative flex-grow-1 flex-column d-flex w-100 bg-view" t-attf-class="{{ className }}" t-ref="root">
+                <t t-if="chatter.dropZoneView">
+                    <DropZone
+                        className="'o_Chatter_dropZone'"
+                        record="chatter.dropZoneView"
+                    />
+                </t>
+                <div class="o_Chatter_fixedPanel">
+                    <ChatterTopbar
+                        t-if="chatter.topbar"
+                        className="'o_Chatter_topbar'"
+                        record="chatter.topbar"
+                    />
+                    <t t-if="chatter.composerView">
+                        <Composer
+                            className="'o_Chatter_composer border-bottom'"
+                            classNameObj="{ 'o-bordered': chatter.hasExternalBorder }"
+                            record="chatter.composerView"
+                        />
+                    </t>
+                </div>
+                <div class="o_Chatter_scrollPanel overflow-auto" t-on-scroll="chatter.onScrollScrollPanel" t-ref="scrollPanel">
+                    <t t-if="chatter.attachmentBoxView">
+                        <AttachmentBox
+                            className="'o_Chatter_attachmentBox'"
+                            record="chatter.attachmentBoxView"
+                        />
+                    </t>
+                    <t t-if="chatter.activityBoxView">
+                        <ActivityBox
+                            className="'o_Chatter_activityBox'"
+                            record="chatter.activityBoxView"
+                        />
+                    </t>
+                    <t t-if="chatter.threadView">
+                        <ThreadView
+                            className="'o_Chatter_thread'"
+                            record="chatter.threadView"
+                        />
+                    </t>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

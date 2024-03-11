@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mail.CallView" owl="1">
+    <t t-if="callView">
+        <div class="o_CallView d-flex" t-att-class="{'o-fullScreen fixed-top vw-100 vh-100': callView.isFullScreen, 'o-isMinimized': callView.isMinimized, 'position-relative': !callView.isFullScreen }" t-attf-class="{{ className }}" t-ref="root">
+            <!-- Used to make the component depend on the window size and trigger an update when the window size changes. -->
+
+            <CallMainView record="callView.callMainView"/>
+            <CallSidebarView t-if="callView.callSidebarView" record="callView.callSidebarView"/>
+
+        </div>
+    </t>
+</t>
+
+</templates>

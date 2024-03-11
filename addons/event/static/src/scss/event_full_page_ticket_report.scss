@@ -1,0 +1,63 @@
+.o_event_full_page_ticket_footer {
+    .o_event_full_page_ticket_powered_by {
+        font-size: .8rem;
+        line-height: 1rem;
+    }
+}
+
+
+.o_event_full_page_ticket_container {
+    z-index: 1;
+    background-repeat: no-repeat;
+    background-image: url(/event/static/src/img/report_full_page_ticket_background.png);
+    padding: 40px 40px 0px 40px;
+
+    .o_event_full_page_ticket_font_faded {
+        color: #939393;
+    }
+
+    .o_event_full_page_ticket_small {
+        font-size: .8rem;
+    }
+
+    .o_event_full_page_ticket_small_caps {
+        text-transform: uppercase;
+        font-size: .8rem;
+    }
+
+    .o_event_full_page_ticket_wrapper {
+        z-index: 2;
+        .o_event_full_page_ticket_details {
+            background-color: white;
+            border: solid 1px #939393;
+            border-radius: .7rem;
+            margin: 0px 8px;
+            padding: 10px 3px;
+            box-shadow: -3px 3px 9px 0px rgba(0,0,0,0.51);
+
+            .o_event_full_page_ticket_event_logo {
+                max-height: 50px;
+            }
+
+            .o_event_full_page_ticket_barcode {
+                padding-left: 30px;
+
+                .o_event_full_page_ticket_barcode_container {
+                    -webkit-transform: rotate(90deg);
+                    transform: rotate(90deg);
+                    width: 67px;
+
+                    img {
+                        padding: 0px 10px;
+                    }
+                }
+            }
+        }
+    }
+
+    .o_event_full_page_extra_instructions {
+        p {
+            margin: 0px;  // to match editor style (.o_field_html p)
+        }
+    }
+}

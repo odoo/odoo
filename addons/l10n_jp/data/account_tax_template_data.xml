@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_jp_tax_sale_exc_8" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="chart_template_id" ref="l10n_jp_chart_template"/>
+        <field name="name">Sale (8%)</field>
+        <field name="description">GST Sale 8%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">8</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">False</field>
+        <field name="active">True</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_sales_taxable_8_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_jp_330800'),
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_to_pay_temp_tx_output_8_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_sales_taxable_8_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_jp_330800'),
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_to_pay_temp_tx_output_8_tag')],
+            }),
+        ]"/>
+        <field name="tax_group_id" ref="l10n_jp_tax_group_8"/>
+    </record>
+    <record id="l10n_jp_tax_sale_exc_10" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="chart_template_id" ref="l10n_jp_chart_template"/>
+        <field name="name">GST Exc. Sale (10%)</field>
+        <field name="description">GST Excluded Sale 10%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">10</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">False</field>
+        <field name="active">True</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_sales_taxable_10_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_jp_330800'),
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_to_pay_temp_tx_output_10_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_sales_taxable_10_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_jp_330800'),
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_to_pay_temp_tx_output_10_tag')],
+            }),
+        ]"/>
+        <field name="tax_group_id" ref="l10n_jp_tax_group_10"/>
+    </record>
+    <record id="l10n_jp_tax_sale_incl_8" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="chart_template_id" ref="l10n_jp_chart_template"/>
+        <field name="name">GST Inc Sale (8%)</field>
+        <field name="description">GST Inclusive Sale 8%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">8</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">TRUE</field>
+        <field name="active">True</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_sales_taxable_8_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_jp_330800'),
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_to_pay_temp_tx_output_8_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_sales_taxable_8_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_jp_330800'),
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_to_pay_temp_tx_output_8_tag')],
+            }),
+        ]"/>
+        <field name="tax_group_id" ref="l10n_jp_tax_group_8"/>
+    </record>
+    <record id="l10n_jp_tax_sale_incl_10" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="chart_template_id" ref="l10n_jp_chart_template"/>
+        <field name="name">GST Inc Sale (10%)</field>
+        <field name="description">GST Inclusive Sale 10%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">10</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">TRUE</field>
+        <field name="active">True</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_sales_taxable_10_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_jp_330800'),
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_to_pay_temp_tx_output_10_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_sales_taxable_10_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_jp_330800'),
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_to_pay_temp_tx_output_10_tag')],
+            }),
+        ]"/>
+        <field name="tax_group_id" ref="l10n_jp_tax_group_10"/>
+    </record>
+    <record id="l10n_jp_tax_sale_exempt" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="chart_template_id" ref="l10n_jp_chart_template"/>
+        <field name="name">GST Tax Exempt Sale</field>
+        <field name="description">GST Tax Exempt Sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">False</field>
+        <field name="active">True</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_sales_duty_free_tag')],
+            }),
+            (0,0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_sales_duty_free_tag')],
+            }),
+            (0,0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="tax_group_id" ref="l10n_jp_tax_group_exempt"/>
+    </record>
+    <record id="l10n_jp_tax_sale_non_vat" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="chart_template_id" ref="l10n_jp_chart_template"/>
+        <field name="name">Non-VAT</field>
+        <field name="description">Non-VAT</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">False</field>
+        <field name="active">True</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_sales_tax_free_tag')],
+            }),
+            (0,0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_sales_tax_free_tag')],
+            }),
+            (0,0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="tax_group_id" ref="l10n_jp_tax_group_exempt"/>
+    </record>
+    <record id="l10n_jp_tax_purchase_exc_8" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="chart_template_id" ref="l10n_jp_chart_template"/>
+        <field name="name">Purchase (8%)</field>
+        <field name="description">GST Purchase 8%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">8</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="price_include">False</field>
+        <field name="active">True</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_purchases_taxable_8_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_jp_123200'),
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_to_pay_temp_pmt_susp_cons_8_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_purchases_taxable_8_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_jp_123200'),
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_to_pay_temp_pmt_susp_cons_8_tag')],
+            }),
+        ]"/>
+        <field name="tax_group_id" ref="l10n_jp_tax_group_8"/>
+    </record>
+    <record id="l10n_jp_tax_purchase_exc_10" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="chart_template_id" ref="l10n_jp_chart_template"/>
+        <field name="name">Purchase (10%)</field>
+        <field name="description">GST Purchase 10%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">10</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="price_include">False</field>
+        <field name="active">True</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_purchases_taxable_10_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_jp_123200'),
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_to_pay_temp_pmt_susp_cons_10_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_purchases_taxable_10_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_jp_123200'),
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_to_pay_temp_pmt_susp_cons_10_tag')],
+            }),
+        ]"/>
+        <field name="tax_group_id" ref="l10n_jp_tax_group_10"/>
+    </record>
+    <record id="l10n_jp_tax_purchase_incl_8" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="chart_template_id" ref="l10n_jp_chart_template"/>
+        <field name="name">GST Inc Purchase (8%)</field>
+        <field name="description">GST Inclusive Purchase 8%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">8</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="price_include">True</field>
+        <field name="active">True</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_purchases_taxable_8_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_jp_123200'),
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_to_pay_temp_pmt_susp_cons_8_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_purchases_taxable_8_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_jp_123200'),
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_to_pay_temp_pmt_susp_cons_8_tag')],
+            }),
+        ]"/>
+        <field name="tax_group_id" ref="l10n_jp_tax_group_8"/>
+    </record>
+    <record id="l10n_jp_tax_purchase_incl_10" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="chart_template_id" ref="l10n_jp_chart_template"/>
+        <field name="name">GST Inc Purchase (10%)</field>
+        <field name="description">GST Inclusive Purchase 10%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">10</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="price_include">True</field>
+        <field name="active">True</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_purchases_taxable_10_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_jp_123200'),
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_to_pay_temp_pmt_susp_cons_10_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_purchases_taxable_10_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_jp_123200'),
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_to_pay_temp_pmt_susp_cons_10_tag')],
+            }),
+        ]"/>
+        <field name="tax_group_id" ref="l10n_jp_tax_group_10"/>
+    </record>
+    <record id="l10n_jp_tax_purchase_imp" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="chart_template_id" ref="l10n_jp_chart_template"/>
+        <field name="name">Oversea Purchase</field>
+        <field name="description">Oversea Purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="price_include">False</field>
+        <field name="active">True</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_purchases_import_tag')],
+            }),
+            (0,0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_purchases_import_tag')],
+            }),
+            (0,0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="tax_group_id" ref="l10n_jp_tax_group_exempt"/>
+    </record>
+    <record id="l10n_jp_tax_purchase_exempt" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="chart_template_id" ref="l10n_jp_chart_template"/>
+        <field name="name">GST Tax Exempt Purchase</field>
+        <field name="description">GST Tax Exempt Purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="price_include">False</field>
+        <field name="active">True</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_purchases_tax_free_tag')],
+            }),
+            (0,0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_jp.l10n_jp_tax_report_comp_basis_purchases_tax_free_tag')],
+            }),
+            (0,0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="tax_group_id" ref="l10n_jp_tax_group_exempt"/>
+    </record>
+</odoo>

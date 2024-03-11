@@ -1,0 +1,1351 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sms
+# 
+# Translators:
+# Aveli Kannel <aveli@avalah.ee>, 2022
+# Egon Raamat <egon@avalah.ee>, 2022
+# Marek Pontus, 2022
+# Andre Roomet <andreroomet@gmail.com>, 2022
+# Eneli Õigus <enelioigus@gmail.com>, 2022
+# Piia Paurson <piia@avalah.ee>, 2022
+# Martin Aavastik <martin@avalah.ee>, 2022
+# Algo Kärp <algokarp@gmail.com>, 2022
+# Triine Aavik <triine@avalah.ee>, 2022
+# Martin Trigaux, 2022
+# Arma Gedonsky <armagedonsky@hot.ee>, 2022
+# Rivo Zängov <eraser@eraser.ee>, 2022
+# Leaanika Randmets, 2022
+# JanaAvalah, 2023
+# Anna, 2023
+# Mihkel avalah, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Mihkel avalah, 2023\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
+msgid "# Invalid recipients"
+msgstr "# Kehtetud adressaadid"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_valid_count
+msgid "# Valid recipients"
+msgstr "# Kehtivad adressaadid"
+
+#. module: sms
+#: code:addons/sms/models/sms_template.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (koopia)"
+
+#. module: sms
+#: code:addons/sms/wizard/sms_composer.py:0
+#, python-format
+msgid "%s invalid recipients"
+msgstr "%s kehtetud adressaadid"
+
+#. module: sms
+#: code:addons/sms/models/sms_sms.py:0
+#, python-format
+msgid ""
+"%s out of the %s selected SMS Text Messages have successfully been resent."
+msgstr "%s valitud tekstisõnumitest %s on edukalt uuesti saadetud."
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid ""
+"<span class=\"o_stat_text\">Add</span>\n"
+"                                <span class=\"o_stat_text\">Context Action</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Lisa</span>\n"
+"                                <span class=\"o_stat_text\">Konteksti tegevus</span>"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid ""
+"<span class=\"o_stat_text\">Remove</span>\n"
+"                                <span class=\"o_stat_text\">Context Action</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Eemalda</span>\n"
+"                                <span class=\"o_stat_text\">Konteksti tegevus</span>"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+msgid ""
+"<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
+"False)]}\">No records</span>"
+msgstr ""
+"<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
+"False)]}\">Kirjed puuduvad</span>"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "<span> or to specify the country code.</span>"
+msgstr "<span> või riigi koodi täpsustamiseks.</span>"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid ""
+"<strong>Invalid number:</strong>\n"
+"                        <span> make sure to set a country on the </span>"
+msgstr ""
+"<strong>Vigane number:</strong>\n"
+"                        <span> ärge unustage määrata riiki </span>"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
+msgid "Action Needed"
+msgstr "Vajalik toiming"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
+#: model:ir.model.fields,field_description:sms.field_ir_cron__state
+msgid "Action To Do"
+msgstr "Toimingud, mida teha"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid ""
+"Add a contextual action on the related model to open a sms composer with "
+"this template"
+msgstr ""
+"Add a contextual action on the related model to open a sms composer with "
+"this template"
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/notification_group/notification_group.xml:0
+#, python-format
+msgid "An error occurred when sending an SMS."
+msgstr "SMS-i saatmisel ilmnes probleem"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template__model_id
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__model_id
+msgid "Applies to"
+msgstr "Millel rakendatakse?"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_reset_view_form
+msgid ""
+"Are you sure you want to reset these sms templates to their original "
+"configuration? Changes and translations will be lost."
+msgstr ""
+"Kas olete kindel, et soovite need sms-mallid algsesse konfiguratsiooni "
+"lähtestada? Muudatused ja tõlked lähevad kaduma."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
+msgid "Attachment Count"
+msgstr "Manuste arv"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
+msgid "Blacklisted"
+msgstr "Musta nimekirja lisatud"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__mobile_blacklisted
+msgid "Blacklisted Phone Is Mobile"
+msgstr "Mustas nimekirjas on mobiiltelefoni number"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__phone_blacklisted
+msgid "Blacklisted Phone is Phone"
+msgstr "Mustas nimekirjas on telefoni number"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_sms__body
+#: model:ir.model.fields,field_description:sms.field_sms_template__body
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__body
+msgid "Body"
+msgstr "Sisu"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
+msgid "Buy credits"
+msgstr "Osta punkte"
+
+#. module: sms
+#: code:addons/sms/models/sms_api.py:0
+#, python-format
+msgid "Buy credits."
+msgstr "Osta punkte."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend__can_cancel
+msgid "Can Cancel"
+msgstr "Võib tühistada"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend__can_resend
+msgid "Can Resend"
+msgstr "Võib uueseti saata"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_reset_view_form
+#: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
+msgid "Cancel"
+msgstr "Tühista"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__canceled
+msgid "Canceled"
+msgstr "Tühistatud"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+msgid "Choose a language:"
+msgstr "Vali keel:"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+msgid "Choose an example"
+msgstr "Vali näidis"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_ir_actions_server__sms_method
+#: model:ir.model.fields,help:sms.field_ir_cron__sms_method
+msgid ""
+"Choose method for SMS sending:\n"
+"SMS: mass SMS\n"
+"Post as Message: log on document\n"
+"Post as Note: mass SMS with archives"
+msgstr ""
+"Valige SMS-i saatmise viis:\n"
+"SMS: mass-SMS\n"
+"Postita sõnumina: logi sisse dokumenti\n"
+"Postita märkusena: mass-SMS arhiividega"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "Close"
+msgstr "Sulge"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
+msgid "Composition Mode"
+msgstr "Koostamisrežiim"
+
+#. module: sms
+#: model:ir.model,name:sms.model_res_partner
+#: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "Content"
+msgstr "Sisu"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__create_uid
+#: model:ir.model.fields,field_description:sms.field_sms_resend__create_uid
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__create_uid
+#: model:ir.model.fields,field_description:sms.field_sms_sms__create_uid
+#: model:ir.model.fields,field_description:sms.field_sms_template__create_uid
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__create_uid
+#: model:ir.model.fields,field_description:sms.field_sms_template_reset__create_uid
+msgid "Created by"
+msgstr "Loodud (kelle poolt?)"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__create_date
+#: model:ir.model.fields,field_description:sms.field_sms_resend__create_date
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__create_date
+#: model:ir.model.fields,field_description:sms.field_sms_sms__create_date
+#: model:ir.model.fields,field_description:sms.field_sms_template__create_date
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__create_date
+#: model:ir.model.fields,field_description:sms.field_sms_template_reset__create_date
+msgid "Created on"
+msgstr "Loomise kuupäev"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_sms__partner_id
+msgid "Customer"
+msgstr "Klient"
+
+#. module: sms
+#: model:sms.template,name:sms.sms_template_demo_0
+msgid "Customer: automated SMS"
+msgstr "Klient: automaatne SMS"
+
+#. module: sms
+#: model:sms.template,body:sms.sms_template_demo_0
+msgid "Dear {{ object.display_name }} this is an automated SMS."
+msgstr "Lugupeetud {{ object.display_name }} see on automaatne SMS."
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+msgid "Discard"
+msgstr "Loobu"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__display_name
+#: model:ir.model.fields,field_description:sms.field_sms_resend__display_name
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__display_name
+#: model:ir.model.fields,field_description:sms.field_sms_sms__display_name
+#: model:ir.model.fields,field_description:sms.field_sms_template__display_name
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__display_name
+#: model:ir.model.fields,field_description:sms.field_sms_template_reset__display_name
+msgid "Display Name"
+msgstr "Kuva nimi"
+
+#. module: sms
+#: model:ir.model,name:sms.model_mail_followers
+msgid "Document Followers"
+msgstr "Dokumendi jälgijad"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__res_id
+msgid "Document ID"
+msgstr "Dokumendi ID"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids
+msgid "Document IDs"
+msgstr "Dokumendi ID-d"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__res_model_description
+msgid "Document Model Description"
+msgstr "Dokumendi mudeli kirjeldus"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__res_model
+msgid "Document Model Name"
+msgstr "Dokumendi mudeli nimi"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_duplicate
+msgid "Duplicate"
+msgstr "Tee koopia"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
+msgid "Edit Partners"
+msgstr "Muuda partnereid"
+
+#. module: sms
+#: model:ir.model,name:sms.model_mail_thread
+msgid "Email Thread"
+msgstr "E-posti kirjavahetus"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
+msgid "Error"
+msgstr "Viga"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__failure_type
+msgid "Error Message"
+msgstr "Veateade"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_sms__failure_type
+msgid "Failure Type"
+msgstr "Veatüüp"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_mail_notification__failure_type
+msgid "Failure type"
+msgstr "Veatüüp"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized
+msgid ""
+"Field used to store sanitized phone number. Helps speeding up searches and "
+"comparisons."
+msgstr ""
+"Väli, mida kasutatakse puhastatud telefoninumbri salvestamiseks. Aitab "
+"kiirendada otsinguid ja võrdlusi."
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_template__template_fs
+msgid ""
+"File from where the template originates. Used to reset broken template."
+msgstr ""
+"Fail, kust mall esialgselt pärineb. Kasutatakse katkise malli "
+"lähtestamiseks."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_follower_ids
+msgid "Followers"
+msgstr "Jälgijad"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Jälgijad (partnerid)"
+
+#. module: sms
+#: code:addons/sms/wizard/sms_composer.py:0
+#, python-format
+msgid "Following numbers are not correctly encoded: %s"
+msgstr "Järgmised numbrid pole õigesti kodeeritud: %s"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend__has_insufficient_credit
+msgid "Has Insufficient Credit"
+msgstr "Pole piisavalt krediiti"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__has_message
+msgid "Has Message"
+msgstr "On sõnum"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_mail_mail__has_sms_error
+#: model:ir.model.fields,field_description:sms.field_mail_message__has_sms_error
+msgid "Has SMS error"
+msgstr "SMS viga"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend__has_unregistered_account
+msgid "Has Unregistered Account"
+msgstr "Registreerimata konto"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__id
+#: model:ir.model.fields,field_description:sms.field_sms_resend__id
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__id
+#: model:ir.model.fields,field_description:sms.field_sms_sms__id
+#: model:ir.model.fields,field_description:sms.field_sms_template__id
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__id
+#: model:ir.model.fields,field_description:sms.field_sms_template_reset__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Kui märgitud, siis uued sõnumid nõuavad Su tähelepanu."
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_calendar_event__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_crm_team__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_crm_team_member__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_mail_blacklist__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_mail_channel__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_mail_thread__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_mail_thread_blacklist__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_mail_thread_cc__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_mail_thread_phone__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_phone_blacklist__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_product_product__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_product_template__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_res_partner__message_has_error
+#: model:ir.model.fields,help:sms.field_res_partner__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_res_users__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Kui valitud, on mõningatel sõnumitel saatmiserror."
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized_blacklisted
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr ""
+"Kui puhastatud telefoninumber on mustas nimekirjas, ei saa kontakt enam "
+"ühtegi masspostituse SMS´i mitte ühestki kanalist."
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
+msgid "Ignore all"
+msgstr "Eira kõiki"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__outgoing
+msgid "In Queue"
+msgstr "Järjekorras"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__mobile_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Näitab, kas mustas nimekirjas olev puhastatud telefoninumber on mobiili "
+"number. Aitab eristada, milline number on mustas nimekirjas             kui "
+"mudelis on nii mobiiltelefoni kui ka telefoninumbri väli."
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__phone_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Näitab, kas mustas nimekirjas olev puhastatud telefoninumber on mobiili "
+"number. Aitab eristada, milline number on mustas nimekirjas             kui "
+"mudelis on nii mobiiltelefoni kui ka telefoninumbri väli."
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
+msgid "Indicates if the SMS composer targets a single specific recipient"
+msgstr "Näitab, kas SMS-i koostaja sihib ühte kindlat adressaati"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_credit
+msgid "Insufficient Credit"
+msgstr "Ebapiisav krediit"
+
+#. module: sms
+#: code:addons/sms/wizard/sms_composer.py:0
+#, python-format
+msgid "Invalid recipient number. Please update it."
+msgstr "Saaja number on vale. Palun värskendage seda."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_is_follower
+msgid "Is Follower"
+msgstr "Jälgija"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
+msgid "Is valid"
+msgstr "On kehtiv"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__mass_keep_log
+msgid "Keep a note on document"
+msgstr "Lisa dokumendile märkus"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template__lang
+msgid "Language"
+msgstr "Keel"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer____last_update
+#: model:ir.model.fields,field_description:sms.field_sms_resend____last_update
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient____last_update
+#: model:ir.model.fields,field_description:sms.field_sms_sms____last_update
+#: model:ir.model.fields,field_description:sms.field_sms_template____last_update
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview____last_update
+#: model:ir.model.fields,field_description:sms.field_sms_template_reset____last_update
+msgid "Last Modified on"
+msgstr "Viimati muudetud (millal)"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__write_uid
+#: model:ir.model.fields,field_description:sms.field_sms_resend__write_uid
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__write_uid
+#: model:ir.model.fields,field_description:sms.field_sms_sms__write_uid
+#: model:ir.model.fields,field_description:sms.field_sms_template__write_uid
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__write_uid
+#: model:ir.model.fields,field_description:sms.field_sms_template_reset__write_uid
+msgid "Last Updated by"
+msgstr "Viimati uuendatud (kelle poolt)"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__write_date
+#: model:ir.model.fields,field_description:sms.field_sms_resend__write_date
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__write_date
+#: model:ir.model.fields,field_description:sms.field_sms_sms__write_date
+#: model:ir.model.fields,field_description:sms.field_sms_template__write_date
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__write_date
+#: model:ir.model.fields,field_description:sms.field_sms_template_reset__write_date
+msgid "Last Updated on"
+msgstr "Viimati uuendatud"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_sms__mail_message_id
+msgid "Mail Message"
+msgstr "Meilisõnum"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_ir_model__is_mail_thread_sms
+msgid "Mail Thread SMS"
+msgstr "Mail Thread SMS"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Peamine manus"
+
+#. module: sms
+#: model:ir.model,name:sms.model_mail_message
+#: model:ir.model.fields,field_description:sms.field_sms_composer__body
+#: model:ir.model.fields,field_description:sms.field_sms_resend__mail_message_id
+#: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
+msgid "Message"
+msgstr "Sõnum"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error
+msgid "Message Delivery error"
+msgstr "Sõnumi edastamise veateade"
+
+#. module: sms
+#: model:ir.model,name:sms.model_mail_notification
+msgid "Message Notifications"
+msgstr "Sõnumi teavitused"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_mail_mail__message_type
+#: model:ir.model.fields,help:sms.field_mail_message__message_type
+msgid ""
+"Message type: email for email message, notification for system message, "
+"comment for other messages such as user replies"
+msgstr ""
+"Sõnumi tüüp: email sõnumiks, teade süsteemi sõnumiks, kommentaar muudeks "
+"sõnumiteks nagu kasutaja vastused."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_ids
+msgid "Messages"
+msgstr "Sõnumid"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_missing
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_number_missing
+msgid "Missing Number"
+msgstr "Puuduolev number"
+
+#. module: sms
+#: model:ir.model,name:sms.model_ir_model
+msgid "Models"
+msgstr "Mudelid"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template__name
+msgid "Name"
+msgstr "Nimi"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__no_record
+msgid "No Record"
+msgstr "Andmed puuduvad"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
+msgid "Notification"
+msgstr "Teavitused"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_mail_notification__notification_type
+msgid "Notification Type"
+msgstr "Teavituse tüüp"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_sms__number
+msgid "Number"
+msgstr "Number"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
+msgid "Number Field"
+msgstr "Numbriväli"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Toimingute arv"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error_counter
+msgid "Number of errors"
+msgstr "Vigade arv"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Tegevust nõudvate sõnumite arv"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Kohaletoimetamise veateatega sõnumite arv"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
+msgid ""
+"Number of recipients that will receive the SMS if sent in mass mode, without"
+" applying the Active Domain value"
+msgstr ""
+"Vastuvõtjate arv, kes saavad SMSi, kui see saadetakse masspostituse teel, "
+"ilma aktiivse domeeni väärtust kohaldamata."
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
+msgid "Opted Out"
+msgstr "Loobutud"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_template__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"Valikuline tõlkekeel (ISO-kood), mis valitakse meili saatmisel. Kui seda "
+"pole määratud, kasutatakse ingliskeelset versiooni. Tavaliselt peaks see "
+"olema kohahoidja avaldis, mis pakub sobivat keelt, nt. {{ "
+"object.partner_id.lang }}."
+
+#. module: sms
+#: model:ir.model,name:sms.model_sms_sms
+msgid "Outgoing SMS"
+msgstr "Väljuv SMS"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_id
+msgid "Partner"
+msgstr "Kontakti kaart"
+
+#. module: sms
+#: model:ir.model,name:sms.model_mail_thread_phone
+msgid "Phone Blacklist Mixin"
+msgstr "Telefoni musta nimekirja Mixin"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized_blacklisted
+msgid "Phone Blacklisted"
+msgstr "Telefoninumber lisatud musta nimekirja"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
+msgid "Phone Number"
+msgstr "Telefoninumber"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__recipient_single_number_itf
+msgid ""
+"Phone number of the recipient. If changed, it will be recorded on "
+"recipient's profile."
+msgstr ""
+"Saaja telefoninumber. Kui telefoninumbrit muudetakse, salvestatakse see "
+"saaja profiilile."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__phone_mobile_search
+msgid "Phone/Mobile"
+msgstr "Telefon/Mobiil"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
+msgid "Post as Message"
+msgstr "Postita sõnum"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
+msgid "Post as Note"
+msgstr "Postita märkus"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
+msgid "Post on a document"
+msgstr "Postitage dokumendile"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "Preview"
+msgstr "Eelvaade"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+msgid "Preview of"
+msgstr "Eelvaade:"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_reset_view_form
+msgid "Proceed"
+msgstr "Jätkake"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "Put in queue"
+msgstr "Pange järjekorda"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
+msgid "Reason"
+msgstr "Põhjus"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "Recipient"
+msgstr "Saaja"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_name
+msgid "Recipient Name"
+msgstr "Saaja nimi"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number_itf
+msgid "Recipient Number"
+msgstr "Saaja number"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend__recipient_ids
+msgid "Recipients"
+msgstr "Saajad"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__numbers
+msgid "Recipients (Numbers)"
+msgstr "Saajate (numbrid)"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_description
+msgid "Recipients (Partners)"
+msgstr "Saajate (partnerid)"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__resource_ref
+msgid "Record reference"
+msgstr "Kirje viide"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template__model
+msgid "Related Document Model"
+msgstr "Seotud dokumendi mudel"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "Remove the contextual action of the related model"
+msgstr "Eemaldage seotud mudeli kontekstiline tegevus"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template__render_model
+msgid "Rendering Model"
+msgstr "Esitlusmudel"
+
+#. module: sms
+#: model:ir.actions.server,name:sms.ir_actions_server_sms_sms_resend
+msgid "Resend"
+msgstr "Saatke uuesti"
+
+#. module: sms
+#: model:ir.model,name:sms.model_sms_resend_recipient
+msgid "Resend Notification"
+msgstr "Saatke teavitus uuesti"
+
+#. module: sms
+#: model:ir.actions.act_window,name:sms.sms_template_reset_action
+msgid "Reset SMS Template"
+msgstr "Lähtestage SMS´i mall"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "Reset Template"
+msgstr "Lähtestage mall"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
+#: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
+msgid "Retry"
+msgstr "Proovi uuesti"
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/sms_button/sms_button.xml:0
+#: code:addons/sms/static/src/models/message_view.js:0
+#: code:addons/sms/static/src/models/message_view.js:0
+#: model:ir.actions.act_window,name:sms.sms_sms_action
+#: model:ir.model.fields,field_description:sms.field_mail_notification__sms_id
+#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_message__message_type__sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_notification__notification_type__sms
+#: model:ir.ui.menu,name:sms.sms_sms_menu
+#: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
+#, python-format
+msgid "SMS"
+msgstr "SMS"
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+#, python-format
+msgid "SMS ("
+msgstr "SMS ("
+
+#. module: sms
+#: model:ir.model,name:sms.model_sms_api
+msgid "SMS API"
+msgstr "SMS API"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_calendar_event__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_crm_team__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_crm_team_member__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_mail_blacklist__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_mail_channel__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_mail_thread__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_mail_thread_blacklist__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_mail_thread_cc__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_mail_thread_phone__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_phone_blacklist__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_product_product__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_product_template__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_res_users__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Sõnumi kohaletoimetamise veateade"
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/models/notification_group.js:0
+#, python-format
+msgid "SMS Failures"
+msgstr "SMS saatmise tõrge"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_mail_notification__sms_number
+msgid "SMS Number"
+msgstr "Sõnumi number"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+msgid "SMS Preview"
+msgstr "Sõnumi eelvaade"
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+#, python-format
+msgid "SMS Pricing"
+msgstr "Sõnumi tasu"
+
+#. module: sms
+#: model:ir.model,name:sms.model_sms_resend
+msgid "SMS Resend"
+msgstr "Sõnumi uuesti saatmine"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_sms__state
+msgid "SMS Status"
+msgstr "Sõnumi olek"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_template_id
+#: model:ir.model.fields,field_description:sms.field_ir_cron__sms_template_id
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "SMS Template"
+msgstr "Sõnumi mall"
+
+#. module: sms
+#: model:ir.model,name:sms.model_sms_template_preview
+msgid "SMS Template Preview"
+msgstr "Sõnumi malli eelvaade"
+
+#. module: sms
+#: model:ir.model,name:sms.model_sms_template_reset
+msgid "SMS Template Reset"
+msgstr "Sõnumi malli lähtestamine"
+
+#. module: sms
+#: model:ir.model,name:sms.model_sms_template
+#: model:ir.ui.menu,name:sms.sms_template_menu
+#: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_tree
+msgid "SMS Templates"
+msgstr "Sõnumi mallid"
+
+#. module: sms
+#: code:addons/sms/wizard/sms_template_reset.py:0
+#, python-format
+msgid "SMS Templates have been reset"
+msgstr "Sõnumi mallid on lähtestatud"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+msgid "SMS content"
+msgstr "Sõnumi sisu"
+
+#. module: sms
+#: model:ir.actions.server,name:sms.ir_cron_sms_scheduler_action_ir_actions_server
+#: model:ir.cron,cron_name:sms.ir_cron_sms_scheduler_action
+#: model:ir.cron,name:sms.ir_cron_sms_scheduler_action
+msgid "SMS: SMS Queue Manager"
+msgstr "SMS: sõnumi järjekorrahaldur"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized
+#: model:ir.model.fields,field_description:sms.field_sms_composer__sanitized_numbers
+msgid "Sanitized Number"
+msgstr "Puhastatud number"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_search
+msgid "Search SMS Templates"
+msgstr "Otsi sõnumimalle"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
+msgid "Send & Close"
+msgstr "Saada ja sule"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+#: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
+#: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
+msgid "Send Now"
+msgstr "Saada kohe"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "Send SMS"
+msgstr "Saada SMS"
+
+#. module: sms
+#: code:addons/sms/models/sms_template.py:0
+#, python-format
+msgid "Send SMS (%s)"
+msgstr "Saada SMS (%s)"
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/sms_button/sms_button.js:0
+#: code:addons/sms/static/src/js/fields_phone_widget.js:0
+#: code:addons/sms/static/src/js/fields_phone_widget.js:0
+#: model:ir.actions.act_window,name:sms.res_partner_act_window_sms_composer_multi
+#: model:ir.actions.act_window,name:sms.res_partner_act_window_sms_composer_single
+#: model:ir.actions.act_window,name:sms.sms_composer_action_form
+#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__state__sms
+#, python-format
+msgid "Send SMS Text Message"
+msgstr "Saada SMS"
+
+#. module: sms
+#: model:ir.model,name:sms.model_sms_composer
+msgid "Send SMS Wizard"
+msgstr "Saada SMS viisard"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__mass
+msgid "Send SMS in batch"
+msgstr "Saada koond SMS"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "Send an SMS"
+msgstr "Saada SMS"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
+msgid "Send as"
+msgstr "Saada kui"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
+#: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
+msgid "Send as (SMS)"
+msgstr "Saada kui (SMS)"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__mass_force_send
+msgid "Send directly"
+msgstr "Saada otse"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__numbers
+msgid "Send to numbers"
+msgstr "Saada numbritele"
+
+#. module: sms
+#: model:ir.actions.act_window,name:sms.sms_resend_action
+msgid "Sending Failures"
+msgstr "Saatmise tõrked"
+
+#. module: sms
+#: code:addons/sms/models/ir_actions_server.py:0
+#, python-format
+msgid "Sending SMS can only be done on a mail.thread or a transient model"
+msgstr ""
+"SMS-i saatmine saab toimuda ainult mail.threadi või transientse mudeli abil."
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__sent
+msgid "Sent"
+msgstr "Saadetud"
+
+#. module: sms
+#: model:ir.model,name:sms.model_ir_actions_server
+msgid "Server Action"
+msgstr "Serveri toiming"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_server
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_server
+msgid "Server Error"
+msgstr "Server Error"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
+msgid "Set up an account"
+msgstr "Seadistage konto"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
+msgid "Sidebar action"
+msgstr "Külgriba toiming"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_template__sidebar_action_id
+msgid ""
+"Sidebar action to make this template available on records of the related "
+"document model"
+msgstr ""
+"Külgriba toiming selle malli kättesaadavaks tegemiseks seotud "
+"dokumendimudeli kirjetel."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__comment_single_recipient
+msgid "Single Mode"
+msgstr "Üksikrežiim"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
+msgid "Sms Resend"
+msgstr "SMS uuesti saata"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__sms_template_id
+msgid "Sms Template"
+msgstr "SMS mall"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number
+msgid "Stored Recipient Number"
+msgstr "Salvestatud adressaadi number"
+
+#. module: sms
+#: code:addons/sms/models/sms_sms.py:0
+#, python-format
+msgid "Success"
+msgstr "Edukas"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template_reset__template_ids
+msgid "Template"
+msgstr "Mall"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template__template_fs
+msgid "Template Filename"
+msgstr "Malli failinimi"
+
+#. module: sms
+#: model:ir.actions.act_window,name:sms.sms_template_preview_action
+msgid "Template Preview"
+msgstr "Malli eelvaade"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__lang
+msgid "Template Preview Language"
+msgstr "Malli vaate keel"
+
+#. module: sms
+#: model:ir.actions.act_window,name:sms.sms_template_action
+msgid "Templates"
+msgstr "Mallid"
+
+#. module: sms
+#: code:addons/sms/models/sms_sms.py:0
+#, python-format
+msgid "The SMS Text Messages could not be resent."
+msgstr "SMS´i ei saadetud"
+
+#. module: sms
+#: code:addons/sms/models/sms_api.py:0
+#, python-format
+msgid "The number you're trying to reach is not correctly formatted."
+msgstr "Number, mida Te üritate kätte saada, ei ole õigesti vormistatud."
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_template__model_id
+#: model:ir.model.fields,help:sms.field_sms_template_preview__model_id
+msgid "The type of document this template can be used with"
+msgstr "Dokumendi tüüp, millega seda malli saab kasutada"
+
+#. module: sms
+#: code:addons/sms/models/sms_sms.py:0
+#, python-format
+msgid "There are no SMS Text Messages to resend."
+msgstr "Uuesti saatmiseks SMS tekstisõnumid puuduvad"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
+msgid ""
+"This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+msgstr ""
+"See telefoninumber on SMS turunduse jaoks mustas nimekirjas. Klikake, et see"
+" nimekirjast eemaldada."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
+msgid "Try Again"
+msgstr "Proovi uuesti"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_mail_mail__message_type
+#: model:ir.model.fields,field_description:sms.field_mail_message__message_type
+msgid "Type"
+msgstr "Tüüp"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_ir_actions_server__state
+#: model:ir.model.fields,help:sms.field_ir_cron__state
+msgid ""
+"Type of server action. The following values are available:\n"
+"- 'Execute Python Code': a block of python code that will be executed\n"
+"- 'Create a new Record': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
+"- 'Execute several actions': define an action that triggers several other server actions\n"
+"- 'Send Email': post a message, a note or send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)\n"
+"- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
+msgstr ""
+"Type of server action. The following values are available:\n"
+"- 'Execute Python Code': a block of python code that will be executed\n"
+"- 'Create a new Record': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
+"- 'Execute several actions': define an action that triggers several other server actions\n"
+"- 'Send Email': post a message, a note or send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)\n"
+"- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_acc
+msgid "Unregistered Account"
+msgstr "Registreerimata konto"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
+msgid "Use Template"
+msgstr "Kasuta malli"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__mass_use_blacklist
+msgid "Use blacklist"
+msgstr "Kasuta musta nimekirja"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids_count
+msgid "Visible records count"
+msgstr "Loevad nähtavad kirjed"
+
+#. module: sms
+#: code:addons/sms/models/sms_sms.py:0
+#, python-format
+msgid "Warning"
+msgstr "Hoiatus"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
+msgid "Website Messages"
+msgstr "Veebilehe sõnumid"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__website_message_ids
+msgid "Website communication history"
+msgstr "Veebilehe suhtluse ajalugu"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_ir_model__is_mail_thread_sms
+msgid "Whether this model supports messages and notifications through SMS"
+msgstr "Kas see mudel toetab SMS-ide kaudu sõnumeid ja teavitusi"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_format
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_number_format
+msgid "Wrong Number Format"
+msgstr "Vale numbriformaat"
+
+#. module: sms
+#: code:addons/sms/wizard/sms_resend.py:0
+#, python-format
+msgid "You do not have access to the message and/or related document."
+msgstr "Puudub ligipääs sõnumile ja/või sellega seotud dokumendile."
+
+#. module: sms
+#: code:addons/sms/models/sms_api.py:0
+#, python-format
+msgid "You don't have an eligible IAP account."
+msgstr "Teil pole sobilikku IAP-kontot."
+
+#. module: sms
+#: code:addons/sms/models/sms_api.py:0
+#, python-format
+msgid "You don't have enough credits on your IAP account."
+msgstr "Teie IAP kontol pole piisavalt krediiti."
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid ""
+"Your SMS Text Message must include at least one non-whitespace character"
+msgstr "Teie SMS-tekstsõnum peab sisaldama vähemalt ühte mitte-tühikumärki."
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+#, python-format
+msgid "characters, fits in"
+msgstr "tähemärki, saadetakse"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "e.g. +1 415 555 0100"
+msgstr "nt. +1 415 555 0100"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "e.g. Calendar Reminder"
+msgstr "nt. Kalendri meeldetuletus"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "e.g. Contact"
+msgstr "nt. Kontakt"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "e.g. en_US or {{ object.partner_id.lang }}"
+msgstr "nt. en_US või {{ object.partner_id.lang }}"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "out of"
+msgstr "otsas"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid ""
+"recipients have an invalid phone number and will not receive this text "
+"message."
+msgstr ""
+"adressaatidel on vigane telefoninumber ja nad ei saa seda tekstisõnumit."
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+msgid "record:"
+msgstr "dokument"

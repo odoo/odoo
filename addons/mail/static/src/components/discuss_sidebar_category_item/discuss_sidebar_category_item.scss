@@ -1,0 +1,29 @@
+.o_DiscussSidebarCategoryItem {
+    &:hover {
+        .o_DiscussSidebarCategoryItem_commands {
+            display: flex;
+        }
+    }
+
+    .o_DiscussSidebarCategoryItem_image {
+        object-fit: cover;
+    }
+
+    .o_DiscussSidebarCategoryItem_threadIcon {
+        font-size: xx-small;
+    }
+
+    .o_DiscussSidebarCategoryItem_commands {
+        display: none;
+    }
+
+    .o_DiscussSidebarCategoryItem_imageContainer {
+        width: $o-mail-discuss-sidebar-category-item-avatar-size;
+        height: $o-mail-discuss-sidebar-category-item-avatar-size;
+    }
+
+    .o_DiscussSidebarCategoryItem_threadIcon {
+        width: 13px;
+        height: 13px;
+    }
+}

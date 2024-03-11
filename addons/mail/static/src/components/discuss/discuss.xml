@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.Discuss" owl="1">
+        <t t-if="discussView">
+            <div class="o_Discuss d-flex h-100" t-attf-class="{{ className }}"
+                t-att-class="{ 'o-isDeviceSmall flex-column align-items-center bg-view': messaging.device.isSmall }"
+                t-ref="root"
+            >
+                <t t-if="!messaging.device.isSmall">
+                    <DiscussSidebar className="'o_Discuss_sidebar flex-shrink-0 h-100 pt-3 border-end bg-light'" record="discussView"/>
+                </t>
+                <t t-if="messaging.device.isSmall" t-call="mail.Discuss.content"/>
+                <t t-else="">
+                    <div class="o_Discuss_content d-flex flex-column flex-grow-1 h-100 overflow-auto">
+                        <t t-call="mail.Discuss.content"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="mail.Discuss.content" owl="1">
+        <t t-if="messaging.device.isSmall and discussView.discuss.activeMobileNavbarTabId === 'mailbox'">
+            <DiscussMobileMailboxSelection className="'o_Discuss_mobileMailboxSelection w-100 border-bottom'" record="discussView"/>
+        </t>
+        <t t-if="discussView.mobileAddItemHeaderAutocompleteInputView">
+            <div class="o_Discuss_mobileAddItemHeader d-flex justify-content-center w-100 p-3 border-bottom bg-light">
+                <AutocompleteInputView
+                    className="'o_Discuss_mobileAddItemHeaderInput flex-grow-1 mb-3 p-2 rounded border'"
+                    record="discussView.mobileAddItemHeaderAutocompleteInputView"
+                />
+            </div>
+        </t>
+        <t t-if="discussView.discuss.threadView">
+            <t name="beforeThread"/>
+            <ThreadView
+                className="'o_Discuss_thread'"
+                classNameObj="{ 'o-isDeviceSmall w-100': messaging.device.isSmall }"
+                record="discussView.discuss.threadView"
+            />
+        </t>
+        <t t-if="!discussView.discuss.activeThread and (!messaging.device.isSmall or discussView.discuss.activeMobileNavbarTabId === 'mailbox')">
+            <div class="o_Discuss_noThread d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
+                <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
+            </div>
+        </t>
+        <t t-if="messaging.device.isSmall and discussView.discuss.activeMobileNavbarTabId !== 'mailbox'">
+            <t t-if="discussView.discuss.activeMobileNavbarTabId === 'chat'">
+                <button class="o_Discuss_mobileNewChatButton w-100 p-2 btn btn-secondary border-bottom bg-light" t-on-click="discussView.onClickMobileNewChatButton">
+                    Start a conversation
+                </button>
+            </t>
+            <t t-if="discussView.discuss.activeMobileNavbarTabId === 'channel'">
+                <button class="o_Discuss_mobileNewChannelButton w-100 p-2 btn btn-secondary border-bottom bg-light" t-on-click="discussView.onClickMobileNewChannelButton">
+                    New Channel
+                </button>
+            </t>
+        </t>
+        <t t-if="discussView.discuss.notificationListView">
+            <NotificationList className="'o_Discuss_notificationList flex-grow-1 w-100'" record="discussView.discuss.notificationListView"/>
+        </t>
+        <t t-if="discussView.discuss.mobileMessagingNavbarView">
+            <MobileMessagingNavbar
+                className="'o_Discuss_mobileNavbar w-100'"
+                record="discussView.discuss.mobileMessagingNavbarView"
+            />
+        </t>
+    </t>
+
+</templates>

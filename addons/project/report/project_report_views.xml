@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="view_task_project_user_pivot" model="ir.ui.view">
+            <field name="name">report.project.task.user.pivot</field>
+            <field name="model">report.project.task.user</field>
+            <field name="arch" type="xml">
+                <pivot string="Tasks Analysis" display_quantity="1" sample="1">
+                    <field name="project_id" type="row"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="view_task_project_user_graph" model="ir.ui.view">
+            <field name="name">report.project.task.user.graph</field>
+            <field name="model">report.project.task.user</field>
+            <field name="arch" type="xml">
+                <graph string="Tasks Analysis" sample="1" disable_linking="1">
+                     <field name="project_id"/>
+                     <field name="stage_id"/>
+                     <field name="nbr" invisible="1"/>
+                 </graph>
+             </field>
+        </record>
+
+        <record id="report_project_task_user_view_tree" model="ir.ui.view">
+            <field name="name">report.project.task.user.view.tree</field>
+            <field name="model">report.project.task.user</field>
+            <field name="arch" type="xml">
+                <tree string="Tasks Analysis" create="false" editable="top" delete="false" edit="false">
+                    <field name="name"/>
+                    <field name="partner_id" optional="hide"/>
+                    <field name="project_id" options="{'no_open': True}" optional="show"/>
+                    <field name="user_ids" optional="show" widget="many2many_avatar_user"/>
+                    <field name="stage_id" optional="show"/>
+                    <field name="company_id" optional="show" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_task_project_user_search" model="ir.ui.view">
+            <field name="name">report.project.task.user.search</field>
+            <field name="model">report.project.task.user</field>
+            <field name="arch" type="xml">
+                <search string="Tasks Analysis">
+                    <field name="name" string="Task"/>
+                    <field name="tag_ids"/>
+                    <field name="user_ids" context="{'active_test': False}"/>
+                    <field name="project_id"/>
+                    <field name="milestone_id" groups="project.group_project_milestone"/>
+                    <field name="ancestor_id" groups="project.group_subtask_project"/>
+                    <field name="stage_id"/>
+                    <field name="partner_id" operator="child_of"/>
+                    <field name="active"/>
+                    <field name="rating_last_text"/>
+                    <field name="date_assign"/>
+                    <field name="date_end"/>
+                    <field name="date_deadline"/>
+                    <field name="date_last_stage_update"/>
+                    <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
+                    <filter string="Followed Tasks" name="followed_by_me" domain="[('task_id.message_is_follower', '=', True)]"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_ids', '=', False)]"/>
+                    <separator/>
+                    <filter string="My Projects" name="own_projects" domain="[('project_id.user_id', '=', uid)]"/>
+                    <filter string="My Favorite Projects" name="my_favorite_projects" domain="[('project_id.favorite_user_ids', 'in', [uid])]"/>
+                    <separator/>
+                    <filter string="High Priority" name="high_priority" domain="[('priority', '=', 1)]"/>
+                    <filter string="Low Priority" name="low_priority" domain="[('priority', '=', 0)]"/>
+                    <separator/>
+                    <filter string="Open" name="open_tasks" domain="[('is_closed', '=', False)]"/>
+                    <filter string="Closed" name="closed_tasks" domain="[('is_closed', '=', True)]"/>
+                    <separator/>
+                    <filter string="Late Milestones" name="late_milestone"
+                        domain="[('project_id.allow_milestones', '=', True), ('is_closed', '=', False), ('milestone_reached', '=', False), ('milestone_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        groups="project.group_project_milestone"
+                    />
+                    <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('is_closed', '=', False)]"/>
+                    <filter name="rating_satisfied" string="Satisfied" domain="[('rating_avg', '&gt;=', 3.66)]" groups="project.group_project_rating"/>
+                    <filter name="rating_okay" string="Okay" domain="[('rating_avg', '&lt;', 3.66), ('rating_avg', '&gt;=', 2.33)]" groups="project.group_project_rating"/>
+                    <filter name="dissatisfied" string="Dissatisfied" domain="[('rating_avg', '&lt;', 2.33), ('rating_last_value', '!=', 0)]" groups="project.group_project_rating"/>
+                    <filter name="no_rating" string="No Rating" domain="[('rating_last_value', '=', 0)]" groups="project.group_project_rating"/>
+                    <separator/>
+                    <filter name="filter_date_deadline" date="date_deadline"/>
+                    <filter name="filter_date_assign" date="date_assign"/>
+                    <filter name="filter_date_last_stage_update" date="date_last_stage_update"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Extended Filters">
+                        <field name="priority"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group expand="1" string="Group By">
+                        <filter string="Stage" name="Stage" context="{'group_by': 'stage_id'}"/>
+                        <filter string="Personal Stage" name="personal_stage" context="{'group_by': 'personal_stage_type_ids'}"/>
+                        <filter string="Assignees" name="User" context="{'group_by': 'user_ids'}"/>
+                        <filter string="Ancestor Task" name="groupby_ancestor_task" context="{'group_by': 'ancestor_id'}" groups="project.group_subtask_project"/>
+                        <filter string="Milestone" name="milestone" context="{'group_by': 'milestone_id'}" groups="project.group_project_milestone"/>
+                        <filter string="Customer" name="Customer" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Kanban State" name="kanban_state" context="{'group_by': 'state'}"/>
+                        <filter string="Deadline" name="deadline" context="{'group_by': 'date_deadline'}"/>
+                        <filter string="Creation Date" name="group_create_date" context="{'group_by': 'create_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+       <record id="action_project_task_user_tree" model="ir.actions.act_window">
+            <field name="name">Tasks Analysis</field>
+            <field name="res_model">report.project.task.user</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="search_view_id" ref="view_task_project_user_search"/>
+            <field name="context">{'group_by_no_leaf':1, 'group_by':[], 'graph_measure': '__count__'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No data yet!
+                </p><p>
+                    Analyze the progress of your projects and the performance of your employees.
+                </p>
+            </field>
+        </record>
+
+</odoo>

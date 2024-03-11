@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderSummary" owl="1">
+        <div class="summary clearfix">
+            <t t-set="_total" t-value="getTotal()" />
+            <t t-set="_tax" t-value="getTax()" />
+            <div class="line">
+                <div class="entry total">
+                    <span class="badge">Total: </span>
+                    <span class="value">
+                        <t t-esc="_total" />
+                    </span>
+                    <div t-if="_tax.hasTax" class="subentry">
+                        Taxes:
+                        <span class="value">
+                            <t t-esc="_tax.displayAmount" />
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

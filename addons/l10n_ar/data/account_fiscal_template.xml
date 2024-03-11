@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Exempt Operations -->
+    <record model='account.fiscal.position.template' id='fiscal_position_template_exempt_operations'>
+        <field name='name'>Compras / Ventas al exterior</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="l10n_ar_afip_responsibility_type_ids" eval="[(6, False, [ref('l10n_ar.res_EXT')])]"/>
+        <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
+    </record>
+    <record id="fiscal_position_template_exempt_operations_tax_ventas_0" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exempt_operations"/>
+        <field name="tax_src_id" ref="ri_tax_vat_0_ventas"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+    </record>
+    <record id="fiscal_position_template_exempt_operations_tax_ventas_10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exempt_operations"/>
+        <field name="tax_src_id" ref="ri_tax_vat_10_ventas"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+    </record>
+    <record id="fiscal_position_template_exempt_operations_tax_ventas_21" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exempt_operations"/>
+        <field name="tax_src_id" ref="ri_tax_vat_21_ventas"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+    </record>
+    <record id="fiscal_position_template_exempt_operations_tax_ventas_27" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exempt_operations"/>
+        <field name="tax_src_id" ref="ri_tax_vat_27_ventas"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+    </record>
+    <record id="fiscal_position_template_exempt_operations_tax_compras_0" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exempt_operations"/>
+        <field name="tax_src_id" ref="ri_tax_vat_0_compras"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+    </record>
+    <record id="fiscal_position_template_exempt_operations_tax_compras_10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exempt_operations"/>
+        <field name="tax_src_id" ref="ri_tax_vat_10_compras"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+    </record>
+    <record id="fiscal_position_template_exempt_operations_tax_compras_21" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exempt_operations"/>
+        <field name="tax_src_id" ref="ri_tax_vat_21_compras"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+    </record>
+    <record id="fiscal_position_template_exempt_operations_tax_compras_27" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exempt_operations"/>
+        <field name="tax_src_id" ref="ri_tax_vat_27_compras"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+    </record>
+    <record id="fiscal_position_template_exempt_operations_exento" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exempt_operations"/>
+        <field name="tax_src_id" ref="ri_tax_vat_exento_compras"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+    </record>
+    <record id="fiscal_position_template_exempt_operations_no_gravado" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_exempt_operations"/>
+        <field name="tax_src_id" ref="ri_tax_vat_no_gravado_compras"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+    </record>
+
+    <!-- Free Zone -->
+    <record model='account.fiscal.position.template' id='fiscal_position_template_free_zone'>
+        <field name='name'>Compras / Ventas Zona Franca</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="l10n_ar_afip_responsibility_type_ids" eval="[(6, False, [ref('l10n_ar.res_IVA_LIB')])]"/>
+        <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
+    </record>
+    <record id="fiscal_position_template_free_zone_tax_ventas_0" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_free_zone"/>
+        <field name="tax_src_id" ref="ri_tax_vat_0_ventas"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+    </record>
+    <record id="fiscal_position_template_free_zone_tax_ventas_10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_free_zone"/>
+        <field name="tax_src_id" ref="ri_tax_vat_10_ventas"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+    </record>
+    <record id="fiscal_position_template_free_zone_tax_ventas_21" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_free_zone"/>
+        <field name="tax_src_id" ref="ri_tax_vat_21_ventas"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+    </record>
+    <record id="fiscal_position_template_free_zone_tax_ventas_27" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_free_zone"/>
+        <field name="tax_src_id" ref="ri_tax_vat_27_ventas"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_exento_ventas"/>
+    </record>
+    <record id="fiscal_position_template_free_zone_tax_compras_0" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_free_zone"/>
+        <field name="tax_src_id" ref="ri_tax_vat_0_compras"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_exento_compras"/>
+    </record>
+    <record id="fiscal_position_template_free_zone_tax_compras_10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_free_zone"/>
+        <field name="tax_src_id" ref="ri_tax_vat_10_compras"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_exento_compras"/>
+    </record>
+    <record id="fiscal_position_template_free_zone_tax_compras_21" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_free_zone"/>
+        <field name="tax_src_id" ref="ri_tax_vat_21_compras"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_exento_compras"/>
+    </record>
+    <record id="fiscal_position_template_free_zone_tax_compras_27" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_free_zone"/>
+        <field name="tax_src_id" ref="ri_tax_vat_27_compras"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_exento_compras"/>
+    </record>
+
+    <!-- VAT dont correspond -->
+    <record model='account.fiscal.position.template' id='fiscal_position_template_iva_no_corresponde'>
+        <field name='name'>Compras IVA no corresponde</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="l10n_ar_afip_responsibility_type_ids" eval="[(6, False, [ref('l10n_ar.res_IVAE'), ref('l10n_ar.res_RM')])]"/>
+        <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
+    </record>
+    <record id="fiscal_position_template_iva_no_corresponde_tax_0" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_iva_no_corresponde"/>
+        <field name="tax_src_id" ref="ri_tax_vat_0_compras"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+    </record>
+    <record id="fiscal_position_template_iva_no_corresponde_tax_10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_iva_no_corresponde"/>
+        <field name="tax_src_id" ref="ri_tax_vat_10_compras"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+    </record>
+    <record id="fiscal_position_template_iva_no_corresponde_tax_21" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_iva_no_corresponde"/>
+        <field name="tax_src_id" ref="ri_tax_vat_21_compras"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+    </record>
+    <record id="fiscal_position_template_iva_no_corresponde_tax_27" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_iva_no_corresponde"/>
+        <field name="tax_src_id" ref="ri_tax_vat_27_compras"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+    </record>
+    <record id="fiscal_position_template_iva_no_corresponde_exento" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_iva_no_corresponde"/>
+        <field name="tax_src_id" ref="ri_tax_vat_exento_compras"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+    </record>
+    <record id="fiscal_position_template_iva_no_corresponde_no_gravado" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_iva_no_corresponde"/>
+        <field name="tax_src_id" ref="ri_tax_vat_no_gravado_compras"/>
+        <field name="tax_dest_id" ref="ri_tax_vat_no_corresponde_compras"/>
+    </record>
+
+</odoo>

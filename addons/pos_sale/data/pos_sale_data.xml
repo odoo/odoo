@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="sales_team.pos_sales_team" model="crm.team">
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="pos_sale.default_downpayment_product" model="product.product">
+            <field name="name">Down Payment (POS)</field>
+            <field name="available_in_pos">False</field>
+            <field name="standard_price">0.00</field>
+            <field name="list_price">0.00</field>
+            <field name="weight">0.00</field>
+            <field name="type">service</field>
+            <field name="taxes_id" eval="[(5,)]"/>
+            <field name="categ_id" ref="point_of_sale.product_category_pos"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="purchase_ok">False</field>
+        </record>
+
+        <record model="pos.config" id="point_of_sale.pos_config_main" forcecreate="0">
+            <field name="down_payment_product_id" ref="pos_sale.default_downpayment_product"/>
+        </record>
+    </data>
+</odoo>
+

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ActivityMenuView" t-inherit-mode="extension">
+        <xpath expr="//*[@name='activityGroupLoop']" position="after">
+            <div t-if="!activityMenuView.isAddingNote" class="o_note_show d-grid" t-on-click="activityMenuView.onClickAddNote">
+                <a role="button" class="btn text-center">Add new note</a>
+            </div>
+            <div t-if="activityMenuView.isAddingNote" class="o_note o_ActivityMenuView_activityGroup">
+                <div class="o_ActivityMenuView_activityGroupIconContainer">
+                    <img src="/note/static/description/icon.svg" alt="Channel"/>
+                </div>
+                <div class="o_ActivityMenuView_activityGroupInfo">
+                    <div class="o_ActivityMenuView_activityGroupTitle">
+                        <span class="o_ActivityMenuView_activityGroupName"><strong>Add a note</strong></span>
+                        <DatePicker
+                            date="activityMenuView.addingNoteDate"
+                            onDateTimeChanged="activityMenuView.onDateTimeChanged"
+                            placeholder="activityMenuView.addingNoteDatePlaceholder"
+                        />
+                    </div>
+                    <div class="o_note_input_box">
+                        <p><input class="o_note_input bg-transparent" type="text" placeholder="Remember..." t-on-keydown="activityMenuView.onKeydownNoteInput" t-ref="noteInput"/></p>
+                        <span class="ml8 mr4">
+                            <a class="o_note_save" t-on-click="activityMenuView.onClickSaveNote">SAVE</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

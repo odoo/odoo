@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pos_restaurant</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="warning_text_pos_restaurant" position="replace"/>
+            <div id="pos_interface_section" position="after">
+                <h2 class="mt16" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">Restaurant &amp; Bar</h2>
+                <div class="row mt16 o_settings_container" id="restaurant_section" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
+                    <div class="col-12 col-lg-6 o_setting_box"
+                         id="is_table_management"
+                         attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
+                        <div class="o_setting_left_pane">
+                            <field name="pos_is_table_management" attrs="{'readonly': [('pos_has_active_session','=', True)]}"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="pos_is_table_management" string="Floors &amp; Tables Map"/>
+                            <div class="text-muted">
+                                Design floors and assign orders to tables
+                            </div>
+                            <div class="content-group" attrs="{'invisible': [('pos_is_table_management','=',False)]}">
+                                <div class="mt16">
+                                    <label string="Floors" for="pos_floor_ids" class="o_light_label"/>
+                                    <field name="pos_floor_ids" widget="many2many_tags" attrs="{'readonly': [('pos_has_active_session','=', True)]}" />
+                                </div>
+                                <div>
+                                    <button name="%(pos_restaurant.action_restaurant_floor_form)d" icon="fa-arrow-right" type="action" string="Floors" class="btn-link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box"
+                         id="iface_orderline_notes"
+                         attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
+                        <div class="o_setting_left_pane">
+                            <field name="pos_iface_orderline_notes"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="pos_iface_orderline_notes" string="Kitchen Notes"/>
+                            <div class="text-muted">
+                                Add internal notes on order lines for the kitchen
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box"
+                         id="iface_printbill"
+                         attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
+                        <div class="o_setting_left_pane">
+                            <field name="pos_iface_printbill"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="pos_iface_printbill" string="Early Receipt Printing" />
+                            <div class="text-muted">
+                                Allow to print receipt before payment
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box"
+                         id="iface_splitbill"
+                         attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
+                        <div class="o_setting_left_pane">
+                            <field name="pos_iface_splitbill" string="Allow Bill Splitting"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="pos_iface_splitbill" string="Allow Bill Splitting"/>
+                            <div class="text-muted">
+                                Split total or order lines
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box"
+                         id="is_order_printer"
+                         attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
+                        <div class="o_setting_left_pane">
+                            <field name="pos_is_order_printer"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="pos_is_order_printer" string="Kitchen Printers"/>
+                            <div class="text-muted">
+                                Print orders at the kitchen, at the bar, etc.
+                            </div>
+                            <div class="content-group" attrs="{'invisible': [('pos_is_order_printer', '=', False)]}">
+                                <div class="mt16">
+                                    <label string="Printers" for="pos_printer_ids" class="o_light_label"/>
+                                    <field name="pos_printer_ids" widget="many2many_tags"/>
+                                </div>
+                                <div>
+                                    <button name="%(pos_restaurant.action_restaurant_printer_form)d" icon="fa-arrow-right" type="action" string="Printers" class="btn-link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tip_product" position="after">
+                <div attrs="{'invisible': ['|', ('pos_module_pos_restaurant', '=', False), ('pos_iface_tipproduct', '=', False)]}">
+                    <field name="pos_set_tip_after_payment" class="oe_inline"/>
+                    <label class="fw-normal" for="pos_set_tip_after_payment" string="Add tip after payment (North America specific)"/>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

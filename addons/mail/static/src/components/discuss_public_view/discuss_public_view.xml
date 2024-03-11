@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussPublicView" owl="1">
+        <t t-if="discussPublicView">
+            <div class="o_DiscussPublicView d-flex flex-column h-100 w-100 position-absolute" t-attf-class="{{ className }}" t-ref="root">
+                <ThreadView t-if="discussPublicView.threadView"
+                    record="discussPublicView.threadView"
+                />
+                <WelcomeView t-if="discussPublicView.welcomeView"
+                    record="discussPublicView.welcomeView"
+                />
+            </div>
+        </t>
+    </t>
+</templates>

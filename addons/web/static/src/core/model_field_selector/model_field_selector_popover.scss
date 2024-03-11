@@ -1,0 +1,82 @@
+.o_popover_field_selector {
+    &.o-popover-top > .popover-arrow::after {
+        border-top-color: map-get($theme-colors, 'primary');
+    }
+    &.o-popover-bottom > .popover-arrow::after {
+        border-bottom-color: map-get($theme-colors, 'primary');
+    }
+}
+
+.o_field_selector_popover:not(.o_legacy_field_selector_popover) {
+    width: 265px;
+    background-color: $dropdown-bg;
+    --o-input-background-color: #{$dropdown-bg};
+
+    &:focus {
+        outline: none;
+    }
+
+    .o_field_selector_popover_header, .o_field_selector_popover_footer {
+        color: color-contrast(map-get($theme-colors, 'primary'));
+        background: map-get($theme-colors, 'primary');
+        font-weight: bold;
+        padding: 5px 0.4em;
+
+        .o_field_selector_title {
+            width: 100%;
+            @include o-text-overflow;
+            padding: 0px 35px;
+            text-align: center;
+        }
+        .o_field_selector_search > .o_input, > input {
+            color: $o-main-text-color;
+            font-size: 115%;
+            border: none;
+            padding: 5px 0.4rem;
+        }
+        .o_field_selector_popover_option {
+            @include o-position-absolute($top: 0);
+            padding: 8px;
+
+            &.o_field_selector_prev_page {
+                left: 0;
+            }
+            &.o_field_selector_close {
+                right: 0;
+            }
+            &:hover {
+                background: darken(map-get($theme-colors, 'primary'), 10%);
+            }
+        }
+    }
+    .o_field_selector_popover_body {
+        .o_field_selector_page {
+            position: relative;
+            height: 320px;
+            overflow: auto;
+            margin: 0;
+            padding: 0;
+
+            > .o_field_selector_item {
+                list-style: none;
+                position: relative;
+                padding: 5px 0 5px 0.4em;
+                cursor: pointer;
+                font-family: Arial;
+                font-size: 13px;
+                &.active {
+                    background: $dropdown-link-hover-bg;
+                }
+                .o_field_selector_item_title {
+                    font-size: 12px;
+                }
+                .o_field_selector_relation_icon {
+                    @include o-position-absolute($top: 0, $right: 0, $bottom: 0);
+                    display: flex;
+                    align-items: center;
+                    padding: 10px;
+                }
+            }
+        }
+    }
+}

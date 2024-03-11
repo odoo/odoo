@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="product_wishlist" inherit_id="website_sale_wishlist.product_wishlist">
+        <xpath expr="//button[hasclass('o_wish_rm')]" position="before">
+            <small class="text-danger d-md-block" t-if="wish.product_id.sudo()._is_sold_out()">Temporarily out of stock</small>
+        </xpath>
+        <xpath expr="//button[hasclass('o_wish_rm')]" position="after">
+            <t t-if="not wish.product_id.allow_out_of_stock_order and wish.product_id._is_sold_out()">
+                <t t-set="has_stock_notification"
+                   t-value="wish.product_id._has_stock_notification(wish.partner_id) or request and wish.product_id.id in request.session.get('product_with_stock_notification_enabled', set())"/>
+                <div id="stock_notification_div" t-if="not wish.product_id.allow_out_of_stock_order"
+                     class="small d-inline-block">
+                    <div class="btn btn-link" t-if="not has_stock_notification"
+                         id="wishlist_stock_notification_message">
+                        <small>
+                            <i class="fa fa-envelope-o"/>
+                            Get notified when back in stock
+                        </small>
+                    </div>
+                    <div id="stock_notification_form" class="d-none">
+                        <div class="input-group">
+                            <input id="stock_notification_input"
+                                   class="form-control"
+                                   name="email"
+                                   type="text"
+                                   placeholder="youremail@gmail.com"
+                                   t-att-value="request.env.user.partner_id.email or request.session.get('stock_notification_email', '')"/>
+                            <div id="wishlist_stock_notification_form_submit_button"
+                                    class="btn btn-secondary">
+                                <i class="fa fa-paper-plane"/>
+                            </div>
+                            <div id="stock_notification_input_incorrect" class="btn d-none">
+                                <i class="fa fa-times text-danger"/>
+                                Invalid email
+                            </div>
+                        </div>
+                    </div>
+                    <div id="stock_notification_success_message" class="text-muted"
+                         t-att-class="'text-muted' if has_stock_notification else 'd-none'">
+                        <i class="fa fa-bell"/>
+                        We'll notify you once the product is back in stock.
+                    </div>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//button[@id='add_to_cart_button']" position="replace">
+            <t t-set="is_sold_out"
+               t-value="not wish.product_id.allow_out_of_stock_order and wish.product_id._is_sold_out()"/>
+            <button t-if="not combination_info['prevent_zero_price_sale']" id="add_to_cart_button"
+                    class="btn btn-secondary btn-block o_wish_add mb4"
+                    t-att-disabled="is_sold_out">
+                Add
+                <span class='d-none d-md-inline'>to Cart</span>
+            </button>
+        </xpath>
+    </template>
+</odoo>

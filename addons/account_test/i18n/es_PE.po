@@ -1,0 +1,245 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_test
+# 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Spanish (Peru) (https://www.transifex.com/odoo/teams/41243/es_PE/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_PE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
+msgid ""
+"<br/>\n"
+"                        <strong>Description:</strong>"
+msgstr ""
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
+msgid "<strong>Name:</strong>"
+msgstr ""
+
+#. module: account_test
+#: model:ir.actions.act_window,name:account_test.action_accounting_assert
+#: model:ir.actions.report,name:account_test.account_assert_test_report
+#: model:ir.ui.menu,name:account_test.menu_action_license
+msgid "Accounting Tests"
+msgstr ""
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
+msgid "Accouting tests on"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_active
+msgid "Active"
+msgstr ""
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_03
+msgid "Check if movement lines are balanced and have the same date and period"
+msgstr ""
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_07
+msgid ""
+"Check on bank statement that the Closing Balance = Starting Balance + sum of"
+" statement lines"
+msgstr ""
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_06
+msgid "Check that paid/reconciled invoices are not in 'Open' state"
+msgstr ""
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_05_2
+msgid ""
+"Check that reconciled account moves, that define Payable and Receivable "
+"accounts, are belonging to reconciled invoices"
+msgstr ""
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_05
+msgid ""
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for"
+" Payable and Receivable Accounts"
+msgstr ""
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_01
+msgid "Check the balance: Debit sum = Credit sum"
+msgstr ""
+
+#. module: account_test
+#: model_terms:ir.actions.act_window,help:account_test.action_accounting_assert
+msgid "Click to create Accounting Test."
+msgstr ""
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+msgid "Code Help"
+msgstr ""
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+msgid ""
+"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
+"try to translate and print what is inside `result`.\n"
+"\n"
+"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
+"what order you want to print `result`'s content.\n"
+"\n"
+"Should you need them, you can also use the following variables into your code:\n"
+"    * cr: cursor to the database\n"
+"    * uid: ID of the current user\n"
+"\n"
+"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
+"\n"
+"Example: \n"
+"    sql = '''SELECT id, name, ref, date\n"
+"             FROM account_move_line \n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
+"          '''\n"
+"    cr.execute(sql)\n"
+"    result = cr.dictfetchall()"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+msgid "Description"
+msgstr "Descripción"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_display_name
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_display_name
+msgid "Display Name"
+msgstr "Nombre a Mostrar"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+msgid "Expression"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_id
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test___last_update
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest___last_update
+msgid "Last Modified on"
+msgstr "Ultima Modificación en"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_uid
+msgid "Last Updated by"
+msgstr "Actualizado última vez por"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_date
+msgid "Last Updated on"
+msgstr "Ultima Actualización"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+msgid "Python Code"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_code_exec
+msgid "Python code"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_01
+msgid "Test 1: General balance"
+msgstr ""
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_03
+msgid "Test 3: Movement lines"
+msgstr ""
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_05
+msgid ""
+"Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
+msgstr ""
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_05_2
+msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
+msgstr ""
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_06
+msgid "Test 6 : Invoices status"
+msgstr ""
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_07
+msgid "Test 7 : Closing balance on bank statements"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_desc
+msgid "Test Description"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_name
+msgid "Test Name"
+msgstr ""
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_tree
+msgid "Tests"
+msgstr ""
+
+#. module: account_test
+#: code:addons/account_test/report/report_account_test.py:52
+#, python-format
+msgid "The test was passed successfully"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model,name:account_test.model_accounting_assert_test
+msgid "accounting.assert.test"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model,name:account_test.model_report_account_test_report_accounttest
+msgid "report.account_test.report_accounttest"
+msgstr ""

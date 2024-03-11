@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="event_track_content"
+    name="Track: Main Description: add quiz"
+    inherit_id="website_event_track.event_track_content">
+    <xpath expr="//div[hasclass('o_wesession_track_main_description')]" position="after">
+        <div id="we_track_quiz_container" t-if="track.quiz_id"
+             t-att-class="'o_quiz_js_quiz_container o_quiz_main border-top o_wevent_theme_bg_base px-2 pt-4 pb-4 col-12 %s' % ('' if track.is_quiz_completed else 'd-none')"
+             t-att-data-object-id="track.id">
+            <h3 class="col-12">Quiz</h3>
+            <t t-call="website_event_track_quiz.quiz_content">
+                <t t-set="track" t-value="track"/>
+                <t t-set="quiz_completed" t-value="track.is_quiz_completed"/>
+                <t t-set="quiz_points" t-value="track.quiz_points"/>
+            </t>
+        </div>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_track_reminder_button')]" position="before">
+        <div class="o_we_track_quiz_button me-2 my-1" t-if="track.quiz_id and not track.is_quiz_completed and not track.is_track_upcoming">
+            <a class="btn btn-primary" href="#we_track_quiz_container" onclick="$('.o_quiz_js_quiz_container').removeClass('d-none'); ">
+                Take the Quiz
+            </a>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

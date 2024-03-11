@@ -1,0 +1,542 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* note
+# 
+# Translators:
+# Jorunn D. Newth, 2022
+# Martin Trigaux, 2022
+# Marius Stedjan <marius@stedjan.com>, 2022
+# Lars Aam <lars.aam@vikenfiber.no>, 2022
+# Henning Fyllingsnes, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Henning Fyllingsnes, 2023\n"
+"Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nb\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Åpen\"/>"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+msgstr "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Lukket\"/>"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Action"
+msgstr "Handling"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_needaction
+msgid "Action Needed"
+msgstr "Handling påkrevd"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
+"Handlinger kan trigge funksjoner, som å åpne en kalendervisning, eller å "
+"automatisk merke som fullført når et dokument er lastet opp"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__open
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_ids
+msgid "Activities"
+msgstr "Aktiviteter"
+
+#. module: note
+#: model:ir.model,name:note.model_mail_activity
+msgid "Activity"
+msgstr "Aktivitet"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Dekorering for Aktivitetsunntak"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_state
+msgid "Activity State"
+msgstr "Aktivitetsstatus"
+
+#. module: note
+#: model:ir.model,name:note.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Aktivitetstype"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikon type Aktivitet"
+
+#. module: note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
+msgid "Add a new personal note"
+msgstr "Lag et personlig notat"
+
+#. module: note
+#: model_terms:ir.actions.act_window,help:note.note_tag_action
+msgid "Add a new tag"
+msgstr "Opprett en ny etikett"
+
+#. module: note
+#. odoo-javascript
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
+#, python-format
+msgid "Add a note"
+msgstr "Nytt notat"
+
+#. module: note
+#. odoo-javascript
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
+#, python-format
+msgid "Add new note"
+msgstr "Nytt notat"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Archive"
+msgstr "Arkivert"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
+msgid "Attachment Count"
+msgstr "Antall vedlegg"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "By sticky note Category"
+msgstr "Etter notatkategori"
+
+#. module: note
+#. odoo-javascript
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
+#, python-format
+msgid "Channel"
+msgstr "Kanal"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__color
+#: model:ir.model.fields,field_description:note.field_note_tag__color
+msgid "Color Index"
+msgstr "Fargeindeks"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__company_id
+msgid "Company"
+msgstr "Firma"
+
+#. module: note
+#: model:ir.ui.menu,name:note.menu_note_configuration
+msgid "Configuration"
+msgstr "Konfigurasjon"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__create_uid
+#: model:ir.model.fields,field_description:note.field_note_stage__create_uid
+#: model:ir.model.fields,field_description:note.field_note_tag__create_uid
+msgid "Created by"
+msgstr "Opprettet av"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__create_date
+#: model:ir.model.fields,field_description:note.field_note_stage__create_date
+#: model:ir.model.fields,field_description:note.field_note_tag__create_date
+msgid "Created on"
+msgstr "Opprettet"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__date_done
+msgid "Date done"
+msgstr "Dato fullført"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Delete"
+msgstr "Slett"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__display_name
+#: model:ir.model.fields,field_description:note.field_note_stage__display_name
+#: model:ir.model.fields,field_description:note.field_note_tag__display_name
+msgid "Display Name"
+msgstr "Visningsnavn"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Dropdown menu"
+msgstr "Nedtrekksmeny"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_stage__fold
+msgid "Folded by Default"
+msgstr "Minimert som standard"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Follower"
+msgstr "Følger"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_follower_ids
+msgid "Followers"
+msgstr "Følgere"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Følgere (partnere)"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font Awesome-ikon, for eksempel fa-tasks"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Future Activities"
+msgstr "Fremtidige aktiviteter"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Group By"
+msgstr "Grupper etter"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__has_message
+msgid "Has Message"
+msgstr "Har melding"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__id
+#: model:ir.model.fields,field_description:note.field_note_stage__id
+#: model:ir.model.fields,field_description:note.field_note_tag__id
+msgid "ID"
+msgstr "ID"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_icon
+msgid "Icon"
+msgstr "Ikon"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikon for å indikere aktivitetsunntak."
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Hvis haket av, vil nye meldinger kreve din oppmerksomhet."
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Hvis haket av, har enkelte meldinger leveringsfeil."
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
+msgid "Is Follower"
+msgstr "Er følger"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note____last_update
+#: model:ir.model.fields,field_description:note.field_note_stage____last_update
+#: model:ir.model.fields,field_description:note.field_note_tag____last_update
+msgid "Last Modified on"
+msgstr "Sist endret"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__write_uid
+#: model:ir.model.fields,field_description:note.field_note_stage__write_uid
+#: model:ir.model.fields,field_description:note.field_note_tag__write_uid
+msgid "Last Updated by"
+msgstr "Sist oppdatert av"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__write_date
+#: model:ir.model.fields,field_description:note.field_note_stage__write_date
+#: model:ir.model.fields,field_description:note.field_note_tag__write_date
+msgid "Last Updated on"
+msgstr "Sist oppdatert"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Late Activities"
+msgstr "Forsinkede aktiviteter"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Hovedvedlegg"
+
+#. module: note
+#: model:note.stage,name:note.note_stage_01
+msgid "Meeting Minutes"
+msgstr "Møtereferat"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_has_error
+msgid "Message Delivery error"
+msgstr "Melding ved leveringsfeil"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_ids
+msgid "Messages"
+msgstr "Meldinger"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "MIn aktivitets tidsfrist"
+
+#. module: note
+#: model:note.stage,name:note.note_stage_00
+msgid "New"
+msgstr "Ny"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Neste kalender aktivitet"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Frist for neste aktivitet"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_summary
+msgid "Next Activity Summary"
+msgstr "Oppsummering av neste aktivitet"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_id
+msgid "Next Activity Type"
+msgstr "Neste aktivitetstype"
+
+#. module: note
+#: model:ir.model,name:note.model_note_note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_form
+msgid "Note"
+msgstr "Notat"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__memo
+msgid "Note Content"
+msgstr "Notatinnhold"
+
+#. module: note
+#: model:ir.model,name:note.model_note_stage
+msgid "Note Stage"
+msgstr "Notatstadium"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__name
+msgid "Note Summary"
+msgstr "Notatsammendrag"
+
+#. module: note
+#: model:ir.model,name:note.model_note_tag
+msgid "Note Tag"
+msgstr "Notat Etikett"
+
+#. module: note
+#. odoo-python
+#: code:addons/note/models/res_users.py:0
+#: model:ir.actions.act_window,name:note.action_note_note
+#: model:ir.ui.menu,name:note.menu_note_notes
+#: model:note.stage,name:note.note_stage_02
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+#, python-format
+msgid "Notes"
+msgstr "Notater"
+
+#. module: note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
+msgid ""
+"Notes are private, unless you share them by inviting follower on a note.\n"
+"            (Useful for meeting minutes)."
+msgstr ""
+"Notater er private, men du kan dele dem ved å invitere følgere på et notat.\n"
+"            (Nyttig på f.eks møtereferater.)"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Antall handlinger"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
+msgid "Number of errors"
+msgstr "Antall feil"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Antall meldinger med leveringsfeil"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__user_id
+#: model:ir.model.fields,field_description:note.field_note_stage__user_id
+msgid "Owner"
+msgstr "Eier"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity__note_id
+msgid "Related Note"
+msgstr "Relatert notat"
+
+#. module: note
+#. odoo-javascript
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
+#, python-format
+msgid "Remember..."
+msgstr "Husk..."
+
+#. module: note
+#: model:ir.model.fields.selection,name:note.selection__mail_activity_type__category__reminder
+#: model:mail.activity.type,name:note.mail_activity_data_reminder
+msgid "Reminder"
+msgstr "Påminnelse"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_user_id
+msgid "Responsible User"
+msgstr "Ansvarlig bruker"
+
+#. module: note
+#. odoo-javascript
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
+#, python-format
+msgid "SAVE"
+msgstr "LAGRE"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__sequence
+#: model:ir.model.fields,field_description:note.field_note_stage__sequence
+msgid "Sequence"
+msgstr "Sekvens"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Show all records which has next action date is before today"
+msgstr "Vis alle poster som har neste handlingsdato før dagen i dag"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__stage_id
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Stage"
+msgstr "Stadium"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_stage__name
+msgid "Stage Name"
+msgstr "Navn på stadium"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_stage_form
+msgid "Stage of Notes"
+msgstr "Notatstadium"
+
+#. module: note
+#: model:ir.actions.act_window,name:note.action_note_stage
+#: model:ir.ui.menu,name:note.menu_notes_stage
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_tree
+msgid "Stages"
+msgstr "Stadier"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_stage_tree
+msgid "Stages of Notes"
+msgstr "Notatstadier"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__stage_ids
+msgid "Stages of Users"
+msgstr "Brukerstadier"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status basert på aktiviteter\n"
+"Utgått: Fristen er allerede passert\n"
+"I dag: Aktiviteten skal gjøres i dag\n"
+"Planlagt: Fremtidige aktiviteter."
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_tag__name
+msgid "Tag Name"
+msgstr "Etikettnavn"
+
+#. module: note
+#: model:ir.model.constraint,message:note.constraint_note_tag_name_uniq
+msgid "Tag name already exists !"
+msgstr "Etikettnavnet eksisterer allerede!"
+
+#. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
+#: model:ir.model.fields,field_description:note.field_note_note__tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model_terms:ir.ui.view,arch_db:note.note_tag_view_form
+#: model_terms:ir.ui.view,arch_db:note.note_tag_view_tree
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_form
+msgid "Tags"
+msgstr "Etiketter"
+
+#. module: note
+#. odoo-javascript
+#: code:addons/note/static/src/models/activity_menu_view.js:0
+#, python-format
+msgid "Today"
+msgstr "I dag"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Today Activities"
+msgstr "Dagens aktiviteter"
+
+#. module: note
+#: model:note.stage,name:note.note_stage_03
+msgid "Todo"
+msgstr "Gjøremål"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Type unntaks-aktivitet på posten."
+
+#. module: note
+#: model:ir.model,name:note.model_res_users
+msgid "User"
+msgstr "Bruker"

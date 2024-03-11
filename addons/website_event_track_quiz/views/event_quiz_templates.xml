@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="quiz_content" name="Track: Quiz specific content">
+        <t t-set="quiz_completed" t-value="quiz_completed or False"/>
+
+        <div class="o_quiz_js_quiz col"
+            t-att-data-id="track.id"
+            t-att-data-event-id="track.event_id.id"
+            t-att-data-completed="1 if quiz_completed else 0"
+            t-att-data-quiz-attempts-count="quiz_attempts_count or 0"
+            t-att-data-quiz-points-gained="quiz_points"
+            t-att-data-is-event-user="is_event_user or 0"
+            t-att-data-repeatable="track.quiz_id.repeatable">
+            <t t-foreach="track.quiz_id.question_ids" t-as="question">
+                <t t-call="website_event_track_quiz.quiz_question"/>
+            </t>
+            <div class="o_quiz_js_quiz_validation pt-3"/>
+        </div>
+    </template>
+
+    <template id="quiz_question" name="Quiz question template">
+        <div t-att-class="'o_quiz_js_quiz_question mt-3 %s' % ('completed-disabled' if quiz_completed else '')"
+            t-att-data-question-id="question['id']" t-att-data-title="question['name']" >
+            <div class="row d-flex mb-2 mx-0">
+                <div class="h4">
+                    <span t-out="question['name']"/>
+                </div>
+            </div>
+            <div class="list-group">
+                <t t-foreach="question['answer_ids']" t-as="answer">
+                    <a t-att-data-answer-id="answer['id']" href="#"
+                        t-att-data-text="answer['text_value']"
+                        class="o_quiz_quiz_answer list-group-item list-group-item-action d-flex align-items-center">
+                        <label class="my-0 d-flex align-items-center justify-content-center me-2">
+                            <input type="radio"
+                                t-att-name="question['id']"
+                                t-att-value="answer['id']"
+                                class="d-none"
+                                t-att-disabled="quiz_completed"/>
+                            <i t-att-class="'fa fa-circle text-400 %s' % ('d-none' if quiz_completed and answer['is_correct'] else '')"/>
+                            <i class="fa fa-times-circle text-danger d-none"></i>
+                            <i t-att-class="'fa fa-check-circle text-success %s' % ('d-none' if not (quiz_completed and answer['is_correct']) else '')"></i>
+                        </label>
+                        <span t-out="answer['text_value']"/>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </template>
+</odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.Dialog" owl="1">
+        <t t-if="dialog">
+            <div class="o_Dialog modal fixed-top bottom-0 d-flex justify-content-center" t-attf-class="{{ className }}" t-att-style="dialog.style" t-ref="root">
+                <t
+                    t-component="constructor.components[dialog.componentName]"
+                    t-props="{
+                        className: `o_Dialog_component ${dialog.componentClassName}`,
+                        record: dialog.record,
+                    }"
+                />
+            </div>
+        </t>
+    </t>
+
+</templates>

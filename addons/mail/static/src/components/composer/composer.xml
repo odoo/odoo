@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.Composer" owl="1">
+        <t t-if="composerView">
+            <div class="o_Composer"
+                t-att-class="{
+                    'o-focused': composerView.isFocused,
+                    'o-has-current-partner-avatar pe-3 ps-1': composerView.hasCurrentPartnerAvatar,
+                    'o-has-footer': composerView.hasFooter,
+                    'o-has-header': composerView.hasHeader,
+                    'o-is-in-thread-view bg-view': composerView.threadView,
+                    'o-is-compact': composerView.isCompact,
+                    'o-messaging-in-editing': composerView.messageViewInEditing,
+                    'pt-3 pb-4': composerView.hasCurrentPartnerAvatar and composerView.hasHeader,
+                    'py-4': composerView.hasCurrentPartnerAvatar and !composerView.hasHeader and !composerView.threadView,
+                    'py-1': composerView.hasCurrentPartnerAvatar and !composerView.hasHeader and composerView.threadView,
+                }"
+                t-attf-class="{{ className }}"
+                t-on-keydown="composerView.onKeydown"
+                t-ref="root"
+            >
+                <t t-if="composerView.dropZoneView">
+                    <DropZone
+                        className="'o_Composer_dropZone'"
+                        record="composerView.dropZoneView"
+                    />
+                </t>
+                <t t-if="composerView.hasHeader">
+                    <div class="o_Composer_coreHeader text-truncate" t-att-class="{ 'small p-2': composerView.isInChatWindow or composerView.isInDiscuss }">
+                        <t t-if="composerView.threadView and composerView.threadView.replyingToMessageView">
+                            <span class="cursor-pointer" t-on-click="composerView.onClickReplyingToMessage">
+                                Replying to <b t-esc="composerView.threadView.replyingToMessageView.message.authorName"/>
+                            </span>
+                            <i t-if="composerView.threadView.thread !== messaging.inbox.thread" class="o_Composer_cancelReply fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="composerView.onClickStopReplying"/>
+                        </t>
+                        <t t-if="composerView.hasThreadName">
+                            <span class="o_Composer_threadName">
+                                on: <b><t t-esc="composerView.composer.activeThread.displayName"/></b>
+                            </span>
+                        </t>
+                        <t t-if="composerView.hasFollowers and !composerView.composer.isLog">
+                            <!-- Text for followers -->
+                            <small class="o_Composer_followers flex-shrink-0">
+                                <b class="text-muted">To: </b>
+                                <em class="text-muted">Followers of </em>
+                                <b>
+                                    <t t-if="composerView.composer.activeThread.displayName">
+                                        &#32;&quot;<t t-esc="composerView.composer.activeThread.displayName"/>&quot;
+                                    </t>
+                                    <t t-else="">
+                                        this document
+                                    </t>
+                                </b>
+                            </small>
+                            <ComposerSuggestedRecipientList record="composerView.composerSuggestedRecipientListView"/>
+                        </t>
+                    </div>
+                </t>
+                <t t-if="composerView.hasCurrentPartnerAvatar">
+                    <div class="o_Composer_sidebarMain">
+                        <t t-if="!messaging.currentGuest or composerView.composer.activeThread.model !== 'mail.channel'">
+                            <img class="o_Composer_currentPartnerAvatar mt-1 rounded-circle o_object_fit_cover" t-att-src="composerView.currentPartnerAvatar" alt="Avatar of user"/>
+                        </t>
+                        <t t-if="messaging.currentGuest and composerView.composer.activeThread.model === 'mail.channel'">
+                            <img class="o_Composer_currentPartnerAvatar mt-1 rounded-circle o_object_fit_cover" t-attf-src="/mail/channel/{{ composerView.composer.activeThread.id }}/guest/{{ messaging.currentGuest.id }}/avatar_128?unique={{ messaging.currentGuest.name }}" alt="Avatar of guest"/>
+                        </t>
+                    </div>
+                </t>
+                <div
+                    class="o_Composer_coreMain d-flex flex-nowrap align-items-start flex-grow-1"
+                    t-att-class="{
+                        'o-composer-is-compact': composerView.isCompact,
+                        'flex-column border rounded-3 bg-view': !composerView.isCompact,
+                    }"
+                >
+                    <ComposerTextInput
+                        className="'o_Composer_textInput flex-grow-1 align-self-stretch'"
+                        classNameObj="{
+                            'o-composer-is-compact': composerView.isCompact,
+                            'rounded-3': !composerView.isCompact,
+                            'o_Composer_textInput-mobile': messaging.device.isSmall,
+                            'o-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar,
+                            'rounded-start-3': composerView.isCompact and composerView.hasCurrentPartnerAvatar,
+                        }"
+                        record="composerView"
+                        t-key="composerView.localId"
+                    />
+                    <div class="o_Composer_buttons d-flex align-items-stretch align-self-stretch flex-shrink-0" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'h-auto w-100 px-3': !composerView.isCompact, 'o-isDeviceSmall': messaging.device.isSmall, 'o-messaging-in-editing': composerView and composerView.messageViewInEditing, 'border-end': composerView.messageViewInEditing and !composerView.hasCurrentPartnerAvatar }">
+                        <div class="o_Composer_toolButtons d-flex py-1 border-top bg-view"
+                            t-att-class="{
+                                'o-composer-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar,
+                                'o-composer-is-compact border-bottom': composerView.isCompact,
+                                'flex-row flex-grow-1 justify-content-between': !composerView.isCompact,
+                            }">
+                            <div class="o_Composer_primaryToolButtons d-flex align-items-center" t-att-class="{ 'o-composer-is-compact px-2': composerView.isCompact, 'flex-column': composerView.messageViewInEditing and composerView.messageViewInEditing.isInChatWindow }">
+                                <button class="o_Composer_button o_Composer_buttonEmojis o_Composer_toolButton btn btn-light border-0 rounded-pill"
+                                    t-att-class="{
+                                        'o-open bg-200': composerView.emojisPopoverView,
+                                        'o-isDeviceSmall': messaging.device.isSmall,
+                                    }"
+                                    t-attf-class="{{ composerView.messageViewInEditing ? 'my-1' : 'mx-1' }}"
+                                    t-att-aria-expanded="composerView.emojisPopoverView ? 'true' : 'false'"
+                                    t-on-keydown="composerView.onKeydownButtonEmojis"
+                                    t-on-click="composerView.onClickButtonEmojis"
+                                    t-ref="buttonEmojis"
+                                >
+                                    <i class="fa fa-smile-o overflow-visible" role="img" aria-label="Emojis"/>
+                                </button>
+                                <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip border-0 rounded-pill" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" t-attf-class="{{ composerView.messageViewInEditing ? 'my-1' : 'mx-1' }}" title="Add attachment" aria-label="Add attachment" type="button" t-on-click="composerView.onClickAddAttachment"/>
+                            </div>
+                            <t t-if="composerView.isExpandable">
+                                <div class="o_Composer_secondaryToolButtons">
+                                    <button class="o_Composer_button o_Composer_buttonFullComposer o_Composer_toolButton btn btn-light fa fa-expand mx-1 border-0 rounded-pill bg-view" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" title="Full composer" aria-label="Full composer" type="button" t-on-click="composerView.onClickFullComposer"/>
+                                </div>
+                            </t>
+                        </div>
+                        <t t-if="composerView.isCompact">
+                            <t t-call="mail.Composer.actionButtons"/>
+                        </t>
+                    </div>
+                </div>
+                <t t-if="composerView.hasFooter">
+                    <div class="o_Composer_coreFooter overflow-auto" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'ms-0': !composerView.isCompact }">
+                        <t t-if="composerView.hasThreadTyping">
+                            <ThreadTextualTypingStatus className="'o_Composer_threadTextualTypingStatus small'" thread="composerView.composer.activeThread"/>
+                        </t>
+                        <AttachmentList
+                            t-if="composerView.attachmentList"
+                            className="'o_Composer_attachmentList flex-grow-1'"
+                            classNameObj="{ 'o-composer-is-compact': composerView.isCompact, 'overflow-auto': !composerView.isCompact }"
+                            record="composerView.attachmentList"
+                        />
+                        <t t-if="!composerView.isCompact">
+                            <t t-call="mail.Composer.actionButtons"/>
+                        </t>
+                        <t t-if="composerView.messageViewInEditing">
+                            <span class="text-muted">escape to <a href="#" t-on-click="composerView.onClickCancelLink">cancel</a>, enter to <a href="#" t-on-click="composerView.onClickSaveLink">save</a></span>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="mail.Composer.actionButtons" owl="1">
+        <div class="o_Composer_actionButtons" t-att-class="{ 'o-composer-is-compact d-flex': composerView.isCompact, 'mt-2': !composerView.isCompact }">
+            <t t-if="composerView.hasSendButton">
+                <button class="o_Composer_actionButton o_Composer_button o_Composer_buttonSend btn btn-primary"
+                    t-att-class="{
+                        'o-last': !composerView.hasDiscardButton,
+                        'o-composer-is-compact border-start-0': composerView.isCompact,
+                        'o-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar,
+                        'rounded-0 rounded-end-3': !composerView.hasDiscardButton and composerView.hasCurrentPartnerAvatar and composerView.isCompact,
+                    }"
+                    t-att-disabled="!composerView.composer.canPostMessage ? 'disabled' : ''"
+                    type="button"
+                    t-on-click="composerView.onClickSend"
+                >
+                    <t t-if="!messaging.device.isSmall"><t t-esc="composerView.sendButtonText"/></t>
+                    <t t-else=""><i class="fa fa-paper-plane-o"/></t>
+                </button>
+            </t>
+            <t t-if="composerView.hasDiscardButton">
+                <button class="o_Composer_actionButton o-last o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-att-class="{ 'o-composer-is-compact border-start-0': composerView.isCompact, 'o-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar, 'rounded-0 rounded-end-3': composerView.hasCurrentPartnerAvatar and composerView.isCompact }" type="button" t-on-click="composerView.onClickDiscard">
+                    Discard
+                </button>
+            </t>
+        </div>
+    </t>
+
+</templates>

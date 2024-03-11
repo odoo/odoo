@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ThreadIcon" owl="1">
+        <t t-if="thread">
+            <div class="o_ThreadIcon d-flex justify-content-center flex-shrink-0" t-attf-class="{{ className }}" t-ref="root" name="root">
+                <t t-if="thread.channel and thread.channel.channel_type === 'channel'">
+                    <t t-if="thread.authorizedGroupFullName">
+                        <div class="o_ThreadIcon_groupRestrictedChannel fa fa-fw fa-hashtag" t-att-title="thread.accessRestrictedToGroupText"/>
+                    </t>
+                    <t t-if="!thread.authorizedGroupFullName">
+                        <div class="o_ThreadIcon_publicChannel fa fa-fw fa-globe" title="Public Channel"/>
+                    </t>
+                </t>
+                <t t-elif="thread.channel and thread.channel.channel_type === 'chat' and thread.channel.correspondent">
+                    <t t-if="thread.orderedOtherTypingMembers.length > 0">
+                        <ThreadTypingIcon
+                            className="'o_ThreadIcon_typing flex-grow-1'"
+                            animation="'pulse'"
+                            title="thread.typingStatusText"
+                        />
+                    </t>
+                    <t t-elif="thread.channel.correspondent.im_status === 'online'">
+                        <div class="o_ThreadIcon_online fa fa-fw fa-circle" title="Online"/>
+                    </t>
+                    <t t-elif="thread.channel.correspondent.im_status === 'offline'">
+                        <div class="o_ThreadIcon_offline fa fa-fw fa-circle-o" title="Offline"/>
+                    </t>
+                    <t t-elif="thread.channel.correspondent.im_status === 'away'">
+                        <div class="o_ThreadIcon_away fa fa-fw fa-circle text-warning" title="Away"/>
+                    </t>
+                    <t t-elif="thread.channel.correspondent === messaging.partnerRoot">
+                        <div class="o_ThreadIcon_online fa fa-fw fa-heart" title="Bot"/>
+                    </t>
+                    <t t-else="" name="noImStatusCondition">
+                        <div class="o_ThreadIcon_noImStatus fa fa-fw fa-question-circle" title="No IM status available"/>
+                    </t>
+                </t>
+                <t t-elif="thread.channel and thread.channel.channel_type === 'group'">
+                    <div class="o_ThreadIcon fa fa-fw fa-users" title="Grouped Chat"/>
+                </t>
+                <t t-elif="thread.mailbox">
+                    <t t-if="thread.mailbox === messaging.inbox">
+                        <div class="o_ThreadIcon_mailboxInbox fa fa-fw fa-inbox"/>
+                    </t>
+                    <t t-elif="thread.mailbox === messaging.starred">
+                        <div class="o_ThreadIcon_mailboxStarred fa fa-fw fa-star-o"/>
+                    </t>
+                    <t t-elif="thread.mailbox === messaging.history">
+                        <div class="o_ThreadIcon_mailboxHistory fa fa-fw fa-history"/>
+                    </t>
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>

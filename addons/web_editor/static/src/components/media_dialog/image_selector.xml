@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="web_editor.AutoResizeImage" owl="1">
+    <div t-ref="auto-resize-image-container" class="o_existing_attachment_cell o_we_image align-items-center justify-content-center me-1 mb-1 opacity-trigger-hover opacity-0 cursor-pointer" t-att-class="{ o_we_attachment_optimized: props.isOptimized, 'o_loaded position-relative opacity-100': state.loaded, o_we_attachment_selected: props.selected, 'position-fixed': !state.loaded }" t-on-click="props.onImageClick">
+        <RemoveButton t-if="props.isRemovable" model="props.model" remove="() => this.remove()"/>
+        <div class="o_we_media_dialog_img_wrapper">
+            <img t-ref="auto-resize-image" class="o_we_attachment_highlight img img-fluid w-100" t-att-src="props.src" t-att-alt="props.altDescription" t-att-title="props.title" loading="lazy"/>
+            <a t-if="props.author" class="o_we_media_author position-absolute start-0 bottom-0 end-0 text-truncate text-center text-primary fs-6 bg-white-50" t-att-href="props.authorLink" target="_blank" t-esc="props.author"/>
+        </div>
+        <span t-if="props.isOptimized" class="badge position-absolute bottom-0 end-0 m-1 text-bg-success">Optimized</span>
+    </div>
+</t>
+
+<t t-name="web_editor.ImagesListTemplate" owl="1">
+    <div class="o_we_existing_attachments o_we_images d-flex flex-wrap my-0">
+        <t t-if="!hasContent and !isFetching">
+            <div t-if="state.needle" class="o_nocontent_help">
+                <p class="o_empty_folder_image">No images found.</p>
+                <p class="o_empty_folder_subtitle">You can upload images with the button located in the top left of the screen.</p>
+            </div>
+            <div t-else="" class="o_we_search_prompt">
+                <h2>Get the perfect image by searching in our library of copyright free photos and illustrations.</h2>
+            </div>
+        </t>
+        <t t-else="">
+            <t t-if="['all', 'database'].includes(state.searchService)">
+                <t t-foreach="state.attachments" t-as="attachment" t-key="attachment.id">
+                    <AutoResizeImage t-if="!attachment.original_id or state.showOptimized"
+                        id="attachment.id"
+                        isOptimized="!!attachment.original_id"
+                        isRemovable="true"
+                        onRemoved="(attachmentId) => this.onRemoved(attachmentId)"
+                        selected="this.selectedAttachmentIds.includes(attachment.id)"
+                        src="attachment.thumbnail_src or attachment.image_src"
+                        name="attachment.name"
+                        title="attachment.name"
+                        altDescription="attachment.altDescription"
+                        model="attachment.res_model"
+                        minRowHeight="MIN_ROW_HEIGHT"
+                        onImageClick="() => this.onClickAttachment(attachment)"
+                        onLoaded="(imgEl) => this.onImageLoaded(imgEl, attachment)"/>
+                </t>
+            </t>
+            <t id="o_we_media_library_images" t-if="['all', 'media-library'].includes(state.searchService)">
+                <t t-foreach="state.libraryMedia" t-as="media" t-key="media.id">
+                    <AutoResizeImage author="media.author"
+                        src="media.thumbnail_url"
+                        authorLink="media.author_link"
+                        title="media.tooltip"
+                        altDescription="media.tooltip"
+                        minRowHeight="MIN_ROW_HEIGHT"
+                        selected="this.selectedMediaIds.includes(media.id)"
+                        onImageClick="() => this.onClickMedia(media)"
+                        onLoaded="(imgEl) => this.onImageLoaded(imgEl, media)"/>
+                </t>
+            </t>
+            <!-- 20 placeholders is just enough for a 5K screen, change this if ImageWidget.MIN_ROW_HEIGHT changes -->
+            <t t-foreach="[...Array(20).keys()]" t-as="i" t-key="i">
+                <div class="o_we_attachment_placeholder"/>
+            </t>
+        </t>
+    </div>
+</t>
+</templates>

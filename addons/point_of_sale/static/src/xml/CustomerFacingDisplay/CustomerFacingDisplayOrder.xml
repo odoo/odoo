@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="CustomerFacingDisplayHead">
+        <div class="resources">
+            <base t-att-href="origin"/>
+            <meta http-equiv="cache-control" content="no-cache" />
+            <meta http-equiv="pragma" content="no-cache" />
+            <link rel="stylesheet" type="text/css" t-att-href="origin + '/web/static/src/libs/fontawesome/css/font-awesome.css'"/>
+            <link rel="stylesheet" type="text/css" t-att-href="origin + '/point_of_sale/static/src/css/customer_facing_display.css'"/>
+        </div>
+    </t>
+
+    <t t-name="CustomerFacingDisplayOrder">
+        <!-- Header -->
+        <t t-call="CustomerFacingDisplayHead"/>
+
+        <div class="pos-customer_facing_display pos-palette_01">
+            <!-- Orderlines -->
+            <div class="pos-customer_products" name="Products list">
+                <t t-call="CustomerFacingDisplayOrderLines"/>
+            </div>
+
+            <div class="pos-payment_info">
+                <!-- Company Logo -->
+                <div class="pos-company_logo" t-attf-style="background-image:url(/logo?company=#{pos.company.id})"/>
+
+                <div class="pos-payment_info_details">
+                    <!-- Order TOtal -->
+                    <div class="pos-total">
+                        <div>
+                            <span class="total-amount-formatting">TOTAL</span>
+                        </div>
+                        <div>
+                            <span class="pos_total-amount" t-esc="pos.format_currency(order and order.get_total_with_tax() || 0)"/>
+                        </div>
+                    </div>
+
+                    <!-- Paymentlines -->
+                    <t t-call="CustomerFacingDisplayPaymentLines"/>
+
+                    <!-- Odoo Logo -->
+                    <div class="pos-odoo_logo_container"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="CustomerFacingDisplayOrderLines">
+        <div class="pos_orderlines">
+            <div class="pos_orderlines_item pos_orderlines_header">
+                <div/>
+                <div/>
+                <div>Quantity</div>
+                <div>Price</div>
+            </div>
+            <div class="pos_orderlines_list">
+                <t t-if="order">
+                    <div t-foreach="order.get_orderlines()" t-as="orderline" class="pos_orderlines_item">
+                        <div><div t-attf-style="background-image:url(#{productImages[orderline.product.id]})"/></div>
+                        <div t-esc="orderline.get_full_product_name()"/>
+                        <div t-esc="orderline.get_quantity_str()"/>
+                        <div t-esc="pos.format_currency(orderline.get_display_price())"/>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="CustomerFacingDisplayPaymentLines">
+        <div class="pos-paymentlines">
+            <t t-if="order">
+                <t t-foreach="order.get_paymentlines()" t-as="paymentline">
+                    <div>
+                        <span><t t-esc="paymentline.name"/>:</span>
+                    </div>
+                    <div>
+                        <span t-esc="pos.format_currency(paymentline.get_amount())"/>
+                    </div>
+                </t>
+            </t>
+
+            <div>
+                <span class="pos-change_title">Change</span>
+            </div>
+            <div>
+                <span class="pos-change_amount" t-esc="pos.format_currency(order and order.get_change() || 0)"/>
+            </div>
+        </div>
+    </t>
+
+</templates>
