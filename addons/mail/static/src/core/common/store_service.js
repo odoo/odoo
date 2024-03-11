@@ -1,5 +1,5 @@
-import { BaseStore, makeStore, Record } from "@mail/core/common/record";
 import { rpcWithEnv } from "@mail/utils/common/misc";
+import { Store as BaseStore, makeStore, Record } from "@mail/core/common/record";
 import { reactive } from "@odoo/owl";
 
 import { router } from "@web/core/browser/router";
