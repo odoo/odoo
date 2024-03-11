@@ -120,6 +120,7 @@
             ('replace', 'web/static/src/legacy/js/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
             'website/static/src/scss/website.scss',
             'website/static/src/scss/website.ui.scss',
+            'website/static/src/libs/bootstrap/bootstrap.js',
             'website/static/src/js/utils.js',
             'website/static/src/js/tours/tour_utils.js',
             'website/static/src/js/content/website_root.js',
