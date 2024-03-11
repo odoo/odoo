@@ -256,43 +256,6 @@ class MailActivity(models.Model):
 
         return valid
 
-    def _check_access_assignation(self):
-        """ Check assigned user (user_id field) has access to the document. Purpose
-        is to allow assigned user to handle their activities. For that purpose
-        assigned user should be able to at least read the document. We therefore
-        raise an UserError if the assigned user has no access to the document.
-
-        .. deprecated:: 17.0
-            Deprecated method, we don't check access to the underlying records anymore
-            as user can new see activities without having access to the underlying records.
-        """
-        for model, activity_data in self._classify_by_model().items():
-            # group activities / user, in order to batch the check of ACLs
-            per_user = dict()
-            for activity in activity_data['activities'].filtered(lambda act: act.user_id):
-                if activity.user_id not in per_user:
-                    per_user[activity.user_id] = activity
-                else:
-                    per_user[activity.user_id] += activity
-            for user, activities in per_user.items():
-                RecordModel = self.env[model].with_user(user).with_context(
-                    allowed_company_ids=user.company_ids.ids
-                )
-                try:
-                    RecordModel.check_access_rights('read')
-                except exceptions.AccessError:
-                    raise exceptions.UserError(
-                        _('Assigned user %s has no access to the document and is not able to handle this activity.',
-                          user.display_name))
-                else:
-                    try:
-                        target_records = self.env[model].browse(activities.mapped('res_id'))
-                        target_records.check_access_rule('read')
-                    except exceptions.AccessError:
-                        raise exceptions.UserError(
-                            _('Assigned user %s has no access to the document and is not able to handle this activity.',
-                              user.display_name))
-
     # ------------------------------------------------------
     # ORM overrides
     # ------------------------------------------------------
