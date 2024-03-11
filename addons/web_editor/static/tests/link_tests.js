@@ -406,7 +406,7 @@ QUnit.module(
                 editor.clean();
                 assert.strictEqual(
                     editable.innerHTML,
-                    `<p>a<a href="#" target="_blank">linkE<br></a>b</p>`
+                    `<p>a<a href="#" target="_blank">linkE</a><br>b</p>`
                 );
             }
         );
@@ -438,7 +438,7 @@ QUnit.module(
                 editor.clean();
                 assert.strictEqual(
                     editable.innerHTML,
-                    `<p>a<a href="#" target="_blank">linkE<br>D</a>b</p>`
+                    `<p>a<a href="#" target="_blank">linkE</a><br>Db</p>`
                 );
             }
         );
