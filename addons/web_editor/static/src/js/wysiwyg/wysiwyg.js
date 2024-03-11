@@ -1615,6 +1615,7 @@ const Wysiwyg = Widget.extend({
                         this.odooEditor.historyPauseSteps();
                         try {
                             this._processAndApplyColor(eventName, ev.data.color);
+                            this.odooEditor._computeHistorySelection();
                         } finally {
                             this.odooEditor.historyUnpauseSteps();
                         }
