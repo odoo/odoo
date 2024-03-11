@@ -132,6 +132,7 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN ir_property product_standard_price
                     ON product_standard_price.res_id = CONCAT('product.product,', product.id)
                     AND product_standard_price.name = 'standard_price'
+                    AND product_standard_price.company_id = line.company_id
                 JOIN {currency_table} ON currency_table.company_id = line.company_id
         '''.format(
             currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today())
