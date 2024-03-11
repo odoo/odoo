@@ -282,7 +282,7 @@ const Wysiwyg = Widget.extend({
             plugins: options.editorPlugins,
             direction: options.direction || localization.direction || 'ltr',
             collaborationClientAvatarUrl: this._getCollaborationClientAvatarUrl(),
-            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
+            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading', 'o_link_in_selection'],
             dropImageAsAttachment: options.dropImageAsAttachment,
             foldSnippets: !!options.foldSnippets,
         }, editorCollaborationOptions));

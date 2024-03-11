@@ -83,6 +83,7 @@ import {
     lastLeaf,
     isUnbreakable,
     splitAroundUntil,
+    isLinkEligibleForZwnbsp,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -3945,7 +3946,19 @@ export class OdooEditor extends EventTarget {
             // re-trigger the _onSelectionChange.
             return;
         }
-
+        // Apply the o_link_in_selection class if the selection is in a single
+        // link, remove it otherwise.
+        const [anchorLink, focusLink] = [selection.anchorNode, selection.focusNode]
+            .map(node => closestElement(node, 'a:not(.btn)'));
+        const singleLinkInSelection = anchorLink === focusLink && anchorLink;
+        if (singleLinkInSelection && isLinkEligibleForZwnbsp(singleLinkInSelection)) {
+            singleLinkInSelection.classList.add('o_link_in_selection');
+        }
+        for (const link of this.editable.querySelectorAll('.o_link_in_selection')) {
+            if (link !== singleLinkInSelection) {
+                link.classList.remove('o_link_in_selection');
+            }
+        };
         // Compute the current selection on selectionchange but do not record it. Leave
         // that to the command execution or the 'input' event handler.
         this._computeHistorySelection();
@@ -4121,6 +4134,10 @@ export class OdooEditor extends EventTarget {
 
         sanitize(element);
 
+        // Remove o_link_in_selection class
+        for (const link of element.querySelectorAll('.o_link_in_selection')) {
+            link.classList.remove('o_link_in_selection');
+        }
         // Remove contenteditable=false on elements
         for (const el of element.querySelectorAll('[contenteditable="false"]')) {
             if (!el.hasAttribute('data-oe-keep-contenteditable')) {
@@ -4140,6 +4157,11 @@ export class OdooEditor extends EventTarget {
         // Clean custom selections
         if (this.deselectTable() && hasValidSelection(this.editable)) {
             this.document.getSelection().collapseToStart();
+        }
+
+        // Remove empty class attributes
+        for (const el of element.querySelectorAll('*[class=""]')) {
+            el.removeAttribute('class');
         }
     }
     /**
