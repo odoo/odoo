@@ -93,6 +93,11 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         trigger: 'iframe #top_menu .nav-item a:contains("Random!")',
     },
     {
+        content: "navbar shouldn't have any zwnbsp and no o_link_in_selection class",
+        trigger: 'iframe nav.navbar:not(:has(.o_link_in_selection)):not(:contains("\ufeff"))',
+        run: () => {}, // It's a check.
+    },
+    {
         content: "Click on Edit Link",
         trigger: 'iframe .o_edit_menu_popover a.o_we_edit_link',
     },
