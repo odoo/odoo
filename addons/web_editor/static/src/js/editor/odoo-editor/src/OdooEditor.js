@@ -85,6 +85,7 @@ import {
     splitAroundUntil,
     ZERO_WIDTH_CHARS,
     ZERO_WIDTH_CHARS_REGEX,
+    getAdjacentCharacter,
     isLinkEligibleForZwnbsp,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
@@ -3907,93 +3908,55 @@ export class OdooEditor extends EventTarget {
             ev.preventDefault();
             ev.stopPropagation();
             this.execCommand('strikeThrough');
-        } else if (IS_KEYBOARD_EVENT_LEFT_ARROW(ev)) {
-            getDeepRange(this.editable);
-            const selection = this.document.getSelection();
-            // Find previous character.
-            let { anchorNode, anchorOffset, focusNode, focusOffset } = selection;
-            if (!focusNode) {
-                return;
-            }
-            // If the selection is at the beginning of a code element at the
-            // start of its parent, make sure there's a zws before it, where the
+        } else if (IS_KEYBOARD_EVENT_LEFT_ARROW(ev) || IS_KEYBOARD_EVENT_RIGHT_ARROW(ev)) {
+            const side = ev.key === 'ArrowLeft' ? 'previous' : 'next';
+            const { anchorNode, anchorOffset } = this.document.getSelection() || {};
+            // If the selection is at the edge of a code element at the edge of
+            // its parent, make sure there's a zws next to it, where the
             // selection can then be set.
-            const codeElement = closestElement(anchorNode, 'code');
+            const codeElement = anchorNode && closestElement(anchorNode, 'code');
+            const siblingProperty = `${side}Sibling`;
             if (
                 codeElement?.classList.contains('o_inline_code') &&
-                !anchorOffset &&
-                (!codeElement.previousSibling || codeElement?.previousSibling.nodeType !== Node.TEXT_NODE ) &&
-                !isZWS(codeElement?.previousSibling)
+                (
+                    (side === 'previous' && !anchorOffset) ||
+                    (side === 'next' && anchorOffset === nodeSize(anchorNode))
+                ) &&
+                codeElement[siblingProperty]?.nodeType !== Node.TEXT_NODE &&
+                !isZWS(codeElement[siblingProperty])
             ) {
-                codeElement.before(document.createTextNode('\u200B'));
-                setSelection(codeElement.previousSibling, 0);
+                codeElement[side === 'previous' ? 'before' : 'after'](document.createTextNode('\u200B'));
+                setSelection(codeElement[siblingProperty], side === 'previous' ? 0 : 1);
             } else {
-                let previousCharacter = focusOffset > 0 && focusNode.textContent[focusOffset - 1];
-                const previousNode = previousLeaf(focusNode, this.editable);
-                if (!previousCharacter && previousNode && closestBlock(previousNode) === closestBlock(focusNode)) {
-                    focusNode = previousNode;
-                    focusOffset = nodeSize(focusNode);
-                    previousCharacter = focusNode.textContent[focusOffset - 1];
+                // Move selection if adjacent character is zero-width space.
+                let didSkipFeff = false;
+                let adjacentCharacter = getAdjacentCharacter(this.editable, side);
+                let previousSelection; // Is used to stop if `modify` doesn't move the selection.
+                const hasSelectionChanged = (oldSelection = {}) => {
+                    const newSelection = this.document.getSelection();
+                    return (
+                        oldSelection.anchorNode !== newSelection.anchorNode ||
+                        oldSelection.anchorOffset !== newSelection.anchorOffset ||
+                        oldSelection.focusNode !== newSelection.focusNode ||
+                        oldSelection.focusOffset !== newSelection.focusOffset
+                    );
+                };
+                while (ZERO_WIDTH_CHARS.includes(adjacentCharacter) && hasSelectionChanged(previousSelection)) {
+                    const selection = this.document.getSelection();
+                    previousSelection = {...selection};
+                    selection.modify(
+                        ev.shiftKey ? 'extend' : 'move',
+                        side === 'previous' ? 'backward' : 'forward',
+                        'character',
+                    );
+                    didSkipFeff = didSkipFeff || adjacentCharacter === '\ufeff';
+                    adjacentCharacter = getAdjacentCharacter(this.editable, side);
                 }
-                // Move selection if previous character is zero-width space
-                if (previousCharacter === '\u200B') {
-                    focusOffset -= 1;
-                    while (focusNode && (focusOffset < 0 || !focusNode.textContent[focusOffset])) {
-                        focusNode = nextLeaf(focusNode, this.editable);
-                        focusOffset = focusNode && nodeSize(focusNode);
-                    }
-                    if (focusNode) {
-                        const startContainer = ev.shiftKey ? anchorNode : focusNode;
-                        const startOffset = ev.shiftKey ? anchorOffset : focusOffset;
-                        setSelection(startContainer, startOffset, focusNode, focusOffset);
-                    }
-                }
-            }
-        } else if (IS_KEYBOARD_EVENT_RIGHT_ARROW(ev)) {
-            getDeepRange(this.editable);
-            const selection = this.document.getSelection();
-            // Find next character.
-            let { anchorNode, anchorOffset, focusNode, focusOffset } = selection;
-            if (!focusNode) {
-                return;
-            }
-            // If the selection is at the ending of a code element at the
-            // end of its parent, make sure there's a zws after it, where the
-            // selection can then be set.
-            const codeElement = closestElement(anchorNode, 'code');
-            if (
-                codeElement?.classList.contains('o_inline_code') &&
-                anchorOffset === nodeSize(anchorNode) &&
-                (!codeElement?.nextSibling || codeElement?.nextSibling.nodeType !== Node.TEXT_NODE ) &&
-                !isZWS(codeElement?.nextSibling)
-            ) {
-                codeElement.after(document.createTextNode('\u200B'));
-                setSelection(codeElement.nextSibling, 1);
-            } else {
-                let nextCharacter = focusNode.textContent[focusOffset];
-                const nextNode = nextLeaf(focusNode, this.editable);
-                if (!nextCharacter && nextNode && closestBlock(nextNode) === closestBlock(focusNode)) {
-                    focusNode = nextNode;
-                    focusOffset = 0;
-                    nextCharacter = focusNode.textContent[focusOffset];
-                }
-                // Move selection if next character is zero-width space
-                if (nextCharacter === '\u200B') {
-                    focusOffset += 1;
-                    let newFocusNode = focusNode;
-                    while (newFocusNode && (!newFocusNode.textContent[focusOffset] || !closestElement(newFocusNode).isContentEditable)) {
-                        newFocusNode = nextLeaf(newFocusNode, this.editable);
-                        focusOffset = 0;
-                    }
-                    if (newFocusNode && !focusOffset && closestBlock(focusNode) !== closestBlock(newFocusNode)) {
-                        newFocusNode = focusNode; // Do not move selection to next block.
-                        focusOffset = focusNode && nodeSize(focusNode);
-                    }
-                    if (newFocusNode) {
-                        const startContainer = ev.shiftKey ? anchorNode : newFocusNode;
-                        const startOffset = ev.shiftKey ? anchorOffset : focusOffset;
-                        setSelection(startContainer, startOffset, newFocusNode, focusOffset);
-                    }
+                if (didSkipFeff && !ev.shiftKey) {
+                    // If moving, just skip the zws then stop. Otherwise, do as if
+                    // they weren't there.
+                    ev.preventDefault();
+                    ev.stopPropagation();
                 }
             }
         }
