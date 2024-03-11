@@ -426,9 +426,6 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         // e.g. User should not be enable to change existing job application form
         // to opportunity form in 'Apply job' page.
         this.modelCantChange = this.$target.attr('hide-change-model') !== undefined;
-        if (this.modelCantChange) {
-            return _super(...arguments);
-        }
 
         // Get list of website_form compatible models.
         this.models = await this.orm.call("ir.model", "get_compatible_form_models");
@@ -436,16 +433,19 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         const targetModelName = this.$target[0].dataset.model_name || 'mail.mail';
         this.activeForm = this.models.find(m => m.model === targetModelName);
         currentActionName = this.activeForm.website_form_label;
-        // Create the Form Action select
-        this.selectActionEl = document.createElement('we-select');
-        this.selectActionEl.setAttribute('string', 'Action');
-        this.selectActionEl.dataset.noPreview = 'true';
-        this.models.forEach(el => {
-            const option = document.createElement('we-button');
-            option.textContent = el.website_form_label;
-            option.dataset.selectAction = el.id;
-            this.selectActionEl.append(option);
-        });
+
+        if (!this.modelCantChange) {
+            // Create the Form Action select
+            this.selectActionEl = document.createElement('we-select');
+            this.selectActionEl.setAttribute('string', 'Action');
+            this.selectActionEl.dataset.noPreview = 'true';
+            this.models.forEach(el => {
+                const option = document.createElement('we-button');
+                option.textContent = el.website_form_label;
+                option.dataset.selectAction = el.id;
+                this.selectActionEl.append(option);
+            });
+        }
 
         return _super(...arguments);
     },
