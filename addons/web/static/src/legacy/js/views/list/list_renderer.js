@@ -146,6 +146,17 @@ var ListRenderer = BasicRenderer.extend({
 
         _.each(this.columns, this._computeColumnAggregates.bind(this, data));
     },
+    _canBeAggregated: function(fieldName) {
+        var field = this.state.fields[fieldName];
+        if (!field) {
+            return false;
+        }
+        var type = field.type;
+        if (type !== 'integer' && type !== 'float' && type !== 'monetary') {
+            return false;
+        }
+        return true;
+    },
     /**
      * Compute the aggregate values for a given column and a set of records.
      * The aggregate values are then written, if applicable, in the 'aggregate'
@@ -157,12 +168,8 @@ var ListRenderer = BasicRenderer.extend({
      */
     _computeColumnAggregates: function (data, column) {
         var attrs = column.attrs;
-        var field = this.state.fields[attrs.name];
-        if (!field) {
-            return;
-        }
-        var type = field.type;
-        if (type !== 'integer' && type !== 'float' && type !== 'monetary') {
+
+        if (!this._canBeAggregated(attrs.name)) {
             return;
         }
         var func = (attrs.sum && 'sum') || (attrs.avg && 'avg') ||
@@ -170,19 +177,34 @@ var ListRenderer = BasicRenderer.extend({
         if (func) {
             var count = 0;
             var aggregateValue = 0;
+            var aggregateDivisor = 0;
             if (func === 'max') {
                 aggregateValue = -Infinity;
             } else if (func === 'min') {
                 aggregateValue = Infinity;
             }
             _.each(data, function (d) {
-                var value = (d.type === 'record') ? d.data[attrs.name] : d.aggregateValues[attrs.name];
+                var fieldName = attrs.name;
+                if (func === 'avg' && d.fields[fieldName].average_numerator) {
+                    fieldName = d.fields[fieldName].average_numerator; 
+                }
+                var value = (d.type === 'record') ? d.data[fieldName] : d.aggregateValues[fieldName];
                 if (Number(value) !== value) {
                     return;
                 }
                 count += 1;
                 if (func === 'avg') {
                     aggregateValue += value;
+                    if (d.fields[attrs.name].average_divisor) {
+                        var divisorField = d.fields[attrs.name].average_divisor
+                        var divisorValue = (d.type === 'record') ? d.data[divisorField] : d.aggregateValues[divisorField];
+                        if (Number(divisorValue) !== divisorValue) {
+                            return;
+                        }
+                        aggregateDivisor += divisorValue;
+                    } else {
+                        aggregateDivisor = count;
+                    }
                 } else if (func === 'sum') {
                     aggregateValue += value;
                 } else if (func === 'max') {
@@ -191,10 +213,10 @@ var ListRenderer = BasicRenderer.extend({
                     aggregateValue = Math.min(aggregateValue, value);
                 }
             });
-            if (func === 'avg') {
-                aggregateValue = count ? aggregateValue / count : aggregateValue;
-            }
             if (count) {
+                if (func === 'avg') {
+                    aggregateValue = aggregateDivisor ? aggregateValue / aggregateDivisor : aggregateValue;
+                }
                 column.aggregate = {
                     help: attrs[func],
                     value: aggregateValue,
