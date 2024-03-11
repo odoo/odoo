@@ -60,7 +60,7 @@ Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
         getState(parentNode, firstSplitOffset, DIRECTIONS.LEFT).cType !== CTYPES.CONTENT
     ) {
         parentNode.oDeleteBackward(firstSplitOffset, alreadyMoved);
-        if (isZWS) {
+        if (isZWS && parentNode.isConnected) {
             fillEmpty(parentNode);
         }
         return;

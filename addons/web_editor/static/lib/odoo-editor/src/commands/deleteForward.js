@@ -85,6 +85,13 @@ HTMLElement.prototype.oDeleteForward = function (offset) {
         restore();
         HTMLElement.prototype.oDeleteForward.call(grandparent, parentIndex);
         return;
+    } else if (
+        firstLeafNode &&
+        firstLeafNode.nodeType === Node.TEXT_NODE &&
+        firstLeafNode.textContent === '\ufeff'
+    ) {
+        firstLeafNode.oDeleteForward(1);
+        return;
     }
     if (
         this.hasAttribute &&
