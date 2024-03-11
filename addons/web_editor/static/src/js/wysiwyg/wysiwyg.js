@@ -187,6 +187,7 @@ export class Wysiwyg extends Component {
                 this.odooEditor.historyPauseSteps();
                 try {
                     this._processAndApplyColor(colorType, props.color, true);
+                    this.odooEditor._computeHistorySelection();
                 } finally {
                     this.odooEditor.historyUnpauseSteps();
                 }
