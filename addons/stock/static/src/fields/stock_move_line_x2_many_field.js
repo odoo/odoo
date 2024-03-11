@@ -19,7 +19,7 @@ export class SMLX2ManyField extends X2ManyField {
             return selectCreate(params);
         };
         this.openRecord = useOpenMany2XRecord({
-            resModel: "stock.quant",
+            resModel: "stock.move.line",
             activeActions: this.activeActions,
             onRecordSaved: (resId) => this.selectRecord([resId.data.id]),
             onRecordDiscarted: (resId) => this.selectRecord(resId),
@@ -57,6 +57,7 @@ export class SMLX2ManyField extends X2ManyField {
     createOpenRecord() {
         const activeElement = document.activeElement;
         this.openRecord({
+            forceModel: 'stock.quant',
             context: {
                 ...this.props.context,
                 form_view_ref: "stock.view_stock_quant_form",
