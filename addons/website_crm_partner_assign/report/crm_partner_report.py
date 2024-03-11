@@ -17,7 +17,6 @@ class CrmPartnerReportAssign(models.Model):
     date_review = fields.Date('Latest Partner Review')
     date_partnership = fields.Date('Partnership Date')
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
-    team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
     nbr_opportunities = fields.Integer('# of Opportunity', readonly=True)
     turnover = fields.Float('Turnover', readonly=True)
     date = fields.Date('Invoice Account Date', readonly=True)
@@ -26,7 +25,7 @@ class CrmPartnerReportAssign(models.Model):
         'account.invoice.report': ['invoice_date', 'partner_id', 'price_subtotal', 'state', 'move_type'],
         'crm.lead': ['partner_assigned_id'],
         'res.partner': ['activation', 'country_id', 'date_partnership', 'date_review',
-                        'grade_id', 'parent_id', 'team_id', 'user_id'],
+                        'grade_id', 'parent_id', 'user_id'],
     }
 
     @property
@@ -45,7 +44,6 @@ class CrmPartnerReportAssign(models.Model):
                     p.date_review,
                     p.date_partnership,
                     p.user_id,
-                    p.team_id,
                     (SELECT count(id) FROM crm_lead WHERE partner_assigned_id=p.id) AS nbr_opportunities,
                     i.price_subtotal as turnover,
                     i.invoice_date as date

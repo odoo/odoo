@@ -503,7 +503,7 @@ class Website(models.Model):
 
             'pricelist_id': self.pricelist_id.id,
 
-            'team_id': self.salesteam_id.id or partner_sudo.parent_id.team_id.id or partner_sudo.team_id.id,
+            'team_id': self.salesteam_id.id,
             'user_id': salesperson_user_sudo.id,
             'website_id': self.id,
         }

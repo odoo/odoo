@@ -1144,7 +1144,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             if lang:
                 new_values['lang'] = lang
             new_values['company_id'] = request.website.company_id.id
-            new_values['team_id'] = request.website.salesteam_id and request.website.salesteam_id.id
             new_values['user_id'] = request.website.salesperson_id.id
 
             if address_mode == 'billing':
@@ -1463,7 +1462,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         else:
             sanitized_values = dict(sanitized_values, **{
                 'company_id': request.website.company_id.id,
-                'team_id': request.website.salesteam_id and request.website.salesteam_id.id,
                 'user_id': request.website.salesperson_id.id,
                 **sanitized_custom_values
             })

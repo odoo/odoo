@@ -738,7 +738,6 @@ class TestCRMLead(TestCrmCommon):
 
         new_lead._handle_partner_assignment(create_missing=True)
         self.assertEqual(new_lead.partner_id.email, 'unknown.sender@test.example.com')
-        self.assertEqual(new_lead.partner_id.team_id, self.sales_team_1)
 
     @users('user_sales_manager')
     def test_phone_mobile_search(self):
