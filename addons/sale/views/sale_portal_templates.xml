@@ -18,7 +18,7 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home_sale" name="Show Quotations / Sales Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
+    <template id="portal_my_home_sale" name="Quotations / Sales Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
             <t t-set="portal_client_category_enable" t-value="True"/>
             <t t-set="portal_alert_category_enable" t-value="True"/>
