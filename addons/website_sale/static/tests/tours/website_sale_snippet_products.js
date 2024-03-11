@@ -28,7 +28,7 @@ function changeTemplate(templateKey) {
         wTourUtils.changeOption(optionBlock, `we-button[data-select-data-attribute="website_sale.${templateKey}"]`),
         {
             content: 'Check the template is applied',
-            trigger: `iframe .s_dynamic_snippet_products.${templateClass} .carousel`,
+            trigger: `:iframe .s_dynamic_snippet_products.${templateClass} .carousel`,
             run: () => null, // It's a check
         },
     ];

@@ -4,7 +4,7 @@ import * as hoot from "@odoo/hoot-dom";
 import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { utils } from "@web/core/ui/ui_service";
-import { isVisible } from "@web/core/utils/ui";
+import { queryFirst, queryAll, isVisible } from "@odoo/hoot-dom";
 
 /**
  * @typedef {string | (actions: RunningTourActionHelper) => void | Promise<void>} RunCommand
@@ -37,41 +37,6 @@ export function callWithUnloadCheck(func, ...args) {
     } else {
         window.removeEventListener("beforeunload", beforeunload);
         return willUnload;
-    }
-}
-
-/**
- * @param {NodeList|HTMLElement|string} selector
- * @param {HTMLElement} target
- * @returns {Node[]}
- */
-export function getNodesFromSelector(selector, target = document) {
-    if (typeof selector === "string") {
-        const iframeRegex = /(?<iframe>.*\biframe[^ ]*)(?<selector>.*)/;
-        const iframeSplit = typeof selector === "string" && selector.match(iframeRegex);
-        if (iframeSplit?.groups?.selector && !iframeSplit?.groups?.iframe.includes(":iframe")) {
-            const iframeSelector = `${iframeSplit.groups?.iframe}:not(.o_ignore_in_tour)`;
-            const iframe = hoot.queryAll(iframeSelector, { root: target }).at(0);
-            if (iframe instanceof Node) {
-                if (iframe.matches(`[is-ready="false"]`)) {
-                    return [];
-                } else {
-                    return hoot.queryAll(iframeSplit.groups?.selector, {
-                        root: iframe.contentWindow.document,
-                    });
-                }
-            } else {
-                return [];
-            }
-        } else {
-            return hoot.queryAll(selector, { root: target });
-        }
-    } else if (selector instanceof HTMLElement) {
-        return [selector];
-    } else if (selector instanceof NodeList) {
-        return [...selector];
-    } else {
-        return [];
     }
 }
 
@@ -215,7 +180,7 @@ export class RunningTourActionHelper {
     }
     drag_and_drop_native(toSel, fromSel) {
         const source = this._get_action_element(fromSel);
-        const target = getNodesFromSelector(toSel)[0];
+        const target = queryFirst(toSel);
         this._drag_and_drop(source, target);
     }
     auto(selector) {
@@ -234,7 +199,7 @@ export class RunningTourActionHelper {
      */
     _get_action_element(selector) {
         if (typeof selector === "string" && selector.length) {
-            const nodes = getNodesFromSelector(selector);
+            const nodes = queryAll(selector);
             return nodes.find(isVisible) || nodes.at(0);
         } else if (selector instanceof Node) {
             return selector;
@@ -606,4 +571,13 @@ export const stepUtils = {
             },
         ];
     },
+
+    waitIframeIsReady() {
+        return  {
+            content: "Wait until the iframe is ready",
+            trigger: `:has([is-ready="true"]):iframe html`,
+            isCheck: true,
+        };
+    }
+
 };

@@ -28,7 +28,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar_mobile', 
     },
     {
         content: "Make sure the toolbar isn't floating",
-        trigger: 'iframe',
+        trigger: ':iframe',
         run: function () {
             const iframeDocument = this.anchor.contentDocument;
             if (iframeDocument.querySelector('#toolbar.oe-floating')) {
@@ -49,7 +49,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar_mobile', 
     },
     {
         content: "Make sure the snippets menu is hidden",
-        trigger: 'iframe',
+        trigger: ':iframe',
         run: function () {
             const iframeDocument = this.anchor.contentDocument;
             if (!iframeDocument.querySelector('#oe_snippets.d-none')) {

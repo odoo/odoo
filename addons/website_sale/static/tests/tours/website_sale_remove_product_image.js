@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
 import wTourUtils from "@website/js/tours/tour_utils";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 const clickOnImgAndWaitForLoad = [
     {
         content: "Click on the product image",
-        trigger: "iframe #o-carousel-product img[alt='Test Remove Image']",
+        trigger: ":iframe #o-carousel-product img[alt='Test Remove Image']",
     },
     {
         content: "Check that the snippet editor of the clicked image has been loaded",
@@ -14,9 +15,10 @@ const clickOnImgAndWaitForLoad = [
     },
 ];
 const enterEditModeOfTestProduct = () => [
+    stepUtils.waitIframeIsReady(),
     {
         content: "Click on the product anchor",
-        trigger: "iframe a:contains('Test Remove Image')",
+        trigger: ":iframe a:contains('Test Remove Image')",
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
 ];
@@ -42,7 +44,7 @@ wTourUtils.registerWebsitePreviewTour("add_and_remove_main_product_image_no_vari
     ...enterEditModeOfTestProduct(),
     {
         content: "Double click on the product image",
-        trigger: "iframe #o-carousel-product img[alt='Test Remove Image']",
+        trigger: ":iframe #o-carousel-product img[alt='Test Remove Image']",
         run: "dblclick",
     },
     {

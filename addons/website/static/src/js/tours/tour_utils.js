@@ -13,7 +13,7 @@ function addMedia(position = "right") {
         run: "click",
     };
 }
-function assertCssVariable(variableName, variableValue, trigger = 'iframe body') {
+function assertCssVariable(variableName, variableValue, trigger = ':iframe body') {
     return {
         content: `Check CSS variable ${variableName}=${variableValue}`,
         trigger: trigger,
@@ -69,7 +69,7 @@ function selectColorPalette(position = "left") {
 
 function changeColumnSize(position = "right") {
     return {
-        trigger: `iframe .oe_overlay.o_draggable.o_we_overlay_sticky.oe_active .o_handle.e`,
+        trigger: `:iframe .oe_overlay.o_draggable.o_we_overlay_sticky.oe_active .o_handle.e`,
         content: markup(_t("<b>Slide</b> this button to change the column size.")),
         position: position,
     };
@@ -133,7 +133,7 @@ function changePaddingSize(direction) {
         position = "bottom";
     }
     return {
-        trigger: `iframe .oe_overlay.o_draggable.o_we_overlay_sticky.oe_active .o_handle.${paddingDirection}`,
+        trigger: `:iframe .oe_overlay.o_draggable.o_we_overlay_sticky.oe_active .o_handle.${paddingDirection}`,
         content: markup(_t("<b>Slide</b> this button to change the %s padding", direction)),
         consumeEvent: 'mousedown',
         position: position,
@@ -203,7 +203,7 @@ function clickOnEditAndWaitEditMode(position = "bottom") {
 function clickOnSnippet(snippet, position = "bottom") {
     const trigger = snippet.id ? `#wrapwrap .${snippet.id}` : snippet;
     return {
-        trigger: `iframe ${trigger}`,
+        trigger: `:iframe ${trigger}`,
         extra_trigger: "body.editor_has_snippets",
         content: markup(_t("<b>Click on a snippet</b> to access its options menu.")),
         position: position,
@@ -242,7 +242,7 @@ function clickOnSave(position = "bottom", timeout) {
  */
 function clickOnText(snippet, element, position = "bottom") {
     return {
-        trigger: snippet.id ? `iframe #wrapwrap .${snippet.id} ${element}` : snippet,
+        trigger: snippet.id ? `:iframe #wrapwrap .${snippet.id} ${element}` : snippet,
         extra_trigger: ":iframe body.editor_enable",
         content: markup(_t("<b>Click on a text</b> to start editing it.")),
         position: position,
@@ -264,7 +264,7 @@ function dragNDrop(snippet, position = "bottom") {
         position: position,
         // Normally no main snippet can be dropped in the default footer but
         // targeting it allows to force "dropping at the end of the page".
-        run: "drag_and_drop_native iframe #wrapwrap > footer",
+        run: "drag_and_drop_native :iframe #wrapwrap > footer",
     };
 }
 
@@ -289,7 +289,7 @@ function goToTheme(position = "bottom") {
 
 function selectHeader(position = "bottom") {
     return {
-        trigger: `iframe header#top`,
+        trigger: `:iframe header#top`,
         content: markup(_t(`<b>Click</b> on this header to configure it.`)),
         position: position,
         run: "click",
@@ -298,7 +298,7 @@ function selectHeader(position = "bottom") {
 
 function selectSnippetColumn(snippet, index = 0, position = "bottom") {
      return {
-        trigger: `iframe #wrapwrap .${snippet.id} .row div[class*="col-lg-"]:eq(${index})`,
+        trigger: `:iframe #wrapwrap .${snippet.id} .row div[class*="col-lg-"]:eq(${index})`,
         content: markup(_t("<b>Click</b> on this column to access its options.")),
          position: position,
         run: "click",
@@ -328,7 +328,7 @@ function getClientActionUrl(path, edition) {
 function clickOnExtraMenuItem(stepOptions, backend = false) {
     return Object.assign({}, {
         content: "Click on the extra menu dropdown toggle if it is there",
-        trigger: `${backend ? "iframe" : ""} .top_menu`,
+        trigger: `${backend ? ":iframe" : ""} .top_menu`,
         run: function () {
             const extraMenuButton = this.anchor.querySelector(".o_extra_menu_items a.nav-link");
             if (extraMenuButton) {
@@ -404,9 +404,9 @@ function registerBackendAndFrontendTour(name, options, steps) {
             const newSteps = [];
             for (const step of steps()) {
                 const newStep = Object.assign({}, step);
-                newStep.trigger = `iframe ${step.trigger}`;
+                newStep.trigger = `:iframe ${step.trigger}`;
                 if (step.extra_trigger) {
-                    newStep.extra_trigger = `iframe ${step.extra_trigger}`;
+                    newStep.extra_trigger = `:iframe ${step.extra_trigger}`;
                 }
                 newSteps.push(newStep);
             }
@@ -458,14 +458,14 @@ function switchWebsite(websiteId, websiteName) {
         trigger: '.o_website_switcher_container button',
     }, {
         content: `Switch to website '${websiteName}'`,
-        extra_trigger: `iframe html:not([data-website-id="${websiteId}"])`,
+        extra_trigger: `:iframe html:not([data-website-id="${websiteId}"])`,
         trigger: `.o-dropdown--menu .dropdown-item:contains("${websiteName}")`,
     }, {
         content: "Wait for the iframe to be loaded",
         // The page reload generates assets for the new website, it may take
         // some time
         timeout: 20000,
-        trigger: `iframe html[data-website-id="${websiteId}"]`,
+        trigger: `:iframe html[data-website-id="${websiteId}"]`,
         isCheck: true,
     }];
 }

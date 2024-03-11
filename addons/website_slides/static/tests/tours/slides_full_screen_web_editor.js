@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import wTourUtils from '@website/js/tours/tour_utils';
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 /**
  * Global use case:
@@ -15,18 +16,20 @@ import wTourUtils from '@website/js/tours/tour_utils';
  wTourUtils.registerWebsitePreviewTour('full_screen_web_editor', {
     url: '/slides',
     test: true,
-}, () => [{
+}, () => [
+    stepUtils.waitIframeIsReady(),
+    {
     // open to the course
-    trigger: 'iframe a:contains("Basics of Gardening")'
+    trigger: ':iframe a:contains("Basics of Gardening")'
 }, {
     // click on a slide to open the fullscreen view
-    trigger: 'iframe a.o_wslides_js_slides_list_slide_link:contains("Home Gardening")'
+    trigger: ':iframe a.o_wslides_js_slides_list_slide_link:contains("Home Gardening")'
 }, {
-    trigger: 'iframe .o_wslides_fs_main',
+    trigger: ':iframe .o_wslides_fs_main',
     run: function () {} // check we land on the fullscreen view
 },
 ...wTourUtils.clickOnEditAndWaitEditMode()
 , {
-    trigger: 'iframe .o_wslides_lesson_main',
+    trigger: ':iframe .o_wslides_lesson_main',
     run: function () {} // check we are redirected on the detailed view
 }]);

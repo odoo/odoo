@@ -29,16 +29,16 @@ wTourUtils.goToTheme(),
     extra_trigger: '.modal-dialog div[name="lang_ids"] .rounded-pill .o_tag_badge_text:contains(Parseltongue)',
 }, {
     content: "click language dropdown (2)",
-    trigger: 'iframe .js_language_selector .dropdown-toggle',
+    trigger: ':iframe .js_language_selector .dropdown-toggle',
     timeout: 60000,
 }, {
     content: "go to english version",
-    trigger: 'iframe .js_language_selector a[data-url_code="en"]',
-    extra_trigger: 'iframe html[lang*="pa-GB"]',
+    trigger: ':iframe .js_language_selector a[data-url_code="en"]',
+    extra_trigger: ':iframe html[lang*="pa-GB"]',
 }, {
     content: "Open new page menu",
     trigger: ".o_menu_systray .o_new_content_container > a",
-    extra_trigger: 'iframe html[lang*="en-US"]',
+    extra_trigger: ':iframe html[lang*="en-US"]',
     consumeVisibleOnly: true,
 }, {
     content: "click on new page",
@@ -84,7 +84,7 @@ wTourUtils.dragNDrop({
     name: "Cover"
 }), {
     content: "change content",
-    trigger: 'iframe #wrap',
+    trigger: ':iframe #wrap',
     run: function () {
         $('iframe:not(.o_ignore_in_tour)').contents().find("#wrap p:first").replaceWith('<p>Write one or <font style="background-color: yellow;">two paragraphs <b>describing</b></font> your product or\
                 <font style="color: rgb(255, 0, 0);">services</font>. To be successful your content needs to be\
@@ -94,31 +94,31 @@ wTourUtils.dragNDrop({
     }
 }, {
     content: "ensure change was applied",
-    trigger: 'iframe #wrap p:first b',
+    trigger: ':iframe #wrap p:first b',
     isCheck: true,
 },
 ...wTourUtils.clickOnSave(),
 {
     content: "click language dropdown (3)",
-    trigger: 'iframe .js_language_selector .dropdown-toggle',
+    trigger: ':iframe .js_language_selector .dropdown-toggle',
 }, {
     content: "click on Parseltongue version",
-    trigger: 'iframe .js_language_selector a[data-url_code="pa_GB"]',
-    extra_trigger: 'iframe html[lang*="en"]',
+    trigger: ':iframe .js_language_selector a[data-url_code="pa_GB"]',
+    extra_trigger: ':iframe html[lang*="en"]',
 }, {
     content: "translate",
     trigger: '.o_menu_systray .o_translate_website_container > a',
-    extra_trigger: 'iframe html:not(:has(#wrap p span))',
+    extra_trigger: ':iframe html:not(:has(#wrap p span))',
 }, {
     content: "close modal",
     trigger: '.modal-footer .btn-secondary',
 }, {
     content: "check if translation is activate",
-    trigger: 'iframe [data-oe-translation-initial-sha]',
+    trigger: ':iframe [data-oe-translation-initial-sha]',
 }, {
     content: "translate text",
     extra_trigger: '#oe_snippets.o_loaded',
-    trigger: 'iframe #wrap p font:first',
+    trigger: ':iframe #wrap p font:first',
     run: function (actionHelper) {
         actionHelper.text('translated Parseltongue text');
         const { Wysiwyg } = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
@@ -128,7 +128,7 @@ wTourUtils.dragNDrop({
     },
 }, {
     content: "translate text with special char",
-    trigger: 'iframe #wrap input + p span:first',
+    trigger: ':iframe #wrap input + p span:first',
     run: function (actionHelper) {
         actionHelper.click();
         this.anchor.textContent = '<{translated}>' + this.anchor.textContent;
@@ -139,8 +139,8 @@ wTourUtils.dragNDrop({
     },
 }, {
     content: "click on input",
-    trigger: 'iframe #wrap input:first',
-    extra_trigger: 'iframe #wrap .o_dirty font:first:contains(translated Parseltongue text)',
+    trigger: ':iframe #wrap input:first',
+    extra_trigger: ':iframe #wrap .o_dirty font:first:contains(translated Parseltongue text)',
     run: 'click',
 }, {
     content: "translate placeholder",
@@ -156,43 +156,43 @@ wTourUtils.dragNDrop({
     extra_trigger: '.modal input:value("test Parseltongue placeholder")',
 }, {
     content: "check: input marked as translated",
-    trigger: 'iframe input[placeholder="test Parseltongue placeholder"].oe_translated',
+    trigger: ':iframe input[placeholder="test Parseltongue placeholder"].oe_translated',
     run: () => {},
 },
 ...wTourUtils.clickOnSave(),
 {
     content: "check: content is translated",
-    trigger: 'iframe #wrap p font:first:contains(translated Parseltongue text)',
+    trigger: ':iframe #wrap p font:first:contains(translated Parseltongue text)',
     run: function () {}, // it's a check
 }, {
     content: "check: content with special char is translated",
-    trigger: "iframe #wrap input + p:contains(<{translated}><b></b> is an HTML tag & )",
+    trigger: ":iframe #wrap input + p:contains(<{translated}><b></b> is an HTML tag & )",
     run: function () {}, // it's a check
 
 }, {
     content: "check: placeholder translation",
-    trigger: 'iframe input[placeholder="test Parseltongue placeholder"]',
+    trigger: ':iframe input[placeholder="test Parseltongue placeholder"]',
     run: function () {}, // it's a check
 }, {
     content: "check: default value translation",
-    trigger: 'iframe input[value="test Parseltongue default value"]',
+    trigger: ':iframe input[value="test Parseltongue default value"]',
     run: () => {},
 }, {
     content: "open language selector",
-    trigger: 'iframe .js_language_selector button:first',
-    extra_trigger: 'iframe html[lang*="pa-GB"]:not(:has(#wrap p span))',
+    trigger: ':iframe .js_language_selector button:first',
+    extra_trigger: ':iframe html[lang*="pa-GB"]:not(:has(#wrap p span))',
 }, {
     content: "return to english version",
-    trigger: 'iframe .js_language_selector a[data-url_code="en"]',
+    trigger: ':iframe .js_language_selector a[data-url_code="en"]',
 }, {
     content: "Check body",
-    trigger: "iframe body:not(:has(#wrap p font:first:contains(/^paragraphs <b>describing</b>$/)))",
+    trigger: ":iframe body:not(:has(#wrap p font:first:contains(/^paragraphs <b>describing</b>$/)))",
     run: function () {}, // it's a check
 },
 ...wTourUtils.clickOnEditAndWaitEditMode(),
 {
     content: "select text",
-    trigger: 'iframe #wrap p',
+    trigger: ':iframe #wrap p',
     run: function (actionHelper) {
         actionHelper.click();
         var el = this.anchor;
@@ -217,17 +217,17 @@ wTourUtils.dragNDrop({
 ...wTourUtils.clickOnSave(),
 {
     content: "click language dropdown (4)",
-    trigger: 'iframe .js_language_selector .dropdown-toggle',
+    trigger: ':iframe .js_language_selector .dropdown-toggle',
 }, {
     content: "return in Parseltongue",
-    trigger: 'iframe html[lang="en-US"] .js_language_selector .js_change_lang[data-url_code="pa_GB"]',
+    trigger: ':iframe html[lang="en-US"] .js_language_selector .js_change_lang[data-url_code="pa_GB"]',
 }, {
     content: "check bis: content is translated",
-    trigger: 'iframe #wrap p font:first:contains(translated Parseltongue text)',
-    extra_trigger: 'iframe html[lang*="pa-GB"]',
+    trigger: ':iframe #wrap p font:first:contains(translated Parseltongue text)',
+    extra_trigger: ':iframe html[lang*="pa-GB"]',
 }, {
     content: "check bis: placeholder translation",
-    trigger: 'iframe input[placeholder="test Parseltongue placeholder"]',
+    trigger: ':iframe input[placeholder="test Parseltongue placeholder"]',
 }, {
     content: "open site menu",
     trigger: 'button[data-menu-xmlid="website.menu_site"]',
@@ -246,6 +246,6 @@ wTourUtils.dragNDrop({
     },
 }, {
     content: "Check that the editor is not showing translated content (2)",
-    trigger: 'iframe body:not(.rte_translator_error)',
+    trigger: ':iframe body:not(.rte_translator_error)',
     run: function () {},
 }]);

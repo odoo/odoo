@@ -29,7 +29,7 @@ const preventRaceConditionStep = [{
 const replaceIconByImage = function (url) {
     return [{
         content: "Replace the icon by an image",
-        trigger: `iframe .s_social_media a[href='${url}'] i.fa`,
+        trigger: `:iframe .s_social_media a[href='${url}'] i.fa`,
         run: "dblclick",
     },
     {
@@ -57,7 +57,7 @@ const addNewSocialNetwork = function (optionIndex, linkIndex, url, replaceIcon =
     },
     {
         content: "Ensure new link is found",
-        trigger: `iframe .s_social_media:has(a:eq(${linkIndex})[href='https://www.example.com'])`,
+        trigger: `:iframe .s_social_media:has(a:eq(${linkIndex})[href='https://www.example.com'])`,
         run: () => {}, // This is a check.
     },
     ...replaceIconByImageSteps,
@@ -68,7 +68,7 @@ const addNewSocialNetwork = function (optionIndex, linkIndex, url, replaceIcon =
     },
     {
         content: "Ensure new link is changed",
-        trigger: `iframe .s_social_media:has(a:eq(${linkIndex})[href='${url}'])`,
+        trigger: `:iframe .s_social_media:has(a:eq(${linkIndex})[href='${url}'])`,
         run: () => {}, // This is a check.
     },
     ...preventRaceConditionStep,
