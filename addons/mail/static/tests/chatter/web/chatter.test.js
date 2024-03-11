@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, getFixture } from "@odoo/hoot";
 
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
 import {
@@ -220,6 +220,45 @@ test("chatter: drop attachments", async () => {
     await dragenterFiles(".o-mail-Chatter", extraFiles);
     await dropFiles(".o-mail-Dropzone", extraFiles);
     await contains(".o-mail-AttachmentCard", { count: 3 });
+});
+
+test("chatter: drop attachment should refresh thread data with hasParentReloadOnAttachmentsChange prop", async () => {
+    patchUiSize({ size: SIZES.XXL });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+
+    onRpc((route) => {
+        if (route === "/mail/attachment/upload") {
+            const attachmentId = pyEnv["ir.attachment"].create([
+                { res_id: partnerId, res_model: "res.partner", mimetype: "application/pdf" }
+            ]);
+            pyEnv["res.partner"].write([partnerId], { message_main_attachment_id: attachmentId });
+            return Promise.resolve();
+        }
+    });
+    await start();
+    const target = getFixture();
+    target.classList.add("o_web_client");
+
+    await openFormView("res.partner", partnerId, {
+        arch: `
+            <form>
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="o_attachment_preview" />
+                <chatter reload_on_post="True" reload_on_attachment="True"/>
+            </form>`
+    });
+    const files = [
+        await createFile({
+            contentType: "application/pdf",
+            name: "text.pdf",
+        }),
+    ];
+    await dragenterFiles(".o-mail-Chatter", files);
+    await dropFiles(".o-mail-Dropzone", files);
+    await contains(".o-mail-Attachment iframe", { count: 1 });
 });
 
 test("should display subject when subject isn't infered from the record", async () => {

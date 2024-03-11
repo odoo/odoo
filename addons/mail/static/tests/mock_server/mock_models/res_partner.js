@@ -8,6 +8,10 @@ export class ResPartner extends webModels.ResPartner {
     _inherit = ["mail.thread"];
 
     description = fields.Char({ string: "Description" });
+    message_main_attachment_id = fields.Many2one({
+        relation: "ir.attachment",
+        string: "Main attachment",
+    });
 
     _views = {
         [`search, ${DEFAULT_MAIL_SEARCH_ID}`]: /* xml */ `<search/>`,
