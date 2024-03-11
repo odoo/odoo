@@ -6,7 +6,7 @@ import { DELAY_FOR_SPINNER } from "@mail/core/web/chatter";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { makeDeferred, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import { getFixture, makeDeferred, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import {
     click,
     contains,
@@ -226,6 +226,50 @@ QUnit.test("chatter: drop attachments", async () => {
     await dragenterFiles(".o-mail-Chatter", extraFiles);
     await dropFiles(".o-mail-Dropzone", extraFiles);
     await contains(".o-mail-AttachmentCard", { count: 3 });
+});
+
+QUnit.test("chatter: drop attachment should refresh thread data with hasParentReloadOnAttachmentsChange prop", async () => {
+    patchUiSize({ size: SIZES.XXL });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    const views = {
+        "res.partner,false,form": `
+            <form>
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="o_attachment_preview" />
+                <div class="oe_chatter">
+                    <field name="message_main_attachment_id" invisible="1" on_change="1" />
+                    <field name="message_ids" options="{'post_refresh': 'always'}"/>
+                </div>
+            </form>`,
+    };
+    const target = getFixture();
+    target.classList.add("o_web_client");
+    const { openFormView } = await start({
+        serverData: { views },
+        target,
+        async mockRPC(route) {
+            if (route === "/mail/attachment/upload") {
+                const attachmentId = pyEnv["ir.attachment"].create([
+                    { res_id: partnerId, res_model: "res.partner", mimetype: "application/pdf" }
+                ]);
+                pyEnv["res.partner"].write([partnerId], { message_main_attachment_id: attachmentId });
+                return Promise.resolve();
+            }
+        },
+    });
+    await openFormView("res.partner", partnerId);
+    const files = [
+        await createFile({
+            contentType: "application/pdf",
+            name: "text.pdf",
+        }),
+    ];
+    await dragenterFiles(".o-mail-Chatter", files);
+    await dropFiles(".o-mail-Dropzone", files);
+    await contains(".o-mail-Attachment iframe", { count: 1 });
 });
 
 QUnit.test("should display subject when subject isn't infered from the record", async () => {
