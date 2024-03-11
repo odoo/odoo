@@ -37,7 +37,6 @@ import {
     getDeepRange,
     ancestors,
     firstLeaf,
-    previousLeaf,
     nextLeaf,
     isUnremovable,
     fillEmpty,
@@ -65,6 +64,7 @@ import {
     descendants,
     ZERO_WIDTH_CHARS,
     ZERO_WIDTH_CHARS_REGEX,
+    getAdjacentCharacter,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -2721,49 +2721,37 @@ export class OdooEditor extends EventTarget {
             ev.preventDefault();
             ev.stopPropagation();
             this.execCommand('strikeThrough');
-        } else if (IS_KEYBOARD_EVENT_LEFT_ARROW(ev)) {
-            getDeepRange(this.editable);
-            const selection = this.document.getSelection();
-            // Find previous character.
-            let { focusNode, focusOffset } = selection;
-            let previousCharacter = focusOffset > 0 && focusNode.textContent[focusOffset - 1];
-            if (!previousCharacter) {
-                focusNode = previousLeaf(focusNode);
-                focusOffset = nodeSize(focusNode);
-                previousCharacter = focusNode.textContent[focusOffset - 1];
+        } else if (IS_KEYBOARD_EVENT_LEFT_ARROW(ev) || IS_KEYBOARD_EVENT_RIGHT_ARROW(ev)) {
+            // Move selection if adjacent character is zero-width space.
+            const side = ev.key === 'ArrowLeft' ? 'previous' : 'next';
+            let didSkipFeff = false;
+            let adjacentCharacter = getAdjacentCharacter(this.editable, side);
+            let previousSelection; // Is used to stop if `modify` doesn't move the selection.
+            const hasSelectionChanged = (oldSelection = {}) => {
+                const newSelection = this.document.getSelection();
+                return (
+                    oldSelection.anchorNode !== newSelection.anchorNode ||
+                    oldSelection.anchorOffset !== newSelection.anchorOffset ||
+                    oldSelection.focusNode !== newSelection.focusNode ||
+                    oldSelection.focusOffset !== newSelection.focusOffset
+                );
+            };
+            while (ZERO_WIDTH_CHARS.includes(adjacentCharacter) && hasSelectionChanged(previousSelection)) {
+                const selection = this.document.getSelection();
+                previousSelection = {...selection};
+                selection.modify(
+                    ev.shiftKey ? 'extend' : 'move',
+                    side === 'previous' ? 'backward' : 'forward',
+                    'character',
+                );
+                didSkipFeff = didSkipFeff || adjacentCharacter === '\ufeff';
+                adjacentCharacter = getAdjacentCharacter(this.editable, side);
             }
-            // Move selection if previous character is zero-width space
-            if (previousCharacter === '\u200B') {
-                focusOffset -= 1;
-                while (focusNode && (focusOffset < 0 || !focusNode.textContent[focusOffset])) {
-                    focusNode = nextLeaf(focusNode);
-                    focusOffset = focusNode && nodeSize(focusNode);
-                }
-                const startContainer = ev.shiftKey ? selection.anchorNode : focusNode;
-                const startOffset = ev.shiftKey ? selection.anchorOffset : focusOffset;
-                setSelection(startContainer, startOffset, focusNode, focusOffset);
-            }
-        } else if (IS_KEYBOARD_EVENT_RIGHT_ARROW(ev)) {
-            getDeepRange(this.editable);
-            const selection = this.document.getSelection();
-            // Find next character.
-            let { focusNode, focusOffset } = selection;
-            let nextCharacter = focusNode.textContent[focusOffset];
-            if (!nextCharacter) {
-                focusNode = nextLeaf(focusNode);
-                focusOffset = 0;
-                nextCharacter = focusNode.textContent[focusOffset];
-            }
-            // Move selection if next character is zero-width space
-            if (nextCharacter === '\u200B') {
-                focusOffset += 1;
-                while (focusNode && !focusNode.textContent[focusOffset]) {
-                    focusNode = nextLeaf(focusNode);
-                    focusOffset = 0;
-                }
-                const startContainer = ev.shiftKey ? selection.anchorNode : focusNode;
-                const startOffset = ev.shiftKey ? selection.anchorOffset : focusOffset;
-                setSelection(startContainer, startOffset, focusNode, focusOffset);
+            if (didSkipFeff && !ev.shiftKey) {
+                // If moving, just skip the zws then stop. Otherwise, do as if
+                // they weren't there.
+                ev.preventDefault();
+                ev.stopPropagation();
             }
         }
     }
