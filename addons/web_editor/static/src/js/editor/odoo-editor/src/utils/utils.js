@@ -1199,6 +1199,12 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         }
     }
 }
+export const isLinkEligibleForZwnbsp = (editable, link) => {
+    return link.isContentEditable && editable.contains(link) && !(
+        [link, ...link.querySelectorAll('*')].some(el => el.nodeName === 'IMG' || isBlock(el)) ||
+        link.matches('nav a, a.nav-link')
+    );
+}
 
 //------------------------------------------------------------------------------
 // DOM Info utils
