@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, date, timedelta
@@ -1042,6 +1041,53 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         for leave_validation_type in types:
             with self.assertRaises(RuntimeError), self.env.cr.savepoint():
                 run_validation_flow(leave_validation_type)
+
+    @freeze_time('2019-11-01')
+    def test_duration_display_global_leave(self):
+        """ Ensure duration_display stays in sync with leave duration. """
+        employee = self.employee_emp
+        calendar = employee.resource_calendar_id
+        sick_leave_type = self.env['hr.leave.type'].create({
+            'name': 'Sick Leave (days)',
+            'request_unit': 'day',
+            'leave_validation_type': 'hr',
+        })
+        sick_leave = self.env['hr.leave'].create({
+            'name': 'Sick 3 days',
+            'employee_id': employee.id,
+            'holiday_status_id': sick_leave_type.id,
+            'request_date_from': '2019-12-23',
+            'request_date_to': '2019-12-25',
+        })
+        comp_leave_type = self.env['hr.leave.type'].create({
+            'name': 'OT Compensation (hours)',
+            'request_unit': 'hour',
+            'leave_validation_type': 'manager',
+        })
+        comp_leave = self.env['hr.leave'].create({
+            'name': 'OT Comp (4 hours)',
+            'employee_id': employee.id,
+            'holiday_status_id': comp_leave_type.id,
+            'request_unit_hours': True,
+            'request_date_from': '2019-12-26',
+            'request_date_to': '2019-12-26',
+            'request_hour_from': '8',
+            'request_hour_to': '12',
+        })
+
+        self.assertEqual(sick_leave.duration_display, '3 days')
+        self.assertEqual(comp_leave.duration_display, '4 hours')
+
+        calendar.global_leave_ids = [(0, 0, {
+            'name': 'Winter Holidays',
+            'date_from': '2019-12-25 00:00:00',
+            'date_to': '2019-12-26 23:59:59',
+            'time_type': 'leave',
+        })]
+
+        msg = "hr_holidays: duration_display should update after adding an overlapping holiday"
+        self.assertEqual(sick_leave.duration_display, '2 days', msg)
+        self.assertEqual(comp_leave.duration_display, '0 hours', msg)
 
     @freeze_time('2024-01-18')
     def test_undefined_working_hours(self):
