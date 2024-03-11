@@ -20,6 +20,8 @@ import {
     EMAIL_REGEX,
     URL_REGEX_WITH_INFOS,
     unwrapContents,
+    padLinkWithZws,
+    getTraversedNodes,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -325,12 +327,45 @@ class Sanitize {
                 this._parse(firstChild);
             }
 
-            // Update link URL if label is a new valid link.
-            if (node.nodeName === 'A' && anchorEl === node) {
-                const url = deduceURLfromLabel(node);
-                if (url) {
-                    node.setAttribute('href', url);
+            // Remove link ZWNBSP not in selection
+            const editable = closestElement(this.root, '[contenteditable=true]');
+            if (
+                node.nodeType === Node.TEXT_NODE &&
+                node.textContent.includes('\uFEFF') &&
+                !closestElement(node, 'a') &&
+                !(editable && getTraversedNodes(editable).includes(node))
+            ) {
+                const startsWithLegitZws = node.textContent.startsWith('\uFEFF') && node.previousSibling && node.previousSibling.nodeName === 'A';
+                const endsWithLegitZws = node.textContent.endsWith('\uFEFF') && node.nextSibling && node.nextSibling.nodeName === 'A';
+                let newText = node.textContent.replace(/\uFEFF/g, '');
+                if (startsWithLegitZws) {
+                    newText = '\uFEFF' + newText;
                 }
+                if (endsWithLegitZws) {
+                    newText = newText + '\uFEFF';
+                }
+                if (newText !== node.textContent) {
+                    // We replace the text node with a new text node with the
+                    // update text rather than just changing the text content of
+                    // the node because these two methods create different
+                    // mutations and at least the tour system breaks if all we
+                    // send here is a text content change.
+                    const newTextNode = document.createTextNode(newText);
+                    node.before(newTextNode);
+                    node.remove();
+                    node = newTextNode;
+                }
+            }
+
+            // Update link URL if label is a new valid link.
+            if (node.nodeName === 'A') {
+                if (anchorEl === node) {
+                    const url = deduceURLfromLabel(node);
+                    if (url) {
+                        node.setAttribute('href', url);
+                    }
+                }
+                padLinkWithZws(this.root, node);
             }
             node = node.nextSibling;
         }

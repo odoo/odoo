@@ -95,6 +95,11 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)",
     },
     {
+        content: "navbar shouldn't have any zwnbsp and no o_link_in_selection class",
+        trigger: 'iframe nav.navbar:not(:has(.o_link_in_selection)):not(:contains("\ufeff"))',
+        run: () => {}, // It's a check.
+    },
+    {
         content: "Click on Edit Link",
         trigger: 'iframe .o_edit_menu_popover a.o_we_edit_link',
     },

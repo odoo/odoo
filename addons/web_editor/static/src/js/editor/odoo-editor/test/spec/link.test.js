@@ -745,6 +745,36 @@ describe('Link', () => {
                 contentAfter: '<p><a href="#/">[]abc</a></p>',
             });
         });
+        it('should zwnbsp-pad simple text link', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">[]b</a>c</p>',
+                contentBeforeEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeff[]b\ufeff</a>\ufeffc</p>',
+            });
+        });
+        it('should not zwnbsp-pad nav-link', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/" class="nav-link">[]b</a>c</p>',
+                contentBeforeEdit: '<p>a<a href="#/" class="nav-link">[]b</a>c</p>',
+            });
+        });
+        it('should not zwnbsp-pad in nav', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<nav>a<a href="#/">[]b</a>c</nav>',
+                contentBeforeEdit: '<nav>a<a href="#/">[]b</a>c</nav>',
+            });
+        });
+        it('should not zwnbsp-pad link with block fontawesome', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">[]<i style="display: flex;" class="fa fa-star"></i></a>b</p>',
+                contentBeforeEdit: '<p>a<a href="#/">[]<i style="display: flex;" class="fa fa-star" contenteditable="false">\u200b</i></a>b</p>',
+            });
+        });
+        it('should not zwnbsp-pad link with image', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">[]<img style="display: inline;"></a>b</p>',
+                contentBeforeEdit: '<p>a<a href="#/">[]<img style="display: inline;"></a>b</p>',
+            });
+        });
     });
     describe('existing link', () => {
         it('should parse correctly a span inside a Link', async () => {
