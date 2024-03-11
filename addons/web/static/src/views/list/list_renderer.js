@@ -2,7 +2,6 @@
 
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -879,7 +878,7 @@ export class ListRenderer extends Component {
     }
 
     evalModifier(modifier, record) {
-        return !!(modifier && new Domain(modifier).contains(record.evalContext));
+        return evalDomain(modifier, record.evalContext);
     }
 
     getGroupDisplayName(group) {
