@@ -40,21 +40,21 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
             }
         },
     },
-    wTourUtils.clickOnElement("button to close the popup", "iframe .s_popup_close"),
-    wTourUtils.clickOnElement("text image snippet button", "iframe .s_text_image .btn-secondary"),
+    wTourUtils.clickOnElement("button to close the popup", ":iframe .s_popup_close"),
+    wTourUtils.clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
         content: "Paste the popup anchor in the URL input",
         trigger: "#o_link_dialog_url_input",
         run: "text #Win-%2420"
     },
     ...wTourUtils.clickOnSave(),
-    wTourUtils.clickOnElement("text image snippet button", "iframe .s_text_image .btn-secondary"),
+    wTourUtils.clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
         content: "Verify that the popup opens after clicked the button.",
         in_modal: false,
         trigger: ":iframe .s_popup .modal[id='Win-%2420'].show",
     },
-    wTourUtils.clickOnElement("button to close the popup", "iframe .s_popup_close"),
+    wTourUtils.clickOnElement("button to close the popup", ":iframe .s_popup_close"),
     {
         content: "Go to the 'contactus' page.",
         trigger: ":iframe a[href='/contactus']",
@@ -66,7 +66,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     wTourUtils.dragNDrop({id: "s_text_image", name: "Image - Text"}),
-    wTourUtils.clickOnElement("text image snippet button", "iframe .s_text_image .btn-secondary"),
+    wTourUtils.clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
         content: "Add a link to the homepage in the URL input",
         trigger: "#o_link_dialog_url_input",
@@ -81,7 +81,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
         trigger: ".o_link_dialog_page_anchor we-button:contains('#Win-%2420')",
     },
     ...wTourUtils.clickOnSave(),
-    wTourUtils.clickOnElement("text image snippet button", "iframe .s_text_image .btn-secondary"),
+    wTourUtils.clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
         content: "Verify that the popup opens when the homepage page loads.",
         in_modal: false,

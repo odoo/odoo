@@ -4,17 +4,17 @@ import wTourUtils from '@website/js/tours/tour_utils';
 
 const blockIDToData = {
     parent: {
-        selector: 'iframe .s_focusblur',
+        selector: ':iframe .s_focusblur',
         name: 'section',
         overlayIndex: 2,
     },
     child1: {
-        selector: 'iframe .s_focusblur_child1',
+        selector: ':iframe .s_focusblur_child1',
         name: 'first child',
         overlayIndex: 1,
     },
     child2: {
-        selector: 'iframe .s_focusblur_child2',
+        selector: ':iframe .s_focusblur_child2',
         name: 'second child',
         overlayIndex: 0,
     },
@@ -25,12 +25,12 @@ function clickAndCheck(blockID, expected) {
 
     return [{
         content: blockID ? `Enable the ${blockData.name}` : 'Disable all blocks',
-        trigger: blockData.selector || 'iframe #wrapwrap',
+        trigger: blockData.selector || ':iframe #wrapwrap',
     }, {
         content: 'Once the related overlays are enabled/disabled, check that the focus/blur calls have been correct.',
         trigger: blockID
-            ? `iframe .oe_overlay.o_draggable:eq(${blockData.overlayIndex}).oe_active`
-            : `iframe #oe_manipulators:not(:has(.oe_active))`,
+            ? `:iframe .oe_overlay.o_draggable:eq(${blockData.overlayIndex}).oe_active`
+            : `:iframe #oe_manipulators:not(:has(.oe_active))`,
         allowInvisible: !blockID,
         run: function (actions) {
             const result = window.focusBlurSnippetsResult;
@@ -57,7 +57,7 @@ wTourUtils.registerWebsitePreviewTour("focus_blur_snippets", {
     {
         content: 'Drag the custom block into the page',
         trigger: '#snippet_structure .oe_snippet:has(.oe_snippet_body.s_focusblur) .oe_snippet_thumbnail',
-        run: 'drag_and_drop_native iframe #wrap',
+        run: 'drag_and_drop_native :iframe #wrap',
     },
     ...clickAndCheck('parent', ['focus parent']),
     ...clickAndCheck(null, ['blur parent']),

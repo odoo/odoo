@@ -41,10 +41,10 @@ for (const snippet of snippetsNames) {
     const snippetSteps = [{
         content: `Drop ${snippet} snippet [${n}/${snippetsNames.length}]`,
         trigger: `#oe_snippets .oe_snippet:has( > [data-snippet='${snippet}']) .oe_snippet_thumbnail`,
-        run: "drag_and_drop_native iframe #wrap",
+        run: "drag_and_drop_native :iframe #wrap",
     }, {
         content: `Edit ${snippet} snippet`,
-        trigger: `iframe #wrap.o_editable [data-snippet='${snippet}']${isModal ? ' .modal.show' : ''}`,
+        trigger: `:iframe #wrap.o_editable [data-snippet='${snippet}']${isModal ? ' .modal.show' : ''}`,
     }, {
         content: `check ${snippet} setting are loaded, wait panel is visible`,
         trigger: ".o_we_customize_panel",
@@ -71,7 +71,7 @@ for (const snippet of snippetsNames) {
         snippetSteps[2]['in_modal'] = false;
         snippetSteps.splice(3, 2, {
             content: `Hide the ${snippet} popup`,
-            trigger: `iframe [data-snippet='${snippet}'] .s_popup_close`,
+            trigger: `:iframe [data-snippet='${snippet}'] .s_popup_close`,
         }, {
             content: `Make sure ${snippet} is hidden`,
             trigger: ":iframe body:not(.modal-open)",
@@ -79,7 +79,7 @@ for (const snippet of snippetsNames) {
     } else if (isDropInOnlySnippet) {
         // The 'drop in only' snippets have their 'data-snippet' attribute
         // removed once they are dropped, so we need to use a different selector.
-        snippetSteps[1]['trigger'] = `iframe #wrap.o_editable ${dropInOnlySnippets[snippet]}`;
+        snippetSteps[1].trigger = `:iframe #wrap.o_editable ${dropInOnlySnippets[snippet]}`;
     }
     steps = steps.concat(snippetSteps);
 }

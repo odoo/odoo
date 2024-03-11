@@ -51,7 +51,7 @@
         run: "text",
     }, {
         trigger: "we-button[data-background]:eq(1)",
-        extra_trigger: `iframe #wrap h1[data-oe-expression="blog_post.name"]:not(:contains(''))`,
+        extra_trigger: `:iframe #wrap h1[data-oe-expression="blog_post.name"]:not(:contains(''))`,
         content: markup(_t("Set a blog post <b>cover</b>.")),
         position: "top",
     }, {

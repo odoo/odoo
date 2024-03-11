@@ -23,7 +23,7 @@
     for (const data of ESSENTIAL_FIELDS_VALID_DATA_FOR_DEFAULT_FORM) {
         essentialFieldsForDefaultFormFillInSteps.push({
             content: "Enter data in model-required field",
-            trigger: `iframe .s_website_form_model_required .s_website_form_input[name="${data.name}"]`,
+            trigger: `:iframe .s_website_form_model_required .s_website_form_input[name="${data.name}"]`,
             run: `text ${data.value}`,
         });
     }
@@ -79,12 +79,12 @@
         ...selectButtonByData(data),
         {
             content: "Wait for field to load",
-            trigger: `iframe .s_website_form_field[data-type="${name}"], .s_website_form_input[name="${name}"]`, //custom or existing field
+            trigger: `:iframe .s_website_form_field[data-type="${name}"],:iframe .s_website_form_input[name="${name}"]`, //custom or existing field
             run: function () {},
         },
         ...selectButtonByText(display.visibility),
     ];
-        let testText = 'iframe .s_website_form_field';
+        let testText = ':iframe .s_website_form_field';
         if (display.condition) {
             ret.push({
                 content: "Set the visibility condition",
@@ -135,7 +135,7 @@
         {
             content: "Drop the form snippet",
             trigger: '#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail',
-            run: 'drag_and_drop_native iframe #wrap',
+            run: 'drag_and_drop_native :iframe #wrap',
         }, {
             content: "Select form by clicking on an input field",
             extra_trigger: ':iframe .s_website_form_field',
@@ -436,11 +436,11 @@
         // Check that the resulting form behavior is correct.
         {
             content: "Check that field B prefill text is set",
-            trigger: `iframe ${triggerFieldByLabel("field B")}:has(input[value="prefilled"])`,
+            trigger: `:iframe ${triggerFieldByLabel("field B")}:has(input[value="prefilled"])`,
             isCheck: true,
         }, {
             content: "Check that field A is visible",
-            trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field A")}:visible)`,
+            trigger: `:iframe .s_website_form:has(${triggerFieldByLabel("field A")}:visible)`,
             isCheck: true,
         },
         // A) Check that if we edit again and save again the default value is
@@ -474,11 +474,11 @@
             isCheck: true,
         }, {
             content: "Type something in field C",
-            trigger: `iframe ${triggerFieldByLabel("field C")} input`,
+            trigger: `:iframe ${triggerFieldByLabel("field C")} input`,
             run: "text Sesame",
         }, {
             content: "Check that fields A and B are visible",
-            trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field B")}:visible)` +
+            trigger: `:iframe .s_website_form:has(${triggerFieldByLabel("field B")}:visible)` +
                 `:has(${triggerFieldByLabel("field A")}:visible)`,
             isCheck: true,
         },
@@ -503,20 +503,20 @@
         // Check that the resulting form works and does not raise an error.
          {
             content: "Write anything in C",
-            trigger: `iframe ${triggerFieldByLabel("field C")} input`,
+            trigger: `:iframe ${triggerFieldByLabel("field C")} input`,
             run: "text Mellon",
         }, {
             content: "Check that field B is visible, but field A is not",
-            trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field B")}:visible)` +
+            trigger: `:iframe .s_website_form:has(${triggerFieldByLabel("field B")}:visible)` +
                 `:has(${triggerFieldByLabel("field A")}:not(:visible))`,
             isCheck: true,
         }, {
             content: "Insert 'peek-a-boo' in field B",
-            trigger: `iframe ${triggerFieldByLabel("field B")} input`,
+            trigger: `:iframe ${triggerFieldByLabel("field B")} input`,
             run: "text peek-a-boo",
         }, {
             content: "Check that field A is visible",
-            trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field A")}:visible)`,
+            trigger: `:iframe .s_website_form:has(${triggerFieldByLabel("field A")}:visible)`,
             isCheck: true,
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
@@ -627,7 +627,7 @@
         {
             content: "Add the form snippet",
             trigger: '#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail',
-            run: 'drag_and_drop_native iframe #wrap',
+            run: 'drag_and_drop_native :iframe #wrap',
         }, {
             content: "Select the form by clicking on an input field",
             extra_trigger: ':iframe .s_website_form_field',

@@ -14,82 +14,85 @@ const testPdf = 'JVBERi0xLjEKJWPDtsO2bW1lbnQKMSAwIG9iago8PC9UeXBlIC9DYXRhbG9nCi9
  */
 
 var addSection = function (sectionName, backend = false) {
+    const prefix = backend ? ':iframe ' : '';
 	return [
 {
     content: 'eLearning: click on Add Section',
-    trigger: (backend ? 'iframe ' : '' ) + 'a.o_wslides_js_slide_section_add',
+    trigger: prefix + 'a.o_wslides_js_slide_section_add',
 }, {
     content: 'eLearning: set section name',
-    trigger: (backend ? 'iframe ' : '' ) + 'input[name="name"]',
+    trigger: prefix + 'input[name="name"]',
     run: 'text ' + sectionName,
 }, {
     content: 'eLearning: create section',
-    trigger: (backend ? 'iframe ' : '' ) + 'footer.modal-footer button:contains("Save")'
+    trigger: prefix + 'footer.modal-footer button:contains("Save")'
 }, {
 	content: 'eLearning: section created empty',
-	trigger: (backend ? 'iframe ' : '' ) + 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '")',
+	trigger: prefix + 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '")',
 }];
 };
 
 var addVideoToSection = function (sectionName, saveAsDraft, backend = false) {
+    const prefix = backend ? ':iframe ' : '';
 	var base_steps = [
 {
 	content: 'eLearning: add content to section',
-	trigger: (backend ? 'iframe ' : '' ) + 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '") a:contains("Add Content")',
+	trigger: prefix + 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '") a:contains("Add Content")',
 }, {
 	content: 'eLearning: click on video',
-	trigger: (backend ? 'iframe ' : '' ) + 'a[data-slide-category=video]',
+	trigger: prefix + 'a[data-slide-category=video]',
 }, {
 	content: 'eLearning: fill video link',
-	trigger: (backend ? 'iframe ' : '' ) + 'input[name=video_url]',
+	trigger: prefix + 'input[name=video_url]',
 	run: 'text https://www.youtube.com/watch?v=pzmI3vAIhbE',
 }, {
     content: 'eLearning: click outside to trigger onchange',
-    trigger: (backend ? 'iframe ' : '' ) + 'div.o_w_slide_upload_modal_container',
+    trigger: prefix + 'div.o_w_slide_upload_modal_container',
 }];
 	if (saveAsDraft) {
 		base_steps = [].concat(base_steps, [{
     content: 'eLearning: save as draft slide',
-    extra_trigger: (backend ? 'iframe ' : '' ) + 'div.o_slide_preview img:not([src="/website_slides/static/src/img/document.png"])',  // wait for onchange to perform its duty
-    trigger: (backend ? 'iframe ' : '' ) + 'footer.modal-footer button:contains("Save as Draft")',
+    extra_trigger: prefix + 'div.o_slide_preview img:not([src="/website_slides/static/src/img/document.png"])',  // wait for onchange to perform its duty
+    trigger: prefix + 'footer.modal-footer button:contains("Save as Draft")',
 }]);
 	}
 	else {
 		base_steps = [].concat(base_steps, [{
     content: 'eLearning: create and publish slide',
-    extra_trigger: (backend ? 'iframe ' : '' ) + 'div.o_slide_preview img:not([src="/website_slides/static/src/img/document.png"])',  // wait for onchange to perform its duty
-    trigger: (backend ? 'iframe ' : '' ) + 'footer.modal-footer button:contains("Publish")',
+    extra_trigger: prefix + 'div.o_slide_preview img:not([src="/website_slides/static/src/img/document.png"])',  // wait for onchange to perform its duty
+    trigger: prefix + 'footer.modal-footer button:contains("Publish")',
 }]);
 	}
 	return base_steps;
 };
 
 var addArticleToSection = function (sectionName, pageName, backend) {
+    const prefix = backend ? ':iframe ' : '';
 	return [
 {
 	content: 'eLearning: add content to section',
-	trigger: (backend ? 'iframe ' : '' ) + 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '") a:contains("Add Content")',
+	trigger: prefix + 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '") a:contains("Add Content")',
 }, {
 	content: 'eLearning: click on article',
-	trigger: (backend ? 'iframe ' : '' ) + 'a[data-slide-category=article]',
+	trigger: prefix + 'a[data-slide-category=article]',
 }, {
 	content: 'eLearning: fill article title',
-	trigger: (backend ? 'iframe ' : '' ) + 'input[name=name]',
+	trigger: prefix + 'input[name=name]',
 	run: 'text ' + pageName,
 }, {
     content: 'eLearning: click on tags',
-    trigger: (backend ? 'iframe ' : '' ) + 'button.o_select_menu_toggler:last',
+    trigger: prefix + 'button.o_select_menu_toggler:last',
 }, {
     content: 'eLearning: select Practice tag',
-    trigger: (backend ? 'iframe ' : '' ) + 'div.o_select_menu_item_label:contains("Practice")',
+    trigger: prefix + 'div.o_select_menu_item_label:contains("Practice")',
     in_modal: false,
 }, {
 	content: 'eLearning: fill article completion time',
-	trigger: (backend ? 'iframe ' : '' ) + 'input[name=duration]',
+	trigger: prefix + 'input[name=duration]',
 	run: 'text 4',
 }, {
     content: 'eLearning: create and publish slide',
-    trigger: (backend ? 'iframe ' : '' ) + 'footer.modal-footer button:contains("Publish")',
+    trigger: prefix + 'footer.modal-footer button:contains("Publish")',
 }];
 };
 
@@ -113,7 +116,7 @@ const compareBase64Content = async (url, name, type, expectedContent) => {
  * Test the upload of an image file as a new content and especially the binary content of the uploaded image.
  */
 const addImageToSection = (sectionName, pageName, backend) => {
-    const prefix = backend ? 'iframe ' : '';
+    const prefix = backend ? ':iframe ' : '';
     return [
 {
     content: 'eLearning: add content to section',
@@ -144,7 +147,7 @@ const addImageToSection = (sectionName, pageName, backend) => {
     trigger: `${prefix}a.o_wslides_js_slides_list_slide_link:contains("Overview")`,
 }, {
     content: 'eLearning: check uploaded image presence and perform comparison',
-    trigger: (backend ? 'iframe ' : '') + '.o_wslides_fs_player img',
+    trigger: prefix + '.o_wslides_fs_player img',
     run: async () => {
         const baseElement = backend ? document.querySelector('iframe').contentDocument : document;
         const img = baseElement.querySelector('.o_wslides_fs_player img');
@@ -171,7 +174,7 @@ const addImageToSection = (sectionName, pageName, backend) => {
  * Test the upload of a pdf file as a new content and especially the binary content of the uploaded pdf.
  */
 const addPdfToSection = function (sectionName, pageName, backend) {
-    const prefix = backend ? 'iframe ' : '';
+    const prefix = backend ? ':iframe ' : '';
     return [
 {
     content: 'eLearning: add content to section',
@@ -202,7 +205,7 @@ const addPdfToSection = function (sectionName, pageName, backend) {
     trigger: `${prefix}a.o_wslides_js_slides_list_slide_link:contains("Exercise")`,
 }, {
     content: 'eLearning: check uploaded pdf presence and perform comparison',
-    trigger: (backend ? 'iframe.o_iframe ' : '') + '.o_wslides_fs_content',
+    trigger: (backend ? '.o_iframe:iframe ' : '') + '.o_wslides_fs_content',
     run: async () => {
         const baseElement = backend ? document.querySelector('iframe.o_iframe').contentDocument : document;
         await contains('iframe.o_wslides_iframe_viewer', { target: baseElement });
@@ -227,54 +230,56 @@ const addPdfToSection = function (sectionName, pageName, backend) {
 };
 
 var addExistingCourseTag = function (backend = false) {
+    const prefix = backend ? ':iframe ' : '';
 	return [
 {
     content: 'eLearning: click on Add Tag',
-    trigger: (backend ? 'iframe ' : '' ) + 'a.o_wslides_js_channel_tag_add',
+    trigger: prefix + 'a.o_wslides_js_channel_tag_add',
 }, {
     content: 'eLearning: click on tag dropdown',
-    trigger: (backend ? 'iframe ' : '' ) + 'button.o_select_menu_toggler:first',
+    trigger: prefix + 'button.o_select_menu_toggler:first',
 }, {
     content: 'eLearning: select advanced tag',
-    trigger: (backend ? 'iframe ' : '' ) + 'div.o_select_menu_item_label:contains("Advanced")',
+    trigger: prefix + 'div.o_select_menu_item_label:contains("Advanced")',
     in_modal: false,
 }, {
     content: 'eLearning: add existing course tag',
-    trigger: (backend ? 'iframe ' : '' ) + 'footer.modal-footer a:contains("Add")'
+    trigger: prefix + 'footer.modal-footer a:contains("Add")'
 }, {
 	content: 'eLearning: check that modal is closed',
-	trigger: (backend ? 'iframe ' : '' ) + 'body:not(.modal-open)',
+	trigger: prefix + 'body:not(.modal-open)',
 }];
 };
 
 var addNewCourseTag = function (courseTagName, backend) {
+    const prefix = backend ? ':iframe ' : '';
 	return [
 {
     content: 'eLearning: click on Add Tag',
-    trigger: (backend ? 'iframe ' : '' ) + 'a.o_wslides_js_channel_tag_add',
+    trigger: prefix + 'a.o_wslides_js_channel_tag_add',
 }, {
     content: 'eLearning: click on tag dropdown',
-	trigger: (backend ? 'iframe ' : '' ) + 'button.o_select_menu_toggler:first',
+	trigger: prefix + 'button.o_select_menu_toggler:first',
 }, {
     content: 'eLearning: add a new course tag',
-	trigger: (backend ? 'iframe ' : '' ) + 'input.dropdown-item:first',
+	trigger: prefix + 'input.dropdown-item:first',
 	run:"text 123",
 }, {
     content: 'eLearning: click on create this tag',
-    trigger: (backend ? 'iframe ' : '') + 'i:contains("123")',
+    trigger: prefix + 'i:contains("123")',
 },{
     content: 'eLearning: click on tag group dropdown',
-	trigger: (backend ? 'iframe ' : '' ) + 'button.o_select_menu_toggler:last',
+	trigger: prefix + 'button.o_select_menu_toggler:last',
 }, {
 	content: 'eLearning: select Tags tag group',
-    trigger: (backend ? 'iframe ' : '' ) + 'div.o_select_menu_item_label:contains("Tags")',
+    trigger: prefix + 'div.o_select_menu_item_label:contains("Tags")',
 	in_modal: false,
 }, {
     content: 'eLearning: add new course tag',
-    trigger: (backend ? 'iframe ' : '' ) + 'footer.modal-footer a:contains("Add")',
+    trigger: prefix + 'footer.modal-footer a:contains("Add")',
 }, {
 	content: 'eLearning: check that modal is closed',
-	trigger: (backend ? 'iframe ' : '' ) + 'body:not(.modal-open)',
+	trigger: prefix + 'body:not(.modal-open)',
 }];
 };
 

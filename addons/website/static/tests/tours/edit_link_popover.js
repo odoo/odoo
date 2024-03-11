@@ -4,7 +4,7 @@ import wTourUtils from "@website/js/tours/tour_utils";
 import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
 
-const FIRST_PARAGRAPH = 'iframe #wrap .s_text_image p:nth-child(2)';
+const FIRST_PARAGRAPH = ':iframe #wrap .s_text_image p:nth-child(2)';
 
 const clickFooter = [{
     content: "Save the link by clicking outside the URL input (not on a link element)",

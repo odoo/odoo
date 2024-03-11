@@ -3,7 +3,7 @@
 import wTourUtils from "@website/js/tours/tour_utils";
 
 const columnCountOptSelector = ".snippet-option-layout_column we-select[data-name='column_count_opt']";
-const columnsSnippetRow = "iframe .s_three_columns .row";
+const columnsSnippetRow = ":iframe .s_three_columns .row";
 
 wTourUtils.registerWebsitePreviewTour("website_update_column_count", {
     test: true,

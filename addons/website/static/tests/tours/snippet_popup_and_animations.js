@@ -34,7 +34,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     wTourUtils.dragNDrop(snippets[1]), // Media List
     wTourUtils.dragNDrop(snippets[1]), // Media List
     wTourUtils.dragNDrop(snippets[2]), // Columns
-    wTourUtils.clickOnElement("3rd columns", "iframe .s_three_columns .row > :last-child"),
+    wTourUtils.clickOnElement("3rd columns", ":iframe .s_three_columns .row > :last-child"),
     ...setOnScrollAnim(),
     {
         content: "Open the Cookies Bar.",
@@ -83,9 +83,9 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         content: "Drag the Columns building block and drop it at the bottom of the popup.",
         trigger: '#oe_snippets .oe_snippet[name="Columns"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
         extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets",
-        run: "drag_and_drop_native iframe #wrapwrap .modal-content .s_media_list .container > .row > :last-child",
+        run: "drag_and_drop_native :iframe #wrapwrap .modal-content .s_media_list .container > .row > :last-child",
     },
-    wTourUtils.clickOnElement("3rd columns", "iframe .s_popup .s_three_columns .row > :last-child"),
+    wTourUtils.clickOnElement("3rd columns", ":iframe .s_popup .s_three_columns .row > :last-child"),
     ...setOnScrollAnim(),
     {
         content: "Verify the animation delay of the animated element in the popup at the beginning",

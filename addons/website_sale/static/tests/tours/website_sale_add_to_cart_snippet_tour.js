@@ -22,14 +22,14 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         wTourUtils.clickOnSnippet({id: 's_add_to_cart'}),
         ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Acoustic Bloc Screens', true),
         ...wTourUtils.clickOnSave(),
-        wTourUtils.clickOnElement('add to cart button', 'iframe .s_add_to_cart_btn'),
+        wTourUtils.clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
 
         // Product with 2 variants with visitor choice (will open modal)
         ...editAddToCartSnippet(),
         ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Conference Chair', true),
         ...wTourUtils.clickOnSave(),
-        wTourUtils.clickOnElement('add to cart button', 'iframe .s_add_to_cart_btn'),
-        wTourUtils.clickOnElement('continue shopping', 'iframe span:contains(Continue Shopping)'),
+        wTourUtils.clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
+        wTourUtils.clickOnElement('continue shopping', ':iframe span:contains(Continue Shopping)'),
 
         // Product with 2 variants with a variant selected
         // ...editAddToCartSnippet(),
@@ -44,13 +44,13 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Acoustic Bloc Screens', true),
         ...wTourUtils.selectElementInWeSelectWidget('action_picker_opt', 'Buy Now'),
         ...wTourUtils.clickOnSave(),
-        wTourUtils.clickOnElement('add to cart button', 'iframe .s_add_to_cart_btn'),
+        wTourUtils.clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
         {
             content: "Wait for the redirection to the payment page",
             trigger: 'body',
             isCheck: true,  // wait for the page to load, as the next check was sometimes too fast
         },
-        wTourUtils.assertPathName('/shop/payment', 'iframe a[href="/shop/cart"]'),
+        wTourUtils.assertPathName('/shop/payment', ':iframe a[href="/shop/cart"]'),
 
         wsTourUtils.goToCart({quantity: 3, backend: true}),
         wsTourUtils.assertCartContains({productName: 'Acoustic Bloc Screens', backend: true}),

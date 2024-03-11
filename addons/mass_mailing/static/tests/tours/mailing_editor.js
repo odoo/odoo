@@ -24,16 +24,14 @@ registry.category("web_tour.tours").add('mailing_editor', {
 }, {
     content: 'drag the "Title" snippet from the design panel and drop it in the editor',
     trigger: '[name="body_arch"] #oe_snippets [name="Title"] .oe_snippet_thumbnail',
-    run: function (actions) {
-        actions.drag_and_drop_native('[name="body_arch"] iframe .o_editable');
-    }
+    run: `drag_and_drop_native [name="body_arch"] :iframe .o_editable`,
 }, {
     content: 'wait for the snippet menu to finish the drop process',
     trigger: 'body:not(:has(.o_we_already_dragging))',
     run: () => {}
 }, {
     content: 'verify that the title was inserted properly in the editor',
-    trigger: '[name="body_arch"] iframe .o_editable h1',
+    trigger: '[name="body_arch"] :iframe .o_editable h1',
     run: () => {},
 }, {
     trigger: 'button.o_form_button_save',
@@ -43,7 +41,7 @@ registry.category("web_tour.tours").add('mailing_editor', {
     run: () => {},
 }, {
     content: 'verify that the edited mailing body was not lost during the failed save',
-    trigger: '[name="body_arch"] iframe .o_editable h1',
+    trigger: '[name="body_arch"] :iframe .o_editable h1',
     run: () => {},
 }, {
     trigger: 'input#subject_0',

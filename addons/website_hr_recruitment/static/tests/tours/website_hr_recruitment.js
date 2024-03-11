@@ -2,6 +2,7 @@
 
     import { registry } from "@web/core/registry";
     import wTourUtils from "@website/js/tours/tour_utils";
+    import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
     function applyForAJob(jobName, application) {
         return [{
@@ -68,15 +69,17 @@
     wTourUtils.registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
         test: true,
         url: '/jobs',
-    }, () => [{
+    }, () => [
+        stepUtils.waitIframeIsReady(),
+    {
         content: 'Go to the Guru job page',
-        trigger: 'iframe a[href*="guru"]',
+        trigger: ':iframe a[href*="guru"]',
     }, {
         content: 'Go to the Guru job form',
-        trigger: 'iframe a[href*="apply"]',
+        trigger: ':iframe a[href*="apply"]',
     }, {
         content: 'Check if the Guru form is present',
-        trigger: 'iframe form'
+        trigger: ':iframe form'
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
@@ -89,7 +92,7 @@
         },
     }, {
         content: 'Edit the form',
-        trigger: 'iframe input[type="file"]',
+        trigger: ':iframe input[type="file"]',
     }, {
         content: 'Add a new field',
         trigger: 'we-button[data-add-field]',
@@ -97,19 +100,19 @@
     ...wTourUtils.clickOnSave(),
     {
         content: 'Go back to /jobs page after save',
-        trigger: 'iframe body',
+        trigger: ':iframe body',
         run: () => {
             window.location.href = wTourUtils.getClientActionUrl('/jobs');
         }
     }, {
         content: 'Go to the Internship job page',
-        trigger: 'iframe a[href*="internship"]',
+        trigger: ':iframe a[href*="internship"]',
     }, {
         content: 'Go to the Internship job form',
-        trigger: 'iframe a[href*="apply"]',
+        trigger: ':iframe a[href*="apply"]',
     }, {
         content: 'Check that a job_id has been loaded',
-        trigger: 'iframe form',
+        trigger: ':iframe form',
         run: () => {
             const selector =
                 'input[name="job_id"]:not([value=""]):not([value = "FAKE_JOB_ID_DEFAULT_VAL"])';

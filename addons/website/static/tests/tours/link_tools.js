@@ -137,8 +137,8 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         isCheck: true,
     },
     // 6. Add mega menu with Cards template and edit URL on text-selected card.
-    wTourUtils.clickOnElement("menu link", "iframe header .nav-item a"),
-    wTourUtils.clickOnElement("'Edit menu' icon", "iframe .o_edit_menu_popover .fa-sitemap"),
+    wTourUtils.clickOnElement("menu link", ":iframe header .nav-item a"),
+    wTourUtils.clickOnElement("'Edit menu' icon", ":iframe .o_edit_menu_popover .fa-sitemap"),
     {
         content: "Click on 'Add Mega Menu Item' link",
         extra_trigger: '.o_website_dialog:visible',
@@ -161,10 +161,10 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         isCheck: true,
     },
     wTourUtils.clickOnElement("Save button", ".btn-primary:contains('Save')"),
-    wTourUtils.clickOnElement("mega menu", "iframe header .o_mega_menu_toggle"),
+    wTourUtils.clickOnElement("mega menu", ":iframe header .o_mega_menu_toggle"),
     wTourUtils.changeOption("MegaMenuLayout", "we-toggler"),
     wTourUtils.changeOption("MegaMenuLayout", '[data-select-label="Cards"]'),
-    wTourUtils.clickOnElement("card's text", "iframe header .s_mega_menu_cards p"),
+    wTourUtils.clickOnElement("card's text", ":iframe header .s_mega_menu_cards p"),
     {
         content: "Enter an URL",
         trigger: "#o_link_dialog_url_input",

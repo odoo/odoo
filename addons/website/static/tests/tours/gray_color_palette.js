@@ -15,7 +15,7 @@ function waitForCSSReload() {
         wTourUtils.goToTheme(),
         {
             content: "Wait for no loading",
-            trigger: 'body:not(:has(.o_we_ui_loading)) iframe body:not(:has(.o_we_ui_loading))',
+            trigger: 'body:not(:has(.o_we_ui_loading)) :iframe body:not(:has(.o_we_ui_loading))',
             run: () => null,
         },
     ];

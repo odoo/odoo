@@ -16,7 +16,7 @@ const snippets = [
 const checkScrollbar = function (hasScrollbar) {
     return {
         content: `Check that the #wrapwrap ${hasScrollbar ? "has" : "does not have"} a vertical scrollbar.`,
-        trigger: `iframe ${hasScrollbar ? "body:not(.modal-open)" : "body.modal-open"}`,
+        trigger: `:iframe ${hasScrollbar ? "body:not(.modal-open)" : "body.modal-open"}`,
         run: function () {
             const wrapwrapEl = this.anchor.querySelector("#wrapwrap");
             const wrapwrapStyle = window.getComputedStyle(wrapwrapEl);
@@ -52,7 +52,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     {
         content: "Drag the Media List block and drop it in the popup.",
         trigger: "#oe_snippets .oe_snippet:has(> [data-snippet='s_media_list']) .oe_snippet_thumbnail",
-        run: "drag_and_drop_native iframe #wrap .s_popup .modal-content.oe_structure",
+        run: "drag_and_drop_native :iframe #wrap .s_popup .modal-content.oe_structure",
     },
     checkScrollbar(false),
     {
@@ -89,7 +89,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     {
         content: "Drag the Media List block and drop it in the popup.",
         trigger: "#oe_snippets .oe_snippet:has(> [data-snippet='s_media_list']) .oe_snippet_thumbnail",
-        run: "drag_and_drop_native iframe #wrap .s_popup .modal-content.oe_structure",
+        run: "drag_and_drop_native :iframe #wrap .s_popup .modal-content.oe_structure",
     },
     checkScrollbar(false),
     {
@@ -108,7 +108,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     {
         content: "Drag a Media List snippet and drop it in the Cookies Bar.",
         trigger: "#oe_snippets .oe_snippet:has(> [data-snippet='s_media_list']) .oe_snippet_thumbnail",
-        run: "drag_and_drop_native iframe #website_cookies_bar .modal-content.oe_structure",
+        run: "drag_and_drop_native :iframe #website_cookies_bar .modal-content.oe_structure",
     },
     {
         content: "Select the Media List snippet in the Cookies Bar.",

@@ -20,7 +20,7 @@ classNameInfo.set("o_small-fs", {scssVariableName: "small-font-size", start: 14,
 function checkComputedFontSize(fontSizeClass, stage) {
     return {
         content: `Check that the computed font size for ${fontSizeClass} is correct`,
-        trigger: `iframe #wrap .s_text_block .${fontSizeClass}`,
+        trigger: `:iframe #wrap .s_text_block .${fontSizeClass}`,
         run: function () {
             const computedFontSize = parseInt(getComputedStyle(this.anchor).fontSize);
             const expectedFontSize = classNameInfo.get(fontSizeClass)[stage];
@@ -84,7 +84,7 @@ function getFontSizeTestSteps(fontSizeClass) {
         checkComputedFontSize(fontSizeClass, "end"),
         {
             content: `Click again on the text with class ${fontSizeClass}`,
-            trigger: `iframe #wrap .s_text_block .${fontSizeClass}`,
+            trigger: `:iframe #wrap .s_text_block .${fontSizeClass}`,
         }, {
             content: `Remove the text snippet containing the text with class ${fontSizeClass}`,
             trigger: `.oe_snippet_remove`,

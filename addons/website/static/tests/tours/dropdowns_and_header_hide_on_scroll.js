@@ -6,16 +6,16 @@ const checkIfUserMenuNotMasked = function () {
     return [
         {
             content: "Click on the user dropdown",
-            trigger: "iframe #wrapwrap header .o_header_hide_on_scroll li.dropdown > a",
+            trigger: ":iframe #wrapwrap header .o_header_hide_on_scroll li.dropdown > a",
         },
-        wTourUtils.checkIfVisibleOnScreen("iframe #wrapwrap header .o_header_hide_on_scroll li.dropdown .dropdown-menu.show a[href='/my/home']"),
+        wTourUtils.checkIfVisibleOnScreen(":iframe #wrapwrap header .o_header_hide_on_scroll li.dropdown .dropdown-menu.show a[href='/my/home']"),
     ];
 };
 
 const scrollDownToMediaList = function () {
     return {
         content: "Scroll down the page a little to leave the dropdown partially visible",
-        trigger: "iframe #wrapwrap .s_media_list",
+        trigger: ":iframe #wrapwrap .s_media_list",
         run: function () {
             // Scroll down to the media list snippet.
             this.anchor.scrollIntoView(true);
@@ -46,8 +46,8 @@ wTourUtils.registerWebsitePreviewTour("dropdowns_and_header_hide_on_scroll", {
     scrollDownToMediaList(),
     {
         content: "Type a search query into the searchbar input",
-        trigger: "iframe #wrapwrap header .s_searchbar_input input.search-query",
+        trigger: ":iframe #wrapwrap header .s_searchbar_input input.search-query",
         run: "text a",
     },
-    wTourUtils.checkIfVisibleOnScreen("iframe #wrapwrap header .s_searchbar_input.show .o_dropdown_menu.show"),
+    wTourUtils.checkIfVisibleOnScreen(":iframe #wrapwrap header .s_searchbar_input.show .o_dropdown_menu.show"),
 ]);
