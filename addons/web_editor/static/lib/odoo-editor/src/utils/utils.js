@@ -1009,6 +1009,27 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         }
     }
 }
+/**
+ * Take a link and pad it with non-break zero-width spaces to ensure that it is
+ * always possible to place the cursor at its inner and outer edges.
+ *
+ * @param {HTMLElement} editable
+ * @param {HTMLAnchorElement} link
+ */
+export const padLinkWithZws = (editable, link) => {
+    if (!link.textContent.startsWith('\uFEFF')) {
+        link.prepend(document.createTextNode('\uFEFF'));
+    }
+    if (!link.textContent.endsWith('\uFEFF')) {
+        link.append(document.createTextNode('\uFEFF'));
+    }
+    if (!(link.previousSibling && link.previousSibling.textContent.endsWith('\uFEFF'))) {
+        link.before(document.createTextNode('\uFEFF'));
+    }
+    if (!(link.nextSibling && link.nextSibling.textContent.startsWith('\uFEFF'))) {
+        link.after(document.createTextNode('\uFEFF'));
+    }
+}
 
 //------------------------------------------------------------------------------
 // DOM Info utils

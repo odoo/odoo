@@ -62,6 +62,7 @@ import {
     boundariesOut,
     rightLeafOnlyNotBlockPath,
     lastLeaf,
+    descendants,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -2974,6 +2975,17 @@ export class OdooEditor extends EventTarget {
                 link.removeAttribute('class');
             }
         }
+
+        // Remove all FEFF within a `prepareUpdate` to make sure to make <br>
+        // nodes visible if needed.
+        for (const node of descendants(element)) {
+            if (node.nodeType === Node.TEXT_NODE && node.textContent.includes('\uFEFF')) {
+                const restore = prepareUpdate(...leftPos(node));
+                node.textContent = node.textContent.replaceAll('\uFEFF', '');
+                restore(); // Make sure to make <br>s visible if needed.
+            }
+        }
+
         // Remove contenteditable=false on elements
         for (const el of element.querySelectorAll('[contenteditable="false"]')) {
             if (!el.hasAttribute('oe-keep-contenteditable')) {
