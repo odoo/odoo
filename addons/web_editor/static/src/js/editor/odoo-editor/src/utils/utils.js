@@ -552,6 +552,84 @@ export function getNormalizedCursorPosition(node, offset, full = true) {
 
     return [node, offset];
 }
+export function insertSelectionChars(anchorNode, anchorOffset, focusNode, focusOffset, startChar='[', endChar=']') {
+    // If the range characters have to be inserted within the same parent and
+    // the anchor range character has to be before the focus range character,
+    // the focus offset needs to be adapted to account for the first insertion.
+    if (anchorNode === focusNode && anchorOffset <= focusOffset) {
+        focusOffset += (focusNode.nodeType === Node.TEXT_NODE ? startChar.length : 1);
+    }
+    insertCharsAt(startChar, anchorNode, anchorOffset);
+    insertCharsAt(endChar, focusNode, focusOffset);
+}
+/**
+ * Log the contents of the given root, with the characters "[" and "]" around
+ * the selection.
+ *
+ * @param {Element} root
+ * @param {Object} [options={}]
+ * @param {Selection} [options.selection] if undefined, the current selection is used.
+ * @param {boolean} [options.doFormat] if true, the HTML is formatted.
+ * @param {boolean} [options.includeOids] if true, the HTML is formatted.
+ */
+export function logSelection(root, options = {}) {
+    const sel = options.selection || root.ownerDocument.getSelection();
+    if (!root.contains(sel.anchorNode) || !root.contains(sel.focusNode)) {
+        console.warn('The selection is not contained in the root.');
+        return;
+    }
+
+    // Clone the root and its contents.
+    let anchorClone, focusClone;
+    const cloneTree = node => {
+        const clone = node.cloneNode();
+        if (options.includeOids) {
+            clone.oid = node.oid;
+        }
+        anchorClone = anchorClone || (node === sel.anchorNode && clone);
+        focusClone = focusClone || (node === sel.focusNode && clone);
+        for (const child of node.childNodes || []) {
+            clone.append(cloneTree(child));
+        }
+        return clone;
+    }
+    const rootClone = cloneTree(root);
+
+    // Insert the selection characters.
+    insertSelectionChars(anchorClone, sel.anchorOffset, focusClone, sel.focusOffset, '%c[%c', '%c]%c');
+
+    // Remove information that is not useful for the log.
+    rootClone.removeAttribute('data-last-history-steps');
+
+    // Format the HTML by splitting and indenting to highlight the structure.
+    if (options.doFormat) {
+        const formatHtml = (node, spaces = 0) => {
+            node.before(document.createTextNode('\n' + ' '.repeat(spaces)));
+            for (const child of [...node.childNodes]) {
+                formatHtml(child, spaces + 4);
+            }
+            if (node.nodeType !== Node.TEXT_NODE) {
+                node.appendChild(document.createTextNode('\n' + ' '.repeat(spaces)));
+            }
+            if (options.includeOids) {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    node.textContent += ` (${node.oid})`;
+                } else {
+                    node.setAttribute('oid', node.oid);
+                }
+            }
+        }
+        formatHtml(rootClone);
+    }
+
+    // Style and log the result.
+    const selectionCharacterStyle = 'color: #75bfff; font-weight: 700;';
+    const defaultStyle = 'color: inherit; font-weight: inherit;';
+    console.log(
+        makeZeroWidthCharactersVisible(rootClone.outerHTML),
+        selectionCharacterStyle, defaultStyle, selectionCharacterStyle, defaultStyle,
+    );
+}
 /**
  * Guarantee that the focus is on element or one of its children.
  *
@@ -2017,6 +2095,33 @@ export function insertText(sel, content) {
     restore();
     setSelection(...boundariesOut(txt), false);
     return txt;
+}
+
+/**
+ * Inserts the given characters at the given offset of the given node.
+ *
+ * @param {string} chars
+ * @param {Node} node
+ * @param {number} offset
+ */
+export function insertCharsAt(chars, node, offset) {
+    if (node.nodeType === Node.TEXT_NODE) {
+        const startValue = node.nodeValue;
+        if (offset < 0 || offset > startValue.length) {
+            throw new Error(`Invalid ${chars} insertion in text node`);
+        }
+        node.nodeValue = startValue.slice(0, offset) + chars + startValue.slice(offset);
+    } else {
+        if (offset < 0 || offset > node.childNodes.length) {
+            throw new Error(`Invalid ${chars} insertion in non-text node`);
+        }
+        const textNode = document.createTextNode(chars);
+        if (offset < node.childNodes.length) {
+            node.insertBefore(textNode, node.childNodes[offset]);
+        } else {
+            node.appendChild(textNode);
+        }
+    }
 }
 
 /**
