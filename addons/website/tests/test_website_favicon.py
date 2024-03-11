@@ -9,7 +9,7 @@ from odoo.tools import base64_to_image, image_to_base64
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteResetPassword(TransactionCase):
+class TestWebsiteFavicon(TransactionCase):
 
     def test_01_website_favicon(self):
         """The goal of this test is to make sure the favicon is correctly
