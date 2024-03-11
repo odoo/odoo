@@ -89,7 +89,9 @@ class ir_cron(models.Model):
     def method_direct_trigger(self):
         self.check_access_rights('write')
         for cron in self:
+            _logger.info('Manually starting job `%s`.', cron.name)
             cron.with_user(cron.user_id).with_context({'lastcall': cron.lastcall}).ir_actions_server_id.run()
+            _logger.info('Job `%s` done.', cron.name)
             cron.lastcall = fields.Datetime.now()
         return True
 
