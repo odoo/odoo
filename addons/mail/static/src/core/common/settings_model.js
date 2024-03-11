@@ -2,6 +2,7 @@ import { browser } from "@web/core/browser/browser";
 import { Record } from "./record";
 
 export class Settings extends Record {
+    static id = [["id"]];
     id;
 
     setup() {

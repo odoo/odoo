@@ -3,7 +3,7 @@ import { Record } from "@mail/core/common/record";
 import { FileModelMixin } from "@web/core/file_viewer/file_model";
 
 export class Attachment extends FileModelMixin(Record) {
-    static id = "id";
+    static id = [["id"]];
     /** @type {Object.<number, import("models").Attachment>} */
     static records = {};
     /** @returns {import("models").Attachment} */

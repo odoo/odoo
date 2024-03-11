@@ -2,7 +2,7 @@ import { compareDatetime } from "@mail/utils/common/misc";
 import { Record } from "./record";
 
 export class DiscussAppCategory extends Record {
-    static id = "id";
+    static id = [["id"]];
     /** @returns {import("models").DiscussAppCategory} */
     static get(data) {
         return super.get(data);

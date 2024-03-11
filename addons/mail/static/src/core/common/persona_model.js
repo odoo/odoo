@@ -1,4 +1,4 @@
-import { AND, Record } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { imageUrl } from "@web/core/utils/urls";
 
@@ -13,7 +13,7 @@ import { imageUrl } from "@web/core/utils/urls";
  */
 
 export class Persona extends Record {
-    static id = AND("type", "id");
+    static id = [["type", "id"]];
     /** @type {Object.<number, import("models").Persona>} */
     static records = {};
     /** @returns {import("models").Persona} */

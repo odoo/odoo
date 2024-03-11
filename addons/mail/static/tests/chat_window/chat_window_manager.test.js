@@ -134,15 +134,16 @@ test("click on hidden chat window should fetch its messages", async (assert) => 
     });
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatWindowHiddenToggler");
-    await contains(".o-mail-Message-content", { text: "Banana" });
+    // FIXME: assumes ordering: Apple (hidden), Banana, Orange
     await contains(".o-mail-Message-content", { text: "Orange" });
+    await contains(".o-mail-Message-content", { text: "Banana" });
     await contains(".o-mail-Message-content", { count: 0, text: "Apple" });
     assert.verifySteps(["fetch_messages", "fetch_messages"]);
     await click(".o-mail-ChatWindowHiddenToggler");
     await click(".o-mail-ChatWindowHiddenMenu-item .o-mail-ChatWindow-command[title='Open']");
-    await contains(".o-mail-Message-content", { text: "Banana" });
+    await contains(".o-mail-Message-content", { text: "Orange" });
     await contains(".o-mail-Message-content", { text: "Apple" });
-    await contains(".o-mail-Message", { count: 0, text: "Orange" });
+    await contains(".o-mail-Message", { count: 0, text: "Banana" });
     assert.verifySteps(["fetch_messages"]);
 });
 

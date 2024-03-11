@@ -33,7 +33,7 @@ import { assignDefined } from "@mail/utils/common/misc";
  */
 
 export class Activity extends Record {
-    static id = "id";
+    static id = [["id"]];
     /** @type {Object.<number, import("models").Activity>} */
     static records = {};
     /** @returns {import("models").Activity} */

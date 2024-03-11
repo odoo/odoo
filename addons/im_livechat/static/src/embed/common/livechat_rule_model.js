@@ -1,6 +1,7 @@
 import { Record } from "@mail/core/common/record";
 
 export class LivechatRule extends Record {
+    static singleton = true;
     /** @type {"auto_popup"|"display_button_and_text"|undefined} */
     action;
     /** @type {number} */
