@@ -18,7 +18,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Paid Time Off',
             'time_type': 'leave',
             'requires_allocation': 'yes',
+<<<<<<< HEAD
             'allocation_validation_type': 'hr',
+=======
+            'allocation_validation_type': 'officer',
+            'allocation_type': 'accrual',
+>>>>>>> f07d33b4bb23 ([IMP] hr_holidays: restrict allocation type to leave type)
         })
         cls.leave_type_hour = cls.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
@@ -26,6 +31,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'requires_allocation': 'yes',
             'allocation_validation_type': 'hr',
             'request_unit': 'hour',
+            'allocation_type': 'accrual',
         })
 
     def setAllocationCreateDate(self, allocation_id, date):
@@ -83,7 +89,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
             })
             allocation.action_validate()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
@@ -121,7 +126,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
             })
             allocation.action_validate()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
@@ -176,7 +180,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
             })
             allocation.action_validate()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
@@ -213,7 +216,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'date_from': '2021-09-03',
             })
             with freeze_time(datetime.date.today() + relativedelta(days=2)):
@@ -259,7 +261,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'date_from': '2021-09-03',
             })
             self.setAllocationCreateDate(allocation.id, '2021-09-01 00:00:00')
@@ -302,7 +303,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'date_from': '2021-08-31',
             })
             self.setAllocationCreateDate(allocation.id, '2021-09-01 00:00:00')
@@ -341,7 +341,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
             })
             self.setAllocationCreateDate(allocation.id, '2021-09-01 00:00:00')
             allocation.action_validate()
@@ -384,7 +383,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
             })
             self.setAllocationCreateDate(allocation.id, '2021-09-01 00:00:00')
             allocation.action_validate()
@@ -469,7 +467,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'state': 'confirm',
             })
             allocation_worked_time = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
@@ -478,7 +475,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'state': 'confirm',
             })
             (allocation_not_worked_time | allocation_worked_time).action_validate()
@@ -544,7 +540,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
             })
             allocation.action_validate()
             allocation._update_accrual()
@@ -584,7 +579,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
             })
             allocation.action_validate()
             allocation._update_accrual()
@@ -633,7 +627,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
             })
             allocation.action_validate()
             next_date = datetime.date.today() + relativedelta(days=11)
@@ -669,7 +662,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
             })
             allocation.action_validate()
             next_date = datetime.date.today() + relativedelta(days=11)
@@ -698,7 +690,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 10,
-                'allocation_type': 'accrual',
             })
             allocation.action_validate()
 
@@ -732,7 +723,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 10,
-                'allocation_type': 'accrual',
             })
             allocation.action_validate()
 
@@ -765,7 +755,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
             })
             allocation.action_validate()
 
@@ -801,7 +790,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 10,
-                'allocation_type': 'accrual',
             })
             allocation.action_validate()
 
@@ -834,7 +822,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
             })
             allocation.action_validate()
 
@@ -876,7 +863,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'date_from': datetime.date(2020, 8, 16),
             })
             allocation.action_validate()
@@ -924,7 +910,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'date_from': datetime.date(2022, 1, 31),
             })
             allocation.action_validate()
@@ -970,7 +955,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'date_from': datetime.date(2021, 1, 1),
             })
             allocation.action_validate()
@@ -1002,7 +986,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'date_from': datetime.date(2019, 1, 1),
             })
             allocation.action_validate()
@@ -1031,7 +1014,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'date_from': '2021-09-03',
             })
 
@@ -1060,7 +1042,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'date_from': '2021-09-03',
             })
 
@@ -1091,7 +1072,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'date_from': '2022-01-01',
             })
             allocation.action_validate()
@@ -1135,7 +1115,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type_hour.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'date_from': '2022-01-01',
             })
             allocation.action_validate()
@@ -1180,7 +1159,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'date_from': '2023-04-24',
             })
             allocation.action_validate()
@@ -1197,7 +1175,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'date_from': '2023-04-24',
             })
             allocation.action_validate()
@@ -1228,7 +1205,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'date_from': '2023-04-13',
             })
             allocation.action_validate()
@@ -1274,7 +1250,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'date_from': '2023-04-26',
             })
             allocation.action_validate()
@@ -1313,7 +1288,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'date_from': '2023-04-26',
             })
             allocation.action_validate()
@@ -1362,7 +1336,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
                 'date_from': '2023-04-20',
             })
             allocation.action_validate()
@@ -1425,7 +1398,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 9,
-                'allocation_type': 'accrual',
                 'date_from': '2023-04-4',
             })
             allocation.action_validate()
@@ -1454,7 +1426,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'holiday_status_id': self.leave_type.id,
                 'date_from': '2023-01-01',
                 'employee_id': self.employee_emp.id,
-                'allocation_type': 'accrual',
                 'accrual_plan_id': accrual_plan.id,
             })
             # As the duration is set to a onchange, we need to force that onchange to run
@@ -1476,6 +1447,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'requires_allocation': 'yes',
             'allocation_validation_type': 'no_validation',
             'request_unit': 'hour',
+            'allocation_type': 'accrual',
         })
         with freeze_time("2023-12-31"):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
@@ -1499,7 +1471,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': leave_type.id,
                 'number_of_days': 0.125,
+<<<<<<< HEAD
                 'allocation_type': 'accrual',
+=======
+                'holiday_type': 'employee',
+>>>>>>> f07d33b4bb23 ([IMP] hr_holidays: restrict allocation type to leave type)
             })
             allocation.action_validate()
             allocation_data = leave_type.get_allocation_data(self.employee_emp, datetime.date(2024, 2, 1))
@@ -1551,7 +1527,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'holiday_status_id': self.leave_type.id,
                 'date_from': '2023-08-01',
                 'employee_id': self.employee_emp.id,
-                'allocation_type': 'accrual',
                 'accrual_plan_id': accrual_plan.id,
             })
             # As the duration is set to a onchange, we need to force that onchange to run
@@ -1586,7 +1561,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'holiday_status_id': self.leave_type.id,
                 'date_from': '2024-03-01',
                 'employee_id': self.employee_emp.id,
-                'allocation_type': 'accrual',
                 'accrual_plan_id': accrual_plan.id,
             })
             # As the duration is set to an onchange, we need to force that onchange to run
@@ -1626,7 +1600,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'holiday_status_id': self.leave_type.id,
                 'date_from': '2024-03-01',
                 'employee_id': self.employee_emp.id,
-                'allocation_type': 'accrual',
                 'accrual_plan_id': accrual_plan.id,
             })
             # As the duration is set to an onchange, we need to force that onchange to run

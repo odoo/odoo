@@ -1,4 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import date
 from freezegun import freeze_time
 
@@ -17,6 +16,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'time_type': 'leave',
             'requires_allocation': 'yes',
             'allocation_validation_type': 'no',
+            'allocation_type': 'accrual',
         })
         cls.accrual_plan = cls.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Test Seniority Plan',
@@ -55,7 +55,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2023-12-01"):
             allocation = self.env['hr.leave.allocation'].create({
                 'employee_id': self.employee_emp_id,
-                'allocation_type': 'accrual',
                 'accrual_plan_id': self.accrual_plan.id,
                 'holiday_status_id': self.leave_type.id,
                 'date_from': date(2000, 1, 1),

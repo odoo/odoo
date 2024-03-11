@@ -1,7 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
-
 import logging
 import pytz
 
@@ -75,6 +71,10 @@ class HolidaysType(models.Model):
         ('no', 'Not Allowed')], default="no", required=True, string="Employee Requests",
         help="""Extra Days Requests Allowed: User can request an allocation for himself.\n
         Not Allowed: User cannot request an allocation.""")
+    allocation_type = fields.Selection([
+        ('regular', 'Regular Allocation'),
+        ('accrual', 'Accrual Allocation')
+    ], string="Allocation Type", default="regular", required=True)
     allocation_validation_type = fields.Selection([
         ('no_validation', 'No Validation'),
         ('hr', 'By Time Off Officer'),
@@ -97,13 +97,12 @@ class HolidaysType(models.Model):
     leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
     allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave_allocation', raise_if_not_found=False))
     support_document = fields.Boolean(string='Supporting Document')
-    accruals_ids = fields.One2many('hr.leave.accrual.plan', 'time_off_type_id')
     accrual_count = fields.Float(compute="_compute_accrual_count", string="Accruals count")
     # negative time off
     allows_negative = fields.Boolean(string='Allow Negative Cap',
         help="If checked, users request can exceed the allocated days and balance can go in negative.")
     max_allowed_negative = fields.Integer(string="Amount in Negative",
-        help="Define the maximum level of negative days this kind of time off can reach. Value must be at least 1.")
+        help="Define the maximum level of negative days/hours this kind of time off can reach. Value must be at least 1.")
 
     _sql_constraints = [(
         'check_negative',
@@ -179,17 +178,18 @@ class HolidaysType(models.Model):
         date_from = self._context.get('default_date_from', fields.Datetime.today())
         date_to = self._context.get('default_date_to', fields.Datetime.today())
         employee_id = self._context.get('default_employee_id', self._context.get('employee_id', self.env.user.employee_id.id))
+        accrual_allocations = self.env['hr.leave.allocation'].search([
+            ('holiday_status_id', 'in', self.ids),
+            ('allocation_type', '=', 'accrual'),
+            ('employee_id', '=', employee_id),
+            ('date_from', '<=', date_from),
+            '|',
+            ('date_to', '>=', date_to),
+            ('date_to', '=', False),
+        ])
         for leave_type in self:
             if leave_type.requires_allocation == 'yes':
-                allocations = self.env['hr.leave.allocation'].search([
-                    ('holiday_status_id', '=', leave_type.id),
-                    ('allocation_type', '=', 'accrual'),
-                    ('employee_id', '=', employee_id),
-                    ('date_from', '<=', date_from),
-                    '|',
-                    ('date_to', '>=', date_to),
-                    ('date_to', '=', False),
-                ])
+                allocations = accrual_allocations.filtered(lambda alloc: alloc.holiday_status_id == leave_type.id)
                 allowed_excess = leave_type.max_allowed_negative if leave_type.allows_negative else 0
                 allocations = allocations.filtered(lambda alloc:
                     alloc.allocation_type == 'accrual'
@@ -361,6 +361,51 @@ class HolidaysType(models.Model):
             leaves = leaves[offset:(offset + limit) if limit else None]
             return leaves._as_query()
         return super()._search(domain, offset, limit, order, access_rights_uid)
+
+    def _has_leave_discrepancies(self, employees, target_date=None):
+        """
+        Returns wether or not the leave types and employees given have any discrepancies
+        in the link between allocations and leaves at the targetted date (which will be interpreted
+        as today if none is given).
+        """
+        data = self.get_allocation_data(employees, target_date)
+        for employee_data in data.values():
+            for leave_type_data in employee_data:
+                if leave_type_data[1]['allows_negative']:
+                    if leave_type_data[1]['total_virtual_excess'] > leave_type_data[1]['max_allowed_negative']:
+                        return True
+                elif leave_type_data[1]['virtual_excess_data']:
+                    return True
+        return False
+
+    def write(self, values):
+        unchangeable_fields = {
+            'requires_allocation',
+            'allocation_type',
+        }
+        change_unchangeable = bool(set(values.keys()).intersection(unchangeable_fields))
+        if values.get('allows_negative', True)\
+                and float(values.get('max_allowed_negative', 'inf')) >= max(self.mapped('max_allowed_negative') or [0])\
+                and not change_unchangeable:
+            return super().write(values)
+        leaves = self.env['hr.leave'].search([('holiday_status_id', 'in', self.ids)])
+        if change_unchangeable and (
+            self.env['hr.leave.allocation'].search([('holiday_status_id', 'in', self.ids)])
+            or leaves
+        ):
+            raise ValidationError(_(
+                'Some fields cannot be modified for a leave type already linked to at least one allocation or leave.\n'
+                'The fields that cannot be modified are:\n'
+                '- Requires Allocation\n'
+                '- Allocation Type'
+            ))
+        res = super().write(values)
+        if self._has_leave_discrepancies(leaves.employee_id):
+            raise ValidationError(_(
+                "The modification you're trying to do on negative amount settings isn't compatible with some leaves "
+                "already taken by some employees."
+            ))
+        return res
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)

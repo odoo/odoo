@@ -111,10 +111,7 @@
                             <field name="holiday_status_id"
                                 context="{'employee_id':employee_id, 'default_date_from':current_date, 'request_type':'allocation'}"
                                 readonly="state == 'validate'"/>
-                            <field name="allocation_type"
-                                widget="radio"
-                                invisible="1"
-                                readonly="not is_officer or state == 'validate'"/>
+                            <field name="allocation_type" invisible="1"/>
                             <field name="is_officer" invisible="1"/>
                             <field name="accrual_plan_id"
                                 invisible="allocation_type == 'regular'"
@@ -193,9 +190,6 @@
                     readonly="state in ['refuse', 'validate']"
                     widget="many2one_avatar_employee"/>
             </field>
-            <field name="allocation_type" position="attributes">
-                <attribute name="invisible">0</attribute>
-            </field>
             <label for="date_from" position="replace">
                 <label for="date_from" string="Validity Period" invisible="allocation_type == 'accrual'"/>
             </label>
@@ -269,7 +263,7 @@
                 <field name="duration_display" string="Amount"/>
                 <field name="date_from" string="Validity Start" optional="hide"/>
                 <field name="date_to" string="Validity Stop" optional="hide" readonly="state in ['refuse', 'validate', 'validate1']"/>
-                <field name="allocation_type" readonly="state not in ['confirm']"/>
+                <field name="allocation_type" optional="hide"/>
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="active_employee" column_invisible="True"/>
                 <field name="state" widget="badge" decoration-warning="state == 'confirm'" decoration-success="state == 'validate'"/>

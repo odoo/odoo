@@ -10,6 +10,8 @@
                 <field name="create_calendar_meeting"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <filter name="group_allocation_type" string="Allocation Type"
+                    context="{'group_by':'allocation_type'}"/>
             </search>
         </field>
     </record>
@@ -66,12 +68,13 @@
                         </group>
                         <group name="allocation_validation" id="allocation_requests" string="Allocation Requests">
                             <field name="requires_allocation" widget="radio" options="{'horizontal':true}"/>
+                            <field name="allocation_type" invisible="requires_allocation == 'no'"/>
                             <field name="employee_requests" widget="radio" invisible="requires_allocation == 'no'"/>
                             <field name="allocation_validation_type" string="Approval" widget="radio" invisible="requires_allocation == 'no'"/>
                         </group>
                     </group>
                     <group>
-                        <group name="configuration" id="configuration" string="Configuration">
+                        <group name="configuration" id="configuration" string="General">
                             <field name="responsible_ids"
                                 widget="many2many_tags"
                                 placeholder="Nobody will be notified"
@@ -135,6 +138,7 @@
                 <field name="leave_validation_type" optional="hide" string="Time Off Approval"/>
                 <field name="responsible_ids" widget="many2many_tags" invisible="leave_validation_type in ['no_validation', 'manager'] and (requires_allocation == 'no' or allocation_validation_type != 'hr')" optional="hide"/>
                 <field name="requires_allocation" optional="hide"/>
+                <field name="allocation_type" optional="hide"/>
                 <field name="allocation_validation_type" string="Allocation Approval"/>
                 <field name="employee_requests" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
