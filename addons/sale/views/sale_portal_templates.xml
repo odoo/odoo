@@ -180,17 +180,11 @@
 
                             <div t-if="sale_order.user_id">
                                 <h6><small class="text-muted">Your contact</small></h6>
-                                <div class="o_portal_contact_details d-flex flex-column gap-2">
-                                    <div class="d-flex gap-2">
-                                        <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(sale_order.user_id.avatar_1024)" alt="Contact"/>
-                                        <div>
-                                            <h6 class="mb-0" t-out="sale_order.user_id.name"/>
-                                            <a href="#discussion" class="d-flex align-items-center gap-2 small fw-bold">
-                                            Send message
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                                <t t-call="portal.portal_my_contact">
+                                    <t t-set="_contactAvatar" t-value="image_data_uri(sale_order.user_id.avatar_1024)"/>
+                                    <t t-set="_contactName" t-value="sale_order.user_id.name"/>
+                                    <t t-set="_contactLink" t-value="True"/>
+                                </t>
                             </div>
                         </div>
                     </t>
