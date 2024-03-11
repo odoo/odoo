@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
@@ -16,7 +15,8 @@ class AccountMove(models.Model):
         log_list = []
         not_posted_before = self.filtered(lambda r: not r.posted_before)
         posted = super()._post(soft)  # We need the move name to be set, but we also need to know which move are posted for the first time.
-        for line in (not_posted_before & posted).line_ids.filtered(lambda ml: ml.vehicle_id and ml.move_id.move_type == 'in_invoice'):
+        for line in (not_posted_before & posted).line_ids.filtered(
+            lambda ml: ml.vehicle_id and ml.move_id.move_type == 'in_invoice' and ml.display_type == "product"):
             val = line._prepare_fleet_log_service()
             log = _('Service Vendor Bill: %s', line.move_id._get_html_link())
             val_list.append(val)
@@ -42,7 +42,16 @@ class AccountMoveLine(models.Model):
         return {
             'service_type_id': vendor_bill_service.id,
             'vehicle_id': self.vehicle_id.id,
-            'amount': self.price_subtotal,
             'vendor_id': self.partner_id.id,
             'description': self.name,
+            'account_move_line_id': self.id,
         }
+
+    def unlink(self):
+        log_services = self.env['fleet.vehicle.log.services'].sudo().search([
+            ('account_move_line_id.id', 'in', self.ids),
+        ])
+        res = super().unlink()
+        if log_services:
+            log_services.unlink()
+        return res
