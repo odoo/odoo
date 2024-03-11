@@ -36,11 +36,6 @@ class CrmTeam(models.Model):
           4- any team matching my company and domain (based on company rule)
           5- any team matching my company (based on company rule)
 
-        Note: ResPartner.team_id field is explicitly not taken into account. We
-        think this field causes a lot of noises compared to its added value.
-        Think notably: team not in responsible teams, team company not matching
-        responsible or lead company, asked domain not matching, ...
-
         :param user_id: salesperson to target, fallback on env.uid;
         :domain: optional domain to filter teams (like use_lead = True);
         """

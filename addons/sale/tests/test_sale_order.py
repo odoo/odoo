@@ -550,24 +550,11 @@ class TestSalesTeam(SaleCommon):
         partner = self.env['res.partner'].create({
             'name': 'Customer of User In Team',
             'user_id': self.user_in_team.id,
-            'team_id': self.sale_team_2.id,
         })
         sale_order = self.env['sale.order'].create({
             'partner_id': partner.id,
         })
         self.assertEqual(sale_order.team_id.id, self.sale_team.id, 'Should assign to team of sales person')
-
-    def test_assign_sales_team_from_partner_team(self):
-        """If no team set on the customer's sales person, fall back to the customer's team"""
-        partner = self.env['res.partner'].create({
-            'name': 'Customer of User Not In Team',
-            'user_id': self.user_not_in_team.id,
-            'team_id': self.sale_team_2.id,
-        })
-        sale_order = self.env['sale.order'].create({
-            'partner_id': partner.id,
-        })
-        self.assertEqual(sale_order.team_id.id, self.sale_team_2.id, 'Should assign to team of partner')
 
     def test_assign_sales_team_when_changing_user(self):
         """When we assign a sales person, change the team on the sales order to their team"""
@@ -744,32 +731,3 @@ class TestSalesTeam(SaleCommon):
             self.sale_order.prepayment_percent = -1
         with self.assertRaises(ValidationError):
             self.sale_order.prepayment_percent = 1.01
-
-    def test_sales_team_defined_on_partner_user_no_team(self):
-        """ Test that sale order picks up a team from res.partner on change if user has no team specified """
-
-        crm_team0 = self.env['crm.team'].create({
-            'name':"Test Team A"
-        })
-
-        crm_team1 = self.env['crm.team'].create({
-            'name':"Test Team B"
-        })
-
-        partner_a = self.env['res.partner'].create({
-            'name': 'Partner A',
-            'team_id': crm_team0.id,
-        })
-
-        partner_b = self.env['res.partner'].create({
-            'name': 'Partner B',
-            'team_id': crm_team1.id,
-        })
-
-        sale_order = self.env['sale.order'].with_user(self.user_not_in_team).create({
-            'partner_id': partner_a.id,
-        })
-
-        self.assertEqual(sale_order.team_id, crm_team0, "Sales team should change to partner's")
-        sale_order.with_user(self.user_not_in_team).write({'partner_id': partner_b.id})
-        self.assertEqual(sale_order.team_id, crm_team1, "Sales team should change to partner's")

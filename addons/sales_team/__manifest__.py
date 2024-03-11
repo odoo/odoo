@@ -20,7 +20,6 @@ Using this application you can manage Sales Teams with CRM and/or Sales
         'views/crm_team_views.xml',
         'views/crm_team_member_views.xml',
         'views/mail_activity_views.xml',
-        'views/res_partner_views.xml',
         ],
     'demo': [
         'data/crm_team_demo.xml',

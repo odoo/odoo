@@ -91,7 +91,6 @@ class NewLeadNotification(TestCrmCommon):
                             'email': 'new.customer.format@test.example.com',
                             'name': 'Format Name',
                             'user_id': self.user_sales_leads.id,
-                            'team_id': self.sales_team_1.id,
                         },
                   }],
                 [{
@@ -104,7 +103,6 @@ class NewLeadNotification(TestCrmCommon):
                             'email': 'new.customer.multi.1@test.example.com',
                             'name': 'Multi Name',
                             'user_id': self.user_sales_leads.id,
-                            'team_id': self.sales_team_1.id,
                         },
                   }],
                 [{
@@ -117,7 +115,6 @@ class NewLeadNotification(TestCrmCommon):
                             'email': 'new.customer.simple@test.example.com',
                             'name': 'Std Name',
                             'user_id': self.user_sales_leads.id,
-                            'team_id': self.sales_team_1.id,
                         },
                   }],
                 [{
@@ -230,7 +227,6 @@ class NewLeadNotification(TestCrmCommon):
             'phone': '678-728-0949',
             'mobile': '661-606-0781',
             'function': 'Delivery Boy',
-            'team_id': self.sales_team_1.id,
             'user_id': self.user_sales_manager.id,
         }
 
