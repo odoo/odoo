@@ -13,8 +13,14 @@ import { useSortable } from "@web/core/utils/sortable_owl";
 import { getTabableElements } from "@web/core/utils/ui";
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
+<<<<<<< HEAD
 import { getClassNameFromDecoration } from "@web/views/utils";
 import { combineModifiers } from "@web/model/relational_model/utils";
+||||||| parent of 1d723f39fbd4 (temp)
+import { getClassNameFromDecoration } from "@web/views/utils";
+=======
+import { evalDomain, getClassNameFromDecoration } from "@web/views/utils";
+>>>>>>> 1d723f39fbd4 (temp)
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
@@ -934,12 +940,20 @@ export class ListRenderer extends Component {
         return getFormattedValue(record, fieldName, column.attrs);
     }
 
+<<<<<<< HEAD
     evalInvisible(invisible, record) {
         return evaluateBooleanExpr(invisible, record.evalContextWithVirtualIds);
     }
 
     evalColumnInvisible(columnInvisible) {
         return this.props.evalViewModifier(columnInvisible);
+||||||| parent of 1d723f39fbd4 (temp)
+    evalModifier(modifier, record) {
+        return !!(modifier && new Domain(modifier).contains(record.evalContext));
+=======
+    evalModifier(modifier, record) {
+        return evalDomain(modifier, record.evalContext);
+>>>>>>> 1d723f39fbd4 (temp)
     }
 
     getGroupDisplayName(group) {
