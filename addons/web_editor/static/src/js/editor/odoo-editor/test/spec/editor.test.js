@@ -3777,7 +3777,7 @@ X[]
                         contentAfter: '<p><b>abc</b></p><p>[]<br></p>',
                     });
                 });
-                it('should insert line breaks outside the edges of an anchor', async () => {
+                it('should insert line breaks outside the edges of an anchor in unbreakable', async () => {
                     const pressEnter = editor => {
                         editor.document.execCommand('insertParagraph');
                     };
@@ -3794,12 +3794,48 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<div><a>ab[]</a></div>',
                         stepFunction: pressEnter,
-                        contentAfter: '<div><a>ab</a><br>[]<br></div>',
+                        contentAfter: '<div><a>ab</a><br><br>[]</div>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<div><a>ab[]</a>cd</div>',
                         stepFunction: pressEnter,
                         contentAfter: '<div><a>ab</a><br>[]cd</div>',
+                    });
+                });
+                it('should insert a paragraph break outside the starting edge of an anchor', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><a>[]ab</a></p>',
+                        stepFunction: editor => editor.document.execCommand('insertParagraph'),
+                        contentAfterEdit: '<p><br></p><p>\ufeff<a>[]\ufeffab\ufeff</a>\ufeff</p>',
+                        contentAfter: '<p><br></p><p><a>[]ab</a></p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>ab<a>[]cd</a></p>',
+                        stepFunction: editor => editor.document.execCommand('insertParagraph'),
+                        contentAfterEdit: '<p>ab</p><p>\ufeff<a>[]\ufeffcd\ufeff</a>\ufeff</p>',
+                        contentAfter: '<p>ab</p><p><a>[]cd</a></p>',
+                    });
+                });
+                it('should insert a paragraph break in the middle of an anchor', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><a>a[]b</a></p>',
+                        stepFunction: editor => editor.document.execCommand('insertParagraph'),
+                        contentAfterEdit: '<p>\ufeff<a class="">\ufeffa\ufeff</a>\ufeff</p><p>\ufeff<a class="o_link_in_selection">\ufeff[]b\ufeff</a>\ufeff</p>',
+                        contentAfter: '<p><a>a</a></p><p><a>[]b</a></p>',
+                    });
+                });
+                it('should insert a paragraph break outside the ending edge of an anchor', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><a>ab[]</a></p>',
+                        stepFunction: editor => editor.document.execCommand('insertParagraph'),
+                        contentAfterEdit: '<p>\ufeff<a class="">\ufeffab\ufeff</a>\ufeff</p><p placeholder="Type &quot;/&quot; for commands" class="oe-hint oe-command-temporary-hint">[]<br></p>',
+                        contentAfter: '<p><a>ab</a></p><p>[]<br></p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><a>ab[]</a>cd</p>',
+                        stepFunction: editor => editor.document.execCommand('insertParagraph'),
+                        contentAfterEdit: '<p>\ufeff<a class="">\ufeffab\ufeff</a>\ufeff</p><p>[]cd</p>',
+                        contentAfter: '<p><a>ab</a></p><p>[]cd</p>',
                     });
                 });
             });
