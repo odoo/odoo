@@ -6,7 +6,7 @@ import {
 } from "@web/core/utils/colors";
 import { uniqueId } from "@web/core/utils/functions";
 import { clamp } from "@web/core/utils/numbers";
-import { throttleForAnimation } from "@web/core/utils/timing";
+import { throttleForAnimation, debounce } from "@web/core/utils/timing";
 
 import {
     Component,
@@ -78,7 +78,8 @@ export class Colorpicker extends Component {
                 ".o_opacity_slider",
                 this._onMouseDownOpacitySlider.bind(this)
             );
-            this.$el.on("change", ".o_color_picker_inputs", this._onChangeInputs.bind(this));
+            const debouncedOnChangeInputs = debounce(this._onChangeInputs.bind(this), 10, true);
+            this.$el.on("change", ".o_color_picker_inputs", debouncedOnChangeInputs);
 
             this.start();
         });
