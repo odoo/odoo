@@ -2,7 +2,11 @@
 
 import { OdooEditor } from '../src/OdooEditor.js';
 import { sanitize } from '../src/utils/sanitize.js';
-import { closestElement, makeZeroWidthCharactersVisible } from '../src/utils/utils.js';
+import {
+    closestElement,
+    makeZeroWidthCharactersVisible,
+    insertSelectionChars,
+} from '../src/utils/utils.js';
 
 export const Direction = {
     BACKWARD: 'BACKWARD',
@@ -169,33 +173,6 @@ export async function setTestSelection(selection, doc = document) {
 }
 
 /**
- * Inserts the given characters at the given offset of the given node.
- *
- * @param {string} chars
- * @param {Node} node
- * @param {number} offset
- */
-export function insertCharsAt(chars, node, offset) {
-    if (node.nodeType === Node.TEXT_NODE) {
-        const startValue = node.nodeValue;
-        if (offset < 0 || offset > startValue.length) {
-            throw new Error(`Invalid ${chars} insertion in text node`);
-        }
-        node.nodeValue = startValue.slice(0, offset) + chars + startValue.slice(offset);
-    } else {
-        if (offset < 0 || offset > node.childNodes.length) {
-            throw new Error(`Invalid ${chars} insertion in non-text node`);
-        }
-        const textNode = document.createTextNode(chars);
-        if (offset < node.childNodes.length) {
-            node.insertBefore(textNode, node.childNodes[offset]);
-        } else {
-            node.appendChild(textNode);
-        }
-    }
-}
-
-/**
  * Return the deepest child of a given container at a given offset, and its
  * adapted offset.
  *
@@ -249,21 +226,7 @@ export function renderTextualSelection(doc = document) {
     if (selection.rangeCount === 0) {
         return;
     }
-
-    const anchor = targetDeepest(selection.anchorNode, selection.anchorOffset);
-    const focus = targetDeepest(selection.focusNode, selection.focusOffset);
-
-    // If the range characters have to be inserted within the same parent and
-    // the anchor range character has to be before the focus range character,
-    // the focus offset needs to be adapted to account for the first insertion.
-    const [anchorNode, anchorOffset] = anchor;
-    const [focusNode, baseFocusOffset] = focus;
-    let focusOffset = baseFocusOffset;
-    if (anchorNode === focusNode && anchorOffset <= focusOffset) {
-        focusOffset++;
-    }
-    insertCharsAt('[', ...anchor);
-    insertCharsAt(']', focusNode, focusOffset);
+    insertSelectionChars(selection.anchorNode, selection.anchorOffset, selection.focusNode, selection.focusOffset);
 }
 
 /**
