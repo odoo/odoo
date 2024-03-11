@@ -269,7 +269,7 @@ class PaymentProvider(models.Model):
                         'title': _("Warning"),
                         'message': _(
                             "This action will also archive %s tokens that are registered with this "
-                            "provider. Archiving tokens is irreversible.", len(related_tokens)
+                            "provider. ", len(related_tokens)
                         )
                     }
                 }
