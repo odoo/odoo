@@ -585,7 +585,7 @@ class ProjectTask(models.Model):
         domain = [
             ('company_id', '=?', self.company_id.id),
             ('is_service', '=', True),
-            ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.id),
+            ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.ids),
             ('is_expense', '=', False),
             ('state', '=', 'sale'),
             ('remaining_hours', '>', 0),
