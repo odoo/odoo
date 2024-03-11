@@ -571,22 +571,30 @@ class BaseAutomation(models.Model):
         msg = _("Note that this automation rule can be triggered up to %d minutes after its schedule.")
         self.least_delay_msg = msg % self._get_cron_interval()
 
-    def _filter_pre(self, records):
+    def _filter_pre(self, records, feedback=False):
         """ Filter the records that satisfy the precondition of automation ``self``. """
         self_sudo = self.sudo()
         if self_sudo.filter_pre_domain and records:
+            if feedback:
+                # this context flag enables to detect the executions of
+                # automations while evaluating their precondition
+                records = records.with_context(__action_feedback=True)
             domain = safe_eval.safe_eval(self_sudo.filter_pre_domain, self._get_eval_context())
             return records.sudo().filtered_domain(domain).with_env(records.env)
         else:
             return records
 
-    def _filter_post(self, records):
-        return self._filter_post_export_domain(records)[0]
+    def _filter_post(self, records, feedback=False):
+        return self._filter_post_export_domain(records, feedback)[0]
 
-    def _filter_post_export_domain(self, records):
+    def _filter_post_export_domain(self, records, feedback=False):
         """ Filter the records that satisfy the postcondition of automation ``self``. """
         self_sudo = self.sudo()
         if self_sudo.filter_domain and records:
+            if feedback:
+                # this context flag enables to detect the executions of
+                # automations while evaluating their postcondition
+                records = records.with_context(__action_feedback=True)
             domain = safe_eval.safe_eval(self_sudo.filter_domain, self._get_eval_context())
             return records.sudo().filtered_domain(domain).with_env(records.env), domain
         else:
@@ -612,26 +620,36 @@ class BaseAutomation(models.Model):
             return
 
         # mark the remaining records as done (to avoid recursive processing)
-        automation_done = dict(automation_done)
-        automation_done[self] = records_done + records
-        self = self.with_context(__action_done=automation_done)
-        records = records.with_context(__action_done=automation_done)
+        if self.env.context.get('__action_feedback'):
+            # modify the context dict in place: this is useful when fields are
+            # computed during the pre/post filtering, in order to know which
+            # automations have already been run by the computation itself
+            automation_done[self] = records_done + records
+        else:
+            automation_done = dict(automation_done)
+            automation_done[self] = records_done + records
+            self = self.with_context(__action_done=automation_done)
+            records = records.with_context(__action_done=automation_done)
 
         # modify records
         if 'date_automation_last' in records._fields:
             records.date_automation_last = fields.Datetime.now()
 
+        # we process the automation on the records for which any watched field
+        # has been modified, and only mark the automation as done for those
+        records = records.filtered(self._check_trigger_fields)
+        automation_done[self] = records_done + records
+
         # prepare the contexts for server actions
-        contexts = []
-        for record in records:
-            # we process the automation if any watched field has been modified
-            if self._check_trigger_fields(record):
-                contexts.append({
-                    'active_model': record._name,
-                    'active_ids': record.ids,
-                    'active_id': record.id,
-                    'domain_post': domain_post,
-                })
+        contexts = [
+            {
+                'active_model': record._name,
+                'active_ids': record.ids,
+                'active_id': record.id,
+                'domain_post': domain_post,
+            }
+            for record in records
+        ]
 
         # execute server actions
         for action in self.sudo().action_server_ids:
@@ -690,7 +708,7 @@ class BaseAutomation(models.Model):
                 records = create.origin(self.with_env(automations.env), vals_list, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
                 for automation in automations.with_context(old_values=None):
-                    automation._process(automation._filter_post(records))
+                    automation._process(automation._filter_post(records, feedback=True))
                 return records.with_env(self.env)
 
             return create
@@ -714,7 +732,7 @@ class BaseAutomation(models.Model):
                 write.origin(self.with_env(automations.env), vals, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
                 for automation in automations.with_context(old_values=old_values):
-                    records, domain_post = automation._filter_post_export_domain(pre[automation])
+                    records, domain_post = automation._filter_post_export_domain(pre[automation], feedback=True)
                     automation._process(records, domain_post=domain_post)
                 return True
 
@@ -747,7 +765,7 @@ class BaseAutomation(models.Model):
                 _compute_field_value.origin(self, field)
                 # check postconditions, and execute automations on the records that satisfy them
                 for automation in automations.with_context(old_values=old_values):
-                    records, domain_post = automation._filter_post_export_domain(pre[automation])
+                    records, domain_post = automation._filter_post_export_domain(pre[automation], feedback=True)
                     automation._process(records, domain_post=domain_post)
                 return True
 
@@ -761,7 +779,7 @@ class BaseAutomation(models.Model):
                 records = self.with_env(automations.env)
                 # check conditions, and execute actions on the records that satisfy them
                 for automation in automations:
-                    automation._process(automation._filter_post(records))
+                    automation._process(automation._filter_post(records, feedback=True))
                 # call original method
                 return unlink.origin(self, **kwargs)
 
@@ -813,7 +831,7 @@ class BaseAutomation(models.Model):
                 mail_trigger = "on_message_received" if message_sudo.author_id.partner_share else "on_message_sent"
                 automations = self.env['base.automation']._get_actions(self, [mail_trigger])
                 for automation in automations.with_context(old_values=None):
-                    records = automation._filter_pre(self)
+                    records = automation._filter_pre(self, feedback=True)
                     automation._process(records)
 
                 return message
