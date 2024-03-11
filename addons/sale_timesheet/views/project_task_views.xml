@@ -14,7 +14,7 @@
             </xpath>
             <xpath expr="//page[@name='settings']" position="after">
                 <page name="billing_employee_rate" string="Invoicing" invisible="not allow_billable or not partner_id">
-                    <field name="sale_line_employee_ids" context="{'default_sale_line_id': sale_line_id}">
+                    <field name="sale_line_employee_ids" mode="tree,kanban" context="{'default_sale_line_id': sale_line_id}">
                         <tree editable="bottom">
                             <field name="company_id" column_invisible="True"/>
                             <field name="partner_id" column_invisible="True"/>
@@ -38,6 +38,64 @@
                             <field name="currency_id" column_invisible="True"/>
                             <field name="cost_currency_id" column_invisible="True"/>
                         </tree>
+                        <kanban class="o_kanban_mobile">
+                            <field name="employee_id"/>
+                            <field name="sale_line_id"/>
+                            <field name="existing_employee_ids"/>
+                            <field name="partner_id"/>
+                            <field name="currency_id"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                        <div class="row">
+                                            <div class="col-8 d-flex">
+                                                <field name="employee_id" widget="many2one_avatar_employee"/>
+                                                <strong><span class="ps-1"><t t-esc="record.employee_id.value"/></span></strong>
+                                            </div>
+                                            <div class="col-4 float-end text-end">
+                                                <b>Unit Price: </b>
+                                                <field name="price_unit" widget="monetary" force_save="1" options="{'currency_field': 'currency_id'}"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-8 text-muted">
+                                                <span><t t-esc="record.sale_line_id.value"/></span>
+                                            </div>
+                                            <div class="col-4">
+                                                <span class="float-end text-end">
+                                                    <b>Daily Cost: </b>
+                                                    <field name="display_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                        <form  string="Timesheet Activities">
+                            <sheet>
+                                <group>
+                                    <field name="existing_employee_ids" invisible="1"/>
+                                    <field name="partner_id" invisible="1"/>
+                                    <field name="sale_order_id" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="employee_id" widget="many2one_avatar_employee" required="1"/>
+                                    <field name="sale_line_id" invisible="parent.id" options="{'no_create': True}" context="{'search_default_order_id': sale_order_id}"/>
+                                    <field name="sale_line_id" invisible="not parent.id" required="True" groups="!sales_team.group_sale_salesman" options="{'no_create': True}"
+                                        context="{'search_default_order_id': sale_order_id}"/>
+                                    <field name="sale_line_id" invisible="not parent.id" required="True" groups="sales_team.group_sale_salesman" options="{'no_quick_create': True}"
+                                        context="{
+                                            'search_default_order_id': sale_order_id,
+                                            'form_view_ref': 'sale_project.sale_order_line_view_form_editable',
+                                            'default_partner_id': parent.partner_id,
+                                            'default_company_id': parent.company_id,
+                                            'default_order_id': sale_order_id,
+                                        }"/>
+                                    <field name="price_unit" widget="monetary" readonly="True" force_save="1" options="{'currency_field': 'currency_id'}"/> 
+                                    <field name="display_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                            </sheet>
+                        </form>
                     </field>
                     <p class="text-muted">
                         <i class="fa fa-lightbulb-o"/>
@@ -139,6 +197,24 @@
                         context="{'with_remaining_hours': True, 'with_price_unit': True}" options="{'no_create': True, 'no_open': True}"
                         domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.partner_id), ('is_expense', '=', False), ('state', '=', 'sale'), ('is_downpayment', '=', False)]"
                         optional="hide"/>
+                </xpath>
+                <xpath expr="//field[@name='timesheet_ids']/form//field[@name='unit_amount']" position="after">
+                    <field name="timesheet_invoice_id" invisible="1"/>
+                    <field name="so_line" widget="so_line_field" groups="!sales_team.group_sale_salesman"
+                        invisible="not parent.allow_billable"
+                        readonly="readonly_timesheet"
+                        context="{'with_remaining_hours': True, 'with_price_unit': True}" options="{'no_create': True, 'no_open': True}"
+                        domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.partner_id), ('is_expense', '=', False), ('state', '=', 'sale')]"
+                        placeholder="Non-billable"
+                        optional="hide"/>
+                    <field 
+                        name="so_line" widget="so_line_field" groups="sales_team.group_sale_salesman"
+                        options="{'no_create': True, 'no_open': True}"
+                        context="{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True}"
+                        invisible="not parent.allow_billable"
+                        domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.partner_id), ('is_expense', '=', False), ('state', '=', 'sale')]"
+                        readonly="readonly_timesheet"
+                        placeholder="Non-billable"/>
                 </xpath>
                 <xpath expr="//field[@name='remaining_hours']" position="after">
                     <t groups="hr_timesheet.group_hr_timesheet_user">
