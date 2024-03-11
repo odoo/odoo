@@ -1420,7 +1420,17 @@ export class OdooEditor extends EventTarget {
     // ===============
 
     deleteRange(sel) {
-        let range = getDeepRange(this.editable, {
+        // Remove all FEFF text nodes
+        let range = getDeepRange(this.editable, { sel, correctTripleClick: true });
+        if (!range) return;
+        for (const node of descendants(closestBlock(range.commonAncestorContainer))) {
+            if (node.nodeType === Node.TEXT_NODE && node.textContent === '\uFEFF') {
+                const restore = prepareUpdate(...leftPos(node));
+                node.remove();
+                restore(); // Make sure to make <br>s visible if needed.
+            }
+        }
+        range = getDeepRange(this.editable, {
             sel,
             splitText: true,
             select: true,
