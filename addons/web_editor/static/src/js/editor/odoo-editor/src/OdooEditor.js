@@ -4388,6 +4388,17 @@ export class OdooEditor extends EventTarget {
         for (const link of element.querySelectorAll('.o_link_in_selection')) {
             link.classList.remove('o_link_in_selection');
         }
+
+        // Remove all FEFF within a `prepareUpdate` to make sure to make <br>
+        // nodes visible if needed.
+        for (const node of descendants(element)) {
+            if (node.nodeType === Node.TEXT_NODE && node.textContent.includes('\uFEFF')) {
+                const restore = prepareUpdate(...leftPos(node));
+                node.textContent = node.textContent.replaceAll('\uFEFF', '');
+                restore(); // Make sure to make <br>s visible if needed.
+            }
+        }
+
         // Remove contenteditable=false on elements
         for (const el of element.querySelectorAll('[contenteditable="false"]')) {
             if (!el.hasAttribute('data-oe-keep-contenteditable')) {
