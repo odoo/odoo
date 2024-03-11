@@ -50,7 +50,6 @@ import {
     YOUTUBE_URL_GET_VIDEO_ID,
     unwrapContents,
     peek,
-    rightPos,
     getAdjacentPreviousSiblings,
     getAdjacentNextSiblings,
     isBlock,
@@ -3673,19 +3672,7 @@ export class OdooEditor extends EventTarget {
                 ev.preventDefault();
                 this._handleAutomaticLinkInsertion();
                 if (this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
-                    const brs = this._applyCommand('oShiftEnter');
-                    const anchor = brs[0].parentElement;
-                    if (anchor.nodeName === 'A') {
-                        if (brs.includes(anchor.firstChild)) {
-                            brs.forEach(br => anchor.before(br));
-                            setSelection(...rightPos(brs[brs.length - 1]));
-                            this.historyStep();
-                        } else if (brs.includes(anchor.lastChild)) {
-                            brs.forEach(br => anchor.after(br));
-                            setSelection(...rightPos(brs[0]));
-                            this.historyStep();
-                        }
-                    }
+                    this._applyCommand('oShiftEnter');
                 }
             } else if (['insertText', 'insertCompositionText'].includes(ev.inputType)) {
                 const selection = this.document.getSelection();
