@@ -21,7 +21,7 @@ enableInDir () {
         mv tmp.json jsconfig.json
         # copy over node_modules and package-lock to avoid double "npm install"
         cp "$community/package-lock.json" package-lock.json
-        cp -a "$community/node_modules" node_modules
+        ln -s "$community/node_modules" node_modules
     else
         npm install
     fi
