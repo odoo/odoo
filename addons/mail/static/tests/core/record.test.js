@@ -1,6 +1,6 @@
 import { describe, afterEach, beforeAll, beforeEach, expect, test } from "@odoo/hoot";
 
-import { BaseStore, Record, makeStore } from "@mail/core/common/record";
+import { Store, Record, makeStore } from "@mail/core/common/record";
 
 import { registry } from "@web/core/registry";
 import { markup, reactive, toRaw } from "@odoo/owl";
@@ -68,7 +68,7 @@ const localRegistry = registry.category("discuss.model.test");
 
 beforeEach(() => {
     Record.register(localRegistry);
-    ({ Store: class extends BaseStore {} }).Store.register(localRegistry);
+    Store.register(localRegistry);
     mockService("store", () => makeStore(getMockEnv(), { localRegistry }));
 });
 afterEach(() => {
