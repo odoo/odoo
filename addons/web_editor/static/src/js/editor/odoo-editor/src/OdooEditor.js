@@ -2097,6 +2097,16 @@ export class OdooEditor extends EventTarget {
         if (this.deleteTableRange()) {
             return;
         }
+        // Remove all FEFF text nodes
+        let range = getDeepRange(this.editable, { sel, correctTripleClick: true });
+        if (!range) return;
+        for (const node of descendants(closestBlock(range.commonAncestorContainer))) {
+            if (node.nodeType === Node.TEXT_NODE && [...node.textContent].every(char => char === '\uFEFF')) {
+                const restore = prepareUpdate(...leftPos(node));
+                node.remove();
+                restore(); // Make sure to make <br>s visible if needed.
+            }
+        }
         if (!this.editable.childElementCount) {
             // Ensure the editable has content.
             const p = document.createElement('p');
@@ -2105,7 +2115,7 @@ export class OdooEditor extends EventTarget {
             setSelection(p, 0);
             return;
         }
-        let range = getDeepRange(this.editable, {
+        range = getDeepRange(this.editable, {
             sel,
             splitText: true,
             select: true,
@@ -2139,7 +2149,8 @@ export class OdooEditor extends EventTarget {
         const startBlock = closestBlock(start);
         const endBlock = closestBlock(end);
         const [firstLeafOfStartBlock, lastLeafOfEndBlock] = [firstLeaf(startBlock), lastLeaf(endBlock)];
-        if (sel && !sel.isCollapsed && !range.startOffset && !range.startContainer.previousSibling) {
+        const startLink = closestElement(range.startContainer, 'a');
+        if (sel && !sel.isCollapsed && !range.startOffset && !range.startContainer.previousSibling && !startLink) {
             // Insert a zero-width space before the selection if the selection
             // is non-collapsed and at the beginning of its parent, so said
             // parent will have content after extraction. This ensures that the
@@ -2147,6 +2158,7 @@ export class OdooEditor extends EventTarget {
             // Eg, <h1><font>[...]</font></h1> will preserve the styles of the
             // <font> node. If it remains empty, it will be cleaned up later by
             // the sanitizer.
+            // Links are excluded from this.
             const zws = document.createTextNode('\u200B');
             range.startContainer.before(zws);
             insertedZws = zws;
@@ -2184,7 +2196,7 @@ export class OdooEditor extends EventTarget {
         const startLi = closestElement(start, 'li');
         // Uncheck a list item with empty text in multi-list selection.
         if (startLi && startLi.classList.contains('o_checked') &&
-            startLi.textContent === '\u200B' && closestElement(end, 'li') !== startLi) {
+            ['\u200B', ''].includes(startLi.textContent) && closestElement(end, 'li') !== startLi) {
             startLi.classList.remove('o_checked');
         }
         range = getDeepRange(this.editable, { sel });
