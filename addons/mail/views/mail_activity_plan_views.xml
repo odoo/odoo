@@ -69,6 +69,7 @@
                                 <field name="template_ids" nolabel="1">
                                     <tree>
                                         <field name="company_id" column_invisible="1"/>
+                                        <field name="note" column_invisible="1"/>
                                         <field name="sequence" widget="handle"/>
                                         <field name="activity_type_id" context="{'form_view_ref': 'mail.mail_activity_type_form_inherit'}"
                                                options="{'no_quick_create': True}"/>
@@ -79,7 +80,6 @@
                                         <field name="delay_count"/>
                                         <field name="delay_unit" string="Unit"/>
                                         <field name="delay_from"/>
-                                        <field name="note" placeholder="e.g. Log a note" optional="hide" width="10rem"/>
                                     </tree>
                                     <kanban class="o_kanban_mobile">
                                         <field name="company_id"/>
