@@ -633,12 +633,12 @@ describe('List', () => {
                             stepFunction: toggleCheckList,
                             contentAfterEdit: unformat(`
                                 <ul class="o_checklist">
-                                    <li class="o_checked" id="checkId-1">abc</li>
+                                    <li class="o_checked">abc</li>
                                     <li class="oe-nested">
                                         <ul class="o_checklist">
-                                            <li class="o_checked" id="checkId-2">def</li>
-                                            <li id="checkId-4">g[]hi</li>
-                                            <li class="o_checked" id="checkId-3">jkl</li>
+                                            <li class="o_checked">def</li>
+                                            <li>g[]hi</li>
+                                            <li class="o_checked">jkl</li>
                                         </ul>
                                     </li>
                                 </ul>`),
@@ -5845,6 +5845,8 @@ describe('List', () => {
                             contentBefore:
                                 '<ul class="o_checklist"><li>ab</li><li class="o_checked"><a href="#">[cd</a></li><li>ef]</li><li>gh</li></ul>',
                             stepFunction: deleteBackward,
+                            contentAfterEdit:
+                                '<ul class="o_checklist"><li>ab</li><li placeholder="List" class="oe-hint">[]<br></li><li>gh</li></ul>',
                             contentAfter:
                                 '<ul class="o_checklist"><li>ab</li><li>[]<br></li><li>gh</li></ul>',
                         });
@@ -6136,6 +6138,48 @@ describe('List', () => {
                             <li>ghi</li>
                         </ol>`),
                 });
+            });
+            it('should empty list items, starting and ending with links', async () => {
+                // Since we introduce \ufeff characters in and around links, we
+                // can enter situations where the links aren't technically fully
+                // selected but should be treated as if they were. These tests
+                // are there to ensure that is the case. They represent four
+                // variations of the same situation, and have the same expected
+                // result.
+                const tests = [
+                    // (1) <a>[...</a>...<a>...]</a>
+                    '<ul><li>ab</li><li><a href="#">[cd</a></li><li>ef</li><li><a href="#a">gh]</a></li><li>ij</li></ul>',
+                    '<ul><li>ab</li><li><a href="#">[\ufeffcd</a></li><li>ef</li><li><a href="#a">gh\ufeff]</a></li><li>ij</li></ul>',
+                    '<ul><li>ab</li><li><a href="#">\ufeff[cd</a></li><li>ef</li><li><a href="#a">gh\ufeff]</a></li><li>ij</li></ul>',
+                    '<ul><li>ab</li><li><a href="#">[\ufeffcd</a></li><li>ef</li><li><a href="#a">gh]\ufeff</a></li><li>ij</li></ul>',
+                    '<ul><li>ab</li><li><a href="#">\ufeff[cd</a></li><li>ef</li><li><a href="#a">gh]\ufeff</a></li><li>ij</li></ul>',
+                    // (2) [<a>...</a>...<a>...]</a>
+                    '<ul><li>ab</li><li>[<a href="#">cd</a></li><li>ef</li><li><a href="#a">gh]</a></li><li>ij</li></ul>',
+                    '<ul><li>ab</li><li>[\ufeff<a href="#">cd</a></li><li>ef</li><li><a href="#a">gh\ufeff]</a></li><li>ij</li></ul>',
+                    '<ul><li>ab</li><li>\ufeff[<a href="#">cd</a></li><li>ef</li><li><a href="#a">gh\ufeff]</a></li><li>ij</li></ul>',
+                    '<ul><li>ab</li><li>[\ufeff<a href="#">cd</a></li><li>ef</li><li><a href="#a">gh]\ufeff</a></li><li>ij</li></ul>',
+                    '<ul><li>ab</li><li>\ufeff[<a href="#">cd</a></li><li>ef</li><li><a href="#a">gh]\ufeff</a></li><li>ij</li></ul>',
+                    // (3) <a>[...</a>...<a>...</a>]
+                    '<ul><li>ab</li><li><a href="#">[cd</a></li><li>ef</li><li><a href="#a">gh</a>]</li><li>ij</li></ul>',
+                    '<ul><li>ab</li><li><a href="#">[\ufeffcd</a></li><li>ef</li><li><a href="#a">gh</a>\ufeff]</li><li>ij</li></ul>',
+                    '<ul><li>ab</li><li><a href="#">\ufeff[cd</a></li><li>ef</li><li><a href="#a">gh</a>\ufeff]</li><li>ij</li></ul>',
+                    '<ul><li>ab</li><li><a href="#">[\ufeffcd</a></li><li>ef</li><li><a href="#a">gh</a>]\ufeff</li><li>ij</li></ul>',
+                    '<ul><li>ab</li><li><a href="#">\ufeff[cd</a></li><li>ef</li><li><a href="#a">gh</a>]\ufeff</li><li>ij</li></ul>',
+                    // (4) [<a>...</a>...<a>...</a>]
+                    '<ul><li>ab</li><li>[<a href="#">cd</a></li><li>ef</li><li><a href="#a">gh</a>]</li><li>ij</li></ul>',
+                    '<ul><li>ab</li><li>[\ufeff<a href="#">cd</a></li><li>ef</li><li><a href="#a">gh</a>\ufeff]</li><li>ij</li></ul>',
+                    '<ul><li>ab</li><li>\ufeff[<a href="#">cd</a></li><li>ef</li><li><a href="#a">gh</a>\ufeff]</li><li>ij</li></ul>',
+                    '<ul><li>ab</li><li>[\ufeff<a href="#">cd</a></li><li>ef</li><li><a href="#a">gh</a>]\ufeff</li><li>ij</li></ul>',
+                    '<ul><li>ab</li><li>\ufeff[<a href="#">cd</a></li><li>ef</li><li><a href="#a">gh</a>]\ufeff</li><li>ij</li></ul>',
+                ];
+                for (const contentBefore of tests) {
+                    await testEditor(BasicEditor, {
+                        contentBefore,
+                        stepFunction: deleteBackward,
+                        contentAfterEdit: '<ul><li>ab</li><li placeholder="List" class="oe-hint">[]<br></li><li>ij</li></ul>',
+                        contentAfter: '<ul><li>ab</li><li>[]<br></li><li>ij</li></ul>',
+                    });
+                }
             });
         });
         describe('insertParagraphBreak', () => {
