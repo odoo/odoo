@@ -416,8 +416,16 @@
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks" invisible="not project_id">
                             <field name="child_ids"
-                                   context="{'default_project_id': project_id, 'default_display_in_project': False, 'default_user_ids': user_ids, 'default_parent_id': id,
-                                    'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id}"
+                                   mode="tree,kanban"
+                                   context="{
+                                        'default_project_id': project_id,
+                                        'default_display_in_project': False,
+                                        'default_user_ids': user_ids,
+                                        'default_parent_id': id,
+                                        'default_partner_id': partner_id,
+                                        'default_milestone_id': allow_milestones and milestone_id,
+                                        'kanban_view_ref': 'project.project_sub_task_view_kanban_mobile',
+                                   }"
                                    widget="subtasks_one2many">
                                 <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']" open_form_view="True">
                                     <field name="allow_milestones" column_invisible="True"/>
@@ -452,8 +460,17 @@
                             </field>
                         </page>
                         <page name="task_dependencies" string="Blocked By" invisible="not allow_task_dependencies" groups="project.group_project_task_dependencies">
-                            <field name="depend_on_ids" nolabel="1"
-                                   context="{'default_project_id': project_id, 'search_view_ref' : 'project.view_task_search_form', 'search_default_project_id': project_id, 'tree_view_ref': 'project.open_view_all_tasks_list_view', 'search_default_open_tasks': 1}">
+                            <field name="depend_on_ids"
+                                   nolabel="1"
+                                   mode="tree,kanban"
+                                   context="{
+                                        'default_project_id': project_id,
+                                        'search_view_ref' : 'project.view_task_search_form',
+                                        'search_default_project_id': project_id,
+                                        'tree_view_ref': 'project.open_view_all_tasks_list_view',
+                                        'search_default_open_tasks': 1,
+                                        'kanban_view_ref': 'project.project_sub_task_view_kanban_mobile',
+                                   }">
                                 <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']" open_form_view="True">
                                     <field name="allow_milestones" column_invisible="True"/>
                                     <field name="parent_id" column_invisible="True" />
@@ -684,6 +701,22 @@
                 </kanban>
             </field>
          </record>
+
+        <!-- View used in the Sub-tasks, Blocked by notebook page in the task form view in mobile -->
+        <record id="project_sub_task_view_kanban_mobile" model="ir.ui.view">
+            <field name="name">project.task.kanban</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_kanban"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_kanban_record_headings')]/span[@t-if='record.parent_id.raw_value']" position="after">
+                    <span invisible="project_id == context.get('active_id', False)" class="d-block mt-1">
+                        <field name="project_id" options="{'no_open': True}"/>
+                    </span>
+                </xpath>
+                <xpath expr="//div[hasclass('o_kanban_record_headings')]/span[@t-if='record.parent_id.raw_value']" position="replace"/>
+            </field>
+        </record>
 
         <!-- The main base of the project.task tree view -->
         <record id="project_task_view_tree_main_base" model="ir.ui.view">
