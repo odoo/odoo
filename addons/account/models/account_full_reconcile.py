@@ -9,6 +9,16 @@ class AccountFullReconcile(models.Model):
     partial_reconcile_ids = fields.One2many('account.partial.reconcile', 'full_reconcile_id', string='Reconciliation Parts')
     reconciled_line_ids = fields.One2many('account.move.line', 'full_reconcile_id', string='Matched Journal Items')
     exchange_move_id = fields.Many2one('account.move', index="btree_not_null")
+    display_name = fields.Char(search='_search_display_name')
+
+    @api.depends('reconciled_line_ids.matching_number')
+    def _compute_display_name(self):
+        for rec in self:
+            rec.display_name = rec.reconciled_line_ids[:1].matching_number
+
+    @api.model
+    def _search_display_name(self, operator, value):
+        return [('reconciled_line_ids.matching_number', operator, value)]
 
     def unlink(self):
         """ When removing a full reconciliation, we need to revert the eventual journal entries we created to book the
