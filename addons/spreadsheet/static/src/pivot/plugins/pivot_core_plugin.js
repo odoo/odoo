@@ -112,7 +112,6 @@ export class PivotCorePlugin extends OdooCorePlugin {
                 const { pivotId, newPivotId } = cmd;
                 const pivot = deepCopy(this.pivots[pivotId]);
                 this._addPivot(newPivotId, pivot);
-                this.history.update("nextFormulaId", parseInt(newPivotId, 10) + 1);
                 break;
             }
             case "UPDATE_ODOO_PIVOT_DOMAIN": {
