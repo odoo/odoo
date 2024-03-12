@@ -15,6 +15,7 @@ const modifierFields = [
     'originalSrc',
     'resizeWidth',
     'aspectRatio',
+    "bgSrc",
 ];
 const isGif = (mimetype) => mimetype === 'image/gif';
 
@@ -532,7 +533,7 @@ return {
     activateCropper,
     loadImageInfo,
     loadImage,
-    removeOnImageChangeAttrs: [...cropperDataFields, ...modifierFields, 'aspectRatio'],
+    removeOnImageChangeAttrs: [...cropperDataFields, ...modifierFields],
     isImageSupportedForProcessing,
     isImageSupportedForStyle,
     createDataURL,
