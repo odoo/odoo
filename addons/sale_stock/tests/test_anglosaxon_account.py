@@ -34,3 +34,4 @@ class TestAngloSaxonAccounting(TestValuationReconciliation):
             {'debit': 0.0, 'credit': company_a_standard_price},
             {'debit': company_a_standard_price, 'credit': 0.0},
         ])
+

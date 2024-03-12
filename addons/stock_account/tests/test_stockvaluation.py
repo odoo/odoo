@@ -141,7 +141,7 @@ class TestStockValuation(TransactionCase):
         })
         out_move._action_confirm()
         out_move._action_assign()
-        out_move.move_line_ids.qty_done = quantity
+        out_move.quantity_done = quantity
         out_move._action_done()
         return out_move.with_context(svl=True)
 
