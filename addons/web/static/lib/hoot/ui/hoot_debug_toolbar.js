@@ -5,6 +5,7 @@ import { Test } from "../core/test";
 import { refresh } from "../core/url";
 import { formatTime } from "../hoot_utils";
 import { HootTestPath } from "./hoot_test_path";
+import { HootTestResult } from "./hoot_test_result";
 
 /**
  * @typedef {import("../core/expect").Assertion} Assertion
@@ -18,20 +19,17 @@ import { HootTestPath } from "./hoot_test_path";
 
 /** @extends {Component<HootDebugToolBarProps, import("../hoot").Environment>} */
 export class HootDebugToolBar extends Component {
-    static components = { HootTestPath };
+    static components = { HootTestPath, HootTestResult };
 
     static props = {
         test: Test,
     };
 
     static template = xml`
-        <div class="${HootDebugToolBar.name} absolute start-0 bottom-0 p-4 z-4 max-w-full">
-            <details class="flex flex-col overflow-hidden rounded shadow bg-gray-200 dark:bg-gray-800" open="">
-                <summary class="flex items-center gap-1 px-2 bg-gray-300 dark:bg-gray-700">
+        <div class="${HootDebugToolBar.name} absolute start-0 bottom-0 p-4 z-4 max-w-full max-h-full">
+            <div class="flex flex-col overflow-hidden rounded shadow bg-gray-200 dark:bg-gray-800">
+                <div class="flex items-center gap-2 px-2">
                     <i class="fa fa-bug text-skip" />
-                    <HootTestPath full="true" test="props.test" />
-                </summary>
-                <div class="flex gap-2 px-2">
                     <div class="flex gap-px rounded my-1 overflow-hidden min-w-fit">
                         <button class="bg-btn px-2 py-1" title="Exit debug mode (Ctrl + Esc)" t-on-click="exitDebugMode">
                             <i class="fa fa-sign-out" />
@@ -42,7 +40,11 @@ export class HootDebugToolBar extends Component {
                             </button>
                         </t>
                     </div>
-                    <div class="flex items-center gap-1 truncate">
+                    <button
+                        class="flex items-center gap-1 truncate"
+                        t-on-click="() => state.open = !state.open"
+                        title="Click to toggle details"
+                    >
                         status:
                         <strong
                             t-attf-class="text-{{ info.className }}"
@@ -67,9 +69,14 @@ export class HootDebugToolBar extends Component {
                             class="text-primary"
                             t-esc="formatTime(props.test.lastResults?.duration, 'ms')"
                         />
-                    </div>
+                    </button>
                 </div>
-            </details>
+                <t t-if="state.open">
+                    <HootTestResult open="true" test="props.test" t-key="done">
+                        <HootTestPath full="true" test="props.test" />
+                    </HootTestResult>
+                </t>
+            </div>
         </div>
     `;
 
@@ -81,6 +88,7 @@ export class HootDebugToolBar extends Component {
 
     setup() {
         this.runnerState = useState(this.env.runner.state);
+        this.state = useState({ open: false });
 
         onWillRender(() => {
             this.info = this.getInfo();
