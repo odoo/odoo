@@ -4791,8 +4791,8 @@
             if (x === cell) {
                 found = true;
             }
-            const cellValue = evaluateLiteral(x?.content);
-            if (filter(cellValue)) {
+            const cellValue = x?.isFormula ? undefined : evaluateLiteral(x?.content);
+            if (cellValue && filter(cellValue)) {
                 group.push(cellValue);
             }
             else {
@@ -21659,7 +21659,11 @@
             }
         }
         updateCellReferenceVisibility() {
-            if (this.isCellReferenceVisible || this.env.model.getters.getEditionMode() === "inactive") {
+            if (this.env.model.getters.getEditionMode() === "inactive") {
+                this.isCellReferenceVisible = false;
+                return;
+            }
+            if (this.isCellReferenceVisible) {
                 return;
             }
             const sheetId = this.env.model.getters.getActiveSheetId();
@@ -42447,6 +42451,9 @@
             this.scrollToSheet();
         }
         onDblClick() {
+            if (this.env.model.getters.isReadonly()) {
+                return;
+            }
             this.startEdition();
         }
         onKeyDown(ev) {
@@ -48032,9 +48039,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.27';
-    __info__.date = '2024-02-28T12:46:22.090Z';
-    __info__.hash = '7dc9484';
+    __info__.version = '16.3.28';
+    __info__.date = '2024-03-12T08:03:33.209Z';
+    __info__.hash = 'f0ddf07';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
