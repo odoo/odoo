@@ -285,6 +285,18 @@ def load_certificate():
     subprocess.check_call(["sudo", "service", "nginx", "restart"])
     return True
 
+def unlink_iot_handlers():
+    """
+    Unlink the drivers, interfaces and the contents of "lib" folder
+    """
+    try:
+        subprocess.run(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/drivers/*"], check=True)
+        subprocess.run(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/interfaces/*"], check=True)
+        subprocess.run(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/lib/*"], check=True)
+        _logger.info("Deleted old iot_handlers")
+    except subprocess.CalledProcessError:
+        _logger.exception("Failed to unlink iot_handlers")
+
 def download_iot_handlers(auto=True):
     """
     Get the drivers from the configured Odoo server
@@ -298,6 +310,7 @@ def download_iot_handlers(auto=True):
             resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto})
             if resp.data:
                 subprocess.call(["sudo", "mount", "-o", "remount,rw", "/"])
+                unlink_iot_handlers()
                 drivers_path = Path.home() / 'odoo/addons/hw_drivers/iot_handlers'
                 zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
                 zip_file.extractall(drivers_path)
