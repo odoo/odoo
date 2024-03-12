@@ -323,7 +323,7 @@ export class OdooEditor extends EventTarget {
 
         this._createCommandBar();
 
-        this.toolbarTablePicker = new TablePicker({ document: this.document });
+        this.toolbarTablePicker = new TablePicker({ document: this.document, direction: this.options.direction });
         this.toolbarTablePicker.addEventListener('cell-selected', ev => {
             this.execCommand('insertTable', {
                 rowNumber: ev.detail.rowNumber,
@@ -1957,6 +1957,7 @@ export class OdooEditor extends EventTarget {
             document: this.document,
             floating: true,
             getContextFromParentRect: this.options.getContextFromParentRect,
+            direction: this.options.direction,
         });
 
         document.body.appendChild(this.commandbarTablePicker.el);
