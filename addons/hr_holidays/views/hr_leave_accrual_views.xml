@@ -92,7 +92,6 @@
             <tree string="Accrual Plans">
                 <field name="name"/>
                 <field name="level_count"/>
-                <field name="time_off_type_id"/>
                 <field name="employees_count"/>
             </tree>
         </field>
@@ -249,7 +248,6 @@
         <field name="arch" type="xml">
             <search string="Group By">
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                <filter string="Time Off Type" name='time_off_type_id' context="{'group_by':'time_off_type_id'}"/>
                 <filter string="Company" name='company_id' context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
             </search>
         </field>
