@@ -35,7 +35,7 @@ export class HootTestResult extends Component {
 
     static template = xml`
         <details
-            class="flex flex-col border-b border-gray-300 dark:border-gray-600"
+            class="${HootTestResult.name} flex flex-col border-b border-gray-300 dark:border-gray-600"
             t-att-class="className"
             t-att-open="props.open"
         >
@@ -44,8 +44,8 @@ export class HootTestResult extends Component {
             </summary>
             <t t-if="!props.test.config.skip">
                 <div class="hoot-result-detail grid gap-1 rounded overflow-x-auto p-1 mx-2">
-                    <t t-set="lastResults" t-value="props.test.lastResults" />
-                    <t t-foreach="lastResults.assertions" t-as="assertion" t-key="assertion.id">
+                    <t t-set="lastResults" t-value="results[results.length - 1]" />
+                    <t t-foreach="lastResults?.assertions || []" t-as="assertion" t-key="assertion.id">
                         <div
                             t-attf-class="text-{{ assertion.pass ? 'pass' : 'fail' }} flex items-center gap-1 px-2 truncate"
                         >
@@ -64,7 +64,7 @@ export class HootTestResult extends Component {
                                 t-esc="assertion.message"
                             />
                         </div>
-                        <t t-set="timestamp" t-value="formatTime(assertion.ts - lastResults.ts, 'ms')" />
+                        <t t-set="timestamp" t-value="formatTime(assertion.ts - (lastResults?.ts || 0), 'ms')" />
                         <small class="text-muted flex items-center" t-att-title="timestamp">
                             <t t-esc="'@' + timestamp" />
                         </small>
@@ -77,7 +77,7 @@ export class HootTestResult extends Component {
                             </div>
                         </t>
                     </t>
-                    <t t-foreach="lastResults.errors" t-as="error" t-key="error_index">
+                    <t t-foreach="lastResults?.errors || []" t-as="error" t-key="error_index">
                         <div class="px-2 text-fail col-span-2">
                             Error while running test "<t t-esc="props.test.name" />"
                         </div>
@@ -154,6 +154,7 @@ export class HootTestResult extends Component {
     setup() {
         subscribeToURLParams("*");
 
+        this.results = useState(this.props.test.results);
         this.state = useState({
             showCode: false,
         });
