@@ -103,19 +103,10 @@ class Product(models.Model):
         if product_taxes:
             website = self.env['website'].get_current_website()
             fiscal_position = website.sudo().fiscal_position_id
-
-            price = self._get_tax_included_unit_price(
-                website.company_id,
-                website.currency_id,
-                fields.Date.context_today(self),
-                'sale',
-                fiscal_position=fiscal_position,
-                product_price_unit=price,
-                product_currency=website.currency_id,
-            )
-            line_tax_type = website.show_line_subtotals_tax_selection
-            tax_display = "total_included" if line_tax_type == "tax_included" else "total_excluded"
-
             taxes = fiscal_position.map_tax(product_taxes)
-            price = taxes.compute_all(price, product=self, partner=self.env['res.partner'])[tax_display]
+
+            price = self.env['product.template']._apply_taxes_to_price(
+                price, website.currency_id, product_taxes, taxes, product_or_template=self,
+            )
+
         return price
