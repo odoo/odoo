@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+sale_approve_route,sale.approve.route,model_sale_approve_route,,1,0,0,0
+sale_approve_route_user,sale.approve.route.user,model_sale_approve_route,sales_team.group_sale_salesman,1,1,1,0
+sale_approve_route_manager,sale.approve.route.manager,model_sale_approve_route,sales_team.group_sale_manager,1,1,1,1
+sale_teams,sale.teams,model_sale_teams,,1,0,0,0
+sale_teams_manager,sale.teams.manager,model_sale_teams,sales_team.group_sale_manager,1,1,1,1
+sale_team_member,sale.team.member,model_sale_team_member,,1,0,0,0
+sale_team_member_manager,sale.team.member.manager,model_sale_team_member,sales_team.group_sale_manager,1,1,1,1

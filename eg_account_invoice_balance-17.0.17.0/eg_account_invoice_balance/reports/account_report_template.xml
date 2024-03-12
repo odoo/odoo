@@ -1,0 +1,12 @@
+<odoo>
+    <template id="report_invoice_document_for_customer_credit" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='informations']" position="inside">
+            <t t-if="o.move_type in ['out_invoice', 'out_refund'] and o.print_customer_credit_on_invoice">
+                <div class="col-auto mw-100 mb-2" t-if="o.customer_credit">
+                    <strong>Customer Credit:</strong>
+                    <p t-field="o.customer_credit"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

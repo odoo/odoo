@@ -1,0 +1,52 @@
+<odoo>
+    <record id="sale_teams_tree_view" model="ir.ui.view">
+        <field name="name">sale.teams.tree.views</field>
+        <field name="model">sale.teams</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="team_lead_id"/>
+            </tree>
+        </field>
+    </record>
+    <record id="sale_teams_form_view" model="ir.ui.view">
+        <field name="name">sale.teams.form.views</field>
+        <field name="model">sale.teams</field>
+        <field name="arch" type="xml">
+            <form string="Sale">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="team_lead_id" options="{'no_create_edit': True, 'no_create': True}"/>
+                        </group>
+                        <group/>
+                    </group>
+                    <notebook>
+                        <page string="Members">
+                            <field name="team_member" mode="tree">
+                                <tree editable="bottom">
+                                    <field name="sale_team_id" invisible="1"/>
+                                    <field name="partner_id" options="{'no_create_edit': True, 'no_create': True}"/>
+                                    <field name="role"/>
+                                    <field name="min_amount"/>
+                                    <field name="max_amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="sale_teams_action" model="ir.actions.act_window">
+        <field name="name">Sale Approve Teams</field>
+        <field name="res_model">sale.teams</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem parent="sale.menu_sale_config" id="menu_sale_order_teams" action="sale_teams_action" groups="sales_team.group_sale_manager"/>
+</odoo>

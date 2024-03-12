@@ -1,0 +1,28 @@
+<odoo>
+    <record id="sale_order_inherited_dynamic_approve_form_view" model="ir.ui.view">
+        <field name="name">sale.order.inherited.dynamic.approve.form.view</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button string="Approve" type="object" name="approve_sale" invisible="state in ['sale', 'done', 'cancel']"/>
+                <button string="Disapprove" type="object" name="disapprove_sale" invisible="state in ['sale', 'done', 'cancel']"/>
+            </xpath>
+            <xpath expr="//sheet/group/group[1]" position="inside">
+                <field name="sale_team_id" areadonly="state not in ['draft', 'sent']" options="{'no_create_edit': True, 'no_create': True}"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Approve Route">
+                    <field name="sale_approve_line" mode="tree" readonly="1">
+                        <tree editable="bottom">
+                            <field name="sale_id" invisible="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="role" readonly="1"/>
+                            <field name="state" readonly="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
