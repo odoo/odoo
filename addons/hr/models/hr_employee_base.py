@@ -39,7 +39,7 @@ class HrEmployeeBase(models.AbstractModel):
     work_email = fields.Char('Work Email', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     email = fields.Char(related="user_id.email")
     work_contact_id = fields.Many2one('res.partner', 'Work Contact', copy=False)
-    work_location_id = fields.Many2one('hr.work.location', 'Work Location')
+    work_location_id = fields.Many2one('hr.work.location', 'Work Location', domain="[('address_id', '=', address_id)]")
     user_id = fields.Many2one('res.users')
     share = fields.Boolean(related='user_id.share')
     resource_id = fields.Many2one('resource.resource')
