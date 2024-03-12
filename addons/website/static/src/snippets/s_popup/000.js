@@ -3,7 +3,7 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { cookie } from "@web/core/browser/cookie";
 import {throttleForAnimation} from "@web/core/utils/timing";
-import { utils as uiUtils } from "@web/core/ui/ui_service";
+import { utils as uiUtils, SIZES } from "@web/core/ui/ui_service";
 import {setUtmsHtmlDataset} from '@website/js/content/inject_dom';
 
 // TODO In master, export this class too or merge it with PopupWidget
@@ -94,7 +94,21 @@ const PopupWidget = publicWidget.Widget.extend({
             this._showPopupOnClick();
         } else {
             this._popupAlreadyShown = !!cookie.get(this.$el.attr('id'));
-            if (!this._popupAlreadyShown) {
+            // Check if every child element of the popup is conditionally hidden,
+            // and if so, never show an empty popup.
+            // config.device.isMobile is true if the device is <= SM, but the device
+            // visibility option uses < LG to hide on mobile. So compute it here.
+            const isMobile = uiUtils.getSize() < SIZES.LG;
+            const emptyPopup = [
+                ...this.$el[0].querySelectorAll(".oe_structure > *:not(.s_popup_close)")
+            ].every((el) => {
+                const visibilitySelectors = el.dataset.visibilitySelectors;
+                const deviceInvisible = isMobile
+                    ? el.classList.contains("o_snippet_mobile_invisible")
+                    : el.classList.contains("o_snippet_desktop_invisible");
+                return (visibilitySelectors && el.matches(visibilitySelectors)) || deviceInvisible;
+            });
+            if (!this._popupAlreadyShown && !emptyPopup) {
                 this._bindPopup();
             }
         }
