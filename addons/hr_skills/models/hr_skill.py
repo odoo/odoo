@@ -12,6 +12,7 @@ class Skill(models.Model):
     name = fields.Char(required=True)
     sequence = fields.Integer(default=10)
     skill_type_id = fields.Many2one('hr.skill.type', required=True, ondelete='cascade')
+    color = fields.Integer(related='skill_type_id.color')
 
     @api.depends('skill_type_id')
     @api.depends_context('from_skill_dropdown')
