@@ -22,6 +22,7 @@
     position: sticky;
     top: 0;
     z-index: $zindex-dropdown - 1;
+    display: none;
 
     .email_designer_top_actions {
         display: flex;
@@ -42,6 +43,7 @@
         }
     }
     &.o_loaded {
+        display: flex;
         transform: translateX(0);
 
         > .o_we_customize_panel .oe-toolbar {
