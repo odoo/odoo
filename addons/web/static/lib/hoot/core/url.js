@@ -2,7 +2,7 @@
 
 import { onWillRender, reactive, useState } from "@odoo/owl";
 import { isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
-import { isNil } from "../hoot_utils";
+import { debounce, isNil } from "../hoot_utils";
 import { CONFIG_KEYS, CONFIG_SCHEMA, FILTER_KEYS, FILTER_SCHEMA } from "./config";
 
 /**
@@ -15,13 +15,13 @@ import { CONFIG_KEYS, CONFIG_SCHEMA, FILTER_KEYS, FILTER_SCHEMA } from "./config
 // Global
 //-----------------------------------------------------------------------------
 
-const { Object, Set, URIError, URL, URLSearchParams, history, location } = globalThis;
+const { history, location, Object, Set, URIError, URL, URLSearchParams } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
 
-const processParams = () => {
+const debouncedUpdateUrl = debounce(function updateUrl() {
     const url = createURL({});
     url.search = "";
     for (const [key, value] of Object.entries(urlParams)) {
@@ -35,33 +35,9 @@ const processParams = () => {
             url.searchParams.set(key, String(value));
         }
     }
-    return url;
-};
-
-const processURL = () => {
-    const searchParams = new URLSearchParams(location.search);
-    const searchKeys = new Set(searchParams.keys());
-    for (const [configKey, { aliases, parse }] of Object.entries({
-        ...CONFIG_SCHEMA,
-        ...FILTER_SCHEMA,
-    })) {
-        const configKeys = [configKey, ...(aliases || [])];
-        /** @type {string[]} */
-        const values = [];
-        let hasKey = false;
-        for (const key of configKeys) {
-            if (searchKeys.has(key)) {
-                hasKey = true;
-                values.push(...searchParams.getAll(key).filter(Boolean));
-            }
-        }
-        if (hasKey) {
-            urlParams[configKey] = parse(values);
-        } else {
-            delete urlParams[configKey];
-        }
-    }
-};
+    const path = url.toString();
+    history.replaceState({ path }, "", path);
+}, 20);
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -88,18 +64,6 @@ export function createURL(params) {
     return url;
 }
 
-/**
- * @param {string | URL} url
- * @param {string | URL} url
- */
-export function goto(url, silent = false) {
-    url = url.toString();
-    history.replaceState({ path: url }, "", url);
-    if (!silent) {
-        processURL();
-    }
-}
-
 export function refresh() {
     history.go();
 }
@@ -119,7 +83,7 @@ export function setParams(params) {
         }
     }
 
-    goto(processParams(), true);
+    debouncedUpdateUrl();
 }
 
 /**
@@ -139,4 +103,27 @@ export const EXCLUDE_PREFIX = "-";
 /** @type {Partial<DEFAULT_CONFIG & DEFAULT_FILTERS>} */
 export const urlParams = reactive({});
 
-processURL();
+// Update URL params immediatly
+
+const searchParams = new URLSearchParams(location.search);
+const searchKeys = new Set(searchParams.keys());
+for (const [configKey, { aliases, parse }] of Object.entries({
+    ...CONFIG_SCHEMA,
+    ...FILTER_SCHEMA,
+})) {
+    const configKeys = [configKey, ...(aliases || [])];
+    /** @type {string[]} */
+    const values = [];
+    let hasKey = false;
+    for (const key of configKeys) {
+        if (searchKeys.has(key)) {
+            hasKey = true;
+            values.push(...searchParams.getAll(key).filter(Boolean));
+        }
+    }
+    if (hasKey) {
+        urlParams[configKey] = parse(values);
+    } else {
+        delete urlParams[configKey];
+    }
+}
