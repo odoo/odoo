@@ -1605,7 +1605,7 @@
                             <t t-if="line.discount">
                                 <del t-attf-class="#{'text-danger mr8'}"
                                      style="white-space: nowrap;"
-                                     t-out="line.price_unit * line.product_uom_qty"
+                                     t-out="line._get_displayed_unit_price() * line.product_uom_qty"
                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                             </t>
                             <t t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"

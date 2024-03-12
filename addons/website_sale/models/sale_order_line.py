@@ -70,6 +70,14 @@ class SaleOrderLine(models.Model):
             self.shop_warning = ''
         return warn
 
+    def _get_displayed_unit_price(self):
+        show_tax = self.order_id.website_id.show_line_subtotals_tax_selection
+        tax_display = 'total_excluded' if show_tax == 'tax_excluded' else 'total_included'
+
+        return self.tax_id.compute_all(
+            self.price_unit, self.currency_id, 1, self.product_id, self.order_partner_id,
+        )[tax_display]
+
     def _show_in_cart(self):
         self.ensure_one()
         # Exclude delivery line from showing up in the cart
