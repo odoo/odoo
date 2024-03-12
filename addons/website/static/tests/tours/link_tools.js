@@ -126,7 +126,28 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: 'iframe .popover div a:contains("http://odoo.com")',
         isCheck: true,
     },
+    ...wTourUtils.clickOnSave(),
+    {
+        content: "Check that the first image was saved.",
+        trigger: '.s_three_columns .row > :nth-child(1) div > a > img',
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Check that the second image was saved.",
+        trigger: '.s_three_columns .row > :nth-child(2) div > img',
+        run: () => {}, // It's a check.
+    },
     // 5. Remove link from image.
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    {
+        content: "Reselect the first image.",
+        trigger: '.s_three_columns .row > :nth-child(1) div > a > img',
+    },
+    {
+        content: "Check that link tools appear.",
+        trigger: '.popover div a:contains("http://odoo.com")',
+        run: () => {}, // It's a check.
+    },
     {
         content: "Remove link.",
         trigger: 'iframe .popover:contains("http://odoo.com") a .fa-chain-broken',
