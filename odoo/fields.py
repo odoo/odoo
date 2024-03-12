@@ -190,19 +190,19 @@ class Field(MetaField('DummyField', (object,), {})):
         * ``bool_or`` : true if at least one value is true, otherwise false
         * ``max`` : maximum value of all values
         * ``min`` : minimum value of all values
-        * ``avg`` : the average (arithmetic mean) of all values. 
-                    Note: In some cases the average needs to be derived from other fields. 
+        * ``avg`` : the average (arithmetic mean) of all values.
+                    Note: In some cases the average needs to be derived from other fields.
                     See: ``averege_numerator`` and ``average_divisor``.
         * ``sum`` : sum of all values
-        
+
         Averaging based on related values and avereging percentages:
-        In some cases taking the average of all values is not valid, for example when averaging percentages. 
+        In some cases taking the average of all values is not valid, for example when averaging percentages.
         To get a valid aggragete percentage, we have to calculated it based on the aggregates of other values.
-        These fields can be defined by setting the ``average_numerator`` and ``average_divisor`` parameters
-        
+        These fields can be defined by setting the ``average_numerator`` and ``average_divisor`` parameters.
+
     :param str average_numerator: optional aggragate field used in conjunction with ``group_operator`` 'avg'.
-    
-    :param str average_divisor: optional aggragate field used in conjunction with ``group_operator`` 'avg'    
+
+    :param str average_divisor: optional aggragate field used in conjunction with ``group_operator`` 'avg'.
 
     :param str group_expand: function used to expand read_group results when grouping on
         the current field.

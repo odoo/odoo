@@ -2550,7 +2550,7 @@ class BaseModel(metaclass=MetaModel):
             expr = self._inherits_join_calc(self._table, fname, query)
             if func.lower() == 'count_distinct':
                 term = 'COUNT(DISTINCT %s) AS "%s"' % (expr, name)
-            elif func.lower() == 'avg': 
+            elif func.lower() == 'avg':
                 if field.average_numerator:
                     expr = self._inherits_join_calc(self._table, field.average_numerator, query)
                 if field.average_divisor:
