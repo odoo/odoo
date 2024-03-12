@@ -41,6 +41,7 @@ from . import test_translate
 from . import test_user_has_group
 from . import test_views
 from . import test_xmlrpc
+from . import test_res_country
 from . import test_res_partner
 from . import test_res_partner_bank
 from . import test_res_users
