@@ -246,12 +246,17 @@ export function batch(fn, interval) {
  * @returns {T}
  */
 export function debounce(fn, delay) {
-    let timeout;
+    let timeout = 0;
     const name = `${fn.name} (debounced)`;
     return {
         [name](...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => fn(args), delay);
+            if (timeout) {
+                clearTimeout(timeout);
+            }
+            timeout = setTimeout(() => {
+                timeout = 0;
+                fn(args);
+            }, delay);
         },
     }[name];
 }

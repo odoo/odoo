@@ -6,7 +6,7 @@ import { isRegExpFilter, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils
 import { Suite } from "../core/suite";
 import { Tag } from "../core/tag";
 import { Test } from "../core/test";
-import { EXCLUDE_PREFIX, refresh, setParams } from "../core/url";
+import { EXCLUDE_PREFIX, refresh } from "../core/url";
 import { debounce, lookup, normalize, title, useWindowListener } from "../hoot_utils";
 import { HootTagButton } from "./hoot_tag_button";
 
@@ -295,7 +295,7 @@ export class HootSearch extends Component {
                         <input
                             type="checkbox"
                             class="hidden"
-                            t-att-checked="env.runner.config.debugTest"
+                            t-att-checked="config.debugTest"
                             t-att-disabled="isRunning"
                             t-on-change="toggleDebug"
                         />
@@ -347,7 +347,8 @@ export class HootSearch extends Component {
         this.rootRef = useRef("root");
         this.searchInputRef = useRef("search-input");
 
-        const query = runner.config.filter || "";
+        this.config = useState(runner.config);
+        const query = this.config.filter || "";
         this.state = useState({
             categories: {
                 /** @type {Suite[]} */
@@ -589,7 +590,7 @@ export class HootSearch extends Component {
             }
         }
 
-        if (this.env.runner.config.fun) {
+        if (this.config.fun) {
             this.verifySecretSequenceStep(ev);
         }
     }
@@ -634,7 +635,7 @@ export class HootSearch extends Component {
     }
 
     toggleDebug() {
-        setParams({ debugTest: !this.env.runner.config.debugTest });
+        this.config.debugTest = !this.config.debugTest;
     }
 
     toggleRegExp() {
@@ -675,19 +676,15 @@ export class HootSearch extends Component {
             this.useTextFilter = setUseTextFilter;
         }
         if (this.useTextFilter) {
-            setParams({
-                filter: this.state.query.trim(),
-                suite: null,
-                tag: null,
-                test: null,
-            });
+            this.config.filter = this.state.query.trim();
+            this.config.suite = [];
+            this.config.tag = [];
+            this.config.test = [];
         } else {
-            setParams({
-                filter: null,
-                suite: formatIncludes(this.runnerState.includeSpecs.suites),
-                tag: formatIncludes(this.runnerState.includeSpecs.tags),
-                test: formatIncludes(this.runnerState.includeSpecs.tests),
-            });
+            this.config.filter = "";
+            this.config.suite = formatIncludes(this.runnerState.includeSpecs.suites);
+            this.config.tag = formatIncludes(this.runnerState.includeSpecs.tags);
+            this.config.test = formatIncludes(this.runnerState.includeSpecs.tests);
         }
     }
 

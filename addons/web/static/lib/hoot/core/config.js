@@ -77,7 +77,7 @@ export const CONFIG_SCHEMA = {
      * Amount of frames rendered per second, used when mocking animation frames.
      * @default 60
      */
-    frameRate: {
+    fps: {
         default: 60,
         parse: parseNumber(60),
     },
