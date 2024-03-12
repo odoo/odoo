@@ -2,12 +2,12 @@
 /* global posmodel */
 
 import { registry } from "@web/core/registry";
-import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
+import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import { roundDecimals as round_di } from "@web/core/utils/numbers";
-import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
-import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
-import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
-import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
+import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
+import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
+import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
+import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 
 function assert(condition, message) {
     if (!condition) {
