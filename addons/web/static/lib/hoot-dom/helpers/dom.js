@@ -758,6 +758,11 @@ customPseudoClasses
             return !matches(node, content);
         };
     })
+    .set("only", () => {
+        return function only(node, i, nodes) {
+            return nodes.length === 1;
+        };
+    })
     .set("scrollable", () => {
         return function scrollable(node) {
             return isNodeScrollable(node);
