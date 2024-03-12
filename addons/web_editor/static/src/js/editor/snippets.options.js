@@ -6874,7 +6874,11 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
             this.$target.addClass('oe_img_bg o_bg_img_center');
         } else {
             delete parts.url;
-            this.$target.removeClass('oe_img_bg o_bg_img_center');
+            this.$target[0].classList.remove(
+                "oe_img_bg",
+                "o_bg_img_center",
+                "o_modified_image_to_save",
+            );
         }
         const combined = backgroundImagePartsToCss(parts);
         this.$target.css('background-image', combined);
