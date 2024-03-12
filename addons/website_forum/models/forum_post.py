@@ -336,7 +336,7 @@ class Post(models.Model):
             # add karma for posting new questions
             if not post.parent_id and post.state == 'active':
                 post.create_uid.sudo()._add_karma(post.forum_id.karma_gen_question_new, post, _('Ask a new question'))
-        posts.post_notification()
+        posts.sudo().post_notification()
         return posts
 
     def unlink(self):
@@ -542,7 +542,7 @@ class Post(models.Model):
                 'active': True,
                 'moderator_id': self.env.user.id,
             })
-            post.post_notification()
+            post.sudo().post_notification()
         return True
 
     def refuse(self):

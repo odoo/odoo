@@ -1189,27 +1189,15 @@ class TestComposerInternals(TestMailComposer):
 
         # patch check access rights for write access, required to post a message by default
         with patch.object(MailTestTicket, 'check_access_rights', return_value=True):
-            self.env['mail.compose.message'].with_user(portal_user).with_context(
-                self._get_web_context(self.test_record)
-            ).create({
-                'subject': 'Subject',
-                'body': '<p>Body text</p>',
-                'partner_ids': []
-            })._action_send_mail()
-
-            self.assertEqual(self.test_record.message_ids[0].body, '<p>Body text</p>')
-            self.assertEqual(self.test_record.message_ids[0].author_id, portal_user.partner_id)
-
-            self.env['mail.compose.message'].with_user(portal_user).with_context({
-                'default_composition_mode': 'comment',
-                'default_parent_id': self.test_record.message_ids.ids[0],
-            }).create({
-                'subject': 'Subject',
-                'body': '<p>Body text 2</p>'
-            })._action_send_mail()
-
-            self.assertEqual(self.test_record.message_ids[0].body, '<p>Body text 2</p>')
-            self.assertEqual(self.test_record.message_ids[0].author_id, portal_user.partner_id)
+            with self.assertRaises(AccessError):
+                # ensure portal can not send messages
+                self.env['mail.compose.message'].with_user(portal_user).with_context(
+                    self._get_web_context(self.test_record)
+                ).create({
+                    'subject': 'Subject',
+                    'body': '<p>Body text</p>',
+                    'partner_ids': []
+                })._action_send_mail()
 
     @users('employee')
     def test_mail_composer_save_template(self):
