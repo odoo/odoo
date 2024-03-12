@@ -205,7 +205,7 @@ class AccountPayment(models.Model):
         return lines
 
     def _get_valid_liquidity_accounts(self):
-        journal_comp = self.journal_id.company_id
+        journal_comp = self.journal_id.company_id or self.env.company
         accessible_branches = journal_comp.with_company(journal_comp)._accessible_branches()
         return (
             self.journal_id.default_account_id |
