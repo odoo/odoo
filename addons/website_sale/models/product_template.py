@@ -725,6 +725,24 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return [self] + list(self.product_template_image_ids)
 
+    def _get_attrib_values_domain(self, attribute_values):
+        attribute_id = None
+        attribute_value_ids = []
+        domains = []
+        for value in attribute_values:
+            if not attribute_id:
+                attribute_id = value[0]
+                attribute_value_ids.append(value[1])
+            elif value[0] == attribute_id:
+                attribute_value_ids.append(value[1])
+            else:
+                domains.append([('attribute_line_ids.value_ids', 'in', attribute_value_ids)])
+                attribute_id = value[0]
+                attribute_value_ids = [value[1]]
+        if attribute_id:
+            domains.append([('attribute_line_ids.value_ids', 'in', attribute_value_ids)])
+        return domains
+
     @api.model
     def _search_get_detail(self, website, order, options):
         with_image = options['displayImage']
@@ -748,20 +766,7 @@ class ProductTemplate(models.Model):
         if max_price:
             domains.append([('list_price', '<=', max_price)])
         if attrib_values:
-            attrib = None
-            ids = []
-            for value in attrib_values:
-                if not attrib:
-                    attrib = value[0]
-                    ids.append(value[1])
-                elif value[0] == attrib:
-                    ids.append(value[1])
-                else:
-                    domains.append([('attribute_line_ids.value_ids', 'in', ids)])
-                    attrib = value[0]
-                    ids = [value[1]]
-            if attrib:
-                domains.append([('attribute_line_ids.value_ids', 'in', ids)])
+            domains.extend(self._get_attrib_values_domain(attrib_values))
         search_fields = ['name', 'default_code', 'product_variant_ids.default_code']
         fetch_fields = ['id', 'name', 'website_url']
         mapping = {
