@@ -4,40 +4,40 @@
     <t t-name="discuss.CallActionList">
         <div class="o-discuss-CallActionList d-flex justify-content-center" t-attf-class="{{ className }}" t-ref="root">
             <div class="d-flex align-items-center flex-wrap justify-content-between" t-att-class="{ 'w-100 ps-2 pe-2': isSmall }">
-                <t t-if="isOfActiveCall and rtc.state.selfSession">
-                    <t t-if="rtc.state?.selfSession.isMute" t-set="micText">Unmute</t>
+                <t t-if="!props.thread.rtcInvitingSession">
+                    <t t-if="this.rtcState.selfSession.isMute" t-set="micText">Unmute</t>
                     <t t-else="" t-set="micText">Mute</t>
                     <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
                         t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
                         t-att-aria-label="micText"
                         t-att-title="micText"
-                        t-on-click="onClickMicrophone">
+                        t-on-click="onClickCallAction.bind(this, 'microphone')">
                         <div class="fa-stack">
                             <i class="fa fa-stack-1x" t-att-class="{
                                 'fa-lg': !isSmall,
-                                'fa-microphone': !rtc.state.selfSession.isMute,
-                                'fa-microphone-slash': rtc.state.selfSession.isMute,
-                                'text-danger': rtc.state.selfSession.isMute,
+                                'fa-microphone': !this.rtcState.selfSession.isMute,
+                                'fa-microphone-slash': this.rtcState.selfSession.isMute,
+                                'text-danger': this.rtcState.selfSession.isMute,
                             }"/>
                         </div>
                     </button>
-                    <t t-if="rtc.state?.selfSession.isDeaf" t-set="headphoneText">Undeafen</t>
+                    <t t-if="this.rtcState.selfSession.isDeaf" t-set="headphoneText">Undeafen</t>
                     <t t-else="" t-set="headphoneText">Deafen</t>
                     <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
                         t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
                         t-att-aria-label="headphoneText"
                         t-att-title="headphoneText"
-                        t-on-click="onClickDeafen">
+                        t-on-click="onClickCallAction.bind(this, 'deaf')">
                         <div class="fa-stack">
                             <i class="fa fa-stack-1x" t-att-class="{
                                 'fa-lg': !isSmall,
-                                'fa-headphones': !rtc.state.selfSession.isDeaf,
-                                'fa-deaf': rtc.state.selfSession.isDeaf,
-                                'text-danger': rtc.state.selfSession.isDeaf,
+                                'fa-headphones': !this.rtcState.selfSession.isDeaf,
+                                'fa-deaf': this.rtcState.selfSession.isDeaf,
+                                'text-danger': this.rtcState.selfSession.isDeaf,
                             }"/>
                         </div>
                     </button>
-                    <t t-if="rtc.state.sendCamera" t-set="cameraText">Stop camera</t>
+                    <t t-if="rtcState.sendCamera" t-set="cameraText">Stop camera</t>
                     <t t-else="" t-set="cameraText">Turn camera on</t>
                     <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
                         t-att-class="{
@@ -46,9 +46,9 @@
                         }"
                         t-att-aria-label="cameraText"
                         t-att-title="cameraText"
-                        t-on-click="() => this.rtc.toggleVideo('camera')">
+                        t-on-click="onClickCallAction.bind(this, 'camera')">
                         <div class="fa-stack">
-                            <i class="fa fa-video-camera fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall, 'text-success': rtc.state.sendCamera }"/>
+                            <i class="fa fa-video-camera fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall, 'text-success': rtcState.sendCamera }"/>
                         </div>
                     </button>
                     <Dropdown position="'top-end'" menuClass="'d-flex flex-column py-0'">
@@ -75,11 +75,12 @@
                         <i class="fa fa-times fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
                     </div>
                 </button>
-                <t t-if="props.thread.eq(rtc.state.channel)" t-set="callText">Disconnect</t>
+                <t t-set="isActive" t-value="isOfActiveCall || !!rtc.sharedState.channelId"/>
+                <t t-if="isActive" t-set="callText">Disconnect</t>
                 <t t-else="" t-set="callText">Join Call</t>
                 <button class="btn d-flex m-1 border-0 rounded-circle shadow-none"
                     t-att-aria-label="callText"
-                    t-att-class="{ 'btn-danger': isOfActiveCall, 'p-2': isSmall, 'p-3': !isSmall, 'btn-success': !isOfActiveCall }"
+                    t-att-class="{ 'btn-danger': isActive, 'p-2': isSmall, 'p-3': !isSmall, 'btn-success': !isActive }"
                     t-att-disabled="rtc.state.hasPendingRequest"
                     t-att-title="callText"
                     t-on-click="onClickToggleAudioCall">

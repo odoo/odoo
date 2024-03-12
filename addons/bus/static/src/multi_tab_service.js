@@ -96,6 +96,16 @@ export const multiTabService = {
             }
         }
 
+        function getAnyOtherTabId() {
+            const lastPresenceByTab = getItemFromStorage("lastPresenceByTab", {});
+            for (const tab of Object.entries(lastPresenceByTab)) {
+                if (tab[0] === tabId) {
+                    continue;
+                }
+                return tab[0];
+            }
+        }
+
         function heartbeat() {
             const now = new Date().getTime();
             let heartbeatValue = getItemFromStorage("heartbeat", 0);
@@ -183,7 +193,7 @@ export const multiTabService = {
             get currentTabId() {
                 return tabId;
             },
-            startElection,
+            getAnyOtherTabId,
             /**
              * Determine whether or not this tab is the main one.
              *

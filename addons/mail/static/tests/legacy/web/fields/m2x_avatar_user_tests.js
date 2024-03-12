@@ -30,6 +30,7 @@ const fakeMultiTab = {
             },
             setSharedValue(key, value) {},
             removeSharedValue(key) {},
+            broadcast() {},
         };
     },
 };

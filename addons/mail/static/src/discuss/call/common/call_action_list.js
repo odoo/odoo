@@ -14,6 +14,7 @@ export class CallActionList extends Component {
     setup() {
         super.setup();
         this.rtc = useState(useService("discuss.rtc"));
+        this.multiTab = useService("multi_tab");
     }
 
     get MORE() {
@@ -24,16 +25,16 @@ export class CallActionList extends Component {
         const acts = [];
         acts.push({
             id: "raiseHand",
-            name: !this.rtc.state?.selfSession.raisingHand ? _t("Raise Hand") : _t("Lower Hand"),
+            name: !this.rtcState.selfSession.raisingHand ? _t("Raise Hand") : _t("Lower Hand"),
             icon: "fa fa-fw fa-hand-paper-o",
-            onSelect: (ev) => this.onClickRaiseHand(ev),
+            onSelect: (ev) => this.onClickCallAction("raiseHand", ev),
         });
-        if (isMobileOS) {
+        if (isMobileOS && (this.rtcState.sendScreen || this.isOfActiveCall)) {
             acts.push({
                 id: "shareScreen",
-                name: !this.rtc.state.sendScreen ? _t("Share Screen") : _t("Stop Sharing Screen"),
+                name: !this.rtcState.sendScreen ? _t("Share Screen") : _t("Stop Sharing Screen"),
                 icon: "fa fa-fw fa-desktop",
-                onSelect: () => this.rtc.toggleVideo("screen"),
+                onSelect: (ev) => this.onClickCallAction('screen', ev),
             });
         }
         if (!this.props.fullscreen.isActive) {
@@ -66,34 +67,19 @@ export class CallActionList extends Component {
         return isMobileOS();
     }
 
-    /**
-     * @param {MouseEvent} ev
-     */
-    async onClickDeafen(ev) {
-        if (this.rtc.state.selfSession.isDeaf) {
-            this.rtc.undeafen();
-        } else {
-            this.rtc.deafen();
-        }
-    }
-
-    async onClickRaiseHand(ev) {
-        this.rtc.raiseHand(!this.rtc.state.selfSession.raisingHand);
+    get rtcState() {
+        return this.isOfActiveCall ? this.rtc.state : this.rtc.sharedState;
     }
 
     /**
+     * @param {String} type
      * @param {MouseEvent} ev
      */
-    onClickMicrophone(ev) {
-        if (this.rtc.state.selfSession.isMute) {
-            if (this.rtc.state.selfSession.isSelfMuted) {
-                this.rtc.unmute();
-            }
-            if (this.rtc.state.selfSession.isDeaf) {
-                this.rtc.undeafen();
-            }
+    async onClickCallAction(type, ev) {
+        if (!this.isOfActiveCall) {
+            this.multiTab.broadcast("discuss.rtc/toggle", { type });
         } else {
-            this.rtc.mute();
+            await this.rtc.callActionByType(type);
         }
     }
 
@@ -111,6 +97,15 @@ export class CallActionList extends Component {
      * @param {MouseEvent} ev
      */
     async onClickToggleAudioCall(ev) {
-        await this.rtc.toggleCall(this.props.thread);
+        const isActive = this.isOfActiveCall || this.rtc.sharedState.channelId;
+        if (isActive) {
+            this.multiTab.broadcast("discuss.rtc/leaveCall", {
+                id: this.props.thread.id,
+                model: this.props.thread.model,
+            });
+        }
+        if (!isActive || this.isOfActiveCall) {
+            await this.rtc.toggleCall(this.props.thread);
+        }
     }
 }

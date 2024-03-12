@@ -28,21 +28,29 @@ const StorePatch = {
     },
     onStarted() {
         super.onStarted(...arguments);
-        debugger;
-        this.multiTab.bus.addEventListener("mail.activity/insert", ({ detail }) => {
-            this.store.Activity.insert(detail, { broadcast: false, html: true });
-        });
-        this.multiTab.bus.addEventListener("mail.activity/delete", ({ detail }) => {
-            const activity = this.store.Activity.insert(detail, { broadcast: false });
-            this.delete(activity, { broadcast: false });
-        });
-        this.multiTab.bus.addEventListener("mail.activity/reload_chatter", ({ detail }) => {
-            const thread = this.store.Thread.insert({
-                model: detail.model,
-                id: detail.id,
-            });
-            this.env.services["mail.thread"].fetchNewMessages(thread);
-        });
+        this.env.services["multi_tab"].bus.addEventListener(
+            "mail.activity/insert",
+            ({ detail }) => {
+                this.store.Activity.insert(detail, { broadcast: false, html: true });
+            }
+        );
+        this.env.services["multi_tab"].bus.addEventListener(
+            "mail.activity/delete",
+            ({ detail }) => {
+                const activity = this.store.Activity.insert(detail, { broadcast: false });
+                activity.delete({ broadcast: false });
+            }
+        );
+        this.env.services["multi_tab"].bus.addEventListener(
+            "mail.activity/reload_chatter",
+            ({ detail }) => {
+                const thread = this.store.Thread.insert({
+                    model: detail.model,
+                    id: detail.id,
+                });
+                thread.fetchNewMessages();
+            }
+        );
     },
     get initMessagingParams() {
         return {

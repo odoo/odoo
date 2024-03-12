@@ -69,7 +69,7 @@ export class Activity extends Record {
         if (broadcast) {
             this.store.env.services["multi_tab"].broadcast(
                 "mail.activity/insert",
-                this.store.env.services["mail.activity"]._serialize(activity)
+                activity.serialize()
             );
         }
         return activity;
