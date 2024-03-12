@@ -172,10 +172,8 @@ class TestActivitySchedule(ActivityScheduleHRCase):
         self.plan_onboarding.res_model = 'res.partner'
         self.plan_onboarding.res_model = 'hr.employee'
         self.plan_onboarding.department_id = self.department_a
-        with self.assertRaises(
-                UserError,
-                msg="Department can only be set with employee plan."):
-            self.plan_onboarding.res_model = 'res.partner'
+        self.plan_onboarding.res_model = 'res.partner'
+        self.assertFalse(self.plan_onboarding.department_id)
 
     def test_responsible(self):
         """ Check that the responsible is correctly configured. """
