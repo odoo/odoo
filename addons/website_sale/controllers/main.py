@@ -11,7 +11,7 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import request, route
 from odoo.osv import expression
-from odoo.tools import float_round, lazy, single_email_re, str2bool
+from odoo.tools import float_round, groupby, lazy, single_email_re, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
 
 from odoo.addons.http_routing.models.ir_http import slug
@@ -138,20 +138,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             domains.append([('public_categ_ids', 'child_of', int(category))])
 
         if attrib_values:
-            attrib = None
-            ids = []
-            for value in attrib_values:
-                if not attrib:
-                    attrib = value[0]
-                    ids.append(value[1])
-                elif value[0] == attrib:
-                    ids.append(value[1])
-                else:
-                    domains.append([('attribute_line_ids.value_ids', 'in', ids)])
-                    attrib = value[0]
-                    ids = [value[1]]
-            if attrib:
-                domains.append([('attribute_line_ids.value_ids', 'in', ids)])
+            domains.extend(request.env['product.template']._get_attrib_values_domain(attrib_values))
 
         return expression.AND(domains)
 
@@ -197,12 +184,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return fuzzy_search_term, product_count, search_result
 
     def _shop_get_query_url_kwargs(
-        self, category, search, min_price, max_price, attrib=None, order=None, tags=None, **post
+        self, category, search, min_price, max_price, order=None, tags=None, **post
     ):
         return {
             'category': category,
             'search': search,
-            'attrib': attrib,
             'tags': tags,
             'min_price': min_price,
             'max_price': max_price,
@@ -255,7 +241,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ppr = website.shop_ppr or 4
 
         request_args = request.httprequest.args
-        attrib_list = request_args.getlist('attrib')
+        attrib_list = request_args.getlist('attribute_value')
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
         attributes_ids = {v[0] for v in attrib_values}
         attrib_set = {v[1] for v in attrib_values}
@@ -299,8 +285,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         url = '/shop'
         if search:
             post['search'] = search
-        if attrib_list:
-            post['attrib'] = attrib_list
 
         options = self._get_search_options(
             category=category,
@@ -395,6 +379,17 @@ class WebsiteSale(payment_portal.PaymentPortal):
         fiscal_position_sudo = website.fiscal_position_id.sudo()
         products_prices = lazy(lambda: products._get_sales_prices(pricelist, fiscal_position_sudo))
 
+        attributes_values = request.env['product.attribute.value'].browse(attrib_set)
+        sorted_attributes_values = attributes_values.sorted('sequence')
+        multi_attributes_values = sorted_attributes_values.filtered(lambda av: av.display_type == 'multi')
+        single_attributes_values = sorted_attributes_values - multi_attributes_values
+        grouped_attributes_values = list(groupby(single_attributes_values, lambda av: av.attribute_id.id))
+        grouped_attributes_values.extend([(av.attribute_id.id, [av]) for av in multi_attributes_values])
+
+        selected_attributes_hash = grouped_attributes_values and "#attribute_values=%s" % (
+            ','.join(str(v[0].id) for k, v in grouped_attributes_values)
+        ) or ''
+
         values = {
             'search': fuzzy_search_term or search,
             'original_search': fuzzy_search_term and search,
@@ -415,6 +410,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'categories': categs,
             'attributes': attributes,
             'keep': keep,
+            'selected_attributes_hash': selected_attributes_hash,
             'search_categories_ids': search_categories.ids,
             'layout_mode': layout_mode,
             'products_prices': products_prices,
@@ -613,11 +609,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         product = request.env['product.product'].browse(product_id)
         return product._is_add_to_cart_allowed()
 
-    def _product_get_query_url_kwargs(self, category, search, attrib=None, **kwargs):
+    def _product_get_query_url_kwargs(self, category, search, **kwargs):
         return {
             'category': category,
             'search': search,
-            'attrib': attrib,
             'tags': kwargs.get('tags'),
             'min_price': kwargs.get('min_price'),
             'max_price': kwargs.get('max_price'),
@@ -628,10 +623,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         if category:
             category = ProductCategory.browse(int(category)).exists()
-
-        attrib_list = request.httprequest.args.getlist('attrib')
-        attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
-        attrib_set = {v[1] for v in attrib_values}
 
         keep = QueryURL(
             '/shop',
@@ -649,8 +640,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'search': search,
             'category': category,
             'pricelist': request.website.pricelist_id,
-            'attrib_values': attrib_values,
-            'attrib_set': attrib_set,
             'keep': keep,
             'categories': ProductCategory.search([('parent_id', '=', False)]),
             'main_object': product,

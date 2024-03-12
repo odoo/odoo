@@ -174,7 +174,7 @@
             <t t-set="display_detail" t-valuef="true"/>
             <t t-if="attrib_values">
                 <t t-foreach="attrib_values" t-as="a">
-                    <input type="hidden" name="attrib" t-att-value="'%s-%s' % (a[0], a[1])" />
+                    <input type="hidden" name="attribute_value" t-att-value="'%s-%s' % (a[0], a[1])" />
                 </t>
             </t>
         </t>
@@ -184,8 +184,7 @@
         <form action="/shop/cart/update" method="post" class="oe_product_cart h-100 d-flex"
             t-att-data-publish="product.website_published and 'on' or 'off'"
             itemscope="itemscope" itemtype="http://schema.org/Product">
-
-            <t t-set="product_href" t-value="keep(product.website_url, page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" />
+            <t t-set="product_href" t-value="keep(product.website_url, page=(pager['page']['num'] if pager['page']['num']&gt;1 else None)) + selected_attributes_hash" />
             <t t-set="image_type" t-value="product._get_suitable_image_size(ppr, td_product['x'], td_product['y'])"/>
 
             <div class="oe_product_image position-relative h-100 flex-grow-0 overflow-hidden">
@@ -325,7 +324,7 @@
                 <div class="container oe_website_sale pt-2">
                     <div class="row o_wsale_products_main_row align-items-start flex-nowrap">
                         <aside t-if="hasLeftColumn" id="products_grid_before" class="d-none d-lg-block position-sticky col-3 px-3 clearfix">
-                            <div class="o_wsale_products_grid_before_rail vh-100 ms-n2 mt-n2 pt-2 pe-lg-2 pb-lg-5 ps-2 overflow-y-scroll">
+                            <div class="o_wsale_products_grid_before_rail vh-100 ms-n2 mt-n2 pt-2 p-lg-2 pb-lg-5 ps-2 overflow-y-scroll">
                                 <div t-if="opt_wsale_categories" class="products_categories mb-3">
                                     <t t-call="website_sale.products_categories_list"/>
                                 </div>
@@ -531,7 +530,7 @@
                    t-attf-class="css_attribute_color mb-1 #{'active' if v.id in attrib_set else ''}"
             >
                 <input type="checkbox"
-                       name="attrib"
+                       name="attribute_value"
                        t-att-value="'%s-%s' % (a.id, v.id)"
                        t-att-checked="'checked' if v.id in attrib_set else None"
                        t-att-title="v.name"
@@ -691,7 +690,7 @@
                                             <div t-foreach="a.value_ids" t-as="v" class="list-group-item border-0 ps-0 pb-0">
                                                 <div class="form-check mb-1">
                                                     <input type="checkbox"
-                                                           name="attrib"
+                                                           name="attribute_value"
                                                            class="form-check-input"
                                                            t-att-id="'%s-%s' % (a.id,v.id)"
                                                            t-att-value="'%s-%s' % (a.id,v.id)"
@@ -891,7 +890,7 @@
                     <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
                     <input type="hidden" name="search" t-att-value="search" />
                     <input type="hidden" name="order" t-att-value="order"/>
-                    <a t-if="attrib_values or tags" t-att-href="keep('/shop'+ ('/category/'+slug(category)) if category else None, attrib=0, tags=0)" t-attf-class="btn btn-{{navClass}} d-flex align-items-center py-1 mb-2">
+                    <a t-if="attrib_values or tags" t-att-href="keep('/shop' + ('/category/' + slug(category)) if category else None, attribute_value=0, tags=0)" t-attf-class="btn btn-{{navClass}} d-flex align-items-center py-1 mb-2">
                         <small class="mx-auto"><b>Clear Filters</b></small>
                         <i class="oi oi-close"/>
                     </a>
@@ -903,7 +902,7 @@
                                 </h6>
                                 <div t-attf-id="o_products_attributes_{{a.id}}" class="">
                                     <t t-if="a.display_type == 'select'">
-                                        <select class="form-select css_attribute_select mb-2" name="attrib">
+                                        <select class="form-select css_attribute_select mb-2" name="attribute_value">
                                             <option value="" selected="true">All <t t-out="a.name"/></option>
                                             <t t-foreach="a.value_ids" t-as="v">
                                                 <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set" />
@@ -917,7 +916,7 @@
                                         <t t-foreach="a.value_ids" t-as="v">
                                             <div class="form-check mb-1">
                                                 <input type="checkbox"
-                                                       name="attrib"
+                                                       name="attribute_value"
                                                        class="form-check-input"
                                                        t-att-id="'%s-%s' % (a.id,v.id)"
                                                        t-att-value="'%s-%s' % (a.id,v.id)"
@@ -1031,11 +1030,11 @@
                         <div class="col-lg-6 d-flex align-items-center">
                             <ol class="breadcrumb p-0 mb-2 m-lg-0">
                                 <li class="breadcrumb-item o_not_editable">
-                                    <a t-att-href="keep(category=0)">All Products</a>
+                                    <a t-att-href="keep(category=0, attribute_value=0, tags=0)">All Products</a>
                                 </li>
                                 <li t-nocache="The category does not have to be cached, as the product can be accessed via different paths."
                                     t-if="category" class="breadcrumb-item">
-                                    <a t-att-href="keep('/shop/category/%s' % slug(category), category=0)" t-field="category.name" />
+                                    <a t-att-href="keep('/shop/category/%s' % slug(category), category=0, attribute_value=0, tags=0)" t-field="category.name" />
                                 </li>
                                 <li class="breadcrumb-item active">
                                     <span t-field="product.name" />

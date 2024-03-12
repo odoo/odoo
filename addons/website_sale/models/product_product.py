@@ -69,11 +69,8 @@ class Product(models.Model):
     @api.depends('product_tmpl_id.website_url', 'product_template_attribute_value_ids')
     def _compute_product_website_url(self):
         for product in self:
-            attributes = ','.join(str(x) for x in product.product_template_attribute_value_ids.ids)
-            url = product.product_tmpl_id.website_url
-            if attributes:
-                url = url_join(url, f"#attr={attributes}")
-            product.website_url = url
+            attributes = ','.join(str(x) for x in product.product_template_attribute_value_ids.product_attribute_value_id.ids)
+            product.website_url = "%s#attribute_values=%s" % (product.product_tmpl_id.website_url, attributes)
 
     #=== CONSTRAINT METHODS ===#
 

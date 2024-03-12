@@ -64,13 +64,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
     start() {
         const def = this._super(...arguments);
 
-        this._applyHashFromSearch();
-
-        this.$("div.js_product")
-            .toArray()
-            .forEach((product) => {
-            $('input.js_product_change', product).first().trigger('change');
-        });
+        this._applyHash();
 
         // This has to be triggered to compute the "out of stock" feature and the hash variant changes
         this.triggerVariantChange(this.$el);
@@ -82,13 +76,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         })
 
         this._startZoom();
-
-        window.addEventListener('popstate', (ev) => {
-            if (ev.state?.newURL) {
-                this._applyHash();
-                this.triggerVariantChange(this.$el);
-            }
-        });
 
         // This allows conditional styling for the filmstrip
         if (isBrowserFirefox() || hasTouch()) {
@@ -158,15 +145,18 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
     },
     _applyHash: function () {
         const params = new URLSearchParams(window.location.hash.substring(1));
-        if (params.get("attr")) {
-            var attributeIds = params.get("attr").split(',');
-            var $inputs = this.$('input.js_variant_change, select.js_variant_change option');
-            attributeIds.forEach((id) => {
-                var $toSelect = $inputs.filter('[data-value_id="' + id + '"]');
-                if ($toSelect.is('input[type="radio"]')) {
-                    $toSelect.prop('checked', true);
-                } else if ($toSelect.is('option')) {
-                    $toSelect.prop('selected', true);
+        if (params.get("attribute_values")) {
+            const attributeValueIds = params.get("attribute_values").split(',');
+            const inputs = document.querySelectorAll(
+                'input.js_variant_change, select.js_variant_change option'
+            );
+            inputs.forEach((element) => {
+                if (attributeValueIds.includes(element.dataset.attributeValueId)) {
+                    if (element.tagName === "INPUT") {
+                        element.checked = true;
+                    } else if (element.tagName === "OPTION") {
+                        element.selected = true;
+                    }
                 }
             });
             this._changeAttribute(['.css_attribute_color', '.o_variant_pills']);
@@ -179,12 +169,12 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @private
      */
     _setUrlHash: function ($parent) {
-        var $attributes = $parent.find('input.js_variant_change:checked, select.js_variant_change option:selected');
-        if (!$attributes.length) {
-            return;
-        }
-        var attributeIds = $attributes.toArray().map((elem) => $(elem).data("value_id"));
-        window.location.replace('#attr=' + attributeIds.join(','));
+        const inputs = document.querySelectorAll(
+            'input.js_variant_change:checked, select.js_variant_change option:checked'
+        );
+        let attributeIds = [];
+        inputs.forEach((element) => attributeIds.push(element.dataset.attributeValueId));
+        window.location.hash = 'attribute_values=' + attributeIds.join(',');
     },
     /**
      * Set the checked values active.
@@ -608,27 +598,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
     _onToggleSummary: function () {
         $('.toggle_summary_div').toggleClass('d-none');
         $('.toggle_summary_div').removeClass('d-xl-block');
-    },
-    /**
-     * @private
-     */
-    _applyHashFromSearch() {
-        const params =  new URL(window.location).searchParams;
-        if (params.get("attrib")) {
-            const dataValueIds = [];
-            for (const attrib of [].concat(params.get("attrib"))) {
-                const attribSplit = attrib.split('-');
-                const attribValueSelector = `.js_variant_change[name="ptal-${attribSplit[0]}"][value="${attribSplit[1]}"]`;
-                const attribValue = this.el.querySelector(attribValueSelector);
-                if (attribValue !== null) {
-                    dataValueIds.push(attribValue.dataset.value_id);
-                }
-            }
-            if (dataValueIds.length) {
-                window.location.hash = `attr=${dataValueIds.join(',')}`;
-            }
-        }
-        this._applyHash();
     },
     /**
      * @private

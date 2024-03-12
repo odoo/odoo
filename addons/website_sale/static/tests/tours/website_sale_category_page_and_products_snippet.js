@@ -47,7 +47,7 @@ registry.category("web_tour.tours").add('category_page_and_products_snippet_use'
                 .map(el => el.getAttribute('href').match(regex)[1]);
 
             const $shownProductLinks = this.anchor.querySelectorAll(".o_carousel_product_img_link");
-            const regex2 = new RegExp(`^/shop/[\\w-/]+-(\\d+)(?:#attr=\\d*)?$`);
+            const regex2 = new RegExp(`^/shop/[\\w-/]+-(\\d+)(?:#attribute_values=\\d*)?$`);
             for (const shownProductLinkEl of $shownProductLinks) {
                 const productID = shownProductLinkEl.getAttribute('href').match(regex2)[1];
                 if (!allPageProductIDs.includes(productID)) {

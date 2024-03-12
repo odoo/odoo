@@ -25,6 +25,7 @@
                             t-att-name="'ptal-%s' % ptal.id">
                             <t t-foreach="ptavs" t-as="ptav">
                                 <option t-att-value="ptav.id"
+                                    t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
                                     t-att-data-value_id="ptav.id"
                                     t-att-data-value_name="ptav.name"
                                     t-att-data-attribute_name="attribute.name"
@@ -50,6 +51,7 @@
                                                 t-att-checked="ptav in combination"
                                                 t-att-name="'ptal-%s' % ptal.id"
                                                 t-att-value="ptav.id"
+                                                t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
                                                 t-att-data-value_id="ptav.id"
                                                 t-att-data-value_name="ptav.name"
                                                 t-att-data-attribute_name="attribute.name"
@@ -80,6 +82,7 @@
                                         t-att-value="ptav.id"
                                         t-att-data-value_id="ptav.id"
                                         t-att-id="ptav.id"
+                                        t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
                                         t-att-data-value_name="ptav.name"
                                         t-att-data-attribute_name="attribute.name"
                                         t-att-data-is_custom="ptav.is_custom"
@@ -113,6 +116,7 @@
                                         t-att-name="'ptal-%s' % ptal.id"
                                         t-att-value="ptav.id"
                                         t-att-title="ptav.name"
+                                        t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
                                         t-att-data-value_id="ptav.id"
                                         t-att-data-value_name="ptav.name"
                                         t-att-data-attribute_name="attribute.name"
