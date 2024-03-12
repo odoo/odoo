@@ -5925,17 +5925,20 @@
     });
 
     function interactiveRenameSheet(env, sheetId, errorText) {
+        if (env.model.getters.isReadonly()) {
+            return;
+        }
         const placeholder = env.model.getters.getSheetName(sheetId);
         const title = _lt("Rename Sheet");
         const callback = (name) => {
             if (name === null || name === placeholder) {
                 return;
             }
-            if (name === "") {
-                interactiveRenameSheet(env, sheetId, _lt("The sheet name cannot be empty."));
-            }
             const result = env.model.dispatch("RENAME_SHEET", { sheetId, name });
             if (!result.isSuccessful) {
+                if (result.reasons.includes(10 /* CommandResult.MissingSheetName */)) {
+                    interactiveRenameSheet(env, sheetId, _lt("The sheet name cannot be empty."));
+                }
                 if (result.reasons.includes(11 /* CommandResult.DuplicatedSheetName */)) {
                     interactiveRenameSheet(env, sheetId, _lt("A sheet with the name %s already exists. Please select another name.", name));
                 }
@@ -21403,6 +21406,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             ev.stopPropagation();
             const initialX = ev.clientX;
             const initialY = ev.clientY;
+            const { scrollX, scrollY } = this.env.model.getters.getActiveSheetScrollInfo();
             const { x: dndInitialX, y: dndInitialY } = this.internalToScreenCoordinates(figure);
             this.dnd.x = dndInitialX;
             this.dnd.y = dndInitialY;
@@ -21421,13 +21425,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 if (dirY < 0) {
                     this.dnd.y = dndInitialY - deltaY;
                 }
-                if (this.dnd.x < 0) {
-                    this.dnd.width += this.dnd.x;
-                    this.dnd.x = 0;
+                // Adjusts figure dimensions to ensure it remains within header boundaries and viewport during resizing.
+                if (this.dnd.x + scrollX <= 0) {
+                    this.dnd.width = this.dnd.width + this.dnd.x + scrollX;
+                    this.dnd.x = -scrollX;
                 }
-                if (this.dnd.y < 0) {
-                    this.dnd.height += this.dnd.y;
-                    this.dnd.y = 0;
+                if (this.dnd.y + scrollY <= 0) {
+                    this.dnd.height = this.dnd.height + this.dnd.y + scrollY;
+                    this.dnd.y = -scrollY;
                 }
             };
             const onMouseUp = (ev) => {
@@ -43270,9 +43275,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.33';
-    __info__.date = '2024-02-16T14:59:44.946Z';
-    __info__.hash = 'c0cefe8';
+    __info__.version = '16.0.34';
+    __info__.date = '2024-03-12T08:02:04.642Z';
+    __info__.hash = 'd503e6d';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
