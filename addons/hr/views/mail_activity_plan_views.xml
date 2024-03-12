@@ -29,7 +29,8 @@
                            options="{'whitelisted_values': ['on_demand', 'other']}"/>
                 </xpath>
                 <xpath expr="//group[@name='group_plan_fields']/group[@name='company_id']" position="before">
-                    <group invisible="res_model != 'hr.employee'">
+                    <field name="department_assignable" invisible="1"/>
+                    <group invisible="not department_assignable">
                         <field name="department_id"/>
                     </group>
                 </xpath>
