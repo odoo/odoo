@@ -927,7 +927,7 @@ export class MockServer {
 
     /** @type {RouteCallback} */
     async mockResequence(request) {
-        const { params } = request.json();
+        const { params } = await request.json();
         const offset = params.offset ? Number(params.offset) : 0;
         const field = params.field || "sequence";
         if (!(field in this.env[params.model]._fields)) {
