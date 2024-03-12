@@ -181,6 +181,7 @@ class AccountMove(models.Model):
     # cancel that part too.
     tax_cash_basis_rec_id = fields.Many2one(
         comodel_name='account.partial.reconcile',
+        index='btree_not_null',
         string='Tax Cash Basis Entry of',
     )
     tax_cash_basis_origin_move_id = fields.Many2one(
