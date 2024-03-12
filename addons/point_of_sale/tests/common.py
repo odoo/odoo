@@ -737,3 +737,12 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         else:
             # if the expected_account_move_vals is falsy, the account_move should be falsy.
             self.assertFalse(account_move)
+
+    def make_payment(self, order, payment_method, amount):
+        """ Make payment for the order using the given payment method.
+        """
+        payment_context = {"active_id": order.id, "active_ids": order.ids}
+        return self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': amount,
+            'payment_method_id': payment_method.id,
+        }).check()
