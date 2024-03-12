@@ -121,8 +121,8 @@ export class HootReporting extends Component {
 
     setup() {
         const { runner, ui } = this.env;
-        const { showdetail } = runner.config;
 
+        this.config = useState(runner.config);
         this.runnerState = useState(runner.state);
         this.state = useState({
             /** @type {string[]} */
@@ -131,6 +131,8 @@ export class HootReporting extends Component {
             openTests: [],
         });
         this.uiState = useState(ui);
+
+        const { showdetail } = this.config;
 
         let didShowDetail = false;
         runner.__afterPostTest((test) => {
@@ -215,13 +217,13 @@ export class HootReporting extends Component {
         return {
             statusFilter,
             statusFilterClassName: COLORS[statusFilter],
-            filter: this.env.runner.config.filter,
+            filter: this.config.filter,
             selectedSuiteName: selectedSuiteId && this.env.runner.suites.get(selectedSuiteId).name,
         };
     }
 
     getQueryFilter() {
-        const { filter } = this.env.runner.config;
+        const { filter } = this.config;
         if (!filter) {
             return null;
         }

@@ -10,6 +10,7 @@ import {
     Markup,
     batch,
     createReporting,
+    deepEqual,
     ensureArray,
     ensureError,
     formatTechnical,
@@ -331,7 +332,7 @@ export class TestRunner {
                 Object.fromEntries(
                     Object.entries(this.config).map(([key, value]) => [
                         key,
-                        value === initialConfig[key] ? null : value,
+                        deepEqual(value, initialConfig[key]) ? null : value,
                     ])
                 )
             );
@@ -808,10 +809,12 @@ export class TestRunner {
             );
             if (activeSingleTests.length !== 1) {
                 logger.warn(`disabling debug mode: ${activeSingleTests.length} tests will be run`);
-                setParams({ debugTest: null });
+                this.config.debugTest = false;
                 this.debug = false;
             }
         }
+
+        const { debugTest, fps, watchkeys } = this.config;
 
         // Register default hooks
         const [addTestDone, flushTestDone] = batch((test) => this.state.done.push(test), 10);
@@ -821,10 +824,10 @@ export class TestRunner {
             on(window, "error", (ev) => this.#onError(ev)),
             on(window, "unhandledrejection", (ev) => this.#onError(ev)),
             // Warn user events
-            on(window, "pointermove", warnUserEvent),
-            on(window, "pointerdown", warnUserEvent),
-            on(window, "keydown", warnUserEvent),
-            watchListeners(window, document, document.head, document.body)
+            !debugTest && on(window, "pointermove", warnUserEvent),
+            !debugTest && on(window, "pointerdown", warnUserEvent),
+            !debugTest && on(window, "keydown", warnUserEvent),
+            watchListeners(window, document, document.documentElement, document.head, document.body)
         );
         this.__beforeEach(this.fixture.setup);
         this.__afterEach(
@@ -834,8 +837,8 @@ export class TestRunner {
             cleanupObservers,
             cleanupTime
         );
-        if (this.config.watchkeys) {
-            const keys = this.config.watchkeys?.split(/\s*,\s*/g) || [];
+        if (watchkeys) {
+            const keys = watchkeys?.split(/\s*,\s*/g) || [];
             this.__afterEach(watchKeys(window, keys), watchKeys(document, keys));
         }
 
@@ -843,7 +846,7 @@ export class TestRunner {
             logger.level = logLevels.DEBUG;
         }
         enableEventLogs(this.debug);
-        setFrameRate(this.config.frameRate);
+        setFrameRate(fps);
 
         await this.#callbacks.call("before-all");
 

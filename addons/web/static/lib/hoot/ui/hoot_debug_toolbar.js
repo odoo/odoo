@@ -33,7 +33,7 @@ export class HootDebugToolBar extends Component {
                 </summary>
                 <div class="flex gap-2 px-2">
                     <div class="flex gap-px rounded my-1 overflow-hidden min-w-fit">
-                        <button class="bg-btn px-2 py-1" title="Exit debug mode (Esc)" t-on-click="stop">
+                        <button class="bg-btn px-2 py-1" title="Exit debug mode (Ctrl + Esc)" t-on-click="exitDebugMode">
                             <i class="fa fa-sign-out" />
                         </button>
                         <t t-if="done">
@@ -87,6 +87,12 @@ export class HootDebugToolBar extends Component {
         });
     }
 
+    exitDebugMode() {
+        const { runner } = this.env;
+        runner.config.debugTest = false;
+        runner.stop();
+    }
+
     getInfo() {
         const [status, className] = this.getStatus();
         const [assertPassed, assertFailed] = this.groupAssertions(
@@ -132,9 +138,5 @@ export class HootDebugToolBar extends Component {
 
     restart() {
         refresh();
-    }
-
-    stop() {
-        this.env.runner.stop();
     }
 }

@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Component, useState, xml } from "@odoo/owl";
-import { createURL, setParams } from "../core/url";
+import { createURL } from "../core/url";
 import { useWindowListener } from "../hoot_utils";
 import { HootButtons } from "./hoot_buttons";
 import { HootConfigDropdown } from "./hoot_config_dropdown";
@@ -109,7 +109,7 @@ export class HootMain extends Component {
             case "d": {
                 if (ev.altKey) {
                     ev.preventDefault();
-                    setParams({ debugTest: !runner.config.debugTest });
+                    runner.config.debugTest = !runner.config.debugTest;
                 }
                 break;
             }
@@ -121,6 +121,9 @@ export class HootMain extends Component {
                 break;
             }
             case "Escape": {
+                if (ev.ctrlKey && runner.config.debugTest) {
+                    runner.config.debugTest = false;
+                }
                 if (runner.state.status === "running") {
                     ev.preventDefault();
                     runner.stop();
