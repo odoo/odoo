@@ -602,10 +602,19 @@ class MrpWorkorder(models.Model):
                     wo._prepare_timeline_vals(wo.duration, fields.Datetime.now())
                 )
 
+<<<<<<< HEAD
             if wo.production_id.state != 'progress':
                 wo.production_id.write({
                     'date_start': fields.Datetime.now()
                 })
+||||||| parent of c8c60a6c5624 (temp)
+=======
+            if wo.production_id.state != 'progress':
+                wo.production_id.write({
+                    'date_start': fields.Datetime.now()
+                })
+
+>>>>>>> c8c60a6c5624 (temp)
             if wo.state == 'progress':
                 continue
             date_start = fields.Datetime.now()
