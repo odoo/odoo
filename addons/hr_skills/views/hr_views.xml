@@ -342,7 +342,8 @@
         <field name="arch" type="xml">
             <tree string="Skill Types">
                 <field name="name"/>
-                <field name="skill_ids" widget="many2many_tags"/>
+                <field name="color" widget="color_picker" optional="show"/>
+                <field name="skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
             </tree>
         </field>
     </record>
@@ -373,6 +374,9 @@
                     <group string="Levels">
                     </group>
                     <field name="skill_level_ids" nolabel="1" widget="auto_save_skill_type" context="{'default_skill_type_id': id}"/>
+                    <group string="Display">
+                        <field name="color" widget="color_picker"/>
+                    </group>
                 </sheet>
             </form>
         </field>

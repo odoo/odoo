@@ -11,7 +11,7 @@ export const patchAvatarCardResourcePopover = {
         if (this.record.employee_skill_ids?.length) {
             promises.push(
                 this.orm
-                    .read("hr.employee.skill", this.record.employee_skill_ids, ["display_name"])
+                    .read("hr.employee.skill", this.record.employee_skill_ids, ["display_name", "color"])
                     .then((skills) => {
                         this.skills = skills;
                     })
@@ -26,9 +26,10 @@ export const patchAvatarCardResourcePopover = {
         ];
     },
     get skillTags() {
-        return this.skills.map(({ id, display_name }) => ({
+        return this.skills.map(({ id, display_name, color }) => ({
             id,
             text: display_name,
+            colorIndex: color,
         }));
     },
 };

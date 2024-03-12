@@ -19,6 +19,7 @@ class EmployeeSkill(models.Model):
                                     default=lambda self: self.env['hr.skill.type'].search([], limit=1),
                                     required=True, ondelete='cascade')
     level_progress = fields.Integer(related='skill_level_id.level_progress')
+    color = fields.Integer(related="skill_type_id.color")
 
     _sql_constraints = [
         ('_unique_skill', 'unique (employee_id, skill_id)', "Two levels for the same skill is not allowed"),
