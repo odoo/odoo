@@ -500,7 +500,29 @@ export async function loadImageInfo(img, recordInfo, attachmentSrc = "") {
     // "local" image even if the domain name is now "mycompany.be".
     if (imageData) {
         weUtils.updateImageDataRegistry(imgSrc, imageData);
+        return;
     }
+    // No image.data or original attachment has been found (e.g; image field
+    // where the image comes from the backend and that never has been modified).
+    await fetch(src).then((result) => {
+        let imageMimetype = result.headers.get("content-type");
+        if (imageMimetype.startsWith("image/svg+xml")) {
+            // If the fetched source is a svg, "content-type" is set to
+            // "image/svg+xml; charset=utf-8". Set the mimetype to
+            // "image/svg+xml".
+            imageMimetype = "image/svg+xml";
+        }
+        const imageData = {
+            // If the data are fetchable, use the current source as the original
+            // src.
+            original_src: src,
+            mimetype: imageMimetype,
+            mimetype_before_conversion: imageMimetype,
+        };
+        weUtils.updateImageDataRegistry(imgSrc, imageData);
+    }).catch(() => {
+        weUtils.updateImageDataRegistry(imgSrc, {});
+    });
 }
 
 /**

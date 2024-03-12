@@ -79,3 +79,10 @@ class TestMailingUi(MassMailCommon, HttpCaseWithUserDemo):
 
     def test_mass_mailing_code_view_tour(self):
         self.start_tour("/odoo?debug=tests", 'mass_mailing_code_view_tour', login="demo")
+
+    def test_mailing_editor_images(self):
+        self.start_tour('/odoo', 'mailing_editor_images', login='admin')
+        # Ensure that an image data record has been created with the correct
+        # image options.
+        image_data = self.env['html_editor.image.data'].search([])._get_image_data()
+        self.assertEqual(image_data['gl_filter'], 'blur')

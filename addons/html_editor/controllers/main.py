@@ -215,7 +215,7 @@ class HTML_Editor(http.Controller):
         context.pop('allowed_company_ids', None)
         request.update_env(context=context)
 
-    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
+    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view', verify_mimetype=True):
         """Create and return a new attachment."""
         IrAttachment = request.env['ir.attachment']
 
@@ -247,15 +247,16 @@ class HTML_Editor(http.Controller):
                 'type': 'url',
                 'url': url,
             })
-            # The code issues a HEAD request to retrieve headers from the URL.
-            # This approach is beneficial when the URL doesn't conclude with an
-            # image extension. By verifying the MIME type, the code ensures that
-            # only supported image types are incorporated into the data.
-            response = requests.head(url, timeout=10)
-            if response.status_code == 200:
-                mime_type = response.headers['content-type']
-                if mime_type in SUPPORTED_IMAGE_MIMETYPES:
-                    attachment_data['mimetype'] = mime_type
+            if verify_mimetype:
+                # The code issues a HEAD request to retrieve headers from the URL.
+                # This approach is beneficial when the URL doesn't conclude with an
+                # image extension. By verifying the MIME type, the code ensures that
+                # only supported image types are incorporated into the data.
+                response = requests.head(url, timeout=10)
+                if response.status_code == 200:
+                    mime_type = response.headers['content-type']
+                    if mime_type in SUPPORTED_IMAGE_MIMETYPES:
+                        attachment_data['mimetype'] = mime_type
         else:
             raise UserError(_("You need to specify either data or url to create an attachment."))
 
@@ -433,16 +434,20 @@ class HTML_Editor(http.Controller):
         attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
 
-    @http.route(['/web_editor/modify_image/<model("ir.attachment"):attachment>', '/html_editor/modify_image/<model("ir.attachment"):attachment>'], type="json", auth="user", website=True)
-    def modify_image(self, attachment, res_model=None, res_id=None, res_field=None, res_type=None, name=None, data=None, mimetype=None, alt_data=None, saved_image_data=None):
+    @http.route([
+                '/web_editor/modify_image/',
+                '/web_editor/modify_image/<model("ir.attachment"):attachment>',
+                '/html_editor/modify_image/<model("ir.attachment"):attachment>',
+                ], type="json", auth="user", website=True)
+    def modify_image(self, attachment=None, res_model=None, res_id=None, res_field=None, res_type=None, name=None, data=None, mimetype=None, alt_data=None, saved_image_data=None):
         """
         Creates a modified copy of an attachment, updates (or creates) the
         data record linked to the image and returns its image_src to be inserted
         into the DOM.
 
         Args:
-            attachment (ir.attachment): The original attachment of the modified
-                                        image.
+            (optional) attachment (ir.attachment): The original attachment of
+                                                   the modified image.
             (optional) res_model (str): The name of the model of the editable
                                         element closest to the image.
             (optional) res_id (int): The id of the editable element closest to
@@ -461,6 +466,28 @@ class HTML_Editor(http.Controller):
         Returns:
             str: The new image source to be inserted on the DOM.
         """
+        if not attachment:
+            # Create an original attachment first.
+            if res_type != 'image':
+                # Default image used in a view: create an "url" attachment
+                attachment = self._attachment_create(url=saved_image_data['original_src'], verify_mimetype=False)
+            else:
+                # Default image field or image field modified from the backend:
+                # create a "data" attachment.
+                mimetype_original = saved_image_data['mimetype_before_conversion']
+                name_original = '%s-%s%s' % (
+                    datetime.now().strftime('%Y%m%d%H%M%S'),
+                    str(uuid.uuid4())[:6],
+                    SUPPORTED_IMAGE_MIMETYPES[mimetype_original],
+                )
+                attachment = self._attachment_create(
+                    name=name_original,
+                    data=b64decode(request.env[res_model].browse(res_id)[res_field]),
+                    res_id=res_id,
+                    res_model=res_model,
+                )
+            saved_image_data['original_id'] = attachment.id
+
         fields = {
             'original_id': attachment.id,
             'datas': data,

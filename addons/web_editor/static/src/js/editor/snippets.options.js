@@ -6502,11 +6502,6 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         const editableEl = this.$target[0].closest(".o_editable");
         await loadImageInfo(img, this.options.wysiwyg._getRecordInfo(editableEl), attachmentSrc);
         this.imageData = weUtils.getImageData(img, this.imageShape);
-        if (!this.imageData.original_id) {
-            this.originalId = null;
-            this.originalSrc = null;
-            return;
-        }
         this.originalId = this.imageData.original_id;
         this.originalSrc = this.imageData.original_src;
         this.mimetypeBeforeConversion = this.imageData.mimetype_before_conversion;

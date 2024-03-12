@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { clickOnSave, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
+import { changeOption, clickOnSave, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour("shop_editor", {
     test: true,
@@ -53,3 +53,21 @@ registerWebsitePreviewTour("shop_editor_set_product_ribbon", {
     content: "Check that the ribbon was properly saved",
     trigger: ':iframe .oe_product:first .o_ribbon:contains("Sale")',
 }]);
+
+registerWebsitePreviewTour("shop_editor_set_product_template_image", {
+    test: true,
+    url: "/shop",
+    edition: true,
+}, () => [{
+    content: "Click on first product image",
+    trigger: ":iframe .oe_product:first img",
+    run: "click",
+},
+changeOption("ImageTools", 'we-select:contains("Filter") we-toggler'),
+changeOption("ImageTools", '[data-gl-filter="blur"]'),
+{
+    content: "Ensure that the image has been modified",
+    trigger: ":iframe .oe_product:first img.o_modified_image_to_save",
+},
+...clickOnSave(),
+]);

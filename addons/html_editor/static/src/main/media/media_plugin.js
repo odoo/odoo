@@ -350,8 +350,9 @@ export class MediaPlugin extends Plugin {
                 }
             }
         }
+        const originalAttachmentId = imageData.original_id ? encodeURIComponent(imageData.original_id) : "";
         const newAttachmentSrc = await rpc(
-            `/html_editor/modify_image/${encodeURIComponent(imageData.original_id)}`,
+            `/html_editor/modify_image/${originalAttachmentId}`,
             {
                 res_model: resModel,
                 res_id: parseInt(resId),
