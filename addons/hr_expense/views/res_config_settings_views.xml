@@ -15,7 +15,7 @@
                                      title="Send an email to this email alias with the receipt in attachment to create an expense in one click. If the first word of the mail subject contains the category's internal reference or the category name, the corresponding category will automatically be set. Type the expense amount in the mail subject to set it on the expense too.">
                                 <field name="hr_expense_use_mailgateway"/>
                                 <div class="content-group" invisible="not hr_expense_use_mailgateway or not alias_domain_id">
-                                    <div class="mt16 d-flex align-items-start">
+                                    <div class="mt16 d-flex align-items-start" dir="ltr">
                                         <label for="hr_expense_alias_prefix" string="Alias" class="o_light_label"/>
                                         <field name="hr_expense_alias_prefix" class="oe_inline ps-2"/>
                                         <span>@</span>

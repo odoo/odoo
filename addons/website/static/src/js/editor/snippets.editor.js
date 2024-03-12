@@ -9,12 +9,8 @@ import wUtils from "@website/js/utils";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
-import {
-    applyTextHighlight,
-    removeTextHighlight,
-    switchTextHighlight,
-    getCurrentTextHighlight
-} from "@website/js/text_processing";
+import { switchTextHighlight } from "@website/js/text_processing";
+
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getTraversedNodes = OdooEditorLib.getTraversedNodes;
 
@@ -96,27 +92,38 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             // We only update SVGs when the mutation targets text content
             // (including all mutations leads to infinite loop since the
             // highlight adjustment will also trigger observed mutations).
-            let target = false;
             let isSVGMutation = false;
+            let isNewContentMutation = false;
+            const textHighlightEls = new Set();
             for (const mutation of mutations) {
                 for (const addedNode of mutation.addedNodes) {
+                    const addedHighlightNode = addedNode.classlist?.contains("o_text_highlight")
+                        ? addedNode
+                        : addedNode.querySelector?.(":scope .o_text_highlight");
+                    if (addedHighlightNode) {
+                        // E.g. When applying the split on a node with text
+                        // highlights, the `oEnter` command will split the node
+                        // and its parents correctly, which leads to duplicated
+                        // highlight items that the observer should also handle.
+                        // The goal here is to adapt these elements too.
+                        textHighlightEls.add(addedHighlightNode);
+                        isNewContentMutation = true;
+                    }
                     if (addedNode.nodeName === "svg") {
                         isSVGMutation = true;
                     }
                 }
                 // Get the "text highlight" top element affected by mutations.
-                const mutationTarget = (mutation.target.parentElement
-                    && mutation.target.parentElement.closest(".o_text_highlight:not(.o_text_highlight_disabled)"))
-                    || (mutation.target.nodeType === Node.ELEMENT_NODE
-                    && mutation.target.querySelector(":scope .o_text_highlight:not(.o_text_highlight_disabled)"));
+                const mutationTarget = mutation.target.parentElement?.closest(".o_text_highlight")
+                    || mutation.target.nodeType === Node.ELEMENT_NODE
+                    && mutation.target.querySelector(":scope .o_text_highlight");
                 if (mutationTarget) {
-                    target = mutationTarget;
+                    textHighlightEls.add(mutationTarget);
                 }
             }
-            if (!isSVGMutation && target) {
-                const highlightID = getCurrentTextHighlight(target);
-                if (highlightID) {
-                    this._adaptHighlightOnEdit(target, highlightID);
+            if (!isSVGMutation || isNewContentMutation) {
+                for (const targetEl of textHighlightEls) {
+                    this._adaptHighlightOnEdit(targetEl);
                 }
             }
         });
@@ -411,6 +418,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      * This callback type is used to identify the function used to apply the
      * text option on a selected text.
      *
+     * @deprecated
      * @callback TextOptionCallback
      * @param {HTMLElement} selectedTextEl The selected text element on which
      * the option should be applied.
@@ -426,6 +434,9 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      * text option's classes, updates...
      */
     _handleTextOptions(targetEl, optionClassList, applyTextOption = () => {}) {
+        // TODO adapt in master
+        const __handleTextOptionsPostActivate = this.__handleTextOptionsPostActivate;
+
         const classSelector = targetEl.dataset.textSelector;
         const sel = this._getSelection();
         if (!this._isValidSelection(sel)) {
@@ -476,10 +487,15 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             }
             if ($snippet) {
                 $snippet[0].normalize();
-                applyTextOption($snippet[0]);
+                applyTextOption($snippet[0]); // TODO remove in master, useless in standard
                 this.trigger_up('activate_snippet', {
                     $snippet: $snippet,
                     previewMode: false,
+                    onSuccess: () => {
+                        if (__handleTextOptionsPostActivate) {
+                            __handleTextOptionsPostActivate($snippet);
+                        }
+                    },
                 });
                 this.options.wysiwyg.odooEditor.historyStep();
             } else {
@@ -503,25 +519,15 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
     /**
      * Used to adjust the highlight effect when the text content is edited.
      *
+     * TODO: Should be directly replaced by `switchTextHighlight()` in master
+     * (left in stable for compatibility).
+     *
      * @private
      * @param {HTMLElement} target
-     * @param {String} highlightID
+     * @param {String} [highlightID]
      */
     _adaptHighlightOnEdit(target, highlightID) {
-        // Adapt the current highlight to the edited content.
-        switchTextHighlight(target, highlightID);
-
-        // Special use case: When applying the split on a node with text
-        // highlights, the `oEnter` command will split the node and its
-        // parents correctly, which leads to duplicated highlight items
-        // that the `textHighlightObserver` can't handle. The goal of
-        // this code is to force an adaptation on these elements too...
-        [...this.$body[0].ownerDocument.querySelectorAll(".o_text_highlight_item_dirty")].forEach(splitEl => {
-            const newTarget = splitEl.closest(".o_text_highlight");
-            if (newTarget) {
-                this._adaptHighlightOnEdit(newTarget, getCurrentTextHighlight(newTarget));
-            }
-        });
+        return switchTextHighlight(target, highlightID);
     },
     /**
      * @private
@@ -676,19 +682,24 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      * @param {Event} ev
      */
     _onTextHighlightClick(ev) {
+        // To be able to open the highlights grid immediately, we need to
+        // prevent the `_onClick()` handler from closing the widget (using
+        // the `_closeWidgets()` method) right after opening it.
+        ev.stopPropagation();
+        this._closeWidgets();
         const target = ev.currentTarget;
-        this._handleTextOptions(target, [
-            this._getOptionTextClass(target),
-            "o_text_highlight_underline",
-            "o_text_highlight_disabled"
-        ], selectedTextEl => {
-            const style = window.getComputedStyle(selectedTextEl);
-            // The default value for `--text-highlight-width` is 0.1em.
-            const widthPxValue = `${Math.round(parseFloat(style.fontSize) * 0.1)}px`;
-            selectedTextEl.style.setProperty("--text-highlight-width", widthPxValue);
-            applyTextHighlight(selectedTextEl, "underline");
-            selectedTextEl.classList.remove("o_text_highlight_disabled");
-        });
+        this.__handleTextOptionsPostActivate = ($snippet) => {
+            // TODO should be reviewed
+            $snippet.data("snippet-editor")?.trigger_up("option_update", {
+                optionName: "TextHighlight",
+                name: "new_text_highlight",
+            });
+        };
+        this._handleTextOptions(
+            target,
+            [this._getOptionTextClass(target), "o_text_highlight_underline"],
+        );
+        delete this.__handleTextOptionsPostActivate;
     },
     /**
      * On reload bundles, when it's from the theme tab, destroy any
@@ -727,39 +738,6 @@ weSnippetEditor.SnippetEditor.include({
         '.o_bg_video_container',
     ].join(','),
 
-    /**
-     * @override
-     */
-    async start() {
-        await this._super(...arguments);
-        // When a SnippetEditor is destroyed before the start() has ended
-        // (which can happen when a widget is immediately removed, as start()
-        // is async but destroy() is not), it could create a useless observer.
-        if (this.isDestroyed()) {
-            return;
-        }
-        this._adaptOnOptionResize = throttleForAnimation(this._adaptOnOptionResize.bind(this));
-        this.editorResizeObserver = new window.ResizeObserver(entries => {
-            // In addition to window resizing, every editor's option that
-            // changes the content size has an effect on text highlights.
-            // The idea here is to observe the size changes in the editor's
-            // target and adapt the text highlights (if they exist)
-            // accordingly.
-            if (!this.observerLock) {
-                this._adaptOnOptionResize();
-            } else {
-                this.observerLock = false;
-            }
-        });
-        this._highlightResizeObserve();
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this.editorResizeObserver?.disconnect();
-        return this._super(...arguments);
-    },
     /**
      * @override
      */
@@ -807,6 +785,8 @@ weSnippetEditor.SnippetEditor.include({
         return restore;
     },
     /**
+     * TODO: Remove in master (left in stable for compatibility)
+     *
      * @private
      */
     _highlightResizeObserve() {
@@ -817,11 +797,13 @@ weSnippetEditor.SnippetEditor.include({
         this.editorResizeObserver.observe(this.$target[0]);
     },
     /**
+     * TODO: Remove in master (left in stable for compatibility)
+     *
      * @private
      */
     _adaptOnOptionResize() {
-        [...this.$target[0].querySelectorAll(".o_text_highlight:not(.o_text_highlight_disabled)")].forEach(textEl => {
-            switchTextHighlight(textEl, getCurrentTextHighlight(textEl));
+        [...this.$target[0].querySelectorAll(".o_text_highlight")].forEach(textEl => {
+            switchTextHighlight(textEl);
         });
     },
 });
@@ -888,11 +870,6 @@ wSnippetMenu.include({
                     });
                 }
                 optionsEl.remove();
-            }
-            // We only save the highlight information on the main text wrapper,
-            // the full structure will be restaured on page load.
-            for (const textHighlightEl of getFromEditable(".o_text_highlight")) {
-                removeTextHighlight(textHighlightEl);
             }
         });
     },

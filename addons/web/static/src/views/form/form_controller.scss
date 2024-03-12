@@ -288,6 +288,14 @@
         }
     }
 
+    .o_form_sheet_bg > .alert {
+        --alert-margin-bottom: #{map-get($spacers, 1)};
+
+        &:nth-last-child(1 of .alert) {
+            --alert-margin-bottom: #{map-get($spacers, 2)};
+        }
+    }
+
     // Statusbar
     .o_form_statusbar {
         > .o_statusbar_status {
