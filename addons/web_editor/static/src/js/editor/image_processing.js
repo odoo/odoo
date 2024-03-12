@@ -13,6 +13,7 @@ const modifierFields = [
     'originalSrc',
     'resizeWidth',
     'aspectRatio',
+    "bgSrc",
 ];
 
 // webgl color filters
@@ -375,7 +376,7 @@ return {
     activateCropper,
     loadImageInfo,
     loadImage,
-    removeOnImageChangeAttrs: [...cropperDataFields, ...modifierFields, 'aspectRatio'],
+    removeOnImageChangeAttrs: [...cropperDataFields, ...modifierFields],
     isImageSupportedForProcessing,
     isImageSupportedForStyle,
 };
