@@ -31,12 +31,16 @@
                     <field name="hide_writeoff_section" invisible="1"/>
                     <field name="writeoff_is_exchange_account" invisible="1"/>
                     <field name="untrusted_bank_ids" invisible="1"/>
+                    <field name="missing_account_partners" invisible="1"/>
 
                     <div role="alert" class="alert alert-info" invisible="not hide_writeoff_section">
                         <p><b>Early Payment Discount applied.</b></p>
                     </div>
                     <div role="alert" class="alert alert-warning" invisible="untrusted_payments_count == 0">
                         <span class="fw-bold"><field name="untrusted_payments_count" class="oe_inline"/> out of <field name="total_payments_amount" class="oe_inline"/> payments will be skipped due to <button class="oe_link p-0 align-baseline" type="object" name="action_open_untrusted_bank_accounts">untrusted bank accounts</button>.</span>
+                    </div>
+                    <div role="alert" class="alert alert-warning" invisible="not missing_account_partners">
+                        <span class="fw-bold">Payments related to partners with no bank account specified will be skipped. <button class="oe_link p-0 align-baseline" type="object" name="action_open_missing_account_partners">View Partner(s)</button></span>
                     </div>
                     <group>
                         <group name="group1">
