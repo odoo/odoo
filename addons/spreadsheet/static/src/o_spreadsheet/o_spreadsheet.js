@@ -5229,8 +5229,10 @@
             if (x === cell) {
                 found = true;
             }
-            const cellValue = evaluateLiteral(x?.content, { locale: DEFAULT_LOCALE });
-            if (filter(cellValue)) {
+            const cellValue = x?.isFormula
+                ? undefined
+                : evaluateLiteral(x?.content, { locale: DEFAULT_LOCALE });
+            if (cellValue && filter(cellValue)) {
                 group.push(cellValue);
             }
             else {
@@ -24781,7 +24783,11 @@
             }
         }
         updateCellReferenceVisibility() {
-            if (this.isCellReferenceVisible || this.env.model.getters.getEditionMode() === "inactive") {
+            if (this.env.model.getters.getEditionMode() === "inactive") {
+                this.isCellReferenceVisible = false;
+                return;
+            }
+            if (this.isCellReferenceVisible) {
                 return;
             }
             const sheetId = this.env.model.getters.getActiveSheetId();
@@ -34662,7 +34668,6 @@
             "getNumberHeaders",
             "getGridLinesVisibility",
             "getNextSheetName",
-            "isEmpty",
             "getSheetSize",
             "getSheetZone",
             "getPaneDivisions",
@@ -35038,14 +35043,6 @@
         // ---------------------------------------------------------------------------
         // Row/Col manipulation
         // ---------------------------------------------------------------------------
-        /**
-         * Check if a zone only contains empty cells
-         */
-        isEmpty(sheetId, zone) {
-            return positions(zone)
-                .map(({ col, row }) => this.getCell({ sheetId, col, row }))
-                .every((cell) => !cell || cell.content === "");
-        }
         getCommandZones(cmd) {
             const zones = [];
             if ("zone" in cmd) {
@@ -37105,6 +37102,7 @@
             "getEvaluatedCell",
             "getEvaluatedCells",
             "getEvaluatedCellsInZone",
+            "isEmpty",
         ];
         shouldRebuildDependenciesGraph = true;
         evaluator;
@@ -37202,6 +37200,14 @@
         }
         getEvaluatedCellsInZone(sheetId, zone) {
             return positions(zone).map(({ col, row }) => this.getters.getEvaluatedCell({ sheetId, col, row }));
+        }
+        /**
+         * Check if a zone only contains empty cells
+         */
+        isEmpty(sheetId, zone) {
+            return positions(zone)
+                .map(({ col, row }) => this.getEvaluatedCell({ sheetId, col, row }))
+                .every((cell) => cell.type === CellValueType.empty);
         }
         // ---------------------------------------------------------------------------
         // Export
@@ -51715,9 +51721,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.24';
-    __info__.date = '2024-02-28T12:47:21.498Z';
-    __info__.hash = '90c74d1';
+    __info__.version = '16.4.25';
+    __info__.date = '2024-03-12T08:04:20.712Z';
+    __info__.hash = '182ad16';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
