@@ -66,5 +66,6 @@ export {
     scroll,
     select,
     setInputFiles,
+    setInputRange,
     uncheck,
 } from "./helpers/events";
