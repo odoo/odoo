@@ -414,6 +414,26 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
             # determine the fields which are currently translated in the database
             cr.execute("SELECT model || '.' || name FROM ir_model_fields WHERE translate IS TRUE")
             registry._database_translated_fields = {row[0] for row in cr.fetchall()}
+            cr.execute(
+                """
+                SELECT f.model || '.' || f.name
+                  FROM ir_model_fields f
+                  JOIN ir_model_data d
+                    ON d.res_id = f.id
+                   AND d.model = 'ir.model.fields'
+                  JOIN ir_module_module m
+                    ON d.module = m.name
+                  JOIN ir_model_data d2
+                    ON d2.res_id = f.id
+                   AND d2.id != d.id
+                  JOIN ir_module_module m2
+                    ON d2.module = m2.name
+                 WHERE m.state = 'to remove'
+                   AND m2.state = 'installed'
+                 GROUP BY f.model, f.name
+                """
+            )
+            registry._overriden_fields_to_reload = {row[0] for row in cr.fetchall()}
 
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading
@@ -483,20 +503,27 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
 
         if update_module:
             # set up the registry without the patch for translated fields
-            database_translated_fields = registry._database_translated_fields
+            database_translated_fields = set(registry._database_translated_fields)
+            overriden_fields_to_reload = set(registry._overriden_fields_to_reload)
             registry._database_translated_fields = ()
+            registry._overriden_fields_to_reload = ()
             registry.setup_models(cr)
             # determine which translated fields should no longer be translated,
             # and make their model fix the database schema
-            models_to_untranslate = set()
-            for full_name in database_translated_fields:
+            models_to_init = set()
+            for full_name in database_translated_fields | overriden_fields_to_reload:
                 model_name, field_name = full_name.rsplit('.', 1)
                 if model_name in registry:
                     field = registry[model_name]._fields.get(field_name)
-                    if field and not field.translate:
-                        _logger.debug("Making field %s non-translated", field)
-                        models_to_untranslate.add(model_name)
-            registry.init_models(cr, list(models_to_untranslate), {'models_to_check': True})
+                    if field:
+                        if not field.translate and full_name in database_translated_fields:
+                            _logger.debug("Making field %s non-translated", field)
+                            models_to_init.add(model_name)
+                        elif not field.store:
+                            _logger.debug("Ensure field %s store property", field)
+                            models_to_init.add(model_name)
+
+            registry.init_models(cr, list(models_to_init), {'models_to_check': True})
 
         registry.loaded = True
         registry.setup_models(cr)
