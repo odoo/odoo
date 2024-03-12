@@ -60,6 +60,10 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
 
         return super.calculateColumnWidth(column);
     }
+
+    get showTimeline() {
+        return !this.props.list.context.no_timeline;
+    }
 }
 
 export class SkillsX2ManyField extends X2ManyField {
