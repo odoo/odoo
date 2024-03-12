@@ -353,6 +353,7 @@ export class OdooEditor extends EventTarget {
             document: this.document,
             floating: true,
             getContextFromParentRect: this.options.getContextFromParentRect,
+            direction: this.options.direction,
         });
         document.body.appendChild(this.powerboxTablePicker.el);
         this.powerboxTablePicker.addEventListener('cell-selected', ev => {
@@ -362,7 +363,7 @@ export class OdooEditor extends EventTarget {
             });
         });
         // Create the table picker for the toolbar.
-        this.toolbarTablePicker = new TablePicker({ document: this.document });
+        this.toolbarTablePicker = new TablePicker({ document: this.document, direction: this.options.direction});
         this.toolbarTablePicker.addEventListener('cell-selected', ev => {
             this.execCommand('insertTable', {
                 rowNumber: ev.detail.rowNumber,
