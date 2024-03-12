@@ -33,6 +33,7 @@
     position: sticky;
     top: 0;
     z-index: $zindex-dropdown - 1;
+    display: none;
 
     .o_we_external_history_buttons {
         display: flex;
@@ -55,6 +56,7 @@
         }
     }
     &.o_loaded {
+        display: flex;
         transform: translateX(0);
 
         > .o_we_customize_panel .oe-toolbar {
