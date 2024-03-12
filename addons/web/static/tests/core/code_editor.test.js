@@ -1,4 +1,4 @@
-import { expect, onError, test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, markup, useState, xml } from "@odoo/owl";
@@ -59,11 +59,7 @@ test("Can be rendered", async () => {
 });
 
 test("CodeEditor shouldn't accepts markup values", async () => {
-    onError((ev) => {
-        if (ev instanceof PromiseRejectionEvent) {
-            ev.preventDefault();
-        }
-    });
+    expect.errors(1);
 
     console.warn = (msg) => expect.step(msg);
 
