@@ -140,6 +140,7 @@ class AccountPaymentRegister(models.TransientModel):
     untrusted_bank_ids = fields.Many2many('res.partner.bank', compute='_compute_trust_values')
     total_payments_amount = fields.Integer(compute='_compute_trust_values')
     untrusted_payments_count = fields.Integer(compute='_compute_trust_values')
+    missing_account_partners = fields.Many2many('res.partner', compute='_compute_trust_values')
 
     # -------------------------------------------------------------------------
     # HELPERS
@@ -351,20 +352,25 @@ class AccountPaymentRegister(models.TransientModel):
             total_payment_count = 0
             untrusted_payments_count = 0
             untrusted_accounts = self.env['res.partner.bank']
+            missing_account_partners = self.env['res.partner']
 
-            # Validate batches; if require_partner_bank_account and the account isn't trusted, we do not allow the payment
+            # Validate batches; if require_partner_bank_account and the account isn't setup and trusted, we do not allow the payment
             for batch in batches:
                 payment_count = 1 if wizard.group_payment else len(batch['lines'])
                 total_payment_count += payment_count
                 batch_account = wizard._get_batch_account(batch)
-                if wizard.require_partner_bank_account and not batch_account.allow_out_payment:
-                    untrusted_payments_count += payment_count
-                    untrusted_accounts |= batch_account
+                if wizard.require_partner_bank_account:
+                    if not batch_account:
+                        missing_account_partners += batch['lines'].partner_id
+                    elif not batch_account.allow_out_payment:
+                        untrusted_payments_count += payment_count
+                        untrusted_accounts |= batch_account
 
             wizard.update({
                 'total_payments_amount': total_payment_count,
                 'untrusted_payments_count': untrusted_payments_count,
                 'untrusted_bank_ids': untrusted_accounts or False,
+                'missing_account_partners': missing_account_partners or False,
             })
 
     @api.depends('line_ids')
@@ -791,11 +797,15 @@ class AccountPaymentRegister(models.TransientModel):
             'company_id': self.company_id.id,
             'currency_id': batch_values['source_currency_id'],
             'partner_id': batch_values['partner_id'],
-            'partner_bank_id': partner_bank_id,
             'payment_method_line_id': payment_method_line.id,
             'destination_account_id': batch_result['lines'][0].account_id.id,
             'write_off_line_vals': [],
         }
+
+        # In case it is false, we don't add it to the create vals so that
+        # _compute_partner_bank_id is executed at payment creation
+        if partner_bank_id:
+            payment_vals['partner_bank_id'] = partner_bank_id
 
         total_amount, mode = self._get_total_amount_using_same_currency(batch_result)
         currency = self.env['res.currency'].browse(batch_values['source_currency_id'])
@@ -926,10 +936,10 @@ class AccountPaymentRegister(models.TransientModel):
         self.ensure_one()
         all_batches = self._get_batches()
         batches = []
-        # Skip batches that are not valid (bank account not trusted but required)
+        # Skip batches that are not valid (bank account not setup or not trusted but required)
         for batch in all_batches:
             batch_account = self._get_batch_account(batch)
-            if self.require_partner_bank_account and not batch_account.allow_out_payment:
+            if self.require_partner_bank_account and (not batch_account or not batch_account.allow_out_payment):
                 continue
             batches.append(batch)
 
@@ -1035,3 +1045,11 @@ class AccountPaymentRegister(models.TransientModel):
             }
 
         return action
+
+    def action_open_missing_account_partners(self):
+        self.ensure_one()
+        vals = {}
+        if len(self.missing_account_partner) > 1:
+            listview_id = self.env.ref('account.partner_missing_account_list_view').id
+            vals['views'] = [(listview_id, 'list'), (False, "form")]
+        return self.missing_account_partner._get_records_action(**vals)
