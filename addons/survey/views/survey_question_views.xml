@@ -261,12 +261,22 @@
                                         placeholder="This question requires an answer."/>
                                 </group>
                                 <group string="Live Sessions">
-                                    <label for="is_time_limited" string="Question Time Limit"/>
-                                    <div>
-                                        <field name="is_time_limited" nolabel="1"/>
+                                    <field name="is_time_customized" invisible="True"/>
+                                    <field name="session_available" invisible="True"/>
+                                    <p class="text-muted" colspan="2" invisible="session_available">
+                                        Time limits are only available for Live Sessions.
+                                    </p>
+                                    <label for="is_time_limited" string="Time Limit (seconds)" invisible="not session_available"/>
+                                    <div invisible="not session_available">
+                                        <field name="is_time_limited" nolabel="1" class="oe_inline"
+                                            widget="boolean_update_flag"
+                                            options="{'flagFieldName': 'is_time_customized'}"
+                                            context="{'referenceValue': parent.session_speed_rating}"/>
                                         <field name="time_limit" nolabel="1" class="oe_inline"
+                                            widget="integer_update_flag"
+                                            options="{'flagFieldName': 'is_time_customized'}"
+                                            context="{'referenceValue': parent.session_speed_rating_time_limit}"
                                             invisible="not is_time_limited" />
-                                        <span invisible="not is_time_limited"> seconds</span>
                                     </div>
                                 </group>
                             </group>

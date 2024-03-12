@@ -9,12 +9,13 @@
                 <field name="id" invisible="1"/>
                 <field name="session_state" invisible="1"/>
                 <field name="question_ids" invisible="1"/>
+                <field name="session_available" invisible="1"/>
                 <header>
                     <button name="action_send_survey" string="Share" type="object" class="oe_highlight" invisible="not active"/>
                     <button name="action_result_survey" string="See results" type="object" class="oe_highlight"
                       invisible="answer_done_count &lt;= 0"/>
                     <button name="action_start_session" string="Create Live Session" type="object" class="d-none d-sm-block"
-                        invisible="session_state or not active or certification or survey_type in ('survey', 'assessment')" />
+                        invisible="session_state or not active or certification or not session_available"/>
                     <button name="action_open_session_manager" string="Open Session Manager" type="object" class="d-none d-sm-block"
                         invisible="not session_state" />
                     <button name="action_end_session" string="Close Live Session" type="object" class="d-none d-sm-block"
@@ -70,7 +71,12 @@
                                     <field name="title" widget="survey_description_page"/>
                                     <field name="background_image" column_invisible="True"/>
                                     <field name="question_type" />
-                                    <field name="constr_mandatory" optional="1"/>
+                                    <field name="is_time_limited" string="Time Limit" optional="hide"
+                                        column_invisible="not parent.session_available"/>
+                                    <field name="time_limit" optional="hide" invisible="not is_time_limited"
+                                        column_invisible="not parent.session_available"/>
+                                    <field name="is_time_customized" column_invisible="True"/>
+                                    <field name="constr_mandatory" optional="hide"/>
                                     <field name="is_page" column_invisible="True"/>
                                     <field name="questions_selection" column_invisible="True"/>
                                     <field name="survey_id" column_invisible="True"/>
@@ -166,11 +172,11 @@
                                         </div>
                                     </div>
                                 </group>
-                                <group string="Live Session" name="live_session"
-                                       invisible="survey_type in ('survey', 'assessment')">
+                                <group string="Live Session" name="live_session" invisible="not session_available">
                                     <field name="session_code" />
                                     <field name="session_link" widget="CopyClipboardChar" />
-                                    <field name="session_speed_rating" />
+                                    <field name="session_speed_rating" invisible="scoring_type == 'no_scoring'" />
+                                    <field name="session_speed_rating_time_limit" invisible="scoring_type == 'no_scoring' or not session_speed_rating" />
                                 </group>
                             </group>
                         </page>

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
+
 from freezegun import freeze_time
 
 from odoo import _, Command, fields
@@ -303,24 +305,29 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
             'suggested_answer_id': a_01.id
         })
 
+        def assert_answer_status(expected_answer_status, questions_statistics):
+            """Assert counts for 'Correct', 'Partially', 'Incorrect', 'Unanswered' are 0, and 1 for our expected answer status"""
+            for status, count in [(total['text'], total['count']) for total in questions_statistics['totals']]:
+                self.assertEqual(count, 1 if status == expected_answer_status else 0)
+
         # this answer is incorrect with no score: should be considered as incorrect
         statistics = user_input._prepare_statistics()[user_input]
-        self.assertAnswerStatus('Incorrect', statistics)
+        assert_answer_status('Incorrect', statistics)
 
         # this answer is correct with a positive score (even if not the maximum): should be considered as correct
         user_input_line.suggested_answer_id = a_02.id
         statistics = user_input._prepare_statistics()[user_input]
-        self.assertAnswerStatus('Correct', statistics)
+        assert_answer_status('Correct', statistics)
 
         # this answer is correct with the best score: should be considered as correct
         user_input_line.suggested_answer_id = a_03.id
         statistics = user_input._prepare_statistics()[user_input]
-        self.assertAnswerStatus('Correct', statistics)
+        assert_answer_status('Correct', statistics)
 
         # this answer is incorrect but has a score: should be considered as "partially"
         user_input_line.suggested_answer_id = a_04.id
         statistics = user_input._prepare_statistics()[user_input]
-        self.assertAnswerStatus('Partially', statistics)
+        assert_answer_status('Partially', statistics)
 
     @users('survey_manager')
     def test_skipped_values(self):
@@ -694,7 +701,152 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
             },
         )
 
-    def assertAnswerStatus(self, expected_answer_status, questions_statistics):
-        """Assert counts for 'Correct', 'Partially', 'Incorrect', 'Unanswered' are 0, and 1 for our expected answer status"""
-        for status, count in [(total['text'], total['count']) for total in questions_statistics['totals']]:
-            self.assertEqual(count, 1 if status == expected_answer_status else 0)
+    def test_survey_session_speed_reward_config_propagation(self):
+        """Check the speed rating time limit propagation to non time-customized questions."""
+        test_survey = self.env['survey.survey'].create({
+            'title': 'Test This Survey',
+            'scoring_type': 'scoring_with_answers',
+            'question_and_page_ids': [
+                Command.create({
+                    'is_time_customized': True,
+                    'is_time_limited': True,
+                    'time_limit': 30,
+                    'title': 'Question A',
+                }), Command.create({
+                    'is_time_customized': True,
+                    'is_time_limited': True,
+                    'time_limit': 40,
+                    'title': 'Question B',
+                }), Command.create({
+                    'time_limit': 11,  # left-over somehow
+                    'title': 'Question C',
+                }),
+            ],
+        })
+        self.assertFalse(test_survey.session_speed_rating)
+
+        test_survey.write({'session_speed_rating': True, 'session_speed_rating_time_limit': 30})
+        self.assertEqual(test_survey.session_speed_rating_time_limit, 30)
+        self.assertSetEqual({*test_survey.question_ids.mapped('is_time_limited')}, {True})
+        self.assertListEqual(test_survey.question_ids.mapped('time_limit'), [30, 40, 30])
+        self.assertListEqual(test_survey.question_ids.mapped('is_time_customized'), [False, True, False])
+
+        test_survey.session_speed_rating_time_limit = 40
+        self.assertSetEqual({*test_survey.question_ids.mapped('time_limit')}, {40})
+        self.assertSetEqual({*test_survey.question_ids.mapped('is_time_customized')}, {False})
+
+        test_survey.question_ids[:2].write({
+            "is_time_limited": False,
+            'is_time_customized': True,  # As would the client do
+        })
+        self.assertListEqual(test_survey.question_ids.mapped('is_time_limited'), [False, False, True])
+        self.assertListEqual(test_survey.question_ids.mapped('is_time_customized'), [True, True, False])
+
+        test_survey.session_speed_rating_time_limit = 20
+        self.assertListEqual(test_survey.question_ids.mapped('is_time_limited'), [False, False, True])
+        self.assertListEqual(test_survey.question_ids.mapped('is_time_customized'), [True, True, False])
+        self.assertEqual(test_survey.question_ids[2].time_limit, 20)
+
+        test_survey.session_speed_rating = False
+        self.assertSetEqual({*test_survey.question_ids.mapped('is_time_limited')}, {False})
+        self.assertSetEqual({*test_survey.question_ids.mapped('is_time_customized')}, {False})
+
+        # test update in batch
+        test_survey.write({'session_speed_rating': True, 'session_speed_rating_time_limit': 30})
+        self.assertSetEqual({*test_survey.question_ids.mapped('is_time_limited')}, {True})
+        self.assertSetEqual({*test_survey.question_ids.mapped('time_limit')}, {30})
+        self.assertSetEqual({*test_survey.question_ids.mapped('is_time_customized')}, {False})
+
+    def test_survey_session_speed_reward_default_applied(self):
+        """Check that new questions added to a survey with speed reward will apply defaults."""
+        test_survey = self.env['survey.survey'].create({
+            'title': 'Test This Survey',
+            'scoring_type': 'scoring_with_answers',
+            'session_speed_rating': True,
+            'session_speed_rating_time_limit': 60,
+        })
+        question_1, question_2, question_3, question_4 = self.env['survey.question'].create([{
+            'is_time_limited': True,  # from client, unedited time limits (from default_get)
+            'question_type': 'numerical_box',
+            'survey_id': test_survey.id,
+            'time_limit': 60,
+            'title': 'Question 1',
+        }, {
+            'survey_id': test_survey.id,  # simple values (via rpc for example), will be updated to is_time_customized
+            'question_type': 'numerical_box',
+            'title': 'Question 2',
+        }, {
+            'is_time_customized': True,
+            'is_time_limited': False,
+            'question_type': 'numerical_box',
+            'survey_id': test_survey.id,
+            'title': 'Question 3',
+        }, {
+            'is_time_customized': True,  # override in client
+            'is_time_limited': True,
+            'question_type': 'numerical_box',
+            'survey_id': test_survey.id,
+            'time_limit': 30,
+            'title': 'Question 4',
+        },
+        ])
+        self.assertTrue(question_1.is_time_limited)
+        self.assertEqual(question_1.time_limit, 60)
+        self.assertFalse(question_1.is_time_customized)
+
+        self.assertFalse(question_2.is_time_limited)
+        self.assertFalse(question_2.time_limit)
+        self.assertTrue(question_2.is_time_customized)
+
+        self.assertFalse(question_3.is_time_limited)
+        self.assertTrue(question_3.is_time_customized)
+        self.assertFalse(question_2.time_limit)
+
+        self.assertTrue(question_4.is_time_limited)
+        self.assertEqual(question_4.time_limit, 30)
+        self.assertTrue(question_4.is_time_customized)
+
+    def test_survey_time_limits_results(self):
+        """Check that speed-related scores awarded are correctly computed."""
+        start_time = datetime.datetime(2023, 7, 7, 12, 0, 0)
+        test_survey = self.env['survey.survey'].create({
+            'title': 'Test This Survey',
+            'scoring_type': 'scoring_with_answers',
+            'scoring_success_min': 80.0,
+            'session_speed_rating': True,
+            'session_speed_rating_time_limit': 30,
+            'session_question_start_time': start_time,
+        })
+        q_01 = self.env['survey.question'].create([{
+            'is_time_customized': True,
+            'is_time_limited': True,
+            'question_type': 'simple_choice',
+            'suggested_answer_ids': [
+                Command.create({'value': 'In Asia', 'answer_score': 5.0, 'is_correct': True}),
+                Command.create({'value': 'In Europe', 'answer_score': 0., 'is_correct': False}),
+            ],
+            'survey_id': test_survey.id,
+            'time_limit': 60,
+            'title': 'Where is india?',
+        }])
+        answer_correct, answer_incorrect = q_01.suggested_answer_ids
+        user_input = self.env['survey.user_input'].create({'survey_id': test_survey.id, 'is_session_answer': True})
+        for (seconds_since_start, answer), expected_score in zip(
+            [
+                (61, answer_correct),  # time limit elapsed
+                (61, answer_incorrect),
+                (31, answer_correct),  # half of time limit elapsed
+                (31, answer_incorrect),
+                (2, answer_correct),  # end of max_score_delay
+                (2, answer_incorrect),
+            ], [2.5, 0.0, 3.75, 0.0, 5.0, 0.0],  # 2.5 if succeeded + up to 2.5 depending on time to answer
+        ):
+            with (self.subTest(elapsed=seconds_since_start, is_correct=answer.is_correct),
+                  freeze_time(start_time + datetime.timedelta(seconds=seconds_since_start))):
+                user_input_line = self.env['survey.user_input.line'].create({
+                    'user_input_id': user_input.id,
+                    'question_id': q_01.id,
+                    'answer_type': 'suggestion',
+                    'suggested_answer_id': answer.id,
+                })
+                self.assertEqual(user_input_line.answer_score, expected_score)
