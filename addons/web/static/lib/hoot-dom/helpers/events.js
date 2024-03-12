@@ -710,22 +710,37 @@ const _click = (target, options) => {
 const _fill = (target, value, options) => {
     const initialValue = target.value;
 
-    if (getTag(target) === "input" && target.type === "file") {
-        const dataTransfer = new DataTransfer();
-        const files = ensureArray(value);
-        if (files.length > 1 && !target.multiple) {
-            throw new HootDomError(`input[type="file"] does not support multiple files`);
-        }
-        for (const file of files) {
-            if (!(file instanceof File)) {
-                throw new TypeError(`file input only accept 'File' objects`);
-            }
-            dataTransfer.items.add(file);
-        }
-        target.files = dataTransfer.files;
+    if (getTag(target) === "input") {
+        switch (target.type) {
+            case "file": {
+                const dataTransfer = new DataTransfer();
+                const files = ensureArray(value);
+                if (files.length > 1 && !target.multiple) {
+                    throw new HootDomError(`input[type="file"] does not support multiple files`);
+                }
+                for (const file of files) {
+                    if (!(file instanceof File)) {
+                        throw new TypeError(`file input only accept 'File' objects`);
+                    }
+                    dataTransfer.items.add(file);
+                }
+                target.files = dataTransfer.files;
 
-        dispatch(target, "change");
-        return;
+                dispatch(target, "change");
+                return;
+            }
+            case "range": {
+                const numberValue = Number(value);
+                if (Number.isNaN(numberValue)) {
+                    throw new TypeError(`input[type="range"] only accept 'number' values`);
+                }
+
+                target.value = String(numberValue);
+                dispatch(target, "input");
+                dispatch(target, "change");
+                return;
+            }
+        }
     }
 
     if (options?.instantly) {
@@ -1913,6 +1928,22 @@ export function setInputFiles(files) {
     runTime.currentFileInput = null;
 
     return logEvents("setInputFiles");
+}
+
+/**
+ * @param {Target} target
+ * @param {number} value
+ * @param {PointerOptions} options
+ */
+export function setInputRange(target, value, options) {
+    const element = getFirstTarget(target, options);
+
+    _implicitHover(element, options);
+    _pointerDown(element, options);
+    _fill(element, value);
+    _pointerUp(element, options);
+
+    return logEvents("setInputRange");
 }
 
 /**

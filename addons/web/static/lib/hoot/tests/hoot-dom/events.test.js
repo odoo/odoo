@@ -20,6 +20,7 @@ import {
     scroll,
     select,
     setInputFiles,
+    setInputRange,
     uncheck,
 } from "../../../hoot-dom/hoot-dom";
 import { after, describe, expect, mountOnFixture, test } from "../../hoot";
@@ -663,6 +664,48 @@ describe(parseUrl(import.meta.url), () => {
         setInputFiles(new File([""], "file.txt"));
 
         expect("input").toHaveValue(/file\.txt/);
+    });
+
+    test("setInputRange: basic case and events", async () => {
+        await mountOnFixture(/* xml */ `<input type="range" min="10" max="40" />`);
+
+        monitorEvents("input");
+
+        setInputRange("input", 30);
+
+        expect("input").toHaveValue(30);
+        expect([
+            // Hover input
+            "input.pointerover",
+            "input.mouseover",
+            "input.pointerenter",
+            "input.mouseenter",
+            "input.pointermove",
+            "input.mousemove",
+            // Pointer down
+            "input.pointerdown",
+            "input.mousedown",
+            "input.focus",
+            // Set range
+            "input.input",
+            "input.change",
+            // Pointer up
+            "input.pointerup",
+            "input.mouseup",
+            "input.click",
+        ]).toVerifySteps();
+    });
+
+    test("setInputRange: out of min and max values", async () => {
+        await mountOnFixture(/* xml */ `<input type="range" min="10" max="40" />`);
+
+        setInputRange("input", 5);
+
+        expect("input").toHaveValue(10);
+
+        setInputRange("input", 50);
+
+        expect("input").toHaveValue(40);
     });
 
     test("hover", async () => {
