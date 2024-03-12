@@ -47,6 +47,17 @@ class SurveyQuestion(models.Model):
     _rec_name = 'title'
     _order = 'sequence,id'
 
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if default_survey_id := self.env.context.get('default_survey_id'):
+            survey = self.env['survey.survey'].browse(default_survey_id)
+            if 'is_time_limited' in fields_list and 'is_time_limited' not in res:
+                res['is_time_limited'] = survey.session_speed_rating
+            if 'time_limit' in fields_list and 'time_limit' not in res:
+                res['time_limit'] = survey.session_speed_rating_time_limit
+        return res
+
     # question generic data
     title = fields.Char('Title', required=True, translate=True)
     description = fields.Html(
@@ -58,6 +69,7 @@ class SurveyQuestion(models.Model):
     survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade')
     scoring_type = fields.Selection(related='survey_id.scoring_type', string='Scoring Type', readonly=True)
     sequence = fields.Integer('Sequence', default=10)
+    session_available = fields.Boolean(related='survey_id.session_available', string='Live Session available', readonly=True)
     # page specific
     is_page = fields.Boolean('Is a page?')
     question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_question_ids")
@@ -118,6 +130,7 @@ class SurveyQuestion(models.Model):
     # -- display & timing options
     is_time_limited = fields.Boolean("The question is limited in time",
         help="Currently only supported for live sessions.")
+    is_time_customized = fields.Boolean("Customized speed rewards")
     time_limit = fields.Integer("Time limit (seconds)")
     # -- comments (simple choice, multiple choice, matrix (without count as an answer))
     comments_allowed = fields.Boolean('Show Comments Field')
@@ -179,6 +192,8 @@ class SurveyQuestion(models.Model):
             'All "Is a scored question = True" and "Question Type: Date" questions need an answer'),
         ('scale', "CHECK (question_type != 'scale' OR (scale_min >= 0 AND scale_max <= 10 AND scale_min < scale_max))",
             'The scale must be a growing non-empty range between 0 and 10 (inclusive)'),
+        ('is_time_limited_have_time_limit', "CHECK (is_time_limited != TRUE OR time_limit IS NOT NULL AND time_limit > 0)",
+            'All time-limited questions need a positive time limit'),
     ]
 
     # -------------------------------------------------------------------------
@@ -388,9 +403,14 @@ class SurveyQuestion(models.Model):
                 new_question.triggering_answer_ids = old_question.triggering_answer_ids
         return new_questions
 
-    # ------------------------------------------------------------
-    # CRUD
-    # ------------------------------------------------------------
+    def create(self, vals_list):
+        questions = super().create(vals_list)
+        questions.filtered(
+            lambda q: q.survey_id
+            and (q.survey_id.session_speed_rating != q.is_time_limited
+                 or q.is_time_limited and q.survey_id.session_speed_rating_time_limit != q.time_limit)
+        ).is_time_customized = True
+        return questions
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_live_sessions_in_progress(self):
@@ -519,6 +539,36 @@ class SurveyQuestion(models.Model):
         However, the order of the recordset is always correct so we can rely on the index method."""
         self.ensure_one()
         return list(self.survey_id.question_and_page_ids).index(self)
+
+    # ------------------------------------------------------------
+    # SPEED RATING
+    # ------------------------------------------------------------
+
+    def _update_time_limit_from_survey(self, is_time_limited=None, time_limit=None):
+        """Update the speed rating values after a change in survey's speed rating configuration.
+
+        * Questions that were not customized will take the new default values from the survey
+        * Questions that were customized will not change their values, but this method will check
+          and update the `is_time_customized` flag if necessary (to `False`) such that the user
+          won't need to "actively" do it to make the question sensitive to change in survey values.
+
+        This is not done with `_compute`s because `is_time_limited` (and `time_limit`) would depend
+        on `is_time_customized` and vice versa.
+        """
+        write_vals = {}
+        if is_time_limited is not None:
+            write_vals['is_time_limited'] = is_time_limited
+        if time_limit is not None:
+            write_vals['time_limit'] = time_limit
+        non_time_customized_questions = self.filtered(lambda s: not s.is_time_customized)
+        non_time_customized_questions.write(write_vals)
+
+        # Reset `is_time_customized` as necessary
+        customized_questions = self - non_time_customized_questions
+        back_to_default_questions = customized_questions.filtered(
+            lambda q: q.is_time_limited == q.survey_id.session_speed_rating
+            and (q.is_time_limited is False or q.time_limit == q.survey_id.session_speed_rating_time_limit))
+        back_to_default_questions.is_time_customized = False
 
     # ------------------------------------------------------------
     # STATISTICS / REPORTING
