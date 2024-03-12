@@ -396,6 +396,7 @@ export class OdooEditor extends EventTarget {
             document: this.document,
             floating: true,
             getContextFromParentRect: this.options.getContextFromParentRect,
+            direction: this.options.direction,
         });
         document.body.appendChild(this.powerboxTablePicker.el);
         this.powerboxTablePicker.addEventListener('cell-selected', ev => {
