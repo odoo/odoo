@@ -1,0 +1,24 @@
+$droid-font-path: '../fonts/droid';
+
+@mixin droid-font($ffamily,$type, $weight, $style) {
+    @font-face {
+        font-family: $ffamily;
+        font-style: $style;
+        font-weight: $weight;
+
+        src: url('#{$droid-font-path}/#{$type}.eot');
+        src: url('#{$droid-font-path}/#{$type}.eot?#iefix') format('embedded-opentype'),
+             url('#{$droid-font-path}/#{$type}.woff') format('woff'),
+             url('#{$droid-font-path}/#{$type}.ttf') format('truetype'),
+             url('#{$droid-font-path}/#{$type}.svg#Almarai') format('svg');
+
+
+        }
+    }
+
+@include droid-font('Droid Arabic Kufi','DroidKufi-Bold', 700,normal);
+@include droid-font('Droid Arabic Kufi','DroidKufi-Regular', 400,normal);
+@include droid-font('Droid Arabic Naskh','DroidNaskh-Bold', 700,normal);
+@include droid-font('Droid Arabic Naskh','DroidNaskh-Regular', 400,normal);
+
+
