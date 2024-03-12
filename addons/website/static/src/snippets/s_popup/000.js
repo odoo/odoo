@@ -95,7 +95,21 @@ const PopupWidget = publicWidget.Widget.extend({
             this._showPopupOnClick();
         } else {
             this._popupAlreadyShown = !!getCookie(this.$el.attr('id'));
-            if (!this._popupAlreadyShown) {
+            // Check if every child element of the popup is conditionally hidden,
+            // and if so, never show an empty popup.
+            // config.device.isMobile is true if the device is <= SM, but the device
+            // visibility option uses < LG to hide on mobile. So compute it here.
+            const isMobile = config.device.size_class < config.device.SIZES.LG;
+            const emptyPopup = [
+                ...this.$el[0].querySelectorAll(".oe_structure > *:not(.s_popup_close)")
+            ].every((el) => {
+                const visibilitySelectors = el.dataset.visibilitySelectors;
+                const deviceInvisible = isMobile
+                    ? el.classList.contains("o_snippet_mobile_invisible")
+                    : el.classList.contains("o_snippet_desktop_invisible");
+                return (visibilitySelectors && el.matches(visibilitySelectors)) || deviceInvisible;
+            });
+            if (!this._popupAlreadyShown && !emptyPopup) {
                 this._bindPopup();
             }
         }
