@@ -186,13 +186,27 @@ class CountryState(models.Model):
             first_domain = [('code', '=ilike', name)]
             domain = [('name', operator, name)]
 
+        fallback_domain = None
+        if name:
+            m = re.fullmatch(r"(?P<name>.+)\((?P<country>.+)\)", name)
+            if m:
+                fallback_domain = [
+                    ('name', operator, m['name'].strip()),
+                    '|', ('country_id.name', 'ilike', m['country'].strip()),
+                         ('country_id.code', '=', m['country'].strip()),
+                ]
+
         first_state_ids = self._search(expression.AND([first_domain, args]), limit=limit, access_rights_uid=name_get_uid) if first_domain else []
         return list(first_state_ids) + [
             state_id
             for state_id in self._search(expression.AND([domain, args]),
                                          limit=limit, access_rights_uid=name_get_uid)
             if state_id not in first_state_ids
-        ]
+        ] or (
+            list(self._search(expression.AND([fallback_domain, args]), limit=limit))
+            if fallback_domain
+            else []
+        )
 
     def name_get(self):
         result = []
