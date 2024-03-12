@@ -1,12 +1,12 @@
 /** @odoo-module */
 
-import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
+import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 import { registry } from "@web/core/registry";
-import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
-import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
-import * as Acceptance from "@point_of_sale/../tests/tours/helpers/AcceptanceTourMethod";
-import * as ProductScreen from "./helpers/ProductScreenTourMethods";
-import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
+import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
+import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
+import * as Acceptance from "@point_of_sale/../tests/tours/utils/acceptance_util";
+import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
+import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
 
 registry.category("web_tour.tours").add("pos_basic_order_01", {
     test: true,

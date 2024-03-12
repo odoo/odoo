@@ -32,7 +32,6 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
         ],
         'web.assets_tests': [
             'pos_sale/static/tests/tours/**/*',
-            'pos_sale/static/tests/helpers/**/*',
         ],
         'point_of_sale.assets_qunit_tests': [
             "pos_sale/static/tests/unit/pos_app_tests.js",
