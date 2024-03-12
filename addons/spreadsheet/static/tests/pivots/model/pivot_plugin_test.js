@@ -1066,10 +1066,9 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
     );
 
     QUnit.test("Can duplicate a pivot", async (assert) => {
-        const { model } = await createSpreadsheetWithPivot();
+        const { model, pivotId } = await createSpreadsheetWithPivot();
         const matching = { chain: "product_id", type: "many2one" };
         const filter = { ...THIS_YEAR_GLOBAL_FILTER, id: "42" };
-        const [pivotId] = model.getters.getPivotIds();
         await addGlobalFilter(model, filter, {
             pivot: { [pivotId]: matching },
         });
@@ -1085,6 +1084,14 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
 
         assert.deepEqual(model.getters.getPivotFieldMatching(pivotId, "42"), matching);
         assert.deepEqual(model.getters.getPivotFieldMatching("2", "42"), matching);
+    });
+
+    QUnit.test("Duplicate pivot respects the formula id increment", async (assert) => {
+        const { model, pivotId } = await createSpreadsheetWithPivot();
+        model.dispatch("DUPLICATE_PIVOT", { pivotId, newPivotId: "second" });
+        model.dispatch("DUPLICATE_PIVOT", { pivotId, newPivotId: "third" });
+        assert.deepEqual(model.getters.getPivotDefinition("second").formulaId, "2");
+        assert.deepEqual(model.getters.getPivotDefinition("third").formulaId, "3");
     });
 
     QUnit.test("Cannot duplicate unknown pivot", async (assert) => {
