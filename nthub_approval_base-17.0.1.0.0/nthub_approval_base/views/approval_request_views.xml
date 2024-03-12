@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="my_request_records_action" model="ir.actions.server">
+        <field name="name">My Requests</field>
+        <field name="model_id" ref="approvals.model_approval_request"/>
+        <field name="binding_model_id" ref="approvals.model_approval_request"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="groups_id" eval="[(4, ref('base.group_no_one'))]"/>
+        <field name="code">
+            action = env.get('approval.request').action_get_my_records()
+        </field>
+    </record>
+
+    <record id="approvals.approvals_request_menu_my" model="ir.ui.menu">
+        <field name="action" ref="nthub_approval_base.my_request_records_action"/>
+    </record>
+
+
+    <record id="approvals.approval_request_request_owner_rule" model="ir.rule">
+        <field name="domain_force">[]</field>
+    </record>
+
+    <record id="approvals.approval_request_unlink_request_owner_rule" model="ir.rule">
+        <field name="domain_force">[]</field>
+    </record>
+
+    <record id="approvals.approval_request_approvers_rule" model="ir.rule">
+        <field name="domain_force">[]</field>
+    </record>
+
+
+</odoo>
