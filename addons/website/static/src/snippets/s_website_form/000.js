@@ -112,6 +112,7 @@ import wUtils from '@website/js/utils';
                 const defaultValue = input.getAttribute("value");
                 this.call("datetime_picker", "create", {
                     target: input,
+                    onChange: () => input.dispatchEvent(new Event("input", { bubbles: true })),
                     pickerProps: {
                         type: field.matches('.s_website_form_date, .o_website_form_date') ? 'date' : 'datetime',
                         value: defaultValue && DateTime.fromSeconds(parseInt(defaultValue)),
