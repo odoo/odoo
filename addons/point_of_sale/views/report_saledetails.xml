@@ -71,10 +71,10 @@
                                     </td>
                                     <td class="text-end">
                                         <t t-if="currency['position']">
-                                            <t t-esc='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
+                                            <t t-esc='line["base_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
                                         </t>
                                         <t t-else="" >
-                                            <t t-esc='currency["symbol"]' /><t t-esc='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                                            <t t-esc='currency["symbol"]' /><t t-esc='line["base_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                                         </t>
 
                                         <t t-if='line["discount"] != 0'>
