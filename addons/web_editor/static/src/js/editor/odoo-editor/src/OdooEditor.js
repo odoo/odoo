@@ -4121,6 +4121,12 @@ export class OdooEditor extends EventTarget {
                 restore(); // Make sure to make <br>s visible if needed.
             }
         }
+        // Remove now empty links
+        for (const link of element.querySelectorAll('a')) {
+            if (![...link.childNodes].some(isVisible) && !link.classList.length) {
+                link.remove();
+            }
+        }
 
         // Remove contenteditable=false on elements
         for (const el of element.querySelectorAll('[contenteditable="false"]')) {
