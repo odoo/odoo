@@ -195,9 +195,6 @@
             'project/static/src/components/project_task_name_with_subtask_count_char_field/*',
             'project/static/src/components/project_task_state_selection/*',
             'project/static/src/components/project_many2one_field/*',
-            'partner_autocomplete/static/src/js/partner_autocomplete_core.js',
-            'partner_autocomplete/static/src/js/partner_autocomplete_many2one.js',
-            'partner_autocomplete/static/src/xml/partner_autocomplete.xml',
             'project/static/src/views/project_task_form/*.scss',
 
             'project/static/src/project_sharing/search/favorite_menu/custom_favorite_item.xml',

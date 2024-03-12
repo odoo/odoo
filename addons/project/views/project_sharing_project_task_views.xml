@@ -111,6 +111,9 @@
                 <attribute name="delete">0</attribute>
                 <attribute name="import">0</attribute>
             </tree>
+            <xpath expr="//field[@widget='res_partner_many2one']" position="attributes">
+                <attribute name="widget">many2one</attribute>
+            </xpath>
             <field name="user_ids" position="replace">
                 <field name="portal_user_names" string="Assignees"/>
             </field>
@@ -263,7 +266,7 @@
                                         column_invisible="not parent.allow_milestones"
                                     />
                                     <field name="company_id" column_invisible="True"/>
-                                    <field name="partner_id" widget="res_partner_many2one" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide" invisible="not project_id"/>
+                                    <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide" invisible="not project_id"/>
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
                                     <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
