@@ -43,8 +43,16 @@
                 padding-left: var(--ListRenderer-table-padding-x);
             }
 
+<<<<<<< HEAD
             > tr > :last-child {
                 padding-right: var(--ListRenderer-table-padding-x);
+||||||| parent of aebcd4839ffd (temp)
+            > tr > :last-child, .o_optional_columns_dropdown {
+                padding-right: var(--ListRenderer-table-padding-h);
+=======
+            > tr > :last-child {
+                padding-right: var(--ListRenderer-table-padding-h);
+>>>>>>> aebcd4839ffd (temp)
             }
 
             > tr > :empty {
@@ -52,6 +60,24 @@
             }
         }
 
+<<<<<<< HEAD
+||||||| parent of aebcd4839ffd (temp)
+        :not(.o_field_x2many_list) > & thead, tfoot {
+            tr > :not(:empty), .o_optional_columns_dropdown {
+                padding-top: var(--ListRenderer-thead-padding-v);
+                padding-bottom: var(--ListRenderer-thead-padding-v);
+            }
+        }
+
+=======
+        :not(.o_field_x2many_list) > & thead, tfoot {
+            tr > :not(:empty) {
+                padding-top: var(--ListRenderer-thead-padding-v);
+                padding-bottom: var(--ListRenderer-thead-padding-v);
+            }
+        }
+
+>>>>>>> aebcd4839ffd (temp)
         thead {
             background-color: var(--ListRenderer-thead-bg-color);
 
@@ -268,8 +294,23 @@
         .o_list_actions_header {
             width: 32px;
             background-color: var(--ListRenderer-thead-bg-color);
+<<<<<<< HEAD
         }
 
+||||||| parent of aebcd4839ffd (temp)
+            z-index: 100;
+        }
+
+        .o_optional_columns_dropdown {
+            height: var(--body-line-height);
+            padding: $table-cell-padding-y-sm $table-cell-padding-x-sm;
+        }
+
+=======
+            z-index: 100;
+        }
+
+>>>>>>> aebcd4839ffd (temp)
         .o_data_row.o_list_no_open {
             cursor: default;
         }
