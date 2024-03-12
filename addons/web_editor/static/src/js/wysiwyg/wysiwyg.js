@@ -3564,8 +3564,9 @@ export class Wysiwyg extends Component {
                 }
             }
         }
+        const originalAttachmentId = imageData.originalId ? encodeURIComponent(imageData.originalId) : "";
         const newAttachmentSrc = await this._serviceRpc(
-            `/web_editor/modify_image/${encodeURIComponent(imageData.originalId)}`,
+            `/web_editor/modify_image/${originalAttachmentId}`,
             {
                 res_model: resModel,
                 res_id: parseInt(resId),

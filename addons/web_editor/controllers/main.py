@@ -634,8 +634,11 @@ class Web_Editor(http.Controller):
 
         return files_data_by_bundle
 
-    @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
-    def modify_image(self, attachment, res_model=None, res_id=None, res_field=None, res_type=None, name=None, data=None, mimetype=None, alt_data=None, saved_image_data=None):
+    @http.route([
+        '/web_editor/modify_image/',
+        '/web_editor/modify_image/<model("ir.attachment"):attachment>',
+    ], type="json", auth="user", website=True)
+    def modify_image(self, attachment=None, res_model=None, res_id=None, res_field=None, res_type=None, name=None, data=None, mimetype=None, alt_data=None, saved_image_data=None):
         """
         Creates a modified copy of an attachment, updates (or creates) the
         data record linked to the image and returns its image_src to be inserted
@@ -654,6 +657,28 @@ class Web_Editor(http.Controller):
         :param saved_image_data: The data of the modified image.
         :return: The new image source to be inserted on the DOM.
         """
+        if not attachment:
+            # Create an original attachment first.
+            if res_type != 'image':
+                # Default image used in a view: create an "url" attachment
+                attachment = self._attachment_create(url=saved_image_data['original_src'])
+            else:
+                # Default image field or image field modified from the backend:
+                # create a "data" attachment.
+                mimetype_original = saved_image_data['mimetype_before_conversion']
+                name_original = '%s-%s%s' % (
+                    datetime.now().strftime('%Y%m%d%H%M%S'),
+                    str(uuid.uuid4())[:6],
+                    SUPPORTED_IMAGE_MIMETYPES[mimetype_original],
+                )
+                attachment = self._attachment_create(
+                    name=name_original,
+                    data=b64decode(request.env[res_model].browse(res_id)[res_field]),
+                    res_id=res_id,
+                    res_model=res_model,
+                )
+            saved_image_data['original_id'] = attachment.id
+
         fields = {
             'original_id': attachment.id,
             'datas': data,
