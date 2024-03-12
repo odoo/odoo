@@ -879,6 +879,45 @@ describe('Link', () => {
                 contentAfter: '<p>a<a href="exist">b</a></p><p>c[]d</p>',
             });
         });
+        it('should remove an empty link on save', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="exist">b[]</a>c</p>',
+                contentBeforeEdit: '<p>a\ufeff<a href="exist" class="o_link_in_selection">\ufeffb[]\ufeff</a>\ufeffc</p>',
+                stepFunction: deleteBackward,
+                contentAfterEdit: '<p>a\ufeff<a href="exist" class="o_link_in_selection">\ufeff[]\ufeff</a>\ufeffc</p>',
+                contentAfter: '<p>a[]c</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="exist"></a>b</p>',
+                contentBeforeEdit: '<p>a\ufeff<a href="exist">\ufeff</a>\ufeffb</p>',
+                contentAfterEdit: '<p>a\ufeff<a href="exist">\ufeff</a>\ufeffb</p>',
+                contentAfter: '<p>ab</p>',
+            });
+        });
+        it('should not remove a link containing an image on save', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="exist"><img></a>b</p>',
+                contentBeforeEdit: '<p>a<a href="exist"><img></a>b</p>',
+                contentAfterEdit: '<p>a<a href="exist"><img></a>b</p>',
+                contentAfter: '<p>a<a href="exist"><img></a>b</p>',
+            });
+        });
+        it('should not remove a document link on save', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="exist" class="o_image" title="file.js.map" data-mimetype="text/plain"></a>b</p>',
+                contentBeforeEdit: '<p>a<a href="exist" class="o_image" title="file.js.map" data-mimetype="text/plain" contenteditable="false"></a>b</p>',
+                contentAfterEdit: '<p>a<a href="exist" class="o_image" title="file.js.map" data-mimetype="text/plain" contenteditable="false"></a>b</p>',
+                contentAfter: '<p>a<a href="exist" class="o_image" title="file.js.map" data-mimetype="text/plain"></a>b</p>',
+            });
+        });
+        it('should not remove a link containing a pictogram on save', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="exist"><span class="fa fa-star"></span></a>b</p>',
+                contentBeforeEdit: '<p>a\ufeff<a href="exist">\ufeff<span class="fa fa-star" contenteditable="false">\u200b</span>\ufeff</a>\ufeffb</p>',
+                contentAfterEdit: '<p>a\ufeff<a href="exist">\ufeff<span class="fa fa-star" contenteditable="false">\u200b</span>\ufeff</a>\ufeffb</p>',
+                contentAfter: '<p>a<a href="exist"><span class="fa fa-star"></span></a>b</p>',
+            });
+        });
         // it('should select and replace all text and add the next char in bold', async () => {
         //     await testEditor(BasicEditor, {
         //         contentBefore: '<div><p>[]123</p><p><a href="#">abc</a></p></div>',
