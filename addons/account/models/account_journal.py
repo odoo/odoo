@@ -464,7 +464,7 @@ class AccountJournal(models.Model):
             company's name or id (in case the company's name is not ascii either).
         """
         def get_company_suffix():
-            if self.company_id != self.env.ref('base.main_company'):
+            if self.alias_id.sudo().search_count([('alias_name', '=', alias_name)]) > 0:
                 try:
                     remove_accents(self.company_id.name).encode('ascii')
                     return '-' + str(self.company_id.name)
