@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <template id="modern_report_invoice_document">
+        <t t-if="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id"></t>
+            </t>
+            <t t-if="not o or not 'company_id' in o">
+                <t t-set="company" t-value="res_company"></t>
+            </t>
+            <div class="header">
+                <div class="row mt32 mb32">
+                    <div class="col-6">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+                             style="max-height: 80px;"/>
+                    </div>
+                    <div class="col-6 text-right"
+                         style="font:16px lucida-console,sans-serif !important; text-align: right;">
+                        <span t-field="company.partner_id"/>
+                        <br/>
+                        <span t-if="company.partner_id.street">
+                            <span t-if="company.partner_id.street" t-field="company.partner_id.street"/>
+                        </span>
+                        <br/>
+                        <span t-if="company.partner_id.street2">
+                            <span t-field="company.partner_id.street2"/>
+                            <br/>
+                        </span>
+
+                        <span t-if="company.partner_id.city" t-field="company.partner_id.city"/>
+                        <br/>
+                        <span t-if="company.partner_id.country_id" t-field="company.partner_id.country_id"/>
+                        <br/>
+                        <span t-if="company.partner_id.vat" t-field="company.partner_id.vat"/>
+                        <br/>
+                    </div>
+                </div>
+            </div>
+
+            <t t-call="web.external_layout">
+                <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div>
+                        <table class="table table-sm table-borderless" style=" table-layout:fixed;">
+                            <thead>
+                                <tr>
+                                    <th width="30px"
+                                        t-attf-style="background-color:#{company.color_account}; !important;  border-radius: 10px; color:#{company.text_color_account}; !important; text-align:left;">
+                                        Customer
+                                    </th>
+                                    <th width="25px"
+                                        t-attf-style="background-color:#{company.color_account}; !important;  border-radius: 10px; color:#{company.text_color_account}; !important; ">
+                                        Reference/Description
+                                    </th>
+                                    <th width="20px"
+                                        t-attf-style="background-color:#{company.color_account}; !important; border-radius: 10px;  color:#{company.text_color_account}; !important; ">
+                                        Invoice #
+                                    </th>
+                                    <th width="30px"
+                                        t-attf-style="background-color:#{company.color_account}; !important; border-radius: 10px;  color:#{company.text_color_account}; !important; text-align:right; ">
+                                        Delivery Address
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div t-field="o.partner_id"/>
+                                        <t t-if="o.partner_id.street">
+                                            <t t-esc="o.partner_id.street"/>
+                                        </t>
+                                        <br/>
+                                        <t t-if="o.partner_id.street2">
+                                            <t t-esc="o.partner_id.street2"/>
+                                            <br/>
+                                        </t>
+
+                                        <t t-if="o.partner_id.city">
+                                            <t t-esc="o.partner_id.city"/>
+                                        </t>
+                                        <br/>
+                                        <t t-if="o.partner_id.state_id.name">
+                                            <t t-esc="o.partner_id.state_id.name"/>
+                                        </t>
+                                        <br/>
+                                        <t t-if="o.partner_id.country_id.name">
+                                            <t t-esc="o.partner_id.country_id.name"/>
+                                        </t>
+                                        <br/>
+                                        <t t-if="o.partner_id.zip">
+                                            <t t-esc="o.partner_id.zip"/>
+                                        </t>
+                                        <br/>
+                                        <div t-field="o.partner_id.vat"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <div t-field="o.payment_reference"/>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <div t-if="o.move_type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA <br/>
+                                        </div>
+                                        <div t-if="o.move_type == 'out_invoice' and o.state == 'draft'">Draft Invoice <br/>
+                                        </div>
+                                        <b>
+                                            <div t-field="o.name"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-end">
+                                        <div t-field="o.partner_shipping_id"/>
+                                        <t t-if="o.partner_id.street">
+                                            <t t-esc="o.partner_shipping_id.street"/>
+                                        </t>
+                                        <br/>
+                                        <t t-if="o.partner_shipping_id.street2">
+                                            <t t-esc="o.partner_shipping_id.street2"/>
+                                            <br/>
+                                        </t>
+
+                                        <t t-if="o.partner_shipping_id.city">
+                                            <t t-esc="o.partner_shipping_id.city"/>
+                                        </t>
+                                        <br/>
+                                        <t t-if="o.partner_shipping_id.state_id.name">
+                                            <t t-esc="o.partner_shipping_id.state_id.name"/>
+                                        </t>
+                                        <br/>
+                                        <t t-if="o.partner_shipping_id.country_id.name">
+                                            <t t-esc="o.partner_shipping_id.country_id.name"/>
+                                        </t>
+                                        <br/>
+                                        <t t-if="o.partner_shipping_id.zip">
+                                            <t t-esc="o.partner_shipping_id.zip"/>
+                                        </t>
+                                        <br/>
+                                        <div t-field="o.partner_shipping_id.vat"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                         <br/>
+                        <table class="table table-sm table-borderless" style=" table-layout:fixed; padding-top=20px;">
+                            <thead>
+                                <tr>
+                                    <th width="30px"
+                                        t-attf-style="background-color:#{company.color_account}; !important; border-radius: 10px; color:#{company.text_color_account}; !important; ">
+                                        Invoice Date
+                                    </th>
+                                    <th width="30px"
+                                        t-attf-style="background-color:#{company.color_account}; !important; border-radius: 10px; color:#{company.text_color_account}; !important; ">
+                                        Due Date
+                                    </th>
+                                    <th width="20px"
+                                        t-attf-style="background-color:#{company.color_account}; !important; border-radius: 10px; color:#{company.text_color_account}; !important; ">
+                                        Payment Term
+                                    </th>
+                                    <th width="20px"
+                                        t-attf-style="background-color:#{company.color_account}; !important; border-radius: 10px; color:#{company.text_color_account}; !important; ">
+                                        SalesPerson
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center">
+                                    <td>
+                                        <div t-field="o.invoice_date"/>
+                                    </td>
+                                    <td>
+                                        <div t-field="o.invoice_date_due"/>
+                                    </td>
+                                    <td>
+                                        <div t-field="o.invoice_payment_term_id"/>
+                                    </td>
+                                    <td>
+                                        <div t-field="o.user_id"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                         <br/>
+                        <div style="padding-top:20px;"></div>
+                        <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>
+
+                        <table class="table table-sm table-borderless">
+                            <thead>
+                                <tr>
+                                    <th t-attf-style="background-color:#{company.color_account}; !important;border-radius: 10px; color:#{company.text_color_account}; !important;">
+                                        Description
+                                    </th>
+                                    <th t-attf-style="background-color:#{company.color_account}; !important;border-radius: 10px; color:#{company.text_color_account}; !important;">
+                                        Quantity
+                                    </th>
+                                    <th t-attf-style="background-color:#{company.color_account}; !important;border-radius: 10px; color:#{company.text_color_account}; !important;">
+                                        Unit Price
+                                    </th>
+                                    <th t-attf-style="background-color:#{company.color_account}; !important;border-radius: 10px; color:#{company.text_color_account}; !important;"
+                                        t-if="display_discount" class="text-right"
+                                        groups="sale.group_discount_per_so_line">Disc.(%)
+                                    </th>
+                                    <th t-attf-style="background-color:#{company.color_account}; !important;border-radius: 10px; color:#{company.text_color_account}; !important;">
+                                        Taxes
+                                    </th>
+                                    <th t-attf-style="background-color:#{company.color_account}; !important;border-radius: 10px; color:#{company.text_color_account}; !important;">
+                                        Price
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="invoice_tbody">
+                                <tr t-foreach="o.invoice_line_ids" t-as="l">
+                                    <td>
+                                        <span t-field="l.name"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="l.quantity"/>
+                                        <span t-field="l.uom_id" groups="product.group_uom"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="l.price_unit"/>
+                                    </td>
+                                    <td t-if="display_discount" class="text-center"
+                                        groups="sale.group_discount_per_so_line">
+                                        <span t-field="l.discount"/>
+                                    </td>
+                                    <td  class="text-center">
+                                        <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.tax_ids))"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="l.price_subtotal"
+                                              t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br/>
+                    <div name="total" class="float-end" style="position: absolute;left: 590px;">
+                        <div class="col-4 pull-right" style="width: 260px;">
+                            <table class="table table-condensed table-borderless">
+                                <tr class="border-black">
+                                    <td>
+                                        <strong>Subtotal</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="o.amount_untaxed"
+                                              t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                    </td>
+                                </tr>
+                                <tr class="border-black"
+                                    t-attf-style="background-color:#{company.color_account}; !important; color:#{company.text_color_account}; !important;">
+                                    <td>
+                                        <strong>Total</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="o.amount_total"
+                                              t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                     <br/>
+                     <br/>
+                    <div style="padding-top:50px;">
+                    </div>
+                    <p t-if="o.narration">
+                        <strong>Comment:</strong>
+                        <span t-field="o.narration"/>
+                    </p>
+                    <p t-if="o.paypal_chk">
+                        <div t-attf-style="background-color:#{company.color_account}; !important;">
+                            <strong t-attf-style="color:#{company.text_color_account}; !important;">Paypal Account
+                                Details
+                            </strong>
+                            <br/>
+                            <span>
+                                <font t-attf-style="color:#{company.text_color_account}; !important;">Paypal Id :</font>
+                            </span>
+                            <span t-attf-style="color:#{company.text_color_account}; !important;"
+                                  t-field="o.paypal_id"/>
+                        </div>
+                    </p> <br/>
+                    <p t-if="o.paypal_chk == False">
+                        <div t-if="o.company_id.bank_account_id.acc_number">
+                            <div t-attf-style="background-color:#{company.color_account}; !important;">
+                                <strong t-attf-style="color:#{company.text_color_account}; !important;">Bank Account
+                                    Details
+                                </strong>
+                                <br/>
+                                <span>
+                                    <font t-attf-style="color:#{company.text_color_account}; !important;">Account Id :
+                                    </font>
+                                </span>
+                                <span t-attf-style="color:#{company.text_color_account}; !important;"
+                                      t-field="o.company_id.bank_account_id.acc_number"/>
+                                <br/>
+                                <span>
+                                    <font t-attf-style="color:#{company.text_color_account}; !important;">Bank Name :
+                                    </font>
+                                </span>
+                                <span t-attf-style="color:#{company.text_color_account}; !important;"
+                                      t-field="o.company_id.bank_account_id.bank_id.name"/>
+                                <br/>
+                                <span>
+                                    <font t-attf-style="color:#{company.text_color_account}; !important;">Branch
+                                        Name/Address :
+                                    </font>
+                                </span>
+                                <span t-attf-style="color:#{company.text_color_account}; !important;"
+                                      t-field="o.company_id.bank_account_id.branch_name"/>
+                                <br/>
+                                <span t-attf-style="color:#{company.text_color_account}; !important;"
+                                      t-field="o.company_id.bank_account_id.street"/>
+                                <span t-attf-style="color:#{company.text_color_account}; !important;"
+                                      t-field="o.company_id.bank_account_id.street2"/>
+                                <span t-attf-style="color:#{company.text_color_account}; !important;">,</span>
+                                <span t-attf-style="color:#{company.text_color_account}; !important;"
+                                      t-field="o.company_id.bank_account_id.city"/>
+                                <span t-attf-style="color:#{company.text_color_account}; !important;">,</span>
+                                <span t-attf-style="color:#{company.text_color_account}; !important;"
+                                      t-field="o.company_id.bank_account_id.zip"/>
+                                <br/>
+                                <span t-attf-style="color:#{company.text_color_account}; !important;"
+                                      t-field="o.company_id.bank_account_id.state_id"/>
+                                <span t-attf-style="color:#{company.text_color_account}; !important;">,</span>
+                                <span t-attf-style="color:#{company.text_color_account}; !important;"
+                                      t-field="o.company_id.bank_account_id.country_id"/>
+                                <br/>
+                                <span>
+                                    <font t-attf-style="color:#{company.text_color_account}; !important;">Swift Code :
+                                    </font>
+                                </span>
+                                <span t-attf-style="color:#{company.text_color_account}; !important;"
+                                      t-field="o.company_id.bank_account_id.swift_code"/>
+                                <br/>
+                                <span>
+                                    <font t-attf-style="color:#{company.text_color_account}; !important;">IFSC Code :
+                                    </font>
+                                </span>
+                                <span t-attf-style="color:#{company.text_color_account}; !important;"
+                                      t-field="o.company_id.bank_account_id.ifsc"/>
+                            </div>
+                        </div>
+                    </p>
+                    <p t-if="o.fiscal_position_id.note">
+                        <strong>Fiscal Position Remark:</strong>
+                        <span t-field="o.fiscal_position_id.note"/>
+                    </p>
+                </div>
+            </t>
+    </template>
+
+
+</data>
+</odoo>
