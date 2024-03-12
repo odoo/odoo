@@ -1486,8 +1486,6 @@ export class TestRunner {
             }
 
             ev.preventDefault();
-            ev.stopPropagation();
-            ev.stopImmediatePropagation();
 
             lastResults.errors.push(error);
             lastResults.caughtErrors++;

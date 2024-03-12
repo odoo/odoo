@@ -268,6 +268,17 @@ const extend = (matcher) => {
 };
 
 /**
+ * @param {Error} [error]
+ */
+const formatError = (error) => {
+    let strError = error ? String(error) : "";
+    if (error?.cause) {
+        strError += `\n${formatError(error.cause)}`;
+    }
+    return strError;
+};
+
+/**
  * @param {string} message
  * @param {{ received: unknown; actual: unknown; not: boolean }} params
  */
@@ -1026,10 +1037,17 @@ export class Matchers {
         return this.#resolve({
             name: "toVerifyErrors",
             acceptedType: ["string[]", "regex[]"],
-            predicate: (actual) => {
+            predicate: (expected) => {
                 receivedErrors = currentResult.errors;
                 currentResult.errors = [];
-                return receivedErrors.every((error, i) => !actual[i] || match(error, actual[i]));
+                return (
+                    receivedErrors.length === expected.length &&
+                    receivedErrors.every(
+                        (error, i) =>
+                            match(error, expected[i]) ||
+                            (error.cause && match(error.cause, expected[i]))
+                    )
+                );
             },
             message: (pass) =>
                 options?.message ||
@@ -1038,11 +1056,15 @@ export class Matchers {
                         ? receivedErrors.map(formatHumanReadable).join(" > ")
                         : "no errors"
                     : `expected the following errors`),
-            details: (actual) => [
-                [Markup.green("Expected:"), actual],
-                [Markup.red("Received:"), receivedErrors],
-                [Markup.text("Diff:"), Markup.diff(actual, receivedErrors)],
-            ],
+            details: (actual) => {
+                const fActual = actual.map(formatError);
+                const fReceived = receivedErrors.map(formatError);
+                return [
+                    [Markup.green("Expected:"), fActual],
+                    [Markup.red("Received:"), fReceived],
+                    [Markup.text("Diff:"), Markup.diff(fActual, fReceived)],
+                ];
+            },
         });
     }
 
