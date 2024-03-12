@@ -179,47 +179,36 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
-            <notebook name="recruitment_target_notebook" position="inside">
-                <page string="Recruitment" name="recruitment_page">
-                    <group>
-                        <group name="recruitment">
-                            <field name="company_id" options="{'no_create': True}" invisible="1" groups="base.group_multi_company"/>
-                            <field name="department_id"/>
-                            <label for="address_id"/>
-                            <div class="o_row">
-                                <span invisible="address_id" class="oe_read_only">Remote</span>
-                                <field name="address_id" context="{'show_address': 1}" placeholder="Remote"/>
-                            </div>
-                            <label for="alias_name" string="Email Alias"
-                                   help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
-                            <div name="alias_def">
-                                <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
-                                <div class="oe_edit_only" name="edit_alias">
-                                    <field name="alias_name" placeholder="alias" class="oe_inline"/>@
-                                    <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
-                                           options="{'no_create': True, 'no_open': True}"/>
-                                </div>
-                            </div>
-                            <field name="contract_type_id"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                        </group>
-
-                        <group name="recruitment2">
-                            <label for="no_of_recruitment"/>
-                            <div name="recruitment_target" class="o_row">
-                                <field name="no_of_recruitment" class="o_hr_narrow_field"/>
-                                <span>new Employees</span>
-                            </div>
-                            <field name="user_id" widget="many2one_avatar_user"/>
-                            <field name="interviewer_ids" widget="many2many_tags_avatar" options="{'no_create': True, 'no_create_edit': True}" />
-                        </group>
-                    </group>
-                </page>
-                <page string="Job Summary" name="job_description_page">
-                    <field name="description" options="{'collaborative': true}"/>
-                </page>
-            </notebook>
-
+            <page name="recruitment_page" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </page>
+            <page name="job_description_page" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </page>
+             <div name="recruitment_target" position="after">
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="interviewer_ids" widget="many2many_tags_avatar" options="{'no_create': True, 'no_create_edit': True}" />
+            </div>
+            <xpath expr="//field[@name='department_id']" position="after">
+                <label for="address_id"/>
+                <div class="o_row">
+                    <span invisible="address_id" class="oe_read_only">Remote</span>
+                    <field name="address_id" context="{'show_address': 1}" placeholder="Remote"/>
+                </div>
+                <label for="alias_name" string="Email Alias"
+                       help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
+                <div name="alias_def">
+                    <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
+                    <div class="oe_edit_only" name="edit_alias">
+                        <field name="alias_name" class="oe_inline"/>@
+                        <field name="alias_domain_id" class="oe_inline" placeholder="e.g. domain.com"
+                               options="{'no_create': True, 'no_open': True}"/>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='contract_type_id']" position="after">
+                <field name="company_id" groups="base.group_multi_company"/>
+            </xpath>
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"
                     icon="fa-pencil"
