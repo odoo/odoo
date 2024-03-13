@@ -68,7 +68,7 @@ class Meeting(models.Model):
         The 'microsoft_synchronization_stopped' variable needs to be 'False' and Outlook account must be connected.
         """
         outlook_connected = self.env.user._get_microsoft_calendar_token()
-        return outlook_connected and self.env.user.microsoft_synchronization_stopped is False
+        return outlook_connected and self.env.user.sudo().microsoft_synchronization_stopped is False
 
     @api.model_create_multi
     def create(self, vals_list):
