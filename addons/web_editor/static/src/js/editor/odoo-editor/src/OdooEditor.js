@@ -373,6 +373,7 @@ export class OdooEditor extends EventTarget {
         this._tableUiContainer = this.document.createElement('div');
         this._tableUiContainer.classList.add('o_table_ui_container');
         const parser = new DOMParser();
+        const isRTL = this.options.direction === "rtl";
         for (const direction of ['row', 'column']) {
             // Create the containers and the menu toggler.
             const iconClass = (direction === 'row') ? 'fa-ellipsis-v' : 'fa-ellipsis-h';
@@ -383,13 +384,19 @@ export class OdooEditor extends EventTarget {
                 </div>
             </div>`, 'text/html').body.firstElementChild;
             const uiMenu = ui.querySelector('.o_table_ui_menu');
-
             // Create the move buttons.
             if (direction === 'column') {
-                uiMenu.append(...parser.parseFromString(`
-                    <div class="o_move_left"><span class="fa fa-chevron-left"></span>` + this.options._t('Move left') + `</div>
-                    <div class="o_move_right"><span class="fa fa-chevron-right"></span>` + this.options._t('Move right') + `</div>
-                `, 'text/html').body.children);
+                if (isRTL) {
+                    uiMenu.append(...parser.parseFromString(`
+                        <div class="o_move_right"><span class="fa fa-chevron-right"></span>` + this.options._t('Move left') + `</div>
+                        <div class="o_move_left"><span class="fa fa-chevron-left"></span>` + this.options._t('Move right') + `</div>
+                    `, 'text/html').body.children);
+                } else {
+                    uiMenu.append(...parser.parseFromString(`
+                        <div class="o_move_left"><span class="fa fa-chevron-left"></span>` + this.options._t('Move left') + `</div>
+                        <div class="o_move_right"><span class="fa fa-chevron-right"></span>` + this.options._t('Move right') + `</div>
+                    `, 'text/html').body.children);
+                }
                 this.addDomListener(uiMenu.querySelector('.o_move_left'), 'click', this._onTableMoveLeftClick);
                 this.addDomListener(uiMenu.querySelector('.o_move_right'), 'click', this._onTableMoveRightClick);
             } else {
@@ -403,10 +410,17 @@ export class OdooEditor extends EventTarget {
 
             // Create the add buttons.
             if (direction === 'column') {
-                uiMenu.append(...parser.parseFromString(`
-                    <div class="o_insert_left"><span class="fa fa-plus"></span>` + this.options._t('Insert left') + `</div>
-                    <div class="o_insert_right"><span class="fa fa-plus"></span>` + this.options._t('Insert right') +`</div>
-                `, 'text/html').body.children);
+                if (isRTL) {
+                    uiMenu.append(...parser.parseFromString(`
+                        <div class="o_insert_right"><span class="fa fa-plus"></span>` + this.options._t('Insert left') + `</div>
+                        <div class="o_insert_left"><span class="fa fa-plus"></span>` + this.options._t('Insert right') + `</div>
+                    `, 'text/html').body.children);
+                } else {
+                    uiMenu.append(...parser.parseFromString(`
+                        <div class="o_insert_left"><span class="fa fa-plus"></span>` + this.options._t('Insert left') + `</div>
+                        <div class="o_insert_right"><span class="fa fa-plus"></span>` + this.options._t('Insert right') + `</div>
+                    `, 'text/html').body.children);
+                }
                 this.addDomListener(uiMenu.querySelector('.o_insert_left'), 'click', () => this.execCommand('addColumn', 'before', this._columnUiTarget));
                 this.addDomListener(uiMenu.querySelector('.o_insert_right'), 'click', () => this.execCommand('addColumn', 'after', this._columnUiTarget));
             } else {
