@@ -1046,12 +1046,12 @@
                         <div t-attf-class="col-lg-#{image_cols[0]} mt-lg-4 o_wsale_product_images position-relative" t-if="website.product_page_image_width != 'none'">
                             <t t-call="website_sale.shop_product_images"/>
                         </div>
-                        <div t-attf-class="col-lg-#{image_cols[1]} mt-md-4" id="product_details">
+                        <div t-attf-class="col-lg-#{image_cols[1]}">
                             <t t-set="base_url" t-value="product.get_base_url()"/>
-                            <h1 itemprop="name" t-field="product.name">Product Name</h1>
                             <span itemprop="url" style="display:none;" t-esc="base_url + product.website_url"/>
                             <span itemprop="image" style="display:none;" t-esc="base_url + website.image_url(product, 'image_1920')" />
-                            <t t-if="is_view_active('website_sale.product_comment')">
+                            <owl-component name="website_sale.ProductConfigurator" t-att-props="json.dumps(product_configurator_props)"/>
+                            <!-- <t t-if="is_view_active('website_sale.product_comment')">
                                 <a href="#o_product_page_reviews" class="o_product_page_reviews_link text-decoration-none">
                                     <t t-call="portal_rating.rating_widget_stars_static">
                                         <t t-set="rating_avg" t-value="product.rating_avg"/>
@@ -1060,11 +1060,11 @@
                                         <t t-set="rating_count" t-value="(trans_text_plural if product.rating_count > 1 else trans_text_singular) % product.rating_count"/>
                                     </t>
                                 </a>
-                            </t>
-                            <p t-field="product.description_sale" class="text-muted my-2" placeholder="A short description that will also appear on documents." />
-                            <div t-field="product.description_ecommerce" class="oe_structure"
-                                placeholder="A detailed, formatted description to promote your product on this page. Use '/' to discover more features."/>
-                            <form t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
+                            </t> -->
+
+                            <!-- <div t-field="product.description_ecommerce" class="oe_structure"
+                                placeholder="A detailed, formatted description to promote your product on this page. Use '/' to discover more features."/> -->
+                            <!-- <form t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                 <div class="js_product js_main_product mb-3">
                                     <div>
@@ -1129,7 +1129,7 @@
                                         </tr>
                                     </t>
                                 </table>
-                            </div>
+                            </div> -->
                             <t t-set="product_documents" t-value="product.sudo().product_document_ids.filtered(lambda doc: doc.shown_on_product_page)"/>
                             <div id="product_documents" class="my-2" t-if="product_documents">
                                 <h5>Documents</h5>
@@ -1269,7 +1269,7 @@
         </xpath>
     </template>
 
-    <template id="product_quantity" inherit_id="website_sale.product" name="Select Quantity">
+    <!-- <template id="product_quantity" inherit_id="website_sale.product" name="Select Quantity">
         <xpath expr="//t[@t-set='hasQuantities']" position="attributes">
             <attribute name="t-value" remove="false" add="true" separator=" "/>
         </xpath>
@@ -1284,7 +1284,7 @@
                 </a>
             </div>
         </div>
-    </template>
+    </template> -->
 
     <template id="product_buy_now" inherit_id="website_sale.product" active="False" name="Buy Now Button">
         <xpath expr="//t[@t-set='hasBuyNow']" position="attributes">
@@ -2644,7 +2644,7 @@
         </div>
     </template>
 
-    <template id="ecom_show_extra_fields" inherit_id="website_sale.product" active="True" name="Show Extra Fields">
+    <!-- <template id="ecom_show_extra_fields" inherit_id="website_sale.product" active="True" name="Show Extra Fields">
         <xpath expr="//div[@id='product_details']" position="inside">
             <t t-if="any([product[field.name] for field in website.shop_extra_field_ids])">
                 <hr/>
@@ -2664,7 +2664,7 @@
                 </p>
             </t>
         </xpath>
-    </template>
+    </template> -->
 
     <template id="add_to_cart_redirect" inherit_id="website.layout" name="Cart Redirection" priority="1">
         <xpath expr="//html" position="before">

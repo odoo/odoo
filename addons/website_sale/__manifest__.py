@@ -96,6 +96,10 @@
             'website_sale/static/src/js/notification/warning_notification/warning_notification.js',
             'website_sale/static/src/js/notification/warning_notification/warning_notification.xml',
             'website_sale/static/src/js/notification/notification_service.js',
+
+            'website_sale/static/src/js/components/product_configurator/**/*',
+            'sale_product_configurator/static/src/js/product_template_attribute_line/*',
+            'sale_product_configurator/static/src/js/badge_extra_price/*',
         ],
         'web._assets_primary_variables': [
             'website_sale/static/src/scss/primary_variables.scss',
