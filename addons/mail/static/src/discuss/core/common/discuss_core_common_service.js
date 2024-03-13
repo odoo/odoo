@@ -182,7 +182,7 @@ export class DiscussCoreCommon {
         const message = this.store.Message.insert(messageData, { html: true });
         if (message.notIn(channel.messages)) {
             if (!channel.loadNewer) {
-                channel.messages.push(message);
+                channel.addOrReplaceMessage(message, this.store.Message.get(temporaryId));
             } else if (channel.status === "loading") {
                 channel.pendingNewMessages.push(message);
             }
@@ -194,9 +194,6 @@ export class DiscussCoreCommon {
                 }
             }
         }
-        // Only delete the temporary message now that seen_message_id is updated
-        // to avoid flickering.
-        this.store.Message.get(temporaryId)?.delete();
         if (
             !channel.isCorrespondentOdooBot &&
             channel.channel_type !== "channel" &&
