@@ -674,6 +674,7 @@ class IrActionsReport(models.Model):
 
         # access the report details with sudo() but evaluation context as current user
         report_sudo = self._get_report(report_ref)
+        has_duplicated_ids = res_ids and len(res_ids) != len(set(res_ids))
 
         collected_streams = OrderedDict()
 
@@ -682,9 +683,13 @@ class IrActionsReport(models.Model):
         if res_ids:
             records = self.env[report_sudo.model].browse(res_ids)
             for record in records:
+                res_id = record.id
+                if res_id in collected_streams:
+                    continue
+
                 stream = None
                 attachment = None
-                if report_sudo.attachment and not self._context.get("report_pdf_no_attachment"):
+                if not has_duplicated_ids and report_sudo.attachment and not self._context.get("report_pdf_no_attachment"):
                     attachment = report_sudo.retrieve_attachment(record)
 
                     # Extract the stream from the attachment.
@@ -699,13 +704,14 @@ class IrActionsReport(models.Model):
                             stream.close()
                             stream = new_stream
 
-                collected_streams[record.id] = {
+                collected_streams[res_id] = {
                     'stream': stream,
                     'attachment': attachment,
                 }
 
         # Call 'wkhtmltopdf' to generate the missing streams.
         res_ids_wo_stream = [res_id for res_id, stream_data in collected_streams.items() if not stream_data['stream']]
+        all_res_ids_wo_stream = res_ids if has_duplicated_ids else res_ids_wo_stream
         is_whtmltopdf_needed = not res_ids or res_ids_wo_stream
 
         if is_whtmltopdf_needed:
@@ -725,16 +731,16 @@ class IrActionsReport(models.Model):
             # https://github.com/wkhtmltopdf/wkhtmltopdf/issues/2083
             additional_context = {'debug': False}
 
-            html = self.with_context(**additional_context)._render_qweb_html(report_ref, res_ids_wo_stream, data=data)[0]
+            html = self.with_context(**additional_context)._render_qweb_html(report_ref, all_res_ids_wo_stream, data=data)[0]
 
             bodies, html_ids, header, footer, specific_paperformat_args = self.with_context(**additional_context)._prepare_html(html, report_model=report_sudo.model)
 
-            if report_sudo.attachment and set(res_ids_wo_stream) != set(html_ids):
+            if not has_duplicated_ids and report_sudo.attachment and set(res_ids_wo_stream) != set(html_ids):
                 raise UserError(_(
                     "The report's template %r is wrong, please contact your administrator. \n\n"
                     "Can not separate file to save as attachment because the report's template does not contains the"
                     " attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname.",
-                    self.name,
+                    report_sudo.name,
                 ))
 
             pdf_content = self._run_wkhtmltopdf(
@@ -749,7 +755,7 @@ class IrActionsReport(models.Model):
             pdf_content_stream = io.BytesIO(pdf_content)
 
             # Printing a PDF report without any records. The content could be returned directly.
-            if not res_ids:
+            if has_duplicated_ids or not res_ids:
                 return {
                     False: {
                         'stream': pdf_content_stream,
@@ -876,12 +882,13 @@ class IrActionsReport(models.Model):
 
         self = self.with_context(webp_as_jpg=True)
         collected_streams = self._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
+        has_duplicated_ids = res_ids and len(res_ids) != len(set(res_ids))
 
         # access the report details with sudo() but keep evaluation context as current user
         report_sudo = self._get_report(report_ref)
 
         # Generate the ir.attachment if needed.
-        if report_sudo.attachment and not self._context.get("report_pdf_no_attachment"):
+        if not has_duplicated_ids and report_sudo.attachment and not self._context.get("report_pdf_no_attachment"):
             attachment_vals_list = self._prepare_pdf_report_attachment_vals_list(report_sudo, collected_streams)
             if attachment_vals_list:
                 attachment_names = ', '.join(x['name'] for x in attachment_vals_list)
