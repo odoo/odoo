@@ -174,14 +174,14 @@ export function contains(target, options) {
          * @param {PointerOptions} [options]
          */
         dragAndDrop: async (target, options) => {
-            const from = await nodePromise;
+            const [from, to] = await Promise.all([nodePromise, waitFor(target)]);
             const { drop, moveTo } = drag(from);
             await dragEffectDelay();
 
             hover(from, DRAG_TOLERANCE_PARAMS);
             await dragEffectDelay();
 
-            moveTo(target, options);
+            moveTo(to, options);
             await dragEffectDelay();
 
             drop();
