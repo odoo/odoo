@@ -2813,11 +2813,12 @@ export class OdooEditor extends EventTarget {
      */
     _resizeTable(ev, direction, target1, target2) {
         ev.preventDefault();
-        const position = target1 ? (target2 ? 'middle' : 'last') : 'first';
+        let position = target1 ? (target2 ? 'middle' : 'last') : 'first';
         let [item, neighbor] = [target1 || target2, target2];
         const table = closestElement(item, 'table');
         const [sizeProp, positionProp, clientPositionProp] = direction === 'col' ? ['width', 'x', 'clientX'] : ['height', 'y', 'clientY'];
 
+        const isRTL = this.options.direction === "rtl";
         // Preserve current width.
         if (sizeProp === 'width') {
             const tableRect = table.getBoundingClientRect();
@@ -2845,16 +2846,22 @@ export class OdooEditor extends EventTarget {
                     td.style.removeProperty(sizeProp);
                 }
             }
+            if (isRTL && position == "middle") {
+                [item, neighbor] = [neighbor, item];
+            }
         }
 
         const MIN_SIZE = 33; // TODO: ideally, find this value programmatically.
         switch (position) {
             case 'first': {
-                const marginProp = direction === 'col' ? 'marginLeft' : 'marginTop';
+                const marginProp = direction === 'col' ? (isRTL ? 'marginRight' : 'marginLeft') : 'marginTop';
                 const itemRect = item.getBoundingClientRect();
                 const tableStyle = getComputedStyle(table);
                 const currentMargin = pxToFloat(tableStyle[marginProp]);
-                const sizeDelta = itemRect[positionProp] - ev[clientPositionProp];
+                let sizeDelta = itemRect[positionProp] - ev[clientPositionProp];
+                if (direction === 'col' && isRTL) {
+                    sizeDelta = ev[clientPositionProp] - itemRect[positionProp] -itemRect[sizeProp] ;
+                }
                 const newMargin = currentMargin - sizeDelta;
                 const currentSize = itemRect[sizeProp];
                 const newSize = currentSize + sizeDelta;
@@ -2863,9 +2870,10 @@ export class OdooEditor extends EventTarget {
                     // Check if a nested table would overflow its parent cell.
                     const hostCell = closestElement(table.parentElement, 'td');
                     const childTable = item.querySelector('table');
+                    const endProp = isRTL ? 'left' : 'right'
                     if (direction === 'col' &&
-                        (hostCell && tableRect.right + sizeDelta > hostCell.getBoundingClientRect().right - 5 ||
-                        childTable && childTable.getBoundingClientRect().right > itemRect.right + sizeDelta - 5)) {
+                        (hostCell && tableRect[endProp] + sizeDelta > hostCell.getBoundingClientRect()[endProp] - 5 ||
+                        childTable && childTable.getBoundingClientRect()[endProp] > itemRect[endProp] + sizeDelta - 5)) {
                         break;
                     }
                     table.style[marginProp] = newMargin + 'px';
@@ -2909,7 +2917,10 @@ export class OdooEditor extends EventTarget {
             }
             case 'last': {
                 const itemRect = item.getBoundingClientRect();
-                const sizeDelta = ev[clientPositionProp] - (itemRect[positionProp] + itemRect[sizeProp]); // todo: rephrase
+                let sizeDelta = ev[clientPositionProp] - (itemRect[positionProp] + itemRect[sizeProp]); // todo: rephrase
+                if (direction === 'col' && isRTL) {
+                    sizeDelta = itemRect[positionProp] - ev[clientPositionProp];
+                }
                 const currentSize = itemRect[sizeProp];
                 const newSize = currentSize + sizeDelta;
                 if ((newSize >= 0 || direction === 'row') && newSize > MIN_SIZE) {
@@ -2917,9 +2928,10 @@ export class OdooEditor extends EventTarget {
                     // Check if a nested table would overflow its parent cell.
                     const hostCell = closestElement(table.parentElement, 'td');
                     const childTable = item.querySelector('table');
+                    const endProp = isRTL ? 'left' : 'right'
                     if (direction === 'col' &&
-                        (hostCell && tableRect.right + sizeDelta > hostCell.getBoundingClientRect().right - 5 ||
-                        childTable && childTable.getBoundingClientRect().right > itemRect.right + sizeDelta - 5)) {
+                        (hostCell && tableRect[endProp] + sizeDelta > hostCell.getBoundingClientRect()[endProp] - 5 ||
+                        childTable && childTable.getBoundingClientRect()[endProp] > itemRect[endProp] + sizeDelta - 5)) {
                         break
                     }
                     if (sizeProp === 'width') {
@@ -4683,6 +4695,7 @@ export class OdooEditor extends EventTarget {
         }
         // Handle table resizing.
         const isHoveringTdBorder = this._isHoveringTdBorder(ev);
+        const isRTL = this.options.direction === 'rtl';
         if (isHoveringTdBorder) {
             ev.preventDefault();
             const direction = { top: 'row', right: 'col', bottom: 'row', left: 'col' }[isHoveringTdBorder] || false;
@@ -4692,14 +4705,24 @@ export class OdooEditor extends EventTarget {
                 target1 = getAdjacentPreviousSiblings(column).find(node => node.nodeName === 'TR');
                 target2 = closestElement(ev.target, 'tr');
             } else if (isHoveringTdBorder === 'right') {
-                target1 = ev.target;
-                target2 = getAdjacentNextSiblings(ev.target).find(node => node.nodeName === 'TD');
+                if (isRTL) {
+                    target1 = getAdjacentPreviousSiblings(ev.target).find(node => node.nodeName === 'TD');
+                    target2 = ev.target;
+                } else {
+                    target1 = ev.target;
+                    target2 = getAdjacentNextSiblings(ev.target).find(node => node.nodeName === 'TD');
+                }
             } else if (isHoveringTdBorder === 'bottom' && column) {
                 target1 = closestElement(ev.target, 'tr');
                 target2 = getAdjacentNextSiblings(column).find(node => node.nodeName === 'TR');
             } else if (isHoveringTdBorder === 'left') {
-                target1 = getAdjacentPreviousSiblings(ev.target).find(node => node.nodeName === 'TD');
-                target2 = ev.target;
+                if (isRTL) {
+                    target1 = ev.target;
+                    target2 = getAdjacentNextSiblings(ev.target).find(node => node.nodeName === 'TD');
+                } else {
+                    target1 = getAdjacentPreviousSiblings(ev.target).find(node => node.nodeName === 'TD');
+                    target2 = ev.target;
+                }
             }
             this._isResizingTable = true;
             this._toggleTableResizeCursor(direction);
