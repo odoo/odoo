@@ -155,6 +155,19 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         return this._super(...arguments);
     },
     /**
+     * @override
+     */
+    _patchForComputeSnippetTemplates($html) {
+        this._super(...arguments);
+
+        // TODO remove in master: as a stable fix we exclude the form fields
+        // from the grid cell's Padding (Y, X) option.
+        const gridColumnsEl = $html.find('[data-js="GridColumns"]')[0];
+        if (gridColumnsEl) {
+            gridColumnsEl.dataset.selector = ".row:not(.s_col_no_resize) > div";
+        }
+    },
+    /**
      * Depending of the demand, reconfigure they gmap key or configure it
      * if not already defined.
      *
