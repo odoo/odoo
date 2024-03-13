@@ -157,6 +157,7 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">L10N_KZ_300_00_006_1.net / L10N_KZ_300_00_006.net * 100</field>
                                 <field name="figure_type">percentage</field>
+                                <field name="subformula">ignore_zero_division</field>
                             </record>
                         </field>
                     </record>
@@ -168,6 +169,7 @@
                                 <field name="label">net</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">(L10N_KZ_300_00_002.net / (L10N_KZ_300_00_001.net + L10N_KZ_300_00_002.net + L10N_KZ_300_00_003.net)) * 100</field>
+                                <field name="subformula">ignore_zero_division</field>
                             </record>
                         </field>
                     </record>

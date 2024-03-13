@@ -514,21 +514,49 @@
                             <record id="F31_normal_tax" model="account.report.expression">
                                 <field name="label">hidden_computation_of_F31_using_normal_formula</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">
-                                    (UG_TAX_D20.tax - UG_TAX_F30.disallowed)
-                                    * (UG_TAX_C1.base + UG_TAX_C2.base + UG_TAX_C4.base + UG_TAX_C5.base + UG_TAX_C6.base + UG_TAX_C7.base)
-                                    / (UG_TAX_C1.base + UG_TAX_C2.base + UG_TAX_C3.base + UG_TAX_C4.base + UG_TAX_C5.base + UG_TAX_C6.base + UG_TAX_C7.base)
-                                </field>
+                                <field name="formula">UG_TAX_F31.normal_formula_part1 * UG_TAX_F31.normal_formula_part2 / UG_TAX_F31.normal_formula_part3</field>
+                                <field name="subformula">ignore_zero_division</field>
+                            </record>
+                            <record id="F31_normal_tax_part1" model="account.report.expression">
+                                <field name="label">normal_formula_part1</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_D20.tax - UG_TAX_F30.disallowed</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                            <record id="F31_normal_tax_part2" model="account.report.expression">
+                                <field name="label">normal_formula_part2</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_C1.base + UG_TAX_C2.base + UG_TAX_C4.base + UG_TAX_C5.base + UG_TAX_C6.base + UG_TAX_C7.base</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                            <record id="F31_normal_tax_part3" model="account.report.expression">
+                                <field name="label">normal_formula_part3</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_C1.base + UG_TAX_C2.base + UG_TAX_C3.base + UG_TAX_C4.base + UG_TAX_C5.base + UG_TAX_C6.base + UG_TAX_C7.base</field>
                                 <field name="subformula">cross_report</field>
                             </record>
                             <record id="F31_sam_tax" model="account.report.expression">
                                 <field name="label">hidden_computation_of_F31_using_sam_formula</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">
-                                    (UG_TAX_D20.tax - UG_TAX_F29.allowed - UG_TAX_F30.disallowed)
-                                    * (UG_TAX_C1.base + UG_TAX_C2.base + UG_TAX_C4.base + UG_TAX_C5.base + UG_TAX_C6.base + UG_TAX_C7.base)
-                                    / (UG_TAX_C1.base + UG_TAX_C2.base + UG_TAX_C3.base + UG_TAX_C4.base + UG_TAX_C5.base + UG_TAX_C6.base + UG_TAX_C7.base)
-                                </field>
+                                <field name="formula">UG_TAX_F31.sam_formula_part1 * UG_TAX_F31.sam_formula_part2 / UG_TAX_F31.sam_formula_part3</field>
+                                <field name="subformula">ignore_zero_division</field>
+                            </record>
+                            <record id="F31_sam_tax_part1" model="account.report.expression">
+                                <field name="label">sam_formula_part1</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_D20.tax - UG_TAX_F29.allowed - UG_TAX_F30.disallowed</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                            <record id="F31_sam_tax_part2" model="account.report.expression">
+                                <field name="label">sam_formula_part2</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_C1.base + UG_TAX_C2.base + UG_TAX_C4.base + UG_TAX_C5.base + UG_TAX_C6.base + UG_TAX_C7.base</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                            <record id="F31_sam_tax_part3" model="account.report.expression">
+                                <field name="label">sam_formula_part3</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_C1.base + UG_TAX_C2.base + UG_TAX_C3.base + UG_TAX_C4.base + UG_TAX_C5.base + UG_TAX_C6.base + UG_TAX_C7.base</field>
                                 <field name="subformula">cross_report</field>
                             </record>
                         </field>

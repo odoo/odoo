@@ -434,6 +434,7 @@
                                 <field name="label">vat</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">( zm_vat_16.no_vat / zm_vat_22.no_vat ) * zm_vat_30.vat</field>
+                                <field name="subformula">ignore_zero_division</field>
                             </record>
                         </field>
                     </record>
@@ -445,6 +446,7 @@
                                 <field name="label">vat</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">( zm_vat_37.vat + ( zm_vat_30.vat - zm_vat_37.vat - zm_vat_38.no_vat ) * ( zm_vat_16.no_vat / zm_vat_22.no_vat ))</field>
+                                <field name="subformula">ignore_zero_division</field>
                             </record>
                         </field>
                     </record>
