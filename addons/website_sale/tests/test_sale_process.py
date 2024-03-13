@@ -114,6 +114,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon):
         self.env['res.config.settings'].create({
             'auth_signup_uninvited': 'b2c',
             'show_line_subtotals_tax_selection': 'tax_excluded',
+            'auth_signup_email_confirmation': False,
         }).execute()
 
         self.start_tour("/", 'website_sale_tour_1')

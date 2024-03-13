@@ -22,3 +22,6 @@ class ResConfigSettings(models.TransientModel):
         'res.users',
         string='Template user for new users created through signup',
         config_parameter='base.template_portal_user_id')
+    auth_signup_email_confirmation = fields.Boolean(
+        string='Ask for user to confirm his account via email',
+        config_parameter='auth_signup.email_confirmation')

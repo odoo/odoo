@@ -5,5 +5,7 @@
         <function model="ir.config_parameter" name="set_param" eval="('auth_signup.invitation_scope', 'b2c')"/>
         <!-- activate Reset password by default -->
         <function model="ir.config_parameter" name="set_param" eval="('auth_signup.reset_password', 'True')"/>
+        <!-- activate sign up confirmation via email by default -->
+        <function model="ir.config_parameter" name="set_param" eval="('auth_signup.email_confirmation', 'True')"/>
     </data>
 </odoo>

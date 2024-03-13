@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- If one tries to register a new account for the first time -->
+        <template id="auth_signup.res_user_signup" name="Waiting for confirmation">
+            <t t-call="web.login_layout">
+                <form class="oe_signup_pending_form">
+                    <div class="text-center oe_login_buttons d-grid pt-3">
+                        <h4>You're almost done.</h4>
+                        Your account is waiting for confirmation.
+                        Please check your mails.<br/><br/>
+                        <a t-attf-href="/web/login" class="btn btn-link btn-sm" role="button">Back to login</a>
+                    </div>
+                </form>
+            </t>
+        </template>
+
+        <!-- If one tries to register again while the account is still pending -->
+        <template id="auth_signup.res_user_signup_pending" name="Waiting for confirmation">
+            <t t-call="web.login_layout">
+                <form class="oe_signup_pending_form">
+                    <input type="hidden" name="login" t-att-value="login"/>
+                    <div class="text-center oe_login_buttons d-grid pt-3">
+                        <h4>You're almost done.</h4>
+                        Your account is still waiting for confirmation.
+                        Please check your mails.
+                        <br/><br/>
+                        <button type="submit" class="btn btn-primary" id="auth_signup_send_confirmation_mail">Send a new mail</button>
+                        <t t-if="success"><br/>
+                            <p class="alert alert-success" role="alert">
+                                <t t-esc="success"/></p>
+                        </t>
+                        <t t-if="error"><br/>
+                            <p class="alert alert-danger" role="alert">
+                                <t t-esc="error"/></p>
+                        </t>
+                        <t t-else=""></t><br/>
+                        <a type="button" class="btn btn-secondary" id="auth_signup_new_register" href="/web/signup">Register with another email address</a>
+                    </div>
+                </form>
+            </t>
+        </template>
+
+        <template id="auth_signup.res_user_signup_confirm" name="Waiting for confirmation">
+            <t t-call="web.login_layout">
+                <form class="oe_signup_pending_form">
+                    <p class="alert alert-danger" t-if="error" role="alert">
+                        <t t-esc="error"/>
+                    </p>
+                    <p t-else="">
+                        <div class="text-center oe_login_buttons d-grid pt-3">Your account has been verified, you can now log into your account.</div>
+                    </p>        
+                </form>
+            </t>
+        </template>
+
+    </data>
+</odoo>
