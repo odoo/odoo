@@ -11,6 +11,7 @@ import { ColorPalette } from "@web_editor/js/wysiwyg/widgets/color_palette";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
 import {ColumnLayoutMixin} from "@web_editor/js/common/column_layout_mixin";
+import { registry as webRegistry } from "@web/core/registry";
 const {
     normalizeColor,
     getBgImageURL,
@@ -6496,7 +6497,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         const img = this._getImg();
         const editableEl = this.$target[0].closest(".o_editable");
         await loadImageInfo(img, this.options.wysiwyg._getRecordInfo(editableEl), attachmentSrc);
-        this.imageData = weUtils.getImageData(img, this.imageShape);
+        const preImageData = webRegistry.category("pre.image.data").get(img.getAttribute("src"), {});
+        this.imageData = weUtils.getImageData(img, Object.assign({}, this.imageShape, preImageData));
         this.originalId = this.imageData.originalId;
         this.originalSrc = this.imageData.originalSrc;
         this.mimetypeBeforeConversion = this.imageData.mimetypeBeforeConversion;

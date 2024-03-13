@@ -330,7 +330,7 @@ class Web_Editor(http.Controller):
         return removal_blocked_by
 
     @http.route('/web_editor/get_image_info', type='json', auth='user', website=True)
-    def get_image_info(self, res_model, res_id, res_field='', res_type='', src=''):
+    def get_image_info(self, res_model, res_id, res_field='', res_type='', search_image_data=True, src=''):
         """Returns the image data (mimetype, image options etc...) of a modified
         image. If the image has never been modified, it returns the mimetype,
         the image source and the id of the original attachment linked to the
@@ -342,12 +342,14 @@ class Web_Editor(http.Controller):
         :param res_field: The name of the field of the editable element closest
         to the image.
         :params res_type: The type of the editable element closest to the image.
+        :param search_image_data: If a 'web_editor.image.data' record has to
+        be searched.
         :param src: The src of the image.
         :return: Object that contains the image data.
         """
         image_data_res_info = self._get_image_data_res_info(res_model=res_model, res_id=res_id, res_field=res_field, res_type=res_type, src=src)
         image_data_res_id = image_data_res_info['image_data_res_id']
-        if isinstance(image_data_res_id, int):
+        if isinstance(image_data_res_id, int) and search_image_data:
             # image_data_res_id could be a string (e.g. xmlid). In this case, do
             # not search for an image.data record as the image has never been
             # modified.
@@ -734,6 +736,7 @@ class Web_Editor(http.Controller):
                 attachment.url = '/'.join(url_fragments)
 
         # Update the image.data record
+        saved_image_data['image_checksum'] = attachment.checksum
         image_data_res_info = self._get_image_data_res_info(res_model=res_model, res_id=res_id, res_field=res_field, res_type=res_type, new_attachment_id=attachment.id)
         image_data_res_model = image_data_res_info['image_data_res_model']
         image_data_res_field = image_data_res_info['image_data_res_field']
