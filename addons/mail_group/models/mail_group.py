@@ -251,6 +251,11 @@ class MailGroup(models.Model):
         self.ensure_one()
 
         if alias.alias_contact == 'followers':
+            # Selected group of users
+            email = email_normalize(message_dict.get('email_from', ''))
+            if self.access_mode == 'groups' and \
+               len(self.search([('id', '=', self.id), ('access_group_id.users.email_normalized', '=', email)])) > 0:
+                return  # Skip the verification because the partner is in the user group list
             # Members only
             if not self._find_member(message_dict.get('email_from')):
                 return _('Only members can send email to the mailing list.')
