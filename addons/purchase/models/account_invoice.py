@@ -315,7 +315,7 @@ class AccountMove(models.Model):
 
         common_domain = [
             ('company_id', '=', self.company_id.id),
-            ('state', '=', 'purchase'),
+            ('state', 'in', ('purchase', 'done')),
             ('invoice_status', 'in', ('to invoice', 'no'))
         ]
 
