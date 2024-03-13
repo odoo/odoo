@@ -182,6 +182,9 @@
                     <filter string="Product Type" name="type" context="{'group_by':'type'}"/>
                     <filter string="Product Category" name="categ_id" context="{'group_by':'categ_id'}"/>
                 </group>
+                <searchpanel>
+                    <field name="categ_id" string="Product Category" icon="fa-filter" select="one" enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>
