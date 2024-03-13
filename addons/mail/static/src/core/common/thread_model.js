@@ -972,6 +972,15 @@ export class Thread extends Record {
         }
     }
 
+    addOrReplaceMessage(message, tmpMsg) {
+        // The message from other personas (not self) should not replace the tmpMsg
+        if (tmpMsg && tmpMsg.in(this.messages) && message.author.eq(this.store.self)) {
+            this.messages.splice(this.messages.indexOf(tmpMsg), 1, message);
+            return;
+        }
+        this.messages.add(message);
+    }
+
     /** @param {string} body */
     async post(
         body,
@@ -1043,7 +1052,7 @@ export class Thread extends Record {
             data.temporary_id = null;
         }
         const message = this.store.Message.insert(data, { html: true });
-        this.messages.add(message);
+        this.addOrReplaceMessage(message, tmpMsg);
         if (this.selfMember?.seen_message_id?.id < message.id) {
             this.selfMember.seen_message_id = message;
             this.selfMember.new_message_separator = message.id + 1;
