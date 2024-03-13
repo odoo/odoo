@@ -28,12 +28,6 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if pos_order_sudo.session_id.state != 'opened':
             raise AccessError(_("The POS session is not opened."))
 
-    def _get_partner_sudo(self, user_sudo):
-        partner_sudo = user_sudo.partner_id
-        if not partner_sudo and user_sudo._is_public():
-            partner_sudo = self.env.ref('base.public_user')
-        return partner_sudo
-
     def _redirect_login(self):
         return request.redirect('/web/login?' + url_encode({'redirect': request.httprequest.full_path}))
 
@@ -99,8 +93,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         user_sudo = request.env.user
         logged_in = not user_sudo._is_public()
-        partner_sudo = self._get_partner_sudo(user_sudo)
-        if not partner_sudo:
+        partner_sudo = pos_order_id.partner_id or user_sudo.partner_id
+        if not partner_sudo and not logged_in:
             return self._redirect_login()
 
         kwargs = {
@@ -179,8 +173,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
         exit_route = request.httprequest.args.get('exit_route')
         user_sudo = request.env.user
         logged_in = not user_sudo._is_public()
-        partner_sudo = self._get_partner_sudo(user_sudo)
-        if not partner_sudo:
+        partner_sudo = pos_order_id.partner_id or user_sudo.partner_id
+        if not partner_sudo and not logged_in:
             return self._redirect_login()
 
         self._validate_transaction_kwargs(kwargs)
