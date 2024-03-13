@@ -77,10 +77,10 @@ Expects the received value to be empty: - `iterable`: no items - `object`: no ke
 
 ### 3. toBeGreaterThan
 
-Expects the received value to be strictly greater than `max`.
+Expects the received value to be strictly greater than `min`.
 
 - Arguments
-    * `max`: number
+    * `min`: number
     * `options`: ExpectOptions
 
 - Examples
@@ -92,12 +92,29 @@ Expects the received value to be strictly greater than `max`.
     ```
 
 
-### 4. toBeLessThan
+### 4. toBeInstanceOf
 
-Expects the received value to be strictly less than `min`.
+Expects the received value to be an instance of the given `cls`.
 
 - Arguments
-    * `min`: number
+    * `cls`: Function
+    * `options`: ExpectOptions
+
+- Examples
+
+    ```js
+    expect({ foo: 1 }).not.toBeInstanceOf(Object);
+
+    expect(document.createElement("div")).toBeInstanceOf(HTMLElement);
+    ```
+
+
+### 5. toBeLessThan
+
+Expects the received value to be strictly less than `max`.
+
+- Arguments
+    * `max`: number
     * `options`: ExpectOptions
 
 - Examples
@@ -109,7 +126,7 @@ Expects the received value to be strictly less than `min`.
     ```
 
 
-### 5. toBeOfType
+### 6. toBeOfType
 
 Expects the received value to be of the given type.
 
@@ -120,13 +137,13 @@ Expects the received value to be of the given type.
 - Examples
 
     ```js
-    expect("foo").toBeOfType("");
+    expect("foo").toBeOfType("string");
 
     expect({ foo: 1 }).toBeOfType("object");
     ```
 
 
-### 6. toBeTruthy
+### 7. toBeTruthy
 
 Expects the received value to resolve to a truthy expression.
 
@@ -142,7 +159,7 @@ Expects the received value to resolve to a truthy expression.
     ```
 
 
-### 7. toBeWithin
+### 8. toBeWithin
 
 Expects the received value to be strictly between `min` (inclusive) and `max` (exclusive).
 
@@ -162,7 +179,7 @@ Expects the received value to be strictly between `min` (inclusive) and `max` (e
     ```
 
 
-### 8. toEqual
+### 9. toEqual
 
 Expects the received value to be deeply equal to the `expected` value.
 
@@ -179,12 +196,12 @@ Expects the received value to be deeply equal to the `expected` value.
     ```
 
 
-### 9. toMatch
+### 10. toMatch
 
 Expects the received value to match the given matcher (string or RegExp).
 
 - Arguments
-    * `matcher`: import("../utils").Matcher
+    * `matcher`: Matcher
     * `options`: ExpectOptions
 
 - Examples
@@ -196,7 +213,7 @@ Expects the received value to match the given matcher (string or RegExp).
     ```
 
 
-### 10. toSatisfy
+### 11. toSatisfy
 
 Expects the received value to satisfy the given predicate, taking the received value as argument.
 
@@ -213,7 +230,7 @@ Expects the received value to satisfy the given predicate, taking the received v
     ```
 
 
-### 11. toThrow
+### 12. toThrow
 
 Expects the received value (`Function`) to throw an error after being called.
 
@@ -230,7 +247,7 @@ Expects the received value (`Function`) to throw an error after being called.
     ```
 
 
-### 12. toVerifyErrors
+### 13. toVerifyErrors
 
 Expects the received matchers to match the errors thrown since the start of the test or the last call to {@link toVerifyErrors}. Calling this matcher will reset the list of current errors.
 
@@ -244,7 +261,7 @@ Expects the received matchers to match the errors thrown since the start of the 
     ```
 
 
-### 13. toVerifySteps
+### 14. toVerifySteps
 
 Expects the received steps to be equal to the steps emitted since the start of the test or the last call to {@link toVerifySteps}. Calling this matcher will reset the list of current steps.
 
@@ -258,7 +275,7 @@ Expects the received steps to be equal to the steps emitted since the start of t
     ```
 
 
-### 14. toBeChecked
+### 15. toBeChecked
 
 Expects the received {@link Target} to be checked, or to be indeterminate if the homonymous option is set to `true`.
 
@@ -272,7 +289,7 @@ Expects the received {@link Target} to be checked, or to be indeterminate if the
     ```
 
 
-### 15. toBeDisplayed
+### 16. toBeDisplayed
 
 Expects the received {@link Target} to be displayed, meaning that: - it has a bounding box; - it is contained in the root document.
 
@@ -288,7 +305,7 @@ Expects the received {@link Target} to be displayed, meaning that: - it has a bo
     ```
 
 
-### 16. toBeEnabled
+### 17. toBeEnabled
 
 Expects the received {@link Target} to be enabled, meaning that it matches the `:enabled` pseudo-selector.
 
@@ -304,7 +321,7 @@ Expects the received {@link Target} to be enabled, meaning that it matches the `
     ```
 
 
-### 17. toBeFocused
+### 18. toBeFocused
 
 Expects the received {@link Target} to be focused in its owner document.
 
@@ -312,7 +329,7 @@ Expects the received {@link Target} to be focused in its owner document.
     * `options`: ExpectOptions
 
 
-### 18. toBeVisible
+### 19. toBeVisible
 
 Expects the received {@link Target} to be visible, meaning that: - it has a bounding box; - it is contained in the root document; - it is not hidden by CSS properties.
 
@@ -328,28 +345,13 @@ Expects the received {@link Target} to be visible, meaning that: - it has a boun
     ```
 
 
-### 19. toContain
-
-Expects the received {@link Target} to contain the given {@link Target}.
-
-- Arguments
-    * `target`: Target
-    * `options`: ExpectOptions
-
-- Examples
-
-    ```js
-    expect("ul").toContain(queryOne("li"));
-    ```
-
-
 ### 20. toHaveAttribute
 
 Expects the received {@link Target} to have the given attribute set on itself, and for that attribute value to match the given `value` if any.
 
 - Arguments
     * `attribute`: string
-    * `value`: string
+    * `value`: Matcher
     * `options`: ExpectOptions
 
 - Examples
@@ -372,7 +374,7 @@ Expects the received {@link Target} to have the given class name(s).
 - Examples
 
     ```js
-    expect("button").toHaveClass("btn");
+    expect("button").toHaveClass("btn btn-primary");
 
     expect("body").toHaveClass(["o_webclient", "o_dark"]);
     ```
@@ -403,7 +405,7 @@ Expects the received {@link Target} to have the given attribute set on itself, a
 
 - Arguments
     * `property`: string
-    * `value`: string
+    * `value`: any
     * `options`: ExpectOptions
 
 - Examples
@@ -420,7 +422,7 @@ Expects the received {@link Target} to have the given attribute set on itself, a
 Expects the received {@link Target} to have the given class name(s).
 
 - Arguments
-    * `style`: string | string[]
+    * `style`: string | Record<string, string | RegExp>
     * `options`: ExpectOptions
 
 - Examples
@@ -438,7 +440,7 @@ Expects the text content of the received {@link Target} to either: - be strictly
 
 - Arguments
     * `text`: string | RegExp
-    * `options`: ExpectOptions
+    * `options`: ExpectOptions & QueryTextOptions
 
 - Examples
 

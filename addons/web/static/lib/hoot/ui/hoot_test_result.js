@@ -16,7 +16,7 @@ import { HootTechnicalValue } from "./hoot_technical_value";
  * }} TestResultProps
  */
 
-const MATCHERS_DOC_URL = `https://www.odoo.com/documentation/master/developer/tutorials/master_odoo_web_framework/05_testing.html`;
+const MATCHERS_DOC_URL = `https://github.com/odoo/odoo/blob/master/addons/web/static/lib/hoot/README.md`;
 
 /** @extends {Component<TestResultProps, import("../hoot").Environment>} */
 export class HootTestResult extends Component {
