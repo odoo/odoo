@@ -1,5 +1,5 @@
 -- neutralization of Google calendar
-UPDATE google_calendar_credentials
-    SET calendar_rtoken = NULL,
-        calendar_token = NULL,
-        synchronization_stopped = True;
+UPDATE res_users_settings
+    SET google_calendar_rtoken = NULL,
+        google_calendar_token = NULL,
+        google_synchronization_stopped = True;
