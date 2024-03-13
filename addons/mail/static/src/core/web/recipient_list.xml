@@ -6,7 +6,7 @@
             <ul class="list-unstyled mb-0">
                 <li t-if="props.thread.selfRecipient" t-out="props.thread.selfRecipient.partner.email"/>
                 <li t-foreach="props.thread.recipients" t-as="recipient" t-key="recipient.id">
-                    <t t-out="recipient.partner.email"/>
+                    <t t-out="getRecipientText(recipient)"/>
                 </li>
                 <span t-if="!props.thread.recipientsFullyLoaded" class="btn btn-link w-100" t-on-click="() => threadService.loadMoreRecipients(props.thread)" t-ref="load-more">Load more</span>
             </ul>

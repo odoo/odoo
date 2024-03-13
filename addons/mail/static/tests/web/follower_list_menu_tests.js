@@ -3,6 +3,7 @@
 import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { contains, click as webClick } from "@web/../tests/utils";
 import { nextTick } from "web.test_utils";
 
 QUnit.module("follower list menu");
@@ -289,6 +290,33 @@ QUnit.test("Load 100 recipients at once", async (assert) => {
     assert.containsNone($, ".o-mail-RecipientList span:contains(Load more)");
 });
 
+QUnit.test("Load recipient without email", async (assert) => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "Luigi" },
+        { name: "Mario" },
+    ]);
+    pyEnv["mail.followers"].create([
+        {
+            is_active: true,
+            partner_id: pyEnv.currentPartnerId,
+            res_id: partnerId_1,
+            res_model: "res.partner",
+        },
+        {
+            is_active: true,
+            partner_id: partnerId_2,
+            res_id: partnerId_1,
+            res_model: "res.partner",
+        },
+    ]);
+    const { openFormView } = await start();
+    await openFormView("res.partner", partnerId_1);
+    await webClick("button", { text: "Send message" });
+    await contains("span[title='no email address']", { text: "Mario" });
+    await webClick("button[title='Show all recipients']");
+    await contains(".o-mail-RecipientList li", { text: "[Mario] (no email address)" });
+});
 
 QUnit.test(
     'Show "Add follower" and subtypes edition/removal buttons on all followers if user has write access',
