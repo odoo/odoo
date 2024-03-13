@@ -142,6 +142,7 @@ def init_logger():
     # ignore deprecation warnings from invalid escape (there's a ton and it's
     # pretty likely a super low-value signal)
     warnings.filterwarnings('ignore', r'^invalid escape sequence \'?\\.', category=DeprecationWarning)
+<<<<<<< HEAD
     if sys.version_info[:2] == (3, 9):
         # recordsets are both sequence and set so trigger warning despite no issue
         # Only applies to 3.9 as it was fixed in 3.10 see https://bugs.python.org/issue42470
@@ -155,6 +156,15 @@ def init_logger():
         warnings.filterwarnings('ignore', category=XMLParsedAsHTMLWarning)
     except ImportError:
         pass
+||||||| parent of 610dd3ebdd78 (temp)
+    # recordsets are both sequence and set so trigger warning despite no issue
+    warnings.filterwarnings('ignore', r'^Sampling from a set', category=DeprecationWarning, module='odoo')
+=======
+    # recordsets are both sequence and set so trigger warning despite no issue
+    warnings.filterwarnings('ignore', r'^Sampling from a set', category=DeprecationWarning, module='odoo')
+    # https://github.com/urllib3/urllib3/issues/2680
+    warnings.filterwarnings('ignore', r'^\'urllib3.contrib.pyopenssl\' module is deprecated.+', category=DeprecationWarning)
+>>>>>>> 610dd3ebdd78 (temp)
     # ignore a bunch of warnings we can't really fix ourselves
     for module in [
         'babel.util', # deprecated parser module, no release yet

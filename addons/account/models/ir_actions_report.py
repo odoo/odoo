@@ -1,6 +1,16 @@
 # -*- coding: utf-8 -*-
+<<<<<<< HEAD
 from collections import OrderedDict
+||||||| parent of 610dd3ebdd78 (temp)
+from PyPDF2.utils import PdfStreamError, PdfReadError
+=======
+>>>>>>> 610dd3ebdd78 (temp)
 from zlib import error as zlib_error
+try:
+    from PyPDF2.errors import PdfStreamError, PdfReadError
+except ImportError:
+    from PyPDF2.utils import PdfStreamError, PdfReadError
+
 try:
     from PyPDF2.errors import PdfStreamError, PdfReadError
 except ImportError:

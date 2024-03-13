@@ -270,22 +270,47 @@ class TestFormatLangDate(TransactionCase):
         time_part = datetime.time(16, 30, 22)
         time_part_tz = datetime.time(16, 30, 22, tzinfo=pytz.timezone('US/Eastern'))  # 4:30 PM timezoned
 
+<<<<<<< HEAD
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='HH:mm:ss'), '16:30:22')
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format="ah:m:ss"), '\u4e0b\u53484:30:22')
+||||||| parent of 610dd3ebdd78 (temp)
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part), '16:30:22')
+        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part), '\u4e0b\u53484:30:22')
+=======
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part), '16:30:22')
+        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format="ah:m:ss"), '\u4e0b\u53484:30:22')
+>>>>>>> 610dd3ebdd78 (temp)
 
         # Check format in different languages
+<<<<<<< HEAD
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='HH:mm'), '16:30')
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='ah:mm'), '\u4e0b\u53484:30')
+||||||| parent of 610dd3ebdd78 (temp)
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='short'), '16:30')
+        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='short'), '\u4e0b\u53484:30')
+=======
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='short'), '16:30')
+        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='ah:mm'), '\u4e0b\u53484:30')
+>>>>>>> 610dd3ebdd78 (temp)
 
         # Check timezoned time part
+<<<<<<< HEAD
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part_tz, time_format='HH:mm:ss Z'), '16:30:22 -0504')
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part_tz, time_format='zzzz ah:mm:ss'), '\u5317\u7f8e\u4e1c\u90e8\u6807\u51c6\u65f6\u95f4\u0020\u4e0b\u53484:30:22')
+||||||| parent of 610dd3ebdd78 (temp)
+        self.assertIn(misc.format_time(lang.with_context(lang='fr_FR').env, time_part_tz, time_format='long'), ['16:30:22 -0504', '16:30:22 HNE'])
+        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part_tz, time_format='full'), '\u5317\u7f8e\u4e1c\u90e8\u6807\u51c6\u65f6\u95f4\u0020\u4e0b\u53484:30:22')
+=======
+        self.assertIn(misc.format_time(lang.with_context(lang='fr_FR').env, time_part_tz, time_format='long'), ['16:30:22 -0504', '16:30:22 HNE'])
+        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part_tz, time_format='zzzz ah:mm:ss'), '\u5317\u7f8e\u4e1c\u90e8\u6807\u51c6\u65f6\u95f4\u0020\u4e0b\u53484:30:22')
+>>>>>>> 610dd3ebdd78 (temp)
 
         #Check timezone conversion in format_time
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, datetime_str, 'Europe/Brussels', time_format='HH:mm:ss Z'), '11:33:00 +0100')
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, datetime_str, 'US/Eastern', time_format='HH:mm:ss Z'), '05:33:00 -0500')
 
         # Check given `lang_code` overwites context lang
+<<<<<<< HEAD
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='ah:mm', lang_code='zh_CN'), '\u4e0b\u53484:30')
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='ah:mm', lang_code='fr_FR'), 'PM4:30')
 
@@ -300,6 +325,13 @@ class TestFormatLangDate(TransactionCase):
         # Force London timezone
         date_datetime = date_datetime.replace(tzinfo=pytz.UTC)
         self.assertEqual(misc.format_date(self.env, date_datetime), '12/31/2016', "User's tz must be ignored when tz is specifed in datetime object")
+||||||| parent of 610dd3ebdd78 (temp)
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='short', lang_code='zh_CN'), '\u4e0b\u53484:30')
+        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='medium', lang_code='fr_FR'), '16:30:22')
+=======
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='ah:mm', lang_code='zh_CN'), '\u4e0b\u53484:30')
+        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='medium', lang_code='fr_FR'), '16:30:22')
+>>>>>>> 610dd3ebdd78 (temp)
 
 
 class TestCallbacks(BaseCase):
