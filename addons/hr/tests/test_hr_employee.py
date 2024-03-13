@@ -242,3 +242,23 @@ class TestHrEmployee(TestHrCommon):
         # change user back -> check that there is no company error
         with Form(test_employee) as employee_form:
             employee_form.user_id = test_user
+
+    def test_avatar(self):
+        # Check simple employee has a generated image (initials)
+        employee_georgette = self.env['hr.employee'].create({'name': 'Georgette Pudubec'})
+        self.assertTrue(employee_georgette.image_1920)
+        self.assertTrue(employee_georgette.avatar_1920)
+
+        self.assertTrue(employee_georgette.work_contact_id)
+        self.assertTrue(employee_georgette.work_contact_id.image_1920)
+        self.assertTrue(employee_georgette.work_contact_id.avatar_1920)
+
+        # Check user has a generate image
+        user_norbert = self.env['res.users'].create({'name': 'Norbert Comidofisse', 'login': 'Norbert6870'})
+        self.assertTrue(user_norbert.image_1920)
+        self.assertTrue(user_norbert.avatar_1920)
+
+        # Check that linked employee got user image
+        employee_norbert = self.env['hr.employee'].create({'name': 'Norbert Employee', 'user_id': user_norbert.id})
+        self.assertEqual(employee_norbert.image_1920, user_norbert.image_1920)
+        self.assertEqual(employee_norbert.avatar_1920, user_norbert.avatar_1920)

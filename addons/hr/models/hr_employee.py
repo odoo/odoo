@@ -168,16 +168,16 @@ class HrEmployeePrivate(models.Model):
         super()._compute_avatar_128()
 
     def _compute_avatar(self, avatar_field, image_field):
-        employee_wo_user_or_image_ids = []
+        employee_wo_user_and_image = self.env['hr.employee']
         for employee in self:
-            if not (employee.user_id or employee._origin[image_field]):
-                employee_wo_user_or_image_ids.append(employee.id)
+            if not employee.user_id and not employee._origin[image_field]:
+                employee_wo_user_and_image += employee
                 continue
             avatar = employee._origin[image_field]
             if not avatar and employee.user_id:
                 avatar = employee.user_id.sudo()[avatar_field]
             employee[avatar_field] = avatar
-        super(HrEmployeePrivate, self.browse(employee_wo_user_or_image_ids))._compute_avatar(avatar_field, image_field)
+        super(HrEmployeePrivate, employee_wo_user_and_image)._compute_avatar(avatar_field, image_field)
 
     @api.depends('name', 'permit_no')
     def _compute_work_permit_name(self):
@@ -383,6 +383,12 @@ class HrEmployeePrivate(models.Model):
                 vals.update(self._sync_user(user, bool(vals.get('image_1920'))))
                 vals['name'] = vals.get('name', user.name)
         employees = super().create(vals_list)
+        # Sudo in case HR officer doesn't have the Contact Creation group
+        employees.filtered(lambda e: not e.work_contact_id).sudo()._create_work_contacts()
+        for employee_sudo in employees.sudo():
+            if not employee_sudo.image_1920:
+                employee_sudo.image_1920 = employee_sudo._avatar_generate_svg()
+                employee_sudo.work_contact_id.image_1920 = employee_sudo.image_1920
         if self.env.context.get('salary_simulation'):
             return employees
         employee_departments = employees.department_id
