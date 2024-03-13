@@ -84,7 +84,7 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
             'pos_config_ids': [(4, pos_config.id)],
         })
 
-        cls.env['restaurant.table'].create({
+        cls.main_floor_table_5 = cls.env['restaurant.table'].create({
             'name': '5',
             'floor_id': main_floor.id,
             'seats': 4,
