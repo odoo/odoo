@@ -208,7 +208,7 @@ export function makeActionManager(env, router = _router) {
 
             // If the current action doesn't have a multi-record view, we don't need to add the
             // last controller to the breadcrumb controllers
-            if (action.views.every((view) => view[1] === "form" || view[1] === "search")) {
+            if (action.views?.every((view) => view[1] === "form" || view[1] === "search")) {
                 return bcControllers;
             }
             controllers.at(-1).displayName = action.display_name || action.name || "";

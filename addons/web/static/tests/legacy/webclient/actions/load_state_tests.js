@@ -597,6 +597,24 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["pushState http://example.com/odoo/act-1000"]);
     });
 
+    QUnit.test("server action loading with id", async (assert) => {
+        const mockRPC = async (route, args) => {
+            if (route === "/web/action/run") {
+                assert.step(`action: ${args.action_id}`);
+                return new Promise(() => {});
+            }
+        };
+        redirect("/odoo/act-2/2");
+        logHistoryInteractions(assert);
+        await createWebClient({ serverData, mockRPC });
+        assert.strictEqual(
+            browser.location.href,
+            "http://example.com/odoo/act-2/2",
+            "url did not change"
+        );
+        assert.verifySteps(["action: 2"], "pushState was not called");
+    });
+
     QUnit.test("state with integer active_ids should not crash", async function (assert) {
         const mockRPC = async (route, args) => {
             if (route === "/web/action/run") {
