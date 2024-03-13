@@ -99,7 +99,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         user_sudo = request.env.user
         logged_in = not user_sudo._is_public()
-        partner_sudo = self._get_partner_sudo(user_sudo)
+        partner_sudo = pos_order_sudo.partner_id or self._get_partner_sudo(user_sudo)
         if not partner_sudo:
             return self._redirect_login()
 
@@ -179,7 +179,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         exit_route = request.httprequest.args.get('exit_route')
         user_sudo = request.env.user
         logged_in = not user_sudo._is_public()
-        partner_sudo = self._get_partner_sudo(user_sudo)
+        partner_sudo = pos_order_sudo.partner_id or self._get_partner_sudo(user_sudo)
         if not partner_sudo:
             return self._redirect_login()
 
