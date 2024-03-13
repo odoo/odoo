@@ -1,0 +1,82 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_tier_validation_server_action
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2024-01-05 10:36+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
+"Language-Team: none\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.17\n"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model.fields,field_description:base_tier_validation_server_action.field_tier_definition__auto_validate
+msgid "Auto Validate"
+msgstr "Auto validazione"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model.fields,field_description:base_tier_validation_server_action.field_tier_definition__auto_validate_domain
+msgid "Auto Validate Domain"
+msgstr "Dominio auto validazione"
+
+#. module: base_tier_validation_server_action
+#: model:ir.actions.server,name:base_tier_validation_server_action.ir_cron_auto_tier_validation_ir_actions_server
+#: model:ir.cron,cron_name:base_tier_validation_server_action.ir_cron_auto_tier_validation
+msgid "Automatic Tier Validation"
+msgstr "Validazione automatica livello"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model.fields,field_description:base_tier_validation_server_action.field_tier_definition__server_action_id
+msgid "Post Approve Action"
+msgstr "Invio azione approvazione"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model.fields,field_description:base_tier_validation_server_action.field_tier_definition__rejected_server_action_id
+msgid "Post Reject Action"
+msgstr "Invio azione rifiuto"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model.fields,help:base_tier_validation_server_action.field_tier_definition__server_action_id
+msgid "Server action triggered as soon as this step is approved"
+msgstr "Azione del server attivata appena questa fase è approvata"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model.fields,help:base_tier_validation_server_action.field_tier_definition__rejected_server_action_id
+msgid "Server action triggered as soon as this step is rejected"
+msgstr "Azione del server attivata appena questa fase è respinta"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model,name:base_tier_validation_server_action.model_tier_definition
+msgid "Tier Definition"
+msgstr "Definizione livello"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model,name:base_tier_validation_server_action.model_tier_validation
+msgid "Tier Validation (abstract)"
+msgstr "Validazione livello (sintesi)"
+
+#. module: base_tier_validation_server_action
+#: model:ir.model.fields,help:base_tier_validation_server_action.field_tier_definition__auto_validate
+msgid ""
+"Use schedule job to auto validate if condition is met.\n"
+"- If no user specified, use job's system user to validate\n"
+"- If 1 user matched as reviewer, use the user to validate\n"
+"- If > 1 user matched as reviewer, do not auto validate"
+msgstr ""
+"Utilizzare il lavoro schedulato per auto validare se la condizione è "
+"soddisfatta.\n"
+"- Se non è secificato l'utente, utilizzare l'utente di sistema per validare\n"
+"- Se un utente corrisponde come revisore, utilizzare l'utente per validare\n"
+"- Se più di un utente corrsponde come revisore, non eseguire auto validazione"
+
+#. module: base_tier_validation_server_action
+#: model_terms:ir.ui.view,arch_db:base_tier_validation_server_action.tier_definition_view_form
+msgid "if pass condition"
+msgstr "se supera la condizione"
