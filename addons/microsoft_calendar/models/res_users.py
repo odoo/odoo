@@ -19,22 +19,9 @@ _logger = logging.getLogger(__name__)
 class User(models.Model):
     _inherit = 'res.users'
 
-    microsoft_calendar_account_id = fields.Many2one('microsoft.calendar.credentials')
-    microsoft_calendar_sync_token = fields.Char(related='microsoft_calendar_account_id.calendar_sync_token')
-    microsoft_synchronization_stopped = fields.Boolean(related='microsoft_calendar_account_id.synchronization_stopped', readonly=False)
-    microsoft_last_sync_date = fields.Datetime(related='microsoft_calendar_account_id.last_sync_date', readonly=False)
-
-    _sql_constraints = [
-        ('microsoft_token_uniq', 'unique (microsoft_calendar_account_id)', "The user has already a microsoft account"),
-    ]
-
-    @property
-    def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['microsoft_synchronization_stopped', 'microsoft_calendar_account_id', 'microsoft_last_sync_date']
-
-    @property
-    def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + ['microsoft_synchronization_stopped', 'microsoft_calendar_account_id', 'microsoft_last_sync_date']
+    microsoft_calendar_sync_token = fields.Char(related='res_users_settings_id.microsoft_calendar_sync_token', groups='base.group_system')
+    microsoft_synchronization_stopped = fields.Boolean(related='res_users_settings_id.microsoft_synchronization_stopped', readonly=False, groups='base.group_system')
+    microsoft_last_sync_date = fields.Datetime(related='res_users_settings_id.microsoft_last_sync_date', readonly=False, groups='base.group_system')
 
     def _microsoft_calendar_authenticated(self):
         return bool(self.sudo().microsoft_calendar_rtoken)
@@ -44,12 +31,12 @@ class User(models.Model):
             return None
 
         self.ensure_one()
-        if self.microsoft_calendar_rtoken and not self._is_microsoft_calendar_valid():
+        if self.sudo().microsoft_calendar_rtoken and not self._is_microsoft_calendar_valid():
             self._refresh_microsoft_calendar_token()
-        return self.microsoft_calendar_token
+        return self.sudo().microsoft_calendar_token
 
     def _is_microsoft_calendar_valid(self):
-        return self.microsoft_calendar_token_validity and self.microsoft_calendar_token_validity >= (fields.Datetime.now() + timedelta(minutes=1))
+        return self.sudo().microsoft_calendar_token_validity and self.sudo().microsoft_calendar_token_validity >= (fields.Datetime.now() + timedelta(minutes=1))
 
     def _refresh_microsoft_calendar_token(self):
         self.ensure_one()
@@ -62,7 +49,7 @@ class User(models.Model):
 
         headers = {"content-type": "application/x-www-form-urlencoded"}
         data = {
-            'refresh_token': self.microsoft_calendar_rtoken,
+            'refresh_token': self.sudo().microsoft_calendar_rtoken,
             'client_id': client_id,
             'client_secret': client_secret,
             'grant_type': 'refresh_token',
@@ -73,7 +60,7 @@ class User(models.Model):
                 DEFAULT_MICROSOFT_TOKEN_ENDPOINT, params=data, headers=headers, method='POST', preuri=''
             )
             ttl = response.get('expires_in')
-            self.write({
+            self.sudo().write({
                 'microsoft_calendar_token': response.get('access_token'),
                 'microsoft_calendar_token_validity': fields.Datetime.now() + timedelta(seconds=ttl),
             })
@@ -81,13 +68,13 @@ class User(models.Model):
             if error.response.status_code in (400, 401):  # invalid grant or invalid client
                 # Delete refresh token and make sure it's commited
                 self.env.cr.rollback()
-                self.write({
+                self.sudo().write({
                     'microsoft_calendar_rtoken': False,
                     'microsoft_calendar_token': False,
                     'microsoft_calendar_token_validity': False,
                 })
-                self.microsoft_calendar_account_id.write({
-                    'calendar_sync_token': False
+                self.res_users_settings_id.sudo().write({
+                    'microsoft_calendar_sync_token': False
                 })
                 self.env.cr.commit()
             error_key = error.response.json().get("error", "nc")
@@ -102,27 +89,24 @@ class User(models.Model):
         status = "sync_active"
         if str2bool(self.env['ir.config_parameter'].sudo().get_param("microsoft_calendar_sync_paused"), default=False):
             status = "sync_paused"
-        elif self.microsoft_synchronization_stopped:
+        elif self.sudo().microsoft_synchronization_stopped:
             status = "sync_stopped"
         return status
 
     def _sync_microsoft_calendar(self):
         self.ensure_one()
-        # Create the Calendar Credentials if it is not defined yet and define the last sync date after creation.
-        if not self.microsoft_calendar_account_id and self._check_microsoft_calendar_credentials():
-            self.microsoft_last_sync_date = fields.datetime.now()
-
+        self.sudo().microsoft_last_sync_date = fields.datetime.now()
         if self._get_microsoft_sync_status() != "sync_active":
             return False
         calendar_service = self.env["calendar.event"]._get_microsoft_service()
-        full_sync = not bool(self.microsoft_calendar_sync_token)
+        full_sync = not bool(self.sudo().microsoft_calendar_sync_token)
         with microsoft_calendar_token(self) as token:
             try:
-                events, next_sync_token = calendar_service.get_events(self.microsoft_calendar_sync_token, token=token)
+                events, next_sync_token = calendar_service.get_events(self.sudo().microsoft_calendar_sync_token, token=token)
             except InvalidSyncToken:
                 events, next_sync_token = calendar_service.get_events(token=token)
                 full_sync = True
-        self.microsoft_calendar_account_id.calendar_sync_token = next_sync_token
+        self.res_users_settings_id.sudo().microsoft_calendar_sync_token = next_sync_token
 
         # Microsoft -> Odoo
         synced_events, synced_recurrences = self.env['calendar.event']._sync_microsoft2odoo(events) if events else (self.env['calendar.event'], self.env['calendar.recurrence'])
@@ -135,14 +119,14 @@ class User(models.Model):
 
         events = self.env['calendar.event']._get_microsoft_records_to_sync(full_sync=full_sync)
         (events - synced_events)._sync_odoo2microsoft()
-        self.microsoft_last_sync_date = fields.datetime.now()
+        self.sudo().microsoft_last_sync_date = fields.datetime.now()
 
         return bool(events | synced_events) or bool(recurrences | synced_recurrences)
 
     @api.model
     def _sync_all_microsoft_calendar(self):
         """ Cron job """
-        users = self.env['res.users'].search([('microsoft_calendar_rtoken', '!=', False), ('microsoft_synchronization_stopped', '=', False)])
+        users = self.env['res.users'].sudo().search([('microsoft_calendar_rtoken', '!=', False), ('microsoft_synchronization_stopped', '=', False)])
         for user in users:
             _logger.info("Calendar Synchro - Starting synchronization for %s", user)
             try:
@@ -152,24 +136,15 @@ class User(models.Model):
                 _logger.exception("[%s] Calendar Synchro - Exception : %s!", user, exception_to_unicode(e))
                 self.env.cr.rollback()
 
-    def _check_microsoft_calendar_credentials(self):
-        # Create the Calendar Credentials for the current user if not already created.
-        self.ensure_one()
-        if not self.microsoft_calendar_account_id:
-            self.microsoft_calendar_account_id = self.env['microsoft.calendar.credentials'].sudo().create([{'user_ids': [Command.set(self.ids)]}])
-        return True
-
     def stop_microsoft_synchronization(self):
         self.ensure_one()
-        self._check_microsoft_calendar_credentials()
-        self.microsoft_synchronization_stopped = True
-        self.microsoft_last_sync_date = None
+        self.sudo().microsoft_synchronization_stopped = True
+        self.sudo().microsoft_last_sync_date = None
 
     def restart_microsoft_synchronization(self):
         self.ensure_one()
-        self._check_microsoft_calendar_credentials()
-        self.microsoft_last_sync_date = fields.datetime.now()
-        self.microsoft_synchronization_stopped = False
+        self.sudo().microsoft_last_sync_date = fields.datetime.now()
+        self.sudo().microsoft_synchronization_stopped = False
         self.env['calendar.recurrence']._restart_microsoft_sync()
         self.env['calendar.event']._restart_microsoft_sync()
 
