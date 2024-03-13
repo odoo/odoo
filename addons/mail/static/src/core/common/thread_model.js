@@ -84,6 +84,7 @@ export class Thread extends Record {
     }
     channelMembers = Record.many("ChannelMember", {
         onDelete: (r) => r.delete(),
+        sort: (m1, m2) => m1.id - m2.id,
     });
     rtcSessions = Record.many("RtcSession", {
         /** @this {import("models").Thread} */
