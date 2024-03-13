@@ -38,6 +38,13 @@ export class CalendarFormController extends FormController {
             this.model.root.update(changes);
             return false; // no continue
         }
+        if (action === "action_join_video_call") {
+            /**
+             * prevents saving the form view when clicking on videocall link.
+             * As the link opens in a new tab, it's ok to do that
+             */
+            return true;
+        }
         return super.beforeExecuteActionButton(...arguments);
     }
 }

@@ -119,7 +119,7 @@ class RecurrenceRule(models.Model):
 
         # Update the recurrence values
         old_event_values = self.base_event_id and self.base_event_id.read(base_event_time_fields)[0]
-        if old_event_values and any(new_event_values[key] != old_event_values[key] for key in base_event_time_fields):
+        if old_event_values and any(new_event_values[key] != old_event_values[key] for key in base_event_time_fields if key in new_event_values):
             # we need to recreate the recurrence, time_fields were modified.
             base_event_id = self.base_event_id
             non_equal_values = [
