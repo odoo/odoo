@@ -1,4 +1,4 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, useSubEnv } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { test, expect } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -17,11 +17,11 @@ test("simple case", async () => {
 
     const remove = getService("overlay").add(MyComp, {});
     await animationFrame();
-    expect(".o-overlay-container > .overlayed").toHaveCount(1);
+    expect(".o-overlay-container .overlayed").toHaveCount(1);
 
     remove();
     await animationFrame();
-    expect(".o-overlay-container > .overlayed").toHaveCount(0);
+    expect(".o-overlay-container .overlayed").toHaveCount(0);
 });
 
 test("onRemove callback", async () => {
@@ -53,20 +53,20 @@ test("multiple overlays", async () => {
     const remove3 = getService("overlay").add(MyComp, { className: "o3" });
     await animationFrame();
     expect(".overlayed").toHaveCount(3);
-    expect(".overlayed:nth-child(1)").toHaveClass("o1");
-    expect(".overlayed:nth-child(2)").toHaveClass("o2");
-    expect(".overlayed:nth-child(3)").toHaveClass("o3");
+    expect(".o-overlay-container :nth-child(1) .overlayed").toHaveClass("o1");
+    expect(".o-overlay-container :nth-child(2) .overlayed").toHaveClass("o2");
+    expect(".o-overlay-container :nth-child(3) .overlayed").toHaveClass("o3");
 
     remove1();
     await animationFrame();
     expect(".overlayed").toHaveCount(2);
-    expect(".overlayed:nth-child(1)").toHaveClass("o2");
-    expect(".overlayed:nth-child(2)").toHaveClass("o3");
+    expect(".o-overlay-container :nth-child(1) .overlayed").toHaveClass("o2");
+    expect(".o-overlay-container :nth-child(2) .overlayed").toHaveClass("o3");
 
     remove2();
     await animationFrame();
     expect(".overlayed").toHaveCount(1);
-    expect(".overlayed:nth-child(1)").toHaveClass("o3");
+    expect(".o-overlay-container :nth-child(1) .overlayed").toHaveClass("o3");
 
     remove3();
     await animationFrame();
@@ -87,22 +87,45 @@ test("sequence", async () => {
     const remove3 = getService("overlay").add(MyComp, { className: "o3" }, { sequence: 40 });
     await animationFrame();
     expect(".overlayed").toHaveCount(3);
-    expect(".overlayed:nth-child(1)").toHaveClass("o3");
-    expect(".overlayed:nth-child(2)").toHaveClass("o1");
-    expect(".overlayed:nth-child(3)").toHaveClass("o2");
+    expect(".o-overlay-container :nth-child(1) .overlayed").toHaveClass("o3");
+    expect(".o-overlay-container :nth-child(2) .overlayed").toHaveClass("o1");
+    expect(".o-overlay-container :nth-child(3) .overlayed").toHaveClass("o2");
 
     remove1();
     await animationFrame();
     expect(".overlayed").toHaveCount(2);
-    expect(".overlayed:nth-child(1)").toHaveClass("o3");
-    expect(".overlayed:nth-child(2)").toHaveClass("o2");
+    expect(".o-overlay-container :nth-child(1) .overlayed").toHaveClass("o3");
+    expect(".o-overlay-container :nth-child(2) .overlayed").toHaveClass("o2");
 
     remove2();
     await animationFrame();
     expect(".overlayed").toHaveCount(1);
-    expect(".overlayed:nth-child(1)").toHaveClass("o3");
+    expect(".o-overlay-container :nth-child(1) .overlayed").toHaveClass("o3");
 
     remove3();
     await animationFrame();
     expect(".overlayed").toHaveCount(0);
+});
+
+test("allow env as option", async () => {
+    await mountWithCleanup(MainComponentsContainer);
+
+    class MyComp extends Component {
+        static props = ["*"];
+        static template = xml`
+            <ul class="outer">
+                <li>A=<t t-out="env.A"/></li>
+                <li>B=<t t-out="env.B"/></li>
+            </ul>
+        `;
+        setup() {
+            useSubEnv({ A: "blip" });
+        }
+    }
+
+    getService("overlay").add(MyComp, {}, { env: { A: "foo", B: "bar" } });
+    await animationFrame();
+
+    expect(".o-overlay-container li:nth-child(1)").toHaveText("A=blip");
+    expect(".o-overlay-container li:nth-child(2)").toHaveText("B=bar");
 });
