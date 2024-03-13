@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from copy import deepcopy
 from typing import List, Dict, Optional
 
 from odoo import api, models, fields
@@ -63,12 +64,18 @@ class ProductProduct(models.Model):
             if attributes_by_ptal_id.get(id) is not None
         ]
 
-    def _get_attributes(self, pos_config_sudo: PosConfig) -> List[Dict]:
+    def _get_attributes(
+        self, pos_config_sudo: PosConfig, attributes=None
+    ) -> List[Dict]:
         self.ensure_one()
 
-        attributes = self._filter_applicable_attributes(
-            self.env["pos.session"]._get_attributes_by_ptal_id()
-        )
+        if attributes is None:
+            attributes = self.env["pos.session"]._get_attributes_by_ptal_id()
+        else:
+            # Performance trick to avoid unnecessary calls to _get_attributes_by_ptal_id()
+            # Needs to be deep-copied because attributes is potentially mutated
+            attributes = deepcopy(attributes)
+        attributes = self._filter_applicable_attributes(attributes)
         return self._add_price_info_to_attributes(
             attributes,
             pos_config_sudo,
@@ -182,12 +189,12 @@ class ProductProduct(models.Model):
             'display_price_alternative': display_price_alternative,
         }
 
-    def _get_product_for_ui(self, pos_config):
+    def _get_product_for_ui(self, pos_config, attributes=None):
         self.ensure_one()
         return {
                 "price_info": self._get_price_info(pos_config),
                 "has_image": bool(self.image_1920),
-                "attributes": self._get_attributes(pos_config),
+                "attributes": self._get_attributes(pos_config, attributes),
                 "name": self._get_name(),
                 "id": self.id,
                 "description_self_order": self.description_self_order,
@@ -200,8 +207,9 @@ class ProductProduct(models.Model):
             }
 
     def _get_self_order_data(self, pos_config: PosConfig) -> List[Dict]:
+        attributes = self.env["pos.session"]._get_attributes_by_ptal_id()
         return [
-            product._get_product_for_ui(pos_config)
+            product._get_product_for_ui(pos_config, attributes)
             for product in self
         ]
 
