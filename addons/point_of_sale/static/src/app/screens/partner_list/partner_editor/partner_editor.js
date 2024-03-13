@@ -31,6 +31,15 @@ export class PartnerDetailsEdit extends Component {
             vat: partner.vat || "",
             property_product_pricelist: this.setDefaultPricelist(partner),
         });
+        this.translatedItems = {
+            'Street': _t('Street'),
+            'City': _t('City'),
+            'Zip': _t('Zip'),
+            'Email': _t('Email'),
+            'Phone': _t('Phone'),
+            'Mobile': _t('Mobile'),
+            'Barcode': _t('Barcode')
+        }
         Object.assign(this.props.imperativeHandle, {
             save: () => this.saveChanges(),
         });
