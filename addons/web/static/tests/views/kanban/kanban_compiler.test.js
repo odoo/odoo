@@ -1,5 +1,4 @@
-import { test } from "@odoo/hoot";
-import { expectMarkup } from "@web/../tests/web_test_helpers";
+import { expect, test } from "@odoo/hoot";
 
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 
@@ -7,7 +6,7 @@ function compileTemplate(arch) {
     const parser = new DOMParser();
     const xml = parser.parseFromString(arch, "text/xml");
     const compiler = new KanbanCompiler({ kanban: xml.documentElement });
-    return compiler.compile("kanban").outerHTML;
+    return compiler.compile("kanban");
 }
 
 test("bootstrap dropdowns with kanban_ignore_dropdown class should be left as is", async () => {
@@ -39,5 +38,5 @@ test("bootstrap dropdowns with kanban_ignore_dropdown class should be left as is
                 </templates>
             </kanban>
         </t>`;
-    expectMarkup(compileTemplate(arch)).toBe(expected);
+    expect(compileTemplate(arch)).toHaveOuterHTML(expected);
 });

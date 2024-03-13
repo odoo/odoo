@@ -1,4 +1,3 @@
-import { expect, formatXML } from "@odoo/hoot";
 import { waitFor } from "@odoo/hoot-dom";
 import { Component, useSubEnv, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -206,19 +205,4 @@ export async function mountView(params) {
         env: params.env || getMockEnv() || (await makeMockEnv({ config })),
         props: parseViewProps(params),
     });
-}
-
-/**
- * @param {string} value
- */
-export function expectMarkup(value) {
-    return {
-        /**
-         * @param {string} expected
-         * @param {object} [options]
-         */
-        toBe(expected, options) {
-            expect(formatXML(value, options)).toBe(formatXML(expected, options));
-        },
-    };
 }

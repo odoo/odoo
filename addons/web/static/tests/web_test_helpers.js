@@ -125,7 +125,6 @@ export {
     clickModalButton,
     clickSave,
     clickViewButton,
-    expectMarkup,
     fieldInput,
     mountView,
     mountViewInDialog,
