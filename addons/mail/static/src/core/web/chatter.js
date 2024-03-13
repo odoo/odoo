@@ -239,9 +239,9 @@ export class Chatter extends Component {
         }
         const recipients = [...this.state.thread.recipients].slice(0, 5).map(({ partner }) => {
             const text = partner.email ? partner.emailWithoutDomain : partner.name;
-            return `<span class="text-muted" title="${escapeHTML(partner.email)}">${escapeHTML(
-                text
-            )}</span>`;
+            return `<span class="text-muted" title="${escapeHTML(
+                partner.email || _t("no email address")
+            )}">${escapeHTML(text)}</span>`;
         });
         const formatter = new Intl.ListFormat(
             this.store.env.services["user"].lang?.replace("_", "-"),
