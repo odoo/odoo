@@ -365,6 +365,7 @@
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">0.13 * l10n_bo_tax_report_iva_31.balance * (l10n_bo_tax_report_iva_13.balance + l10n_bo_tax_report_iva_14.balance) / (l10n_bo_tax_report_iva_13.balance + l10n_bo_tax_report_iva_14.balance + l10n_bo_tax_report_iva_15.balance + l10n_bo_tax_report_iva_505.balance)</field>
+                                        <field name="subformula">ignore_zero_division</field>
                                     </record>
                                 </field>
                             </record>

@@ -359,10 +359,16 @@
                         <field name="name">15. Claim for repayment of VAT - Proportion claimable</field>
                         <field name="code">T15</field>
                         <field name="expression_ids">
+                            <record id="mu_tr_T15_safe_div" model="account.report.expression">
+                                <field name="label">_safe_div</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">(T1_1.value + T1_2.value) / (T5.value - T3.value) * 100</field>
+                                <field name="subformula">ignore_zero_division</field>
+                            </record>
                             <record id="mu_tr_T15_rounded" model="account.report.expression">
                                 <field name="label">_rounded</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">(T1_1.value + T1_2.value) / (T5.value - T3.value) * 100</field>
+                                <field name="formula">T15._safe_div</field>
                                 <field name="subformula">round(0)</field>
                             </record>
                             <record id="mu_tr_T15_percent" model="account.report.expression">
@@ -402,10 +408,16 @@
                                 <field name="name">15.3. Total repayment claimed</field>
                                 <field name="code">T15_3</field>
                                 <field name="expression_ids">
+                                    <record id="mu_tr_T15_3_vat_safe_div" model="account.report.expression">
+                                        <field name="label">_safe_div</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">(T15.percent / 100) * (T15_1.value + T15_2.value)</field>
+                                        <field name="subformula">ignore_zero_division</field>
+                                    </record>
                                     <record id="mu_tr_T15_3_vat" model="account.report.expression">
                                         <field name="label">vat</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">(T15.percent / 100) * (T15_1.value + T15_2.value)</field>
+                                        <field name="formula">T15_3._safe_div</field>
                                         <field name="subformula">if_other_expr_below(T14.vat, MUR(0))</field>
                                     </record>
                                 </field>
