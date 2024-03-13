@@ -429,8 +429,8 @@ class PosConfig(models.Model):
                         continue
                     if key == 'use_pricelist' and vals[key]:
                         continue
-                    if key == 'available_pricelist_ids':
-                        removed_pricelist = set(self.available_pricelist_ids.ids) - set(vals[key][0][2])
+                    if key == 'available_pricelist_ids' and vals[key]:
+                        removed_pricelist = set(self.available_pricelist_ids.ids) - {pricelist_ids[1] for pricelist_ids in vals[key]}
                         if len(removed_pricelist) == 0:
                             continue
                     field_name = self._fields[key].get_description(self.env)["string"]

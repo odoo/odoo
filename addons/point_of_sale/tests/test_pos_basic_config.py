@@ -7,6 +7,7 @@ from odoo import fields
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import UserError
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -547,6 +548,17 @@ class TestPoSBasicConfig(TestPoSCommon):
                 ],
             },
         })
+
+    def test_avilable_pricelist_ids_with_session_open(self):
+        # Test POS by adding a new pricelist while the session is open
+        new_pricelist_1 = self.env['product.pricelist'].create({
+            'name': 'New Pricelist 1',
+            'currency_id': self.other_currency.id,
+        })
+        self.open_new_session()
+
+        with self.assertRaises(UserError):
+            self.config.write({'available_pricelist_ids': [(4, new_pricelist_1.id)]})
 
     def test_rounding_method(self):
         # set the cash rounding method
