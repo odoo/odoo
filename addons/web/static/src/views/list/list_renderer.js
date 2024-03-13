@@ -220,6 +220,9 @@ export class ListRenderer extends Component {
             // OWL don't wait the patch for the children components if the children trigger a patch by himself.
             await Promise.resolve();
 
+            if (this.activeElement !== this.uiService.activeElement) {
+                return;
+            }
             const editedRecord = this.props.list.editedRecord;
             if (editedRecord && this.activeRowId !== editedRecord.id) {
                 if (this.cellToFocus && this.cellToFocus.record === editedRecord) {
