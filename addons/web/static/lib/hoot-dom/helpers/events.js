@@ -964,6 +964,10 @@ const _keyDown = (target, eventInit) => {
                 // Get selection from window
                 const text = globalThis.getSelection().toString();
                 globalThis.navigator.clipboard.writeTextSync(text);
+
+                dispatch(target, "copy", {
+                    clipboardData: eventInit.dataTransfer || new DataTransfer(),
+                });
             }
             break;
         }
@@ -995,6 +999,10 @@ const _keyDown = (target, eventInit) => {
                 nextValue = value;
 
                 inputType = "insertFromPaste";
+
+                dispatch(target, "paste", {
+                    clipboardData: eventInit.dataTransfer || new DataTransfer(),
+                });
             }
             break;
         }
@@ -1011,6 +1019,10 @@ const _keyDown = (target, eventInit) => {
 
                 nextValue = deleteSelection(target);
                 inputType = "deleteByCut";
+
+                dispatch(target, "cut", {
+                    clipboardData: eventInit.dataTransfer || new DataTransfer(),
+                });
             }
             break;
         }
