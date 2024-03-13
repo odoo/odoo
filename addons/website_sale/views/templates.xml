@@ -1894,7 +1894,7 @@
                             <div>
                                 <t t-set="address_mode" t-value="mode[1]"/>
                                 <t t-if="not is_public_order">
-                                    <t t-if="not is_public_order and address_mode == 'billing'">
+                                    <t t-if="address_mode == 'billing'">
                                         <h3 class="mb-3">Billing address</h3>
                                     </t>
                                     <t t-else="">
@@ -1919,7 +1919,7 @@
                                             <label t-attf-class="col-form-label #{mode[1] == 'shipping' and 'label-optional' or ''}" for="email">Email</label>
                                             <div style="display: inline" class="float-end">
                                                 <span> Already have an account?</span>
-                                                <a t-if="account_on_checkout != 'disabled'" role="button" href='/web/login?redirect=/shop/checkout'  style="margin-top: -11px" class="btn btn-primary"> Sign in</a>
+                                                <a t-if="account_on_checkout != 'disabled'" role="button" href='/web/login?redirect=/shop/checkout' style="margin-top: -11px" class="btn btn-primary">Sign in</a>
                                             </div>
                                             <input type="email" name="email" t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}" t-att-value="'email' in checkout and checkout['email']"/>
                                         </div>
