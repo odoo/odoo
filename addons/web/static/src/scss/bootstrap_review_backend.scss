@@ -89,10 +89,11 @@
         &:active, &.active, &:active:hover, &.active:hover {
             z-index: 2;
         }
+    }
 
-        &:not(:first-child) {
-            margin-left: var(--btn-group-gap, $btn-border-width); 
-        }
+    > :not(.btn-check:first-child) + .btn,
+    > .btn-group:not(:first-child) {
+        margin-left: var(--btn-group-gap, $btn-border-width);
     }
 }
 
