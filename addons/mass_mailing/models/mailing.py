@@ -1441,6 +1441,9 @@ class MassMailing(models.Model):
                 )
 
             return content
+        except UnidentifiedImageError:
+            _logger.warning('This file could not be decoded as an image file.', exc_info=True)
+            raise
         except Exception as e:
             _logger.exception(e)
             raise ImportValidationError(_("Could not retrieve URL: %s", url)) from e
