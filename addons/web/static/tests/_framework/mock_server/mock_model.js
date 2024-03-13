@@ -1268,6 +1268,13 @@ export class Model extends Array {
         this.definition._name = value;
     }
 
+    static get _onChanges() {
+        return this.definition._onChanges;
+    }
+    static set _onChanges(value) {
+        this.definition._onChanges = value;
+    }
+
     static get _order() {
         return this.definition._order;
     }
