@@ -871,6 +871,9 @@ class MrpProduction(models.Model):
                 vals['name'] = self.env['stock.picking.type'].browse(picking_type_id).sequence_id.next_by_id()
             if not vals.get('procurement_group_id'):
                 procurement_group_vals = self._prepare_procurement_group_vals(vals)
+                field = self.env['procurement.group']._fields.get('move_type')
+                if field and field.default and 'move_type' not in procurement_group_vals:
+                    procurement_group_vals['move_type'] = field.default(self.env['procurement.group'])
                 vals['procurement_group_id'] = self.env["procurement.group"].create(procurement_group_vals).id
         res = super().create(vals_list)
         # Make sure that the date passed in vals_list are taken into account and not modified by a compute

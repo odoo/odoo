@@ -479,3 +479,18 @@ class TestMrpByProduct(common.TransactionCase):
         mo.button_mark_done()
         self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 2)
         self.assertEqual(mo.move_byproduct_ids.product_id, mo.move_byproduct_ids.move_line_ids.product_id)
+
+    def test_create_mrp_production_with_context(self):
+        """
+        Test creating MRP production while passing default value
+        for 'move_type' in context.
+        """
+        mp = self.env['mrp.production'].with_context(default_move_type="out_invoice").create({
+            'product_id': self.product_a.id,
+            'product_qty': 1.0,
+            'bom_id': self.bom_byproduct.id,
+        })
+
+        self.assertTrue(mp.procurement_group_id, 'The procurement group should have been created '
+                                                 'with its default value')
+        self.assertEqual(mp.procurement_group_id.move_type, 'direct')
