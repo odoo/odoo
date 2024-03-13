@@ -1084,6 +1084,10 @@ class BaseModel(metaclass=MetaModel):
                     # in order to reproduce the former behavior
                     if not isinstance(value, BaseModel):
                         current[i] = field.convert_to_export(value, record)
+
+                    elif import_compatible and field.type == 'reference':
+                        current[i] = f"{value._name},{value.id}"
+
                     else:
                         primary_done.append(name)
                         # recursively export the fields that follow name; use

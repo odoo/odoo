@@ -35,7 +35,7 @@ MODELS = [
     ('many2many', fields.Many2many('export.many2many.other')),
     ('function', fields.Integer(compute=compute_fn, inverse=inverse_fn)),
     # related: specialization of fields.function, should work the same way
-    # TODO: reference
+    ('reference', fields.Reference([('export.integer', 'integer')], 'export.reference')),
 ]
 
 for name, field in MODELS:

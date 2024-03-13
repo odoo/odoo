@@ -366,6 +366,28 @@ class test_m2o(CreatorCase):
         )
         self.assertEqual(set(xp), {xp[0]})
 
+
+class test_reference(CreatorCase):
+    model_name = 'export.reference'
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.ref_record = cls.env['export.integer'].create({'value': 42})
+        cls.ref_value = f"{cls.ref_record._name},{cls.ref_record.id}"
+
+    def test_empty(self):
+        self.assertEqual(self.export(False), [['']])
+
+    def test_import_compat(self):
+        self.assertEqual(self.export(self.ref_value), [[self.ref_value]])
+
+    def test_false_import_compat(self):
+        self.assertEqual(
+            self.export(self.ref_value, context={'import_compat': False}),
+            [[self.ref_record.display_name]])
+
+
 class test_o2m(CreatorCase):
     model_name = 'export.one2many'
     commands = [
