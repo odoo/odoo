@@ -64,7 +64,7 @@ class ResPartner(models.Model):
         # NOTE by the moment we include the CUIT (VAT AR) validation also here because we extend the messages
         # errors to be more friendly to the user. In a future when Odoo improve the base_vat message errors
         # we can change this method and use the base_vat.check_vat_ar method.s
-        l10n_ar_partners = self.filtered(lambda x: x.l10n_latam_identification_type_id.l10n_ar_afip_code)
+        l10n_ar_partners = self.filtered(lambda p: p.l10n_latam_identification_type_id.l10n_ar_afip_code or p.country_code == 'AR')
         l10n_ar_partners.l10n_ar_identification_validation()
         return super(ResPartner, self - l10n_ar_partners).check_vat()
 
@@ -110,6 +110,9 @@ class ResPartner(models.Model):
                 raise ValidationError(_('Invalid length for "%s"', rec.l10n_latam_identification_type_id.name))
             except module.InvalidFormat:
                 raise ValidationError(_('Only numbers allowed for "%s"', rec.l10n_latam_identification_type_id.name))
+            except module.InvalidComponent:
+                valid_cuit = ('20', '23', '24', '27', '30', '33', '34', '50', '51', '55')
+                raise ValidationError(_('CUIT number must be prefixed with one of the following: %s', ', '.join(valid_cuit)))
             except Exception as error:
                 raise ValidationError(repr(error))
 
