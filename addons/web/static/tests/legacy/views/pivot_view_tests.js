@@ -2859,7 +2859,7 @@ QUnit.module("Views", (hooks) => {
         await mouseEnter(target.querySelector(".o-dropdown--menu .dropdown-toggle"));
         await click(
             target.querySelectorAll(
-                ".o-overlay-container .o-dropdown--menu:nth-child(2) .dropdown-item"
+                ".o-overlay-item:nth-child(2) .o-dropdown--menu .dropdown-item"
             )[3]
         );
 

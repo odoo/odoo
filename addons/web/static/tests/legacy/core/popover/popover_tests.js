@@ -9,6 +9,7 @@ import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { Component, xml } from "@odoo/owl";
+import { overlayService } from "@web/core/overlay/overlay_service";
 
 let env;
 let fixture;
@@ -33,6 +34,7 @@ QUnit.module("Popover", {
 
         registry.category("services").add("hotkey", hotkeyService);
         registry.category("services").add("ui", uiService);
+        registry.category("services").add("overlay", overlayService);
         env = await makeTestEnv();
     },
 });

@@ -5,16 +5,15 @@
         <div class="o-overlay-container" t-ref="root">
             <t t-foreach="sortedOverlays" t-as="overlay" t-key="overlay.id">
                 <ErrorHandler t-if="isVisible(overlay)" onError="(error) => this.handleError(overlay, error)">
-                    <t t-if="overlay.env">
-                        <WithEnv env="overlay.env">
-                            <t t-component="overlay.component" t-props="overlay.props" />
-                        </WithEnv>
-                    </t>
-                    <t t-else="">
-                        <t t-component="overlay.component" t-props="overlay.props" />
-                    </t>
+                    <OverlayItem env="overlay.env" component="overlay.component" props="overlay.props"/>
                 </ErrorHandler>
             </t>
+        </div>
+    </t>
+
+    <t t-name="web.OverlayContainer.Item">
+        <div t-ref="rootRef" class="o-overlay-item">
+            <t t-component="props.component" t-props="props.props" />
         </div>
     </t>
 

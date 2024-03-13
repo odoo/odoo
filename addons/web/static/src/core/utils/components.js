@@ -9,14 +9,3 @@ export class ErrorHandler extends Component {
         });
     }
 }
-
-export class WithEnv extends Component {
-    static template = xml`<t t-slot="default"/>`;
-    static props = {
-        env: { optional: false, type: Object },
-        slots: { optional: true, type: Object },
-    };
-    setup() {
-        this.__owl__.childEnv = this.props.env;
-    }
-}

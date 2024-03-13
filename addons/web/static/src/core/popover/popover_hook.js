@@ -1,7 +1,6 @@
 import { useService } from "@web/core/utils/hooks";
 
-import { onWillUnmount, status, useComponent, useEnv } from "@odoo/owl";
-import { POPOVER_SYMBOL } from "./popover";
+import { onWillUnmount, status, useComponent } from "@odoo/owl";
 
 /**
  * @typedef PopoverHookReturnType
@@ -44,11 +43,9 @@ export function makePopover(popoverService, component, options) {
  * @returns {PopoverHookReturnType}
  */
 export function usePopover(component, options = {}) {
-    const env = useEnv();
     const popoverService = useService("popover");
     const owner = useComponent();
     const newOptions = Object.create(options);
-    newOptions[POPOVER_SYMBOL] = env[POPOVER_SYMBOL];
     newOptions.onClose = () => {
         if (status(owner) !== "destroyed") {
             options.onClose?.();
