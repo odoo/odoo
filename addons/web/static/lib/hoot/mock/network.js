@@ -679,9 +679,7 @@ export class MockXMLHttpRequest extends EventTarget {
 
     abort() {}
 
-    upload = {
-        addEventListener: () => {},
-    };
+    upload = new MockXMLHttpRequestUpload();
 
     get response() {
         return this.#response;
@@ -724,6 +722,22 @@ export class MockXMLHttpRequest extends EventTarget {
         this.#headers[name] = value;
     }
     getResponseHeader() {}
+}
+
+export class MockXMLHttpRequestUpload extends EventTarget {
+    constructor() {
+        super(...arguments);
+
+        makePublicListeners(this, [
+            "abort",
+            "error",
+            "load",
+            "loadend",
+            "loadstart",
+            "progress",
+            "timeout",
+        ]);
+    }
 }
 
 export class ServerWebSocket extends EventTarget {
