@@ -187,6 +187,13 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         // "Effect" option of the "On Hover" animation option.
         const hoverEffectSelectEl = $html.find('[data-set-img-shape-hover-effect]')[0];
         delete hoverEffectSelectEl.dataset.noPreview;
+
+        // TODO remove in master: as a stable fix we exclude the form fields
+        // from the grid cell's Padding (Y, X) option.
+        const gridColumnsEl = $html.find('[data-js="GridColumns"]')[0];
+        if (gridColumnsEl) {
+            gridColumnsEl.dataset.selector = ".row:not(.s_col_no_resize) > div";
+        }
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
