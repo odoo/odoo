@@ -5,6 +5,7 @@ import {
     hover,
     manuallyDispatchProgrammaticEvent,
     press,
+    queryAll,
     queryAllAttributes,
     queryAllTexts,
     queryFirst,
@@ -56,6 +57,7 @@ import {
 
 import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
+import { makeErrorFromResponse } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -10343,6 +10345,77 @@ test(`resequence list lines when discardable lines are present`, async () => {
     await contains(`.o_selected_row input`).edit("second line");
     expect.verifySteps(["onchange"]);
     expect(`[name="foo"] input`).toHaveValue("2");
+});
+
+test("resequence list lines when previous resequencing crashed", async () => {
+    expect.errors(1);
+    let onChangeCount = 0;
+
+    Partner._onChanges = {
+        int_field: function (obj) {
+            if (obj.name === "first line") {
+                if (onChangeCount === 0) {
+                    onChangeCount += 1;
+
+                    expect.step("resequence onChange crash");
+                    throw makeErrorFromResponse({
+                        code: 200,
+                        message: "Odoo Server Error",
+                        data: {
+                            name: `odoo.exceptions.${"UserError"}`,
+                            debug: "traceback",
+                            arguments: [],
+                            context: {},
+                            message: "error",
+                        },
+                    });
+                } else {
+                    expect.step("resequence onChange ok");
+                }
+            }
+        },
+    };
+
+    Partner._views = {
+        list: `
+            <list editable="bottom">
+                <field name="int_field" widget="handle"/>
+                <field name="name" required="1"/>
+            </list>
+        `,
+    };
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo"/><field name="child_ids"/></form>`,
+        resId: 1,
+    });
+
+    // Add two lines
+    await contains(`.o_field_x2many_list_row_add a`).click();
+
+    await contains(".o_data_cell [name='name'] input").edit("first line");
+    await animationFrame();
+
+    await contains(".o_selected_row input").edit("second line");
+    await contains(".o_form_button_save").click();
+    await animationFrame();
+
+    const getNames = () => [...queryAll(".o_list_char")].map((el) => el.textContent);
+    expect(getNames()).toEqual(["first line", "second line"]);
+    await contains("tbody.ui-sortable tr:nth-child(1) .o_handle_cell").dragAndDrop(
+        "tbody.ui-sortable tr:nth-child(2)"
+    );
+    await animationFrame();
+    expect(getNames()).toEqual(["first line", "second line"]);
+
+    await contains("tbody.ui-sortable tr:nth-child(1) .o_handle_cell").dragAndDrop(
+        "tbody.ui-sortable tr:nth-child(2)"
+    );
+    await animationFrame();
+    expect(getNames()).toEqual(["second line", "first line"]);
+    expect.verifySteps(["resequence onChange crash", "resequence onChange ok"]);
 });
 
 test(`reload company when creating records of model res.company`, async () => {
