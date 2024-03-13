@@ -519,7 +519,10 @@ class ProductTemplate(models.Model):
     @api.depends('name', 'default_code')
     def _compute_display_name(self):
         for template in self:
-            template.display_name = '{}{}'.format(template.default_code and '[%s] ' % template.default_code or '', template.name)
+            template.display_name = False if not template.name else (
+                '{}{}'.format(
+                    template.default_code and '[%s] ' % template.default_code or '', template.name
+                ))
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
