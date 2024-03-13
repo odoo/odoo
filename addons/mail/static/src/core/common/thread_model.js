@@ -206,7 +206,9 @@ export class Thread extends Record {
      *
      * Content should be fetched and inserted in a controlled way.
      */
-    messages = Record.many("Message");
+    messages = Record.many("Message", {
+        sort: (message1, message2) => message1.id - message2.id,
+    });
     /** @type {string} */
     modelName;
     /** @type {string} */
