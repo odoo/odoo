@@ -615,6 +615,7 @@ class AccountTax(models.Model):
                     for tax_rep in repartition_lines
                 ]
                 tax_values['_factor'] = sum(repartition_lines.mapped('factor'))
+                tax_values['_base_factor'] = tax_values['_factor'] or 1.0
             for tax_rep_field, tax_values_key in (
                 ('refund_repartition_line_ids', '_refund_base_tag_ids'),
                 ('invoice_repartition_line_ids', '_invoice_base_tag_ids'),
@@ -1028,29 +1029,29 @@ class AccountTax(models.Model):
         """
         price_include = tax_values['price_include']
         amount_type = tax_values['amount_type']
-        total_tax_amount = evaluation_context['total_tax_amount']
         reverse = evaluation_context['reverse']
 
         raw_base = (evaluation_context['quantity'] * evaluation_context['price_unit']) + evaluation_context['extra_base']
         if reverse and 'reverse_multiplicator' in evaluation_context:
             raw_base *= evaluation_context['reverse_multiplicator']
-        base = raw_base - total_tax_amount
 
         if price_include:
+            total_tax_amount = evaluation_context['total_tax_amount']
+            base = raw_base - total_tax_amount
             if amount_type == 'division':
                 return {
-                    'base': base,
+                    'base': base * tax_values['_base_factor'],
                     'display_base': raw_base,
                 }
             else:
                 return {
-                    'base': base,
+                    'base': base * tax_values['_base_factor'],
                     'display_base': base,
                 }
 
         # Price excluded.
         return {
-            'base': raw_base,
+            'base': raw_base * tax_values['_base_factor'],
             'display_base': raw_base,
         }
 

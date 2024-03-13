@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.addons.account.tests.common import TestTaxCommon
 from odoo.tests import tagged
 
@@ -465,6 +466,37 @@ class TestTax(TestTaxCommon):
         )
         self._assert_tests(tests)
 
+    def test_intracomm_taxes(self):
+        """ Test the base of the intracomm taxes is 100% of the base and not 0%. """
+        tax = self.percent_tax(
+            21.0,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+        )
+
+        tests = (
+            self._prepare_taxes_computation_test(
+                tax,
+                100.0,
+                {
+                    'total_included': 100.0,
+                    'total_excluded': 100.0,
+                    'tax_values_list': (
+                        (100.0, 0.0),
+                    ),
+                },
+            ),
+        )
+        self._assert_tests(tests)
+
     def test_fixed_tax_price_included_affect_base_on_0(self):
         tax = self.fixed_tax(0.05, price_include=True, include_base_amount=True)
         tests = (
@@ -657,8 +689,8 @@ class TestTax(TestTaxCommon):
                         (836.7, 50.0),
                         (836.7, 30.0),
                         (836.7, 6.5),
-                        (836.7, 28.8),
-                        (836.7, 48.0),
+                        (267.74, 28.8),
+                        (267.74, 48.0),
                     ),
                 },
             ),
@@ -697,8 +729,8 @@ class TestTax(TestTaxCommon):
                         (836.7, 50.0),
                         (836.7, 30.0),
                         (836.7, 6.5),
-                        (836.7, 28.8),
-                        (836.7, 48.0),
+                        (267.74, 28.8),
+                        (267.74, 48.0),
                     ),
                 },
             ),
@@ -730,8 +762,8 @@ class TestTax(TestTaxCommon):
                         (836.7, 50.0),
                         (836.7, 30.0),
                         (836.7, 6.5),
-                        (836.7, 28.8),
-                        (836.7, 48.0),
+                        (267.7439999, 28.8),
+                        (267.7439999, 48.0),
                     ),
                 },
                 {'rounding_method': 'round_globally'},

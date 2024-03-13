@@ -391,24 +391,24 @@ export function eval_tax_amount(tax_values, eval_context) {
 export function eval_tax_base_amount(tax_values, eval_context) {
     const price_include = tax_values.price_include;
     const amount_type = tax_values.amount_type;
-    const total_tax_amount = eval_context.total_tax_amount;
     const reverse = eval_context.reverse;
 
     let raw_base = (eval_context.quantity * eval_context.price_unit) + eval_context.extra_base;
     if (reverse && eval_context.hasOwnProperty("reverse_multiplicator")) {
         raw_base *= eval_context.reverse_multiplicator;
     }
-    const base = raw_base - total_tax_amount;
 
     if (price_include) {
+        const total_tax_amount = eval_context.total_tax_amount;
+        const base = raw_base - total_tax_amount;
         if (amount_type === "division") {
             return {
-                base: base,
+                base: base * tax_values._base_factor,
                 display_base: raw_base,
             }
         } else {
             return {
-                base: base,
+                base: base * tax_values._base_factor,
                 display_base: base,
             }
         }
@@ -416,7 +416,7 @@ export function eval_tax_base_amount(tax_values, eval_context) {
 
     // Price excluded.
     return {
-        base: raw_base,
+        base: raw_base * tax_values._base_factor,
         display_base: raw_base,
     }
 }
