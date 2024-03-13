@@ -107,6 +107,7 @@ options.registry.mailing_list_subscribe = options.Class.extend({
         checkboxEl.setAttribute('string', _t("Display Thanks Message"));
         checkboxEl.dataset.toggleThanksMessage = 'true';
         checkboxEl.dataset.noPreview = 'true';
+        checkboxEl.dataset.dependencies = "!form_opt";
         uiFragment.appendChild(checkboxEl);
     },
 });
