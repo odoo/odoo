@@ -15,6 +15,7 @@ const simpleDraggableHook = {
     onComputeParams({ ctx, params }) {
         ctx.helper = params.helper;
         ctx.followCursor = false;
+        ctx.tolerance = 0;
     },
     onDragStart({ ctx }) {
         ctx.current.element = ctx.helper();
