@@ -65,3 +65,21 @@ def literal_eval(expr):
     return orig_literal_eval(expr)
 
 ast.literal_eval = literal_eval
+
+
+################
+# Noble compat
+# TOTO, remove me in master (<17.1)
+################
+
+from werkzeug import urls
+if not hasattr(urls, 'url_join'):
+    # see https://github.com/pallets/werkzeug/compare/2.3.0..3.0.0
+    # see https://github.com/pallets/werkzeug/blob/2.3.0/src/werkzeug/urls.py for replacement
+    from urllib import parse
+    urls.url_decode = parse.parse_qs
+    urls.url_encode = parse.urlencode
+    urls.url_join = parse.urljoin
+    urls.url_parse = parse.urlsplit
+    urls.url_quote_plus = parse.quote_plus
+    urls.url_quote = parse.quote

@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-from PyPDF2.utils import PdfStreamError, PdfReadError
+try:
+    from PyPDF2.utils import PdfStreamError, PdfReadError
+except ImportError:
+    from PyPDF2.errors import PdfStreamError, PdfReadError
+
 from zlib import error as zlib_error
 
 from odoo import models, _
