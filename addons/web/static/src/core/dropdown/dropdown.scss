@@ -73,12 +73,6 @@
     margin-bottom: var(--Dropdown_menu-margin-y, #{map-get($spacers, 1)});
     background-color: $dropdown-bg;
 
-    &.popover {
-        // Sets the z-index to be the same as dialogs, this should ensure dropdowns
-        // appear behind or in front of dialogs based on the order they are opened.
-        z-index: 1055;
-    }
-
     .dropdown-toggle:focus,
     .dropdown-item:focus {
         background-color: transparent;

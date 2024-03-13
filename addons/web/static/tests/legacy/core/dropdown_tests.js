@@ -1820,4 +1820,64 @@ QUnit.module("Components", ({ beforeEach }) => {
         await nextTick();
         assert.containsOnce(target, DROPDOWN_MENU);
     });
+
+    QUnit.test("Dropdown in dialog in dropdown, first dropdown should stay open when clicking inside the second one", async (assert) => {
+        const env = await makeTestEnv();
+
+        serviceRegistry.add("dialog", dialogService);
+        serviceRegistry.add("l10n", makeFakeLocalizationService());
+
+        class DialogDropdown extends Component {
+            static components = { Dialog, Dropdown };
+            static props = { close: true };
+            static template = xml`
+                <Dialog>
+                    <button class="inside-dialog">Inside Dialog</button>
+                    <Dropdown>
+                        <button class="dialog-dropdown">Open</button>
+                        <t t-set-slot="content">
+                            <button class="dialog-button">Coucou</button>
+                        </t>
+                    </Dropdown>
+                </Dialog>
+            `;
+        }
+
+        class Parent extends Component {
+            static components = { Dropdown };
+            static props = {};
+            static template = xml`
+                <Dropdown>
+                    <button class="root-dropdown">Coucou</button>
+                    <t t-set-slot="content">
+                        <button t-on-click="() => this.onClick()" class="root-button">Open Dialog</button>
+                    </t>
+                </Dropdown>
+            `;
+
+            onClick() {
+                env.services.dialog.add(DialogDropdown);
+            }
+        }
+
+        await mountInFixture(Parent, target, { env });
+        assert.containsNone(target, DROPDOWN_MENU);
+
+        // Open dialog
+        await click(target, ".root-dropdown");
+        await click(target, ".root-button");
+        assert.containsOnce(target, DROPDOWN_MENU);
+
+        // Open dropdown in dialog => both dropdown should be open
+        await click(target, ".dialog-dropdown");
+        assert.containsN(target, DROPDOWN_MENU, 2);
+
+        // Click inside dropdown inside dialog => both dropdown should not close
+        await click(target, ".dialog-button");
+        assert.containsN(target, DROPDOWN_MENU, 2);
+
+        // Click outside dropdown inside dialog => only first dropdown should be open
+        await click(target, ".inside-dialog");
+        assert.containsN(target, DROPDOWN_MENU, 1);
+    });
 });
