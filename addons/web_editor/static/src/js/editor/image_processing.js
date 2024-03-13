@@ -465,8 +465,10 @@ export async function activateCropper(image, aspectRatio, dataset) {
 export async function loadImageInfo(img, recordInfo, attachmentSrc = "") {
     const imgSrc = img.getAttribute("src");
     const src = attachmentSrc || imgSrc;
-    if (!src || registry.category("image.data").get(src, undefined)) {
-        // The image data have already been loaded
+    let imageData = registry.category("image.data").get(src, undefined);
+    const isImageReplaced = imageData && !imageData.mimetype;
+    if (!src || (imageData && !isImageReplaced)) {
+        // The image options have already been loaded
         return;
     }
     // In order to be robust to absolute, relative and protocol relative URLs,
@@ -482,11 +484,12 @@ export async function loadImageInfo(img, recordInfo, attachmentSrc = "") {
 
     const srcUrl = new URL(src, docHref);
     const relativeSrc = srcUrl.pathname;
-    const imageData = await rpc("/web_editor/get_image_info", {
+    imageData = await rpc("/web_editor/get_image_info", {
         res_model: recordInfo.resModel,
         res_id: recordInfo.resId,
         res_field: recordInfo.resField,
         res_type: recordInfo.type,
+        search_image_data: !isImageReplaced,
         src: relativeSrc,
     });
     // If src was an absolute "external" URL, we consider unlikely that its

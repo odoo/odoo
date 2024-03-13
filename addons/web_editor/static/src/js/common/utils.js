@@ -560,6 +560,7 @@ export default {
     computePxByRem: _computePxByRem,
     convertValueToUnit: _convertValueToUnit,
     convertNumericToUnit: _convertNumericToUnit,
+    convertSnakeToCamelString: _convertSnakeToCamelString,
     getNumericAndUnit: _getNumericAndUnit,
     areCssValuesEqual: _areCssValuesEqual,
     isColorCombinationName: _isColorCombinationName,

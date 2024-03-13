@@ -324,7 +324,7 @@ class HTML_Editor(http.Controller):
         }
 
     @http.route(['/web_editor/get_image_info', '/html_editor/get_image_info'], type='json', auth='user', website=True)
-    def get_image_info(self, res_model='', res_id=None, res_field='', res_type='', src=''):
+    def get_image_info(self, res_model='', res_id=None, res_field='', res_type='', search_image_data=True, src=''):
         """Returns the image data (mimetype, image options etc...) of a modified
         image. If the image has never been modified, it returns the mimetype,
         the image source and the id of the original attachment linked to the
@@ -340,6 +340,8 @@ class HTML_Editor(http.Controller):
                                         element closest to the image.
             (optional) res_type (str): The type of the editable element closest
                                        to the image.
+            (optional) search_image_data (bool) : If a 'html_editor.image.data'
+                                                  record has to be searched.
             (optional) src (str): The src of the image.
 
         Returns:
@@ -347,7 +349,7 @@ class HTML_Editor(http.Controller):
         """
         image_data_res_info = self._get_image_data_res_info(res_model=res_model, res_id=res_id, res_field=res_field, res_type=res_type, src=src)
         image_data_res_id = image_data_res_info['image_data_res_id']
-        if isinstance(image_data_res_id, int):
+        if isinstance(image_data_res_id, int) and search_image_data:
             # image_data_res_id could be a string (e.g. xmlid). In this case, do
             # not search for an image.data record as the image has never been
             # modified.
@@ -543,6 +545,7 @@ class HTML_Editor(http.Controller):
                 attachment.url = '/'.join(url_fragments)
 
         # Update the image.data record
+        saved_image_data['image_checksum'] = attachment.checksum
         image_data_res_info = self._get_image_data_res_info(res_model=res_model, res_id=res_id, res_field=res_field, res_type=res_type, new_attachment_id=attachment.id)
         image_data_res_model = image_data_res_info['image_data_res_model']
         image_data_res_field = image_data_res_info['image_data_res_field']

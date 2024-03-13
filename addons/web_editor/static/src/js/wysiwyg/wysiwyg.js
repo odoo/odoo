@@ -922,9 +922,12 @@ export class Wysiwyg extends Component {
         }
         document.removeEventListener('scroll', this._onScroll, true);
 
-        // Remove the "image.data" entries from the registry
+        // Remove the "image.data" and "pre.image.data" entries from the
+        // registry.
         const imageData = registry.category("image.data").getEntries();
         imageData.forEach((imageDataEntry) => registry.category("image.data").remove(imageDataEntry[0]));
+        const preImageData = registry.category("pre.image.data").getEntries();
+        preImageData.forEach((preImageDataEntry) => registry.category("pre.image.data").remove(preImageDataEntry[0]));
     }
     /**
      * @override

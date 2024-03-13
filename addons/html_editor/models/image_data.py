@@ -12,6 +12,7 @@ class ImageData(models.Model):
 
     original_id = fields.Many2one('ir.attachment', string='Original (unoptimized, unresized) attachment')
     original_src = fields.Char(related='original_id.image_src', store=True)
+    image_checksum = fields.Char("Checksum/SHA1", size=40, readonly=True)
     mimetype = fields.Char(help='Current mimetype of the image')
     original_mimetype = fields.Char(help='Mimetype of the image before a shape has been applied')
     mimetype_before_conversion = fields.Char(help='Mimetype of the image before the webp conversion')
