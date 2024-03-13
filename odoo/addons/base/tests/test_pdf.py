@@ -104,8 +104,8 @@ class TestPdf(TransactionCase):
         """
         attach_name = 'super_attach.pdf'
         # we need to corrupt the file: change count object in the xref table
-        pattern = re.compile(r"xref\n\d\s+(\d)")
-        corrupted_file = re.sub(pattern, "xref\n0 5", self.file.decode('utf-8'), 1).encode('utf-8')
+        pattern = re.compile(rb"xref\n\d\s+(\d)")
+        corrupted_file = re.sub(pattern, b"xref\n0 5", self.file, 1)
 
         self.env['ir.attachment'].create({
             'datas': base64.b64encode(corrupted_file),
