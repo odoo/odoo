@@ -9,6 +9,7 @@ export const modelRegistry = registry.category("discuss.model");
  */
 export const Markup = markup("").constructor;
 
+export const FIELD_DEFINITION_SYM = Symbol("field_definition");
 /** @typedef {ATTR_SYM|MANY_SYM|ONE_SYM} FIELD_SYM */
 export const ATTR_SYM = Symbol("attr");
 export const MANY_SYM = Symbol("many");
@@ -45,16 +46,19 @@ export function isRecord(record) {
 export function isRecordList(recordList) {
     return Boolean(recordList?.[IS_RECORD_LIST_SYM]);
 }
-/** @param {FIELD_SYM|RecordList} val */
-export function isRelation(val) {
-    if ([MANY_SYM, ONE_SYM].includes(val)) {
-        return true;
-    }
-    return isOne(val) || isMany(val);
+/**
+ * @param {typeof import("./record").Record} Model
+ * @param {string} fieldName
+ */
+export function isRelation(Model, fieldName) {
+    return Model._.fieldsMany.get(fieldName) || Model._.fieldsOne.get(fieldName);
 }
 /** @param {FIELD_SYM} SYM */
 export function isField(SYM) {
     return [MANY_SYM, ONE_SYM, ATTR_SYM].includes(SYM);
+}
+export function isFieldDefinition(val) {
+    return val?.[FIELD_DEFINITION_SYM];
 }
 
 /**
@@ -111,6 +115,6 @@ export function isField(SYM) {
  * @property {boolean} [sortInNeed] on lazy sorted-fields, determines whether this field is needed (i.e. accessed).
  * @property {() => void} [onUpdate] function that contains functions to be called when the value of field
  *   has changed, e.g. sort and onUpdate.
- * @property {RecordList<Record>} [value] value of the field. Either its raw value if it's an attribute,
+ * @property {import("./record_list").RecordList<Record>} [value] value of the field. Either its raw value if it's an attribute,
  *   or a RecordList if it's a relational field.
  */
