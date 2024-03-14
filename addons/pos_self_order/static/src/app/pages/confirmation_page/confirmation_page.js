@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
@@ -53,7 +53,13 @@ export class ConfirmationPage extends Component {
                         }
                     }
                 }, 500);
+                this.defaultTimeout = setTimeout(() => {
+                    this.router.navigate("default");
+                }, 30000);
             }
+        });
+        onWillUnmount(() => {
+            clearTimeout(this.defaultTimeout);
         });
 
         this.initOrder();

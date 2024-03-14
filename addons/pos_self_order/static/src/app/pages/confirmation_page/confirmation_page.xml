@@ -25,12 +25,12 @@
             <span role="button" t-if="selfOrder.showDownloadButton(confirmedOrder)" t-on-click="() => this.selfOrder.downloadReceipt(this.confirmedOrder)">
                 Download your receipt here 
             </span>
-        </div>
-        <div class="px-3 py-4 text-center">
-            <button class="btn btn-primary btn-lg" t-on-click="backToHome">
-                <t t-if="this.selfOrder.config.self_ordering_mode === 'kiosk'">Close</t>
-                <t t-else="">Ok</t>
-            </button>
+            <div class="px-3 py-4 text-center">
+                <button class="btn btn-primary btn-lg" t-attf-style="{{selfOrder.config.self_ordering_mode === 'kiosk' ? 'height: 10vh; width: 40vw;' : ''}}" t-on-click="backToHome">
+                    <t t-if="this.selfOrder.config.self_ordering_mode === 'kiosk'">Close</t>
+                    <t t-else="">Ok</t>
+                </button>
+            </div>
         </div>
     </t>
 </templates>

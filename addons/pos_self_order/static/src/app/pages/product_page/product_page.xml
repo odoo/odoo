@@ -3,7 +3,7 @@
     <t t-name="pos_self_order.ProductPage">
         <div class="d-flex flex-column bg-view flex-grow-1 h-100">
             <div class="d-flex align-items-center flex-shrink-0 justify-content-between gap-3 px-3 py-2 w-100 bg-view border-bottom overflow-x-auto z-index-1">
-                <button class="btn btn-secondary btn-lg px-3 text-nowrap" t-on-click="back">
+                <button class="btn btn-secondary btn-lg px-3 text-nowrap" t-on-click="() => router.back()">
                     <i class="oi oi-chevron-left" aria-hidden="true"/><span class="ms-2 d-none d-md-inline">Discard</span>
                 </button>
                 <h1 class="mb-0 text-nowrap"><strong t-esc="product.name"/> options</h1>
