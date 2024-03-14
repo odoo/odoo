@@ -1,4 +1,4 @@
-import { markRaw, toRaw } from "@odoo/owl";
+import { toRaw } from "@odoo/owl";
 import {
     ATTR_SYM,
     FIELD_DEFINITION_SYM,
@@ -7,7 +7,6 @@ import {
     ONE_SYM,
     OR_SYM,
     isCommand,
-    isField,
     isMany,
     isOne,
     isRecord,
@@ -15,7 +14,6 @@ import {
     isRelation,
     modelRegistry,
 } from "./misc";
-import { RecordUses } from "./record_uses";
 
 /** @typedef {import("./misc").FieldDefinition} FieldDefinition */
 /** @typedef {import("./misc").RecordField} RecordField */
@@ -26,10 +24,6 @@ export class Record {
     static _;
     /** @type {import("./record_internal").RecordInternal} */
     _;
-    /** @param {FieldDefinition} */
-    static isAttr(definition) {
-        return this.isAttr(definition);
-    }
     static id;
     /** @type {import("@web/env").OdooEnv} */
     static env;
@@ -45,26 +39,6 @@ export class Record {
     }
     static onChange(record, name, cb) {
         return this.store.onChange(...arguments);
-    }
-    /**
-     * Version of onChange where the callback receives observe function as param.
-     * This is useful when there's desire to postpone calling the callback function,
-     * in which the observe is also intended to have its invocation postponed.
-     *
-     * @param {Record} record
-     * @param {string|string[]} key
-     * @param {(observe: Function) => any} callback
-     * @returns {function} function to call to stop observing changes
-     */
-    static _onChange(record, key, callback) {
-        return this.store._onChange(...arguments);
-    }
-    static isRecord(record) {
-        return isRecord(record);
-    }
-    /** @param {FIELD_SYM} SYM */
-    static isField(SYM) {
-        return isField(SYM);
     }
     static get(data) {
         const Model = toRaw(this);
@@ -201,7 +175,7 @@ export class Record {
      */
     static new(data) {
         const Model = toRaw(this);
-        const store = Model.store;
+        const store = Model._rawStore;
         return store.MAKE_UPDATE(function RecordNew() {
             const recordProxy = new Model.Class();
             const record = toRaw(recordProxy)._raw;
@@ -220,7 +194,7 @@ export class Record {
                     );
                 }
             }
-            Object.assign(record, { localId: Model.localId(ids) });
+            Object.assign(record._, { localId: Model.localId(ids) });
             Object.assign(recordProxy, { ...ids });
             Model.records[record.localId] = recordProxy;
             if (record.Model.name === "Store") {
@@ -316,7 +290,7 @@ export class Record {
     static insert(data, options = {}) {
         const ModelFullProxy = this;
         const Model = toRaw(ModelFullProxy);
-        const store = Model.store;
+        const store = Model._rawStore;
         return store.MAKE_UPDATE(function RecordInsert() {
             const isMulti = Array.isArray(data);
             if (!isMulti) {
@@ -351,16 +325,16 @@ export class Record {
         const Model = toRaw(ModelFullProxy);
         return Model.get.call(ModelFullProxy, data) ?? Model.new(data);
     }
-    static isCommand(data) {
-        return isCommand(data);
-    }
 
     /** @type {Map<string, RecordList>} */
     _fieldsValue = new Map();
-    __uses__ = markRaw(new RecordUses());
     /** @returns {import("models").Store} */
     get _store() {
         return toRaw(this)._raw.Model._rawStore._proxy;
+    }
+    /** @returns {import("models").Store} */
+    get _rawStore() {
+        return toRaw(this)._raw.Model._rawStore;
     }
     /**
      * Technical attribute, contains the Model entry in the store.
@@ -378,7 +352,9 @@ export class Record {
      */
     Model;
     /** @type {string} */
-    localId;
+    get localId() {
+        return toRaw(this)._.localId;
+    }
     /** @type {this} */
     _raw;
     /** @type {this} */
@@ -394,22 +370,22 @@ export class Record {
 
     update(data) {
         const record = toRaw(this)._raw;
-        const store = record._store;
+        const store = record._rawStore;
         return store.MAKE_UPDATE(function recordUpdate() {
             if (typeof data === "object" && data !== null) {
-                record._store.updateFields(record, data);
+                store._.updateFields(record, data);
             } else {
                 // update on single-id data
-                record._store.updateFields(record, { [record.Model.id]: data });
+                store._.updateFields(record, { [record.Model.id]: data });
             }
         });
     }
 
     delete() {
         const record = toRaw(this)._raw;
-        const store = record._store;
+        const store = record._rawStore;
         return store.MAKE_UPDATE(function recordDelete() {
-            store.ADD_QUEUE("delete", record);
+            store._.ADD_QUEUE("delete", record);
         });
     }
 
@@ -465,10 +441,7 @@ export class Record {
         delete data._;
         delete data._proxy;
         delete data._proxyInternal;
-        delete data._proxyUsed;
         delete data._raw;
-        delete data._updateFields;
-        delete data.__uses__;
         delete data.Model;
         return data;
     }
@@ -480,15 +453,6 @@ export class Record {
             }
         }
         return data;
-    }
-
-    /**
-     * The internal reactive is only necessary to trigger outer reactives when
-     * writing on it. As it has no callback, reading through it has no effect,
-     * except slowing down performance and complexifying the stack.
-     */
-    _downgradeProxy(fullProxy) {
-        return this._proxy === fullProxy ? this._proxyInternal : fullProxy;
     }
 }
 Record.register();

@@ -133,9 +133,9 @@ export class RecordList extends Array {
                                 recordList.data[index]
                             );
                             if (oldRecord && oldRecord.notEq(newRecord)) {
-                                oldRecord.__uses__.delete(recordList);
+                                oldRecord._.uses.delete(recordList);
                             }
-                            store.ADD_QUEUE(
+                            store._.ADD_QUEUE(
                                 "onDelete",
                                 recordList.owner,
                                 recordList.name,
@@ -147,8 +147,8 @@ export class RecordList extends Array {
                             }
                             recordListProxy.data[index] = newRecord?.localId;
                             if (newRecord) {
-                                newRecord.__uses__.add(recordList);
-                                store.ADD_QUEUE(
+                                newRecord._.uses.add(recordList);
+                                store._.ADD_QUEUE(
                                     "onAdd",
                                     recordList.owner,
                                     recordList.name,
@@ -244,16 +244,16 @@ export class RecordList extends Array {
             const newRecords = vals.map((val) =>
                 recordList._insert(val, function recordListAssignInsert(record) {
                     if (record.notIn(oldRecords)) {
-                        record.__uses__.add(recordList);
-                        store.ADD_QUEUE("onAdd", recordList.owner, recordList.name, record);
+                        record._.uses.add(recordList);
+                        store._.ADD_QUEUE("onAdd", recordList.owner, recordList.name, record);
                     }
                 })
             );
             const inverse = getInverse(recordList);
             for (const oldRecord of oldRecords) {
                 if (oldRecord.notIn(newRecords)) {
-                    oldRecord.__uses__.delete(recordList);
-                    store.ADD_QUEUE("onDelete", recordList.owner, recordList.name, oldRecord);
+                    oldRecord._.uses.delete(recordList);
+                    store._.ADD_QUEUE("onDelete", recordList.owner, recordList.name, oldRecord);
                     if (inverse) {
                         oldRecord._fieldsValue.get(inverse).delete(recordList.owner);
                     }
@@ -271,9 +271,9 @@ export class RecordList extends Array {
             for (const val of records) {
                 const record = recordList._insert(val, function recordListPushInsert(record) {
                     recordList._proxy.data.push(record.localId);
-                    record.__uses__.add(recordList);
+                    record._.uses.add(recordList);
                 });
-                store.ADD_QUEUE("onAdd", recordList.owner, recordList.name, record);
+                store._.ADD_QUEUE("onAdd", recordList.owner, recordList.name, record);
                 const inverse = getInverse(recordList);
                 if (inverse) {
                     record._fieldsValue.get(inverse).add(recordList.owner);
@@ -309,8 +309,8 @@ export class RecordList extends Array {
                 return;
             }
             const record = toRaw(recordProxy)._raw;
-            record.__uses__.delete(recordList);
-            store.ADD_QUEUE("onDelete", recordList.owner, recordList.name, record);
+            record._.uses.delete(recordList);
+            store._.ADD_QUEUE("onDelete", recordList.owner, recordList.name, record);
             const inverse = getInverse(recordList);
             if (inverse) {
                 record._fieldsValue.get(inverse).delete(recordList.owner);
@@ -327,9 +327,9 @@ export class RecordList extends Array {
             for (let i = records.length - 1; i >= 0; i--) {
                 const record = recordList._insert(records[i], (record) => {
                     recordList._proxy.data.unshift(record.localId);
-                    record.__uses__.add(recordList);
+                    record._.uses.add(recordList);
                 });
-                store.ADD_QUEUE("onAdd", recordList.owner, recordList.name, record);
+                store._.ADD_QUEUE("onAdd", recordList.owner, recordList.name, record);
                 const inverse = getInverse(recordList);
                 if (inverse) {
                     record._fieldsValue.get(inverse).add(recordList.owner);
@@ -368,8 +368,8 @@ export class RecordList extends Array {
             recordList._proxy.data = list;
             for (const oldRecordProxy of oldRecordsProxy) {
                 const oldRecord = toRaw(oldRecordProxy)._raw;
-                oldRecord.__uses__.delete(recordList);
-                store.ADD_QUEUE("onDelete", recordList.owner, recordList.name, oldRecord);
+                oldRecord._.uses.delete(recordList);
+                store._.ADD_QUEUE("onDelete", recordList.owner, recordList.name, oldRecord);
                 const inverse = getInverse(recordList);
                 if (inverse) {
                     oldRecord._fieldsValue.get(inverse).delete(recordList.owner);
@@ -377,8 +377,8 @@ export class RecordList extends Array {
             }
             for (const newRecordProxy of newRecordsProxy) {
                 const newRecord = toRaw(newRecordProxy)._raw;
-                newRecord.__uses__.add(recordList);
-                store.ADD_QUEUE("onAdd", recordList.owner, recordList.name, newRecord);
+                newRecord._.uses.add(recordList);
+                store._.ADD_QUEUE("onAdd", recordList.owner, recordList.name, newRecord);
                 const inverse = getInverse(recordList);
                 if (inverse) {
                     newRecord._fieldsValue.get(inverse).add(recordList.owner);
@@ -392,7 +392,7 @@ export class RecordList extends Array {
         const recordListFullProxy = recordList._downgradeProxy(this);
         const store = recordList.store;
         return store.MAKE_UPDATE(function recordListSort() {
-            recordList.store.sortRecordList(recordListFullProxy, func);
+            recordList.store._.sortRecordList(recordListFullProxy, func);
             return recordListFullProxy;
         });
     }
@@ -455,14 +455,14 @@ export class RecordList extends Array {
                     if (record.localId !== recordList.data[0]) {
                         const old = recordList._proxy.at(-1);
                         recordList._proxy.data.pop();
-                        old?.__uses__.delete(recordList);
+                        old?._.uses.delete(recordList);
                         recordList._proxy.data.push(record.localId);
-                        record.__uses__.add(recordList);
+                        record._.uses.add(recordList);
                     }
                 },
                 { inv: false }
             );
-            store.ADD_QUEUE("onAdd", recordList.owner, recordList.name, record);
+            store._.ADD_QUEUE("onAdd", recordList.owner, recordList.name, record);
             return;
         }
         for (const val of records) {
@@ -474,12 +474,12 @@ export class RecordList extends Array {
                 function recordList_AddNoInvManyInsert(record) {
                     if (recordList.data.indexOf(record.localId) === -1) {
                         recordList.push.call(recordList._proxy, record);
-                        record.__uses__.add(recordList);
+                        record._.uses.add(recordList);
                     }
                 },
                 { inv: false }
             );
-            store.ADD_QUEUE("onAdd", recordList.owner, recordList.name, record);
+            store._.ADD_QUEUE("onAdd", recordList.owner, recordList.name, record);
         }
     }
     /** @param {...R}  */
@@ -518,12 +518,12 @@ export class RecordList extends Array {
                     const index = recordList.data.indexOf(record.localId);
                     if (index !== -1) {
                         recordList.splice.call(recordList._proxy, index, 1);
-                        record.__uses__.delete(recordList);
+                        record._.uses.delete(recordList);
                     }
                 },
                 { inv: false }
             );
-            store.ADD_QUEUE("onDelete", recordList.owner, recordList.name, record);
+            store._.ADD_QUEUE("onDelete", recordList.owner, recordList.name, record);
         }
     }
     clear() {

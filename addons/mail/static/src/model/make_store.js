@@ -49,8 +49,6 @@ export function makeStore(env, { localRegistry } = {}) {
                 constructor() {
                     super();
                     const record = this;
-                    record._proxyUsed = new Set();
-                    record._updateFields = new Set();
                     record._raw = record;
                     record.Model = Model;
                     record._ = markRaw(
@@ -63,7 +61,7 @@ export function makeStore(env, { localRegistry } = {}) {
                          * @param {Record} recordFullProxy
                          */
                         get(record, name, recordFullProxy) {
-                            recordFullProxy = record._downgradeProxy(recordFullProxy);
+                            recordFullProxy = record._.downgradeProxy(record, recordFullProxy);
                             if (Model._.fieldsCompute.get(name) && !Model._.fieldsEager.get(name)) {
                                 record._.fieldsComputeInNeed.set(name, true);
                                 if (record._.fieldsComputeOnNeed.get(name)) {
@@ -105,15 +103,15 @@ export function makeStore(env, { localRegistry } = {}) {
                          * when updating multiple fields at the same time.
                          */
                         set(record, name, val) {
-                            // ensure each field write goes through the updateFields method exactly once
-                            if (record._updateFields.has(name)) {
+                            // ensure each field write goes through the updatingAttrs method exactly once
+                            if (record._.updatingAttrs.has(name)) {
                                 record[name] = val;
                                 return true;
                             }
                             return store.MAKE_UPDATE(function recordSet() {
-                                record._proxyUsed.add(name);
-                                store.updateFields(record, { [name]: val });
-                                record._proxyUsed.delete(name);
+                                record._.proxyUsed.set(name, true);
+                                store._.updateFields(record, { [name]: val });
+                                record._.proxyUsed.delete(name);
                                 return true;
                             });
                         },
