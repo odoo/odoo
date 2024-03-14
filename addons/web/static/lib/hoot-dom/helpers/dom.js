@@ -792,7 +792,12 @@ let rCustomPseudoClass = compilePseudoClassRegex();
 // Exports
 //-----------------------------------------------------------------------------
 
-export function cleanupObservers() {
+export function cleanupDOM() {
+    // Dimensions
+    currentDimensions.width = null;
+    currentDimensions.height = null;
+
+    // Observers
     const remainingObservers = observers.size;
     if (remainingObservers) {
         console.warn(`${remainingObservers} observers still running`);
