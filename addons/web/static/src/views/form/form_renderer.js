@@ -69,6 +69,7 @@ export class FormRenderer extends Component {
             return !record.isInEdition && !!target.closest(".oe_title, .o_inner_group");
         });
         this.uiService = useService("ui");
+        this.technical_chm = useState(useService("technical-chm"));
         this.onResize = useDebounced(this.render, 200);
         onMounted(() => browser.addEventListener("resize", this.onResize));
         onWillUnmount(() => browser.removeEventListener("resize", this.onResize));

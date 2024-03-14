@@ -17,6 +17,7 @@ declare module "services" {
     import { uiService } from "@web/core/ui/ui_service";
     import { userService } from "@web/core/user_service";
     import { viewService } from "@web/views/view_service";
+    import { TechnicalService } from "@web/webclient/technical_chm/technical_chm_service";
 
     export interface Services {
         action: ReturnType<typeof actionService.start>;
@@ -37,5 +38,6 @@ declare module "services" {
         ui: ReturnType<typeof uiService.start>;
         user: ReturnType<typeof userService.start>;
         view: ReturnType<typeof viewService.start>;
+        'technical-chm': ReturnType<typeof TechnicalService.start>;
     }
 }

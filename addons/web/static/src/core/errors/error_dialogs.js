@@ -119,6 +119,7 @@ export class WarningDialog extends Component {
     };
 
     setup() {
+        this.technical_chm = useState(useService("technical-chm"));
         this.title = this.inferTitle();
         const { data, message } = this.props;
         if (data && data.arguments && data.arguments.length > 0) {

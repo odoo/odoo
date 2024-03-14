@@ -17,7 +17,7 @@ import { ListRenderer } from "@web/views/list/list_renderer";
 import { computeViewClassName } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 export class X2ManyField extends Component {
     static template = "web.X2ManyField";
@@ -37,6 +37,8 @@ export class X2ManyField extends Component {
     };
 
     setup() {
+        this.technical_chm = useState(useService("technical-chm"));
+
         this.field = this.props.record.fields[this.props.name];
         const { saveRecord, updateRecord, removeRecord } = useX2ManyCrud(
             () => this.list,

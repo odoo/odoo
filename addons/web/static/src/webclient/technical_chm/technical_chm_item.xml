@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DebugMenu.TechnicalItem">
+        <div class="d-flex justify-content-between">
+            <div class="align-self-center">
+                <span class="form-check form-switch" t-on-click.stop.prevent="toggleMode">
+                    <input type="checkbox" class="form-check-input" t-att-checked="technical_chm.active"/>
+                    <label class="form-check-label">Technical Mode</label>
+                </span>
+            </div>
+        </div>
+    </t>
+
+</templates>

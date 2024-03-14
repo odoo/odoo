@@ -1,4 +1,5 @@
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
+import { useCommand } from "@web/core/commands/command_hook";
 import { DebugMenu } from "@web/core/debug/debug_menu";
 import { localization } from "@web/core/l10n/localization";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -6,6 +7,7 @@ import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
+import { _t } from "@web/core/l10n/translation";
 
 import { Component, onMounted, onWillStart, useExternalListener, useState } from "@odoo/owl";
 import { router, routerBus } from "@web/core/browser/router";
@@ -33,6 +35,18 @@ export class WebClient extends Component {
                 { sequence: 100 }
             );
         }
+        const technical_chm = useService("technical-chm");
+        useCommand(
+            _t("Technical Mode"),
+            () => {
+                technical_chm.active = !technical_chm.active;
+            },
+            {
+                category: "debug",
+                hotkey: "alt+shift+h",
+                global: true,
+            }
+        );
         this.localization = localization;
         this.state = useState({
             fullscreen: false,
