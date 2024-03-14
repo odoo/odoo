@@ -72,7 +72,7 @@ class Home(http.Controller):
         if lang:
             request.update_context(lang=lang)
 
-        menus = request.env["ir.ui.menu"].load_web_menus(request.session.debug)
+        menus = request.env["ir.ui.menu"].load_web_menus()
         body = json.dumps(menus, default=ustr)
         response = request.make_response(body, [
             # this method must specify a content-type application/json instead of using the default text/html set because

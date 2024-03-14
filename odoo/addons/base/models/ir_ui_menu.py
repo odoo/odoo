@@ -9,7 +9,6 @@ import re
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
-from odoo.http import request
 from odoo.osv import expression
 
 MENU_ITEM_SEPARATOR = "/"
@@ -25,6 +24,7 @@ class IrUiMenu(models.Model):
 
     name = fields.Char(string='Menu', required=True, translate=True)
     active = fields.Boolean(default=True)
+    technical_chm = fields.Boolean(default=False)
     sequence = fields.Integer(default=10)
     child_id = fields.One2many('ir.ui.menu', 'parent_id', string='Child IDs')
     parent_id = fields.Many2one('ir.ui.menu', string='Parent Menu', index=True, ondelete="restrict")
@@ -74,17 +74,15 @@ class IrUiMenu(models.Model):
             raise ValidationError(_('Error! You cannot create recursive menus.'))
 
     @api.model
-    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'debug')
-    def _visible_menu_ids(self, debug=False):
+    @tools.ormcache('frozenset(self.env.user.groups_id.ids)')
+    def _visible_menu_ids(self):
         """ Return the ids of the menu items visible to the user. """
         # retrieve all menus, and determine which ones are visible
         context = {'ir.ui.menu.full_list': True}
         menus = self.with_context(context).search_fetch([], ['action', 'parent_id']).sudo()
 
-        groups = self.env.user.groups_id
-        if not debug:
-            groups = groups - self.env.ref('base.group_no_one')
         # first discard all menus with groups the user does not have
+        groups = self.env.user.groups_id
         menus = menus.filtered(
             lambda menu: not menu.groups_id or menu.groups_id & groups)
 
@@ -135,7 +133,7 @@ class IrUiMenu(models.Model):
             the menu hierarchy of the current user.
             Uses a cache for speeding up the computation.
         """
-        visible_ids = self._visible_menu_ids(request.session.debug if request else False)
+        visible_ids = self._visible_menu_ids()
         return self.filtered(lambda menu: menu.id in visible_ids)
 
     @api.model
@@ -244,14 +242,14 @@ class IrUiMenu(models.Model):
         return menu_root
 
     @api.model
-    @tools.ormcache_context('self._uid', 'debug', keys=('lang',))
-    def load_menus(self, debug):
+    @tools.ormcache_context('self._uid', keys=('lang',))
+    def load_menus(self):
         """ Loads all menu items (all applications and their sub-menus).
 
         :return: the menu root
         :rtype: dict('children': menu_nodes)
         """
-        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon']
+        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon', 'technical_chm']
         menu_roots = self.get_user_roots()
         menu_roots_data = menu_roots.read(fields) if menu_roots else []
         menu_root = {
@@ -259,6 +257,7 @@ class IrUiMenu(models.Model):
             'name': 'root',
             'parent_id': [-1, ''],
             'children': [menu['id'] for menu in menu_roots_data],
+            'technical_chm': False,
         }
 
         all_menus = {'root': menu_root}
@@ -309,7 +308,11 @@ class IrUiMenu(models.Model):
 
         # sort by sequence
         for menu_id in all_menus:
+            if not all_menus[menu_id]['children']:
+                continue
             all_menus[menu_id]['children'].sort(key=lambda id: all_menus[id]['sequence'])
+            if not all_menus[menu_id]['technical_chm']:
+                all_menus[menu_id]['technical_chm'] = all(all_menus[item_id]['technical_chm'] for item_id in all_menus[menu_id]['children'])
 
         # recursively set app ids to related children
         def _set_app_id(app_id, menu):

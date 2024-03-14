@@ -62,7 +62,7 @@ class Http(models.AbstractModel):
 
     def webclient_rendering_context(self):
         return {
-            'menu_data': request.env['ir.ui.menu'].load_menus(request.session.debug),
+            'menu_data': request.env['ir.ui.menu'].load_menus(),
             'session_info': self.session_info(),
         }
 
@@ -128,7 +128,7 @@ class Http(models.AbstractModel):
             # but is still included in some other calls (e.g. '/web/session/authenticate')
             # to avoid access errors and unnecessary information, it is only included for users
             # with access to the backend ('internal'-type users)
-            menus = self.env['ir.ui.menu'].load_menus(request.session.debug)
+            menus = self.env['ir.ui.menu'].load_menus()
             ordered_menus = {str(k): v for k, v in menus.items()}
             menu_json_utf8 = json.dumps(ordered_menus, default=ustr, sort_keys=True).encode()
             session_info['cache_hashes'].update({

@@ -7,7 +7,7 @@ from odoo import models
 class IrUiMenu(models.Model):
     _inherit = "ir.ui.menu"
 
-    def load_web_menus(self, debug):
+    def load_web_menus(self):
         """ Loads all menu items (all applications and their sub-menus) and
         processes them to be used by the webclient. Mainly, it associates with
         each application (top level menu) the action of its first child menu
@@ -16,7 +16,7 @@ class IrUiMenu(models.Model):
 
         :return: the menus (including the images in Base64)
         """
-        menus = self.load_menus(debug)
+        menus = self.load_menus()
 
         web_menus = {}
         for menu in menus.values():
@@ -35,6 +35,7 @@ class IrUiMenu(models.Model):
                     "webIconData": None,
                     "webIconDataMimetype": None,
                     "backgroundImage": menu.get('backgroundImage'),
+                    "technical_chm": False,
                 }
             else:
                 action = menu['action']
@@ -65,6 +66,7 @@ class IrUiMenu(models.Model):
                     "webIcon": menu['web_icon'],
                     "webIconData": menu['web_icon_data'],
                     "webIconDataMimetype": menu['web_icon_data_mimetype'],
+                    "technical_chm": menu['technical_chm'],
                 }
 
         return web_menus
