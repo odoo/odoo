@@ -499,6 +499,9 @@
                                 <div t-if="i.payment_state in ('paid', 'in_payment')" class="small badge text-bg-success orders_label_text_align">
                                     <i class="fa fa-fw fa-check"/> Paid
                                 </div>
+                                <div t-elif="i.payment_state == 'reversed'" class="small badge text-bg-success orders_label_text_align">
+                                    <i class="fa fa-fw fa-check"/> Reversed
+                                </div>
                                 <div t-elif="authorized_tx_ids" class="small badge text-bg-success orders_label_text_align">
                                     <i class="fa fa-fw fa-check"/> Authorized
                                 </div>
