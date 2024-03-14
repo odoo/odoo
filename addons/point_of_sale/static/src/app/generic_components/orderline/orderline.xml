@@ -18,7 +18,7 @@
                     </div>
                     <div t-if="props.showTaxGroupLabels" t-esc="line.taxGroupLabels" class="text-end" style="width: 2rem"/>
                 </div>
-                <ul class="info-list" t-attf-class="{{props.infoListClasses}}">
+                <ul class="info-list">
                     <li class="price-per-unit">
                         <em t-esc="line.qty" class="qty fst-normal fw-bolder me-1" /> <t t-if="line.unit" t-esc="line.unit" />
                         <t t-if="line.price !== 0">
