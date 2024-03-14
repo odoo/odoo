@@ -44,6 +44,7 @@ function increaseProductQuantity(productName) {
             td.o_sale_product_configurator_qty
             button:has(i.fa-plus)
         `,
+        allowDisabled: true,
         run: 'click',
     };
 }
@@ -56,6 +57,7 @@ function decreaseProductQuantity(productName) {
             td.o_sale_product_configurator_qty
             button:has(i.fa-minus)
         `,
+        allowDisabled: true,
         run: 'click',
     };
 }
