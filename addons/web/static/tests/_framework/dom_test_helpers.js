@@ -233,8 +233,7 @@ export function contains(target, options) {
          * @param {InputValue} value
          */
         select: async (value) => {
-            await focusCurrent();
-            select(value);
+            select(value, { target: await nodePromise });
             await animationFrame();
         },
         /**
