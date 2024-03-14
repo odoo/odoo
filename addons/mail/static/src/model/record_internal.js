@@ -11,7 +11,8 @@ import {
     isRelation,
 } from "./misc";
 import { RecordList } from "./record_list";
-import { reactive } from "@odoo/owl";
+import { reactive, toRaw } from "@odoo/owl";
+import { RecordUses } from "./record_uses";
 
 export class RecordInternal {
     [IS_DELETED_SYM] = false;
@@ -62,6 +63,11 @@ export class RecordInternal {
     fieldsSortProxy2 = new Map();
     /** @type {Map<string, this>} */
     fieldsComputeProxy2 = new Map();
+    uses = new RecordUses();
+    updatingAttrs = new Map();
+    proxyUsed = new Map();
+    /** @type {string} */
+    localId;
 
     /**
      * @param {Record} record
@@ -70,7 +76,7 @@ export class RecordInternal {
      */
     prepareField(record, fieldName, recordProxy) {
         const self = this;
-        const Model = record.Model;
+        const Model = toRaw(record).Model;
         if (isRelation(Model, fieldName)) {
             // Relational fields contain symbols for detection in original class.
             // This constructor is called on genuine records:
@@ -142,7 +148,7 @@ export class RecordInternal {
             store._onChange(recordProxy, fieldName, (obs) => {
                 this.fieldsOnUpdateObserves.set(fieldName, obs);
                 if (store._.UPDATE !== 0) {
-                    store.ADD_QUEUE("onUpdate", record, fieldName);
+                    store._.ADD_QUEUE("onUpdate", record, fieldName);
                 } else {
                     this.onUpdate(record, fieldName);
                 }
@@ -155,9 +161,9 @@ export class RecordInternal {
         if (!Model._.fieldsCompute.get(fieldName)) {
             return;
         }
-        const store = record._store;
+        const store = record._rawStore;
         if (store._.UPDATE !== 0 && !force) {
-            store.ADD_QUEUE("compute", record, fieldName);
+            store._.ADD_QUEUE("compute", record, fieldName);
         } else {
             if (Model._.fieldsEager.get(fieldName) || this.fieldsComputeInNeed.get(fieldName)) {
                 this.compute(record, fieldName);
@@ -171,9 +177,9 @@ export class RecordInternal {
         if (!Model._.fieldsSort.get(fieldName)) {
             return;
         }
-        const store = record._store;
+        const store = record._rawStore;
         if (store._.UPDATE !== 0 && !force) {
-            store.ADD_QUEUE("sort", record, fieldName);
+            store._.ADD_QUEUE("sort", record, fieldName);
         } else {
             if (Model._.fieldsEager.get(fieldName) || this.fieldsSortInNeed.get(fieldName)) {
                 this.sort(record, fieldName);
@@ -188,10 +194,10 @@ export class RecordInternal {
      */
     compute(record, fieldName) {
         const Model = record.Model;
-        const store = record._store;
+        const store = record._rawStore;
         this.fieldsComputing.set(fieldName, true);
         this.fieldsComputeOnNeed.delete(fieldName);
-        store.updateFields(record, {
+        store._.updateFields(record, {
             [fieldName]: Model._.fieldsCompute
                 .get(fieldName)
                 .call(this.fieldsComputeProxy2.get(fieldName)),
@@ -207,11 +213,11 @@ export class RecordInternal {
         if (!Model._.fieldsSort.get(fieldName)) {
             return;
         }
-        const store = record._store;
+        const store = record._rawStore;
         this.fieldsSortOnNeed.delete(fieldName);
         this.fieldsSorting.set(fieldName, true);
         const proxy2Sort = this.fieldsSortProxy2.get(fieldName);
-        store.sortRecordList(
+        store._.sortRecordList(
             proxy2Sort._fieldsValue.get(fieldName)._proxy,
             Model._.fieldsSort.get(fieldName).bind(proxy2Sort)
         );
@@ -228,5 +234,13 @@ export class RecordInternal {
          */
         Model._.fieldsOnUpdate.get(fieldName).call(record._proxyInternal);
         this.fieldsOnUpdateObserves.get(fieldName)?.();
+    }
+    /**
+     * The internal reactive is only necessary to trigger outer reactives when
+     * writing on it. As it has no callback, reading through it has no effect,
+     * except slowing down performance and complexifying the stack.
+     */
+    downgradeProxy(record, fullProxy) {
+        return record._proxy === fullProxy ? record._proxyInternal : fullProxy;
     }
 }
