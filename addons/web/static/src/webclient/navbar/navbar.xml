@@ -51,7 +51,7 @@
             t-foreach="apps"
             t-as="app"
             t-key="app.id"
-            t-if="!app.technical_chm || app.technical_chm == this.technical_chm.active"
+            t-if="!app.advanced || app.advanced == this.advanced.active"
             class="{ 'o_app': true, focus: menuService.getCurrentApp() === app }"
             onSelected="() => this.onNavBarDropdownItemSelection(app)"
             t-esc="app.name"
@@ -119,7 +119,7 @@
 
   <t t-name="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
     <t t-set="style" t-value="`padding-left: ${decalage}px;`" />
-    <t t-foreach="items" t-as="item" t-key="item.id" t-if="!item.technical_chm || item.technical_chm == this.technical_chm.active">
+    <t t-foreach="items" t-as="item" t-key="item.id" t-if="!item.advanced || item.advanced == this.advanced.active">
       <DropdownItem
         t-if="!item.childrenTree.length"
         class="{
@@ -150,7 +150,7 @@
 
         <t t-set-slot="content">
           <t t-foreach="sections" t-as="section" t-key="section.id">
-            <t t-if="!section.childrenTree.length &amp;&amp; (!section.technical_chm || section.technical_chm == this.technical_chm.active)">
+            <t t-if="!section.childrenTree.length &amp;&amp; (!section.advanced || section.advanced == this.advanced.active)">
               <DropdownItem
                 class="'o_more_dropdown_section'"
                 onSelected="() => this.onNavBarDropdownItemSelection(section)"

@@ -145,7 +145,7 @@ export class FormController extends Component {
 
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;
-        this.technical_chm = useState(useService("technical-chm"));
+        this.advanced = useState(useService("advanced"));
         this.dialogService = useService("dialog");
         this.orm = useService("orm");
         this.viewService = useService("view");

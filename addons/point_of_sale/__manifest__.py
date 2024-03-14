@@ -143,7 +143,7 @@
             # report download utils
             'web/static/src/webclient/actions/reports/utils.js',
             # advanced mode
-            'web/static/src/webclient/technical_chm/*',
+            'web/static/src/webclient/advanced/*',
             # PoS files
             'point_of_sale/static/src/**/*',
             ('remove', 'point_of_sale/static/src/backend/**/*'),

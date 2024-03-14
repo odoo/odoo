@@ -97,7 +97,7 @@ export class ListRenderer extends Component {
 
     setup() {
         this.uiService = useService("ui");
-        this.technical_chm = useState(useService("technical-chm"));
+        this.advanced = useState(useService("advanced"));
         this.notificationService = useService("notification");
         this.keyOptionalFields = this.createKeyOptionalFields();
         this.cellClassByColumn = {};
@@ -150,7 +150,7 @@ export class ListRenderer extends Component {
                 technical.active; // force the reactive value subscription.
                 // this.state.columns = this.getActiveColumns(this.props.list);
             },
-            [this.technical_chm]
+            [this.advanced]
         );
 
         let dataRowId;
@@ -260,7 +260,7 @@ export class ListRenderer extends Component {
             if (col.optional && !this.optionalActiveFields[col.name]) {
                 return false;
             }
-            if ("is_technical_chm" in col && col.is_technical_chm !== this.technical_chm.active) {
+            if ("is_advanced" in col && col.is_advanced !== this.advanced.active) {
                 return false;
             }
             if (this.evalColumnInvisible(col.column_invisible)) {
@@ -620,8 +620,8 @@ export class ListRenderer extends Component {
                 name: col.name,
                 value: this.optionalActiveFields[col.name],
             };
-            if ("is_technical_chm" in col) {
-                optionalField.is_technical_chm = col.is_technical_chm;
+            if ("is_advanced" in col) {
+                optionalField.is_advanced = col.is_advanced;
             }
             if (!col.relatedPropertyField) {
                 optionalFields.push(optionalField);

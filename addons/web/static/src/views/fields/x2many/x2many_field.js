@@ -37,7 +37,7 @@ export class X2ManyField extends Component {
     };
 
     setup() {
-        this.technical_chm = useState(useService("technical-chm"));
+        this.advanced = useState(useService("advanced"));
 
         this.field = this.props.record.fields[this.props.name];
         const { saveRecord, updateRecord, removeRecord } = useX2ManyCrud(

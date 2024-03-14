@@ -45,7 +45,7 @@ export class ImportDataContent extends Component {
 
     makeChoices(fields) {
         return fields
-            .filter((field) => !field['technical-chm'] || this.props.options.advanced)
+            .filter((field) => !field.advanced || this.props.options.advanced)
             .map((field) => ({
                 label: field.label,
                 value: field.fieldPath,

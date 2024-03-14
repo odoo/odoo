@@ -217,8 +217,8 @@ export class ListArchParser {
                 const type = xmlDoc.getAttribute("type");
                 treeAttr.openAction = action && type ? { action, type } : null;
             }
-            if (parsedNode && node.getAttribute("technical-chm")) {
-                parsedNode.is_technical_chm = node.getAttribute("technical-chm") === "1";
+            if (parsedNode && node.getAttribute("advanced")) {
+                parsedNode.is_advanced = node.getAttribute("advanced") === "1";
             }
             return visitChildren;
         });
