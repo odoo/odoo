@@ -473,7 +473,7 @@ test("can be searched", async () => {
     expect(queryAllTexts(".o_command")).toEqual(["Jaime Lannister"]);
 
     // Clear search input
-    await contains(".o_command_palette_search input").edit("", { confirm: false });
+    await contains(".o_command_palette_search input").clear({ confirm: false });
     await animationFrame();
 
     expect(queryAllTexts(".o_command")).toEqual(names);
