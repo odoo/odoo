@@ -21,13 +21,14 @@ import { constructFullProductName, qrCodeSrc, deduceUrl } from "@point_of_sale/u
 import { Line } from "./models/line";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { renderToElement } from "@web/core/utils/render";
+import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
 export class SelfOrder extends Reactive {
     constructor(...args) {
         super();
         this.ready = this.setup(...args).then(() => this);
     }
 
-    async setup(env, { notification, router, printer, renderer, barcode }) {
+    async setup(env, { notification, router, printer, renderer, barcode, dialog }) {
         // services
         this.notification = notification;
         this.router = router;
@@ -35,6 +36,7 @@ export class SelfOrder extends Reactive {
         this.printer = printer;
         this.renderer = renderer;
         this.barcode = barcode;
+        this.dialog = dialog;
 
         // data
         Object.assign(this, {
@@ -166,8 +168,8 @@ export class SelfOrder extends Reactive {
         // if the amount is 0, we don't need to go to the payment page
         // this directive works for both mode each and meal
         if (order.amount_total === 0 && order.lines.length > 0) {
-            const order = await this.sendDraftOrderToServer();
-            this.confirmationPage("order", device, order.access_token);
+            await this.sendDraftOrderToServer();
+            this.router.navigate("default");
             return;
         }
 
@@ -344,11 +346,18 @@ export class SelfOrder extends Reactive {
         this.idleTimout = false;
         window.addEventListener("click", (event) => {
             this.idleTimout && clearTimeout(this.idleTimout);
+            this.alertTimeout && clearTimeout(this.alertTimeout);
+            this.timeoutPopup?.();
             this.idleTimout = setTimeout(() => {
-                if (this.router.activeSlot !== "payment") {
+                if (this.router.activeSlot !== "payment" && this.router.activeSlot !== "default") {
+                    this.timeoutPopup = this.dialog.add(TimeoutPopup, {});
+                }
+            }, 1 * 1000 * 50);
+            this.alertTimeout = setTimeout(() => {
+                if (this.router.activeSlot !== "payment" && this.router.activeSlot !== "default") {
                     this.router.navigate("default");
                 }
-            }, 5 * 1000 * 60);
+            }, 1 * 1000 * 60);
         });
     }
 
@@ -758,7 +767,7 @@ export class SelfOrder extends Reactive {
 }
 
 export const selfOrderService = {
-    dependencies: ["notification", "router", "printer", "renderer", "barcode"],
+    dependencies: ["notification", "router", "printer", "renderer", "barcode", "dialog"],
     async start(env, services) {
         return new SelfOrder(env, services).ready;
     },

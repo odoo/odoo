@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.TimeoutPopup">
+        <div class="self_order_timeout_popup o_dialog" t-att-id="id">
+            <div role="dialog" class="modal d-block" tabindex="-1">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content rounded">
+                        <div class="modal-body p-5">
+                            <div class="pb-5 fs-3 text-center">
+                                It seems there hasn't been any activity on this kiosk. Would you like to continue?
+                                <br/>
+                                <t t-esc="this.state.time"/>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center w-100">
+                                <button type="button" class="btn btn-primary btn-lg popup_button" t-on-click="() => this.props.close()">Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
