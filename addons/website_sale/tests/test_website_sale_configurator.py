@@ -184,14 +184,14 @@ class TestWebsiteSaleProductConfigurator(TestProductConfiguratorCommon, HttpCase
                 Command.create({
                     'attribute_id': attribute.id,
                     'value_ids': [Command.set(attribute.value_ids.ids)],
-                })
+                }),
             ],
         })
-        self.start_tour('/shop', 'website_sale_product_configurator_single_variant')
+        self.start_tour('/shop', 'website_sale_product_configurator_shop_hide_dialog')
 
     def test_product_configurator_on_product_page_empty_multi_checkbox(self):
-        """ Test that the product configurator isn't shown on the product page if a product with a
-            multi-checkbox attribute is added, even if no option was selected.
+        """ Test that the product configurator isn't shown if a product with a multi-checkbox
+            attribute is added from the product page, even if no option was selected.
         """
         multi_attribute = self.env['product.attribute'].create({
             'name': "Multi-checkbox attribute",
@@ -222,7 +222,7 @@ class TestWebsiteSaleProductConfigurator(TestProductConfiguratorCommon, HttpCase
             'value_ids': [
                 Command.create({'name': "Zero-priced"}),
                 Command.create({'name': "One-priced"}),
-            ]
+            ],
         })
         optional_product = self.env['product.template'].create({
             'name': "Optional product",
@@ -232,7 +232,7 @@ class TestWebsiteSaleProductConfigurator(TestProductConfiguratorCommon, HttpCase
                 Command.create({
                     'attribute_id': price_attribute.id,
                     'value_ids': [Command.set(price_attribute.value_ids.ids)],
-                })
+                }),
             ],
         })
         self.env['product.template'].create({
@@ -300,3 +300,79 @@ class TestWebsiteSaleProductConfigurator(TestProductConfiguratorCommon, HttpCase
             'optional_product_ids': [Command.set(optional_product.ids)],
         })
         self.start_tour('/shop', 'website_sale_product_configurator_hide_dialog')
+
+    def test_product_configurator_only_no_variant_attributes(self):
+        """ Test that the product configurator is shown if a product with only no variant attributes
+            is added from the shop page.
+        """
+        self.env.ref('website_sale.products_add_to_cart').active = True
+        no_variant_attribute = self.env['product.attribute'].create({
+            'name': "No variant attribute",
+            'create_variant': 'no_variant',
+            'value_ids': [
+                Command.create({'name': "A"}),
+                Command.create({'name': "B"}),
+            ],
+        })
+        self.env['product.template'].create({
+            'name': "Main product",
+            'website_published': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': no_variant_attribute.id,
+                    'value_ids': [Command.set(no_variant_attribute.value_ids.ids)],
+                })
+            ],
+        })
+        self.start_tour("/shop", 'website_sale_product_configurator_shop_show_dialog')
+
+    def test_product_configurator_only_dynamic_attributes(self):
+        """ Test that the product configurator is shown if a product with only dynamic attributes is
+            added from the shop page.
+        """
+        self.env.ref('website_sale.products_add_to_cart').active = True
+        dynamic_attribute = self.env['product.attribute'].create({
+            'name': "Dynamic attribute",
+            'create_variant': 'dynamic',
+            'value_ids': [
+                Command.create({'name': "A"}),
+                Command.create({'name': "B"}),
+            ],
+        })
+        self.env['product.template'].create({
+            'name': "Main product",
+            'website_published': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': dynamic_attribute.id,
+                    'value_ids': [Command.set(dynamic_attribute.value_ids.ids)],
+                })
+            ],
+        })
+        self.start_tour("/shop", 'website_sale_product_configurator_shop_show_dialog')
+
+    def test_product_configurator_single_custom_attribute(self):
+        """ Test that the product configurator is shown if a product with a single custom attribute
+            is added from the shop page.
+        """
+        self.env.ref('website_sale.products_add_to_cart').active = True
+        custom_attribute = self.env['product.attribute'].create({
+            'name': "Custom attribute",
+            'value_ids': [
+                Command.create({
+                    'name': "Custom value",
+                    'is_custom': True,
+                }),
+            ],
+        })
+        self.env['product.template'].create({
+            'name': "Main product",
+            'website_published': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': custom_attribute.id,
+                    'value_ids': [Command.set(custom_attribute.value_ids.ids)],
+                })
+            ],
+        })
+        self.start_tour("/shop", 'website_sale_product_configurator_shop_show_dialog')

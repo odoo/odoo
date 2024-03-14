@@ -73,4 +73,13 @@ export class Product extends Component {
     getFormattedPrice() {
         return formatCurrency(this.props.price, this.env.currency.id);
     }
+
+    /**
+     * Check whether this product is the main product.
+     *
+     * @return {Boolean} - Whether this product is the main product.
+     */
+    get isMainProduct() {
+        return this.env.mainProductTmplId === this.props.product_tmpl_id;
+    }
 }

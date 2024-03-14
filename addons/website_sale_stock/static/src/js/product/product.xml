@@ -7,6 +7,11 @@
         <div name="sale_product_configurator_quantity_buttons" position="after">
             <t t-call="website_sale_stock.out_of_stock"/>
         </div>
+        <button name="sale_product_configurator_quantity_button_plus" position="attributes">
+            <attribute name="t-att-disabled">
+                !env.isQuantityAllowed(props, props.quantity + 1)
+            </attribute>
+        </button>
         <button name="sale_product_configurator_add_button" position="attributes">
             <attribute name="t-if" add="!isOutOfStock()" separator=" &amp;&amp; "/>
         </button>
