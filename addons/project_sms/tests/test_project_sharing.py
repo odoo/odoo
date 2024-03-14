@@ -4,6 +4,7 @@
 from odoo import Command
 from odoo.addons.project.tests.test_project_sharing import TestProjectSharingCommon
 from odoo.addons.sms.tests.common import SMSCommon
+from odoo.tests import tagged
 
 
 class TestProjectSharingWithSms(TestProjectSharingCommon, SMSCommon):
@@ -63,3 +64,42 @@ class TestProjectSharingWithSms(TestProjectSharingCommon, SMSCommon):
             })
         self.assertEqual(self.project_portal.stage_id, self.project_stage_with_sms)
         self.assertSMSIapSent([self.project_portal.partner_id.mobile])
+
+
+@tagged('post_install', '-at_install')
+class TestPostInstallProjectSharingWithSms(TestProjectSharingWithSms):
+
+    def test_project_user_can_change_stage_with_sms_template(self):
+        """ Test that users with the rights to change the stage of a task can perform this action
+            when the stage has an sms template.
+
+            The sms template should be sent and the stage should be changed on the task.
+        """
+        project_user_group = self.env.ref('project.group_project_user')
+        sale_manager_group = self.env.ref('sales_team.group_sale_manager', False)
+        if not sale_manager_group:
+            self.skipTest('`sale_sms` not installed')
+        self.user_projectuser.write({
+            'groups_id': [
+                Command.link(project_user_group.id),
+                Command.link(sale_manager_group.id),
+            ]
+        })
+        self.assertTrue(self.task_cow.with_user(self.user_projectuser).check_access_rights('write'))
+        with self.mockSMSGateway():
+            self.task_cow.with_user(self.user_projectuser).write({
+                'stage_id': self.task_stage_with_sms.id,
+            })
+        self.assertEqual(self.task_cow.stage_id, self.task_stage_with_sms)
+        self.assertSMSIapSent([])  # no sms sent since the author is the recipient
+
+        self.task_cow.write({
+            'partner_id': self.user_portal.partner_id.id,
+            'stage_id': self.project_cows.type_ids[0].id,
+        })
+        with self.mockSMSGateway():
+            self.task_cow.with_user(self.user_projectuser).write({
+                'stage_id': self.task_stage_with_sms.id,
+            })
+        self.assertEqual(self.task_cow.stage_id, self.task_stage_with_sms)
+        self.assertSMSIapSent([self.user_portal.partner_id.mobile])
