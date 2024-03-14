@@ -18,6 +18,7 @@ class Employee(models.Model):
     contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contract Count')
     contract_warning = fields.Boolean(string='Contract Warning', store=True, compute='_compute_contract_warning', groups="hr.group_hr_user")
     first_contract_date = fields.Date(compute='_compute_first_contract_date', groups="hr.group_hr_user", store=True)
+    manager_user_id = fields.Many2one(related='parent_id.user_id', string='Manager UID')
 
     def _get_first_contracts(self):
         self.ensure_one()

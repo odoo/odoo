@@ -11,12 +11,49 @@
                     <div name="button_box" position="inside">
                         <field name="contract_warning" invisible="1"/>
                         <field name="employee_type" invisible="1"/>
+                        <field name="manager_user_id" invisible="1"/>
                         <button name="action_open_contract_history"
                             class="oe_stat_button"
                             icon="fa-book"
                             type="object"
                             groups="hr_contract.group_hr_contract_manager"
                             attrs="{'invisible' : [('employee_type', 'not in', ['employee', 'student', 'trainee'])]}">
+                            <div attrs="{'invisible' : [('first_contract_date', '=', False)]}" class="o_stat_info">
+                                <span class="o_stat_text text-success" attrs="{'invisible' : [('contract_warning', '=', True)]}" title="In Contract Since"> In Contract Since</span>
+                                <span class="o_stat_value text-success" attrs="{'invisible' : [('contract_warning', '=', True)]}">
+                                    <field name="first_contract_date" readonly="1"/>
+                                </span>
+                                <span class="o_stat_text text-danger" attrs="{'invisible' : [('contract_warning', '=', False)]}" title="In Contract Since">
+                                    In Contract Since
+                                </span>
+                                <span class="o_stat_value text-danger" attrs="{'invisible' : [('contract_warning', '=', False)]}">
+                                    <field name="first_contract_date" readonly="1"/>
+                                </span>
+                            </div>
+                            <div attrs="{'invisible' : [('first_contract_date', '!=', False)]}" class="o_stat_info">
+                                <span class="o_stat_value text-danger">
+                                   <field name="contracts_count"/>
+                                </span>
+                                <span attrs="{'invisible' : [('contracts_count', '!=', 1)]}" class="o_stat_text text-danger" >
+                                    Contract
+                                </span>
+                                <span attrs="{'invisible' : [('contracts_count', '=', 1)]}" class="o_stat_text text-danger">
+                                    Contracts
+                                </span>
+                            </div>
+                        </button>
+                        <button name="action_open_contract_history"
+                            class="oe_stat_button"
+                            icon="fa-book"
+                            type="object"
+                            groups="hr_contract.group_hr_contract_employee_manager,!hr_contract.group_hr_contract_manager"
+                            attrs="{'invisible' : &quot;[
+                                '|',
+                                ('employee_type', 'not in', ['employee', 'student', 'trainee']),
+                                    '&amp;',
+                                    ('user_id', '!=', uid),
+                                    ('manager_user_id', '!=', uid),
+                            ]&quot;}">
                             <div attrs="{'invisible' : [('first_contract_date', '=', False)]}" class="o_stat_info">
                                 <span class="o_stat_text text-success" attrs="{'invisible' : [('contract_warning', '=', True)]}" title="In Contract Since"> In Contract Since</span>
                                 <span class="o_stat_value text-success" attrs="{'invisible' : [('contract_warning', '=', True)]}">

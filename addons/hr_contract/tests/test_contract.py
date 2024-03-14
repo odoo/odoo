@@ -4,8 +4,10 @@
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, AccessError
 from odoo.addons.hr_contract.tests.common import TestContractCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.tests.common import users
 from odoo.tests import tagged
 
 @tagged('test_contracts')
@@ -15,6 +17,13 @@ class TestHrContracts(TestContractCommon):
     def setUpClass(cls):
         super(TestHrContracts, cls).setUpClass()
         cls.contracts = cls.env['hr.contract'].with_context(tracking_disable=True)
+
+        cls.hr_user = mail_new_test_user(
+            cls.env, login='hr_user',
+            name='HR Manager', email='hr@test.example.com',
+            company_id=cls.env.company.id,
+            groups='base.default_user',
+        )
 
     def create_contract(self, state, kanban_state, start, end=None):
         return self.env['hr.contract'].create({
@@ -121,3 +130,32 @@ class TestHrContracts(TestContractCommon):
         contract = self.create_contract('open', 'normal', date(2018, 1, 1), date(2018, 1, 2))
         duplicate_employee = self.employee.copy()
         self.assertNotEqual(duplicate_employee.contract_id, contract)
+
+    @users('hr_user')
+    def test_contract_accessibility(self):
+        """
+        hr_contract.group_hr_contract_employee_manager can call `action_open_contract_history()` of employees that they
+            directly manage, hr_contract.group_hr_contract_manager can call for all regular employees
+        """
+        self.env.user.groups_id = [
+            (4, self.ref('hr_contract.group_hr_contract_manager')),
+            (4, self.ref('hr.group_hr_user'))
+        ]
+        self.create_contract('open', 'normal', date(2024, 1, 1))
+
+        self.employee.contract_id.with_user(self.env.user).check_access_rule('read')
+        self.env.user.groups_id = [(3, self.ref('hr_contract.group_hr_contract_manager'))]
+
+        with self.assertRaises(AccessError):
+            self.employee.contract_id.with_user(self.env.user).check_access_rule('read')
+
+        self.env.user.employee_id = self.env['hr.employee'].create({
+            'name': 'Test Employee',
+            'user_id': self.env.user.id,
+        })
+        self.employee.parent_id = self.env.user.employee_id
+        self.employee.contract_id.with_user(self.env.user).check_access_rule('read')
+
+        self.env.user.groups_id = [(3, self.ref('hr_contract.group_hr_contract_employee_manager'))]
+        with self.assertRaises(AccessError):
+            self.employee.contract_id.with_user(self.env.user).check_access_rights('read')

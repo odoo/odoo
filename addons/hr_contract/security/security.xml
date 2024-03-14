@@ -36,9 +36,23 @@
             <field name="domain_force">['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.user_id', '=', user.id)]</field>
         </record>
 
+        <record id="ir_rule_hr_contract_history_employee_manager" model="ir.rule">
+            <field name="name">HR Contract History: Employee Manager</field>
+            <field name="model_id" ref="model_hr_contract_history"/>
+            <field name="groups" eval="[(4, ref('hr_contract.group_hr_contract_employee_manager'))]"/>
+            <field name="domain_force">['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.user_id', '=', user.id)]</field>
+        </record>
+
         <record id="ir_rule_hr_contract_manager" model="ir.rule">
             <field name="name">HR Contract: Contract Manager</field>
             <field name="model_id" ref="model_hr_contract"/>
+            <field name="groups" eval="[(4, ref('hr_contract.group_hr_contract_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <record id="ir_rule_hr_contract_history_manager" model="ir.rule">
+            <field name="name">HR Contract History: Contract Manager</field>
+            <field name="model_id" ref="model_hr_contract_history"/>
             <field name="groups" eval="[(4, ref('hr_contract.group_hr_contract_manager'))]"/>
             <field name="domain_force">[(1, '=', 1)]</field>
         </record>
