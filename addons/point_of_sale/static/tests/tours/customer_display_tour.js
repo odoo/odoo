@@ -40,8 +40,7 @@ registry.category("web_tour.tours").add("CustomerDisplayTour", {
             postMessage(ORDER_IS_FINALIZED, "order is finalized"),
             {
                 content: "Check that we are now on the 'Thank you' screen",
-                trigger: "div i.fa-smile-o",
-                run: "click",
+                trigger: "div:contains('Thank you')",
             },
             postMessage(NEW_ORDER, "new order"),
             {
