@@ -27,6 +27,7 @@
             <field name="attachment">'original_vendor_bill.pdf'</field>
             <field name="attachment_use">True</field>
             <field name="binding_view_types">list</field>
+            <field name="domain" eval="[('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt')), ('message_main_attachment_id', '!=', False)]"/>
         </record>
 
         <record id="account_invoices_without_payment" model="ir.actions.report">

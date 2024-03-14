@@ -3,9 +3,10 @@ import { makeContext } from "@web/core/context";
 import { session } from "@web/session";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 
 export const STATIC_ACTIONS_GROUP_NUMBER = 1;
 export const ACTIONS_GROUP_NUMBER = 100;
@@ -50,30 +51,13 @@ export class ActionMenus extends Component {
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");
+        this.state = useState({ printItems: []})
         onWillStart(async () => {
             this.actionItems = await this.getActionItems(this.props);
         });
         onWillUpdateProps(async (nextProps) => {
             this.actionItems = await this.getActionItems(nextProps);
         });
-    }
-
-    get printItems() {
-        const printActions = this.props.items.print || [];
-        return printActions.map((action) => ({
-            action,
-            description: action.name,
-            key: action.id,
-        }));
-    }
-
-    asDropdownItems(items) {
-        return items.map((item) => ({
-            id: item.key,
-            label: item.description,
-            onSelected: () => this.onItemSelected(item),
-            class: "o_menu_item",
-        }));
     }
 
     //---------------------------------------------------------------------
@@ -148,5 +132,47 @@ export class ActionMenus extends Component {
             // Event has been prevented at its source: we need to redirect manually.
             browser.location = item.url;
         }
+    }
+
+    async loadAvailablePrintItems() {
+        const printActions = this.props.items.print || [];
+        const actionWithDomainIds = [];
+        const validActionIds = [];
+        for (const action of printActions) {
+            "domain" in action
+                ? actionWithDomainIds.push(action.id)
+                : validActionIds.push(action.id);
+        }
+        if (actionWithDomainIds.length) {
+            const validActionsWithDomainIds = await this.orm.call(
+                "ir.actions.report",
+                "get_valid_action_reports",
+                [actionWithDomainIds, this.props.resModel, this.props.getActiveIds()]
+            );
+            validActionIds.push(...validActionsWithDomainIds);
+        }
+        return printActions
+            .filter((action) => validActionIds.includes(action.id))
+            .map((action) => ({
+                action,
+                class: "o_menu_item",
+                description: action.name,
+                key: action.id,
+            }));
+    }
+
+    async loadPrintItems() {
+        if (!this.props.items.print?.length) {
+            return;
+        }
+        const items = await this.loadAvailablePrintItems();
+        if (!items.length) {
+            items.push({
+                description: _t("No report available."),
+                class: "o_menu_item disabled",
+                key: "nothing_to_display",
+            });
+        }
+        this.state.printItems = allItems;
     }
 }

@@ -195,7 +195,7 @@ class IrActions(models.Model):
             try:
                 action = self.env[action_model].sudo().browse(action_id)
                 fields = ['name', 'binding_view_types']
-                for field in ('groups_id', 'res_model', 'sequence'):
+                for field in ('groups_id', 'res_model', 'sequence', 'domain'):
                     if field in action._fields:
                         fields.append(field)
                 action = action.read(fields)[0]
@@ -203,6 +203,8 @@ class IrActions(models.Model):
                     # transform the list of ids into a list of xml ids
                     groups = self.env['res.groups'].browse(action['groups_id'])
                     action['groups_id'] = list(groups._ensure_xml_id().values())
+                if 'domain' in action and not action.get('domain'):
+                    action.pop('domain')
                 result[binding_type].append(frozendict(action))
             except (MissingError):
                 continue
