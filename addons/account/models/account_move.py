@@ -4254,17 +4254,16 @@ class AccountMove(models.Model):
             ]
 
         limit = job_count + 1
-        to_process = self.env['account.move']._read_group(
+        to_process = self.env['account.move'].search(
             [('send_and_print_values', '!=', False)],
-            groupby=['company_id'],
-            aggregates=['id:recordset'],
             limit=limit,
         )
         need_retrigger = len(to_process) > job_count
         if not to_process:
             return
 
-        for _company, moves in to_process[:job_count]:
+        all_moves = to_process[:job_count]
+        for _company, moves in all_moves.grouped('company_id').items():
             try:
                 # Lock moves
                 with self.env.cr.savepoint(flush=False):
