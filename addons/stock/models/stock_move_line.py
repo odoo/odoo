@@ -25,12 +25,13 @@ class StockMoveLine(models.Model):
         check_company=True, index=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True, required=True, index=True)
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade", check_company=True, domain="[('type', '!=', 'service')]", index=True)
+    product_categ_id = fields.Many2one(related='product_id.categ_id')
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]",
         compute="_compute_product_uom_id", store=True, readonly=False, precompute=True,
     )
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
-    product_category_name = fields.Char(related="product_id.categ_id.complete_name", string="Product Category")
+    product_category_name = fields.Char(related="product_id.categ_id.complete_name", string="Product Category Name")
     quantity = fields.Float(
         'Quantity', digits='Product Unit of Measure', copy=False, store=True,
         compute='_compute_quantity', readonly=False)
