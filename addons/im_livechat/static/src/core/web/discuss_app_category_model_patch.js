@@ -19,7 +19,7 @@ patch(DiscussAppCategory.prototype, {
      */
     sortThreads(t1, t2) {
         if (this.livechatChannel || this.eq(this.app?.defaultLivechatCategory)) {
-            return compareDatetime(t2.last_interest_dt, t1.last_interest_dt) || t2.id - t1.id;
+            return compareDatetime(t2.lastInterestDt, t1.lastInterestDt) || t2.id - t1.id;
         }
         return super.sortThreads(t1, t2);
     },

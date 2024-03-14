@@ -21,7 +21,7 @@ export class DiscussAppCategory extends Record {
             return String.prototype.localeCompare.call(t1.name, t2.name);
         }
         if (this.id === "chats") {
-            return compareDatetime(t2.last_interest_dt, t1.last_interest_dt) || t2.id - t1.id;
+            return compareDatetime(t2.lastInterestDt, t1.lastInterestDt) || t2.id - t1.id;
         }
     }
 

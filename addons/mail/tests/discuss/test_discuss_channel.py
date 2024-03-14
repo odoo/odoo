@@ -174,8 +174,17 @@ class TestChannelInternals(MailCommon, HttpCase):
         with patch.object(fields.Datetime, 'now', lambda: retrieve_time):
             # `last_interest_dt` should be updated again when `channel_get` is called
             # because `channel_pin` is called.
-            channel_info = self.env['discuss.channel'].channel_get(partners_to=self.partner_admin.ids)._channel_info()[0]
-        self.assertEqual(channel_info['last_interest_dt'], fields.Datetime.to_string(retrieve_time))
+            channel = self.env["discuss.channel"].channel_get(
+                partners_to=self.partner_admin.ids
+            )
+        self.assertEqual(
+            fields.Datetime.to_string(
+                channel.channel_member_ids.filtered(
+                    lambda member: member.partner_id == self.env.user.partner_id
+                ).last_interest_dt
+            ),
+            fields.Datetime.to_string(retrieve_time),
+        )
 
     @users('employee')
     def test_channel_info_seen(self):

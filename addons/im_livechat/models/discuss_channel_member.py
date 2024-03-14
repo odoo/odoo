@@ -2,7 +2,7 @@
 
 from datetime import datetime, timedelta
 
-from odoo import api, models
+from odoo import api, models, fields
 
 
 class ChannelMember(models.Model):
@@ -18,7 +18,7 @@ class ChannelMember(models.Model):
             ('channel_id.channel_type', '=', 'livechat'),
         ])
         sessions_to_be_unpinned = members.filtered(lambda m: m.message_unread_counter == 0)
-        sessions_to_be_unpinned.write({'is_pinned': False})
+        sessions_to_be_unpinned.write({'unpin_dt': fields.Datetime.now()})
         self.env['bus.bus']._sendmany([(member.partner_id, 'discuss.channel/unpin', {'id': member.channel_id.id}) for member in sessions_to_be_unpinned])
 
     def _get_partner_data(self, fields=None):

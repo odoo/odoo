@@ -23,8 +23,7 @@ patch(ThreadService.prototype, {
         const oldestUnreadThread = this.store.discuss.livechats
             .filter((thread) => thread.isUnread)
             .sort(
-                (t1, t2) =>
-                    compareDatetime(t1.last_interest_dt, t2.last_interest_dt) || t1.id - t2.id
+                (t1, t2) => compareDatetime(t1.lastInterestDt, t2.lastInterestDt) || t1.id - t2.id
             )[0];
         if (!oldestUnreadThread) {
             return false;

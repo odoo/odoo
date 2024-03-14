@@ -37,8 +37,9 @@ class ChannelMember(models.Model):
         help="All Messages if not specified",
     )
     mute_until_dt = fields.Datetime("Mute notifications until", help="If set, the member will not receive notifications from the channel until this date.")
-    is_pinned = fields.Boolean("Is pinned on the interface", default=True)
-    last_interest_dt = fields.Datetime("Last Interest", default=fields.Datetime.now, help="Contains the date and time of the last interesting event that happened in this channel for this partner. This includes: creating, joining, pinning, and new message posted.")
+    is_pinned = fields.Boolean("Is pinned on the interface", compute="_compute_is_pinned", search="_search_is_pinned")
+    unpin_dt = fields.Datetime("Unpin date", index=True, help="Contains the date and time when the channel was unpinned by the user.")
+    last_interest_dt = fields.Datetime("Last Interest", index=True, default=fields.Datetime.now, help="Contains the date and time of the last interesting event that happened in this channel for this user. This includes: creating, joining, pinning")
     last_seen_dt = fields.Datetime("Last seen date")
     # RTC
     rtc_session_ids = fields.One2many(string="RTC Sessions", comodel_name='discuss.channel.rtc.session', inverse_name='channel_member_id')
@@ -77,6 +78,20 @@ class ChannelMember(models.Model):
                 ("guest_id", "!=", current_guest.id) if current_guest else expression.TRUE_LEAF,
             ]
 
+    def _search_is_pinned(self, operator, operand):
+        if (operator == "=" and operand) or (operator == "!=" and not operand):
+            return expression.OR([
+                [("unpin_dt", "=", False)],
+                [("last_interest_dt", ">=", self._field_to_sql(self._table, "unpin_dt"))],
+                [("channel_id.last_interest_dt", ">=", self._field_to_sql(self._table, "unpin_dt"))],
+            ])
+        else:
+            return [
+                ("unpin_dt", "!=", False),
+                ("last_interest_dt", "<", self._field_to_sql(self._table, "unpin_dt")),
+                ("channel_id.last_interest_dt", "<", self._field_to_sql(self._table, "unpin_dt")),
+            ]
+
     @api.depends("channel_id.message_ids", "seen_message_id")
     def _compute_message_unread(self):
         if self.ids:
@@ -110,6 +125,21 @@ class ChannelMember(models.Model):
                 "“%(member_name)s” in “%(channel_name)s”",
                 member_name=member.partner_id.name or member.guest_id.name,
                 channel_name=member.channel_id.display_name,
+            )
+
+    @api.depends("last_interest_dt", "unpin_dt", "channel_id.last_interest_dt")
+    def _compute_is_pinned(self):
+        for member in self:
+            member.is_pinned = (
+                not member.unpin_dt
+                or (
+                    member.last_interest_dt
+                    and member.last_interest_dt >= member.unpin_dt
+                )
+                or (
+                    member.channel_id.last_interest_dt
+                    and member.channel_id.last_interest_dt >= member.unpin_dt
+                )
             )
 
     def init(self):
@@ -182,7 +212,7 @@ class ChannelMember(models.Model):
             notifications.append((member.partner_id, "mail.record/insert", {"Thread": channel_data}))
         self.env["bus.bus"]._sendmany(notifications)
 
-    def _discuss_channel_member_format(self, fields=None):
+    def _discuss_channel_member_format(self, fields=None, extra_fields=None):
         if not fields:
             fields = {
                 "channel": {},
@@ -192,6 +222,8 @@ class ChannelMember(models.Model):
                 "persona": {},
                 "seen_message_id": True,
             }
+        if extra_fields:
+            fields.update(extra_fields)
         members_formatted_data = {}
         for member in self:
             data = {}
@@ -217,6 +249,8 @@ class ChannelMember(models.Model):
                 data['fetched_message_id'] = {'id': member.fetched_message_id.id} if member.fetched_message_id else False
             if 'seen_message_id' in fields:
                 data['seen_message_id'] = {'id': member.seen_message_id.id} if member.seen_message_id else False
+            if fields.get("last_interest_dt"):
+                data['last_interest_dt'] = odoo.fields.Datetime.to_string(member.last_interest_dt)
             members_formatted_data[member] = data
         return members_formatted_data
 

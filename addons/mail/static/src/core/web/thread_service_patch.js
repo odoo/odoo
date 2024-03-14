@@ -153,7 +153,7 @@ patch(ThreadService.prototype, {
     getRecentChannels() {
         return Object.values(this.store.Thread.records)
             .filter((thread) => thread.model === "discuss.channel")
-            .sort((a, b) => compareDatetime(b.last_interest_dt, a.last_interest_dt) || b.id - a.id);
+            .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id);
     },
     getNeedactionChannels() {
         return this.getRecentChannels().filter((channel) => channel.importantCounter > 0);

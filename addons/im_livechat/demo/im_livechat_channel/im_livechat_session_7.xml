@@ -11,7 +11,8 @@
         <record id="im_livechat.livechat_channel_session_7_member_admin" model="discuss.channel.member">
             <field name="partner_id" ref="base.partner_admin"/>
             <field name="channel_id" ref="im_livechat.livechat_channel_session_7"/>
-            <field name="is_pinned">False</field>
+            <field name="unpin_dt" eval="DateTime.today()"/>
+            <field name="last_interest_dt" eval="DateTime.today() + relativedelta(months=-1)"/>
         </record>
         <record id="im_livechat.livechat_channel_session_7_member_portal" model="discuss.channel.member">
             <field name="partner_id" ref="base.partner_demo_portal"/>
