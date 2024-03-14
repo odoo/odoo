@@ -52,6 +52,8 @@ import {
  *
  * @typedef {import("./dom").QueryOptions} QueryOptions
  *
+ * @typedef {{ target: Target }} SelectOptions
+ *
  * @typedef {"bottom" | "left" | "right" | "top"} Side
  *
  * @typedef {import("./dom").Target} Target
@@ -2044,18 +2046,26 @@ export function scroll(target, position, options) {
  *  - `change`
  *
  * @param {string | number | (string | number)[]} value
+ * @param {SelectOptions} [options]
  * @returns {Event[]}
  * @example
  *  click("select[name=country]"); // Focuses <select> element
  *  select("belgium"); // Selects the <option value="belgium"> element
  */
-export function select(value) {
-    const element = getActiveElement();
+export function select(value, options) {
+    const element = options?.target ? getFirstTarget(options.target) : getActiveElement();
     if (!hasTagName(element, "select")) {
         throw new HootDomError(`cannot call \`select()\`: target should be a <select> element`);
     }
 
+    if (options?.target) {
+        _implicitHover(element);
+        _pointerDown(element);
+    }
     _select(element, value);
+    if (options?.target) {
+        _pointerUp(element);
+    }
 
     return logEvents("select");
 }
