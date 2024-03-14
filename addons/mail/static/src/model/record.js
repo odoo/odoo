@@ -24,6 +24,8 @@ import { RecordUses } from "./record_uses";
 export class Record {
     /** @type {import("./model_internal").ModelInternal} */
     static _;
+    /** @type {import("./record_internal").RecordInternal} */
+    _;
     /** @param {FieldDefinition} */
     static isAttr(definition) {
         return this.isAttr(definition);
@@ -41,14 +43,6 @@ export class Record {
     static MAKE_UPDATE(fn) {
         return this.store.MAKE_UPDATE(...arguments);
     }
-    /**
-     * @param {RecordField|Record} fieldOrRecord
-     * @param {"compute"|"sort"|"onAdd"|"onDelete"|"onUpdate"} type
-     * @param {Record} [record] when field with onAdd/onDelete, the record being added or deleted
-     */
-    static ADD_QUEUE(fieldOrRecord, type, record) {
-        return this.store.ADD_QUEUE(...arguments);
-    }
     static onChange(record, name, cb) {
         return this.store.onChange(...arguments);
     }
@@ -65,14 +59,6 @@ export class Record {
     static _onChange(record, key, callback) {
         return this.store._onChange(...arguments);
     }
-    /**
-     * Contains field definitions of the model:
-     * - key : field name
-     * - value: Value contains definition of field
-     *
-     * @type {Map<string, FieldDefinition>}
-     */
-    static _fields;
     static isRecord(record) {
         return isRecord(record);
     }
@@ -244,9 +230,9 @@ export class Record {
                 });
             }
             Model._rawStore.recordByLocalId.set(record.localId, recordProxy);
-            for (const field of record._fields.values()) {
-                field.requestCompute?.();
-                field.requestSort?.();
+            for (const fieldName of record.Model._.fields.keys()) {
+                record._.requestCompute?.(record, fieldName);
+                record._.requestSort?.(record, fieldName);
             }
             return recordProxy;
         });
@@ -369,14 +355,8 @@ export class Record {
         return isCommand(data);
     }
 
-    /**
-     * Raw relational values of the record, each of which contains object id(s)
-     * rather than the record(s). This allows data in store and models being normalized,
-     * which eases handling relations notably in when a record gets deleted.
-     *
-     * @type {Map<string, RecordField>}
-     */
-    _fields = new Map();
+    /** @type {Map<string, RecordList>} */
+    _fieldsValue = new Map();
     __uses__ = markRaw(new RecordUses());
     /** @returns {import("models").Store} */
     get _store() {
@@ -429,12 +409,12 @@ export class Record {
         const record = toRaw(this)._raw;
         const store = record._store;
         return store.MAKE_UPDATE(function recordDelete() {
-            store.ADD_QUEUE(record, "delete");
+            store.ADD_QUEUE("delete", record);
         });
     }
 
     exists() {
-        return !this[IS_DELETED_SYM];
+        return !this._[IS_DELETED_SYM];
     }
 
     /** @param {Record} record */
@@ -467,26 +447,26 @@ export class Record {
     toData() {
         const recordProxy = this;
         const record = toRaw(recordProxy)._raw;
+        const Model = record.Model;
         const data = { ...recordProxy };
-        for (const [name, { value }] of record._fields) {
-            if (isMany(value)) {
-                data[name] = value.map((recordProxy) => {
+        for (const name of Model._.fields.keys()) {
+            if (isMany(Model, name)) {
+                data[name] = record[name].map((recordProxy) => {
                     const record = toRaw(recordProxy)._raw;
                     return record.toIdData.call(record._proxyInternal);
                 });
-            } else if (isOne(value)) {
-                const record = toRaw(value[0])?._raw;
-                data[name] = record?.toIdData.call(record._proxyInternal);
+            } else if (isOne(Model, name)) {
+                const otherRecord = toRaw(record[name])?._raw;
+                data[name] = otherRecord?.toIdData.call(record._proxyInternal);
             } else {
                 data[name] = recordProxy[name]; // Record.attr()
             }
         }
-        delete data._fields;
+        delete data._;
         delete data._proxy;
         delete data._proxyInternal;
         delete data._proxyUsed;
         delete data._raw;
-        delete data.Model;
         delete data._updateFields;
         delete data.__uses__;
         delete data.Model;

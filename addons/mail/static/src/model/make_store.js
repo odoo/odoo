@@ -1,21 +1,17 @@
 import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { Store } from "./store";
 import {
-    ATTR_SYM,
-    IS_RECORD_LIST_SYM,
     IS_RECORD_SYM,
-    MANY_SYM,
-    ONE_SYM,
+    STORE_SYM,
     isFieldDefinition,
     isMany,
     isRelation,
     modelRegistry,
 } from "./misc";
-import { RecordList } from "./record_list";
-import { onChange } from "@mail/utils/common/misc";
 import { Record } from "./record";
 import { StoreInternal } from "./store_internal";
 import { ModelInternal } from "./model_internal";
+import { RecordInternal } from "./record_internal";
 
 /** @returns {import("models").Store} */
 export function makeStore(env, { localRegistry } = {}) {
@@ -26,7 +22,7 @@ export function makeStore(env, { localRegistry } = {}) {
     let store = new Store();
     store.env = env;
     store.Model = Store;
-    store._ = new StoreInternal();
+    store._ = markRaw(new StoreInternal());
     store._raw = store;
     store._proxyInternal = store;
     store._proxy = store;
@@ -57,40 +53,47 @@ export function makeStore(env, { localRegistry } = {}) {
                     record._updateFields = new Set();
                     record._raw = record;
                     record.Model = Model;
+                    record._ = markRaw(
+                        record[STORE_SYM] ? new StoreInternal() : new RecordInternal()
+                    );
                     const recordProxyInternal = new Proxy(record, {
+                        /**
+                         * @param {Record} record
+                         * @param {string} name
+                         * @param {Record} recordFullProxy
+                         */
                         get(record, name, recordFullProxy) {
                             recordFullProxy = record._downgradeProxy(recordFullProxy);
-                            const field = record._fields.get(name);
-                            if (field) {
-                                if (field.compute && !field.eager) {
-                                    field.computeInNeed = true;
-                                    if (field.computeOnNeed) {
-                                        field.compute();
-                                    }
+                            if (Model._.fieldsCompute.get(name) && !Model._.fieldsEager.get(name)) {
+                                record._.fieldsComputeInNeed.set(name, true);
+                                if (record._.fieldsComputeOnNeed.get(name)) {
+                                    record._.compute(record, name);
                                 }
-                                if (field.sort && !field.eager) {
-                                    field.sortInNeed = true;
-                                    if (field.sortOnNeed) {
-                                        field.sort();
-                                    }
+                            }
+                            if (Model._.fieldsSort.get(name) && !Model._.fieldsEager.get(name)) {
+                                record._.fieldsSortInNeed.set(name, true);
+                                if (record._.fieldsSortOnNeed.get(name)) {
+                                    record._.sort(record, name);
                                 }
-                                if (isRelation(Model, name)) {
-                                    const recordList = field.value;
-                                    const recordListFullProxy =
-                                        recordFullProxy._fields.get(name).value._proxy;
-                                    if (isMany(recordList)) {
-                                        return recordListFullProxy;
-                                    }
-                                    return recordListFullProxy[0];
+                            }
+                            if (isRelation(Model, name)) {
+                                const recordListFullProxy =
+                                    recordFullProxy._fieldsValue.get(name)._proxy;
+                                if (isMany(Model, name)) {
+                                    return recordListFullProxy;
                                 }
+                                return recordListFullProxy[0];
                             }
                             return Reflect.get(record, name, recordFullProxy);
                         },
+                        /**
+                         * @param {Record} record
+                         * @param {string} name
+                         */
                         deleteProperty(record, name) {
                             return store.MAKE_UPDATE(function recordDeleteProperty() {
-                                const field = record._fields.get(name);
-                                if (field && isRelation(Model, name)) {
-                                    const recordList = field.value;
+                                if (isRelation(Model, name)) {
+                                    const recordList = record._fieldsValue.get(name);
                                     recordList.clear();
                                     return true;
                                 }
@@ -118,153 +121,14 @@ export function makeStore(env, { localRegistry } = {}) {
                     record._proxyInternal = recordProxyInternal;
                     const recordProxy = reactive(recordProxyInternal);
                     record._proxy = recordProxy;
-                    if (record instanceof Store) {
+                    if (record?.[STORE_SYM]) {
                         record.recordByLocalId = store.recordByLocalId;
-                        record._ = store._;
+                        record._ = markRaw(toRaw(store._));
                         store = record;
                         Record.store = store;
                     }
                     for (const name of Model._.fields.keys()) {
-                        const isAttr = record[name]?.[ATTR_SYM];
-                        const isOne = record[name]?.[ONE_SYM];
-                        const isMany = record[name]?.[MANY_SYM];
-                        const field = {
-                            [ATTR_SYM]: isAttr,
-                            [ONE_SYM]: isOne,
-                            [MANY_SYM]: isMany,
-                            eager: Model._.fieldsEager.get(name),
-                            name,
-                        };
-                        record._fields.set(name, field);
-                        if (isRelation(Model, name)) {
-                            // Relational fields contain symbols for detection in original class.
-                            // This constructor is called on genuine records:
-                            // - 'one' fields => undefined
-                            // - 'many' fields => RecordList
-                            // record[name]?.[0] is ONE_SYM or MANY_SYM
-                            const recordList = new RecordList();
-                            Object.assign(recordList, {
-                                [IS_RECORD_LIST_SYM]: true,
-                                [ATTR_SYM]: isAttr,
-                                [ONE_SYM]: isOne,
-                                [MANY_SYM]: isMany,
-                                field,
-                                name,
-                                owner: record,
-                                _raw: recordList,
-                            });
-                            recordList.store = store;
-                            field.value = recordList;
-                        } else {
-                            record[name] = Model._.fieldsDefault.get(name);
-                        }
-                        if (Model._.fieldsCompute.get(name)) {
-                            if (!Model._.fieldsEager.get(name)) {
-                                onChange(recordProxy, name, () => {
-                                    if (field.computing) {
-                                        /**
-                                         * Use a reactive to reset the computeInNeed flag when there is
-                                         * a change. This assumes when other reactive are still
-                                         * observing the value, its own callback will reset the flag to
-                                         * true through the proxy getters.
-                                         */
-                                        field.computeInNeed = false;
-                                    }
-                                });
-                                // reset flags triggered by registering onChange
-                                field.computeInNeed = false;
-                                field.sortInNeed = false;
-                            }
-                            const proxy2 = reactive(recordProxy, function computeObserver() {
-                                field.requestCompute();
-                            });
-                            Object.assign(field, {
-                                compute: () => {
-                                    field.computing = true;
-                                    field.computeOnNeed = false;
-                                    store.updateFields(record, {
-                                        [name]: Model._.fieldsCompute.get(name).call(proxy2),
-                                    });
-                                    field.computing = false;
-                                },
-                                requestCompute: ({ force = false } = {}) => {
-                                    if (store._.UPDATE !== 0 && !force) {
-                                        store.ADD_QUEUE(field, "compute");
-                                    } else {
-                                        if (field.eager || field.computeInNeed) {
-                                            field.compute();
-                                        } else {
-                                            field.computeOnNeed = true;
-                                        }
-                                    }
-                                },
-                            });
-                        }
-                        if (Model._.fieldsSort.get(name)) {
-                            if (!Model._.fieldsEager.get(name)) {
-                                onChange(recordProxy, name, () => {
-                                    if (field.sorting) {
-                                        /**
-                                         * Use a reactive to reset the inNeed flag when there is a
-                                         * change. This assumes if another reactive is still observing
-                                         * the value, its own callback will reset the flag to true
-                                         * through the proxy getters.
-                                         */
-                                        field.sortInNeed = false;
-                                    }
-                                });
-                                // reset flags triggered by registering onChange
-                                field.computeInNeed = false;
-                                field.sortInNeed = false;
-                            }
-                            const proxy2 = reactive(recordProxy, function sortObserver() {
-                                field.requestSort();
-                            });
-                            Object.assign(field, {
-                                sort: () => {
-                                    field.sortOnNeed = false;
-                                    field.sorting = true;
-                                    store.sortRecordList(
-                                        proxy2._fields.get(name).value._proxy,
-                                        Model._.fieldsSort.get(name).bind(proxy2)
-                                    );
-                                    field.sorting = false;
-                                },
-                                requestSort: ({ force } = {}) => {
-                                    if (store._.UPDATE !== 0 && !force) {
-                                        store.ADD_QUEUE(field, "sort");
-                                    } else {
-                                        if (field.eager || field.sortInNeed) {
-                                            field.sort();
-                                        } else {
-                                            field.sortOnNeed = true;
-                                        }
-                                    }
-                                },
-                            });
-                        }
-                        if (Model._.fieldsOnUpdate.get(name)) {
-                            /** @type {Function} */
-                            let observe;
-                            Object.assign(field, {
-                                onUpdate: () => {
-                                    /**
-                                     * Forward internal proxy for performance as onUpdate does not
-                                     * need reactive (observe is called separately).
-                                     */
-                                    Model._.fieldsOnUpdate.get(name).call(record._proxyInternal);
-                                    observe?.();
-                                },
-                            });
-                            store._onChange(recordProxy, name, (obs) => {
-                                observe = obs;
-                                if (store._.UPDATE !== 0) {
-                                    store.ADD_QUEUE(field, "onUpdate");
-                                } else {
-                                    field.onUpdate();
-                                }
-                            });
-                        }
+                        record._.prepareField(record, name, recordProxy);
                     }
                     return recordProxy;
                 }
@@ -275,7 +139,6 @@ export function makeStore(env, { localRegistry } = {}) {
             Class,
             env,
             records: reactive({}),
-            _fields: new Map(),
         });
         Models[name] = Model;
         store[name] = Model;
