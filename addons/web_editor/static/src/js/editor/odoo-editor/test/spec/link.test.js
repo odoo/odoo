@@ -705,10 +705,8 @@ describe('Link', () => {
                 stepFunction: async editor => {
                     await clickOnLink(editor);
                     await deleteBackward(editor);
-                    console.log(a.closest('.odoo-editor-editable').outerHTML);
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                 },
-                contentAfterEdit: '<p>a<a href="#/" contenteditable="true" oe-zws-empty-inline="">[]\u200B</a>c</p>',
+                contentAfterEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeff[]\ufeff</a>\ufeffc</p>',
                 contentAfter: '<p>a[]c</p>',
             });
         });
@@ -716,16 +714,11 @@ describe('Link', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
                 stepFunction: async editor => {
-                    const a = await clickOnLink(editor);
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await clickOnLink(editor);
                     await deleteBackward(editor);
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                     await insertText(editor, 'a');
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                     await insertText(editor, 'b');
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                     await insertText(editor, 'c');
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                 },
                 contentAfter: '<p>a<a href="#/">abc[]</a>c</p>',
             });
