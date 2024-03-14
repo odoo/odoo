@@ -1,5 +1,5 @@
 import { expect, getFixture, test } from "@odoo/hoot";
-import { queryAll, queryAllTexts, queryFirst, queryLast, queryOne } from "@odoo/hoot-dom";
+import { queryAllTexts, queryLast } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import {
@@ -63,11 +63,9 @@ function addProperties() {
 }
 
 test("creating a field chain from scratch", async () => {
-    function getValueFromDOM(el) {
-        return [...queryAll(".o_model_field_selector_chain_part", { root: el })]
-            .map((part) => part.textContent.trim())
-            .join(" -> ");
-    }
+    const getValueFromDOM = (root) =>
+        queryAllTexts(".o_model_field_selector_chain_part", { root }).join(" -> ");
+
     class Parent extends Component {
         static components = { ModelFieldSelector };
         static template = xml`
@@ -93,12 +91,12 @@ test("creating a field chain from scratch", async () => {
     const fieldSelector = await mountWithCleanup(Parent);
 
     await openModelFieldSelectorPopover();
-    expect(queryOne("input.o_input[placeholder='Search...']")).toBe(document.activeElement);
+    expect("input.o_input[placeholder='Search...']").toBeFocused();
     expect(".o_model_field_selector_popover").toHaveCount(1);
 
     // The field selector popover should contain the list of "partner"
     // fields. "Bar" should be among them.
-    expect(queryFirst(".o_model_field_selector_popover_item_name")).toHaveText("Bar");
+    expect(".o_model_field_selector_popover_item_name:first").toHaveText("Bar");
 
     // Clicking the "Bar" field should close the popover and set the field
     // chain to "bar" as it is a basic field
@@ -170,7 +168,7 @@ test("default field chain should set the page data correctly", async () => {
         "Last Modified on",
         "Product",
     ]);
-    expect(queryLast(".o_model_field_selector_popover_item")).toHaveClass("active");
+    expect(".o_model_field_selector_popover_item:last").toHaveClass("active");
 });
 
 test("use the filter option", async () => {
@@ -722,14 +720,10 @@ test("focus on search input", async () => {
 
     await mountWithCleanup(Parent);
     await openModelFieldSelectorPopover();
-    expect(document.activeElement).toBe(
-        queryOne(".o_model_field_selector_popover_search .o_input")
-    );
+    expect(".o_model_field_selector_popover_search .o_input").toBeFocused();
 
     await followRelation();
-    expect(document.activeElement).toBe(
-        queryOne(".o_model_field_selector_popover_search .o_input")
-    );
+    expect(".o_model_field_selector_popover_search .o_input").toBeFocused();
 });
 
 test("support properties", async () => {

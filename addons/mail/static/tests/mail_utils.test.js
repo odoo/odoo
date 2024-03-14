@@ -79,8 +79,8 @@ test("addLink: utility function and special entities", () => {
 test("addLink: linkify inside text node (1 occurrence)", async () => {
     const content = "<p>some text https://somelink.com</p>";
     const linkified = parseAndTransform(content, addLink);
-    expect(linkified.startsWith("<p>some text <a")).toBeTruthy();
-    expect(linkified.endsWith("</a></p>")).toBeTruthy();
+    expect(linkified.startsWith("<p>some text <a")).toBe(true);
+    expect(linkified.endsWith("</a></p>")).toBe(true);
 
     // linkify may add some attributes. Since we do not care of their exact
     // stringified representation, we continue deeper assertion with query

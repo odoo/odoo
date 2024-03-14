@@ -77,8 +77,8 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("generateHash", () => {
-        expect(generateHash("abc").length).toBe(8);
-        expect(generateHash("abcdef").length).toBe(8);
+        expect(generateHash("abc")).toHaveLength(8);
+        expect(generateHash("abcdef")).toHaveLength(8);
         expect(generateHash("abc")).toBe(generateHash("abc"));
 
         expect(generateHash("abc")).not.toBe(generateHash("def"));

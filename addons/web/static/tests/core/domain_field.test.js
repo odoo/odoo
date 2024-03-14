@@ -1,5 +1,5 @@
 import { expect, getFixture, test } from "@odoo/hoot";
-import { queryAllTexts, queryFirst, queryLast, scroll } from "@odoo/hoot-dom";
+import { queryAllTexts, scroll } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockDate } from "@odoo/hoot-mock";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import { SELECTORS } from "@web/../tests/core/domain_selector/domain_selector_helpers";
@@ -126,7 +126,7 @@ test("basic domain field usage is ok", async function () {
 
     // The popover should contain the list of partnertype fields and so
     // there should be the "Color index" field
-    expect(queryFirst(".o_model_field_selector_popover_item_name")).toHaveText("Color index");
+    expect(".o_model_field_selector_popover_item_name:first").toHaveText("Color index");
 
     // Clicking on this field should close the popover, then changing the
     // associated value should reveal one matched record
@@ -209,7 +209,7 @@ test("domain field is correctly reset on every view change", async function () {
     expect(".o_model_field_selector_popover_item").toHaveCount(5, {
         message: "field selector popover should contain only one non-default field",
     });
-    expect(queryLast(".o_model_field_selector_popover_item")).toHaveText("Product Name", {
+    expect(".o_model_field_selector_popover_item:last").toHaveText("Product Name", {
         message: "field selector popover should contain 'Product Name' field",
     });
 
@@ -226,7 +226,7 @@ test("domain field is correctly reset on every view change", async function () {
     expect(".o_model_field_selector_popover_item").toHaveCount(6, {
         message: "field selector popover should contain two non-default fields",
     });
-    expect(queryFirst(".o_model_field_selector_popover_item")).toHaveText("Color index", {
+    expect(".o_model_field_selector_popover_item:first").toHaveText("Color index", {
         message: "field selector popover should contain 'Color index' field",
     });
 });
@@ -715,7 +715,7 @@ test.tags("desktop")("domain field in kanban view", async function () {
         },
     });
 
-    expect(queryFirst(".o_read_mode")).toHaveText("Match all records");
+    expect(".o_read_mode:first").toHaveText("Match all records");
 
     await contains(".o_domain_show_selection_button").click();
     expect(".o_dialog .o_list_view").toHaveCount(1, {
@@ -777,11 +777,7 @@ test("edit domain button is available even while loading records count", async f
     serverState.debug = true;
     const searchCountDeffered = new Deferred();
     onRpc("/web/domain/validate", () => true);
-    onRpc(async (route) => {
-        if (route === "/web/dataset/call_kw/partner/search_count") {
-            await searchCountDeffered;
-        }
-    });
+    onRpc("search_count", () => searchCountDeffered);
     await mountView({
         type: "form",
         resModel: "partner",
@@ -910,7 +906,7 @@ test("domain field can be foldable", async function () {
 
     // The popover should contain the list of partnertype fields and so
     // there should be the "Color index" field
-    expect(queryFirst(".o_model_field_selector_popover_item_name")).toHaveText("Color index");
+    expect(".o_model_field_selector_popover_item_name:first").toHaveText("Color index");
 
     // Clicking on this field should close the popover, then changing the
     // associated value should reveal one matched record
@@ -990,5 +986,5 @@ test("foldable domain field unfolds and hides caret when domain is invalid", asy
     expect(".fa-caret-down").toHaveCount(0);
     expect(".o_domain_selector_row").toHaveText("This domain is not supported.\nReset domain");
     await contains(".o_domain_selector_row button").click();
-    expect(queryFirst(".o_field_domain span")).toHaveText("Match all records");
+    expect(".o_field_domain span:first").toHaveText("Match all records");
 });

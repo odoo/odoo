@@ -73,11 +73,11 @@ test("activity mark done popover mark done without feedback", async () => {
     onRpc("/web/dataset/call_kw/mail.activity/action_feedback", (request) => {
         step("action_feedback");
         const { params } = request.json();
-        expect(params.args.length).toBe(1);
-        expect(params.args[0].length).toBe(1);
+        expect(params.args).toHaveLength(1);
+        expect(params.args[0]).toHaveLength(1);
         expect(params.args[0][0]).toBe(activityId);
         expect(params.kwargs.attachment_ids).toBeEmpty();
-        expect(params.kwargs.feedback).not.toBeTruthy();
+        expect("feedback" in params.kwargs).toBe(false);
         // random value returned in order for the mock server to know that this route is implemented.
         return true;
     });
@@ -100,8 +100,8 @@ test("activity mark done popover mark done with feedback", async () => {
     onRpc("/web/dataset/call_kw/mail.activity/action_feedback", (request) => {
         step("action_feedback");
         const { params } = request.json();
-        expect(params.args.length).toBe(1);
-        expect(params.args[0].length).toBe(1);
+        expect(params.args).toHaveLength(1);
+        expect(params.args[0]).toHaveLength(1);
         expect(params.args[0][0]).toBe(activityId);
         expect(params.kwargs.attachment_ids).toBeEmpty();
         expect(params.kwargs.feedback).toBe("This task is done");
@@ -137,8 +137,8 @@ test("activity mark done popover mark done and schedule next", async () => {
     onRpc("/web/dataset/call_kw/mail.activity/action_feedback_schedule_next", (request) => {
         step("action_feedback_schedule_next");
         const { params } = request.json();
-        expect(params.args.length).toBe(1);
-        expect(params.args[0].length).toBe(1);
+        expect(params.args).toHaveLength(1);
+        expect(params.args[0]).toHaveLength(1);
         expect(params.args[0][0]).toBe(activityId);
         expect(params.kwargs.feedback).toBe("This task is done");
         return false;
