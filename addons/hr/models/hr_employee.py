@@ -198,7 +198,11 @@ class HrEmployeePrivate(models.Model):
         # copy them to the cache of self; non-public data will be missing from
         # cache, and interpreted as an access error
         self.flush_recordset(fields)
-        public = self.env['hr.employee.public'].browse(self._ids)
+        hr_employee_public = self.env['hr.employee.public']
+        public = hr_employee_public.browse(self._ids)
+        public_fields = hr_employee_public._fields.keys()
+        # keep only the fields that are available on the public model
+        fields = list(set(fields) & set(public_fields))
         public.read(fields)
         for fname in fields:
             values = self.env.cache.get_values(public, public._fields[fname])
