@@ -1,16 +1,17 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import timedelta
+from unittest.mock import patch
+
 from freezegun import freeze_time
 
 from odoo import fields
-from odoo.fields import Command
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tests import tagged, Form
-from odoo.tools import float_compare
+from odoo.fields import Command
+from odoo.tests import Form, tagged
 
-from odoo.addons.sale.tests.common import SaleCommon
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.sale.tests.common import SaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -465,6 +466,16 @@ class TestSaleOrder(SaleCommon):
         self.assertFalse(sale_order.analytic_account_id)
         sale_order.action_confirm()
         self.assertTrue(sale_order.analytic_account_id, "An analytic account should be generated")
+
+    def test_so_discount_is_not_reset(self):
+        """ Discounts should not be recomputed on order confirmation """
+        with patch(
+            'odoo.addons.sale.models.sale_order_line.SaleOrderLine'
+            '._compute_discount'
+        ) as patched:
+            self.sale_order.action_confirm()
+            self.sale_order.order_line.flush_recordset(['discount'])
+            patched.assert_not_called()
 
 
 @tagged('post_install', '-at_install')
