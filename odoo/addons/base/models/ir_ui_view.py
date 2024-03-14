@@ -549,8 +549,7 @@ actual arch.
 
         self.clear_caches()
         result = super(View, self.with_context(ir_ui_view_partial_validation=True)).create(vals_list)
-        for record, data in result._get_modified_value(self._fields_to_log, vals_list,
-                                                        self._fields_to_log_wo_value):
+        for record, data in result._get_modified_value(self._fields_to_log, vals_list):
             _logger.info("%s %r (#%d) created with %r by user "
                          "%r (#%d) ", LogType.IRUIVIEW_CREATE, record.display_name, record.id, data,
                          self.env.user.display_name, self.env.user.id)
@@ -571,8 +570,9 @@ actual arch.
         self.clear_caches()
         if 'arch_db' in vals and not self.env.context.get('no_save_prev'):
             vals['arch_prev'] = self.arch_db
+        vals = self._compute_defaults(vals)
         _log_saved_data = super(View, self)._save_values_for_log(self._fields_to_log, vals)
-        res = super(View, self).write(self._compute_defaults(vals))
+        res = super(View, self).write(vals)
         for record, data in self._get_modified_value(self._fields_to_log, vals, _log_saved_data):
             _logger.info("%s %r (#%d) modified with %r by user"
                          " %r (#%d) ", LogType.IRUIVIEW_WRITE, record.display_name, record.id, data,

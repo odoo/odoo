@@ -234,14 +234,9 @@ class Groups(models.Model):
 
     def create(self, vals):
         groups = super(Groups, self).create(vals)
-        for index, group in enumerate(groups):
-            data_to_log = []
-            for key, value in vals[index].items():
-                if key in self._fields_to_log:
-                    data_to_log.append(f"{key}: {value}")
-            _logger.info("%s The group %r (#%d) has been created with data %r by user "
-                         "%r (#%d)", LogType.RESGROUP_CREATE, group.display_name, group.id, ", ".join(data_to_log),
-                         self.env.user.display_name, self.env.user.id)
+        for record, data in groups._get_modified_value(self._fields_to_log, vals):
+            _logger.info("%s %r (#%d) created with value %r by user %r (#%d) ", LogType.RESGROUP_CREATE,
+                        record.display_name, record.id, data, self.env.user.display_name, self.env.user.id)
         return groups
 
     def _format_log(self, key, past_object=None):
@@ -623,9 +618,9 @@ class Users(models.Model):
                 user.partner_id.company_id = user.company_id
             user.partner_id.active = user.active
         _logger.info("%s %s by user %r (#%d)", LogType.RESUSER_CREATE,
-        ', '.join(f"{record.name} (#{record.id}) created with '{data}'" for record, data in
-        users._get_modified_value(self._fields_to_log, vals_list)), self.env.user.display_name,
-        self.env.user.id)
+        ', '.join(f"'{record.name}' (#{record.id}) created with '{data}'" for record, data in
+        users._get_modified_value(self._fields_to_log, vals_list, keyset_to_save_wo_value=self._fields_to_log_wo_value))
+                                , self.env.user.display_name,self.env.user.id)
         return users
 
     def write(self, values):
@@ -766,6 +761,7 @@ class Users(models.Model):
         if not password:
             raise AccessDenied()
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
+        user_agent = user_agent_env['HTTP_USER_AGENT'] if user_agent_env.get('HTTP_USER_AGENT') else 'n/a'
         try:
             with cls.pool.cursor() as cr:
                 self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
@@ -782,11 +778,11 @@ class Users(models.Model):
                     user._update_last_login()
         except AccessDenied:
             _logger.info("%s Login failed for db:%s login:%s from %s UserAgent:%s", LogType.LOGIN_FAILED,
-                         db, login, ip, user_agent_env['HTTP_USER_AGENT'])
+                         db, login, ip, user_agent)
             raise
 
         _logger.info("%s Login successful for db:%s login:%s from %s UserAgent:%s", LogType.LOGIN_SUCCESSFUL,
-                     db, login, ip, user_agent_env['HTTP_USER_AGENT'])
+                     db, login, ip, user_agent)
 
         return user.id
 

@@ -752,19 +752,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             return RedirectWarning(msg % values, action_id, _('Go to the configuration panel'))
         return UserError(msg % values)
 
-    def _log_on_create(self, values, res, previous_settings):
-        data_to_log = []
-        for key in values:
-            # Must compare the previous and the new record as for each setting change a new record is created
-            if res[key] != previous_settings[key]:
-                if not isinstance(res[key], bool) and previous_settings and previous_settings[key]:
-                    data_to_log.append(f"{key}: {previous_settings[key]} ==> {res[key]}")
-                else:
-                    data_to_log.append(f"{key}: {res[key]}")
-        if data_to_log:
-            _logger.info("%s Settings modified for %r "
-                         "by user %r (#%d)", LogType.RESCONFIG_CREATE_AND_MODIFY, ", ".join(data_to_log),
-                         self.env.user.display_name, self.env.user.id)
+    _fields_to_log = True
 
     @api.model
     def create(self, values):
@@ -798,5 +786,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
 
         previous_settings = self.search([], order='create_date desc', limit=1)
         res = super(ResConfigSettings, self).create(values)
-        self._log_on_create(values, res, previous_settings)
+        for record, data in res._get_modified_value(self._fields_to_log, values, {res.id:previous_settings}):
+            _logger.info("%s Settings modified for %r by user %r (#%d)", LogType.RESCONFIG_CREATE_AND_MODIFY, data,
+                        self.env.user.display_name, self.env.user.id)
         return res

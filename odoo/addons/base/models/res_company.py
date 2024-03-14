@@ -229,7 +229,7 @@ class Company(models.Model):
         self.clear_caches()
         company = super(Company, self).create(vals)
         for record, data in company._get_modified_value(self._fields_to_log, vals,
-                                                        self._fields_to_log_wo_value):
+                                                        keyset_to_save_wo_value=self._fields_to_log_wo_value):
             _logger.info("%s %r (#%d) created with %r by user "
                          "%r (#%d) ", LogType.RESCOMPANY_CREATE, record.display_name, record.id, data,
                          self.env.user.display_name, self.env.user.id)

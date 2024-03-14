@@ -3666,6 +3666,7 @@ Fields:
         self.flush()
         self.modified(self._fields, before=True)
 
+        display_name_log = ", ".join(self.mapped('display_name'))
         with self.env.norecompute():
             cr = self._cr
             Data = self.env['ir.model.data'].sudo().with_context({})
@@ -3732,7 +3733,7 @@ Fields:
 
         # auditing: deletions are infrequent and leave no trace in the database
         _unlink.info('%s User %r (#%d) deleted %s records with IDs: %r, Display names : %r', LogType.RECORD_DELETION,
-                    self.env.user.display_name, self._uid, self._name, self.ids, ", ".join(self.mapped('display_name')))
+                    self.env.user.display_name, self._uid, self._name, self.ids, display_name_log)
 
         return True
 
@@ -6603,7 +6604,7 @@ Fields:
         """
         if past_object and past_object[key] == self[key]:
             return ""
-        elif not past_object or (past_object and isinstance(past_object, bool)):
+        elif not past_object or (past_object and isinstance(past_object[key], bool)):
             return f"{key}: {self[key]}"
         elif isinstance(past_object[key], BaseModel):
             if len(self[key]) == 1 and len(past_object[key]) == 1:
@@ -6629,7 +6630,7 @@ Fields:
                             keyset_to_save_wo_value=None):
         """ For each records generate a string of the field and their values that has get some change.
 
-        :param set keyset_to_save: A set of fields, telling which field need to be logged
+        :param set keyset_to_save: A set of fields, telling which field need to be logged or True to log everything
         :param dict modified_values: fields to update and the value to set on them (as on create/write)
         :param dict before_modification: In order to log previous to new data, a dict {record_id:{fields:values}}
             usually returned by _save_values_for_log()
@@ -6638,11 +6639,12 @@ Fields:
         :returns: A generator of record, data_to_log where data_to_log is a string with all the data that should be
             logged
         """
+        log_every_field = isinstance(keyset_to_save, bool) and keyset_to_save
         for index, record in enumerate(self):
             data_to_log = []
             looper = modified_values[index] if isinstance(modified_values, list) else modified_values
             for key in looper:
-                if key in keyset_to_save:
+                if log_every_field or key in keyset_to_save:
                     if not before_modification or (keyset_to_save_wo_value and key in keyset_to_save_wo_value):
                         log_formated = record._format_log(key)
                     elif before_modification:

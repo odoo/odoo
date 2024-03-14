@@ -156,10 +156,11 @@ class IrUiMenu(models.Model):
             if 'web_icon' in values:
                 values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
         res = super(IrUiMenu, self).create(vals_list)
-        _logger.info("%s %s by user %r (#%d)", LogType.IRUIMENU_CREATE,
-        ', '.join(f"{record.name} (#{record.id}) created with '{data}'" for record, data in
-        res._get_modified_value(self._fields_to_log, vals_list)), self.env.user.display_name,
-        self.env.user.id)
+        log_data = ', '.join(f"{record.name} (#{record.id}) created with '{data}'" for record, data in
+                            res._get_modified_value(self._fields_to_log, vals_list))
+        if log_data:
+            _logger.info("%s %s by user %r (#%d)", LogType.IRUIMENU_CREATE, log_data,
+                        self.env.user.display_name, self.env.user.id)
         return res
 
     def write(self, values):
@@ -168,10 +169,11 @@ class IrUiMenu(models.Model):
         if 'web_icon' in values:
             values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
         res = super(IrUiMenu, self).write(values)
-        _logger.info("%s %s by user %r (#%d)", LogType.IRUIMENU_MODIF,
-            ', '.join(f"{record.name} (#{record.id}) modified for '{data}'" for record, data in
-            self._get_modified_value(self._fields_to_log, values, _log_saved_data)), self.env.user.display_name,
-            self.env.user.id)
+        log_data = ', '.join(f"{record.name} (#{record.id}) modified for '{data}'" for record, data in
+                       self._get_modified_value(self._fields_to_log, values, _log_saved_data))
+        if log_data:
+            _logger.info("%s %s by user %r (#%d)", LogType.IRUIMENU_MODIF, log_data,
+                self.env.user.display_name, self.env.user.id)
         return res
 
     def _compute_web_icon_data(self, web_icon):
