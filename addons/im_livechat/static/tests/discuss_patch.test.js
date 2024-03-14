@@ -42,7 +42,6 @@ test("add livechat in the sidebar on visitor sending first message", async () =>
     rpc = rpcWithEnv(env);
     await openDiscuss();
     await contains(".o-mail-DiscussSidebar");
-    await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     // simulate livechat visitor sending a message
     withGuest(guestId, () =>
         rpc("/mail/message/post", {

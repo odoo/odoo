@@ -1,4 +1,10 @@
 import { Record } from "@mail/core/common/record";
+import { useSequential } from "@mail/utils/common/hooks";
+
+import { _t } from "@web/core/l10n/translation";
+import { sprintf } from "@web/core/utils/strings";
+
+const sequential = useSequential();
 
 export class LivechatChannel extends Record {
     static id = "id";
@@ -7,7 +13,6 @@ export class LivechatChannel extends Record {
         compute() {
             return {
                 extraClass: "o-mail-DiscussSidebarCategory-livechat",
-                hideWhenEmpty: true,
                 id: `im_livechat.category_${this.id}`,
                 livechatChannel: this,
                 name: this.name,
@@ -20,5 +25,39 @@ export class LivechatChannel extends Record {
     id;
     /** @type {string} */
     name;
+    hasSelfAsMember = false;
+    threads = Record.many("Thread", { inverse: "livechatChannel" });
+
+    async join({ notify = true } = {}) {
+        this.hasSelfAsMember = true;
+        if (notify) {
+            this._store.env.services.notification.add(_t("You joined %s.", this.name), {
+                type: "info",
+            });
+        }
+        await sequential(() =>
+            this._store.env.services.orm.call("im_livechat.channel", "action_join", [this.id])
+        );
+    }
+
+    get joinTitle() {
+        return sprintf(_t("Join %s"), this.name);
+    }
+
+    async leave({ notify = true } = {}) {
+        this.hasSelfAsMember = false;
+        if (notify) {
+            this._store.env.services.notification.add(_t("You left %s.", this.name), {
+                type: "info",
+            });
+        }
+        await sequential(() =>
+            this._store.env.services.orm.call("im_livechat.channel", "action_quit", [this.id])
+        );
+    }
+
+    get leaveTitle() {
+        return sprintf(_t("Leave %s"), this.name);
+    }
 }
 LivechatChannel.register();
