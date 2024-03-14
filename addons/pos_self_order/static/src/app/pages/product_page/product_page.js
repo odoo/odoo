@@ -63,10 +63,6 @@ export class ProductPage extends Component {
         return 0;
     }
 
-    back() {
-        this.router.navigate("product_list");
-    }
-
     changeQuantity(increase) {
         const currentQty = this.state.qty;
 
