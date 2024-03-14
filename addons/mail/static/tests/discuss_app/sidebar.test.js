@@ -1,6 +1,11 @@
 import { describe, expect, test } from "@odoo/hoot";
-
-import { rpc } from "@web/core/network/rpc";
+import {
+    Command,
+    getService,
+    onRpc,
+    patchWithCleanup,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 import {
     assertSteps,
     click,
@@ -15,9 +20,9 @@ import {
     step,
     triggerHotkey,
 } from "../mail_test_helpers";
-import { Command, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
+import { rpc } from "@web/core/network/rpc";
 import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
@@ -79,7 +84,7 @@ test("Opening a category sends the updated user setting to the server.", async (
     onRpc("/web/dataset/call_kw/res.users.settings/set_res_users_settings", (request) => {
         const { params } = request.json();
         step("/web/dataset/call_kw/res.users.settings/set_res_users_settings");
-        expect(params.kwargs.new_settings.is_discuss_sidebar_category_channel_open).toBeTruthy();
+        expect(params.kwargs.new_settings.is_discuss_sidebar_category_channel_open).toBe(true);
     });
     await start();
     await openDiscuss();
@@ -704,13 +709,13 @@ test("channel - avatar: should update avatar url from bus", async () => {
         avatarCacheKey: "notaDateCache",
         name: "test",
     });
-    const env = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(
         `img[data-src='${getOrigin()}/web/image/discuss.channel/${channelId}/avatar_128?unique=notaDateCache']`,
         { count: 2 }
     );
-    await env.services.orm.call("discuss.channel", "write", [
+    await getService("orm").call("discuss.channel", "write", [
         [channelId],
         { image_128: "This field does not matter" },
     ]);
@@ -729,8 +734,8 @@ test("channel - states: close should update the value on the server", async () =
         user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: true,
     });
-    const env = await start();
-    patchWithCleanup(env.services.orm, {
+    await start();
+    patchWithCleanup(getService("orm"), {
         async call(model, method, _, params) {
             const result = await super.call(...arguments);
             if (model === "res.users.settings" && method === "set_res_users_settings") {
@@ -753,8 +758,8 @@ test("channel - states: open should update the value on the server", async () =>
         user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    const env = await start();
-    patchWithCleanup(env.services.orm, {
+    await start();
+    patchWithCleanup(getService("orm"), {
         async call(model, method, _, params) {
             const result = await super.call(...arguments);
             if (model === "res.users.settings" && method === "set_res_users_settings") {
@@ -862,8 +867,8 @@ test("chat - states: close should call update server data", async () => {
         user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: true,
     });
-    const env = await start();
-    patchWithCleanup(env.services.orm, {
+    await start();
+    patchWithCleanup(getService("orm"), {
         async call(model, method) {
             const result = await super.call(...arguments);
             if (model === "res.users.settings" && method === "set_res_users_settings") {
@@ -876,12 +881,12 @@ test("chat - states: close should call update server data", async () => {
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
     await click(".o-mail-DiscussSidebarCategory-chat .btn", { text: "Direct messages" });
     await assertSteps(["set_res_users_settings"]);
-    const newSettings = await env.services.orm.call(
+    const newSettings = await getService("orm").call(
         "res.users.settings",
         "_find_or_create_for_user",
         [serverState.userId]
     );
-    expect(newSettings.is_discuss_sidebar_category_chat_open).not.toBeTruthy();
+    expect(newSettings.is_discuss_sidebar_category_chat_open).toBe(false);
 });
 
 test("chat - states: open should call update server data", async () => {
@@ -891,8 +896,8 @@ test("chat - states: open should call update server data", async () => {
         user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    const env = await start();
-    patchWithCleanup(env.services.orm, {
+    await start();
+    patchWithCleanup(getService("orm"), {
         async call(model, method) {
             const result = await super.call(...arguments);
             if (model === "res.users.settings" && method === "set_res_users_settings") {
@@ -905,12 +910,12 @@ test("chat - states: open should call update server data", async () => {
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
     await click(".o-mail-DiscussSidebarCategory-chat .btn", { text: "Direct messages" });
     await assertSteps(["set_res_users_settings"]);
-    const newSettings = await env.services.orm.call(
+    const newSettings = await getService("orm").call(
         "res.users.settings",
         "_find_or_create_for_user",
         [serverState.userId]
     );
-    expect(newSettings.is_discuss_sidebar_category_chat_open).toBeTruthy();
+    expect(newSettings.is_discuss_sidebar_category_chat_open).toBe(true);
 });
 
 test("chat - states: close from the bus", async () => {

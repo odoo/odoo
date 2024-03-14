@@ -102,7 +102,7 @@ test("pager", async () => {
 });
 
 test("view switcher hotkey cycles through views", async () => {
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction({

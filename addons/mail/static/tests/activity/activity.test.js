@@ -329,7 +329,7 @@ test("activity with mail template: send mail", async () => {
     onRpc("/web/dataset/call_kw/res.partner/activity_send_mail", (request) => {
         step("activity_send_mail");
         const { params } = request.json();
-        expect(params.args[0].length).toBe(1);
+        expect(params.args[0]).toHaveLength(1);
         expect(params.args[0][0]).toBe(partnerId);
         expect(params.args[1]).toBe(mailTemplateId);
         // random value returned in order for the mock server to know that this route is implemented.
@@ -427,7 +427,7 @@ test("activity click on cancel", async () => {
     onRpc("/web/dataset/call_kw/mail.activity/unlink", (request) => {
         step("unlink");
         const { params } = request.json();
-        expect(params.args[0].length).toBe(1);
+        expect(params.args[0]).toHaveLength(1);
         expect(params.args[0][0]).toBe(activityId);
     });
     await start();

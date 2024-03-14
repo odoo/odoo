@@ -1,13 +1,16 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { keyDown, keyUp, press, queryAll, queryOne, resize } from "@odoo/hoot-dom";
+import { describe, destroy, expect, getFixture, test } from "@odoo/hoot";
+import { keyDown, keyUp, press, queryAllTexts, queryOne, resize } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { makeDialogMockEnv } from "@web/../tests/_framework/env_test_helpers";
-import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { Component, onMounted, useState, xml } from "@odoo/owl";
+import {
+    contains,
+    getService,
+    makeDialogMockEnv,
+    mountWithCleanup,
+} from "@web/../tests/web_test_helpers";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
-
-import { Component, onMounted, useState, xml } from "@odoo/owl";
 
 describe.current.tags("desktop");
 
@@ -28,14 +31,14 @@ test("simple rendering", async () => {
     expect(".o_dialog header .modal-title").toHaveCount(1, {
         message: "the header is rendered by default",
     });
-    expect(queryOne("header .modal-title").textContent).toBe("Wow(l) Effect");
+    expect("header .modal-title").toHaveText("Wow(l) Effect");
     expect(".o_dialog main").toHaveCount(1, { message: "a dialog has always a main node" });
-    expect(queryOne("main").textContent).toBe(" Hello! ");
+    expect("main").toHaveText("Hello!");
     expect(".o_dialog footer").toHaveCount(1, { message: "the footer is rendered by default" });
     expect(".o_dialog footer button").toHaveCount(1, {
         message: "the footer is rendered with a single button 'Ok' by default",
     });
-    expect(queryOne("footer button").textContent).toBe("Ok");
+    expect("footer button").toHaveText("Ok");
 });
 
 test("hotkeys work on dialogs", async () => {
@@ -48,12 +51,16 @@ test("hotkeys work on dialogs", async () => {
         `;
         static props = ["*"];
     }
-    const env = await makeDialogMockEnv();
-    env.dialogData.close = () => expect.step("close");
-    env.dialogData.dismiss = () => expect.step("dismiss");
+    await makeDialogMockEnv({
+        dialogData: {
+            close: () => expect.step("close"),
+            dismiss: () => expect.step("dismiss"),
+            isActive: true,
+        },
+    });
     await mountWithCleanup(Parent);
-    expect(queryOne("header .modal-title").textContent).toBe("Wow(l) Effect");
-    expect(queryOne("footer button").textContent).toBe("Ok");
+    expect("header .modal-title").toHaveText("Wow(l) Effect");
+    expect("footer button").toHaveText("Ok");
     // Same effect as clicking on the x button
     press("escape");
     await animationFrame();
@@ -83,14 +90,8 @@ test("simple rendering with two dialogs", async () => {
     await makeDialogMockEnv();
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(2);
-    expect([...queryAll("header .modal-title")].map((el) => el.textContent)).toEqual([
-        "First Title",
-        "Second Title",
-    ]);
-    expect([...queryAll(".o_dialog .modal-body")].map((el) => el.textContent)).toEqual([
-        " Hello! ",
-        " Hello again! ",
-    ]);
+    expect(queryAllTexts("header .modal-title")).toEqual(["First Title", "Second Title"]);
+    expect(queryAllTexts(".o_dialog .modal-body")).toEqual(["Hello!", "Hello again!"]);
 });
 
 test("click on the button x triggers the service close", async () => {
@@ -104,9 +105,13 @@ test("click on the button x triggers the service close", async () => {
         static props = ["*"];
         static components = { Dialog };
     }
-    const env = await makeDialogMockEnv();
-    env.dialogData.close = () => expect.step("close");
-    env.dialogData.dismiss = () => expect.step("dismiss");
+    await makeDialogMockEnv({
+        dialogData: {
+            close: () => expect.step("close"),
+            dismiss: () => expect.step("dismiss"),
+            isActive: true,
+        },
+    });
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(1);
     await contains(".o_dialog header button.btn-close").click();
@@ -152,9 +157,13 @@ test("click on the default footer button triggers the service close", async () =
         static props = ["*"];
         static components = { Dialog };
     }
-    const env = await makeDialogMockEnv();
-    env.dialogData.close = () => expect.step("close");
-    env.dialogData.dismiss = () => expect.step("dismiss");
+    await makeDialogMockEnv({
+        dialogData: {
+            close: () => expect.step("close"),
+            dismiss: () => expect.step("dismiss"),
+            isActive: true,
+        },
+    });
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(1);
 
@@ -228,7 +237,7 @@ test("embed an arbitrary component in a dialog is possible", async () => {
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(1);
     expect(".o_dialog main .o_subcomponent").toHaveCount(1);
-    expect(queryOne(".o_subcomponent").textContent).toBe("Wow(l) Effect");
+    expect(".o_subcomponent").toHaveText("Wow(l) Effect");
     await contains(".o_subcomponent").click();
     expect(["subcomponent-clicked", "message received by parent"]).toVerifySteps();
 });
@@ -308,15 +317,17 @@ test("can be the UI active element", async () => {
             });
         }
     }
-    const env = await makeDialogMockEnv();
+    await makeDialogMockEnv();
     const parent = await mountWithCleanup(Parent);
-    parent.__owl__.app.destroy();
-    expect(env.services.ui.activeElement).toBe(document, {
+    destroy(parent);
+    expect(getService("ui").activeElement).toBe(document, {
         message: "UI owner should be reset to the default (document)",
     });
 });
 
 test("dialog can be moved", async () => {
+    getFixture().style.transform ||= "rotate(0)"; // force different stacking context
+
     class Parent extends Component {
         static template = xml`<Dialog>content</Dialog>`;
         static props = ["*"];
@@ -325,10 +336,11 @@ test("dialog can be moved", async () => {
     await makeDialogMockEnv();
     await mountWithCleanup(Parent);
     expect(".modal-content").toHaveStyle({
-        top: "0px",
         left: "0px",
+        top: "0px",
     });
 
+    const modalRect = queryOne(".modal").getBoundingClientRect();
     const header = queryOne(".modal-header");
     const headerRect = header.getBoundingClientRect();
     await contains(header).dragAndDrop(".modal-content", {
@@ -340,12 +352,14 @@ test("dialog can be moved", async () => {
         },
     });
     expect(".modal-content").toHaveStyle({
-        top: "50px",
-        left: "20px",
+        left: `${modalRect.y + 20}px`,
+        top: `${modalRect.x + 50}px`,
     });
 });
 
 test("dialog's position is reset on resize", async () => {
+    getFixture().style.transform ||= "rotate(0)"; // force different stacking context
+
     class Parent extends Component {
         static template = xml`<Dialog>content</Dialog>`;
         static props = ["*"];
@@ -354,10 +368,11 @@ test("dialog's position is reset on resize", async () => {
     await makeDialogMockEnv();
     await mountWithCleanup(Parent);
     expect(".modal-content").toHaveStyle({
-        top: "0px",
         left: "0px",
+        top: "0px",
     });
 
+    const modalRect = queryOne(".modal").getBoundingClientRect();
     const header = queryOne(".modal-header");
     const headerRect = header.getBoundingClientRect();
     await contains(header).dragAndDrop(".modal-content", {
@@ -369,14 +384,14 @@ test("dialog's position is reset on resize", async () => {
         },
     });
     expect(".modal-content").toHaveStyle({
-        top: "50px",
-        left: "20px",
+        left: `${modalRect.y + 20}px`,
+        top: `${modalRect.x + 50}px`,
     });
 
     resize(window, "resize");
     await animationFrame();
     expect(".modal-content").toHaveStyle({
-        top: "0px",
         left: "0px",
+        top: "0px",
     });
 });

@@ -184,14 +184,14 @@ test("is formatted by default", async () => {
 
 test("basic flow in editable list view", async () => {
     Product._records = [{ id: 1 }, { id: 2, price: 10 }];
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
     await mountView({
         type: "list",
         resModel: "product",
         arch: '<tree editable="bottom"><field name="price"/></tree>',
     });
     const zeroValues = queryAllTexts("td").filter((text) => text === "0");
-    expect(zeroValues.length).toBe(1, {
+    expect(zeroValues).toHaveLength(1, {
         message: "Unset integer values should not be rendered as zeros",
     });
     await contains("td.o_data_cell").click();

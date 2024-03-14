@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { queryAll, queryOne } from "@odoo/hoot-dom";
+import { queryAll, queryFirst } from "@odoo/hoot-dom";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -194,19 +194,19 @@ test.tags("desktop")("char field in editable list view", async () => {
     expect("tbody td:not(.o_list_record_selector)").toHaveCount(5, {
         message: "should have 5 cells",
     });
-    expect(queryAll("tbody td:not(.o_list_record_selector)")[0]).toHaveText("yop", {
+    expect("tbody td:not(.o_list_record_selector):first").toHaveText("yop", {
         message: "value should be displayed properly as text",
     });
 
     const cellSelector = "tbody td:not(.o_list_record_selector)";
     await contains(cellSelector).click();
-    expect(queryAll(cellSelector)[0].parentElement).toHaveClass("o_selected_row", {
+    expect(queryFirst(cellSelector).parentElement).toHaveClass("o_selected_row", {
         message: "should be set as edit mode",
     });
     expect(`${cellSelector} input`).toHaveValue("yop", {
         message: "should have the corect value in internal input",
     });
-    await fieldInput("name").edit("brolo");
+    await fieldInput("name").edit("brolo", { confirm: false });
 
     await contains(".o_list_button_save").click();
     expect(cellSelector).not.toHaveClass("o_selected_row", {
@@ -223,15 +223,15 @@ test("char field translatable", async () => {
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 
     let call_get_field_translations = 0;
-    onRpc(async (route, params) => {
-        if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+    onRpc(async (_, { args, method, model }) => {
+        if (method === "get_installed" && model === "res.lang") {
             return [
                 ["en_US", "English"],
                 ["fr_BE", "French (Belgium)"],
                 ["es_ES", "Spanish"],
             ];
         }
-        if (route === "/web/dataset/call_kw/res.partner/get_field_translations") {
+        if (method === "get_field_translations" && model === "res.partner") {
             if (call_get_field_translations === 0) {
                 call_get_field_translations = 1;
                 return [
@@ -254,8 +254,8 @@ test("char field translatable", async () => {
                 ];
             }
         }
-        if (route === "/web/dataset/call_kw/res.partner/update_field_translations") {
-            expect(params.args[2]).toEqual(
+        if (method === "update_field_translations" && model === "res.partner") {
+            expect(args[2]).toEqual(
                 { en_US: "bar", es_ES: false },
                 {
                     message:
@@ -335,15 +335,15 @@ test("translation dialog should close if field is not there anymore", async () =
             </sheet>
         </form>`,
     });
-    onRpc(async (route) => {
-        if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+    onRpc(async (_, { method, model }) => {
+        if (method === "get_installed" && model === "res.lang") {
             return [
                 ["en_US", "English"],
                 ["fr_BE", "French (Belgium)"],
                 ["es_ES", "Spanish"],
             ];
         }
-        if (route === "/web/dataset/call_kw/res.partner/get_field_translations") {
+        if (method === "get_field_translations" && model === "res.partner") {
             return [
                 [
                     { lang: "en_US", source: "yop", value: "yop" },
@@ -378,14 +378,14 @@ test("html field translatable", async () => {
 
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 
-    onRpc(async (route, params) => {
-        if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+    onRpc(async (route, { args, method, model }) => {
+        if (method === "get_installed" && model === "res.lang") {
             return [
                 ["en_US", "English"],
                 ["fr_BE", "French (Belgium)"],
             ];
         }
-        if (route === "/web/dataset/call_kw/res.partner/get_field_translations") {
+        if (method === "get_field_translations" && model === "res.partner") {
             return [
                 [
                     {
@@ -416,8 +416,8 @@ test("html field translatable", async () => {
             ];
         }
 
-        if (route === "/web/dataset/call_kw/res.partner/update_field_translations") {
-            expect(params.args[2]).toEqual(
+        if (method === "update_field_translations" && model === "res.partner") {
+            expect(args[2]).toEqual(
                 { en_US: { "first paragraph": "first paragraph modified" } },
                 {
                     message: "the new translation value should be written",
@@ -437,7 +437,7 @@ test("html field translatable", async () => {
     expect(".modal .o_translation_dialog .translation").toHaveCount(4, {
         message: "four rows should be visible",
     });
-    const enField = queryAll(".modal .o_translation_dialog .translation input")[0];
+    const enField = queryFirst(".modal .o_translation_dialog .translation input");
     expect(enField).toHaveValue("first paragraph", {
         message: "first part of english translation should be filled",
     });
@@ -494,7 +494,7 @@ test("char field trim (or not) characters", async () => {
     expect(".o_field_widget[name='name'] input").toHaveValue("abc", {
         message: "Name value should have been trimmed",
     });
-    expect(queryOne(".o_field_widget[name='foo2'] input").value).toBe("  def  ");
+    expect(".o_field_widget[name='foo2'] input:only").toHaveValue("  def  ");
 });
 
 test.tags("desktop")("input field: change value before pending onchange returns", async () => {
@@ -939,18 +939,18 @@ test("edit a char field should display the status indicator buttons without flic
         expect.step("onchange");
         await def;
     });
-    expect(queryOne(".o_form_status_indicator_buttons")).not.toBeVisible({
+    expect(".o_form_status_indicator_buttons").not.toBeVisible({
         message: "form view is not dirty",
     });
     await contains(".o_data_cell").click();
     await fieldInput("name").edit("a");
-    expect(queryOne(".o_form_status_indicator_buttons")).toBeVisible({
+    expect(".o_form_status_indicator_buttons").toBeVisible({
         message: "form view is dirty",
     });
     def.resolve();
     expect(["onchange"]).toVerifySteps();
     await animationFrame();
-    expect(queryOne(".o_form_status_indicator_buttons")).toBeVisible({
+    expect(".o_form_status_indicator_buttons").toBeVisible({
         message: "form view is dirty",
     });
     expect(["onchange"]).toVerifySteps();
