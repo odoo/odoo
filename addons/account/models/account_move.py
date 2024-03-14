@@ -4253,49 +4253,49 @@ class AccountMove(models.Model):
             ]
 
         limit = job_count + 1
-        to_process = self.env['account.move']._read_group(
+        to_process = self.env['account.move'].search(
             [('send_and_print_values', '!=', False)],
-            groupby=['company_id'],
-            aggregates=['id:recordset'],
             limit=limit,
+            order='id asc',
         )
         need_retrigger = len(to_process) > job_count
         if not to_process:
             return
 
-        for _company, moves in to_process[:job_count]:
-            try:
-                # Lock moves
-                with self.env.cr.savepoint(flush=False):
-                    self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(moves.ids)])
+        moves = to_process[:job_count]
 
-            except OperationalError as e:
-                if e.pgcode == '55P03':
-                    _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
-                else:
-                    raise
+        try:
+            # Lock moves
+            with self.env.cr.savepoint(flush=False):
+                self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(moves.ids)])
 
-            # Retrieve res.partner that executed the Send & Print wizard
-            sp_partner_ids = set(moves.mapped(lambda move: move.send_and_print_values.get('sp_partner_id')))
-            sp_partners = self.env['res.partner'].browse(sp_partner_ids)
-            moves_map = {
-                partner: moves.filtered(lambda m: m.send_and_print_values['sp_partner_id'] == partner.id)
-                for partner in sp_partners
-            }
+        except OperationalError as e:
+            if e.pgcode == '55P03':
+                _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
+            else:
+                raise
 
-            self.env['account.move.send']._process_send_and_print(moves)
+        # Retrieve res.partner that executed the Send & Print wizard
+        sp_partner_ids = set(moves.mapped(lambda move: move.send_and_print_values.get('sp_partner_id')))
+        sp_partners = self.env['res.partner'].browse(sp_partner_ids)
+        moves_map = {
+            partner: moves.filtered(lambda m: m.send_and_print_values['sp_partner_id'] == partner.id)
+            for partner in sp_partners
+        }
 
-            notifications = []
-            for partner, partner_moves in moves_map.items():
-                partner_moves_error = partner_moves.filtered(lambda m: m.send_and_print_values and m.send_and_print_values.get('error'))
-                if partner_moves_error:
-                    notifications.append(get_account_notification(partner, partner_moves_error, False))
-                partner_moves_success = partner_moves - partner_moves_error
-                if partner_moves_success:
-                    notifications.append(get_account_notification(partner, partner_moves_success, True))
-                partner_moves_error.send_and_print_values = False
+        self.env['account.move.send']._process_send_and_print(moves)
 
-            self.env['bus.bus']._sendmany(notifications)
+        notifications = []
+        for partner, partner_moves in moves_map.items():
+            partner_moves_error = partner_moves.filtered(lambda m: m.send_and_print_values and m.send_and_print_values.get('error'))
+            if partner_moves_error:
+                notifications.append(get_account_notification(partner, partner_moves_error, False))
+            partner_moves_success = partner_moves - partner_moves_error
+            if partner_moves_success:
+                notifications.append(get_account_notification(partner, partner_moves_success, True))
+            partner_moves_error.send_and_print_values = False
+
+        self.env['bus.bus']._sendmany(notifications)
 
         if need_retrigger:
             self.env.ref('account.ir_cron_account_move_send')._trigger()
