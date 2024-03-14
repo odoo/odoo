@@ -327,3 +327,28 @@ class StockPickingBatch(models.Model):
         if self.picking_type_id.batch_max_pickings:
             res = res and (len(self.picking_ids) + 1 <= self.picking_type_id.batch_max_pickings)
         return res
+
+    def _is_line_auto_mergeable(self, num_of_moves=False, num_of_pickings=False, weight=False):
+        """ Verifies if a line can be safely inserted into the wave without violating auto_batch_constrains.
+        """
+        self.ensure_one()
+        res = True
+        if num_of_moves:
+            res = res and self._are_moves_auto_mergeable(num_of_moves)
+        if num_of_pickings:
+            res = res and self._are_pickings_auto_mergeable(num_of_pickings)
+        return res
+
+    def _are_moves_auto_mergeable(self, num_of_moves):
+        self.ensure_one()
+        res = True
+        if self.picking_type_id.batch_max_lines:
+            res = res and (len(self.move_ids) + num_of_moves <= self.picking_type_id.batch_max_lines)
+        return res
+
+    def _are_pickings_auto_mergeable(self, num_of_pickings):
+        self.ensure_one()
+        res = True
+        if self.picking_type_id.batch_max_pickings:
+            res = res and (len(self.picking_ids) + num_of_pickings <= self.picking_type_id.batch_max_pickings)
+        return res

@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='second']" position="after">
                 <group name="batch" invisible="code not in ('incoming', 'outgoing', 'internal')">
-                    <group string="Batch Transfers" colspan="12">
+                    <group string="Batch &amp; Wave Transfers" colspan="12">
                         <group>
                             <field name="auto_batch"/>
                             <field name="batch_max_lines" invisible="not auto_batch"/>
@@ -15,7 +15,7 @@
                             <field name="batch_auto_confirm" invisible="not auto_batch"/>
                         </group>
                         <group>
-                            <span class="o_form_label fw-bold" invisible="not auto_batch">Group by</span>
+                            <span class="o_form_label fw-bold" invisible="not auto_batch">Batch Grouping</span>
                             <div name="batch_contact" class="o_row" invisible="not auto_batch">
                                 <field name="batch_group_by_partner"/>
                                 <label for="batch_group_by_partner" string="Contact"/>
@@ -34,6 +34,25 @@
                             <div name="batch_dest_subloc" class="o_row" invisible="not auto_batch or not default_location_dest_id" groups="stock.group_stock_multi_locations">
                                 <field name="batch_group_by_dest_loc"/>
                                 <label for="batch_group_by_dest_loc" string="Destination Location"/>
+                            </div>
+                            <span class="o_form_label fw-bold" invisible="not auto_batch" style="white-space: nowrap;">Wave Grouping</span>
+                            <div name="wave_product" class="o_row" invisible="not auto_batch">
+                                <field name="wave_group_by_product"/>
+                                <label for="wave_group_by_product"/>
+                            </div>
+                            <span invisible="not auto_batch"/>
+                            <div name="wave_category" class="o_row" invisible="not auto_batch">
+                                <field name="wave_group_by_category"/>
+                                <label for="wave_group_by_category"/>
+                                <field name="wave_category_ids" widget="many2many_tags" placeholder="Select product categories you want to group"
+                                    invisible="not wave_group_by_category" required="wave_group_by_category"/>
+                            </div>
+                            <span invisible="not auto_batch" groups="stock.group_stock_multi_locations"/>
+                            <div name="wave_location" class="o_row" invisible="not auto_batch" groups="stock.group_stock_multi_locations">
+                                <field name="wave_group_by_location"/>
+                                <label for="wave_group_by_location"/>
+                                <field name="wave_location_ids" widget="many2many_tags" placeholder="Select locations you want to group"
+                                    invisible="not wave_group_by_location" required="wave_group_by_location"/>
                             </div>
                         </group>
                     </group>
