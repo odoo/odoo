@@ -186,3 +186,16 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
             ('date_stop', '<=', end),
         ])
         self.assertEqual(len(work_entries.work_entry_type_id), 2)
+
+    def test_time_off_duration_contract_state_change(self):
+        # check that setting a contract without end state from
+        # expired to running won't erase the time off duration
+
+        leave = self.create_leave(datetime(2019, 10, 10, 9, 0), datetime(2019, 10, 10, 18, 0))
+        self.assertTrue(leave.number_of_days, 1)
+        contract = self.richard_emp.contract_ids
+        contract.state = "close"
+        contract.date_end = False
+        self.assertTrue(leave.number_of_days, 1)
+        contract.state = "open"
+        self.assertTrue(leave.number_of_days, 1)
