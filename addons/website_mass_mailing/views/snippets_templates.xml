@@ -209,6 +209,9 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
         </t>
         <div data-selector=".js_subscribe" data-drop-near="p, h1, h2, h3, blockquote, .card"/>
     </xpath>
+    <xpath expr="//div[@data-js='layout_column'][.//@data-select-layout='grid']" position="attributes">
+        <attribute name="data-exclude" add=".s_newsletter_block" separator=","/>
+    </xpath>
 </template>
 
 <template id="newsletter_subscribe_options_common">

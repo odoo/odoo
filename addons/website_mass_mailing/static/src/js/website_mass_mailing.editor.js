@@ -3,11 +3,26 @@ odoo.define('website_mass_mailing.editor', function (require) {
 
 var core = require('web.core');
 const Dialog = require('web.Dialog');
+const weSnippetEditor = require('web_editor.snippet.editor');
 var options = require('web_editor.snippets.options');
 
 const qweb = core.qweb;
 var _t = core._t;
 
+// TODO Remove in master: this is a stable patch to remove the "Layout" option
+// for the "Newsletter Block" snippet.
+weSnippetEditor.SnippetsMenu.include({
+    /**
+     * @override
+     */
+    _patchForComputeSnippetTemplates($html) {
+        this._super(...arguments);
+        const layoutOptionEl = $html.find("div[data-js='layout_column']:has(*[data-select-layout='grid'])")[0];
+        if (layoutOptionEl) {
+            layoutOptionEl.dataset.exclude += ",.s_newsletter_block";
+        }
+    },
+});
 
 options.registry.mailing_list_subscribe = options.Class.extend({
     /**
