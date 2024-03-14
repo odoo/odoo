@@ -178,7 +178,7 @@ class Ewaybill(models.Model):
 
     def generate_ewaybill(self):
         for ewaybill in self:
-            errors = ewaybill._check_ewaybill_configuration()
+            errors = ewaybill._check_configuration()
             if errors:
                 raise UserError('\n'.join(errors))
             ewaybill._generate_ewaybill_direct()
@@ -198,26 +198,30 @@ class Ewaybill(models.Model):
 
     def _is_overseas(self):
         self.ensure_one()
-        gst_treatment = self._get_gst_treatment()
+        gst_treatment = self._get_gst_treatment()[1]
         if gst_treatment in ('overseas', 'special_economic_zone'):
             return True
         return False
 
-    def _check_ewaybill_configuration(self):
+    def _check_configuration(self):
         error_message = []
-        methods_to_check = [self._check_ewaybill_partners, self._check_ewaybill_document_number, self._check_lines, self._check_gst_customer_treatment]
-        if self.mode == '0':
-            error_message += self._check_ewaybill_transporter()
+        methods_to_check =[
+            self._check_partners,
+            self._check_document_number,
+            self._check_lines,
+            self._check_gst_treatment,
+            self._check_transporter,
+        ]
         for get_error_message in methods_to_check:
             error_message.extend(get_error_message())
         return error_message
 
-    def _check_ewaybill_transporter(self):
-        if self.transporter_id and not self.transporter_id.vat:
+    def _check_transporter(self):
+        if self.mode == '0' and self.transporter_id and not self.transporter_id.vat:
             return [_("- Transporter %s does not have GST Number", self.transporter_id.name)]
         return []
 
-    def _check_ewaybill_partners(self):
+    def _check_partners(self):
         error_message = []
         partners = {self.partner_bill_to_id, self.partner_bill_from_id, self.partner_ship_to_id, self.partner_ship_from_id}
         for partner in partners:
@@ -228,15 +232,17 @@ class Ewaybill(models.Model):
     def _l10n_in_validate_partner(self, partner, is_company=False):
         message = []
         if partner.country_id.code == "IN":
-            if not partner.state_id.l10n_in_tin:
-                message.append(_("- State with TIN number is required"))
+            if partner.state_id and not partner.state_id.l10n_in_tin:
+                message.append(_("- TIN number not set in state %s", partner.state_id.name))
+            if not partner.state_id:
+                message.append(_("- State is required"))
             if not partner.zip or not re.match("^[0-9]{6}$", partner.zip):
                 message.append(_("- Zip code required and should be 6 digits"))
         if message:
             message.insert(0, "%s" % (partner.display_name))
         return message
 
-    def _check_ewaybill_document_number(self):
+    def _check_document_number(self):
         if not re.match("^.{1,16}$", self.document_number):
             return [_("Document number should be set and not more than 16 characters")]
         return []
@@ -253,17 +259,18 @@ class Ewaybill(models.Model):
                 ))
         return error_message
 
-    def _check_gst_customer_treatment(self):
-        if not self._get_gst_treatment():
-            return [_("Set GST Treatment for Partner")]
+    def _check_gst_treatment(self):
+        partner, gst_treatment = self._get_gst_treatment()
+        if not gst_treatment:
+            return [_("Set GST Treatment for in %s", partner.display_name)]
         return []
 
     def _get_gst_treatment(self):
         if self.picking_type_code == 'incoming':
-            gst_treatment = self.partner_bill_from_id.l10n_in_gst_treatment
+            partner = self.partner_bill_from_id
         else:
-            gst_treatment = self.partner_bill_to_id.l10n_in_gst_treatment
-        return gst_treatment
+            partner = self.partner_bill_to_id
+        return partner, gst_treatment
 
     def _write_error(self, error_message, blocking_level='error'):
         self.write({
@@ -410,11 +417,6 @@ class Ewaybill(models.Model):
         return partner.commercial_partner_id.vat or "URP"
 
     @api.model
-    def _get_partner_ship_address(self, partner):
-        address = ''.join(addr for addr in partner if addr.isalnum() or addr.isspace() or addr in '#-/')[:120]
-        return address
-
-    @api.model
     def _l10n_in_edi_extract_digits(self, string):
         if not string:
             return string
@@ -528,9 +530,9 @@ class Ewaybill(models.Model):
                 "fromTrdName": partner_bill_from_id.commercial_partner_id.name,
                 "fromStateCode": self._get_partner_state_code(partner_bill_from_id),
                 # Ship from
-                "fromAddr1": partner_ship_from_id.street and self._get_partner_ship_address(partner_ship_from_id.street) or "",
-                "fromAddr2": partner_ship_from_id.street2 and self._get_partner_ship_address(partner_ship_from_id.street2) or "",
-                "fromPlace": partner_ship_from_id.city if partner_ship_from_id.city and len(partner_ship_from_id.city) <= 50 else "",
+                "fromAddr1": partner_ship_from_id.street and partner_ship_from_id.street[:120] or "",
+                "fromAddr2": partner_ship_from_id.street2 and partner_ship_from_id.street2[:120] or "",
+                "fromPlace": partner_ship_from_id.city and partner_ship_from_id.city[:50] else "",
                 "fromPincode": self._get_partner_zip(partner_ship_from_id),
                 "actFromStateCode": self._get_partner_state_code(partner_ship_from_id),
                 # Bill to
@@ -538,9 +540,9 @@ class Ewaybill(models.Model):
                 "toTrdName": partner_bill_to_id.commercial_partner_id.name,
                 "actToStateCode": self._get_partner_state_code(partner_bill_to_id),
                 # Ship to
-                "toAddr1": partner_ship_to_id.street and self._get_partner_ship_address(partner_ship_to_id.street) or "",
-                "toAddr2": partner_ship_to_id.street2 and self._get_partner_ship_address(partner_ship_to_id.street2) or "",
-                "toPlace": partner_ship_to_id.city if partner_ship_to_id.city and len(partner_ship_to_id.city) <= 50 else "",
+                "toAddr1": partner_ship_to_id.street and partner_ship_to_id.street[:120] or "",
+                "toAddr2": partner_ship_to_id.street2 and partner_ship_to_id.street2[:120] or "",
+                "toPlace": partner_ship_to_id.city and partner_ship_to_id.city[:50] or "",
                 "toStateCode": self._get_partner_state_code(partner_ship_to_id),
                 "toPincode": self._get_partner_zip(partner_ship_to_id),
             }
