@@ -4,6 +4,7 @@ import { Component, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 export class OrdersHistoryPage extends Component {
     static template = "pos_self_order.OrdersHistoryPage";
     static props = {};
@@ -18,6 +19,9 @@ export class OrdersHistoryPage extends Component {
         await this.loadOrder();
     }
 
+    getOrderDate(order) {
+        return deserializeDateTime(order.date_order).toFormat("dd/MM/yyyy");
+    }
     async loadOrder() {
         await this.selfOrder.getOrdersFromServer();
         this.state.loadingProgress = false;

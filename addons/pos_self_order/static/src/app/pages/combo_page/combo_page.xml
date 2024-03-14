@@ -13,7 +13,7 @@
         <div class="d-flex flex-column overflow-y-auto bg-view flex-grow-1">
             <section t-if="!state.showResume" class="pos_self_order_breadcrumb position-relative px-3 px-md-0 pb-md-4 bg-view">
                 <div class="d-flex justify-content-around my-5">
-                    <div t-foreach="props.product.pos_combo_ids" t-as="combo_id" t-key="combo_id" class="position-relative">
+                    <div t-foreach="comboIds" t-as="combo_id" t-key="combo_id" class="position-relative">
                         <t t-set="isComboCurrent" t-value="currentComboId === combo_id"/>
                         <t t-set="isComboSelected" t-value="false"/>
                         <t t-set="isNextSelected" t-value="false"/>
@@ -97,7 +97,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <button class="btn btn-secondary ms-auto" t-on-click="() => this.editCombo(combo.id)">Edit</button>
+                        <button t-if="comboIds.includes(combo.id)" class="btn btn-secondary ms-auto" t-on-click="() => this.editCombo(combo.id)">Edit</button>
 
                     </li>
                 </ul>
