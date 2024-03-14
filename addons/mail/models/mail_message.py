@@ -560,7 +560,7 @@ class Message(models.Model):
     def _filtered_records(self):
         # Logging all the message modification would bloat the logs but logs messages from different user than the
         # author_id looks a good tradeoff
-        return self.filtered(lambda m: self.env.user.id != 1 and m.author_id.id != self.env.user.id )
+        return self.filtered(lambda m: self.env.user.id != 1 and m.author_id.id != self.env.user.id)
 
     @api.model_create_multi
     def create(self, values_list):

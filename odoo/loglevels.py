@@ -153,7 +153,7 @@ class LogType(Enum):
     IR_MODULE_ACCESS_DENIED = no_category_event_prefix + "0006"
 
     IRRULE_CREATE = no_category_event_prefix + "0007"
-    IRRULE_MODIFIED = no_category_event_prefix + "0008"
+    IRRULE_WRITE = no_category_event_prefix + "0008"
 
     IRRULE_ACCESS_DENIED = no_category_event_prefix + "0010"
     IRRULE_ACCESS_ALLOWED = no_category_event_prefix + "0011"
