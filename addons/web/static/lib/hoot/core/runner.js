@@ -2,7 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 
 import { markRaw, reactive, toRaw, whenReady } from "@odoo/owl";
-import { cleanupObservers, watchKeys } from "@web/../lib/hoot-dom/helpers/dom";
+import { cleanupDOM, watchKeys } from "@web/../lib/hoot-dom/helpers/dom";
 import { enableEventLogs, on } from "@web/../lib/hoot-dom/helpers/events";
 import { isIterable, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
@@ -834,7 +834,7 @@ export class TestRunner {
             cleanupWindow,
             cleanupNavigator,
             this.fixture.cleanup,
-            cleanupObservers,
+            cleanupDOM,
             cleanupTime
         );
         if (watchkeys) {
