@@ -404,6 +404,8 @@
                                 <field name="repeat_until" invisible="repeat_type != 'until'" required="repeat_type == 'until'"
                                        class="me-2" />
                             </div>
+                            <!-- Field needed to trigger its compute in project_enterprise, but will be replaced in an override defined in hr_timesheet module -->
+                            <field name="allocated_hours" invisible="1"/>
                         </group>
                     </group>
                         <field name="task_properties" columns="2"/>
