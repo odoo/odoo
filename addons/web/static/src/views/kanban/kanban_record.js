@@ -216,7 +216,7 @@ export class KanbanRecord extends Component {
         this.action = useService("action");
         this.dialog = useService("dialog");
         this.notification = useService("notification");
-        this.technical_chm = useState(useService("technical-chm"));
+        this.advanced = useState(useService("advanced"));
 
         const { Compiler, templates } = this.props;
         const ViewCompiler = Compiler || this.constructor.Compiler;

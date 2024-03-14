@@ -291,11 +291,11 @@ export class ViewCompiler {
             compiledNode = this.applyInvisible(invisible, compiledNode, params);
         }
 
-        const technical_chm = getModifier(node, "technical-chm");
-        if (technical_chm) {
+        const advanced = getModifier(node, "advanced");
+        if (advanced) {
             compiledNode.setAttribute(
                 "t-if",
-                (technical_chm === "1" ? "" : "!") + "__comp__.technical_chm.active"
+                (advanced === "1" ? "" : "!") + "__comp__.advanced.active"
             );
         }
 
@@ -406,7 +406,7 @@ export class ViewCompiler {
             "invisible",
             "readonly",
             "required",
-            "technical-chm",
+            "advanced",
         ];
         for (const attr of el.attributes) {
             if (metaAttrs.includes(attr.name)) {

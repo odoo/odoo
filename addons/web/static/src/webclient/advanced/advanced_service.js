@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { TechnicalItem } from "./technical_chm_item";
+import { TechnicalItem } from "./advanced_item";
 import { reactive } from "@odoo/owl";
 
-export const technicalService = {
+export const advancedService = {
     start(env) {
         function technicalItem() {
             return {
@@ -19,4 +19,4 @@ export const technicalService = {
     },
 };
 
-registry.category("services").add("technical-chm", technicalService);
+registry.category("services").add("advanced", advancedService);

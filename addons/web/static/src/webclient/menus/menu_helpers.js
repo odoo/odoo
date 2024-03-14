@@ -36,7 +36,7 @@ export function computeAppsAndMenuItems(menuTree) {
             actionID: menuItem.actionID,
             href: `/odoo/${menuItem.actionPath || "action-" + menuItem.actionID}`,
             appID: menuItem.appID,
-            technical_chm: menuItem.technical_chm,
+            advanced: menuItem.advanced,
         };
         if (isApp) {
             if (menuItem.webIconData) {

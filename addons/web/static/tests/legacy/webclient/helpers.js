@@ -2,7 +2,7 @@
 
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { notificationService } from "@web/core/notifications/notification_service";
-import { technicalService } from "@web/webclient/technical_chm/technical_chm_service";
+import { advancedService } from "@web/webclient/advanced/advanced_service";
 import { ormService } from "@web/core/orm_service";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
@@ -76,7 +76,7 @@ export function setupWebClientRegistries() {
         view: () => viewService,
         company: () => fakeCompanyService,
         datetime_picker: () => datetimePickerService,
-        "technical-chm": () => technicalService,
+        "advanced": () => advancedService,
     };
     for (const serviceName in services) {
         if (!serviceRegistry.contains(serviceName)) {

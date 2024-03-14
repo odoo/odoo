@@ -35,11 +35,11 @@ export class WebClient extends Component {
                 { sequence: 100 }
             );
         }
-        const technical_chm = useService("technical-chm");
+        const advanced = useService("advanced");
         useCommand(
             _t("Technical Mode"),
             () => {
-                technical_chm.active = !technical_chm.active;
+                advanced.active = !advanced.active;
             },
             {
                 category: "debug",

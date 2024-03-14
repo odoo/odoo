@@ -7,9 +7,9 @@ export class TechnicalItem extends Component {
     static template = "web.DebugMenu.TechnicalItem";
     static props = {};
     setup() {
-        this.technical_chm = useState(useService("technical-chm"));
+        this.advanced = useState(useService("advanced"));
     }
     toggleMode() {
-        this.technical_chm.active = !this.technical_chm.active;
+        this.advanced.active = !this.advanced.active;
     }
 }

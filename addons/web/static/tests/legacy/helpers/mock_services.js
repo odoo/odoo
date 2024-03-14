@@ -170,7 +170,7 @@ export const fakeCommandService = {
     },
 };
 
-export const fakeTechnicalService = {
+export const fakeAdvancedService = {
     start() {
         return { active: false };
     },
@@ -312,5 +312,5 @@ export const mocks = {
     orm: () => ormService,
     action: makeFakeActionService,
     overlay: () => overlayService,
-    "technical-chm": () => fakeTechnicalService,
+    "advanced": () => fakeAdvancedService,
 };
