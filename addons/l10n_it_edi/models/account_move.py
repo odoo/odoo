@@ -687,12 +687,13 @@ class AccountMove(models.Model):
             :param proxy_user:     the AccountEdiProxyClientUser to use for decrypting the file
         """
 
-        # Name should be unique, the invoice already exists
-        Attachment = self.env['ir.attachment']
+        # Name should be unique per company, the invoice already exists
+        Attachment = self.env['ir.attachment'].sudo().with_company(proxy_user.company_id)
         if Attachment.search_count([
             ('name', '=', filename),
             ('res_model', '=', 'account.move'),
             ('res_field', '=', 'l10n_it_edi_attachment_file'),
+            ('company_id', '=', proxy_user.company_id.id),
         ], limit=1):
             _logger.warning('E-invoice already exists: %s', filename)
             return False
@@ -705,7 +706,7 @@ class AccountMove(models.Model):
             return False
 
         # Create the attachment, an empty move, then attach the two and commit
-        move = self.create({})
+        move = self.with_company(proxy_user.company_id).create({})
         attachment = Attachment.create({
             'name': filename,
             'raw': decrypted_content,
