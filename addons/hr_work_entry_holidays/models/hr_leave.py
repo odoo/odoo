@@ -40,9 +40,7 @@ class HrLeave(models.Model):
             ('date_start', '<=', self.date_to),
             '|',
                 ('date_end', '>=', self.date_from),
-                '&',
-                    ('date_end', '=', False),
-                    ('state', '!=', 'close')
+                ('date_end', '=', False),
         ]])
         return self.env['hr.contract'].sudo().search(domain)
 
