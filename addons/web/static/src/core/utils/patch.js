@@ -35,7 +35,9 @@ function isClassPrototype(objToPatch) {
     // isClassPrototype(A.prototype) === true
     // isClassPrototype(new A()) === false
     // isClassPrototype({}) === false
-    return Object.hasOwn(objToPatch, "constructor") && objToPatch.constructor?.prototype === objToPatch;
+    return (
+        Object.hasOwn(objToPatch, "constructor") && objToPatch.constructor?.prototype === objToPatch
+    );
 }
 
 /**
@@ -61,14 +63,16 @@ function findAncestorPropertyDescriptor(objToPatch, key) {
  * you want to patch static properties/methods.
  *
  * @template T
- * @template {T} U
+ * @template {Partial<T>} U
  * @param {T} objToPatch The object to patch
  * @param {U} extension The object containing the patched properties
  * @returns {() => void} Returns an unpatch function
  */
 export function patch(objToPatch, extension) {
     if (typeof extension === "string") {
-        throw new Error(`Patch "${extension}": Second argument is not the patch name anymore, it should be the object containing the patched properties`);
+        throw new Error(
+            `Patch "${extension}": Second argument is not the patch name anymore, it should be the object containing the patched properties`
+        );
     }
 
     const description = getPatchDescription(objToPatch);
