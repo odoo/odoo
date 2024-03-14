@@ -188,7 +188,7 @@
                                     <field name="include_base_amount" invisible="amount_type == 'group'"/>
                                     <field name="is_base_affected"
                                            invisible="amount_type == 'group' or price_include"
-                                           technical-chm="1"/>
+                                           advanced="1"/>
                                     <field name="hide_tax_exigibility" invisible="1"/>
                                     <field name="tax_exigibility" widget="radio" invisible="amount_type == 'group' or not hide_tax_exigibility" groups="account.group_account_readonly"/>
                                     <field name="cash_basis_transition_account_id" options="{'no_create': True}" invisible="tax_exigibility == 'on_invoice'" required="tax_exigibility == 'on_payment'" groups="account.group_account_readonly"/>

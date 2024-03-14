@@ -135,7 +135,7 @@ class TestO2M(BaseImportCase):
                          'required': False, 'fields': [], 'type': 'integer', 'model_name': base_import_model('o2m.child'),
                         },
                         {'id': '.id', 'name': '.id', 'string': 'Database ID',
-                        'required': False, 'fields': [], 'type': 'id', 'technical-chm': True},
+                        'required': False, 'fields': [], 'type': 'id', 'advanced': True},
                     ]
                 }
             ]

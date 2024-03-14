@@ -31,7 +31,7 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Moves" create="0" default_order="date desc">
-                    <field name="date" technical-chm="1" decoration-danger="(state not in ('cancel','done')) and date > current_date"/>
+                    <field name="date" advanced="1" decoration-danger="(state not in ('cancel','done')) and date > current_date"/>
                     <field name="reference"/>
                     <field name="picking_type_id" column_invisible="True"/>
                     <field name="location_usage" column_invisible="True"/>
@@ -317,12 +317,12 @@
                                 <field name="date_deadline" force_save="1"/>
                             </group>
                         </group>
-                        <group name="origin_grp" string="Origin" technical-chm="1" >
+                        <group name="origin_grp" string="Origin" advanced="1" >
                             <field name="origin"/>
                             <field name="group_id"/>
                             <field name="procure_method" readonly="state != 'draft'" groups="stock.group_adv_location"/>
                         </group>
-                        <group name="linked_group" string="Linked Moves" technical-chm="1" colspan="2">
+                        <group name="linked_group" string="Linked Moves" advanced="1" colspan="2">
                             <field name="move_orig_ids" string="Origin Moves" readonly="1">
                                 <tree>
                                     <field name="location_id"/>

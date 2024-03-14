@@ -325,10 +325,10 @@
                     </group>
                     <group name="order_details">
                         <field name="validity_date" invisible="state == 'sale'" readonly="state in ['cancel', 'sale']"/>
-                        <div class="o_td_label" technical-chm="1" invisible="state in ['sale', 'cancel']">
+                        <div class="o_td_label" advanced="1" invisible="state in ['sale', 'cancel']">
                             <label for="date_order" string="Quotation Date"/>
                         </div>
-                        <field name="date_order" nolabel="1" technical-chm="1" invisible="state in ['sale', 'cancel']" readonly="state in ['cancel', 'sale']"/>
+                        <field name="date_order" nolabel="1" advanced="1" invisible="state in ['sale', 'cancel']" readonly="state in ['cancel', 'sale']"/>
                         <div class="o_td_label" invisible="state in ['draft', 'sent']">
                             <label for="date_order" string="Order Date"/>
                         </div>
@@ -447,7 +447,7 @@
                                 <label for="name" string="Section Name (eg. Products, Services)" invisible="display_type != 'line_section'"/>
                                 <label for="name" string="Note" invisible="display_type != 'line_note'"/>
                                 <field name="name"/>
-                                <div name="invoice_lines" technical-chm="1" invisible="display_type">
+                                <div name="invoice_lines" advanced="1" invisible="display_type">
                                     <label for="invoice_lines"/>
                                     <field name="invoice_lines"/>
                                 </div>
@@ -736,10 +736,10 @@
                                 </div>
                                 <field name="partner_invoice_id" groups="!account.group_delivery_invoice_address" invisible="1"/>
                                 <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" readonly="invoice_count != 0 and state == 'sale'" groups="analytic.group_analytic_accounting" force_save="1"/>
-                                <field name="journal_id" technical-chm="1" readonly="invoice_count != 0 and state == 'sale'"/>
-                                <field name="invoice_status" invisible="state != 'sale'" technical-chm="1"/>
+                                <field name="journal_id" advanced="1" readonly="invoice_count != 0 and state == 'sale'"/>
+                                <field name="invoice_status" invisible="state != 'sale'" advanced="1"/>
                                 <!-- test_event_configurator -->
-                                <field name="invoice_status" invisible="1" technical-chm="0"/>
+                                <field name="invoice_status" invisible="1" advanced="0"/>
                             </group>
                             <group name="sale_shipping" string="Shipping">
                                 <label for="commitment_date" string="Delivery Date"/>
@@ -756,7 +756,7 @@
                             </group>
                         </group>
                     </page>
-                    <page technical-chm="1" string="Customer Signature" name="customer_signature" invisible="not require_signature and not signed_by and not signature and not signed_on">
+                    <page advanced="1" string="Customer Signature" name="customer_signature" invisible="not require_signature and not signed_by and not signature and not signed_on">
                         <group>
                             <field name="signed_by" readonly="signature"/>
                             <field name="signed_on" readonly="signature"/>

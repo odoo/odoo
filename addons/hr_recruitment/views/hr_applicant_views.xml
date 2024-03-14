@@ -126,7 +126,7 @@
                         <field name="partner_id" invisible="1" />
                         <field name="refuse_reason_id" invisible="active"/>
                         <field name="email_from" widget="email"/>
-                        <field name="email_cc" technical-chm="1"/>
+                        <field name="email_cc" advanced="1"/>
                         <field name="partner_phone" widget="phone"/>
                         <field name="partner_mobile" widget="phone"/>
                         <field name="linkedin_profile" widget="url"/>
@@ -570,7 +570,7 @@
         name="Stages"
         parent="menu_hr_recruitment_config_jobs"
         action="hr_recruitment_stage_act"
-        technical-chm="1"
+        advanced="1"
         sequence="1"/>
 
     <menuitem
@@ -584,14 +584,14 @@
         id="hr_applicant_category_menu"
         parent="menu_hr_recruitment_config_applications"
         action="hr_applicant_category_action"
-        sequence="20" technical-chm="1"/>
+        sequence="20" advanced="1"/>
 
     <menuitem
         id="menu_hr_recruitment_degree"
         name="Degrees"
         parent="menu_hr_recruitment_config_applications"
         action="hr_recruitment_degree_action"
-        sequence="1" technical-chm="1"/>
+        sequence="1" advanced="1"/>
 
     <record id="hr_applicant_view_pivot" model="ir.ui.view">
         <field name="name">hr.applicant.pivot</field>
@@ -770,7 +770,7 @@ if records:
         id="menu_hr_recruitment_utm"
         parent="menu_hr_recruitment_configuration"
         name="UTMs"
-        technical-chm="1"
+        advanced="1"
         sequence="15"/>
 
     <menuitem
@@ -778,7 +778,7 @@ if records:
         parent="menu_hr_recruitment_utm"
         name="Sources"
         action="utm.utm_source_action"
-        technical-chm="1"
+        advanced="1"
         sequence="15"/>
 
     <menuitem
@@ -786,7 +786,7 @@ if records:
         parent="menu_hr_recruitment_utm"
         name="Mediums"
         action="utm.utm_medium_action"
-        technical-chm="1"
+        advanced="1"
         sequence="15"/>
 
     </data>

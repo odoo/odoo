@@ -467,7 +467,7 @@
                                         column_invisible="not parent.allow_milestones"
                                         invisible="not allow_milestones"/>
                                     <field name="partner_id" optional="hide" widget="res_partner_many2one" invisible="not project_id"/>
-                                    <field name="parent_id" optional="hide" technical-chm="1"/>
+                                    <field name="parent_id" optional="hide" advanced="1"/>
                                     <field name="user_ids" widget="many2many_avatar_user" optional="show"/>
                                     <field name="company_id" optional="hide" groups="base.group_multi_company" />
                                     <field name="company_id" column_invisible="True"/>
@@ -482,19 +482,19 @@
                                 </tree>
                             </field>
                         </page>
-                        <page name="extra_info" string="Extra Info" technical-chm="1">
+                        <page name="extra_info" string="Extra Info" advanced="1">
                             <group>
                                 <group>
-                                    <field name="parent_id" technical-chm="1" context="{'search_view_ref' : 'project.view_task_search_form','search_default_project_id': project_id, 'search_default_open_tasks': 1}"/>
+                                    <field name="parent_id" advanced="1" context="{'search_view_ref' : 'project.view_task_search_form','search_default_project_id': project_id, 'search_default_open_tasks': 1}"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" context="{'default_partner_id': partner_id, 'default_company_id': company_id}"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                    <field name="sequence" technical-chm="1"/>
-                                    <field name="email_cc" technical-chm="1"/>
-                                    <field name="displayed_image_id" technical-chm="1" options="{'no_create': True}"/>
+                                    <field name="sequence" advanced="1"/>
+                                    <field name="email_cc" advanced="1"/>
+                                    <field name="displayed_image_id" advanced="1" options="{'no_create': True}"/>
                                 </group>
                                 <group>
-                                    <field name="date_assign" technical-chm="1"/>
-                                    <field name="date_last_stage_update" technical-chm="1"/>
+                                    <field name="date_assign" advanced="1"/>
+                                    <field name="date_last_stage_update" advanced="1"/>
                                 </group>
                                 <group string="Working Time to Assign" invisible="working_hours_open == 0.0">
                                     <field name="working_hours_open" widget="float_time" string="Hours"/>
@@ -542,7 +542,7 @@
                         <field name="user_ids" options="{'no_open': True, 'no_quick_create': True}"
                             widget="many2many_avatar_user"/>
                         <field name="company_id" invisible="1"/>
-                        <field name="parent_id" invisible="1" technical-chm="1"/>
+                        <field name="parent_id" invisible="1" advanced="1"/>
                         <field name="description" invisible="1"/>
                     </group>
                 </form>
@@ -734,7 +734,7 @@
                     <field name="recurrence_id" column_invisible="True" />
                 </tree>
                 <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="parent_id" optional="hide" context="{'search_view_ref': 'project.view_task_search_form', 'search_default_project_id': project_id}" technical-chm="1"/>
+                    <field name="parent_id" optional="hide" context="{'search_view_ref': 'project.view_task_search_form', 'search_default_project_id': project_id}" advanced="1"/>
                 </xpath>
                 <xpath expr="//field[@name='stage_id']" position="after">
                     <field name="personal_stage_type_id" string="Personal Stage" optional="hide"/>
