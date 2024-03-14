@@ -195,7 +195,7 @@ class IrModule(models.Model):
         } for asset in created_assets])
 
         mod._update_from_terp(terp)
-
+        _logger.info("Successfully imported module '%s'", module)
         return True
 
     @api.model
