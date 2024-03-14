@@ -35,7 +35,7 @@ class IrUiMenu(models.Model):
                     "webIconData": None,
                     "webIconDataMimetype": None,
                     "backgroundImage": menu.get('backgroundImage'),
-                    "technical_chm": False,
+                    "advanced": False,
                 }
             else:
                 action = menu['action']
@@ -66,7 +66,7 @@ class IrUiMenu(models.Model):
                     "webIcon": menu['web_icon'],
                     "webIconData": menu['web_icon_data'],
                     "webIconDataMimetype": menu['web_icon_data_mimetype'],
-                    "technical_chm": menu['technical_chm'],
+                    "advanced": menu['advanced'],
                 }
 
         return web_menus

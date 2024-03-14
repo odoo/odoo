@@ -269,13 +269,13 @@ class WithContext(HttpCase):
             # first call, no debug, traceback should not be visible
             r = self.url_open(self.page.url)
             self.assertEqual(r.status_code, 500, "15/0 raise a 500 error page")
-            self.assertIn('technical-chm="1"', r.text, "Error should not be shown when not in editable but present for the advanced mode.")
+            self.assertIn('advanced="1"', r.text, "Error should not be shown when not in editable but present for the advanced mode.")
             self.assertIn('ZeroDivisionError: division by zero', r.text, "Error must be shown in the advanced part.")
 
             # second call, enable debug, traceback should be visible
             r = self.url_open(self.page.url + '?debug=assets')
             self.assertEqual(r.status_code, 500, "15/0 raise a 500 error page (2)")
-            self.assertIn('technical-chm="1"', r.text, "Error should not be shown when not in editable but present for the advanced mode.")
+            self.assertIn('advanced="1"', r.text, "Error should not be shown when not in editable but present for the advanced mode.")
             self.assertIn('ZeroDivisionError: division by zero', r.text, "Error must be shown in the advanced part.")
 
             # third call, no explicit debug but it should be enabled by

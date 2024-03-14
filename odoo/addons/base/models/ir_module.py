@@ -895,7 +895,7 @@ class Module(models.Model):
                 'base.module_category_website_theme',
                 'base.module_category_theme',
             ]
-            if not kwargs.get('technical_chm'):
+            if not kwargs.get('advanced'):
                 excluded_xmlids.append('base.module_category_hidden')
 
             excluded_category_ids = []

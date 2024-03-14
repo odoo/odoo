@@ -48,7 +48,7 @@ class TestACL(TransactionCaseWithUserDemo):
 
         # Verify the test environment first
         original_fields = currency.fields_get([])
-        # <group technical-chm="">
+        # <group advanced="">
         #     <group string="Price Accuracy">
         #         <field name="rounding"/>
         #         <field name="decimal_places"/>
