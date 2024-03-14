@@ -1,5 +1,6 @@
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { AND, Record } from "@mail/core/common/record";
+import { compareDatetime } from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -282,6 +283,17 @@ export class Thread extends Record {
     canPostOnReadonly;
     /** @type {luxon.DateTime} */
     last_interest_dt = Record.attr(undefined, { type: "datetime" });
+    /** @type {luxon.DateTime} */
+    lastInterestDt = Record.attr(undefined, {
+        type: "datetime",
+        compute() {
+            const selfMemberLastInterestDt = this.selfMember?.last_interest_dt;
+            const lastInterestDt = this.last_interest_dt;
+            return compareDatetime(selfMemberLastInterestDt, lastInterestDt) > 0
+                ? selfMemberLastInterestDt
+                : lastInterestDt;
+        },
+    });
     /** @type {Boolean} */
     is_editable;
     /** @type {false|'mentions'|'no_notif'} */

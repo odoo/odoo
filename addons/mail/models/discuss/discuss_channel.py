@@ -6,6 +6,7 @@ from collections import defaultdict
 from hashlib import sha512
 from secrets import choice
 from markupsafe import Markup
+from datetime import timedelta
 
 from odoo import _, api, fields, models, tools, Command
 from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
@@ -68,6 +69,7 @@ class Channel(models.Model):
     rtc_session_ids = fields.One2many('discuss.channel.rtc.session', 'channel_id', groups="base.group_system")
     is_member = fields.Boolean('Is Member', compute='_compute_is_member', search='_search_is_member')
     member_count = fields.Integer(string="Member Count", compute='_compute_member_count', compute_sudo=True)
+    last_interest_dt = fields.Datetime("Last Interest", index=True, help="Contains the date and time of the last interesting event that happened in this channel. This updates itself when new message posted.")
     group_ids = fields.Many2many(
         'res.groups', string='Auto Subscription',
         help="Members of those groups will automatically added as followers. "
@@ -232,7 +234,7 @@ class Channel(models.Model):
                 if cmd[0] != 0:
                     raise ValidationError(_('Invalid value when creating a channel with memberships, only 0 is allowed.'))
                 for field_name in cmd[2]:
-                    if field_name not in ["partner_id", "guest_id", "is_pinned", "fold_state"]:
+                    if field_name not in ["partner_id", "guest_id", "unpin_dt", "last_interest_dt", "fold_state"]:
                         raise ValidationError(
                             _(
                                 "Invalid field “%(field_name)s” when creating a channel with members.",
@@ -660,11 +662,8 @@ class Channel(models.Model):
         if (not self.env.user or self.env.user._is_public()) and self.is_member:
             # sudo: discuss.channel - guests don't have access for creating mail.message
             self = self.sudo()
-        # sudo: discuss.channel.member - updating hard-coded fields/values for non-self members
-        self.sudo().channel_member_ids.write({
-            'is_pinned': True,
-            'last_interest_dt': fields.Datetime.now(),
-        })
+        # sudo: discuss.channel - write to discuss.channel is not accessible for most users
+        self.sudo().last_interest_dt = fields.Datetime.now()
         # mail_post_autofollow=False is necessary to prevent adding followers
         # when using mentions in channels. Followers should not be added to
         # channels, and especially not automatically (because channel membership
@@ -848,6 +847,7 @@ class Channel(models.Model):
             'authorizedGroupFullName': self.group_public_id.full_name,
             'allow_public_upload': self.allow_public_upload,
             'model': "discuss.channel",
+            'last_interest_dt': fields.Datetime.to_string(self.last_interest_dt),
         }
 
     def _channel_info(self):
@@ -900,7 +900,7 @@ class Channel(models.Model):
                 info['message_needaction_counter'] = channel.message_needaction_counter
                 member = member_of_current_user_by_channel.get(channel, self.env['discuss.channel.member']).with_prefetch([m.id for m in member_of_current_user_by_channel.values()])
                 if member:
-                    info['channelMembers'] = [('ADD', list(member._discuss_channel_member_format().values()))]
+                    info['channelMembers'] = [('ADD', list(member._discuss_channel_member_format(extra_fields={"last_interest_dt": True}).values()))]
                     info['state'] = member.fold_state or 'closed'
                     info['message_unread_counter'] = member.message_unread_counter
                     info['custom_notifications'] = member.custom_notifications
@@ -908,7 +908,6 @@ class Channel(models.Model):
                     info['seen_message_id'] = member.seen_message_id.id
                     info['custom_channel_name'] = member.custom_channel_name
                     info['is_pinned'] = member.is_pinned
-                    info['last_interest_dt'] = fields.Datetime.to_string(member.last_interest_dt)
                     if member.rtc_inviting_session_id:
                         info['rtcInvitingSession'] = member.rtc_inviting_session_id._mail_rtc_session_format()
             # add members info
@@ -996,7 +995,7 @@ class Channel(models.Model):
                 member = self.env['discuss.channel.member'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', channel.id)])
                 vals = {'last_interest_dt': fields.Datetime.now()}
                 if pin:
-                    vals['is_pinned'] = True
+                    vals['unpin_dt'] = False
                 if force_open:
                     vals['fold_state'] = "open"
                 member.write(vals)
@@ -1008,7 +1007,8 @@ class Channel(models.Model):
                     Command.create({
                         'partner_id': partner_id,
                         # only pin for the current user, so the chat does not show up for the correspondent until a message has been sent
-                        'is_pinned': partner_id == self.env.user.partner_id.id
+                        # one more second to make sure that it works well with the default last_interest_dt (datetime.now())
+                        'unpin_dt': False if partner_id == self.env.user.partner_id.id else fields.Datetime.now() + timedelta(seconds=1),
                     }) for partner_id in partners_to
                 ],
                 'channel_type': 'chat',
@@ -1022,7 +1022,7 @@ class Channel(models.Model):
         member = self.env['discuss.channel.member'].search(
             [('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', self.id), ('is_pinned', '!=', pinned)])
         if member:
-            member.write({'is_pinned': pinned})
+            member.write({'unpin_dt': False if pinned else fields.Datetime.now()})
         if not pinned:
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'discuss.channel/unpin', {'id': self.id})
         else:

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
 import base64
 import random
 import re
@@ -153,7 +154,15 @@ class ImLivechatChannel(models.Model):
                 return False
         # partner to add to the discuss.channel
         operator_partner_id = user_operator.partner_id.id if user_operator else chatbot_script.operator_partner_id.id
-        members_to_add = [Command.create({'partner_id': operator_partner_id, 'is_pinned': False})]
+        members_to_add = [
+            Command.create({
+                # making sure the unpin_dt is always later than the last_interest_dt
+                # so that the channel is always unpinned at first
+                'last_interest_dt': fields.Datetime.now() - timedelta(seconds=30),
+                'partner_id': operator_partner_id,
+                'unpin_dt': fields.Datetime.now(),
+            })
+        ]
         visitor_user = False
         if user_id:
             visitor_user = self.env['res.users'].browse(user_id)

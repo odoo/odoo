@@ -22,7 +22,7 @@ class TestDiscussFullPerformance(HttpCase):
     #     1: has_access_livechat
     _query_count_init_store = 17
     _query_count = 48 + 1  # +1 is necessary to fix nondeterministic issue on runbot
-    _query_count_discuss_channels = 69
+    _query_count_discuss_channels = 68
 
     def setUp(self):
         super().setUp()
@@ -285,7 +285,7 @@ class TestDiscussFullPerformance(HttpCase):
     def _expected_result_for_channel(self, channel):
         members = channel.channel_member_ids
         member_0 = members.filtered(lambda m: m.partner_id == self.users[0].partner_id)
-        last_interest_dt = fields.Datetime.to_string(member_0.last_interest_dt)
+        member_0_last_interest_dt = fields.Datetime.to_string(member_0.last_interest_dt)
         member_0_create_date = fields.Datetime.to_string(member_0.create_date)
         write_date_0 = fields.Datetime.to_string(self.users[0].partner_id.write_date)
         member_1 = members.filtered(lambda m: m.partner_id == self.users[1].partner_id)
@@ -297,6 +297,7 @@ class TestDiscussFullPerformance(HttpCase):
         member_g = members.filtered(lambda m: m.guest_id)
         guest = member_g.guest_id
         last_message = channel._get_last_messages()
+        last_interest_dt = fields.Datetime.to_string(channel.last_interest_dt)
         if channel == self.channel_general:
             return {
                 "allow_public_upload": False,
@@ -317,6 +318,7 @@ class TestDiscussFullPerformance(HttpCase):
                                         "model": "discuss.channel",
                                     },
                                     "id": member_0.id,
+                                    "last_interest_dt": member_0_last_interest_dt,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
@@ -351,7 +353,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "invitedMembers": [["ADD", []]],
                 "is_editable": False,
                 "is_pinned": True,
-                "last_interest_dt": last_interest_dt,
+                "last_interest_dt": False,
                 "message_needaction_counter": 0,
                 "name": "general",
                 "rtcSessions": [["ADD", []]],
@@ -381,6 +383,7 @@ class TestDiscussFullPerformance(HttpCase):
                                         "model": "discuss.channel",
                                     },
                                     "id": member_0.id,
+                                    "last_interest_dt": member_0_last_interest_dt,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
@@ -445,6 +448,7 @@ class TestDiscussFullPerformance(HttpCase):
                                         "model": "discuss.channel",
                                     },
                                     "id": member_0.id,
+                                    "last_interest_dt": member_0_last_interest_dt,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
@@ -509,6 +513,7 @@ class TestDiscussFullPerformance(HttpCase):
                                         "model": "discuss.channel",
                                     },
                                     "id": member_0.id,
+                                    "last_interest_dt": member_0_last_interest_dt,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
@@ -634,6 +639,7 @@ class TestDiscussFullPerformance(HttpCase):
                                         "model": "discuss.channel",
                                     },
                                     "id": member_0.id,
+                                    "last_interest_dt": member_0_last_interest_dt,
                                     "persona": {
                                         "active": True,
                                         "email": "e.e@example.com",
@@ -755,7 +761,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
-                "last_interest_dt": last_interest_dt,
+                "last_interest_dt": False,
                 "message_needaction_counter": 0,
                 "name": "",
                 "rtcSessions": [["ADD", []]],
@@ -842,7 +848,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "invitedMembers": [["ADD", []]],
                 "is_editable": False,
                 "is_pinned": True,
-                "last_interest_dt": last_interest_dt,
+                "last_interest_dt": False,
                 "message_needaction_counter": 0,
                 "name": "Ernest Employee, test14",
                 "rtcSessions": [["ADD", []]],
@@ -929,7 +935,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "invitedMembers": [["ADD", []]],
                 "is_editable": False,
                 "is_pinned": True,
-                "last_interest_dt": last_interest_dt,
+                "last_interest_dt": False,
                 "message_needaction_counter": 0,
                 "name": "Ernest Employee, test15",
                 "rtcSessions": [["ADD", []]],
@@ -1016,7 +1022,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "invitedMembers": [["ADD", []]],
                 "is_editable": False,
                 "is_pinned": True,
-                "last_interest_dt": last_interest_dt,
+                "last_interest_dt": False,
                 "message_needaction_counter": 0,
                 "name": "Ernest Employee, test2",
                 "rtcSessions": [["ADD", []]],
@@ -1105,7 +1111,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "invitedMembers": [["ADD", []]],
                 "is_editable": False,
                 "is_pinned": True,
-                "last_interest_dt": last_interest_dt,
+                "last_interest_dt": False,
                 "message_needaction_counter": 0,
                 "name": "Ernest Employee, test3",
                 "rtcSessions": [["ADD", []]],
