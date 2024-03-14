@@ -55,3 +55,53 @@ class TestReportSession(TestPoSCommon):
         self.assertEqual(split_payment_bank[0]['cash_moves'][0]['amount'], 50)
         bank_payment = [p for p in report['payments'] if p.get('id', 0) == self.bank_pm1.id]
         self.assertEqual(bank_payment[0]['cash_moves'][0]['amount'], 40)
+
+    def test_report_session_2(self):
+        """Make sure the report is not crashing when we have multiple payments of the same split method"""
+
+        product1 = self.create_product('Product 1', self.categ_basic, 150)
+        self.open_new_session()
+        session = self.pos_session
+
+        order_data = {
+            'session_id': session.id,
+            'partner_id': self.partner_a.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': product1.id,
+                'price_unit': 150,
+                'discount': 0,
+                'qty': 1.0,
+                'price_subtotal': 150,
+                'price_subtotal_incl': 150,
+            }),],
+            'amount_total': 150.0,
+            'amount_tax': 0.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        }
+
+        order = self.env['pos.order'].create(order_data)
+
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': 150,
+            'payment_method_id': self.bank_split_pm1.id
+        })
+        order_payment.with_context(**payment_context).check()
+
+        order_data['partner_id'] = self.partner_b.id
+        order = self.env['pos.order'].create(order_data)
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': 150,
+            'payment_method_id': self.bank_split_pm1.id
+        })
+        order_payment.with_context(**payment_context).check()
+
+
+        session.action_pos_session_closing_control()
+
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=[session.id])
+        split_payment_bank = [p for p in report['payments'] if p.get('id', 0) == self.bank_split_pm1.id]
+        self.assertEqual(split_payment_bank[0]['final_count'], 300)
