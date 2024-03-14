@@ -213,9 +213,6 @@ const fieldNotFoundError = (modelName, fieldName, consequence) => {
  * @param {ViewType} viewType
  */
 const findView = (model, viewId, viewType) => {
-    if (viewType === "tree") {
-        viewType = "list";
-    }
     const key = model._getViewKey(viewType, viewId);
     if (model._views[key]) {
         return [model._views[key], viewId];
@@ -348,9 +345,18 @@ const getRelation = (field, record = {}) => {
 };
 
 /**
- * @param {Node} node
+ * @param {Node | string} [node]
+ * @returns {string}
  */
-const getTag = (node) => node.nodeName.toLowerCase();
+const getTag = (node) => {
+    if (typeof node === "string") {
+        return node === "tree" ? "list" : node;
+    } else if (node) {
+        return getTag(node.nodeName.toLowerCase());
+    } else {
+        return node;
+    }
+};
 
 /**
  * @param {Model} model
@@ -366,7 +372,7 @@ const getView = (model, args, kwargs) => {
             requestViewId = kwargs.context[contextKey];
         }
     }
-    const [arch, viewId] = findView(model, requestViewId, viewType);
+    const [arch, viewId] = findView(model, requestViewId, getTag(viewType));
     if (!arch) {
         throw viewNotFoundError(model._name, viewType, viewId);
     }
@@ -457,6 +463,26 @@ const isM2OField = (field) => {
 const isRelationalView = (viewType) => ["form", "kanban", "list"].includes(viewType);
 
 /**
+ * @param {[number, number?, any?]} command
+ */
+const isValidCommand = (command) => {
+    const [action, id, data] = command;
+    if (!command.length) {
+        return false;
+    }
+    if (action < 0 || action > 6) {
+        return false;
+    }
+    if (command.length > 1 && !Number.isInteger(id)) {
+        return false;
+    }
+    if (command.length > 2 && typeof data !== "object") {
+        return false;
+    }
+    return command.length <= 3;
+};
+
+/**
  * @param {ModelRecord} record
  * @param {FieldDefinition} fieldDef
  * @param {unknown} value
@@ -492,7 +518,16 @@ const isValidFieldValue = (record, fieldDef) => {
         }
         case "many2many":
         case "one2many": {
-            return Array.isArray(value) && value.every((id) => isValidId(id, fieldDef, record));
+            return (
+                Array.isArray(value) &&
+                value.every((id) => {
+                    if (Array.isArray(id)) {
+                        return isValidCommand(id);
+                    } else {
+                        return isValidId(id, fieldDef, record);
+                    }
+                })
+            );
         }
         case "many2one":
         case "many2one_reference": {
@@ -543,7 +578,6 @@ const isViewEditable = (element, modelName) => {
         case "form":
             return true;
         case "list":
-        case "tree":
             return element.getAttribute("editable") || element.getAttribute("multi_edit");
         case "field": {
             const fname = element.getAttribute("name");
@@ -717,7 +751,7 @@ const parseView = (model, params) => {
         typeof arch === "string"
             ? domParser.parseFromString(arch, "text/xml").documentElement
             : arch;
-    const viewType = getTag(doc) === "tree" ? "list" : getTag(doc);
+    const viewType = getTag(doc);
     const isEditable = editable && isViewEditable(doc, model._name);
 
     traverseElement(doc, (node) => {
@@ -774,20 +808,16 @@ const parseView = (model, params) => {
             ) {
                 const inlineViewTypes = [...node.childNodes].map(getTag);
                 const missingViewtypes = [];
-                const mode = node.getAttribute("mode") || "kanban,tree";
-                if (!intersection(inlineViewTypes, safeSplit(mode))) {
+                const nodeMode = getTag(node.getAttribute("mode"));
+                if (!intersection(inlineViewTypes, safeSplit(nodeMode || "kanban,list")).length) {
                     // TODO: use a kanban view by default in mobile
-                    missingViewtypes.push(safeSplit(node.getAttribute("mode") || "list")[0]);
+                    missingViewtypes.push(safeSplit(nodeMode || "list")[0]);
                 }
                 for (const type of missingViewtypes) {
                     // in a lot of tests, we don't need the form view, so it doesn't even exist
                     let [arch] = findView(relModel, false, type);
                     if (!arch) {
-                        if (type === "form") {
-                            arch = /* xml */ `<form />`;
-                        } else {
-                            throw viewNotFoundError(getRelation(field)?._name, type, false);
-                        }
+                        arch = /* xml */ `<${type} />`;
                     }
                     node.appendChild(domParser.parseFromString(arch, "text/xml").documentElement);
                 }
