@@ -47,7 +47,7 @@ export class CogMenu extends ActionMenus {
     }
 
     get hasItems() {
-        return this.cogItems.length || this.printItems.length;
+        return this.cogItems.length || this.props.items.print?.length;
     }
 
     async _registryItems() {
