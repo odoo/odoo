@@ -79,7 +79,7 @@
                                 <div class="o_kanban_record_headings">
                                     <div class="o_kanban_record_title">
                                         <em>
-                                            <field name="is_reached" widget="boolean_toggle"/>
+                                            <field name="is_reached" widget="task_done_checkmark"/>
                                             <field name="name"/>
                                             <t t-set="badge" t-value="'text-success'" t-if="record.can_be_marked_as_done.raw_value"/>
                                             <t t-set="badge" t-value="'text-danger'" t-if="record.is_deadline_exceeded.raw_value"/>
