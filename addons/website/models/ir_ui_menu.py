@@ -13,7 +13,7 @@ class IrUiMenu(models.Model):
     def load_menus_root(self):
         root_menus = super().load_menus_root()
         if self.env.context.get('force_action'):
-            web_menus = self.load_web_menus(request.session.debug if request else False)
+            web_menus = self.load_web_menus()
             for menu in root_menus['children']:
                 # Force the action.
                 if (

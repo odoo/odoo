@@ -26,6 +26,7 @@ class LoadMenusTests(HttpCase):
                 "children": [],
                 "id": self.menu.id,
                 "name": "test_menu",
+                "technical_chm": False,
                 "webIcon": False,
                 "webIconData": False,
                 "webIconDataMimetype": False,
@@ -41,6 +42,7 @@ class LoadMenusTests(HttpCase):
                 ],
                 "id": "root",
                 "name": "root",
+                "technical_chm": False,
                 "webIcon": None,
                 "webIconData": None,
                 "webIconDataMimetype": None,
@@ -48,7 +50,6 @@ class LoadMenusTests(HttpCase):
                 "backgroundImage": None,
             }
         }
-
         self.assertDictEqual(
             menu_loaded.json(),
             expected,
