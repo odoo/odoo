@@ -18,12 +18,12 @@
                         <div class="oe_title">
                             <h1><field name="name" placeholder="e.g. Support flow"/></h1>
                         </div>
-                        <group technical-chm="0" invisible="context.get('default_model_id')">
+                        <group advanced="0" invisible="context.get('default_model_id')">
                             <group>
                                 <field name="model_id" options="{'no_create': True}" />
                             </group>
                         </group>
-                        <group technical-chm="1">
+                        <group advanced="1">
                             <group>
                                 <field name="model_id" options="{'no_create': True}" />
                             </group>
@@ -83,7 +83,7 @@
                                 <div class="alert alert-info" role="alert" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated'] or not least_delay_msg">
                                     <field name="least_delay_msg"/>
                                 </div>
-                                <field name="filter_pre_domain" widget="domain" technical-chm="1"
+                                <field name="filter_pre_domain" widget="domain" advanced="1"
                                        options="{'model': 'model_name', 'in_dialog': True}"
                                        invisible="trigger in ['on_webhook', 'on_time', 'on_time_created', 'on_time_updated']"
                                 />

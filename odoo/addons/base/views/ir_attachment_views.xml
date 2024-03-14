@@ -16,9 +16,9 @@
                             <label for="datas" class="mt-1"/>
                             <field name="datas" nolabel="1" class="w-100" filename="name" invisible="type == 'url'"/>
                             <field name="url" widget="url" invisible="type == 'binary'"/>
-                            <field name="mimetype" technical-chm="1"/>
+                            <field name="mimetype" advanced="1"/>
                         </group>
-                        <group string="Attached To" technical-chm="1">
+                        <group string="Attached To" advanced="1">
                             <field name="res_model"/>
                             <field name="res_field"/>
                             <field name="res_id"/>
@@ -26,17 +26,17 @@
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="public"/>
                         </group>
-                        <group string="History" technical-chm="1" invisible="not create_date">
+                        <group string="History" advanced="1" invisible="not create_date">
                             <label for="create_uid" string="Creation"/>
                             <div name="creation_div">
                                 <field name="create_uid" readonly="1" class="oe_inline"/> on
                                 <field name="create_date" readonly="1" class="oe_inline"/>
                             </div>
                         </group>
-                        <group name="description_group" string="Description" technical-chm="1" colspan="4">
+                        <group name="description_group" string="Description" advanced="1" colspan="4">
                             <field name="description" nolabel="1" colspan="2"/>
                         </group>
-                        <group technical-chm="1" string="Indexed Content" colspan="4">
+                        <group advanced="1" string="Indexed Content" colspan="4">
                             <field name="index_content" nolabel="1" colspan="2"/>
                         </group>
                     </group>

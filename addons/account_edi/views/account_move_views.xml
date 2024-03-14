@@ -122,7 +122,7 @@
                     <page id="edi_documents"
                           string="EDI Documents"
                           name="page_edi_documents"
-                          technical-chm="1"
+                          advanced="1"
                           groups="account.group_account_readonly,account.group_account_invoice"
                           invisible="not edi_document_ids">
                         <field name="edi_document_ids">
@@ -136,7 +136,7 @@
                                         type="object"
                                         class="oe_link oe_inline"
                                         string="Download"
-                                        technical-chm="1"
+                                        advanced="1"
                                         invisible="not error or blocking_level == 'info'"/>
                             </tree>
                         </field>

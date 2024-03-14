@@ -246,7 +246,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page name="page_invitations" string="Invitations" technical-chm="1" invisible="not user_can_edit">
+                        <page name="page_invitations" string="Invitations" advanced="1" invisible="not user_can_edit">
                             <button name="action_sendmail" type="object" string="Send Invitations" icon="fa-envelope" class="oe_link"/>
                             <field name="attendee_ids" widget="one2many" mode="tree,kanban" readonly="1">
                                 <tree string="Invitation details" editable="top" create="false" delete="false">
@@ -499,7 +499,7 @@
         sequence="40"
         action="calendar.action_calendar_event"
         groups="base.group_system"
-        technical-chm="1"/>
+        advanced="1"/>
 
     <menuitem
         id="menu_calendar_settings"
@@ -515,7 +515,7 @@
         name="Reminders"
         sequence="50"
         action="action_calendar_alarm"
-        technical-chm="1"/>
+        advanced="1"/>
 
     <menuitem
         id="menu_calendar_configuration"
@@ -527,12 +527,12 @@
         id="menu_calendar_event_type"
         parent="menu_calendar_configuration"
         action="action_calendar_event_type"
-        technical-chm="1"/>
+        advanced="1"/>
 
     <menuitem
         id="menu_calendar_alarm"
         parent="menu_calendar_configuration"
         action="action_calendar_alarm"
-        technical-chm="1"/>
+        advanced="1"/>
 
 </odoo>

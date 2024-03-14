@@ -17,13 +17,13 @@
                             <field name="category"/>
                             <field name="default_user_id" options="{'no_create': True}" domain="[('share', '=', False)]"
                                    widget="many2one_avatar_user"/>
-                            <field name="res_model" technical-chm="1"/>
+                            <field name="res_model" advanced="1"/>
                             <field name="res_model" invisible="1"/>
                             <field name="res_model_change" invisible="1"/>
                             <field name="initial_res_model" invisible="1"/>
                             <field name="summary" placeholder="e.g. &quot;Discuss proposal&quot;"/>
-                            <field name="icon" technical-chm="1"/>
-                            <field name="decoration_type" technical-chm="1"/>
+                            <field name="icon" advanced="1"/>
+                            <field name="decoration_type" advanced="1"/>
                             <field name="keep_done"/>
                         </group>
                         <group name="activity_planning" string="Next Activity">
@@ -96,8 +96,8 @@
                 <field name="summary"/>
                 <field name="delay_label" string="Planned in" class="text-end"/>
                 <field name="delay_from" string="Type"/>
-                <field name="res_model" technical-chm="1"/>
-                <field name="icon" technical-chm="1"/>
+                <field name="res_model" advanced="1"/>
+                <field name="icon" advanced="1"/>
             </tree>
         </field>
     </record>
