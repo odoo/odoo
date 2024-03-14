@@ -820,27 +820,36 @@ class Picking(models.Model):
                 picking.with_context(mail_notrack=True).write({'scheduled_date': scheduled_date})
         pickings._autoconfirm_picking()
 
+        partners_mapping = {}
         for picking, vals in zip(pickings, vals_list):
             # set partner as follower
             if vals.get('partner_id'):
                 if picking.location_id.usage == 'supplier' or picking.location_dest_id.usage == 'customer':
-                    picking.message_subscribe([vals.get('partner_id')])
+                    partners_mapping[picking.id] = [vals.get('partner_id')]
             if vals.get('picking_type_id'):
                 for move in picking.move_ids:
                     if not move.description_picking:
                         move.description_picking = move.product_id.with_context(lang=move._get_lang())._get_description(move.picking_id.picking_type_id)
+        if partners_mapping:
+            self.message_subscribe(partners_mapping)
         return pickings
 
     def write(self, vals):
         if vals.get('picking_type_id') and any(picking.state != 'draft' for picking in self):
             raise UserError(_("Changing the operation type of this record is forbidden at this point."))
         # set partner as a follower and unfollow old partner
+        subscribe_mapping = {}
+        unsubscribe_mapping = {}
         if vals.get('partner_id'):
             for picking in self:
                 if picking.location_id.usage == 'supplier' or picking.location_dest_id.usage == 'customer':
                     if picking.partner_id:
-                        picking.message_unsubscribe(picking.partner_id.ids)
-                    picking.message_subscribe([vals.get('partner_id')])
+                        unsubscribe_mapping[picking.id] = picking.partner_id.ids
+                    subscribe_mapping[picking.id] = [vals.get('partner_id')]
+            if subscribe_mapping:
+                self.message_subscribe(subscribe_mapping)
+            if unsubscribe_mapping:
+                self.message_subscribe(unsubscribe_mapping)
         res = super(Picking, self).write(vals)
         if vals.get('signature'):
             for picking in self:
@@ -1102,7 +1111,7 @@ class Picking(models.Model):
         # Sanity checks.
         if not self.env.context.get('skip_sanity_check', False):
             self._sanity_check()
-        self.message_subscribe([self.env.user.partner_id.id])
+        self.message_subscribe({p.id: self.env.user.partner_id.ids for p in self})
 
         # Run the pre-validation wizards. Processing a pre-validation wizard should work on the
         # moves and/or the context and never call `_action_done`.

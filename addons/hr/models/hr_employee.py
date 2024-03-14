@@ -459,9 +459,9 @@ class HrEmployeePrivate(models.Model):
                             bank_account.allow_out_payment = False
                         if vals['work_contact_id']:
                             bank_account.partner_id = vals['work_contact_id']
-            self.message_unsubscribe(self.work_contact_id.ids)
+            self.message_unsubscribe({e.id: e.work_contact_id.ids for e in self})
             if vals['work_contact_id']:
-                self._message_subscribe([vals['work_contact_id']])
+                self.message_subscribe(partner_ids={e.id: [vals['work_contact_id']] for e in self})
         if 'user_id' in vals:
             # Update the profile pictures with user, except if provided
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']),

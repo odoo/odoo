@@ -40,7 +40,7 @@ class TestProjectSharingCommon(TestProjectCommon):
             'partner_id': cls.user_portal.partner_id.id,
             'type_ids': project_sharing_stages_vals_list,
         })
-        cls.project_portal.message_subscribe(partner_ids=[cls.partner_portal.id])
+        cls.project_portal.message_subscribe(partner_ids={cls.project_portal.id: [cls.partner_portal.id]})
 
         cls.project_no_collabo = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
             'name': 'No Collabo',
@@ -234,7 +234,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         })
         project_share_wizard.action_send_mail()
         # the portal user is set as follower for the task_cow. Without it he does not have read access to the task, and thus can not access its view form
-        self.task_cow.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
+        self.task_cow.message_subscribe(partner_ids={self.task_cow.id: self.user_portal.partner_id.ids})
         with self.get_project_sharing_form_view(self.task_cow.with_context({'tracking_disable': True, 'default_project_id': self.project_cows.id, 'uid': self.user_portal.id}), self.user_portal) as form:
             form.name = 'Test'
             task = form.save()
@@ -335,7 +335,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         })
         project_share_wizard.action_send_mail()
         # subscribe the portal user to give him read access to the task.
-        self.task_cow.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
+        self.task_cow.message_subscribe(partner_ids={self.task_cow.id: self.user_portal.partner_id.ids})
         self.assertFalse(self.task_cow.with_user(self.user_portal).user_ids, 'the portal user should see no assigness in the task.')
         task_portal_read = self.task_cow.with_user(self.user_portal).read(['portal_user_names'])
         self.assertEqual(self.task_cow.portal_user_names, task_portal_read[0]['portal_user_names'], 'the portal user should see assignees name in the task via the `portal_user_names` field.')

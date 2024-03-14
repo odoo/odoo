@@ -37,10 +37,10 @@ class TestWebPushNotification(SMSCommon):
             'name': 'Test',
             'email_from': 'ignasse@example.com'
         })
-        cls.record_simple.message_subscribe(partner_ids=[
+        cls.record_simple.message_subscribe(partner_ids={cls.record_simple.id: [
             cls.user_email.partner_id.id,
             cls.user_inbox.partner_id.id,
-        ])
+        ]})
 
         # generate keys and devices
         cls.vapid_public_key = cls.env['mail.push.device'].get_web_push_vapid_public_key()
@@ -156,7 +156,7 @@ class TestWebPushNotification(SMSCommon):
             'name': 'Test',
             'email_from': 'ignasse@example.com',
         })
-        test_record.message_subscribe(partner_ids=[self.user_inbox.partner_id.id])
+        test_record.message_subscribe(partner_ids={test_record.id: [self.user_inbox.partner_id.id]})
 
         fake_email = self.env['mail.message'].create({
             'model': 'mail.test.gateway',
@@ -227,7 +227,7 @@ class TestWebPushNotification(SMSCommon):
             'name': 'Test',
         })
         ticket.message_subscribe(
-            partner_ids=[self.user_email.partner_id.id],
+            partner_ids={ticket.id: self.user_email.partner_id.ids},
             subtype_ids=[container_update_subtype.id],
         )
 
@@ -243,7 +243,7 @@ class TestWebPushNotification(SMSCommon):
 
         container2 = self.env['mail.test.container'].create({'name': 'Container Two'})
         ticket.message_subscribe(
-            partner_ids=[self.user_inbox.partner_id.id],
+            partner_ids={ticket.id: self.user_inbox.partner_id.ids},
             subtype_ids=[container_update_subtype.id],
         )
         ticket.write({

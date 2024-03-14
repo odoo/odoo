@@ -945,7 +945,7 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/channel/unsubscribe'], type='json', auth='user', website=True)
     def slide_channel_unsubscribe(self, channel_id):
-        request.env['slide.channel'].browse(channel_id).message_unsubscribe(partner_ids=[request.env.user.partner_id.id])
+        request.env['slide.channel'].message_unsubscribe(partner_ids={channel_id: [request.env.user.partner_id.id]})
         return True
 
     # --------------------------------------------------

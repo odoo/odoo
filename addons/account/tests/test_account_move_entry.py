@@ -424,7 +424,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         },{
             'name': 'Paulus',
         }])
-        self.test_move.message_subscribe(existing_partners.ids)
+        self.test_move.message_subscribe({self.test_move.id: existing_partners.ids})
 
         user = new_test_user(self.env, login='jag', groups='account.group_account_invoice')
 

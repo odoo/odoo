@@ -77,11 +77,12 @@ class EventBooth(models.Model):
         res = super(EventBooth, self).write(vals)
 
         if vals.get('state') == 'unavailable' or vals.get('partner_id'):
-            for booth in self:
-                booth.message_subscribe(booth.partner_id.ids)
-        for booth in self:
-            if wpartner.get(booth) and booth.partner_id.id not in wpartner[booth]:
-                booth.message_unsubscribe(wpartner[booth])
+            self.message_subscribe({booth.id: booth.partner_id.ids for booth in self})
+
+        self.message_unsubscribe({
+            booth.id: wpartner[booth] for booth in self
+            if wpartner.get(booth) and booth.partner_id.id not in wpartner[booth]
+        })
 
         if vals.get('state') == 'unavailable':
             to_confirm._action_post_confirm(vals)

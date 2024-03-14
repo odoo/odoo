@@ -423,12 +423,14 @@ class Task(models.Model):
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         """ Set task notification based on project notification preference if user follow the project"""
         if not subtype_ids:
-            project_followers = self.project_id.message_follower_ids.filtered(lambda f: f.partner_id.id in partner_ids)
-            for project_follower in project_followers:
-                project_subtypes = project_follower.subtype_ids
-                task_subtypes = (project_subtypes.mapped('parent_id') | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids if project_subtypes else None
-                partner_ids.remove(project_follower.partner_id.id)
-                super().message_subscribe(project_follower.partner_id.ids, task_subtypes)
+            for task_id, pids in partner_ids.items():
+                task = self.env['project.task'].browse(task_id)
+                project_followers = task.project_id.message_follower_ids.filtered(lambda f: f.partner_id.id in pids)
+                for project_follower in project_followers:
+                    project_subtypes = project_follower.subtype_ids
+                    task_subtypes = (project_subtypes.mapped('parent_id') | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids if project_subtypes else None
+                    pids.remove(project_follower.partner_id.id)
+                    super().message_subscribe({task.id: project_follower.partner_id.ids}, task_subtypes)
         return super().message_subscribe(partner_ids, subtype_ids)
 
     @api.constrains('depend_on_ids')
@@ -1045,13 +1047,14 @@ class Task(models.Model):
         }
         if tasks.project_id:
             tasks._set_stage_on_project_from_task()
+        subscribe_mapping = defaultdict(list)
         for task in tasks:
             if task.project_id.privacy_visibility == 'portal':
                 task._portal_ensure_token()
             for follower in task.parent_id.message_follower_ids:
-                task.message_subscribe(follower.partner_id.ids, follower.subtype_ids.ids)
+                task.message_subscribe({task.id: follower.partner_id.ids}, follower.subtype_ids.ids)
             if current_partner not in task.message_partner_ids:
-                task.message_subscribe(current_partner.ids)
+                subscribe_mapping[task.id] += current_partner.ids
             if task.email_cc:
                 partners_with_internal_user = self.env['res.partner']
                 for email in tools.email_split(task.email_cc):
@@ -1061,7 +1064,9 @@ class Task(models.Model):
                 if not partners_with_internal_user:
                     continue
                 task._send_email_notify_to_cc(partners_with_internal_user)
-                task.message_subscribe(partners_with_internal_user.ids)
+                subscribe_mapping[task.id] += partners_with_internal_user.ids
+        if subscribe_mapping:
+            self.message_subscribe(subscribe_mapping)
         return tasks
 
     def write(self, vals):
@@ -1578,14 +1583,14 @@ class Task(models.Model):
         task = super(Task, self.with_context(create_context)).message_new(msg, custom_values=defaults)
         email_list = task.email_split(msg)
         partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=task, force_create=False) if p]
-        task.message_subscribe(partner_ids)
+        task.message_subscribe({task.id: partner_ids})
         return task
 
     def message_update(self, msg, update_vals=None):
         """ Override to update the task according to the email. """
         email_list = self.email_split(msg)
         partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=self, force_create=False) if p]
-        self.message_subscribe(partner_ids)
+        self.message_subscribe({t.id: partner_ids for t in self})
         return super(Task, self).message_update(msg, update_vals=update_vals)
 
     def _message_get_suggested_recipients(self):
@@ -1870,12 +1875,6 @@ class Task(models.Model):
         """ Overwrite since we have user_ids and not user_id """
         tasks_with_one_user = self.filtered(lambda task: len(task.user_ids) == 1 and task.user_ids.partner_id)
         return tasks_with_one_user.user_ids.partner_id or self.env['res.partner']
-
-    # ---------------------------------------------------
-    # Privacy
-    # ---------------------------------------------------
-    def _unsubscribe_portal_users(self):
-        self.message_unsubscribe(partner_ids=self.message_partner_ids.filtered('user_ids.share').ids)
 
     # ---------------------------------------------------
     # Analytic accounting

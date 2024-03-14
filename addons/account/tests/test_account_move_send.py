@@ -404,7 +404,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
 
         # add a follower to the invoice
         self.partner_b.email = 'partner_b@example.com'
-        test_move.message_subscribe(self.partner_b.ids)
+        test_move.message_subscribe({test_move.id: self.partner_b.ids})
 
         additional_partner = self.env['res.partner'].create({
             'name': "Additional Partner",

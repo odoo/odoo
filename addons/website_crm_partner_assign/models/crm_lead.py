@@ -205,7 +205,7 @@ class CrmLead(models.Model):
             message = Markup('<p>%s</p>') % _('I am not interested by this lead. I have not contacted the lead.')
         partner_ids = self.env['res.partner'].search(
             [('id', 'child_of', self.env.user.partner_id.commercial_partner_id.id)])
-        self.message_unsubscribe(partner_ids=partner_ids.ids)
+        self.message_unsubscribe(partner_ids={l.id: partner_ids.ids for l in self})
         if comment:
             message += Markup('<p>%s</p>') % comment
         self.message_post(body=message)

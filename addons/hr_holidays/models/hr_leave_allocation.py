@@ -3,6 +3,7 @@
 
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
 
+from collections import defaultdict
 from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
 
@@ -637,11 +638,6 @@ class HolidaysAllocation(models.Model):
                     next_level_start = allocation.date_from + get_timedelta(next_level.start_count, next_level.start_type)
                     allocation.nextcall = min(allocation.nextcall, next_level_start)
 
-    def add_follower(self, employee_id):
-        employee = self.env['hr.employee'].browse(employee_id)
-        if employee.user_id:
-            self.message_subscribe(partner_ids=employee.user_id.partner_id.ids)
-
     @api.model_create_multi
     def create(self, vals_list):
         """ Override to avoid automatic logging of creation """
@@ -653,6 +649,7 @@ class HolidaysAllocation(models.Model):
                 values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
         allocations = super(HolidaysAllocation, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         allocations._add_lastcalls()
+        partners_mapping = defaultdict(list)
         for allocation in allocations:
             partners_to_subscribe = set()
             if allocation.employee_id.user_id:
@@ -660,11 +657,12 @@ class HolidaysAllocation(models.Model):
             if allocation.validation_type == 'officer':
                 partners_to_subscribe.add(allocation.employee_id.parent_id.user_id.partner_id.id)
                 partners_to_subscribe.add(allocation.employee_id.leave_manager_id.partner_id.id)
-            allocation.message_subscribe(partner_ids=tuple(partners_to_subscribe))
+            partners_mapping[allocation.id] += list(partners_to_subscribe)
             if not self._context.get('import_file'):
                 allocation.activity_update()
             if allocation.validation_type == 'no' and allocation.state == 'confirm':
                 allocation.action_validate()
+        allocations.message_subscribe(partner_ids=partners_mapping)
         return allocations
 
     def write(self, values):
@@ -672,7 +670,10 @@ class HolidaysAllocation(models.Model):
         if values.get('state'):
             self._check_approval_update(values['state'])
 
-        self.add_follower(employee_id)
+        employee = self.env['hr.employee'].browse(employee_id)
+        if employee.user_id:
+            partner_ids = employee.user_id.partner_id.ids
+            self.message_subscribe(partner_ids={a.id: partner_ids for a in self})
 
         if 'number_of_days_display' not in values and 'number_of_hours_display' not in values:
             return super().write(values)

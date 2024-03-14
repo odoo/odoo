@@ -178,7 +178,7 @@ class MailController(http.Controller):
 
         pid = int(pid)
         record_sudo = record.sudo()
-        record_sudo.message_unsubscribe([pid])
+        record_sudo.message_unsubscribe({record_sudo.id: [pid]})
 
         display_link = True
         if request.session.uid:

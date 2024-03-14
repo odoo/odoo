@@ -35,7 +35,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
         self.assertIn(
             self.user_blogmanager.partner_id, self.test_blog.message_partner_ids,
             'website_blog: blog create should be in the blog followers')
-        self.test_blog.message_subscribe([self.user_employee.partner_id.id, self.user_public.partner_id.id])
+        self.test_blog.message_subscribe({self.test_blog.id: [self.user_employee.partner_id.id, self.user_public.partner_id.id]})
 
         # Create a new post, blog followers should not follow the post
         self.assertNotIn(

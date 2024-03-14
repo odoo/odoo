@@ -98,7 +98,8 @@ class Department(models.Model):
                 manager = self.env['hr.employee'].browse(manager_id)
                 # subscribe the manager user
                 if manager.user_id:
-                    self.message_subscribe(partner_ids=manager.user_id.partner_id.ids)
+                    partner_ids = manager.user_id.partner_id.ids
+                    self.message_subscribe(partner_ids={d.id: partner_ids for d in self})
             # set the employees's parent to the new manager
             self._update_employee_manager(manager_id)
         return super(Department, self).write(vals)

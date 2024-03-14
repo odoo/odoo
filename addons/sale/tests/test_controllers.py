@@ -14,7 +14,7 @@ class TestAccessRightsControllers(BaseUsersCommon, HttpCase, SaleCommon):
     def test_access_controller(self):
         private_so = self.sale_order
         portal_so = self.sale_order.copy()
-        portal_so.message_subscribe(self.user_portal.partner_id.ids)
+        portal_so.message_subscribe({portal_so.id: self.user_portal.partner_id.ids})
 
         portal_so._portal_ensure_token()
         token = portal_so.access_token

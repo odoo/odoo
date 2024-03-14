@@ -290,9 +290,13 @@ class MailActivity(models.Model):
                     per_user[activity.user_id] = [activity.res_id]
                 else:
                     per_user[activity.user_id].append(activity.res_id)
+            partners_mapping = defaultdict(list)
             for user, res_ids in per_user.items():
                 pids = user.partner_id.ids if user.partner_id in readable_user_partners else user.sudo().partner_id.ids
-                self.env[model].browse(res_ids).message_subscribe(partner_ids=pids)
+                for res_id in res_ids:
+                    partners_mapping[res_id] += pids
+            if partners_mapping:
+                self.env[model].message_subscribe(partner_ids=partners_mapping)
 
         # send notifications about activity creation
         todo_activities = activities.filtered(lambda act: act.date_deadline <= fields.Date.today())
@@ -313,8 +317,11 @@ class MailActivity(models.Model):
             if values['user_id'] != self.env.uid:
                 if not self.env.context.get('mail_activity_quick_update', False):
                     user_changes.action_notify()
+            partners_mapping_by_model = defaultdict(lambda: defaultdict(list))
             for activity in user_changes:
-                self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
+                partners_mapping_by_model[activity.res_model][activity.res_id].append(activity.user_id.partner_id.id)
+            for res_model, partners_mapping in partners_mapping_by_model.items():
+                self.env[res_model].message_subscribe(partner_ids=partners_mapping)
 
             # send bus notifications
             todo_activities = user_changes.filtered(lambda act: act.date_deadline <= fields.Date.today())

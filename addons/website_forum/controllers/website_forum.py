@@ -337,7 +337,7 @@ class WebsiteForum(WebsiteProfile):
             # Automatically add the user as follower of the posts that he
             # favorites (on unfavorite we chose to keep him as a follower until
             # he decides to not follow anymore).
-            question.sudo().message_subscribe(request.env.user.partner_id.ids)
+            question.sudo().message_subscribe({question.id: request.env.user.partner_id.ids})
         return favourite
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/ask_for_close', type='http', auth="user", methods=['POST'], website=True)

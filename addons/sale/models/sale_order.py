@@ -805,9 +805,7 @@ class SaleOrder(models.Model):
     def write(self, vals):
         res = super().write(vals)
         if vals.get('partner_id'):
-            self.filtered(lambda so: so.state in ('sent', 'sale')).message_subscribe(
-                partner_ids=[vals['partner_id']],
-            )
+            self.message_subscribe({o.id: [vals['partner_id']] for o in self if o.state in ('sent', 'sale')})
         return res
 
     #=== ACTION METHODS ===#
@@ -899,9 +897,7 @@ class SaleOrder(models.Model):
         if any(order.state != 'draft' for order in self):
             raise UserError(_("Only draft orders can be marked as sent directly."))
 
-        for order in self:
-            order.message_subscribe(partner_ids=order.partner_id.ids)
-
+        self.message_subscribe({o.id: o.partner_id.ids for o in self})
         self.write({'state': 'sent'})
 
     def action_confirm(self):
@@ -921,11 +917,7 @@ class SaleOrder(models.Model):
 
         self.order_line._validate_analytic_distribution()
 
-        for order in self:
-            if order.partner_id in order.message_partner_ids:
-                continue
-            order.message_subscribe([order.partner_id.id])
-
+        self.message_subscribe({o.id: o.partner_id.ids for o in self if o.partner_id not in o.message_partner_ids})
         self.write(self._prepare_confirmation_values())
 
         # Context key 'default_name' is sometimes propagated up to here.

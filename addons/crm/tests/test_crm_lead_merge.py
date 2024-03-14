@@ -501,9 +501,9 @@ class TestLeadMerge(TestLeadMergeCommon):
         self.leads.message_follower_ids.unlink()
         self.leads.message_ids.unlink()
 
-        self.lead_w_contact.message_subscribe([self.contact_1.id])
-        self.lead_w_email.message_subscribe([self.contact_1.id, self.contact_2.id, self.contact_company.id])
-        self.lead_w_partner.message_subscribe([self.contact_2.id])
+        self.lead_w_contact.message_subscribe({self.lead_w_contact.id: [self.contact_1.id]})
+        self.lead_w_email.message_subscribe({self.lead_w_email.id: [self.contact_1.id, self.contact_2.id, self.contact_company.id]})
+        self.lead_w_partner.message_subscribe({self.lead_w_partner.id: [self.contact_2.id]})
 
         self.env['mail.message'].create([{
             'author_id': self.contact_1.id,

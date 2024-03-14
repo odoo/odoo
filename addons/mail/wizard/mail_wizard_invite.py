@@ -54,7 +54,7 @@ class Invite(models.TransientModel):
 
             # filter partner_ids to get the new followers, to avoid sending email to already following partners
             new_partners = wizard.partner_ids - document.sudo().message_partner_ids
-            document.message_subscribe(partner_ids=new_partners.ids)
+            document.message_subscribe(partner_ids={document.id: new_partners.ids})
 
             model_name = self.env['ir.model']._get(wizard.res_model).display_name
             # send a notification if option checked and if a message exists (do not send void notifications)

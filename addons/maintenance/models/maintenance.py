@@ -175,9 +175,7 @@ class MaintenanceEquipment(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         equipments = super().create(vals_list)
-        for equipment in equipments:
-            if equipment.owner_user_id:
-                equipment.message_subscribe(partner_ids=[equipment.owner_user_id.partner_id.id])
+        self.message_subscribe({equipment.id: equipment.owner_user_id.partner_id.ids for equipment in equipments if equipment.owner_user_id})
         return equipments
 
     def write(self, vals):
@@ -303,9 +301,8 @@ class MaintenanceRequest(models.Model):
     def create(self, vals_list):
         # context: no_log, because subtype already handle this
         maintenance_requests = super().create(vals_list)
+        self.message_subscribe({r.id: (r.owner_user_id.partner_id + r.user_id.partner_id).ids for r in maintenance_requests if r.owner_user_id or r.user_id})
         for request in maintenance_requests:
-            if request.owner_user_id or request.user_id:
-                request._add_followers()
             if request.equipment_id and not request.maintenance_team_id:
                 request.maintenance_team_id = request.equipment_id.maintenance_team_id
             if request.close_date and not request.stage_id.done:
@@ -327,7 +324,7 @@ class MaintenanceRequest(models.Model):
                 self.copy({'schedule_date': schedule_date})
         res = super(MaintenanceRequest, self).write(vals)
         if vals.get('owner_user_id') or vals.get('user_id'):
-            self._add_followers()
+            self.message_subscribe({r.id: (r.owner_user_id.partner_id + r.user_id.partner_id).ids for r in self})
         if 'stage_id' in vals:
             self.filtered(lambda m: m.stage_id.done).write({'close_date': fields.Date.today()})
             self.filtered(lambda m: not m.stage_id.done).write({'close_date': False})
@@ -366,11 +363,6 @@ class MaintenanceRequest(models.Model):
                     'maintenance.mail_act_maintenance_request',
                     fields.Datetime.from_string(request.schedule_date).date(),
                     note=note, user_id=request.user_id.id or request.owner_user_id.id or self.env.uid)
-
-    def _add_followers(self):
-        for request in self:
-            partner_ids = (request.owner_user_id.partner_id + request.user_id.partner_id).ids
-            request.message_subscribe(partner_ids=partner_ids)
 
     @api.model
     def _read_group_stage_ids(self, stages, domain):

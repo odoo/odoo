@@ -10,11 +10,12 @@ class AccountMove(models.Model):
         if self.env.su:
             # sending mail in sudo was meant for it being sent from superuser
             self = self.with_user(SUPERUSER_ID)
+        partners_mapping = {}
         for invoice in self.filtered(lambda x: x.move_type == 'out_invoice'):
             # send template only on customer invoice
             # subscribe the partner to the invoice
             if invoice.partner_id not in invoice.message_partner_ids:
-                invoice.message_subscribe([invoice.partner_id.id])
+                partners_mapping[invoice.id] = invoice.partner_id.ids
             comment_subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
             for line in invoice.invoice_line_ids:
                 if line.product_id.email_template_id:
@@ -23,6 +24,8 @@ class AccountMove(models.Model):
                         email_layout_xmlid="mail.mail_notification_light",
                         subtype_id=comment_subtype_id,
                     )
+        if partners_mapping:
+            self.message_subscribe(partners_mapping)
         return True
 
     def _post(self, soft=True):

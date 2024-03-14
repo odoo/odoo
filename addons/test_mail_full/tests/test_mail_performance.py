@@ -70,7 +70,7 @@ class FullBaseMailPerformance(BaseMailPerformance):
             'name': 'Test Ticket',
             'user_id': cls.user_emp_email.id,
         })
-        cls.record_ticket.message_subscribe(cls.customers.ids + cls.user_admin.partner_id.ids + cls.user_portal.partner_id.ids)
+        cls.record_ticket.message_subscribe({cls.record_ticket.id: cls.customers.ids + cls.user_admin.partner_id.ids + cls.user_portal.partner_id.ids})
 
 
 @tagged('mail_performance', 'post_install', '-at_install')

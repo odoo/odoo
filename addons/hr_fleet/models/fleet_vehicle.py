@@ -99,13 +99,16 @@ class FleetVehicle(models.Model):
     def write(self, vals):
         self._update_create_write_vals(vals)
         if 'driver_employee_id' in vals:
+            unsubscribe_mapping = {}
             for vehicle in self:
                 if vehicle.driver_employee_id and vehicle.driver_employee_id.id != vals['driver_employee_id']:
                     partners_to_unsubscribe = vehicle.driver_id.ids
                     employee = vehicle.driver_employee_id
                     if employee and employee.user_id.partner_id:
                         partners_to_unsubscribe.append(employee.user_id.partner_id.id)
-                    vehicle.message_unsubscribe(partner_ids=partners_to_unsubscribe)
+                    unsubscribe_mapping[vehicle.id] = partners_to_unsubscribe
+            if unsubscribe_mapping:
+                self.message_unsubscribe(partner_ids=unsubscribe_mapping)
         return super().write(vals)
 
     def action_open_employee(self):

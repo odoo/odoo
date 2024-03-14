@@ -131,7 +131,7 @@ class TestTracking(MailCommon):
     def test_message_track_message_type(self):
         """Check that the right message type is applied for track templates."""
         self.record.message_subscribe(
-            partner_ids=[self.user_admin.partner_id.id],
+            partner_ids={self.record.id: self.user_admin.partner_id.ids},
             subtype_ids=[self.env.ref('mail.mt_comment').id]
         )
         mail_templates = self.env['mail.template'].create([{
@@ -237,7 +237,7 @@ class TestTracking(MailCommon):
     def test_message_track_subtype(self):
         """ Update some tracked fields linked to some subtype -> message with onchange """
         self.record.message_subscribe(
-            partner_ids=[self.user_admin.partner_id.id],
+            partner_ids={self.record.id: self.user_admin.partner_id.ids},
             subtype_ids=[self.env.ref('test_mail.st_mail_test_ticket_container_upd').id]
         )
 

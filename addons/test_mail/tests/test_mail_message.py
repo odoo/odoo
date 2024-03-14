@@ -46,7 +46,7 @@ class TestMessageValues(MailCommon):
         })
         record = self.env['mail.test.track'].create({'name': 'EmptyTesting'})
         self.flush_tracking()
-        record.message_subscribe(partner_ids=self.partner_admin.ids, subtype_ids=note_subtype.ids)
+        record.message_subscribe(partner_ids={record.id: self.partner_admin.ids}, subtype_ids=note_subtype.ids)
         message = record.message_post(
             attachment_ids=_attach_1.ids,
             body='Test',
@@ -476,7 +476,7 @@ class TestMessageAccess(MailCommon):
             'name': 'Jitendra Prajapati (jpr-odoo)',
             'email': 'jpr@odoo.com',
         })
-        test_record.message_subscribe((partner_1 | self.user_admin.partner_id).ids)
+        test_record.message_subscribe({test_record.id: (partner_1 | self.user_admin.partner_id).ids})
 
         message = test_record.message_post(
             body=Markup('<p>This is First Message</p>'), subject='Subject',

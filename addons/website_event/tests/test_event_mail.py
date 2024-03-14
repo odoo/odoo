@@ -21,7 +21,7 @@ class TestMail(MailCommon):
         self.flush_tracking()
 
         follower = self.user_employee.partner_id
-        event.message_subscribe(partner_ids=follower.ids, subtype_ids=[published_subtype.id, unpublished_subtype.id])
+        event.message_subscribe(partner_ids={event.id: follower.ids}, subtype_ids=[published_subtype.id, unpublished_subtype.id])
 
         event.website_published = True
         self.flush_tracking()

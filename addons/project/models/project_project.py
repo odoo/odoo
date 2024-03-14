@@ -542,11 +542,14 @@ class Project(models.Model):
             project_subtypes = self.env['mail.message.subtype'].browse(subtype_ids)
             task_subtypes = (project_subtypes.mapped('parent_id') | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids
             if task_subtypes:
+                subscribe_mapping = {}
                 for task in self.task_ids:
                     partners = set(task.message_partner_ids.ids) & set(partner_ids)
                     if partners:
-                        task.message_subscribe(partner_ids=list(partners), subtype_ids=task_subtypes)
-                self.update_ids.message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
+                        subscribe_mapping[task.id] = list(partners)
+                if subscribe_mapping:
+                    self.env['project.task'].message_subscribe(partner_ids=subscribe_mapping, subtype_ids=task_subtypes)
+                self.env['project.update'].message_subscribe(partner_ids={u.id: partner_ids for u in self.update_ids}, subtype_ids=subtype_ids)
         return res
 
     def _alias_get_creation_values(self):
@@ -918,17 +921,31 @@ class Project(models.Model):
         goes from 'portal' to a different value.
         If the privacy visibility is set to 'portal', subscribe back project and tasks partners.
         """
+        project_subscribe_mapping = defaultdict(list)
+        project_unsubscribe_mapping = defaultdict(list)
+        task_subscribe_mapping = defaultdict(list)
+        task_unsubscribe_mapping = defaultdict(list)
         for project in self:
             if project.privacy_visibility == new_visibility:
                 continue
             if new_visibility == 'portal':
-                project.message_subscribe(partner_ids=project.partner_id.ids)
-                for task in project.task_ids.filtered('partner_id'):
-                    task.message_subscribe(partner_ids=task.partner_id.ids)
+                project_subscribe_mapping[project.id] += project.partner_id.ids
+                for task in project.task_ids:
+                    if task.partner_id:
+                        task_subscribe_mapping[task.id] += task.partner_id.ids
             elif project.privacy_visibility == 'portal':
                 portal_users = project.message_partner_ids.user_ids.filtered('share')
-                project.message_unsubscribe(partner_ids=portal_users.partner_id.ids)
-                project.tasks._unsubscribe_portal_users()
+                project_unsubscribe_mapping[project.id] += portal_users.partner_id.ids
+                for task in project.tasks:
+                    task_unsubscribe_mapping[task.id] += task.message_partner_ids.filtered('user_ids.share').ids
+        if project_subscribe_mapping:
+            self.message_subscribe(project_subscribe_mapping)
+        if project_unsubscribe_mapping:
+            self.message_unsubscribe(project_unsubscribe_mapping)
+        if task_subscribe_mapping:
+            self.env['project.task'].message_subscribe(task_subscribe_mapping)
+        if task_unsubscribe_mapping:
+            self.env['project.task'].message_unsubscribe(task_unsubscribe_mapping)
 
     # ---------------------------------------------------
     # Project sharing
@@ -961,7 +978,7 @@ class Project(models.Model):
 
     def _add_followers(self, partners):
         self.ensure_one()
-        self.message_subscribe(partners.ids)
+        self.message_subscribe({self.id: partners.ids})
 
         dict_tasks_per_partner = {}
         dict_partner_ids_to_subscribe_per_partner = {}
@@ -976,5 +993,10 @@ class Project(models.Model):
                 if partner_ids_to_subscribe:
                     dict_tasks_per_partner[task.partner_id] = task
                     dict_partner_ids_to_subscribe_per_partner[task.partner_id] = partner_ids_to_subscribe
+
+        subscribe_mapping = defaultdict(list)
         for partner, tasks in dict_tasks_per_partner.items():
-            tasks.message_subscribe(dict_partner_ids_to_subscribe_per_partner[partner])
+            for task in tasks:
+                subscribe_mapping[task.id] += dict_partner_ids_to_subscribe_per_partner[partner]
+        if subscribe_mapping:
+            self.env['project.task'].message_subscribe(subscribe_mapping)

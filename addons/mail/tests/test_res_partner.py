@@ -514,7 +514,7 @@ class TestPartner(MailCommon):
         p3 = Partner.create({'name': 'Other (dup email)', 'email': 'test1@test.example.com'})
 
         # add some mail related documents
-        p1.message_subscribe(partner_ids=p3.ids)
+        p1.message_subscribe(partner_ids={p1.id: p3.ids})
         p1_act1 = p1.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo')
         p1_msg1 = p1.message_post(
             body=Markup('<p>Log on P1</p>'),

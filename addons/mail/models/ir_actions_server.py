@@ -184,14 +184,14 @@ class ServerActions(models.Model):
         Model = self.env[self.model_name]
         if self.partner_ids and hasattr(Model, 'message_subscribe'):
             records = Model.browse(self._context.get('active_ids', self._context.get('active_id')))
-            records.message_subscribe(partner_ids=self.partner_ids.ids)
+            records.message_subscribe(partner_ids={r.id: self.partner_ids.ids for r in records})
         return False
 
     def _run_action_remove_followers_multi(self, eval_context=None):
         Model = self.env[self.model_name]
         if self.partner_ids and hasattr(Model, 'message_unsubscribe'):
             records = Model.browse(self._context.get('active_ids', self._context.get('active_id')))
-            records.message_unsubscribe(partner_ids=self.partner_ids.ids)
+            records.message_unsubscribe(partner_ids={r.id: self.partner_ids.ids for r in records})
         return False
 
     def _is_recompute(self):
