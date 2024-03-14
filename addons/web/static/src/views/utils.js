@@ -234,6 +234,7 @@ export function processButton(node) {
         options: JSON.parse(node.getAttribute("options") || "{}"),
         display: node.getAttribute("display") || "selection",
         clickParams,
+        is_technical_chm: node.getAttribute("technical-chm"),
         column_invisible: node.getAttribute("column_invisible"),
         invisible: combineModifiers(
             node.getAttribute("column_invisible"),

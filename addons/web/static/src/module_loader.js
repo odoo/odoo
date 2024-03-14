@@ -242,10 +242,8 @@
     }
 
     const odoo = (globalThis.odoo ||= {});
-    if (odoo.debug && !new URLSearchParams(location.search).has("debug")) {
-        // remove debug mode if not explicitely set in url
-        odoo.debug = "";
-    }
+    // add debug mode if explicitely set in url
+    odoo.debug = new URLSearchParams(location.search).get('debug') || '';
 
     const loader = new ModuleLoader();
     odoo.define = loader.define.bind(loader);

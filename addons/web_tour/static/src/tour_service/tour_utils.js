@@ -354,6 +354,28 @@ export const stepUtils = {
         return step;
     },
 
+    toggleTechnical_chm() {
+        return {
+            content: "Display technical features (alt+shift+h)",
+            edition: "community",
+            trigger: ".o_web_client",
+            position: "absolute",
+            run: async () => {
+                const eventAttrs = {
+                    key: 'h',
+                    shiftKey: true,
+                    altKey: true,
+                    bubbles: true,
+                    cancelable: true,
+                };
+                document.querySelector('.o_web_client').dispatchEvent(new KeyboardEvent("keydown", eventAttrs));
+                await new Promise((resolve) => window.requestAnimationFrame(resolve));
+                await new Promise((resolve) => setTimeout(resolve));
+                document.querySelector('.o_web_client').dispatchEvent(new KeyboardEvent("keyup", eventAttrs));
+            },
+        };
+    },
+
     editionEnterpriseModifier(step) {
         step.edition = "enterprise";
         return step;

@@ -11,7 +11,6 @@
                 var odoo = <t t-out="json.dumps({
                     'csrf_token': request.csrf_token(None),
                     '__session_info__': session_info,
-                    'debug': debug,
                     'pos_session_id': pos_session_id,
                 })"/>;
             </script>

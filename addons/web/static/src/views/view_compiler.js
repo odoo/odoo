@@ -267,6 +267,7 @@ export class ViewCompiler {
         }
 
         this.validateNode(node);
+
         let invisible;
         if (evalInvisible) {
             invisible = getModifier(node, "invisible");
@@ -289,6 +290,15 @@ export class ViewCompiler {
         if (evalInvisible && compiledNode) {
             compiledNode = this.applyInvisible(invisible, compiledNode, params);
         }
+
+        const technical_chm = getModifier(node, "technical-chm");
+        if (technical_chm) {
+            compiledNode.setAttribute(
+                "t-if",
+                (technical_chm === "1" ? "" : "!") + "__comp__.technical_chm.active"
+            );
+        }
+
         return compiledNode;
     }
 
@@ -391,7 +401,13 @@ export class ViewCompiler {
      */
     compileGenericNode(el, params) {
         const compiled = createElement(el.nodeName.toLowerCase());
-        const metaAttrs = ["column_invisible", "invisible", "readonly", "required"];
+        const metaAttrs = [
+            "column_invisible",
+            "invisible",
+            "readonly",
+            "required",
+            "technical-chm",
+        ];
         for (const attr of el.attributes) {
             if (metaAttrs.includes(attr.name)) {
                 continue;
