@@ -284,8 +284,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertGoogleEventPatched(event.google_id, {
             'id': event.google_id,
             'summary': 'coucou',
-            'start': {'date': str(event.start_date)},
-            'end': {'date': str(event.stop_date + relativedelta(days=1))},
+            'start': {'date': str(event.start_date), 'dateTime': None},
+            'end': {'date': str(event.stop_date + relativedelta(days=1)), 'dateTime': None},
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'declined'}],
             'extendedProperties': {'private': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
             'reminders': {'overrides': [], 'useDefault': False},
@@ -415,8 +415,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'visibility': 'public',
             'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=3;BYDAY=MO'],
             'reminders': {'useDefault': True},
-            'start': {'dateTime': '2020-01-06T18:00:00+01:00'},
-            'end': {'dateTime': '2020-01-06T19:00:00+01:00'},
+            'start': {'dateTime': '2020-01-06T18:00:00+01:00', 'date': None},
+            'end': {'dateTime': '2020-01-06T19:00:00+01:00', 'date': None},
         }
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
         recurrence = self.env['calendar.recurrence'].search([('google_id', '=', values.get('id'))])
@@ -709,8 +709,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'id': google_id,
             'summary': 'coucou again',
             'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=MO'],
-            'start': {'dateTime': '2021-02-15T09:00:00+01:00'}, # 8:00 UTC
-            'end': {'dateTime': '2021-02-15-T11:00:00+01:00'},
+            'start': {'dateTime': '2021-02-15T09:00:00+01:00', 'date': None},  # 8:00 UTC
+            'end': {'dateTime': '2021-02-15-T11:00:00+01:00', 'date': None},
             'reminders': {'useDefault': True},
             "attendees": [
                 {
@@ -759,8 +759,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'id': google_id,
             'summary': "It's me again",
             'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=4;BYDAY=MO'],
-            'start': {'dateTime': '2021-02-15T12:00:00+01:00'},  # 11:00 UTC
-            'end': {'dateTime': '2021-02-15-T15:00:00+01:00'},
+            'start': {'dateTime': '2021-02-15T12:00:00+01:00', 'date': None},  # 11:00 UTC
+            'end': {'dateTime': '2021-02-15-T15:00:00+01:00', 'date': None},
             'reminders': {'useDefault': True},
             "attendees": [
                 {
@@ -821,8 +821,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'visibility': 'public',
             'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=3;BYDAY=MO'],
             'reminders': {'useDefault': True},
-            'start': {'dateTime': '2020-01-06T18:00:00+01:00', 'timeZone': 'Pacific/Auckland'},
-            'end': {'dateTime': '2020-01-06T19:00:00+01:00', 'timeZone': 'Pacific/Auckland'},
+            'start': {'dateTime': '2020-01-06T18:00:00+01:00', 'timeZone': 'Pacific/Auckland', 'date': None},
+            'end': {'dateTime': '2020-01-06T19:00:00+01:00', 'timeZone': 'Pacific/Auckland', 'date': None},
         }
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
         recurrence = self.env['calendar.recurrence'].search([('google_id', '=', values.get('id'))])
@@ -961,11 +961,13 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             'start': {
                 'dateTime': '2020-01-06T18:00:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
             'end': {
                 'dateTime': '2020-01-13T19:55:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
         }
         self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
@@ -978,8 +980,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'visibility': 'public',
             'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=3;BYDAY=MO'],
             'reminders': {'useDefault': True},
-            'start': {'dateTime': '2020-01-06T18:00:00+01:00', 'timeZone': 'Europe/Brussels'},
-            'end': {'dateTime': '2020-01-06T19:00:00+01:00', 'timeZone': 'Europe/Brussels'},
+            'start': {'dateTime': '2020-01-06T18:00:00+01:00', 'timeZone': 'Europe/Brussels', 'date': None},
+            'end': {'dateTime': '2020-01-06T19:00:00+01:00', 'timeZone': 'Europe/Brussels', 'date': None},
         }
         recurrence = self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
         events = recurrence.calendar_event_ids.sorted('start')
@@ -1011,11 +1013,13 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'overrides': [{"method": "email", "minutes": 10}], 'useDefault': False},
             'start': {
                 'dateTime': pytz.utc.localize(start).isoformat(),
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None
             },
             'end': {
                 'dateTime': pytz.utc.localize(end).isoformat(),
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None
             },
         }
         self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
@@ -1040,11 +1044,13 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'overrides': [{"method": "email", "minutes": 10}], 'useDefault': False},
             'start': {
                 'dateTime': pytz.utc.localize(start).isoformat(),
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
             'end': {
                 'dateTime': pytz.utc.localize(end).isoformat(),
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
         }
         self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
@@ -1082,11 +1088,13 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             'start': {
                 'dateTime': '2020-01-13T16:55:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
             'end': {
                 'dateTime': '2020-01-13T19:55:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None
             },
             'transparency': 'opaque',
         }
@@ -1113,8 +1121,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         # guestsCanModify property is not properly handled yet
         self.assertGoogleEventPatched(event.google_id, {
             'id': event.google_id,
-            'start': {'date': str(event.start_date)},
-            'end': {'date': str(event.stop_date + relativedelta(days=1))},
+            'start': {'date': str(event.start_date), 'dateTime': None},
+            'end': {'date': str(event.stop_date + relativedelta(days=1)), 'dateTime': None},
             'summary': 'coucou',
             'description': '',
             'location': '',
@@ -1159,8 +1167,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             # 'visibility': 'public',
             'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=MO'],
             'reminders': {'useDefault': True},
-            'start': {'dateTime': '2021-02-15T8:00:00+01:00', 'timeZone': 'Europe/Brussels'},
-            'end': {'dateTime': '2021-02-15T10:00:00+01:00', 'timeZone': 'Europe/Brussels'},
+            'start': {'dateTime': '2021-02-15T8:00:00+01:00', 'timeZone': 'Europe/Brussels', 'date': None},
+            'end': {'dateTime': '2021-02-15T10:00:00+01:00', 'timeZone': 'Europe/Brussels', 'date': None},
         }
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
         attendee = recurrence.calendar_event_ids.attendee_ids.mapped('state')
@@ -1180,8 +1188,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             # 'visibility': 'public',
             'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=MO'],
             'reminders': {'useDefault': True},
-            'start': {'dateTime': '2021-02-15T8:00:00+01:00', 'timeZone': 'Europe/Brussels'},
-            'end': {'dateTime': '2021-02-15T10:00:00+01:00', 'timeZone': 'Europe/Brussels'},
+            'start': {'dateTime': '2021-02-15T8:00:00+01:00', 'timeZone': 'Europe/Brussels', 'date': None},
+            'end': {'dateTime': '2021-02-15T10:00:00+01:00', 'timeZone': 'Europe/Brussels', 'date': None},
             'guestsCanModify': True,
         }
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
@@ -1248,11 +1256,13 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=MO'],
             'start': {
                 'dateTime': '2020-01-13T16:00:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
             'end': {
                 'dateTime': '2020-01-13T20:00:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None
             },
         }])
         self.sync(gevent)
@@ -1280,11 +1290,13 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             'start': {
                 'dateTime': '2020-01-13T16:00:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
             'end': {
                 'dateTime': '2020-01-13T20:00:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
         }
         event = self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
@@ -1307,11 +1319,13 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             'start': {
                 'dateTime': '2020-01-13T16:55:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
             'end': {
                 'dateTime': '2020-01-13T19:55:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None
             },
             'conferenceData': {
                 'entryPoints': [{
@@ -1403,11 +1417,13 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             'start': {
                 'dateTime': '2020-01-13T16:55:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
             'end': {
                 'dateTime': '2020-01-13T19:55:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
             'transparency': 'transparent'
         }
@@ -1437,11 +1453,13 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             'start': {
                 'dateTime': '2020-01-13T16:55:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
             'end': {
                 'dateTime': '2020-01-13T19:55:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
         }
 
@@ -1532,11 +1550,13 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             'start': {
                 'dateTime': '2020-01-13T16:55:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
             'end': {
                 'dateTime': '2020-01-13T19:55:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
         }
         self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
@@ -1575,11 +1595,13 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             'start': {
                 'dateTime': '2020-01-13T16:55:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
             'end': {
                 'dateTime': '2020-01-13T19:55:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None
             },
         }
 
@@ -1642,8 +1664,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                 'summary': 'First title',
                 'creator': {'email': 'john.doe@example.com', 'self': True},
                 'organizer': {'email': 'john.doe@example.com', 'self': True},
-                'start': {'dateTime': '2023-05-12T09:00:00+02:00', 'timeZone': 'Europe/Brussels'},
-                'end': {'dateTime': '2023-05-12T10:00:00+02:00', 'timeZone': 'Europe/Brussels'},
+                'start': {'dateTime': '2023-05-12T09:00:00+02:00', 'timeZone': 'Europe/Brussels', 'date': None},
+                'end': {'dateTime': '2023-05-12T10:00:00+02:00', 'timeZone': 'Europe/Brussels', 'date': None},
                 'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;UNTIL=20230518T215959Z;BYDAY=FR'],
                 'iCalUID': '59orfkiunbn2vlp6c2tndq6ui0@google.com',
                 'reminders': {'useDefault': True},
@@ -1658,8 +1680,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                 'summary': 'Second title',
                 'creator': {'email': 'john.doe@example.com', 'self': True},
                 'organizer': {'email': 'john.doe@example.com', 'self': True},
-                'start': {'dateTime': '2023-05-19T09:00:00+02:00', 'timeZone': 'Europe/Brussels'},
-                'end': {'dateTime': '2023-05-19T10:00:00+02:00', 'timeZone': 'Europe/Brussels'},
+                'start': {'dateTime': '2023-05-19T09:00:00+02:00', 'timeZone': 'Europe/Brussels', 'date': None},
+                'end': {'dateTime': '2023-05-19T10:00:00+02:00', 'timeZone': 'Europe/Brussels', 'date': None},
                 'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=2;BYDAY=FR'],
                 'iCalUID': '59orfkiunbn2vlp6c2tndq6ui0_R20230519T070000@google.com',
                 'reminders': {'useDefault': True},
@@ -1674,8 +1696,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                 'summary': 'Second title',
                 'creator': {'email': 'john.doe@example.com', 'self': True},
                 'organizer': {'email': 'john.doe@example.com', 'self': True},
-                'start': {'dateTime': '2023-05-26T08:00:00+02:00', 'timeZone': 'Europe/Brussels'},
-                'end': {'dateTime': '2023-05-26T09:00:00+02:00', 'timeZone': 'Europe/Brussels'},
+                'start': {'dateTime': '2023-05-26T08:00:00+02:00', 'timeZone': 'Europe/Brussels', 'date': None},
+                'end': {'dateTime': '2023-05-26T09:00:00+02:00', 'timeZone': 'Europe/Brussels', 'date': None},
                 'recurringEventId': '59orfkiunbn2vlp6c2tndq6ui0_R20230519T070000',
                 'originalStartTime': {'dateTime': '2023-05-26T09:00:00+02:00', 'timeZone': 'Europe/Brussels'},
                 'reminders': {'useDefault': True},
@@ -1750,8 +1772,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                 'summary': 'First title',
                 'creator': {'email': 'john.doe@example.com', 'self': True},
                 'organizer': {'email': 'john.doe@example.com', 'self': True},
-                'start': {'dateTime': '2023-05-12T09:00:00+02:00', 'timeZone': 'Europe/Brussels'},
-                'end': {'dateTime': '2023-05-12T10:00:00+02:00', 'timeZone': 'Europe/Brussels'},
+                'start': {'dateTime': '2023-05-12T09:00:00+02:00', 'timeZone': 'Europe/Brussels', 'date': None},
+                'end': {'dateTime': '2023-05-12T10:00:00+02:00', 'timeZone': 'Europe/Brussels', 'date': None},
                 'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;UNTIL=20230518T215959Z;BYDAY=FR'],
                 'iCalUID': '59orfkiunbn2vlp6c2tndq6ui0@google.com',
                 'reminders': {'useDefault': True},
@@ -1766,8 +1788,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                 'summary': 'Second title',
                 'creator': {'email': 'john.doe@example.com', 'self': True},
                 'organizer': {'email': 'john.doe@example.com', 'self': True},
-                'start': {'dateTime': '2023-05-19T09:00:00+02:00', 'timeZone': 'Europe/Brussels'},
-                'end': {'dateTime': '2023-05-19T10:00:00+02:00', 'timeZone': 'Europe/Brussels'},
+                'start': {'dateTime': '2023-05-19T09:00:00+02:00', 'timeZone': 'Europe/Brussels', 'date': None},
+                'end': {'dateTime': '2023-05-19T10:00:00+02:00', 'timeZone': 'Europe/Brussels', 'date': None},
                 'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=2;BYDAY=FR'],
                 'iCalUID': '59orfkiunbn2vlp6c2tndq6ui0_R20230519T070000@google.com',
                 'reminders': {'useDefault': True},
@@ -1782,8 +1804,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                 'summary': 'Second title',
                 'creator': {'email': 'john.doe@example.com', 'self': True},
                 'organizer': {'email': 'john.doe@example.com', 'self': True},
-                'start': {'dateTime': '2023-05-26T08:00:00+02:00', 'timeZone': 'Europe/Brussels'},
-                'end': {'dateTime': '2023-05-26T09:00:00+02:00', 'timeZone': 'Europe/Brussels'},
+                'start': {'dateTime': '2023-05-26T08:00:00+02:00', 'timeZone': 'Europe/Brussels', 'date': None},
+                'end': {'dateTime': '2023-05-26T09:00:00+02:00', 'timeZone': 'Europe/Brussels', 'date': None},
                 'recurringEventId': '59orfkiunbn2vlp6c2tndq6ui0', # Range removed
                 'originalStartTime': {'dateTime': '2023-05-26T09:00:00+02:00', 'timeZone': 'Europe/Brussels'},
                 'reminders': {'useDefault': True},
@@ -1850,11 +1872,13 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             'start': {
                 'dateTime': '2023-07-05T16:55:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None
             },
             'end': {
                 'dateTime': '2023-07-05T19:55:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None
             },
         }
         # Create an event editable by guests and organizer.
@@ -1873,11 +1897,13 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             'start': {
                 'dateTime': '2023-07-05T16:55:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
             'end': {
                 'dateTime': '2023-07-05T19:55:00+01:00',
-                'timeZone': 'Europe/Brussels'
+                'timeZone': 'Europe/Brussels',
+                'date': None,
             },
         }
         # Sync events from Google to Odoo and get them after sync.
@@ -1935,8 +1961,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'summary': 'coucou',
             'id': recurrence_id,
             'recurrence': ['RRULE:FREQ=DAILY;INTERVAL=1;COUNT=3'],
-            'start': {'dateTime': '2020-01-06T10:00:00+01:00'},
-            'end': {'dateTime': '2020-01-06T11:00:00+01:00'},
+            'start': {'dateTime': '2020-01-06T10:00:00+01:00', 'date': None},
+            'end': {'dateTime': '2020-01-06T11:00:00+01:00', 'date': None},
             'reminders': {'useDefault': True},
             'organizer': {'email': organizer.partner_id.email},
             'attendees': [{'email': organizer.partner_id.email, 'responseStatus': 'accepted'}, {'email': other_user.partner_id.email, 'responseStatus': 'accepted'}],

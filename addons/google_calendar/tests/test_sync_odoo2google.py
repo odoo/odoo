@@ -47,8 +47,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventInserted({
             'id': False,
-            'start': {'dateTime': '2020-01-15T08:00:00+00:00'},
-            'end': {'dateTime': '2020-01-15T18:00:00+00:00'},
+            'start': {'dateTime': '2020-01-15T08:00:00+00:00', 'date': None},
+            'end': {'dateTime': '2020-01-15T18:00:00+00:00', 'date': None},
             'summary': 'Event',
             'description': tools.html_sanitize(description),
             'location': '',
@@ -160,8 +160,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventInserted({
             'id': False,
-            'start': {'dateTime': '2020-01-15T08:00:00+00:00'},
-            'end': {'dateTime': '2020-01-15T18:00:00+00:00'},
+            'start': {'dateTime': '2020-01-15T08:00:00+00:00', 'date': None},
+            'end': {'dateTime': '2020-01-15T18:00:00+00:00', 'date': None},
             'summary': 'Event',
             'description': '',
             'location': '',
@@ -187,8 +187,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventInserted({
             'id': False,
-            'start': {'date': '2020-01-15'},
-            'end': {'date': '2020-01-16'},
+            'start': {'date': '2020-01-15', 'dateTime': None},
+            'end': {'date': '2020-01-16', 'dateTime': None},
             'summary': 'Event',
             'description': '',
             'location': '',
@@ -248,8 +248,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         recurrence._sync_odoo2google(self.google_service)
         self.assertGoogleEventInserted({
             'id': False,
-            'start': {'date': '2020-01-15'},
-            'end': {'date': '2020-01-16'},
+            'start': {'date': '2020-01-15', 'dateTime': None},
+            'end': {'date': '2020-01-16', 'dateTime': None},
             'summary': 'Event',
             'description': '',
             'location': '',
@@ -283,8 +283,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         self.assertFalse(event.google_id, "The google id will be set after the API call")
         self.assertGoogleEventInserted({
             'id': False,
-            'start': {'date': '2020-01-15'},
-            'end': {'date': '2020-01-16'},
+            'start': {'date': '2020-01-15', 'dateTime': None},
+            'end': {'date': '2020-01-16', 'dateTime': None},
             'summary': 'Event',
             'description': '',
             'location': '',
@@ -331,8 +331,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
         self.assertGoogleEventInserted({
             'id': False,
-            'start': {'date': str(event.start_date)},
-            'end': {'date': str(event.stop_date + relativedelta(days=1))},
+            'start': {'date': str(event.start_date), 'dateTime': None},
+            'end': {'date': str(event.stop_date + relativedelta(days=1)), 'dateTime': None},
             'summary': 'New name',
             'description': '',
             'location': '',
@@ -382,8 +382,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         user.with_user(user).restart_google_synchronization()
         self.assertGoogleEventPatched(event.google_id, {
             'id': event.google_id,
-            'start': {'dateTime': '2020-01-15T08:00:00+00:00'},
-            'end': {'dateTime': '2020-01-15T18:00:00+00:00'},
+            'start': {'dateTime': '2020-01-15T08:00:00+00:00', 'date': None},
+            'end': {'dateTime': '2020-01-15T18:00:00+00:00', 'date': None},
             'summary': 'Event',
             'description': '',
             'location': '',
@@ -419,8 +419,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         new_recurrence = self.env['calendar.recurrence'].search([('id', '>', recurrence.id)])
         self.assertGoogleEventInserted({
             'id': False,
-            'start': {'date': str(event.start_date)},
-            'end': {'date': str(event.stop_date + relativedelta(days=1))},
+            'start': {'date': str(event.start_date), 'dateTime': None},
+            'end': {'date': str(event.stop_date + relativedelta(days=1)), 'dateTime': None},
             'summary': 'New name',
             'description': '',
             'location': '',
@@ -549,8 +549,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         event.attendee_ids.do_decline()
         self.assertGoogleEventPatched(event.google_id, {
             'id': event.google_id,
-            'start': {'date': str(event.start_date)},
-            'end': {'date': str(event.stop_date + relativedelta(days=1))},
+            'start': {'date': str(event.start_date), 'dateTime': None},
+            'end': {'date': str(event.stop_date + relativedelta(days=1)), 'dateTime': None},
             'summary': 'Event with attendees',
             'description': '',
             'location': '',
@@ -586,8 +586,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         new_recurrence = self.env['calendar.recurrence'].search([('id', '>', recurrence.id)])
         self.assertGoogleEventInserted({
             'id': False,
-            'start': {'dateTime': "2020-01-15T08:00:00+00:00", 'timeZone': 'Europe/Brussels'},
-            'end': {'dateTime': "2020-01-15T09:00:00+00:00", 'timeZone': 'Europe/Brussels'},
+            'start': {'dateTime': "2020-01-15T08:00:00+00:00", 'timeZone': 'Europe/Brussels', 'date': None},
+            'end': {'dateTime': "2020-01-15T09:00:00+00:00", 'timeZone': 'Europe/Brussels', 'date': None},
             'summary': 'New name',
             'description': '',
             'location': '',
@@ -659,8 +659,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         event_1.action_mass_archive('self_only')
         self.assertGoogleEventPatched(event_1.google_id, {
             'id': event_1.google_id,
-            'start': {'dateTime': '2023-06-15T10:00:00+00:00'},
-            'end': {'dateTime': '2023-06-15T10:00:00+00:00'},
+            'start': {'dateTime': '2023-06-15T10:00:00+00:00', 'date': None},
+            'end': {'dateTime': '2023-06-15T10:00:00+00:00', 'date': None},
             'summary': 'Event',
             'description': '',
             'location': '',
@@ -794,8 +794,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventInserted({
             'id': False,
-            'start': {'dateTime': '2024-03-29T10:00:00+00:00'},
-            'end': {'dateTime': '2024-03-29T10:00:00+00:00'},
+            'start': {'dateTime': '2024-03-29T10:00:00+00:00', 'date': None},
+            'end': {'dateTime': '2024-03-29T10:00:00+00:00', 'date': None},
             'summary': 'Event',
             'description': '',
             'location': '',
@@ -820,8 +820,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventInserted({
             'id': False,
-            'start': {'dateTime': '2024-03-29T10:00:00+00:00'},
-            'end': {'dateTime': '2024-03-29T10:00:00+00:00'},
+            'start': {'dateTime': '2024-03-29T10:00:00+00:00', 'date': None},
+            'end': {'dateTime': '2024-03-29T10:00:00+00:00', 'date': None},
             'summary': 'Event',
             'description': '',
             'location': '',
