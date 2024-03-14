@@ -305,7 +305,7 @@ class Import(models.TransientModel):
                 field_value['comodel_name'] = field['relation']
             elif field['type'] == 'one2many':
                 field_value['fields'] = self.get_fields_tree(field['relation'], depth=depth-1)
-                field_value['fields'].append({'id': '.id', 'name': '.id', 'string': _("Database ID"), 'required': False, 'fields': [], 'type': 'id', 'technical-chm': True})
+                field_value['fields'].append({'id': '.id', 'name': '.id', 'string': _("Database ID"), 'required': False, 'fields': [], 'type': 'id', 'advanced': True})
                 field_value['comodel_name'] = field['relation']
 
             importable_fields.append(field_value)

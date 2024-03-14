@@ -24,7 +24,7 @@ class IrUiMenu(models.Model):
 
     name = fields.Char(string='Menu', required=True, translate=True)
     active = fields.Boolean(default=True)
-    technical_chm = fields.Boolean(default=False)
+    advanced = fields.Boolean(default=False)
     sequence = fields.Integer(default=10)
     child_id = fields.One2many('ir.ui.menu', 'parent_id', string='Child IDs')
     parent_id = fields.Many2one('ir.ui.menu', string='Parent Menu', index=True, ondelete="restrict")
@@ -249,7 +249,7 @@ class IrUiMenu(models.Model):
         :return: the menu root
         :rtype: dict('children': menu_nodes)
         """
-        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon', 'technical_chm']
+        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon', 'advanced']
         menu_roots = self.get_user_roots()
         menu_roots_data = menu_roots.read(fields) if menu_roots else []
         menu_root = {
@@ -257,7 +257,7 @@ class IrUiMenu(models.Model):
             'name': 'root',
             'parent_id': [-1, ''],
             'children': [menu['id'] for menu in menu_roots_data],
-            'technical_chm': False,
+            'advanced': False,
         }
 
         all_menus = {'root': menu_root}
@@ -311,8 +311,8 @@ class IrUiMenu(models.Model):
             if not all_menus[menu_id]['children']:
                 continue
             all_menus[menu_id]['children'].sort(key=lambda id: all_menus[id]['sequence'])
-            if not all_menus[menu_id]['technical_chm']:
-                all_menus[menu_id]['technical_chm'] = all(all_menus[item_id]['technical_chm'] for item_id in all_menus[menu_id]['children'])
+            if not all_menus[menu_id]['advanced']:
+                all_menus[menu_id]['advanced'] = all(all_menus[item_id]['advanced'] for item_id in all_menus[menu_id]['children'])
 
         # recursively set app ids to related children
         def _set_app_id(app_id, menu):

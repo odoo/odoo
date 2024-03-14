@@ -1527,7 +1527,7 @@ class GroupsView(models.Model):
                 attrs = {}
                 # hide groups in categories 'Hidden' and 'Extra'
                 if app.xml_id in self._get_hidden_extra_categories():
-                    attrs['technical-chm'] = '1'
+                    attrs['advanced'] = '1'
 
                 # User type (employee, portal or public) is a separated group. This is the only 'selection'
                 # group of res.groups without implied groups (with each other).
@@ -1558,8 +1558,8 @@ class GroupsView(models.Model):
                     xml_by_category[category_name].append(E.field(name=field_name, **attrs))
                     xml_by_category[category_name].append(E.newline())
                     # add duplicate invisible field so default values are saved on create
-                    if attrs.get('technical-chm'):
-                        xml0.append(E.field(name=field_name, **{**attrs, "invisible": "1", "technical-chm": "0"}))
+                    if attrs.get('advanced'):
+                        xml0.append(E.field(name=field_name, **{**attrs, "invisible": "1", "advanced": "0"}))
 
                 else:
                     # application separator with boolean fields
@@ -1574,8 +1574,8 @@ class GroupsView(models.Model):
                         dest_group = left_group if group_count % 2 == 0 else right_group
                         dest_group.append(E.field(name=field_name, **attrs))
                         # add duplicate invisible field so default values are saved on create
-                        if attrs.get('technical-chm'):
-                            xml0.append(E.field(name=field_name, **{**attrs, "invisible": "1", "technical-chm": "0"}))
+                        if attrs.get('advanced'):
+                            xml0.append(E.field(name=field_name, **{**attrs, "invisible": "1", "advanced": "0"}))
                         group_count += 1
                     xml4.append(E.group(*left_group))
                     xml4.append(E.group(*right_group))
@@ -1604,10 +1604,10 @@ class GroupsView(models.Model):
 
             xml = E.field(
                 *(xml0),
-                E.group(*(xml1),  **{"technical-chm": "1"}),
+                E.group(*(xml1),  **{"advanced": "1"}),
                 E.group(*(xml2), invisible=user_type_invisible),
                 E.group(*(xml3), invisible=user_type_invisible),
-                E.group(*(xml4), invisible=user_type_invisible, **{"technical-chm": "1"}), name="groups_id", position="replace")
+                E.group(*(xml4), invisible=user_type_invisible, **{"advanced": "1"}), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
 
         # serialize and update the view
