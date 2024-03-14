@@ -7,7 +7,8 @@
                 <t t-set="_eWalletPrograms" t-value="_getEWalletPrograms()" />
                 <t t-set="_eWalletRewards" t-value="_getEWalletRewards(pos.get_order())" />
                 <button class="btn btn-light rounded-0 fw-bolder" t-on-click="onClickWallet"
-                    t-att-class="{'highlight': (_orderTotal lt 0 and _eWalletPrograms.length gte 1) or _eWalletRewards.length gte 1}">
+                    t-att-class="{'highlight': (_orderTotal lt 0 and _eWalletPrograms.length gte 1) or _eWalletRewards.length gte 1}"
+                    t-if="!props.wrapped">
                     <i class="fa fa-credit-card me-1" />
                     <t t-if="_orderTotal lt 0 and _eWalletPrograms.length">eWallet Refund</t>
                     <t t-elif="_eWalletRewards.length">eWallet Pay</t>
@@ -15,7 +16,9 @@
                 </button>
             </t>
             <t t-if="pos.models['loyalty.program'].some((p) => ['coupons', 'promotion', 'gift_card', 'promo_code', 'next_order_coupons'].includes(p.program_type))">
-                <button class="btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickPromoCode()">
+                <button class="btn btn-light rounded-0 fw-bolder"
+                        t-on-click="() => this.clickPromoCode()"
+                        t-if="!pos.config.module_pos_restaurant or (pos.config.module_pos_restaurant and !props.wrapped)">
                     <i class="fa fa-barcode me-1"/>Enter Code
                 </button>
             </t>

@@ -64,9 +64,12 @@ registry.category("web_tour.tours").add("MultipleGiftWalletProgramsTour", {
             PosLoyalty.finalizeOrder("Cash", "50"),
             // Consume 12$ from ewallet_1 of AAAAAAA.
             ProductScreen.addOrderline("Whiteboard Pen", "2", "6", "12.00"),
+            ProductScreen.controlButtonMore(),
             PosLoyalty.eWalletButtonState({ highlighted: false }),
+            Dialog.cancel(),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAAAAAA"),
+            ProductScreen.controlButtonMore(),
             PosLoyalty.eWalletButtonState({ highlighted: true, text: getEWalletText("Pay") }),
             PosLoyalty.clickEWalletButton(getEWalletText("Pay")),
             SelectionPopup.has("ewallet_1"),

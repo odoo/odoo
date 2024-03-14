@@ -213,6 +213,7 @@ registry.category("web_tour.tours").add("PosCouponTour5", {
         [
             Dialog.confirm("Open session"),
             ProductScreen.addOrderline("Test Product 1", "1.00", "100"),
+            ProductScreen.controlButton("More"),
             PosLoyalty.clickDiscountButton(),
             Dialog.confirm(),
             ProductScreen.totalAmountIs("92.00"),

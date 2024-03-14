@@ -9,7 +9,7 @@
                     t-on-click="clickPrintBill">
                     <i class="fa fa-print me-1"></i>Bill
                 </button>
-                <button class="btn btn-light rounded-0 fw-bolder" t-on-click="clickTableGuests">
+                <button class="btn btn-light rounded-0 fw-bolder" t-on-click="clickTableGuests" t-if="!props.wrapped">
                     <span t-esc="currentOrder?.getCustomerCount() || 0" class="px-2 py-1 rounded-circle text-bg-dark fw-bolder small me-1"/>
                     <span>Guests</span>
                 </button>
