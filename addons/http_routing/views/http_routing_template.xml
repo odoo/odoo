@@ -6,9 +6,7 @@
                 <div class="oe_structure">
                     <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
                 </div>
-                <t t-if="editable or debug">
-                    <t t-call="http_routing.http_error_debug"/>
-                </t>
+                <t t-call="http_routing.http_error_debug"/>
             </div>
         </t>
     </template>
@@ -21,7 +19,7 @@
     </template>
 
     <template id="http_error_debug">
-        <div class="container accordion mb32 mt32" id="debug_infos">
+        <div class="container accordion mb32 mt32" id="debug_infos" t-att-advanced="None if editable else '1'">
             <div class="card" t-if="error_message">
                 <h4 class="card-header">
                     <a data-bs-toggle="collapse" href="#error_main">Error</a>
@@ -69,10 +67,8 @@
                     <h1 class="mt-5">Oops! Something went wrong.</h1>
                     <p>Take a look at the error message below.</p>
                 </div>
-                <t t-if="editable or debug">
-                    <t t-call="http_routing.http_error_debug"/>
-                </t>
-                <t t-else="">
+                <t t-call="http_routing.http_error_debug"/>
+                <t t-if="not editable">
                     <div class="container">
                         <t t-call="http_routing.error_message"/>
                     </div>
@@ -88,10 +84,8 @@
                     <h1 class="mt-5">403: Forbidden</h1>
                     <p>The page you were looking for could not be authorized.</p>
                 </div>
-                    <t t-if="editable or debug">
-                        <t t-call="http_routing.http_error_debug"/>
-                    </t>
-                    <t t-else="">
+                    <t t-call="http_routing.http_error_debug"/>
+                    <t t-if="not editable">
                         <div class="container">
                             <t t-call="http_routing.error_message"/>
                         </div>
@@ -178,10 +172,7 @@
                         <div id="error_message" class="oe_structure">
                             <h2 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h2>
                         </div>
-
-                        <t t-if="editable or debug">
-                            <t t-call="http_routing.http_error_debug"/>
-                        </t>
+                        <t t-call="http_routing.http_error_debug"/>
                     </main>
                 </div>
             </body>
