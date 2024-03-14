@@ -148,8 +148,9 @@ class ResPartner(models.Model):
                 if vies_result['valid'] and name != '---':
                     address = list(filter(bool, vies_result['address'].split('\n')))
                     street = address[0]
-                    zip_city = address[-1].split(' ', 1) if len(address) > 1 else [None, None]
-                    street2 = address[1] if len(address) > 2 else None
+                    zip_city_record = next(filter(lambda addr: re.match(r'^\d.*', addr), address[1:]), None)
+                    zip_city = zip_city_record.split(' ', 1) if zip_city_record else [None, None]
+                    street2 = next((addr for addr in filter(lambda addr: addr != zip_city_record, address[1:])), None)
                     return [self._iap_replace_location_codes({
                         'name': name,
                         'vat': vat,
