@@ -26,6 +26,7 @@ import {
 import {
     Command,
     mockService,
+    mockUserAgent,
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
@@ -142,9 +143,7 @@ test("respond to notification prompt (granted)", async () => {
 test("no 'OdooBot has a request' in mobile app", async () => {
     patchBrowserNotification("default");
     // simulate Android Odoo App
-    patchWithCleanup(browser.navigator, {
-        userAgent: "Chrome/0.0.0 Android (OdooMobile; Linux; Android 13; Odoo TestSuite)",
-    });
+    mockUserAgent("chrome", "android");
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });

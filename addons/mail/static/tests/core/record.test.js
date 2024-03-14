@@ -3,7 +3,7 @@ import { describe, afterEach, beforeAll, beforeEach, expect, test } from "@odoo/
 import { Store, Record, makeStore } from "@mail/core/common/record";
 
 import { registry } from "@web/core/registry";
-import { markup, reactive, toRaw } from "@odoo/owl";
+import { reactive, toRaw } from "@odoo/owl";
 import { mockService } from "@web/../tests/web_test_helpers";
 import { Markup } from "@web/../lib/hoot/hoot_utils";
 import { Matchers } from "@web/../lib/hoot/core/expect";
@@ -105,7 +105,6 @@ test("Can pass object as data for relational field with inverse as id", async ()
     const store = await start();
     const thread = store.Thread.insert("General");
     Object.assign(thread, { composer: {} });
-    expect(thread.composer).toBeTruthy();
     expect(thread.composer.thread).toRecEq(thread);
 });
 
@@ -137,7 +136,6 @@ test("Assign & Delete on fields with inverses", async () => {
     const [hello, world] = store.Message.insert(["hello", "world"]);
     // Assign on fields should adapt inverses
     Object.assign(thread, { composer: {}, members: [["ADD", john]], messages: [hello, world] });
-    expect(thread.composer).toBeTruthy();
     expect(thread.composer.thread).toRecEq(thread);
     expect(john.thread).toRecEq(thread);
     expect(john).toRecIn(thread.members);
@@ -152,7 +150,7 @@ test("Assign & Delete on fields with inverses", async () => {
     // delete should adapt inverses
     thread.members.delete(john);
     expect(john).not.toRecIn(thread.members);
-    expect(john.thread).not.toBeTruthy();
+    expect(Boolean(john.thread)).toBe(false);
     // can delete with command
     thread.messages = [["DELETE", world]];
     expect(world).not.toRecIn(thread.messages);
@@ -163,8 +161,8 @@ test("Assign & Delete on fields with inverses", async () => {
     // Deletion removes all relations
     const composer = thread.composer;
     thread.delete();
-    expect(thread.composer).not.toBeTruthy();
-    expect(composer.thread).not.toBeTruthy();
+    expect(Boolean(thread.composer)).toBe(false);
+    expect(Boolean(composer.thread)).toBe(false);
     expect(marc).not.toRecIn(thread.members);
     expect(thread.members).toBeEmpty();
     expect(hello).not.toRecIn(thread.messages);
@@ -315,7 +313,7 @@ test("Trusted insert on html field with { html: true }", async () => {
     const store = await start();
     const hello = store.Message.insert("<p>hello</p>", { html: true });
     const world = store.Message.insert("<p>world</p>");
-    expect(hello.body instanceof markup("").constructor).toBeTruthy();
+    expect(hello.body.constructor).toBe("Markup");
     expect(hello.body.toString()).toBe("<p>hello</p>");
     expect(world.body).toBe("<p>world</p>");
 });
@@ -329,11 +327,11 @@ test("(Un)trusted insertion is applied even with same field value", async () => 
     const store = await start();
     const rawMessage = { id: 1, body: "<p>hello</p>" };
     let message = store.Message.insert(rawMessage);
-    expect(message.body instanceof markup("").constructor).not.toBeTruthy();
+    expect(message.body.constructor).not.toBe("Markup");
     message = store.Message.insert(rawMessage, { html: true });
-    expect(message.body instanceof markup("").constructor).toBeTruthy();
+    expect(message.body.constructor).toBe("Markup");
     message = store.Message.insert(rawMessage);
-    expect(message.body instanceof markup("").constructor).not.toBeTruthy();
+    expect(message.body.constructor).not.toBe("Markup");
 });
 
 test("Unshift preserves order", async () => {
@@ -399,10 +397,10 @@ test("Can insert with relation as id, using relation as data object", async () =
         { pushNotif: true, user: { name: "John" } },
         { pushNotif: false, user: { name: "Paul" } },
     ]);
-    expect(store.User.get("John")).toBeTruthy();
-    expect(store.User.get("John").settings.pushNotif).toBeTruthy();
-    expect(store.User.get("Paul")).toBeTruthy();
-    expect(store.User.get("Paul").settings.pushNotif).not.toBeTruthy();
+    expect(Boolean(store.User.get("John"))).toBe(true);
+    expect(Boolean(store.User.get("John")).settings.pushNotif).toBe(true);
+    expect(Boolean(store.User.get("Paul"))).toBe(true);
+    expect(Boolean(store.User.get("Paul")).settings.pushNotif).toBe(false);
 });
 
 test("Set on attr should invoke onChange", async () => {
@@ -783,7 +781,7 @@ test("record list assign should update inverse fields", async () => {
     general.members = jane; // direct assignation of value goes through assign()
     expect(jane.thread).toRecEq(general);
     general.members = []; // writing empty array specifically goes through assign()
-    expect(jane.thread).not.toBeTruthy();
+    expect(Boolean(jane.thread)).toBe(false);
     jane.thread = general;
     expect(jane).toRecIn(general.members);
     jane.thread = [];
@@ -803,7 +801,7 @@ test("datetime type record", async () => {
     await assertSteps([]);
     const general = store.Thread.insert({ name: "General", date: "2024-02-20 14:42:00" });
     await assertSteps(["DATE_UPDATED"]);
-    expect(general.date instanceof luxon.DateTime).toBeTruthy();
+    expect(general.date).toBeInstanceOf(luxon.DateTime);
     expect(general.date.day).toBe(20);
     store.Thread.insert({ name: "General", date: "2024-02-21 14:42:00" });
     await assertSteps(["DATE_UPDATED"]);
@@ -816,8 +814,8 @@ test("datetime type record", async () => {
     const now = luxon.DateTime.now();
     const thread = store.Thread.insert({ name: "General", date: now });
     await assertSteps(["DATE_UPDATED"]);
-    expect(thread.date instanceof luxon.DateTime).toBeTruthy();
-    expect(thread.date.equals(now)).toBeTruthy();
+    expect(thread.date).toBeInstanceOf(luxon.DateTime);
+    expect(thread.date.equals(now)).toBe(true);
     store.Thread.insert({ name: "General", date: false });
     await assertSteps(["DATE_UPDATED"]);
     expect(general.date).toBe(false);

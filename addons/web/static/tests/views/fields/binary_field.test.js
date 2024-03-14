@@ -1,4 +1,4 @@
-import { after, before, expect, test } from "@odoo/hoot";
+import { after, expect, test } from "@odoo/hoot";
 import { click, queryOne, queryValue, setInputFiles, waitFor } from "@odoo/hoot-dom";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import {
@@ -40,9 +40,7 @@ class Product extends models.Model {
 
 defineModels([Partner, Product]);
 
-before(() => {
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
-});
+onRpc("has_group", () => true);
 
 test("BinaryField is correctly rendered (readonly)", async () => {
     onRpc("/web/content", (request) => {

@@ -529,7 +529,7 @@ export class Matchers {
      *
      * @returns {Omit<Matchers<R, A, Async>, "not">}
      * @example
-     *  expect(false).not.toBeTruthy();
+     *  expect([1]).not.toBeEmpty();
      * @example
      *  expect("foo").not.toBe("bar");
      */
@@ -790,31 +790,6 @@ export class Matchers {
     }
 
     /**
-     * Expects the received value to resolve to a truthy expression.
-     *
-     * @param {ExpectOptions} [options]
-     * @example
-     *  expect(true).toBeTruthy();
-     * @example
-     *  expect([]).toBeTruthy();
-     */
-    toBeTruthy(options) {
-        this.#saveStack();
-
-        ensureArguments([[options, ["object", null]]]);
-
-        return this.#resolve({
-            name: "toBeTruthy",
-            acceptedType: "any",
-            predicate: Boolean,
-            message: (pass) =>
-                options?.message ||
-                (pass ? `%actual% is[! not] truthy` : `expected value[! not] to be truthy`),
-            details: (actual) => [[Markup.red("Received:"), actual]],
-        });
-    }
-
-    /**
      * Expects the received value to be strictly between `min` (inclusive) and
      * `max` (exclusive).
      *
@@ -940,44 +915,6 @@ export class Matchers {
             details: (actual) => [
                 [Markup.green("Matcher:"), matcher],
                 [Markup.red("Received:"), actual],
-            ],
-        });
-    }
-
-    /**
-     * Expects the received value to satisfy the given predicate, taking the received
-     * value as argument.
-     *
-     * @param {(received: R) => boolean} predicate
-     * @param {ExpectOptions} [options]
-     * @example
-     *  expect("foo").toSatisfy((value) => typeof value === "string");
-     * @example
-     *  expect(false).not.toSatisfy(Boolean);
-     */
-    toSatisfy(predicate, options) {
-        this.#saveStack();
-
-        ensureArguments([
-            [predicate, "function"],
-            [options, ["object", null]],
-        ]);
-
-        return this.#resolve({
-            name: "toSatisfy",
-            acceptedType: "any",
-            predicate,
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? `%actual% [satisfies!does not satisfy] the predicate ${formatHumanReadable(
-                          predicate
-                      )}`
-                    : `expected value[! not] to satisfy the predicate`),
-            details: (actual) => [
-                [Markup.green("Expected:"), true],
-                [Markup.red("Received:"), actual],
-                [Markup.text("Predicate:"), predicate],
             ],
         });
     }

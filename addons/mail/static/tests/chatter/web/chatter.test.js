@@ -616,7 +616,7 @@ test("schedule activities on draft record should prompt with scheduling an activ
                 } else if (action.res_model === "mail.activity.schedule") {
                     step("mail.activity.schedule");
                     expect(action.context.active_model).toBe("res.partner");
-                    expect(Number(action.context.active_id)).toBeTruthy();
+                    expect(Number(action.context.active_id)).toBeGreaterThan(0);
                     options.onClose();
                     wizardOpened.resolve();
                 } else {

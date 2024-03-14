@@ -16,7 +16,7 @@ class Contact extends models.Model {
 
 defineModels([Contact]);
 
-onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+onRpc("has_group", () => true);
 
 test("in form view", async () => {
     Contact._records = [{ id: 1, email: "john.doe@odoo.com" }];

@@ -777,11 +777,7 @@ test("edit domain button is available even while loading records count", async f
     serverState.debug = true;
     const searchCountDeffered = new Deferred();
     onRpc("/web/domain/validate", () => true);
-    onRpc(async (route) => {
-        if (route === "/web/dataset/call_kw/partner/search_count") {
-            await searchCountDeffered;
-        }
-    });
+    onRpc("search_count", () => searchCountDeffered);
     await mountView({
         type: "form",
         resModel: "partner",

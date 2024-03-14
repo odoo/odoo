@@ -223,15 +223,15 @@ test("char field translatable", async () => {
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 
     let call_get_field_translations = 0;
-    onRpc(async (route, params) => {
-        if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+    onRpc(async (_, { args, method, model }) => {
+        if (method === "get_installed" && model === "res.lang") {
             return [
                 ["en_US", "English"],
                 ["fr_BE", "French (Belgium)"],
                 ["es_ES", "Spanish"],
             ];
         }
-        if (route === "/web/dataset/call_kw/res.partner/get_field_translations") {
+        if (method === "get_field_translations" && model === "res.partner") {
             if (call_get_field_translations === 0) {
                 call_get_field_translations = 1;
                 return [
@@ -254,8 +254,8 @@ test("char field translatable", async () => {
                 ];
             }
         }
-        if (route === "/web/dataset/call_kw/res.partner/update_field_translations") {
-            expect(params.args[2]).toEqual(
+        if (method === "update_field_translations" && model === "res.partner") {
+            expect(args[2]).toEqual(
                 { en_US: "bar", es_ES: false },
                 {
                     message:
@@ -335,15 +335,15 @@ test("translation dialog should close if field is not there anymore", async () =
             </sheet>
         </form>`,
     });
-    onRpc(async (route) => {
-        if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+    onRpc(async (_, { method, model }) => {
+        if (method === "get_installed" && model === "res.lang") {
             return [
                 ["en_US", "English"],
                 ["fr_BE", "French (Belgium)"],
                 ["es_ES", "Spanish"],
             ];
         }
-        if (route === "/web/dataset/call_kw/res.partner/get_field_translations") {
+        if (method === "get_field_translations" && model === "res.partner") {
             return [
                 [
                     { lang: "en_US", source: "yop", value: "yop" },
@@ -378,14 +378,14 @@ test("html field translatable", async () => {
 
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 
-    onRpc(async (route, params) => {
-        if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+    onRpc(async (route, { args, method, model }) => {
+        if (method === "get_installed" && model === "res.lang") {
             return [
                 ["en_US", "English"],
                 ["fr_BE", "French (Belgium)"],
             ];
         }
-        if (route === "/web/dataset/call_kw/res.partner/get_field_translations") {
+        if (method === "get_field_translations" && model === "res.partner") {
             return [
                 [
                     {
@@ -416,8 +416,8 @@ test("html field translatable", async () => {
             ];
         }
 
-        if (route === "/web/dataset/call_kw/res.partner/update_field_translations") {
-            expect(params.args[2]).toEqual(
+        if (method === "update_field_translations" && model === "res.partner") {
+            expect(args[2]).toEqual(
                 { en_US: { "first paragraph": "first paragraph modified" } },
                 {
                     message: "the new translation value should be written",

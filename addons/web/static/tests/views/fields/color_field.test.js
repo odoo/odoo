@@ -1,6 +1,4 @@
 import { expect, test } from "@odoo/hoot";
-import { queryOne } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
 import {
     contains,
     defineModels,
@@ -70,10 +68,7 @@ test("field contains a color input", async () => {
     );
     expect(".o_field_color input").toHaveValue("#000000");
 
-    const input = queryOne(".o_field_color input");
-    input.value = "#fefefe";
-    input.dispatchEvent(new Event("change"));
-    await animationFrame();
+    await contains(".o_field_color input", { visible: false }).edit("#fefefe");
     expect([
         'onchange [[1],{"hex_color":"#fefefe"},["hex_color"],{"hex_color":{},"display_name":{}}]',
     ]).toVerifySteps();

@@ -19,7 +19,7 @@ class Localization extends models.Model {
 defineModels([Localization]);
 
 test("in a list view", async () => {
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
     await mountView({
         type: "list",
         resModel: "localization",

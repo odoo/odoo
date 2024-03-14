@@ -202,7 +202,7 @@ test("building a domain with an invalid path (2)", async () => {
     });
 
     expect(getCurrentPath()).toBe("bloup");
-    expect(isNotSupportedPath()).toBeTruthy();
+    expect(isNotSupportedPath()).toBe(true);
     expect(getCurrentOperator()).toBe("=");
     expect(getCurrentValue()).toBe("abc");
 
@@ -227,7 +227,7 @@ test("building a domain with an invalid path (3)", async () => {
     });
 
     expect(getCurrentPath()).toBe("bloup");
-    expect(isNotSupportedPath()).toBeTruthy();
+    expect(isNotSupportedPath()).toBe(true);
     expect(getCurrentOperator()).toBe("=");
     expect(getCurrentValue()).toBe("abc");
 
@@ -248,7 +248,7 @@ test("building a domain with an invalid operator", async () => {
     expect(getCurrentPath()).toBe("Foo");
     expect(".o_model_field_selector_warning").toHaveCount(0);
     expect(getCurrentOperator()).toBe(`"!!!!=!!!!"`);
-    expect(isNotSupportedOperator()).toBeTruthy();
+    expect(isNotSupportedOperator()).toBe(true);
     expect(getCurrentValue()).toBe("abc");
 
     await clearNotSupported();
@@ -301,7 +301,7 @@ test("building a domain with a m2o without following the relation", async () => 
         },
     });
     expect([]).toVerifySteps();
-    expect(isNotSupportedValue()).toBeTruthy();
+    expect(isNotSupportedValue()).toBe(true);
 
     await clearNotSupported();
     expect([`[("product_id", "ilike", "")]`]).toVerifySteps();
@@ -320,7 +320,7 @@ test("editing a domain with `parent` key", async () => {
     expect.assertions(2);
 
     expect(getCurrentValue()).toBe("parent.foo");
-    expect(isNotSupportedValue()).toBeTruthy();
+    expect(isNotSupportedValue()).toBe(true);
 });
 
 test("edit a domain with the debug textarea", async () => {
@@ -332,7 +332,7 @@ test("edit a domain with the debug textarea", async () => {
         isDebugMode: true,
         update(domain, fromDebug) {
             expect(domain).toBe(newDomain);
-            expect(fromDebug).toBeTruthy();
+            expect(fromDebug).toBe(true);
         },
     });
 
@@ -355,7 +355,7 @@ test("set [(1, '=', 1)] or [(0, '=', 1)] as domain with the debug textarea", asy
         isDebugMode: true,
         update(domain, fromDebug) {
             expect(domain).toBe(newDomain);
-            expect(fromDebug).toBeTruthy();
+            expect(fromDebug).toBe(true);
         },
     });
 
@@ -602,7 +602,7 @@ test("debug input in model field selector popover", async () => {
     }
     await mountWithCleanup(Parent);
     await openModelFieldSelectorPopover();
-    await contains(".o_model_field_selector_debug").edit("a");
+    await contains(".o_model_field_selector_debug").edit("a", { confirm: "tab" });
     await contains(".o_model_field_selector_popover_close").click();
     expect([`[("a", "=", 1)]`]).toVerifySteps();
     expect(getCurrentPath()).toBe("a");

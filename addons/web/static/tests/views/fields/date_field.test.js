@@ -234,7 +234,7 @@ test("date field with warn_future option: do not overwrite datepicker option", a
 });
 
 test.tags("desktop")("date field in editable list view", async () => {
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
     await mountView({
         type: "list",
         resModel: "res.partner",
@@ -268,39 +268,36 @@ test.tags("desktop")("date field in editable list view", async () => {
     expect("tr.o_data_row td:not(.o_list_record_selector)").toHaveText("02/22/2017");
 });
 
-test.tags("desktop")(
-    "multi edition of date field in list view: clear date in input",
-    async (assert) => {
-        onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
-        Partner._records = [
-            { id: 1, date: "2017-02-03" },
-            { id: 2, date: "2017-02-03" },
-        ];
+test.tags("desktop")("multi edition of date field in list view: clear date in input", async () => {
+    onRpc("has_group", () => true);
+    Partner._records = [
+        { id: 1, date: "2017-02-03" },
+        { id: 2, date: "2017-02-03" },
+    ];
 
-        await mountView({
-            type: "list",
-            resModel: "res.partner",
-            arch: `
+    await mountView({
+        type: "list",
+        resModel: "res.partner",
+        arch: `
             <tree multi_edit="1">
                 <field name="date"/>
             </tree>`,
-        });
+    });
 
-        const rows = queryAll(".o_data_row");
-        await contains(".o_list_record_selector input", { root: rows[0] }).click();
-        await contains(".o_list_record_selector input", { root: rows[1] }).click();
-        await contains(".o_data_cell", { root: rows[0] }).click();
+    const rows = queryAll(".o_data_row");
+    await contains(".o_list_record_selector input", { root: rows[0] }).click();
+    await contains(".o_list_record_selector input", { root: rows[1] }).click();
+    await contains(".o_data_cell", { root: rows[0] }).click();
 
-        expect(".o_field_date input").toHaveCount(1);
-        await fieldInput("date").clear();
+    expect(".o_field_date input").toHaveCount(1);
+    await fieldInput("date").clear();
 
-        expect(".modal").toHaveCount(1);
-        await contains(".modal .modal-footer .btn-primary").click();
+    expect(".modal").toHaveCount(1);
+    await contains(".modal .modal-footer .btn-primary").click();
 
-        expect(".o_data_row:first-child .o_data_cell").toHaveText("");
-        expect(".o_data_row:nth-child(2) .o_data_cell").toHaveText("");
-    }
-);
+    expect(".o_data_row:first-child .o_data_cell").toHaveText("");
+    expect(".o_data_row:nth-child(2) .o_data_cell").toHaveText("");
+});
 
 test("date field remove value", async () => {
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
@@ -318,7 +315,7 @@ test("date field remove value", async () => {
     expect(["false"]).toVerifySteps();
 });
 
-test("date field should select its content onclick when there is one", async (assert) => {
+test("date field should select its content onclick when there is one", async () => {
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 
     await contains(".o_field_date input").click();

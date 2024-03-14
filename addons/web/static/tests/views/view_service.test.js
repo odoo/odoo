@@ -47,7 +47,7 @@ test("stores calls in cache when failed", async () => {
     expect.assertions(3);
     onRpc("get_views", () => {
         expect.step("get_views");
-        return new Error("my little error");
+        throw new Error("my little error");
     });
     const env = await makeMockEnv();
     try {

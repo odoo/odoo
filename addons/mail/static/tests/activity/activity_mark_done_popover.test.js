@@ -77,7 +77,7 @@ test("activity mark done popover mark done without feedback", async () => {
         expect(params.args[0].length).toBe(1);
         expect(params.args[0][0]).toBe(activityId);
         expect(params.kwargs.attachment_ids).toBeEmpty();
-        expect(params.kwargs.feedback).not.toBeTruthy();
+        expect(params.kwargs.feedback).toBe(false);
         // random value returned in order for the mock server to know that this route is implemented.
         return true;
     });

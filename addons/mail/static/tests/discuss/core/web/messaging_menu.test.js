@@ -14,7 +14,7 @@ import {
     startServer,
     triggerHotkey,
 } from "../../../mail_test_helpers";
-import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { Command, getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 import { rpcWithEnv } from "@mail/utils/common/misc";
 
@@ -193,11 +193,11 @@ test("counter is taking into account non-fetched channels", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const env = await start();
+    await start();
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
     expect(
-        env.services["mail.store"].Thread.get({ model: "discuss.channel", id: channelId })
-    ).not.toBeTruthy();
+        Boolean(getService("mail.store").Thread.get({ model: "discuss.channel", id: channelId }))
+    ).toBe(false);
 });
 
 test("counter is updated on receiving message on non-fetched channels", async () => {
@@ -227,8 +227,8 @@ test("counter is updated on receiving message on non-fetched channels", async ()
     await contains(".o_menu_systray .dropdown-toggle i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     expect(
-        env.services["mail.store"].Thread.get({ model: "discuss.channel", id: channelId })
-    ).not.toBeTruthy();
+        Boolean(getService("mail.store").Thread.get({ model: "discuss.channel", id: channelId }))
+    ).toBe(false);
     withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },

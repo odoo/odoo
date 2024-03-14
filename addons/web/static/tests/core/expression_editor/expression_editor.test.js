@@ -389,7 +389,7 @@ test("no field of type properties in model field selector", async () => {
         { level: 0, value: "all" },
         { level: 1, value: ["Properties", "is set"] },
     ]);
-    expect(isNotSupportedPath()).toBeTruthy();
+    expect(isNotSupportedPath()).toBe(true);
     await clearNotSupported();
     expect([`foo == ""`]).toVerifySteps();
 

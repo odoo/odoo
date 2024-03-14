@@ -1,5 +1,6 @@
-import { AttachDocumentWidget } from "@web/views/widgets/attach_document/attach_document";
-
+import { expect, test } from "@odoo/hoot";
+import { click, setInputFiles } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     contains,
     defineModels,
@@ -8,11 +9,7 @@ import {
     models,
     mountView,
     onRpc,
-    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { expect, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
 
 class Partner extends models.Model {
     display_name = fields.Char({ string: "Displayed name" });
@@ -27,14 +24,6 @@ class Partner extends models.Model {
 defineModels([Partner]);
 
 test("attach document widget calls action with attachment ids", async () => {
-    let fileInput;
-    patchWithCleanup(AttachDocumentWidget.prototype, {
-        setup() {
-            super.setup();
-            fileInput = this.fileInput;
-        },
-    });
-
     mockService("http", () => ({
         post: (route, params) => {
             expect.step("post");
@@ -77,19 +66,12 @@ test("attach document widget calls action with attachment ids", async () => {
     await animationFrame();
     click(".o_attach_document");
     await animationFrame();
-    fileInput.dispatchEvent(new Event("change"));
+    setInputFiles([]);
     await animationFrame();
     expect(["web_save", "post", "my_action", "web_read"]).toVerifySteps();
 });
 
 test("attach document widget calls action with attachment ids on a new record", async () => {
-    let fileInput;
-    patchWithCleanup(AttachDocumentWidget.prototype, {
-        setup() {
-            super.setup();
-            fileInput = this.fileInput;
-        },
-    });
     mockService("http", () => ({
         post: (route, params) => {
             expect.step("post");
@@ -129,7 +111,7 @@ test("attach document widget calls action with attachment ids on a new record", 
     await contains("[name='display_name'] input").edit("yop");
     click(".o_attach_document");
     await animationFrame();
-    fileInput.dispatchEvent(new Event("change"));
+    setInputFiles([]);
     await animationFrame();
     expect(["web_save", "post", "my_action", "web_read"]).toVerifySteps();
 });

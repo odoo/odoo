@@ -184,7 +184,7 @@ test("is formatted by default", async () => {
 
 test("basic flow in editable list view", async () => {
     Product._records = [{ id: 1 }, { id: 2, price: 10 }];
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
     await mountView({
         type: "list",
         resModel: "product",
