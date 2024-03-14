@@ -23,11 +23,9 @@ export class Orderline extends Component {
                 price_without_discount: { type: String, optional: true },
             },
         },
-        infoListClasses: { type: String, optional: true },
         slots: { type: Object, optional: true },
     };
     static defaultProps = {
         class: {},
-        infoListClasses: "",
     };
 }
