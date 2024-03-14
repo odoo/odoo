@@ -1,9 +1,10 @@
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
 import { Record } from "./record";
-import { IS_DELETED_SYM, Markup, isAttr, isCommand, isMany, isRecord } from "./misc";
+import { IS_DELETED_SYM, Markup, isCommand, isMany, isRecord } from "./misc";
 import { markup, reactive, toRaw } from "@odoo/owl";
 
 /** @typedef {import("./record_list").RecordList} RecordList */
+/** @typedef {import("./misc").RecordField} RecordField */
 
 export class Store extends Record {
     /** @type {import("./store_internal").StoreInternal} */
@@ -24,24 +25,26 @@ export class Store extends Record {
      * @param {any} value
      */
     updateAttr(record, fieldName, value) {
-        const fieldDefinition = record.Model._fields.get(fieldName);
+        const Model = record.Model;
+        const fieldType = Model._.fieldsType.get(fieldName);
+        const fieldHtml = Model._.fieldsHtml.get(fieldName);
         // ensure each field write goes through the proxy exactly once to trigger reactives
         const targetRecord = record._proxyUsed.has(fieldName) ? record : record._proxy;
         let shouldChange = record[fieldName] !== value;
-        if (fieldDefinition?.type === "datetime" && value) {
+        if (fieldType === "datetime" && value) {
             if (!(value instanceof luxon.DateTime)) {
                 value = deserializeDateTime(value);
             }
             shouldChange = !record[fieldName] || !value.equals(record[fieldName]);
         }
-        if (fieldDefinition?.type === "date" && value) {
+        if (fieldType === "date" && value) {
             if (!(value instanceof luxon.DateTime)) {
                 value = deserializeDate(value);
             }
             shouldChange = !record[fieldName] || !value.equals(record[fieldName]);
         }
         let newValue = value;
-        if (fieldDefinition?.html && this._.trusted) {
+        if (fieldHtml && this._.trusted) {
             shouldChange =
                 record[fieldName]?.toString() !== value?.toString() ||
                 !(record[fieldName] instanceof Markup);
@@ -59,8 +62,7 @@ export class Store extends Record {
      */
     updateFields(record, vals) {
         for (const [fieldName, value] of Object.entries(vals)) {
-            const fieldDefinition = record.Model._fields.get(fieldName);
-            if (!fieldDefinition || isAttr(fieldDefinition)) {
+            if (!record.Model._.fields.get(fieldName) || record.Model._.fieldsAttr.get(fieldName)) {
                 this.updateAttr(record, fieldName, value);
             } else {
                 this.updateRelation(record, fieldName, value);
@@ -177,7 +179,7 @@ export class Store extends Record {
                 }
             }
         } else {
-            /** @type {RecordField} */
+            /** @type {import("./misc").RecordField} */
             const field = fieldOrRecord;
             const rawField = toRaw(field);
             if (type === "compute") {
@@ -186,7 +188,9 @@ export class Store extends Record {
                 }
             }
             if (type === "sort") {
-                if (!rawField.value?.fieldDefinition.sort) {
+                const Model = rawField.value?.owner.Model;
+                const sort = Model?._.fieldsSort.get(rawField.name);
+                if (!sort) {
                     return;
                 }
                 if (!this._.FS_QUEUE.some((f) => toRaw(f) === rawField)) {
@@ -194,10 +198,12 @@ export class Store extends Record {
                 }
             }
             if (type === "onAdd") {
-                if (rawField.value?.fieldDefinition.sort) {
+                const Model = rawField.value?.owner.Model;
+                const sort = Model?._.fieldsSort.get(rawField.name);
+                if (sort) {
                     this.ADD_QUEUE(fieldOrRecord, "sort");
                 }
-                if (!rawField.value?.fieldDefinition.onAdd) {
+                if (!Model?._.fieldsOnAdd.get(rawField.name)) {
                     return;
                 }
                 const item = this._.FA_QUEUE.find((item) => toRaw(item.field) === rawField);
@@ -210,7 +216,8 @@ export class Store extends Record {
                 }
             }
             if (type === "onDelete") {
-                if (!rawField.value?.fieldDefinition.onDelete) {
+                const Model = rawField.value?.owner.Model;
+                if (!Model._.fieldsOnDelete.get(rawField.name)) {
                     return;
                 }
                 const item = this._.FD_QUEUE.find((item) => toRaw(item.field) === rawField);
@@ -273,14 +280,16 @@ export class Store extends Record {
                 }
                 while (FA_QUEUE.length > 0) {
                     const { field, records } = FA_QUEUE.pop();
-                    const { onAdd } = field.value.fieldDefinition;
+                    const Model = field.value?.owner.Model;
+                    const onAdd = Model._.fieldsOnAdd.get(field.name);
                     records.forEach((record) =>
                         onAdd?.call(field.value.owner._proxy, record._proxy)
                     );
                 }
                 while (FD_QUEUE.length > 0) {
                     const { field, records } = FD_QUEUE.pop();
-                    const { onDelete } = field.value.fieldDefinition;
+                    const Model = field.value?.owner.Model;
+                    const onDelete = Model._.fieldsOnDelete.get(field.name);
                     records.forEach((record) =>
                         onDelete?.call(field.value.owner._proxy, record._proxy)
                     );
