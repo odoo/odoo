@@ -14,3 +14,10 @@ class StockPickingBatch(models.Model):
             batch_weight = sum(self.picking_ids.mapped('weight'))
             res = res and (batch_weight + picking.weight <= self.picking_type_id.batch_max_weight)
         return res
+
+    def _is_line_auto_mergeable(self, num_of_moves=False, num_of_pickings=False, weight=False):
+        res = super()._is_line_auto_mergeable(num_of_moves, num_of_pickings, weight)
+        if self.picking_type_id.batch_max_weight:
+            wave_weight = sum(self.move_ids.mapped('weight'))
+            res = res and (wave_weight + weight <= self.picking_type_id.batch_max_weight)
+        return res
