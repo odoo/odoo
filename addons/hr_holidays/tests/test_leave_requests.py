@@ -233,7 +233,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_timezone_employee_leave_request(self):
         """ Create a leave request for an employee in another timezone """
-        self.employee_emp.tz = 'NZ'  # GMT+12
+        self.employee_emp.tz = 'Pacific/Auckland'  # GMT+12
         leave = self.env['hr.leave'].new({
             'employee_id': self.employee_emp.id,
             'holiday_status_id': self.holidays_type_1.id,
@@ -250,7 +250,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     def test_timezone_company_leave_request(self):
         """ Create a leave request for a company in another timezone """
         company = self.env['res.company'].create({'name': "Hergé"})
-        company.resource_calendar_id.tz = 'NZ'  # GMT+12
+        company.resource_calendar_id.tz = 'Pacific/Auckland'  # GMT+12
         leave = self.env['hr.leave'].new({
             'employee_id': self.employee_emp.id,
             'holiday_status_id': self.holidays_type_1.id,
@@ -268,7 +268,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_timezone_company_validated(self):
         """ Create a leave request for a company in another timezone and validate it """
-        self.env.user.tz = 'NZ' # GMT+12
+        self.env.user.tz = 'Pacific/Auckland' # GMT+12
         company = self.env['res.company'].create({'name': "Hergé"})
         employee = self.env['hr.employee'].create({'name': "Remi", 'company_id': company.id})
         leave_form = Form(self.env['hr.leave'], view='hr_holidays.hr_leave_view_form_manager')
@@ -290,7 +290,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     def test_timezone_department_leave_request(self):
         """ Create a leave request for a department in another timezone """
         company = self.env['res.company'].create({'name': "Hergé"})
-        company.resource_calendar_id.tz = 'NZ'  # GMT+12
+        company.resource_calendar_id.tz = 'Pacific/Auckland'  # GMT+12
         department = self.env['hr.department'].create({'name': "Museum", 'company_id': company.id})
         leave = self.env['hr.leave'].new({
             'employee_id': self.employee_emp.id,
@@ -453,7 +453,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_defaults_with_timezones(self):
         """ Make sure that leaves start with correct defaults for non-UTC timezones """
-        timezones_to_test = ('UTC', 'Pacific/Midway', 'US/Pacific', 'Asia/Taipei', 'Pacific/Kiritimati')  # UTC, UTC -11, UTC -8, UTC +8, UTC +14
+        timezones_to_test = ('UTC', 'Pacific/Midway', 'America/Los_Angeles', 'Asia/Taipei', 'Pacific/Kiritimati')  # UTC, UTC -11, UTC -8, UTC +8, UTC +14
 
         #     January 2020
         # Su Mo Tu We Th Fr Sa

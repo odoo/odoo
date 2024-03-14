@@ -178,7 +178,7 @@ class TestSelfAccessRights(TestHrCommon):
         self.env['ir.config_parameter'].set_param('hr.hr_employee_self_edit', False)
         # should not raise
         vals = [
-            {'tz': "Australia/ACT"},
+            {'tz': "Australia/Sydney"},
             {'email': "new@example.com"},
             {'signature': "<p>I'm Richard!</p>"},
             {'notification_type': "email"},
@@ -192,7 +192,7 @@ class TestSelfAccessRights(TestHrCommon):
         # they are in SELF_READABLE_FIELDS
         self.env['ir.config_parameter'].set_param('hr.hr_employee_self_edit', False)
         vals = [
-            {'tz': "Australia/ACT"},
+            {'tz': "Australia/Sydney"},
             {'email': "new@example.com"},
             {'signature': "<p>I'm Richard!</p>"},
             {'notification_type': "email"},
