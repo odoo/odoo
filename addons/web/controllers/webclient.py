@@ -114,8 +114,8 @@ class WebClient(http.Controller):
         if 'lang' in bundle_params:
             request.update_context(lang=request.env['res.lang']._get_code(bundle_params['lang']))
 
-        debug = bundle_params.get('debug', request.session.debug)
-        files = request.env["ir.qweb"]._get_asset_nodes(bundle_name, debug=debug, js=True, css=True)
+        is_debug_assets = 'assets' in bundle_params.get('debug', request.session.debug or '')
+        files = request.env["ir.qweb"]._get_asset_nodes(bundle_name, debug_assets=is_debug_assets, js=True, css=True)
         data = [{
             "type": tag,
             "src": attrs.get("src") or attrs.get("data-src") or attrs.get('href'),

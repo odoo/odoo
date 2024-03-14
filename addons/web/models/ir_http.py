@@ -16,9 +16,10 @@ It can be activated with an URL query string `debug=<mode>` where mode
 is either:
 - 'tests' to load tests assets
 - 'assets' to load assets non minified
-- any other truthy value to enable simple debug mode (to show some
-  technical feature, to show complete traceback in frontend error..)
-- any falsy value to disable debug mode
+- 'disable-t-cache' disable the qweb rendering cache
+- '1' is only used to enable the JavaScript debug mode
+- any previous value enable the JavaScript debug mode
+- any other value to disable debug mode
 
 You can use any truthy/falsy value from `str2bool` (eg: 'on', 'f'..)
 Multiple debug modes can be activated simultaneously, separated with a
@@ -44,10 +45,9 @@ class Http(models.AbstractModel):
         debug = request.httprequest.args.get('debug')
         if debug is not None:
             request.session.debug = ','.join(
-                     mode if mode in ALLOWED_DEBUG_MODES
-                else '1' if str2bool(mode, mode)
-                else ''
+                mode
                 for mode in (debug or '').split(',')
+                if mode in ALLOWED_DEBUG_MODES
             )
 
     @classmethod

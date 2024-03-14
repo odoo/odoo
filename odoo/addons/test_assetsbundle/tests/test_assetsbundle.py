@@ -1887,18 +1887,8 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         self.assertEqual(len(asset_keys), 1)
         self.assertEqual(len(qweb_keys), 1)
 
-        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', debug='tests')
-        asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
-
-        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', debug='1')
-        asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
-
         # in debug=assets, the ormcache is not used for _generate_asset_links_cache
-        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', debug='assets')
+        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', debug_assets=True)
         asset_keys, qweb_keys = self.cache_keys()
         self.assertEqual(len(asset_keys), 1)
         self.assertEqual(len(qweb_keys), 1)
