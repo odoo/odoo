@@ -553,8 +553,8 @@ QUnit.module('web_editor', {}, function () {
                 }
             });
 
-            let pText = $field.find('.note-editable p').first().contents()[0];
-            Wysiwyg.setRange(pText.firstChild, 0, pText.firstChild, pText.firstChild.length);
+            let pText = $field.find('.note-editable p a')[0];
+            Wysiwyg.setRange(pText.firstChild, 0, pText.lastChild, pText.lastChild.length);
             await testUtils.dom.triggerEvent($('#toolbar #create-link'), 'click');
             // load static xml file (dialog, link dialog)
             await defLinkDialog;
@@ -602,8 +602,8 @@ QUnit.module('web_editor', {}, function () {
                 }
             });
 
-            let pText = $field.find('.note-editable p').first().contents()[0];
-            Wysiwyg.setRange(pText.firstChild, 0, pText.firstChild, pText.firstChild.length);
+            let pText = $field.find('.note-editable p a')[0];
+            Wysiwyg.setRange(pText.firstChild, 0, pText.lastChild, pText.lastChild.length);
             await testUtils.dom.triggerEvent($('#toolbar #create-link'), 'click');
             // load static xml file (dialog, link dialog)
             await defLinkDialog;
@@ -652,17 +652,18 @@ QUnit.module('web_editor', {}, function () {
                 }
             });
 
-            let pText = $field.find('.note-editable p').first().contents()[0];
-            Wysiwyg.setRange(pText.firstChild, 0, pText.firstChild, pText.firstChild.length);
+
+            let pText = $field.find('.note-editable p a')[0];
+            Wysiwyg.setRange(pText.firstChild, 0, pText.lastChild, pText.lastChild.length);
             await testUtils.dom.triggerEvent($('#toolbar #create-link'), 'click');
             // load static xml file (dialog, link dialog)
             await defLinkDialog;
             $('.modal .tab-content .tab-pane').removeClass('fade'); // to be sync in test
             const $labelInputField = $('input#o_link_dialog_label_input');
             const $linkPreview = $('a#link-preview');
-            assert.strictEqual($labelInputField.val(), 'This website',
+            assert.strictEqual($labelInputField.val().replaceAll('\ufeff', ''), 'This website',
                 "The label input field should match the link's content");
-            assert.strictEqual($linkPreview.text().replace(/\u200B/g, ''), 'This website',
+            assert.strictEqual($linkPreview.text().replaceAll('\ufeff', ''), 'This website',
                 "Link label in preview should match label input field");
             await testUtils.fields.editAndTrigger($labelInputField, "New label", ['input']);
             await testUtils.nextTick();
