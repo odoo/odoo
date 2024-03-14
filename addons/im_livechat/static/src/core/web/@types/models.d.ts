@@ -8,4 +8,7 @@ declare module "models" {
         anonymous_name: String,
         appAsLivechats: DiscussApp,
     }
+    export interface Store {
+        has_access_livechat: boolean,
+    }
 }
