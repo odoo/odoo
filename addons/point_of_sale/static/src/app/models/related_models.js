@@ -11,10 +11,8 @@ function uuid(model) {
     return `${model}_${ID_CONTAINER[model]++}`;
 }
 
-let dummyNameId = 1;
-
-function getDummyName(model, suffix) {
-    return `__dummy_${model}_${dummyNameId++}_${suffix}__`;
+function getBackRef(model, fieldName) {
+    return `<-${model}.${fieldName}`;
 }
 
 function clone(obj) {
@@ -44,6 +42,16 @@ function processModelDefs(modelDefs) {
         const fields = modelDefs[model];
         for (const fieldName in fields) {
             const field = fields[fieldName];
+
+            // Make sure that the field has a name and consistent with the key.
+            if (field.name) {
+                if (fieldName !== field.name) {
+                    throw new Error(`Field name mismatch: ${fieldName} !== ${field.name}`);
+                }
+            } else {
+                field.name = fieldName;
+            }
+
             if (!RELATION_TYPES.has(field.type)) {
                 continue;
             }
@@ -59,22 +67,25 @@ function processModelDefs(modelDefs) {
             }
 
             if (field.type === "many2many") {
-                let [inverseField, ...others] = Object.entries(comodel).filter(
-                    (model_name, f) => model_name === field.relation
+                let [inverseField, ...others] = Object.values(comodel).filter(
+                    (f) =>
+                        model === f.relation &&
+                        f.relation_table === field.relation_table &&
+                        field.name !== f.name
                 );
                 if (others.length > 0) {
                     throw new Error("Many2many relation must have only one inverse");
                 }
                 if (!inverseField) {
-                    const dummyName = getDummyName(model, "ids");
+                    const backRefName = getBackRef(model, field.name);
                     inverseField = {
-                        name: dummyName,
+                        name: backRefName,
                         type: "many2many",
                         relation: model,
                         inverse_name: field.name,
                         dummy: true,
                     };
-                    comodel[dummyName] = inverseField;
+                    comodel[backRefName] = inverseField;
                 }
                 inverseMap.set(field, inverseField);
                 inverseMap.set(inverseField, field);
@@ -83,15 +94,15 @@ function processModelDefs(modelDefs) {
                     (f) => f.relation === model && f.name === field.inverse_name
                 );
                 if (!inverseField) {
-                    const dummyName = getDummyName(model, "id");
+                    const backRefName = getBackRef(model, field.name);
                     inverseField = {
-                        name: dummyName,
+                        name: backRefName,
                         type: "many2one",
                         relation: model,
                         inverse_name: field.name,
                         dummy: true,
                     };
-                    comodel[dummyName] = inverseField;
+                    comodel[backRefName] = inverseField;
                 }
                 inverseMap.set(field, inverseField);
                 inverseMap.set(inverseField, field);
@@ -112,7 +123,7 @@ function processModelDefs(modelDefs) {
             // throw new Error(`Model ${field.relation} not found`);
         }
 
-        const dummyName = getDummyName(model, "ids");
+        const dummyName = getBackRef(model, field.name);
         const dummyField = {
             name: dummyName,
             type: "one2many",
@@ -161,7 +172,7 @@ export class Base {
 
             // We only care about the fields present in python model
             for (const [name, params] of Object.entries(fields)) {
-                if (name.startsWith("__") && name.endsWith("__")) {
+                if (params.dummy) {
                     continue;
                 }
                 if (orm && params.local) {
@@ -805,7 +816,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                         }
                     }
                     // Connect existing records in case of post-loading
-                    if (name.includes("__dummy")) {
+                    if (name.includes("<-")) {
                         const toConenct = Object.values(records[field.relation]).filter(
                             (r) => r.raw[field.inverse_name] === rawRec.id
                         );

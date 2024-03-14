@@ -348,6 +348,8 @@ class PosSession(models.Model):
                             }
                             if params['type'] == 'one2many' and params.get('relation_field'):
                                 response['relations'][key][name]['inverse_name'] = params['relation_field']
+                            if params['type'] == 'many2many':
+                                response['relations'][key][name]['relation_table'] = self.env[key]._fields[name].relation
                         else:
                             response['relations'][key][name] = {
                                 'name': name,
