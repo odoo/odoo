@@ -316,7 +316,12 @@ const getStyleValues = (node, keys) => {
     if (!nodeStyle) {
         return {};
     }
-    return Object.fromEntries(keys.map((key) => [key, nodeStyle[key]]));
+    return Object.fromEntries(
+        keys.map((key) => [
+            key,
+            key.includes("-") ? nodeStyle.getPropertyValue(key) : nodeStyle[key],
+        ])
+    );
 };
 
 /**
@@ -325,10 +330,7 @@ const getStyleValues = (node, keys) => {
  * @param {Record<string, string | RegExp>} styleDef
  */
 const hasStyle = (node, styleDef) => {
-    const nodeStyle = getStyle(node);
-    if (!nodeStyle) {
-        return false;
-    }
+    const nodeStyle = getStyleValues(node, Object.keys(styleDef));
     for (const [prop, value] of Object.entries(styleDef)) {
         if (!regexMatchOrStrictEqual(nodeStyle[prop], value)) {
             return false;
