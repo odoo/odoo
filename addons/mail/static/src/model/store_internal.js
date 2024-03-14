@@ -1,3 +1,6 @@
+/** @typedef {import("./record").Record} Record */
+/** @typedef {import("./misc").RecordField} RecordField */
+
 export class StoreInternal {
     /**
      * Determines whether the inserts are considered trusted or not.

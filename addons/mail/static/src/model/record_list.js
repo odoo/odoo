@@ -1,6 +1,16 @@
 import { reactive, toRaw } from "@odoo/owl";
 import { isMany, isOne, isRecord } from "./misc";
 
+/** @param {RecordList} reclist */
+function getInverse(reclist) {
+    return reclist.owner.Model._.fieldsInverse.get(reclist.name);
+}
+
+/** @param {RecordList} reclist */
+function getTargetModel(reclist) {
+    return reclist.owner.Model._.fieldsTargetModel.get(reclist.name);
+}
+
 /** * @template {Record} R */
 export class RecordList extends Array {
     static isOne(list) {
@@ -9,7 +19,7 @@ export class RecordList extends Array {
     static isMany(list) {
         return isMany(list);
     }
-    /** @type {Record} */
+    /** @type {import("./record").Record} */
     owner;
     /** @type {string} */
     name;
@@ -23,10 +33,6 @@ export class RecordList extends Array {
     _proxyInternal;
     /** @type {this} */
     _proxy;
-
-    get fieldDefinition() {
-        return this.owner.Model._fields.get(this.name);
-    }
 
     constructor() {
         super();
@@ -86,7 +92,7 @@ export class RecordList extends Array {
                                 oldRecord.__uses__.delete(recordList);
                             }
                             store.ADD_QUEUE(recordList.field, "onDelete", oldRecord);
-                            const { inverse } = recordList.fieldDefinition;
+                            const inverse = getInverse(recordList);
                             if (inverse) {
                                 oldRecord._fields.get(inverse).value.delete(recordList);
                             }
@@ -94,7 +100,6 @@ export class RecordList extends Array {
                             if (newRecord) {
                                 newRecord.__uses__.add(recordList);
                                 store.ADD_QUEUE(recordList.field, "onAdd", newRecord);
-                                const { inverse } = recordList.fieldDefinition;
                                 if (inverse) {
                                     newRecord._fields.get(inverse).value.add(recordList);
                                 }
@@ -148,7 +153,8 @@ export class RecordList extends Array {
      */
     _insert(val, fn, { inv = true, mode = "ADD" } = {}) {
         const recordList = this;
-        const { inverse } = recordList.fieldDefinition;
+        const inverse = getInverse(recordList);
+        const targetModel = getTargetModel(recordList);
         if (inverse && inv) {
             // special command to call _addNoinv/_deleteNoInv, to prevent infinite loop
             val[inverse] = [[mode === "ADD" ? "ADD.noinv" : "DELETE.noinv", recordList.owner]];
@@ -156,7 +162,6 @@ export class RecordList extends Array {
         /** @type {R} */
         let newRecordProxy;
         if (!isRecord(val)) {
-            const { targetModel } = recordList.fieldDefinition;
             newRecordProxy = recordList.store[targetModel].preinsert(val);
         } else {
             newRecordProxy = val;
@@ -165,7 +170,6 @@ export class RecordList extends Array {
         fn?.(newRecord);
         if (!isRecord(val)) {
             // was preinserted, fully insert now
-            const { targetModel } = recordList.fieldDefinition;
             recordList.store[targetModel].insert(val);
         }
         return newRecord;
@@ -191,7 +195,7 @@ export class RecordList extends Array {
                     }
                 })
             );
-            const inverse = recordList.fieldDefinition.inverse;
+            const inverse = getInverse(recordList);
             for (const oldRecord of oldRecords) {
                 if (oldRecord.notIn(newRecords)) {
                     oldRecord.__uses__.delete(recordList);
@@ -216,7 +220,7 @@ export class RecordList extends Array {
                     record.__uses__.add(recordList);
                 });
                 store.ADD_QUEUE(recordList.field, "onAdd", record);
-                const { inverse } = recordList.fieldDefinition;
+                const inverse = getInverse(recordList);
                 if (inverse) {
                     record._fields.get(inverse).value.add(recordList.owner);
                 }
@@ -253,7 +257,7 @@ export class RecordList extends Array {
             const record = toRaw(recordProxy)._raw;
             record.__uses__.delete(recordList);
             store.ADD_QUEUE(recordList.field, "onDelete", record);
-            const { inverse } = recordList.fieldDefinition;
+            const inverse = getInverse(recordList);
             if (inverse) {
                 record._fields.get(inverse).value.delete(recordList.owner);
             }
@@ -272,7 +276,7 @@ export class RecordList extends Array {
                     record.__uses__.add(recordList);
                 });
                 store.ADD_QUEUE(recordList.field, "onAdd", record);
-                const { inverse } = recordList.fieldDefinition;
+                const inverse = getInverse(recordList);
                 if (inverse) {
                     record._fields.get(inverse).value.add(recordList.owner);
                 }
@@ -312,7 +316,7 @@ export class RecordList extends Array {
                 const oldRecord = toRaw(oldRecordProxy)._raw;
                 oldRecord.__uses__.delete(recordList);
                 store.ADD_QUEUE(recordList.field, "onDelete", oldRecord);
-                const { inverse } = recordList.fieldDefinition;
+                const inverse = getInverse(recordList);
                 if (inverse) {
                     oldRecord._fields.get(inverse).value.delete(recordList.owner);
                 }
@@ -321,7 +325,7 @@ export class RecordList extends Array {
                 const newRecord = toRaw(newRecordProxy)._raw;
                 newRecord.__uses__.add(recordList);
                 store.ADD_QUEUE(recordList.field, "onAdd", newRecord);
-                const { inverse } = recordList.fieldDefinition;
+                const inverse = getInverse(recordList);
                 if (inverse) {
                     newRecord._fields.get(inverse).value.add(recordList.owner);
                 }

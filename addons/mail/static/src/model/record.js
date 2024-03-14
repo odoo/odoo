@@ -1,6 +1,7 @@
 import { markRaw, toRaw } from "@odoo/owl";
 import {
     ATTR_SYM,
+    FIELD_DEFINITION_SYM,
     IS_DELETED_SYM,
     MANY_SYM,
     ONE_SYM,
@@ -21,6 +22,8 @@ import { RecordUses } from "./record_uses";
 /** @typedef {import("./record_list").RecordList} RecordList */
 
 export class Record {
+    /** @type {import("./model_internal").ModelInternal} */
+    static _;
     /** @param {FieldDefinition} */
     static isAttr(definition) {
         return this.isAttr(definition);
@@ -73,10 +76,6 @@ export class Record {
     static isRecord(record) {
         return isRecord(record);
     }
-    /** @param {FIELD_SYM|RecordList} val */
-    static isRelation(val) {
-        return isRelation(val);
-    }
     /** @param {FIELD_SYM} SYM */
     static isField(SYM) {
         return isField(SYM);
@@ -106,12 +105,11 @@ export class Record {
     static _localId(expr, data, { brackets = false } = {}) {
         const Model = toRaw(this);
         if (!Array.isArray(expr)) {
-            const fieldDefinition = Model._fields.get(expr);
-            if (fieldDefinition) {
-                if (isMany(fieldDefinition)) {
+            if (Model._.fields.get(expr)) {
+                if (Model._.fieldsMany.get(expr)) {
                     throw new Error("Using a Record.Many() as id is not (yet) supported");
                 }
-                if (!isRelation(fieldDefinition)) {
+                if (!isRelation(Model, expr)) {
                     return data[expr];
                 }
                 if (isCommand(data[expr])) {
@@ -227,11 +225,11 @@ export class Record {
                     ids[name] &&
                     !isRecord(ids[name]) &&
                     !isCommand(ids[name]) &&
-                    isRelation(Model._fields.get(name))
+                    isRelation(Model, name)
                 ) {
                     // preinsert that record in relational field,
                     // as it is required to make current local id
-                    ids[name] = Model._rawStore[Model._fields.get(name).targetModel].preinsert(
+                    ids[name] = Model._rawStore[Model._.fieldsTargetModel.get(name)].preinsert(
                         ids[name]
                     );
                 }
@@ -274,8 +272,8 @@ export class Record {
      *   This is called at least once at record creation.
      * @returns {import("models").Models[M]}
      */
-    static one(targetModel, { compute, eager = false, inverse, onAdd, onDelete, onUpdate } = {}) {
-        return [ONE_SYM, { targetModel, compute, eager, inverse, onAdd, onDelete, onUpdate }];
+    static one(targetModel, param1) {
+        return { ...param1, targetModel, [FIELD_DEFINITION_SYM]: true, [ONE_SYM]: true };
     }
     /**
      * @template {keyof import("models").Models} M
@@ -300,14 +298,8 @@ export class Record {
      *   is automatically sorted by this function.
      * @returns {import("models").Models[M][]}
      */
-    static many(
-        targetModel,
-        { compute, eager = false, inverse, onAdd, onDelete, onUpdate, sort } = {}
-    ) {
-        return [
-            MANY_SYM,
-            { targetModel, compute, eager, inverse, onAdd, onDelete, onUpdate, sort },
-        ];
+    static many(targetModel, param1) {
+        return { ...param1, targetModel, [FIELD_DEFINITION_SYM]: true, [MANY_SYM]: true };
     }
     /**
      * @template T
@@ -331,8 +323,8 @@ export class Record {
      * specific type.
      * @returns {T}
      */
-    static attr(def, { compute, eager = false, html, onUpdate, sort, type } = {}) {
-        return [ATTR_SYM, { compute, default: def, eager, html, onUpdate, sort, type }];
+    static attr(def, param1) {
+        return { ...param1, [FIELD_DEFINITION_SYM]: true, [ATTR_SYM]: true, default: def };
     }
     /** @returns {Record|Record[]} */
     static insert(data, options = {}) {

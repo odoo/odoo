@@ -1,10 +1,12 @@
-import { reactive, toRaw } from "@odoo/owl";
+import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { Store } from "./store";
 import {
-    IS_FIELD_SYM,
+    ATTR_SYM,
     IS_RECORD_LIST_SYM,
     IS_RECORD_SYM,
-    isField,
+    MANY_SYM,
+    ONE_SYM,
+    isFieldDefinition,
     isMany,
     isRelation,
     modelRegistry,
@@ -13,6 +15,7 @@ import { RecordList } from "./record_list";
 import { onChange } from "@mail/utils/common/misc";
 import { Record } from "./record";
 import { StoreInternal } from "./store_internal";
+import { ModelInternal } from "./model_internal";
 
 /** @returns {import("models").Store} */
 export function makeStore(env, { localRegistry } = {}) {
@@ -71,7 +74,7 @@ export function makeStore(env, { localRegistry } = {}) {
                                         field.sort();
                                     }
                                 }
-                                if (isRelation(field)) {
+                                if (isRelation(Model, name)) {
                                     const recordList = field.value;
                                     const recordListFullProxy =
                                         recordFullProxy._fields.get(name).value._proxy;
@@ -86,7 +89,7 @@ export function makeStore(env, { localRegistry } = {}) {
                         deleteProperty(record, name) {
                             return store.MAKE_UPDATE(function recordDeleteProperty() {
                                 const field = record._fields.get(name);
-                                if (field && isRelation(field)) {
+                                if (field && isRelation(Model, name)) {
                                     const recordList = field.value;
                                     recordList.clear();
                                     return true;
@@ -121,11 +124,19 @@ export function makeStore(env, { localRegistry } = {}) {
                         store = record;
                         Record.store = store;
                     }
-                    for (const [name, fieldDefinition] of Model._fields) {
-                        const SYM = record[name]?.[0];
-                        const field = { [SYM]: true, eager: fieldDefinition.eager, name };
+                    for (const name of Model._.fields.keys()) {
+                        const isAttr = record[name]?.[ATTR_SYM];
+                        const isOne = record[name]?.[ONE_SYM];
+                        const isMany = record[name]?.[MANY_SYM];
+                        const field = {
+                            [ATTR_SYM]: isAttr,
+                            [ONE_SYM]: isOne,
+                            [MANY_SYM]: isMany,
+                            eager: Model._.fieldsEager.get(name),
+                            name,
+                        };
                         record._fields.set(name, field);
-                        if (isRelation(SYM)) {
+                        if (isRelation(Model, name)) {
                             // Relational fields contain symbols for detection in original class.
                             // This constructor is called on genuine records:
                             // - 'one' fields => undefined
@@ -134,7 +145,9 @@ export function makeStore(env, { localRegistry } = {}) {
                             const recordList = new RecordList();
                             Object.assign(recordList, {
                                 [IS_RECORD_LIST_SYM]: true,
-                                [SYM]: true,
+                                [ATTR_SYM]: isAttr,
+                                [ONE_SYM]: isOne,
+                                [MANY_SYM]: isMany,
                                 field,
                                 name,
                                 owner: record,
@@ -143,10 +156,10 @@ export function makeStore(env, { localRegistry } = {}) {
                             recordList.store = store;
                             field.value = recordList;
                         } else {
-                            record[name] = fieldDefinition.default;
+                            record[name] = Model._.fieldsDefault.get(name);
                         }
-                        if (fieldDefinition.compute) {
-                            if (!fieldDefinition.eager) {
+                        if (Model._.fieldsCompute.get(name)) {
+                            if (!Model._.fieldsEager.get(name)) {
                                 onChange(recordProxy, name, () => {
                                     if (field.computing) {
                                         /**
@@ -170,7 +183,7 @@ export function makeStore(env, { localRegistry } = {}) {
                                     field.computing = true;
                                     field.computeOnNeed = false;
                                     store.updateFields(record, {
-                                        [name]: fieldDefinition.compute.call(proxy2),
+                                        [name]: Model._.fieldsCompute.get(name).call(proxy2),
                                     });
                                     field.computing = false;
                                 },
@@ -187,8 +200,8 @@ export function makeStore(env, { localRegistry } = {}) {
                                 },
                             });
                         }
-                        if (fieldDefinition.sort) {
-                            if (!fieldDefinition.eager) {
+                        if (Model._.fieldsSort.get(name)) {
+                            if (!Model._.fieldsEager.get(name)) {
                                 onChange(recordProxy, name, () => {
                                     if (field.sorting) {
                                         /**
@@ -213,7 +226,7 @@ export function makeStore(env, { localRegistry } = {}) {
                                     field.sorting = true;
                                     store.sortRecordList(
                                         proxy2._fields.get(name).value._proxy,
-                                        fieldDefinition.sort.bind(proxy2)
+                                        Model._.fieldsSort.get(name).bind(proxy2)
                                     );
                                     field.sorting = false;
                                 },
@@ -230,7 +243,7 @@ export function makeStore(env, { localRegistry } = {}) {
                                 },
                             });
                         }
-                        if (fieldDefinition.onUpdate) {
+                        if (Model._.fieldsOnUpdate.get(name)) {
                             /** @type {Function} */
                             let observe;
                             Object.assign(field, {
@@ -239,7 +252,7 @@ export function makeStore(env, { localRegistry } = {}) {
                                      * Forward internal proxy for performance as onUpdate does not
                                      * need reactive (observe is called separately).
                                      */
-                                    fieldDefinition.onUpdate.call(record._proxyInternal);
+                                    Model._.fieldsOnUpdate.get(name).call(record._proxyInternal);
                                     observe?.();
                                 },
                             });
@@ -257,6 +270,7 @@ export function makeStore(env, { localRegistry } = {}) {
                 }
             },
         }[OgClass.name];
+        Model._ = markRaw(new ModelInternal());
         Object.assign(Model, {
             Class,
             env,
@@ -268,39 +282,41 @@ export function makeStore(env, { localRegistry } = {}) {
         // Detect fields with a dummy record and setup getter/setters on them
         const obj = new OgClass();
         for (const [name, val] of Object.entries(obj)) {
-            const SYM = val?.[0];
-            if (!isField(SYM)) {
-                continue;
+            if (isFieldDefinition(val)) {
+                Model._.prepareField(name, val);
             }
-            Model._fields.set(name, { [IS_FIELD_SYM]: true, [SYM]: true, ...val[1] });
         }
     }
     // Sync inverse fields
     for (const Model of Object.values(Models)) {
-        for (const [name, fieldDefinition] of Model._fields) {
-            if (!isRelation(fieldDefinition)) {
+        for (const name of Model._.fields.keys()) {
+            if (!isRelation(Model, name)) {
                 continue;
             }
-            const { targetModel, inverse } = fieldDefinition;
+            const targetModel = Model._.fieldsTargetModel.get(name);
+            const inverse = Model._.fieldsInverse.get(name);
             if (targetModel && !Models[targetModel]) {
                 throw new Error(`No target model ${targetModel} exists`);
             }
             if (inverse) {
-                const rel2 = Models[targetModel]._fields.get(inverse);
-                if (rel2.targetModel && rel2.targetModel !== Model.name) {
+                const OtherModel = Models[targetModel];
+                const rel2TargetModel = OtherModel._.fieldsTargetModel.get(inverse);
+                const rel2Inverse = OtherModel._.fieldsInverse.get(inverse);
+                if (rel2TargetModel && rel2TargetModel !== Model.name) {
                     throw new Error(
-                        `Fields ${Models[targetModel].name}.${inverse} has wrong targetModel. Expected: "${Model.name}" Actual: "${rel2.targetModel}"`
+                        `Fields ${Models[targetModel].name}.${inverse} has wrong targetModel. Expected: "${Model.name}" Actual: "${rel2TargetModel}"`
                     );
                 }
-                if (rel2.inverse && rel2.inverse !== name) {
+                if (rel2Inverse && rel2Inverse !== name) {
                     throw new Error(
-                        `Fields ${Models[targetModel].name}.${inverse} has wrong inverse. Expected: "${name}" Actual: "${rel2.inverse}"`
+                        `Fields ${Models[targetModel].name}.${inverse} has wrong inverse. Expected: "${name}" Actual: "${rel2Inverse}"`
                     );
                 }
-                Object.assign(rel2, { targetModel: Model.name, inverse: name });
+                OtherModel._.fieldsTargetModel.set(inverse, Model.name);
+                OtherModel._.fieldsInverse.set(inverse, name);
                 // // FIXME: lazy fields are not working properly with inverse.
-                fieldDefinition.eager = true;
-                rel2.eager = true;
+                Model._.fieldsEager.set(name, true);
+                OtherModel._.fieldsEager.set(inverse, true);
             }
         }
     }
