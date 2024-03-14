@@ -346,13 +346,19 @@ class AccountEdiFormat(models.Model):
                                    False if the file cannot be parsed as an XML.
         '''
 
-        if self.env['ir.attachment'].search([('name', '=', filename), ('res_model', '=', 'account.move')], limit=1):
+        # Name should be unique per company, the invoice already exists
+        Attachment = self.env['ir.attachment'].sudo().with_company(proxy_user.company_id)
+        if Attachment.search_count([
+            ('name', '=', filename),
+            ('res_model', '=', 'account.move'),
+            ('company_id', '=', proxy_user.company_id.id),
+        ], limit=1):
             # name should be unique, the invoice already exists
             _logger.info('E-invoice already exists: %s', filename)
             return True
 
         decrypted_content = proxy_user._decrypt_data(content, key)
-        attachment = self.env['ir.attachment'].create({
+        attachment = Attachment.create({
             'name': filename,
             'raw': decrypted_content,
             'type': 'binary'
