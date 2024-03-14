@@ -1,5 +1,10 @@
-import { parseRequestParams, registerRoute } from "@mail/../tests/mock_server/mail_mock_server";
+import {
+    mailDataHelpers,
+    parseRequestParams,
+    registerRoute,
+} from "@mail/../tests/mock_server/mail_mock_server";
 import { Discuss } from "@mail/core/common/discuss";
+import { patch } from "@web/core/utils/patch";
 
 /**
  * @template [T={}]
@@ -173,3 +178,21 @@ registerRoute("/im_livechat/email_livechat_transcript", email_livechat_transcrip
 async function email_livechat_transcript(request) {
     return true;
 }
+
+patch(mailDataHelpers, {
+    async processRequest(request) {
+        const res = await super.processRequest(...arguments);
+        const { livechat_channels } = await parseRequestParams(request);
+        if (livechat_channels) {
+            const LivechatChannel = this.env["im_livechat.channel"];
+            mailDataHelpers.addToRes(res, {
+                LivechatChannel: LivechatChannel.search_read([]).map((channel) => ({
+                    id: channel.id,
+                    name: channel.name,
+                    hasSelfAsMember: channel.user_ids.includes(this.env.user.id),
+                })),
+            });
+        }
+        return res;
+    },
+});

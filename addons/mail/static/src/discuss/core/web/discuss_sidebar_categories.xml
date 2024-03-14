@@ -11,14 +11,14 @@
     </t>
 
     <t t-name="mail.DiscussSidebarCategory">
-        <t t-set="hover_class" t-value="'btn p-0 text-start text-700 opacity-100-hover opacity-75'"/>
+        <t t-set="hover_class" t-value="'btn p-0 text-start opacity-100-hover opacity-75'"/>
         <div class="o-mail-DiscussSidebarCategory d-flex align-items-center my-1" t-att-class="category.extraClass">
             <div t-attf-class="d-flex align-items-baseline mx-1 {{ hover_class }}" t-on-click="() => (category.open = !category.open)">
                 <i class="o-mail-DiscussSidebarCategory-icon small me-1" t-att-class="category.open ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
-                <span class="btn-sm p-0 text-uppercase fw-bolder"><t t-esc="category.name"/></span>
+                <span class="btn-sm p-0 text-uppercase text-break fw-bolder"><t t-esc="category.name"/></span>
             </div>
             <div class="flex-grow-1"/>
-            <div class="d-flex me-3">
+            <div class="d-flex me-3" t-ref="actions">
                 <i t-if="category.canView" t-attf-class="fa fa-cog {{ hover_class }}" title="View or join channels" t-on-click="() => this.openCategory(category)" role="img"/>
                 <i t-if="category.canAdd and category.open" class="o-mail-DiscussSidebarCategory-add" t-attf-class="fa fa-plus {{ hover_class }} ms-1" t-on-click="() => this.addToCategory(category)" t-att-title="category.addTitle" role="img"  t-att-data-hotkey="category.addHotkey"/>
             </div>
@@ -58,10 +58,10 @@
             </span>
             <div class="flex-grow-1"/>
             <div class="o-mail-DiscussSidebarChannel-commands d-none ms-1 me-3">
-                <i t-if="thread.channel_type === 'channel'" t-attf-class="fa fa-cog {{ hover_class }}" title="Channel settings" t-on-click.stop="() => this.openSettings(thread)" role="img"/>
-                <div t-if="thread.canLeave" class="fa fa-times ms-1" t-attf-class="{{ hover_class }}"
+                <i t-if="thread.channel_type === 'channel'" t-attf-class="fa fa-cog {{ hover_class }} text-700" title="Channel settings" t-on-click.stop="() => this.openSettings(thread)" role="img"/>
+                <div t-if="thread.canLeave" class="fa fa-times ms-1" t-attf-class="{{ hover_class }} text-700"
                     t-on-click.stop="() => this.leaveChannel(thread)" title="Leave this channel" role="img"/>
-                <div t-if="thread.canUnpin" t-attf-class="fa fa-times ms-1 {{ hover_class }}" t-on-click.stop="() => threadService.unpin(thread)" title="Unpin Conversation" role="img"/>
+                <div t-if="thread.canUnpin" t-attf-class="fa fa-times ms-1 {{ hover_class }} text-700" t-on-click.stop="() => threadService.unpin(thread)" title="Unpin Conversation" role="img"/>
             </div>
             <t t-foreach="channelIndicators" t-as="indicator" t-key="indicator_index" t-component="indicator" t-props="{ thread }"/>
             <div t-if="thread.importantCounter > 0">

@@ -19,7 +19,8 @@ class TestDiscussFullPerformance(HttpCase):
     #     1: mt_comment_id
     #     6: odoobot format
     #     4: settings
-    _query_count_init_store = 16
+    #     1: has_access_livechat
+    _query_count_init_store = 17
     _query_count = 48 + 1  # +1 is necessary to fix nondeterministic issue on runbot
     _query_count_discuss_channels = 69
 
@@ -167,6 +168,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "action_discuss_id": xmlid_to_res_id("mail.action_discuss"),
                 "hasGifPickerFeature": False,
                 "hasLinkPreviewFeature": True,
+                "has_access_livechat": False,
                 "hasMessageTranslationFeature": False,
                 "internalUserGroupId": self.env.ref("base.group_user").id,
                 "mt_comment_id": xmlid_to_res_id("mail.mt_comment"),

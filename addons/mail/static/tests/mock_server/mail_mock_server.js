@@ -725,13 +725,13 @@ async function mail_thread_messages(request) {
 registerRoute("/mail/action", mail_action);
 /** @type {RouteCallback} */
 async function mail_action(request) {
-    return processRequest.call(this, request);
+    return mailDataHelpers.processRequest.call(this, request);
 }
 
 registerRoute("/mail/data", mail_data);
 /** @type {RouteCallback} */
 async function mail_data(request) {
-    return processRequest.call(this, request);
+    return mailDataHelpers.processRequest.call(this, request);
 }
 
 /** @type {RouteCallback} */
@@ -856,3 +856,8 @@ function addToRes(res, data) {
         }
     }
 }
+
+export const mailDataHelpers = {
+    addToRes,
+    processRequest,
+};

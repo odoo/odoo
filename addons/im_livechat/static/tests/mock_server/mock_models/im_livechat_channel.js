@@ -7,6 +7,26 @@ export class LivechatChannel extends models.ServerModel {
     user_ids = fields.Many2many({ relation: "res.users" }); // FIXME: somehow not fetched properly
 
     /** @param {integer} id */
+    action_join(id) {
+        this.write([id], { user_ids: [Command.link(this.env.user.id)] });
+        const self = this.read([id])[0];
+        const [partner] = this.env["res.partner"].read(this.env.user.partner_id);
+        this.env["bus.bus"]._sendone(partner, "mail.record/insert", {
+            LivechatChannel: { id, name: self.name, hasSelfAsMember: true },
+        });
+    }
+
+    /** @param {integer} id */
+    action_quit(id) {
+        this.write(id, { user_ids: [Command.unlink(this.env.user.id)] });
+        const [partner] = this.env["res.partner"].read(this.env.user.partner_id);
+        const self = this.read([id])[0];
+        this.env["bus.bus"]._sendone(partner, "mail.record/insert", {
+            LivechatChannel: { id, name: self.name, hasSelfAsMember: false },
+        });
+    }
+
+    /** @param {integer} id */
     _compute_available_operator_ids(id) {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
