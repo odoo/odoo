@@ -348,7 +348,7 @@ class AccountJournal(models.Model):
                 journal.type,
             ) if string and is_encodable_as_ascii(string))
 
-            if journal.company_id != self.env.ref('base.main_company'):
+            if not journal.alias_name:
                 if is_encodable_as_ascii(journal.company_id.name):
                     alias_name = f"{alias_name}-{journal.company_id.name}"
                 else:

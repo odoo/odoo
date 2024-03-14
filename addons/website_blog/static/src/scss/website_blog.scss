@@ -45,6 +45,13 @@ $o-wblog-loader-size: 50px;
 // Website Blog
 //------------------------------------------------------------------------------
 .website_blog {
+    .o_website_blog_nav_container {
+        // Overrides the value from portal, useless in >=17
+        &::before, &::after {
+            display: none !important;
+        }
+    }
+
     .css_website_mail {
         .o_has_error {
             border-color: red;
