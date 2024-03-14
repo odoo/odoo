@@ -37,17 +37,13 @@ test("Message model properties", async () => {
         thread: { id: serverState.partnerId, model: "res.partner" },
         res_id: serverState.partnerId,
     });
-    expect(message).toBeTruthy();
-    expect(message.isNeedaction).toBeTruthy();
+    expect(message.isNeedaction).toBe(true);
     expect(message.body).toBe("<p>Test</p>");
     expect(serializeDateTime(message.date)).toBe("2019-05-05 10:00:00");
     expect(message.id).toBe(4000);
-    expect(message.attachments).toBeTruthy();
     expect(message.attachments[0].name).toBe("test.txt");
-    expect(message.thread).toBeTruthy();
     expect(message.thread.id).toBe(serverState.partnerId);
     expect(message.thread.name).toBe("general");
-    expect(message.author).toBeTruthy();
     expect(message.author.id).toBe(5);
     expect(message.author.displayName).toBe("Demo");
 });

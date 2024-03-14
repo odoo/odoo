@@ -26,7 +26,7 @@ test("check status 502", async () => {
 
 test("FormData is built by post", async () => {
     const restoreFetch = mockFetch((_, { body }) => {
-        expect(body).toSatisfy((body) => body instanceof FormData);
+        expect(body).toBeInstanceOf(FormData);
         expect(body.get("s"), "1");
         expect(body.get("a"), "1");
         expect(body.getAll("a"), ["1", "2", "3"]);

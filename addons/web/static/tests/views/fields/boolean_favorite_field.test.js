@@ -166,7 +166,7 @@ test("FavoriteField in form view", async () => {
 });
 
 test("FavoriteField in editable list view without label", async () => {
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
 
     await mountView({
         resModel: "partner",

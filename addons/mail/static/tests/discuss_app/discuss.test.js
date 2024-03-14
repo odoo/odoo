@@ -199,11 +199,7 @@ test("Message of type notification in chatter should not have inline display", a
     await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message-body");
-    expect(
-        window
-            .getComputedStyle(document.querySelector(".o-mail-Message-body"), null)
-            .display.includes("inline")
-    ).not.toBeTruthy();
+    expect(".o-mail-Message-body").not.toHaveStyle({ display: /inline/ });
 });
 
 test("Click on avatar opens its partner chat window", async () => {
@@ -1454,7 +1450,7 @@ test("composer should be focused automatically after clicking on the send button
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await click(".o-mail-Composer-send:enabled");
-    expect(document.activeElement).toBe($(".o-mail-Composer-input")[0]);
+    expect(".o-mail-Composer-input").toBeFocused();
 });
 
 test("mark channel as seen if last message is visible when switching channels when the previous channel had a more recent last message than the current channel [REQUIRE FOCUS]", async () => {

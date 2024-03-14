@@ -11,8 +11,8 @@ describe(parseUrl(import.meta.url), () => {
         runner.describe("a suite", () => {});
         runner.describe("another suite", () => {});
 
-        expect(runner.suites.size).toBe(2);
-        expect(runner.tests.size).toBe(0);
+        expect(runner.suites).toHaveLength(2);
+        expect(runner.tests).toHaveLength(0);
         for (const suite of runner.suites.values()) {
             expect(suite).toMatch(Suite);
         }
@@ -35,8 +35,8 @@ describe(parseUrl(import.meta.url), () => {
             runner.test("test 3", () => {});
         });
 
-        expect(runner.suites.size).toBe(2);
-        expect(runner.tests.size).toBe(3);
+        expect(runner.suites).toHaveLength(2);
+        expect(runner.tests).toHaveLength(3);
     });
 
     test("should not have duplicate suites", () => {
@@ -72,7 +72,7 @@ describe(parseUrl(import.meta.url), () => {
             testFn("tagged test", () => {});
         });
 
-        expect(runner.tags.size).toBe(12);
-        expect(runner.tests.values().next().value.tags.length).toBe(12);
+        expect(runner.tags).toHaveLength(12);
+        expect(runner.tests.values().next().value.tags).toHaveLength(12);
     });
 });

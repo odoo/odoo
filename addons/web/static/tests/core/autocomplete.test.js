@@ -512,7 +512,7 @@ test("correct sequence of blur, focus and select", async () => {
         onSelect(option, params) {
             queryOne(".o-autocomplete input").value = option.label;
             expect.step("select " + option.label);
-            expect(params.triggeredOnBlur).not.toBeTruthy();
+            expect(params.triggeredOnBlur).not.toBe(true);
         }
         onBlur() {
             expect.step("blur");

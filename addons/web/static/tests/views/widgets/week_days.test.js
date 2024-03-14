@@ -43,12 +43,12 @@ test("simple week recurrence widget", async () => {
         if (method === "web_save") {
             writeCall++;
             if (writeCall === 1) {
-                expect(args[1].sun).toBeTruthy();
+                expect(args[1].sun).toBe(true);
             }
             if (writeCall === 2) {
-                expect(args[1].sun).not.toBeTruthy();
-                expect(args[1].mon).toBeTruthy();
-                expect(args[1].tue).toBeTruthy();
+                expect(args[1].sun).not.toBe(true);
+                expect(args[1].mon).toBe(true);
+                expect(args[1].tue).toBe(true);
             }
         }
     });

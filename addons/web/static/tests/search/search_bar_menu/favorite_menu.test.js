@@ -15,11 +15,11 @@ import {
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
 import { mountWithSearch } from "../helpers";
-import { defineSearchBarModels, Foo } from "./models";
+import { Foo, defineSearchBarModels } from "./models";
 
-import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 import { registry } from "@web/core/registry";
 import { SearchBar } from "@web/search/search_bar/search_bar";
+import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 import { WebClient } from "@web/webclient/webclient";
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
@@ -88,6 +88,7 @@ test("delete an active favorite", async () => {
             });
         }
     }
+
     viewsRegistry.add("toy", {
         type: "toy",
         display_name: "Toy",
@@ -107,10 +108,11 @@ test("delete an active favorite", async () => {
         },
     ];
 
-    onRpc("/web/dataset/call_kw/ir.filters/unlink", () => {
+    onRpc("unlink", () => {
         expect.step("deleteFavorite");
-        return { result: true }; // mocked unlink result
+        return true;
     });
+
     const webClient = await mountWithCleanup(WebClient);
 
     const clearCacheListener = () => expect.step("CLEAR-CACHES");

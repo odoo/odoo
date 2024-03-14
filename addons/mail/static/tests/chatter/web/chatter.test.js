@@ -230,7 +230,7 @@ test("chatter: drop attachment should refresh thread data with hasParentReloadOn
     onRpc((route) => {
         if (route === "/mail/attachment/upload") {
             const attachmentId = pyEnv["ir.attachment"].create([
-                { res_id: partnerId, res_model: "res.partner", mimetype: "application/pdf" }
+                { res_id: partnerId, res_model: "res.partner", mimetype: "application/pdf" },
             ]);
             pyEnv["res.partner"].write([partnerId], { message_main_attachment_id: attachmentId });
             return Promise.resolve();
@@ -248,7 +248,7 @@ test("chatter: drop attachment should refresh thread data with hasParentReloadOn
                 </sheet>
                 <div class="o_attachment_preview" />
                 <chatter reload_on_post="True" reload_on_attachment="True"/>
-            </form>`
+            </form>`,
     });
     const files = [
         await createFile({
@@ -396,10 +396,10 @@ test("composer show/hide on log note/send message [REQUIRE FOCUS]", async () => 
     await contains(".o-mail-Composer", { count: 0 });
     await click("button", { text: "Send message" });
     await contains(".o-mail-Composer");
-    expect(document.activeElement).toBe($(".o-mail-Composer-input")[0]);
+    expect(".o-mail-Composer-input").toBeFocused();
     await click("button", { text: "Log note" });
     await contains(".o-mail-Composer");
-    expect(document.activeElement).toBe($(".o-mail-Composer-input")[0]);
+    expect(".o-mail-Composer-input").toBeFocused();
     await click("button", { text: "Log note" });
     await contains(".o-mail-Composer", { count: 0 });
     await click("button", { text: "Send message" });
@@ -616,7 +616,7 @@ test("schedule activities on draft record should prompt with scheduling an activ
                 } else if (action.res_model === "mail.activity.schedule") {
                     step("mail.activity.schedule");
                     expect(action.context.active_model).toBe("res.partner");
-                    expect(Number(action.context.active_id)).toBeTruthy();
+                    expect(Number(action.context.active_id)).toBeGreaterThan(0);
                     options.onClose();
                     wizardOpened.resolve();
                 } else {

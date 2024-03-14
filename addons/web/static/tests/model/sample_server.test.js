@@ -104,6 +104,8 @@ const fields = {
     },
 };
 
+describe.current.tags("headless");
+
 describe("Sample data", () => {
     test("people type + all field names", async () => {
         const specification = {};
@@ -123,39 +125,37 @@ describe("Sample data", () => {
         });
         const rec = records[0];
         // Basic fields
-        expect(SAMPLE_PEOPLE.includes(rec.display_name)).toBe(true);
-        expect(SAMPLE_PEOPLE.includes(rec.name)).toBe(true);
+        expect(SAMPLE_PEOPLE).toInclude(rec.display_name);
+        expect(SAMPLE_PEOPLE).toInclude(rec.name);
         expect(rec.email).toBe(`${rec.display_name.replace(/ /, ".").toLowerCase()}@sample.demo`);
         expect(rec.phone_number).toMatch(/\+1 555 754 000\d/);
         expect(rec.website_url).toMatch(/http:\/\/sample\d\.com/);
         expect(rec.urlemailphone).toBe(false);
         expect(rec.active).toBe(true);
         expect(rec.is_alive).toBeOfType("boolean");
-        expect(SAMPLE_TEXTS.includes(rec.description)).toBe(true);
+        expect(SAMPLE_TEXTS).toInclude(rec.description);
         expect(rec.birthday).toMatch(/\d{4}-\d{2}-\d{2}/);
         expect(rec.arrival_date).toMatch(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/);
-        expect(rec.height >= 0 && rec.height <= MAX_FLOAT).toBe(true, {
-            message: "Field height should be between 0 and 100",
-        });
+        expect(rec.height).toBeWithin(0, MAX_FLOAT + 1);
         expect(rec.color).toBeWithin(0, MAX_COLOR_INT);
         expect(rec.age).toBeWithin(0, MAX_INTEGER);
         expect(rec.salary).toBeWithin(0, MAX_MONETARY);
         // check float field have 2 decimal rounding
         expect(rec.height).toBe(parseFloat(parseFloat(rec.height).toFixed(2)));
         const selectionValues = fields["res.users"].type.selection.map((sel) => sel[0]);
-        expect(selectionValues.includes(rec.type)).toBe(true);
+        expect(selectionValues).toInclude(rec.type);
         // Relational fields
         expect(rec.currency.id).toBe(1);
         // Currently we expect the currency name to be a latin string, which
         // is not important; in most case we only need the ID. The following
         // assertion can be removed if needed.
-        expect(SAMPLE_TEXTS.includes(rec.currency.display_name)).toBe(true);
+        expect(SAMPLE_TEXTS).toInclude(rec.currency.display_name);
         expect(rec.manager_id.id).toBeOfType("number");
-        expect(SAMPLE_PEOPLE.includes(rec.manager_id.display_name)).toBe(true);
+        expect(SAMPLE_PEOPLE).toInclude(rec.manager_id.display_name);
         expect(rec.cover_image_id).toBe(false);
-        expect(rec.managed_ids.length).toBe(2);
+        expect(rec.managed_ids).toHaveLength(2);
         expect(rec.managed_ids.every((id) => typeof id === "number")).toBe(true);
-        expect(rec.tag_ids.length).toBe(2);
+        expect(rec.tag_ids).toHaveLength(2);
         expect(rec.tag_ids.every((id) => typeof id === "number")).toBe(true);
     });
 
@@ -166,7 +166,7 @@ describe("Sample data", () => {
             model: "res.country",
             specification: { display_name: {} },
         });
-        expect(SAMPLE_COUNTRIES.includes(records[0].display_name)).toBe(true);
+        expect(SAMPLE_COUNTRIES).toInclude(records[0].display_name);
     });
 
     test("any type", async () => {
@@ -176,7 +176,7 @@ describe("Sample data", () => {
             model: "hobbit",
             specification: { display_name: {} },
         });
-        expect(SAMPLE_TEXTS.includes(records[0].display_name)).toBe(true);
+        expect(SAMPLE_TEXTS).toInclude(records[0].display_name);
     });
 });
 
@@ -208,7 +208,7 @@ describe("RPC calls", () => {
         });
         expect(Object.keys(result.records[0])).toEqual(["id", "manager_id"]);
         expect(result.records[0].manager_id.id).toBe(1);
-        expect(result.records[0].manager_id.display_name).toMatch(/\w+/)
+        expect(result.records[0].manager_id.display_name).toMatch(/\w+/);
     });
 
     test("'web_read_group': no group", async () => {
@@ -254,8 +254,8 @@ describe("RPC calls", () => {
             groupBy: ["profession"],
             fields: [],
         });
-        expect(result.length).toBe(2);
-        expect(result.groups.length).toBe(2);
+        expect(result).toHaveLength(2);
+        expect(result.groups).toHaveLength(2);
         expect(result.groups.map((g) => g.profession)).toEqual(["gardener", "adventurer"]);
         expect(result.groups.reduce((acc, g) => acc + g.profession_count, 0)).toBe(
             MAIN_RECORDSET_SIZE
@@ -278,7 +278,7 @@ describe("RPC calls", () => {
             fields: [],
         });
         expect(result.length).toBe(3);
-        expect(result.groups.length).toBe(3);
+        expect(result.groups).toHaveLength(3);
         expect(result.groups.map((g) => g.profession)).toEqual([
             "gardener",
             "brewer",
@@ -314,7 +314,7 @@ describe("RPC calls", () => {
             fields: [],
             groupBy: ["profession"],
         });
-        expect(result.length).toBe(3);
+        expect(result).toHaveLength(3);
         expect(result.map((g) => g.profession)).toEqual(["adventurer", "brewer", "gardener"]);
         expect(result.reduce((acc, g) => acc + g.profession_count, 0)).toBe(MAIN_RECORDSET_SIZE);
     });
@@ -327,7 +327,7 @@ describe("RPC calls", () => {
             fields: ["age:sum"],
             groupBy: ["profession"],
         });
-        expect(result.length).toBe(3);
+        expect(result).toHaveLength(3);
         expect(result.map((g) => g.profession)).toEqual(["adventurer", "brewer", "gardener"]);
         expect(result.reduce((acc, g) => acc + g.profession_count, 0)).toBe(MAIN_RECORDSET_SIZE);
         expect(result.reduce((acc, g) => acc + g.age, 0)).toBe(
@@ -390,7 +390,7 @@ describe("RPC calls", () => {
             model: "hobbit",
             args: [[1], ["display_name"]],
         });
-        expect(result.length).toBe(1);
+        expect(result).toHaveLength(1);
         expect(result[0].display_name).toMatch(/\w+/);
         expect(result[0].id).toBe(1);
     });
@@ -404,7 +404,7 @@ describe("RPC calls", () => {
             model: "hobbit",
             args: [ids, ["display_name"]],
         });
-        expect(result.length).toBe(MAIN_RECORDSET_SIZE);
+        expect(result).toHaveLength(MAIN_RECORDSET_SIZE);
     });
 
     test("'read_group': partial support of array_agg", async () => {
@@ -417,7 +417,7 @@ describe("RPC calls", () => {
             groupBy: [],
             lazy: false,
         });
-        expect(result.length).toBe(1);
+        expect(result).toHaveLength(1);
         const ids = new Array(16).fill(0).map((_, index) => index + 1);
         expect(result[0].id).toEqual(ids);
     });

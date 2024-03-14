@@ -172,7 +172,7 @@ test.tags("desktop")("many sublevels in app menu items", async () => {
     await contains(".o_menu_sections .o-dropdown").click();
     expect(
         queryAll(".o-dropdown--menu > *").map((el) => ({
-            text: el.textContent,
+            text: el.innerText,
             paddingLeft: el.style.paddingLeft,
             tagName: el.tagName,
         }))
@@ -460,7 +460,7 @@ test.tags("desktop")(
         getFixture().style.width = "600px";
 
         const navbar = await mountWithCleanup(MyNavbar);
-        expect(navbar.currentAppSections.length).toBe(0, { message: "0 app sub menus" });
+        expect(navbar.currentAppSections).toHaveLength(0, { message: "0 app sub menus" });
         expect(".o_navbar").toHaveProperty("offsetWidth", 600);
         expect(adaptCount).toBe(1);
         expect(adaptRenderCount).toBe(0, {
@@ -481,8 +481,8 @@ test.tags("desktop")(
         // Set menu
         getService("menu").setCurrentMenu(1);
         await animationFrame();
-        expect(navbar.currentAppSections.length).toBe(3, { message: "3 app sub menus" });
-        expect(navbar.currentAppSectionsExtra.length).toBe(3, {
+        expect(navbar.currentAppSections).toHaveLength(3, { message: "3 app sub menus" });
+        expect(navbar.currentAppSectionsExtra).toHaveLength(3, {
             message: "all app sub menus are inside the more menu",
         });
         expect(adaptCount).toBe(3);
@@ -496,7 +496,7 @@ test.tags("desktop")(
         resize(window);
         await advanceTime(navbarDebounceTime);
         await animationFrame();
-        expect(navbar.currentAppSectionsExtra.length).toBe(3, {
+        expect(navbar.currentAppSectionsExtra).toHaveLength(3, {
             message: "all app sub menus are inside the more menu",
         });
         expect(adaptCount).toBe(4);
@@ -510,8 +510,8 @@ test.tags("desktop")(
         resize(window);
         await advanceTime(navbarDebounceTime);
         await animationFrame();
-        expect(navbar.currentAppSections.length).toBe(3, { message: "still 3 app sub menus" });
-        expect(navbar.currentAppSectionsExtra.length).toBe(0, {
+        expect(navbar.currentAppSections).toHaveLength(3, { message: "still 3 app sub menus" });
+        expect(navbar.currentAppSectionsExtra).toHaveLength(0, {
             message: "all app sub menus are NO MORE inside the more menu",
         });
         expect(adaptCount).toBe(5);

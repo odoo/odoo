@@ -6,6 +6,7 @@ import {
     contains,
     defineActions,
     defineMenus,
+    getService,
     mountWithCleanup,
     useTestClientAction,
 } from "@web/../tests/web_test_helpers";
@@ -119,11 +120,11 @@ test("open a menu item when a dialog is displayed", async () => {
         static props = ["*"];
     }
 
-    const webclient = await mountWithCleanup(WebClient);
+    await mountWithCleanup(WebClient);
     expect(".o_menu_brand").toHaveCount(0);
     expect(".modal .test").toHaveCount(0);
 
-    webclient.env.services.dialog.add(CustomDialog);
+    getService("dialog").add(CustomDialog);
     await animationFrame();
     expect(".modal .test").toHaveCount(1);
 

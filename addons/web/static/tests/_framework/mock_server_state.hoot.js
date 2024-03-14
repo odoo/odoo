@@ -1,4 +1,4 @@
-import { after, before, createJobScopedGetter } from "@odoo/hoot";
+import { after, before, beforeAll, createJobScopedGetter } from "@odoo/hoot";
 
 /**
  * @typedef {typeof SERVER_STATE_VALUES} ServerState
@@ -67,4 +67,4 @@ export const serverState = new Proxy(SERVER_STATE_VALUES, {
     },
 });
 
-before(notifySubscribers);
+beforeAll(notifySubscribers);

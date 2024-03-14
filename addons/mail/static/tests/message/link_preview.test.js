@@ -275,9 +275,8 @@ test("No crash on receiving link preview of non-known message", async () => {
     rpc = rpcWithEnv(env);
     await openDiscuss();
     rpc("/mail/link_preview", { message_id: messageId });
-    expect(true).toBeTruthy();
     rpc("/mail/link_preview/hide", { link_preview_ids: [linkPreviewId] });
-    expect(true).toBeTruthy();
+    expect(true).toBe(true, { message: "no assertions" });
 });
 
 test("Squash the message and the link preview when the link preview is an image and the link is the only text in the message", async () => {

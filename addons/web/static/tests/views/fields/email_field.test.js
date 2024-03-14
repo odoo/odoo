@@ -16,7 +16,7 @@ class Contact extends models.Model {
 
 defineModels([Contact]);
 
-onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+onRpc("has_group", () => true);
 
 test("in form view", async () => {
     Contact._records = [{ id: 1, email: "john.doe@odoo.com" }];
@@ -51,7 +51,7 @@ test("in editable list view", async () => {
         "john.doe@odoo.com",
         "jane.doe@odoo.com",
     ]);
-    expect(queryFirst(".o_field_email a")).toHaveAttribute("href", "mailto:john.doe@odoo.com");
+    expect(".o_field_email a:first").toHaveAttribute("href", "mailto:john.doe@odoo.com");
     let cell = queryFirst("tbody td:not(.o_list_record_selector)");
     await contains(cell).click();
     expect(cell.parentElement).toHaveClass("o_selected_row");
@@ -64,7 +64,7 @@ test("in editable list view", async () => {
         "new@odoo.com",
         "jane.doe@odoo.com",
     ]);
-    expect(queryFirst(".o_field_email a")).toHaveAttribute("href", "mailto:new@odoo.com");
+    expect(".o_field_email a:first").toHaveAttribute("href", "mailto:new@odoo.com");
 });
 
 test("with empty value", async () => {

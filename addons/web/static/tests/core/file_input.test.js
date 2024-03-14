@@ -75,7 +75,7 @@ test("Upload a file: custom attachment", async () => {
             resModel: "res.model",
             route: "/web/binary/upload",
             onUpload(files) {
-                expect(files.length).toBe(0, {
+                expect(files).toHaveLength(0, {
                     message: "'files' property should be an empty array",
                 });
             },

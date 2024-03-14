@@ -1,5 +1,6 @@
-import { AttachDocumentWidget } from "@web/views/widgets/attach_document/attach_document";
-
+import { expect, test } from "@odoo/hoot";
+import { click, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     contains,
     defineModels,
@@ -10,9 +11,8 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { expect, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+
+import { AttachDocumentWidget } from "@web/views/widgets/attach_document/attach_document";
 
 class Partner extends models.Model {
     display_name = fields.Char({ string: "Displayed name" });
@@ -27,6 +27,9 @@ class Partner extends models.Model {
 defineModels([Partner]);
 
 test("attach document widget calls action with attachment ids", async () => {
+    // FIXME: This ugly hack is needed because the input is not attached in the DOM
+    // The input should be attached to the component and hidden in some way to make
+    // the interaction easier and more natural.
     let fileInput;
     patchWithCleanup(AttachDocumentWidget.prototype, {
         setup() {
@@ -45,19 +48,19 @@ test("attach document widget calls action with attachment ids", async () => {
         },
     }));
 
-    onRpc(async (route, params) => {
-        expect.step(params.method);
-        if (params.method === "my_action") {
-            expect(params.model).toBe("partner");
-            expect(params.args).toEqual([1]);
-            expect(params.kwargs.attachment_ids).toEqual([5, 2]);
+    onRpc(async (route, { args, kwargs, method, model }) => {
+        expect.step(method);
+        if (method === "my_action") {
+            expect(model).toBe("partner");
+            expect(args).toEqual([1]);
+            expect(kwargs.attachment_ids).toEqual([5, 2]);
             return true;
         }
-        if (params.method === "web_save") {
-            expect(params.args[1]).toEqual({ display_name: "yop" });
+        if (method === "web_save") {
+            expect(args[1]).toEqual({ display_name: "yop" });
         }
-        if (params.method === "web_read") {
-            expect(params.args[0]).toEqual([1]);
+        if (method === "web_read") {
+            expect(args[0]).toEqual([1]);
         }
     });
 
@@ -77,12 +80,15 @@ test("attach document widget calls action with attachment ids", async () => {
     await animationFrame();
     click(".o_attach_document");
     await animationFrame();
-    fileInput.dispatchEvent(new Event("change"));
+    manuallyDispatchProgrammaticEvent(fileInput, "change");
     await animationFrame();
     expect(["web_save", "post", "my_action", "web_read"]).toVerifySteps();
 });
 
 test("attach document widget calls action with attachment ids on a new record", async () => {
+    // FIXME: This ugly hack is needed because the input is not attached in the DOM
+    // The input should be attached to the component and hidden in some way to make
+    // the interaction easier and more natural.
     let fileInput;
     patchWithCleanup(AttachDocumentWidget.prototype, {
         setup() {
@@ -90,6 +96,7 @@ test("attach document widget calls action with attachment ids on a new record", 
             fileInput = this.fileInput;
         },
     });
+
     mockService("http", () => ({
         post: (route, params) => {
             expect.step("post");
@@ -129,7 +136,7 @@ test("attach document widget calls action with attachment ids on a new record", 
     await contains("[name='display_name'] input").edit("yop");
     click(".o_attach_document");
     await animationFrame();
-    fileInput.dispatchEvent(new Event("change"));
+    manuallyDispatchProgrammaticEvent(fileInput, "change");
     await animationFrame();
     expect(["web_save", "post", "my_action", "web_read"]).toVerifySteps();
 });

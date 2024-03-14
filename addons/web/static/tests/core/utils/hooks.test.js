@@ -121,7 +121,7 @@ describe("useAutofocus", () => {
             setup() {
                 const inputRef = useAutofocus();
                 onMounted(() => {
-                    expect(inputRef.el).toBeTruthy();
+                    expect(inputRef.el).toBeInstanceOf(HTMLInputElement);
                 });
             }
         }

@@ -64,7 +64,7 @@ export function waitUntilSubscribe(...requiredChannels) {
     const failTimeout = setTimeout(() => {
         const errMsg = `Subscription to ${JSON.stringify(requiredChannels)} not received.`;
         subscribeDeferred.reject(new Error(errMsg));
-        expect(false).toBeTruthy({ message: errMsg });
+        expect(false).toBe(true, { message: errMsg });
     }, TIMEOUT);
     const lastCallback = callbackRegistry.get("subscribe", () => {});
     callbackRegistry.add(
@@ -77,7 +77,7 @@ export function waitUntilSubscribe(...requiredChannels) {
             );
             if (allChannelsSubscribed) {
                 subscribeDeferred.resolve();
-                expect(true).toBeTruthy({
+                expect(true).toBe(true, {
                     message: `Subscription to ${JSON.stringify(requiredChannels)} received.`,
                 });
                 clearTimeout(failTimeout);
@@ -112,7 +112,7 @@ export function waitForChannels(channels, { operation = "add" } = {}) {
             : `Waited ${TIMEOUT}ms for [${channels.join(", ")}] to be ${
                   operation === "add" ? "added" : "deleted"
               }`;
-        expect(success).toBeTruthy({ message: msg });
+        expect(success).toBe(true, { message: msg });
         if (success) {
             deferred.resolve();
         } else {

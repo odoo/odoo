@@ -1,7 +1,13 @@
 /** @odoo-module */
 
-import { defineModels, makeMockEnv, models, onRpc } from "../web_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import {
+    defineModels,
+    getService,
+    makeMockEnv,
+    models,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 
 describe.current.tags("headless");
 
@@ -23,8 +29,8 @@ test("stores calls in cache in success", async () => {
     onRpc("get_views", () => {
         expect.step("get_views");
     });
-    const env = await makeMockEnv();
-    await env.services.view.loadViews(
+    await makeMockEnv();
+    await getService("view").loadViews(
         {
             resModel: "take.five",
             views: [[99, "list"]],
@@ -32,7 +38,7 @@ test("stores calls in cache in success", async () => {
         },
         {}
     );
-    await env.services.view.loadViews(
+    await getService("view").loadViews(
         {
             resModel: "take.five",
             views: [[99, "list"]],
@@ -47,31 +53,27 @@ test("stores calls in cache when failed", async () => {
     expect.assertions(3);
     onRpc("get_views", () => {
         expect.step("get_views");
-        return new Error("my little error");
+        throw new Error("my little error");
     });
-    const env = await makeMockEnv();
-    try {
-        await env.services.view.loadViews(
+    await makeMockEnv();
+    await expect(
+        getService("view").loadViews(
             {
                 resModel: "take.five",
                 views: [[99, "list"]],
             },
             {}
-        );
-    } catch (error) {
-        expect(error).toMatch(/my little error/);
-    }
-    try {
-        await env.services.view.loadViews(
+        )
+    ).rejects.toThrow(/my little error/);
+    await expect(
+        getService("view").loadViews(
             {
                 resModel: "take.five",
                 views: [[99, "list"]],
             },
             {}
-        );
-    } catch (error) {
-        expect(error).toMatch(/my little error/);
-    }
+        )
+    ).rejects.toThrow(/my little error/);
     expect(["get_views", "get_views"]).toVerifySteps();
 });
 
@@ -80,9 +82,9 @@ test("clear cache when updating ir.ui.view", async () => {
     onRpc("get_views", () => {
         expect.step("get_views");
     });
-    const env = await makeMockEnv();
+    await makeMockEnv();
     const loadView = () =>
-        env.services.view.loadViews(
+        getService("view").loadViews(
             {
                 resModel: "take.five",
                 views: [[99, "list"]],
@@ -94,10 +96,10 @@ test("clear cache when updating ir.ui.view", async () => {
     expect(["get_views"]).toVerifySteps();
     await loadView();
     expect([]).toVerifySteps(); // cache works => no actual rpc
-    await env.services.orm.unlink("ir.ui.view", [3]);
+    await getService("orm").unlink("ir.ui.view", [3]);
     await loadView();
     expect(["get_views"]).toVerifySteps(); // cache was invalidated
-    await env.services.orm.unlink("take.five", [3]);
+    await getService("orm").unlink("take.five", [3]);
     await loadView();
     expect([]).toVerifySteps(); // cache was not invalidated
 });

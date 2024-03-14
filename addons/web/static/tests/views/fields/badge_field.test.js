@@ -1,4 +1,4 @@
-import { beforeEach, expect, test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
@@ -42,9 +42,7 @@ class Partner extends models.Model {
 
 defineModels([Partner]);
 
-beforeEach(() => {
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
-});
+onRpc("has_group", () => true);
 
 test("BadgeField component on a char field in list view", async () => {
     await mountView({

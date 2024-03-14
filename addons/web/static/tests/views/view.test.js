@@ -624,7 +624,7 @@ test("can click on action-bound links -- 1", async () => {
             <a type="action" data-method="setTheControl" data-model="animal">link</a>
         </toy>
     `;
-    onRpc("/web/dataset/call_kw/animal/setTheControl", () => {
+    onRpc("setTheControl", () => {
         expect.step("root called");
         return { type: "ir.actions.client", tag: "someAction" };
     });
@@ -776,7 +776,7 @@ test("banner can re-render with new HTML", async () => {
         expect.step("/mybody/isacage");
         return { html: banners.shift() };
     });
-    onRpc("/web/dataset/call_kw/animal/setTheControl", () => {
+    onRpc("setTheControl", () => {
         return { type: "ir.actions.act_window_close" };
     });
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
@@ -843,14 +843,14 @@ test("click on action-bound links in banner (concurrency)", async () => {
             html: `<div><a type="action" data-method="heartOfTheSun" data-model="animal">link</a></div>`,
         };
     });
-    onRpc("/web/dataset/call_kw/animal/setTheControl", async () => {
+    onRpc("setTheControl", async () => {
         await prom;
         return {
             type: "ir.actions.client",
             tag: "toug",
         };
     });
-    onRpc("/web/dataset/call_kw/animal/heartOfTheSun", () => {
+    onRpc("heartOfTheSun", () => {
         return {
             type: "ir.actions.client",
             tag: "gout",
@@ -904,14 +904,14 @@ test("real life banner", async () => {
         expect.step("/mybody/isacage");
         return { html: bannerArch };
     });
-    onRpc("/web/dataset/call_kw/mah.model/mah_method", async () => {
-        expect.step("/web/dataset/call_kw/mah.model/mah_method");
+    onRpc("/web/dataset/call_kw/mah.model/mah_method", async (request) => {
+        expect.step(new URL(request.url).pathname);
         return true;
     });
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
     expect(["/mybody/isacage"]).toVerifySteps();
     expect(".modal").not.toBeVisible();
-    expect(queryOne(".o_onboarding_container")).toHaveClass("o-vertical-slide");
+    expect(".o_onboarding_container").toHaveClass("o-vertical-slide");
     click("#closeOnboarding");
     await animationFrame();
     expect(".modal").toBeVisible();

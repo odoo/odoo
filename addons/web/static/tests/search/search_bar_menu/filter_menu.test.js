@@ -26,7 +26,7 @@ import {
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
 import { mountWithSearch } from "../helpers";
-import { defineSearchBarModels, Foo, Partner } from "./models";
+import { Foo, Partner, defineSearchBarModels } from "./models";
 
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
@@ -798,7 +798,7 @@ test("display names in facets (with a property)", async () => {
 });
 
 test("group by properties", async () => {
-    onRpc("/web/dataset/call_kw/parent.model/web_search_read", () => {
+    onRpc("web_search_read", () => {
         expect.step("definitionFetched");
         return {
             records: [

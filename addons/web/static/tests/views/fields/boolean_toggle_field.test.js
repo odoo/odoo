@@ -42,7 +42,7 @@ test("BooleanToggleField is disabled with a readonly attribute", async () => {
 test("BooleanToggleField is disabled if readonly in editable list", async () => {
     Partner._fields.bar = fields.Boolean({ readonly: true });
 
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
     await mountView({
         resModel: "partner",
         type: "list",

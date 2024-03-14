@@ -1628,7 +1628,7 @@ test("search panel is available on list and kanban by default", async () => {
         `,
     };
 
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     expect(`.o_kanban_view .o_content.o_component_with_search_panel`).toHaveCount(1);
@@ -1664,7 +1664,7 @@ test("search panel with view_types attribute", async () => {
         `,
     };
 
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     expect(`.o_kanban_view .o_content.o_component_with_search_panel`).toHaveCount(1);
@@ -1683,7 +1683,7 @@ test("search panel state is shared between views", async () => {
     onRpc("web_search_read", (_, { kwargs }) => {
         expect.step(JSON.stringify(kwargs.domain));
     });
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     expect(`.o_search_panel_category_value header:eq(0)`).toHaveClass("active");
@@ -1719,7 +1719,7 @@ test("search panel filters are kept between switch views", async () => {
     onRpc("web_search_read", (_, { kwargs }) => {
         expect.step(JSON.stringify(kwargs.domain));
     });
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     expect(`.o_search_panel_filter_value input:checked`).toHaveCount(0);
@@ -1756,7 +1756,7 @@ test("search panel filters are kept between switch views", async () => {
 });
 
 test("search panel filters are kept when switching to a view with no search panel", async () => {
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     expect(`.o_kanban_view .o_content.o_component_with_search_panel`).toHaveCount(1);
@@ -1798,7 +1798,7 @@ test("categories and filters are not reloaded when switching between views", asy
             expect.step(method);
         }
     });
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     await getService("action").switchView("list");
@@ -1835,7 +1835,7 @@ test("categories and filters are loaded when switching from a view without the s
             expect.step(method);
         }
     });
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     expect([]).toVerifySteps();
@@ -1893,7 +1893,7 @@ test("scroll position is kept when switching between controllers", async () => {
             <div class="o_web_client" style="max-height: 300px"><WebClient/></div>
         `;
     }
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
     await mountWithCleanup(WebClientContainer);
     await getService("action").doAction(1);
     expect(`.o_kanban_view .o_content`).toHaveCount(1);
@@ -1930,7 +1930,7 @@ test("search panel is not instantiated in dialogs", async () => {
         `,
     };
 
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1, { viewType: "form" });
     await contains(`.o_field_widget[name="company_id"] .dropdown input`).click();

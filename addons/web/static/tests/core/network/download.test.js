@@ -47,7 +47,7 @@ test("handles business error from server", async () => {
     } catch (e) {
         error = e;
     }
-    expect(error).toSatisfy((error) => error instanceof RPCError);
+    expect(error).toBeInstanceOf(RPCError);
     expect(error.data).toEqual(serverError.data);
 });
 
@@ -70,7 +70,7 @@ test("handles arbitrary error", async () => {
         error = e;
     }
 
-    expect(error).toSatisfy((error) => error instanceof RPCError);
+    expect(error).toBeInstanceOf(RPCError);
     expect(error.message).toBe("Arbitrary Uncaught Python Exception");
     expect(error.data.debug.trim()).toBe("200\nHTML error message");
 });
@@ -81,11 +81,10 @@ test("handles success download", async () => {
     // That is, a link will be created with the download attribute
 
     const restoreFetch = mockFetch((_, { body }) => {
-        expect(body).toSatisfy((body) => body instanceof FormData);
-        expect(body instanceof FormData).toBeTruthy();
+        expect(body).toBeInstanceOf(FormData);
         expect(body.get("someKey")).toBe("someValue");
-        expect(body.has("token")).toBeTruthy();
-        expect(body.has("csrf_token")).toBeTruthy();
+        expect(body.has("token")).toBe(true);
+        expect(body.has("csrf_token")).toBe(true);
         expect.step("fetching file");
 
         const blob = new Blob(["some plain text file"], { type: "text/plain" });
@@ -101,7 +100,7 @@ test("handles success download", async () => {
         if (target.tagName === "A" && "download" in target.attributes) {
             ev.preventDefault();
 
-            expect(target.href).toSatisfy((href) => href.startsWith("blob:"));
+            expect(target.href).toMatch(/^blob:/);
             expect.step("file downloaded");
             document.removeEventListener("click", downloadOnClick);
             deferred.resolve();

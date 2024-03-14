@@ -12,9 +12,8 @@ test("Attachment model properties", async () => {
         mimetype: "text/plain",
         name: "test.txt",
     });
-    expect(attachment).toBeTruthy();
-    expect(attachment.isText).toBeTruthy();
-    expect(attachment.isViewable).toBeTruthy();
+    expect(attachment.isText).toBe(true);
+    expect(attachment.isViewable).toBe(true);
     expect(attachment.filename).toBe("test.txt");
     expect(attachment.mimetype).toBe("text/plain");
     expect(attachment.name).toBe("test.txt");

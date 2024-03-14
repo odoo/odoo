@@ -10,8 +10,6 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
-
 class Partner extends models.Model {
     _name = "res.partner";
 
@@ -96,15 +94,9 @@ test("Display a tooltip on click", async () => {
         },
     }));
 
-    patchWithCleanup(browser, {
-        navigator: {
-            clipboard: {
-                writeText: (text) => {
-                    expect.step(text);
-                    return Promise.resolve();
-                },
-            },
-            userAgent: [],
+    patchWithCleanup(navigator.clipboard, {
+        async writeText(text) {
+            expect.step(text);
         },
     });
 
@@ -120,15 +112,9 @@ test("Display a tooltip on click", async () => {
 });
 
 test("CopyClipboardButtonField in form view", async () => {
-    patchWithCleanup(browser, {
-        navigator: {
-            clipboard: {
-                writeText: (text) => {
-                    expect.step(text);
-                    return Promise.resolve();
-                },
-            },
-            userAgent: [],
+    patchWithCleanup(navigator.clipboard, {
+        async writeText(text) {
+            expect.step(text);
         },
     });
 
@@ -157,15 +143,9 @@ test("CopyClipboardButtonField in form view", async () => {
 });
 
 test("CopyClipboardButtonField can be disabled", async () => {
-    patchWithCleanup(browser, {
-        navigator: {
-            clipboard: {
-                writeText: (text) => {
-                    expect.step(text);
-                    return Promise.resolve();
-                },
-            },
-            userAgent: [],
+    patchWithCleanup(navigator.clipboard, {
+        async writeText(text) {
+            expect.step(text);
         },
     });
 

@@ -65,7 +65,7 @@ test("radio field on a many2one in a new record", async () => {
 
     expect("div.o_radio_item").toHaveCount(2);
     expect("input.o_radio_input").toHaveCount(2);
-    expect(queryFirst(".o_field_radio")).toHaveText("xphone\nxpad");
+    expect(".o_field_radio:first").toHaveText("xphone\nxpad");
     expect("input.o_radio_input:checked").toHaveCount(0, {
         message: "none of the input should be checked",
     });
@@ -82,12 +82,12 @@ test("required radio field on a many2one", async () => {
         message: "none of the input should be checked",
     });
     await clickSave();
-    expect(queryFirst(".o_notification_title")).toHaveText("Invalid fields:");
-    expect(queryFirst(".o_notification_content")).toHaveProperty(
+    expect(".o_notification_title:first").toHaveText("Invalid fields:");
+    expect(".o_notification_content:first").toHaveProperty(
         "innerHTML",
         "<ul><li>Product</li></ul>"
     );
-    expect(queryFirst(".o_notification_bar")).toHaveClass("bg-danger");
+    expect(".o_notification_bar:first").toHaveClass("bg-danger");
 });
 
 test("radio field change value by onchange", async () => {

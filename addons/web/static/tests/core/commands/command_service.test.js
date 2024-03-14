@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { press, queryAllTexts } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, mockUserAgent } from "@odoo/hoot-mock";
 import {
     contains,
     getService,
@@ -11,7 +11,6 @@ import {
 
 import { Component, reactive, xml } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
 import { useCommand } from "@web/core/commands/command_hook";
 import { HotkeyCommandItem } from "@web/core/commands/default_providers";
 import { registry } from "@web/core/registry";
@@ -919,16 +918,8 @@ test("display shortcuts correctly for non-MacOS ", async () => {
 });
 
 test("display shortcuts correctly for MacOS ", async () => {
-    patchWithCleanup(window, {
-        navigator: {
-            userAgent: window.navigator.userAgent.replace(/\([^)]*\)/, "(MacOs)"),
-        },
-    });
-    patchWithCleanup(browser, {
-        navigator: {
-            userAgent: window.navigator.userAgent.replace(/\([^)]*\)/, "(MacOs)"),
-        },
-    });
+    mockUserAgent("chrome", "mac");
+
     class MyComponent extends Component {
         static components = { TestComponent };
         static template = xml`
@@ -956,7 +947,7 @@ test("display shortcuts correctly for MacOS ", async () => {
     await animationFrame();
 
     // Open palette
-    press("Control+k");
+    press("meta+k");
     await animationFrame();
 
     expect(queryAllTexts(".o_command")).toEqual([
@@ -995,16 +986,7 @@ test("display shortcuts correctly for non-MacOS with a new overlayModifier", asy
 });
 
 test("display shortcuts correctly for MacOS with a new overlayModifier", async () => {
-    patchWithCleanup(window, {
-        navigator: {
-            userAgent: window.navigator.userAgent.replace(/\([^)]*\)/, "(MacOs)"),
-        },
-    });
-    patchWithCleanup(browser, {
-        navigator: {
-            userAgent: browser.navigator.userAgent.replace(/\([^)]*\)/, "(MacOs)"),
-        },
-    });
+    mockUserAgent("chrome", "mac");
 
     const hotkeyService = registry.category("services").get("hotkey");
     patchWithCleanup(hotkeyService, {
@@ -1024,7 +1006,7 @@ test("display shortcuts correctly for MacOS with a new overlayModifier", async (
 
     await mountWithCleanup(MyComponent);
     // Open palette
-    press("Control+k");
+    press("meta+k");
     await animationFrame();
 
     expect(queryAllTexts(".o_command")).toEqual(["Click\nCONTROL + COMMAND + A"]);

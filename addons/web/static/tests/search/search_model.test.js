@@ -929,7 +929,7 @@ test("no search items created for search panel sections", async () => {
         { viewType: "kanban" }
     );
     const sections = model.getSections();
-    expect(sections.length).toBe(2);
+    expect(sections).toHaveLength(2);
     expect(sanitizeSearchItems(model)).toEqual([]);
 });
 
@@ -969,6 +969,6 @@ test("allow filtering based on extra keys in getSearchItems", async () => {
         },
     });
     const items = model.getSearchItems((i) => i.isActive);
-    expect(items.length).toBe(1);
+    expect(items).toHaveLength(1);
     expect(items[0].name).toBe("filter_1");
 });
