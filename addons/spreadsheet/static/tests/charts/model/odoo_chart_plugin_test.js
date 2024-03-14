@@ -579,4 +579,16 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         insertChartInSpreadsheet(model);
         assert.strictEqual(model.getters.getChartIds(sheetId).length, 1);
     });
+
+    QUnit.test("Remove odoo chart when sheet is deleted", async (assert) => {
+        const { model } = await createSpreadsheetWithChart({ type: "odoo_line" });
+        const sheetId = model.getters.getActiveSheetId();
+        model.dispatch("CREATE_SHEET", {
+            sheetId: model.uuidGenerator.uuidv4(),
+            position: model.getters.getSheetIds().length,
+        });
+        assert.strictEqual(model.getters.getOdooChartIds().length, 1);
+        model.dispatch("DELETE_SHEET", { sheetId });
+        assert.strictEqual(model.getters.getOdooChartIds().length, 0);
+    });
 });
