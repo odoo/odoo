@@ -218,14 +218,12 @@ class IrRule(models.Model):
 
         resolution_info = _("If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.")
 
-        if not self.env.user.has_group('base.group_no_one') or not self.env.user._is_internal():
+        if not self.env.user._is_internal():
             records.invalidate_recordset()
             return AccessError(f"{operation_error}\n{failing_model}\n\n{resolution_info}")
 
         # This extended AccessError is only displayed in debug mode.
-        # Note that by default, public and portal users do not have
-        # the group "base.group_no_one", even if debug mode is enabled,
-        # so it is relatively safe here to include the list of rules and record names.
+        # It is relatively safe here to include the list of rules and record names.
         rules = self._get_failing(records, mode=operation).sudo()
 
         records_sudo = records[:6].sudo()

@@ -404,7 +404,7 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
 
     @contextmanager
     def debug_mode(self):
-        """ Enable the effects of debug mode (in particular for group ``base.group_no_one``). """
+        """ Enable the effects of debug mode. """
         request = Mock(
             httprequest=Mock(host='localhost'),
             db=self.env.cr.dbname,

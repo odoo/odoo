@@ -33,7 +33,7 @@ class TestPartner(TestCrmCommon):
         self.assertEqual(child.user_id, self.env.user)
 
         # test form tool
-        # <field name="team_id" groups="base.group_no_one"/>
+        # <field name="team_id"/>
         with self.debug_mode():
             partner_form = Form(self.env['res.partner'], 'base.view_partner_form')
         partner_form.parent_id = contact_company
@@ -46,7 +46,7 @@ class TestPartner(TestCrmCommon):
         self.assertEqual(partner_form.user_id, self.env.user)
 
         # test form tool
-        # <field name="team_id" groups="base.group_no_one"/>
+        # <field name="team_id"/>
         with self.debug_mode():
             partner_form = Form(self.env['res.partner'], 'base.view_partner_form')
         # `parent_id` is invisible when `is_company` is True (`company_type == 'company'`)

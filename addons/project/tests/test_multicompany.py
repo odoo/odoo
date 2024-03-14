@@ -422,7 +422,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
 
                 # For `parent_id` to  be visible in the view, you need
                 # 1. The debug mode
-                # <field name="parent_id" groups="base.group_no_one"/>
+                # <field name="parent_id"/>
                 view = self.env.ref('project.view_task_form2').sudo()
                 tree = etree.fromstring(view.arch)
                 for node in tree.xpath('//field[@name="parent_id"][@invisible]'):
@@ -442,7 +442,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
 
         # For `parent_id` to  be visible in the view, you need
         # 1. The debug mode
-        # <field name="parent_id" groups="base.group_no_one"/>
+        # <field name="parent_id"/>
         view = self.env.ref('project.view_task_form2').sudo()
         tree = etree.fromstring(view.arch)
         for node in tree.xpath('//field[@name="parent_id"][@invisible]'):
