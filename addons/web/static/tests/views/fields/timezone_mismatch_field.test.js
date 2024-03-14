@@ -1,6 +1,13 @@
-import { test, expect } from "@odoo/hoot";
-import { queryFirst } from "@odoo/hoot-dom";
-import { contains, defineModels, fields, models, mountView, onRpc } from "../../web_test_helpers";
+import { expect, test } from "@odoo/hoot";
+import { queryText } from "@odoo/hoot-dom";
+import {
+    contains,
+    defineModels,
+    fields,
+    models,
+    mountView,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 
 class Localization extends models.Model {
     country = fields.Selection({
@@ -19,7 +26,7 @@ class Localization extends models.Model {
 defineModels([Localization]);
 
 test("in a list view", async () => {
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
     await mountView({
         type: "list",
         resModel: "localization",
@@ -35,8 +42,9 @@ test("in a list view", async () => {
     await contains(".o_data_cell").click();
     expect(".o_field_widget[name=country] select").toHaveCount(1);
     await contains(".o_field_widget[name=country] select").select(`"usa"`);
-    const newContent = queryFirst(".o_data_cell").textContent;
-    expect(newContent).toMatch(/United States\s+\([0-9]+\/[0-9]+\/[0-9]+ [0-9]+:[0-9]+:[0-9]+\)/);
+    expect(".o_data_cell:first").toHaveText(
+        /United States\s+\([0-9]+\/[0-9]+\/[0-9]+ [0-9]+:[0-9]+:[0-9]+\)/
+    );
     expect(".o_tz_warning").toHaveCount(1);
 });
 
@@ -55,7 +63,8 @@ test("in a form view", async () => {
     expect(`.o_field_widget[name="country"]:contains(Belgium)`).toHaveCount(1);
     expect(".o_field_widget[name=country] select").toHaveCount(1);
     await contains(".o_field_widget[name=country] select").select(`"usa"`);
-    const newContent = queryFirst(`.o_field_widget[name="country"]`).textContent;
-    expect(newContent).toMatch(/United States\s+\([0-9]+\/[0-9]+\/[0-9]+ [0-9]+:[0-9]+:[0-9]+\)/);
+    expect(queryText(`.o_field_widget[name="country"]:first`)).toMatch(
+        /United States\s+\([0-9]+\/[0-9]+\/[0-9]+ [0-9]+:[0-9]+:[0-9]+\)/
+    );
     expect(".o_tz_warning").toHaveCount(1);
 });

@@ -126,17 +126,15 @@ test("display the correct name in debug mode", async () => {
 });
 
 test("can execute the callback of settings", async () => {
-    onRpc("/web/dataset/call_kw/res.users/action_get", () => {
-        return Promise.resolve({
-            name: "Change My Preferences",
-            res_id: 0,
-        });
-    });
+    onRpc("action_get", () => ({
+        name: "Change My Preferences",
+        res_id: 0,
+    }));
     mockService("action", () => ({
-        doAction(actionId) {
-            expect.step("" + actionId.res_id);
+        async doAction(actionId) {
+            expect.step(String(actionId.res_id));
             expect.step(actionId.name);
-            return Promise.resolve(true);
+            return true;
         },
     }));
 

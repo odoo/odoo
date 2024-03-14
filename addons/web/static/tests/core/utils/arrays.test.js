@@ -252,29 +252,29 @@ describe("unique", () => {
 
 describe("shallowEqual", () => {
     test("simple valid cases", () => {
-        expect(shallowEqual([], [])).toBeTruthy();
-        expect(shallowEqual([1], [1])).toBeTruthy();
-        expect(shallowEqual([1, "a"], [1, "a"])).toBeTruthy();
+        expect(shallowEqual([], [])).toBe(true);
+        expect(shallowEqual([1], [1])).toBe(true);
+        expect(shallowEqual([1, "a"], [1, "a"])).toBe(true);
     });
 
     test("simple invalid cases", () => {
-        expect(shallowEqual([1], [])).not.toBeTruthy();
-        expect(shallowEqual([], [1])).not.toBeTruthy();
-        expect(shallowEqual([1, "b"], [1, "a"])).not.toBeTruthy();
+        expect(shallowEqual([1], [])).not.toBe(true);
+        expect(shallowEqual([], [1])).not.toBe(true);
+        expect(shallowEqual([1, "b"], [1, "a"])).not.toBe(true);
     });
 
     test("arrays with non primitive values", () => {
         const obj = { b: 3 };
-        expect(shallowEqual([obj], [obj])).toBeTruthy();
-        expect(shallowEqual([{ b: 3 }], [{ b: 3 }])).not.toBeTruthy();
+        expect(shallowEqual([obj], [obj])).toBe(true);
+        expect(shallowEqual([{ b: 3 }], [{ b: 3 }])).not.toBe(true);
 
         const arr = ["x", "y", "z"];
-        expect(shallowEqual([arr], [arr])).toBeTruthy();
-        expect(shallowEqual([["x", "y", "z"]], [["x", "y", "z"]])).not.toBeTruthy();
+        expect(shallowEqual([arr], [arr])).toBe(true);
+        expect(shallowEqual([["x", "y", "z"]], [["x", "y", "z"]])).not.toBe(true);
 
         const fn = () => {};
-        expect(shallowEqual([fn], [fn])).toBeTruthy();
-        expect(shallowEqual([() => {}], [() => {}])).not.toBeTruthy();
+        expect(shallowEqual([fn], [fn])).toBe(true);
+        expect(shallowEqual([() => {}], [() => {}])).not.toBe(true);
     });
 });
 

@@ -79,7 +79,7 @@ test("boolean field in form view", async () => {
 });
 
 test("boolean field in editable list view", async () => {
-    onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
+    onRpc("has_group", () => true);
 
     await mountView({
         resModel: "partner",
