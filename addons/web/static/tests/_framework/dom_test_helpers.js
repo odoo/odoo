@@ -1,5 +1,6 @@
 import {
     check,
+    clear,
     click,
     drag,
     edit,
@@ -103,6 +104,14 @@ export function contains(target, options) {
          */
         check: async (options) => {
             check(await nodePromise, options);
+            await animationFrame();
+        },
+        /**
+         * @param {FillOptions} [options]
+         */
+        clear: async (options) => {
+            await focusCurrent();
+            clear({ confirm: true, ...options });
             await animationFrame();
         },
         /**

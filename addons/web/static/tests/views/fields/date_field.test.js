@@ -207,7 +207,7 @@ test("date field with warn_future option ", async () => {
     await contains(getPickerCell("Dec")).click();
     await contains(getPickerCell("22")).click();
     expect(".fa-exclamation-triangle").toHaveCount(1);
-    await fieldInput("date").edit("");
+    await fieldInput("date").clear();
     expect(".fa-exclamation-triangle").toHaveCount(0);
 });
 
@@ -292,7 +292,7 @@ test.tags("desktop")(
         await contains(".o_data_cell", { root: rows[0] }).click();
 
         expect(".o_field_date input").toHaveCount(1);
-        await fieldInput("date").edit("");
+        await fieldInput("date").clear();
 
         expect(".modal").toHaveCount(1);
         await contains(".modal .modal-footer .btn-primary").click();
@@ -310,7 +310,7 @@ test("date field remove value", async () => {
 
     expect(".o_field_date input").toHaveValue("02/03/2017");
 
-    await fieldInput("date").edit("");
+    await fieldInput("date").clear();
     expect(".o_field_date input").toHaveValue("");
 
     await clickSave();
