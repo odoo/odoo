@@ -803,6 +803,8 @@ class SaleOrder(models.Model):
                     " You must first cancel it."))
 
     def write(self, vals):
+        if 'pricelist_id' in vals and any(so.state == 'sale' for so in self):
+            raise UserError(_("You cannot change the pricelist of a confirmed order !"))
         res = super().write(vals)
         if vals.get('partner_id'):
             self.filtered(lambda so: so.state in ('sent', 'sale')).message_subscribe(
