@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api, Command, _
 
 _logger = logging.getLogger(__name__)
 
@@ -51,12 +51,56 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
     )
     amount = fields.Monetary()
     split_move_line_id = fields.Many2one('account.move.line')
+    issue_state = fields.Selection([('handed', 'Handed'), ('debited', 'Debited'), ('voided', 'Voided')],
+                                   compute="_compute_issue_state")
 
-    # check_state = fields.Selection([
-    #         ('on_hand', 'on hand')
-    #     ],
-    #     compute='_compute_check_info', store=True,
-    # )
+    def prepare_void_move_vals(self):
+        return {
+                'ref' : 'Void check',
+                'journal_id': self.split_move_line_id.move_id.journal_id.id,
+                'line_ids':[Command.create({
+                    'name': "Void check %s" % self.split_move_line_id.name,
+                    'date_maturity': self.split_move_line_id.date_maturity,
+                    'amount_currency': self.split_move_line_id.amount_currency,
+                    'currency_id': self.split_move_line_id.currency_id.id,
+                    'debit': self.split_move_line_id.debit,
+                    'credit': self.split_move_line_id.credit,
+                    'partner_id': self.split_move_line_id.partner_id.id,
+                    'account_id': self.payment_id.destination_account_id.id,
+                   }),
+                    Command.create({
+                    'name': "Void check %s" % self.split_move_line_id.name,
+                    'date_maturity': self.split_move_line_id.date_maturity,
+                    'amount_currency': -self.split_move_line_id.amount_currency,
+                    'currency_id': self.split_move_line_id.currency_id.id,
+                    'debit': -self.split_move_line_id.debit,
+                    'credit': -self.split_move_line_id.credit,
+                    'partner_id': self.split_move_line_id.partner_id.id,
+                    'account_id': self.split_move_line_id.account_id.id,
+                  })
+                ]
+            }
+
+    @api.depends('split_move_line_id.amount_residual')
+    def _compute_issue_state(self):
+        for rec in self:
+            if not rec.split_move_line_id:
+                rec.issue_state = False
+            elif not rec.split_move_line_id.amount_residual:
+                reconciled_line = rec.split_move_line_id.full_reconcile_id.reconciled_line_ids- rec.split_move_line_id
+                voides_types = ['liability_payable', 'assets_receivable']
+                if (reconciled_line.move_id.line_ids - reconciled_line).mapped('account_id.account_type') in voides_types:
+                    rec.issue_state = 'voided'
+                else:
+                    rec.issue_state = 'debited'
+            else:
+                rec.issue_state = 'handed'
+
+    def action_void(self):
+        for rec in self.filtered('split_move_line_id'):
+            void_move = rec.env['account.move'].create(rec.prepare_void_move_vals())
+            void_move.action_post()
+            (void_move.line_ids[1] + rec.split_move_line_id).reconcile()
 
     @api.depends('state', 'l10n_latam_check_operation_ids.state')
     def _compute_check_info(self):

@@ -1,6 +1,6 @@
 import stdnum
 
-from odoo import fields, models, api, Command,  _
+from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date
 
@@ -39,15 +39,11 @@ class AccountPayment(models.Model):
 
     def action_cancel(self):
         super().action_cancel()
-        # TODO: Move to account.move
-        self._l10n_latam_check_unlink_split_move()
         # TODO : to look for another alternative.
         (self.l10n_latam_check_ids or self.l10n_latam_new_check_ids)._compute_check_info()
 
     def action_draft(self):
         super().action_draft()
-        # TODO: Move to account.move
-        self._l10n_latam_check_unlink_split_move()
         # TODO : to look for another alternative.
         (self.l10n_latam_check_ids or self.l10n_latam_new_check_ids)._compute_check_info()
 
@@ -85,7 +81,7 @@ class AccountPayment(models.Model):
                 check.split_move_line_id = move_line.id
 
             # inverse liquidity line
-            self.env['account.move.line'].with_context(check_move_validity=False).create({
+            inverse_liquidity_line = self.env['account.move.line'].with_context(check_move_validity=False).create({
                     'name': liquidity_line.name,
                     'date_maturity': liquidity_line.date_maturity,
                     'amount_currency': -liquidity_line.amount_currency,
@@ -97,7 +93,7 @@ class AccountPayment(models.Model):
                     'move_id' : move_id.id,
                 })
             move_id.action_post()
-            (move_id.line_ids + liquidity_line).reconcile()
+            (inverse_liquidity_line + liquidity_line).reconcile()
 
     def _l10n_latam_check_unlink_split_move(self):
         split_move_ids = self.mapped('check_ids.split_move_line_id.move_id')

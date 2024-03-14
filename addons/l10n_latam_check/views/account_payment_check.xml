@@ -54,8 +54,8 @@
         <field name="name">l10n_latam_account_payment_check.view.tree</field>
         <field name="model">l10n_latam.account.payment.check</field>
         <field name="arch" type="xml">
-            <tree>
-                <field name="name"/>
+            <tree create="False" edit="False">
+                <field name="name"/>00
                 <field name="partner_id"/>
                 <field name="l10n_latam_check_current_journal_id"/>
                 <field name="payment_type"/>
@@ -75,10 +75,14 @@
         <field name="name">l10n_latam_account_payment_check.view.form</field>
         <field name="model">l10n_latam.account.payment.check</field>
         <field name="arch" type="xml">
-            <form string="">
+            <form create="False" edit="False">
+                <header>
+                    <button name="action_void" string="Void Check" invisible="issue_state != 'handed'" type="object" class="oe_highlight" confirm="void"  data-hotkey="v"/>
+                    <field name="issue_state" statusbar_visible="issue_state" widget="statusbar"/>
+                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button icon="fa-bars" type="object" name="button_open_check_operations">
+                        <button  icon="fa-bars" type="object" name="button_open_check_operations">
                             <span>Check Operations</span>
                         </button>
                     </div>
