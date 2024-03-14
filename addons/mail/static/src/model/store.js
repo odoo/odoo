@@ -1,6 +1,6 @@
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
 import { Record } from "./record";
-import { IS_DELETED_SYM, Markup, isCommand, isMany, isRecord } from "./misc";
+import { IS_DELETED_SYM, Markup, STORE_SYM, isCommand, isMany } from "./misc";
 import { markup, reactive, toRaw } from "@odoo/owl";
 
 /** @typedef {import("./record_list").RecordList} RecordList */
@@ -9,7 +9,9 @@ import { markup, reactive, toRaw } from "@odoo/owl";
 export class Store extends Record {
     /** @type {import("./store_internal").StoreInternal} */
     _;
-
+    [STORE_SYM] = true;
+    /** @type {Map<string, Record>} */
+    recordByLocalId;
     storeReady = false;
     /**
      * @param {string} localId
@@ -76,8 +78,8 @@ export class Store extends Record {
      */
     updateRelation(record, fieldName, value) {
         /** @type {RecordList<Record>} */
-        const recordList = record._fields.get(fieldName).value;
-        if (isMany(recordList)) {
+        const recordList = record._fieldsValue.get(fieldName);
+        if (isMany(record.Model, fieldName)) {
             this.updateRelationMany(recordList, value);
         } else {
             this.updateRelationOne(recordList, value);
@@ -160,79 +162,102 @@ export class Store extends Record {
         }
     }
     /**
-     * @param {RecordField|Record} fieldOrRecord
-     * @param {"compute"|"sort"|"onAdd"|"onDelete"|"onUpdate"} type
-     * @param {Record} [record] when field with onAdd/onDelete, the record being added or deleted
+     * @param {"compute"|"sort"|"onAdd"|"onDelete"|"onUpdate"|"hard_delete"} type
+     * @param {...any} params
      */
-    ADD_QUEUE(fieldOrRecord, type, record) {
-        if (isRecord(fieldOrRecord)) {
-            /** @type {Record} */
-            const record = fieldOrRecord;
-            if (type === "delete") {
-                if (!this._.RD_QUEUE.includes(record)) {
-                    this._.RD_QUEUE.push(record);
+    ADD_QUEUE(type, ...params) {
+        switch (type) {
+            case "delete": {
+                /** @type {import("./record").Record} */
+                const [record] = params;
+                if (!this._.RD_QUEUE.has(record)) {
+                    this._.RD_QUEUE.set(record, true);
                 }
+                break;
             }
-            if (type === "hard_delete") {
-                if (!this._.RHD_QUEUE.includes(record)) {
-                    this._.RHD_QUEUE.push(record);
+            case "compute": {
+                /** @type {[import("./record").Record, string]} */
+                const [record, fieldName] = params;
+                let recMap = this._.FC_QUEUE.get(record);
+                if (!recMap) {
+                    recMap = new Map();
+                    this._.FC_QUEUE.set(record, recMap);
                 }
+                recMap.set(fieldName, true);
+                break;
             }
-        } else {
-            /** @type {import("./misc").RecordField} */
-            const field = fieldOrRecord;
-            const rawField = toRaw(field);
-            if (type === "compute") {
-                if (!this._.FC_QUEUE.some((f) => toRaw(f) === rawField)) {
-                    this._.FC_QUEUE.push(field);
+            case "sort": {
+                /** @type {[import("./record").Record, string]} */
+                const [record, fieldName] = params;
+                let recMap = this._.FS_QUEUE.get(record);
+                if (!recMap) {
+                    recMap = new Map();
+                    this._.FS_QUEUE.set(record, recMap);
                 }
+                recMap.set(fieldName, true);
+                break;
             }
-            if (type === "sort") {
-                const Model = rawField.value?.owner.Model;
-                const sort = Model?._.fieldsSort.get(rawField.name);
-                if (!sort) {
+            case "onAdd": {
+                /** @type {[import("./record").Record, string, import("./record").Record]} */
+                const [record, fieldName, addedRec] = params;
+                const Model = record.Model;
+                if (Model._.fieldsSort.get(fieldName)) {
+                    this.ADD_QUEUE("sort", record, fieldName);
+                }
+                if (!Model._.fieldsOnAdd.get(fieldName)) {
                     return;
                 }
-                if (!this._.FS_QUEUE.some((f) => toRaw(f) === rawField)) {
-                    this._.FS_QUEUE.push(field);
+                let recMap = this._.FA_QUEUE.get(record);
+                if (!recMap) {
+                    recMap = new Map();
+                    this._.FA_QUEUE.set(record, recMap);
                 }
+                let fieldMap = recMap.get(fieldName);
+                if (!fieldMap) {
+                    fieldMap = new Map();
+                    recMap.set(fieldName, fieldMap);
+                }
+                fieldMap.set(addedRec, true);
+                break;
             }
-            if (type === "onAdd") {
-                const Model = rawField.value?.owner.Model;
-                const sort = Model?._.fieldsSort.get(rawField.name);
-                if (sort) {
-                    this.ADD_QUEUE(fieldOrRecord, "sort");
-                }
-                if (!Model?._.fieldsOnAdd.get(rawField.name)) {
+            case "onDelete": {
+                /** @type {[import("./record").Record, string, import("./record").Record]} */
+                const [record, fieldName, removedRec] = params;
+                const Model = record.Model;
+                if (!Model._.fieldsOnDelete.get(fieldName)) {
                     return;
                 }
-                const item = this._.FA_QUEUE.find((item) => toRaw(item.field) === rawField);
-                if (!item) {
-                    this._.FA_QUEUE.push({ field, records: [record] });
-                } else {
-                    if (!item.records.some((recordProxy) => recordProxy.eq(record))) {
-                        item.records.push(record);
-                    }
+                let recMap = this._.FD_QUEUE.get(record);
+                if (!recMap) {
+                    recMap = new Map();
+                    this._.FD_QUEUE.set(record, recMap);
                 }
+                let fieldMap = recMap.get(fieldName);
+                if (!fieldMap) {
+                    fieldMap = new Map();
+                    recMap.set(fieldName, fieldMap);
+                }
+                fieldMap.set(removedRec, true);
+                break;
             }
-            if (type === "onDelete") {
-                const Model = rawField.value?.owner.Model;
-                if (!Model._.fieldsOnDelete.get(rawField.name)) {
-                    return;
+            case "onUpdate": {
+                /** @type {[import("./record").Record, string]} */
+                const [record, fieldName] = params;
+                let recMap = this._.FU_QUEUE.get(record);
+                if (!recMap) {
+                    recMap = new Map();
+                    this._.FU_QUEUE.set(record, recMap);
                 }
-                const item = this._.FD_QUEUE.find((item) => toRaw(item.field) === rawField);
-                if (!item) {
-                    this._.FD_QUEUE.push({ field, records: [record] });
-                } else {
-                    if (!item.records.some((recordProxy) => recordProxy.eq(record))) {
-                        item.records.push(record);
-                    }
-                }
+                recMap.set(fieldName, true);
+                break;
             }
-            if (type === "onUpdate") {
-                if (!this._.FU_QUEUE.some((f) => toRaw(f) === rawField)) {
-                    this._.FU_QUEUE.push(field);
+            case "hard_delete": {
+                /** @type {import("./record").Record} */
+                const [record] = params;
+                if (!this._.RHD_QUEUE.has(record)) {
+                    this._.RHD_QUEUE.set(record, true);
                 }
+                break;
             }
         }
     }
@@ -245,96 +270,120 @@ export class Store extends Record {
             // pretend an increased update cycle so that nothing in queue creates many small update cycles
             this._.UPDATE++;
             while (
-                this._.FC_QUEUE.length > 0 ||
-                this._.FS_QUEUE.length > 0 ||
-                this._.FA_QUEUE.length > 0 ||
-                this._.FD_QUEUE.length > 0 ||
-                this._.FU_QUEUE.length > 0 ||
-                this._.RO_QUEUE.length > 0 ||
-                this._.RD_QUEUE.length > 0 ||
-                this._.RHD_QUEUE.length > 0
+                this._.FC_QUEUE.size > 0 ||
+                this._.FS_QUEUE.size > 0 ||
+                this._.FA_QUEUE.size > 0 ||
+                this._.FD_QUEUE.size > 0 ||
+                this._.FU_QUEUE.size > 0 ||
+                this._.RO_QUEUE.size > 0 ||
+                this._.RD_QUEUE.size > 0 ||
+                this._.RHD_QUEUE.size > 0
             ) {
-                const FC_QUEUE = [...this._.FC_QUEUE];
-                const FS_QUEUE = [...this._.FS_QUEUE];
-                const FA_QUEUE = [...this._.FA_QUEUE];
-                const FD_QUEUE = [...this._.FD_QUEUE];
-                const FU_QUEUE = [...this._.FU_QUEUE];
-                const RO_QUEUE = [...this._.RO_QUEUE];
-                const RD_QUEUE = [...this._.RD_QUEUE];
-                const RHD_QUEUE = [...this._.RHD_QUEUE];
-                this._.FC_QUEUE.length = 0;
-                this._.FS_QUEUE.length = 0;
-                this._.FA_QUEUE.length = 0;
-                this._.FD_QUEUE.length = 0;
-                this._.FU_QUEUE.length = 0;
-                this._.RO_QUEUE.length = 0;
-                this._.RD_QUEUE.length = 0;
-                this._.RHD_QUEUE.length = 0;
-                while (FC_QUEUE.length > 0) {
-                    const field = FC_QUEUE.pop();
-                    field.requestCompute({ force: true });
+                const FC_QUEUE = new Map(this._.FC_QUEUE);
+                const FS_QUEUE = new Map(this._.FS_QUEUE);
+                const FA_QUEUE = new Map(this._.FA_QUEUE);
+                const FD_QUEUE = new Map(this._.FD_QUEUE);
+                const FU_QUEUE = new Map(this._.FU_QUEUE);
+                const RO_QUEUE = new Map(this._.RO_QUEUE);
+                const RD_QUEUE = new Map(this._.RD_QUEUE);
+                const RHD_QUEUE = new Map(this._.RHD_QUEUE);
+                this._.FC_QUEUE.clear();
+                this._.FS_QUEUE.clear();
+                this._.FA_QUEUE.clear();
+                this._.FD_QUEUE.clear();
+                this._.FU_QUEUE.clear();
+                this._.RO_QUEUE.clear();
+                this._.RD_QUEUE.clear();
+                this._.RHD_QUEUE.clear();
+                while (FC_QUEUE.size > 0) {
+                    /** @type {[Record, Map<string, true>]} */
+                    const [record, recMap] = FC_QUEUE.entries().next().value;
+                    FC_QUEUE.delete(record);
+                    for (const fieldName of recMap.keys()) {
+                        record._.requestCompute(record, fieldName, { force: true });
+                    }
                 }
-                while (FS_QUEUE.length > 0) {
-                    const field = FS_QUEUE.pop();
-                    field.requestSort({ force: true });
+                while (FS_QUEUE.size > 0) {
+                    /** @type {[Record, Map<string, true>]} */
+                    const [record, recMap] = FS_QUEUE.entries().next().value;
+                    FS_QUEUE.delete(record);
+                    for (const fieldName of recMap.keys()) {
+                        record._.requestSort(record, fieldName, { force: true });
+                    }
                 }
-                while (FA_QUEUE.length > 0) {
-                    const { field, records } = FA_QUEUE.pop();
-                    const Model = field.value?.owner.Model;
-                    const onAdd = Model._.fieldsOnAdd.get(field.name);
-                    records.forEach((record) =>
-                        onAdd?.call(field.value.owner._proxy, record._proxy)
-                    );
+                while (FA_QUEUE.size > 0) {
+                    /** @type {[Record, Map<string, Map<Record, true>>]} */
+                    const [record, recMap] = FA_QUEUE.entries().next().value;
+                    FA_QUEUE.delete(record);
+                    while (recMap.size > 0) {
+                        /** @type {[string, Map<Record, true>]} */
+                        const [fieldName, fieldMap] = recMap.entries().next().value;
+                        recMap.delete(fieldName);
+                        const onAdd = record.Model._.fieldsOnAdd.get(fieldName);
+                        for (const addedRec of fieldMap.keys()) {
+                            onAdd?.call(record._proxy, addedRec._proxy);
+                        }
+                    }
                 }
-                while (FD_QUEUE.length > 0) {
-                    const { field, records } = FD_QUEUE.pop();
-                    const Model = field.value?.owner.Model;
-                    const onDelete = Model._.fieldsOnDelete.get(field.name);
-                    records.forEach((record) =>
-                        onDelete?.call(field.value.owner._proxy, record._proxy)
-                    );
+                while (FD_QUEUE.size > 0) {
+                    /** @type {[Record, Map<string, Map<Record, true>>]} */
+                    const [record, recMap] = FD_QUEUE.entries().next().value;
+                    FD_QUEUE.delete(record);
+                    while (recMap.size > 0) {
+                        /** @type {[string, Map<Record, true>]} */
+                        const [fieldName, fieldMap] = recMap.entries().next().value;
+                        recMap.delete(fieldName);
+                        const onDelete = record.Model._.fieldsOnDelete.get(fieldName);
+                        for (const removedRec of fieldMap.keys()) {
+                            onDelete?.call(record._proxy, removedRec._proxy);
+                        }
+                    }
                 }
-                while (FU_QUEUE.length > 0) {
-                    const field = FU_QUEUE.pop();
-                    field.onUpdate();
+                while (FU_QUEUE.size > 0) {
+                    /** @type {[Record, Map<string, true>]} */
+                    const [record, map] = FU_QUEUE.entries().next().value;
+                    FU_QUEUE.delete(record);
+                    for (const fieldName of map.keys()) {
+                        record._.onUpdate(record, fieldName);
+                    }
                 }
-                while (RO_QUEUE.length > 0) {
-                    const cb = RO_QUEUE.pop();
+                while (RO_QUEUE.size > 0) {
+                    /** @type {Map<Function, true>} */
+                    const cb = RO_QUEUE.keys().next().value;
+                    RO_QUEUE.delete(cb);
                     cb();
                 }
-                while (RD_QUEUE.length > 0) {
-                    const record = RD_QUEUE.pop();
-                    for (const name of record._fields.keys()) {
-                        record[name] = undefined;
-                    }
+                while (RD_QUEUE.size > 0) {
+                    /** @type {Record} */
+                    const record = RD_QUEUE.keys().next().value;
+                    RD_QUEUE.delete(record);
                     for (const [localId, names] of record.__uses__.data.entries()) {
                         for (const [name2, count] of names.entries()) {
-                            const usingRecordProxy = toRaw(
-                                record.Model._rawStore.recordByLocalId
-                            ).get(localId);
-                            if (!usingRecordProxy) {
+                            const usingRecord2 = toRaw(this.recordByLocalId).get(localId);
+                            if (!usingRecord2) {
                                 // record already deleted, clean inverses
                                 record.__uses__.data.delete(localId);
                                 continue;
                             }
-                            const usingRecordList =
-                                toRaw(usingRecordProxy)._raw._fields.get(name2).value;
-                            if (isMany(usingRecordList)) {
+                            if (usingRecord2.Model._.fieldsMany.get(name2)) {
                                 for (let c = 0; c < count; c++) {
-                                    usingRecordProxy[name2].delete(record);
+                                    usingRecord2[name2].delete(record);
                                 }
                             } else {
-                                usingRecordProxy[name2] = undefined;
+                                usingRecord2[name2] = undefined;
                             }
                         }
                     }
-                    this.ADD_QUEUE(record, "hard_delete");
+                    this.ADD_QUEUE("hard_delete", toRaw(record));
                 }
-                while (RHD_QUEUE.length > 0) {
-                    const record = RHD_QUEUE.pop();
-                    record[IS_DELETED_SYM] = true;
+                while (RHD_QUEUE.size > 0) {
+                    // effectively delete the record
+                    /** @type {Record} */
+                    const record = RHD_QUEUE.keys().next().value;
+                    RHD_QUEUE.delete(record);
+                    record._[IS_DELETED_SYM] = true;
                     delete record.Model.records[record.localId];
-                    record.Model._rawStore.recordByLocalId.delete(record.localId);
+                    this.recordByLocalId.delete(record.localId);
                 }
             }
             this._.UPDATE--;
@@ -348,8 +397,8 @@ export class Store extends Record {
                 cb();
             };
             if (this._.UPDATE !== 0) {
-                if (!this._.RO_QUEUE.some((f) => toRaw(f) === fn)) {
-                    this._.RO_QUEUE.push(fn);
+                if (!this._.RO_QUEUE.has(fn)) {
+                    this._.RO_QUEUE.set(fn, true);
                 }
             } else {
                 fn();

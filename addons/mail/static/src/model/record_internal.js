@@ -1,0 +1,232 @@
+/** @typedef {import("./record").Record} Record */
+/** @typedef {import("./record_list").RecordList} RecordList */
+
+import { onChange } from "@mail/utils/common/misc";
+import {
+    ATTR_SYM,
+    IS_DELETED_SYM,
+    IS_RECORD_LIST_SYM,
+    MANY_SYM,
+    ONE_SYM,
+    isRelation,
+} from "./misc";
+import { RecordList } from "./record_list";
+import { reactive } from "@odoo/owl";
+
+export class RecordInternal {
+    [IS_DELETED_SYM] = false;
+    // Note: state of fields in Maps rather than object is intentional for improved performance.
+    /**
+     * For computed field, determines whether the field is computing its value.
+     *
+     * @type {Map<string, boolean>}
+     */
+    fieldsComputing = new Map();
+    /**
+     * On lazy-sorted field, determines whether the field should be (re-)sorted
+     * when it's needed (i.e. accessed). Eager sorted fields are immediately re-sorted at end of update cycle,
+     * whereas lazy sorted fields wait extra for them being needed.
+     *
+     * @type {Map<string, boolean>}
+     */
+    fieldsSortOnNeed = new Map();
+    /**
+     * On lazy sorted-fields, determines whether this field is needed (i.e. accessed).
+     *
+     * @type {Map<string, boolean>}
+     */
+    fieldsSortInNeed = new Map();
+    /**
+     * For sorted field, determines whether the field is sorting its value.
+     *
+     * @type {Map<string, boolean>}
+     */
+    fieldsSorting = new Map();
+    /**
+     * On lazy computed-fields, determines whether this field is needed (i.e. accessed).
+     *
+     * @type {Map<string, boolean>}
+     */
+    fieldsComputeInNeed = new Map();
+    /**
+     * on lazy-computed field, determines whether the field should be (re-)computed
+     * when it's needed (i.e. accessed). Eager computed fields are immediately re-computed at end of update cycle,
+     * whereas lazy computed fields wait extra for them being needed.
+     *
+     * @type {Map<string, boolean>}
+     */
+    fieldsComputeOnNeed = new Map();
+    /** @type {Map<string, () => void>} */
+    fieldsOnUpdateObserves = new Map();
+    /** @type {Map<string, this>} */
+    fieldsSortProxy2 = new Map();
+    /** @type {Map<string, this>} */
+    fieldsComputeProxy2 = new Map();
+
+    /**
+     * @param {Record} record
+     * @param {string} fieldName
+     * @param {Record} recordProxy
+     */
+    prepareField(record, fieldName, recordProxy) {
+        const self = this;
+        const Model = record.Model;
+        if (isRelation(Model, fieldName)) {
+            // Relational fields contain symbols for detection in original class.
+            // This constructor is called on genuine records:
+            // - 'one' fields => undefined
+            // - 'many' fields => RecordList
+            // record[name]?.[0] is ONE_SYM or MANY_SYM
+            const recordList = new RecordList();
+            Object.assign(recordList, {
+                [IS_RECORD_LIST_SYM]: true,
+                [ATTR_SYM]: Model._.fieldsAttr.get(fieldName),
+                [ONE_SYM]: Model._.fieldsOne.get(fieldName),
+                [MANY_SYM]: Model._.fieldsMany.get(fieldName),
+                name: fieldName,
+                owner: record,
+                _raw: recordList,
+            });
+            recordList.store = record._store;
+            record._fieldsValue.set(fieldName, recordList);
+        } else {
+            record[fieldName] = Model._.fieldsDefault.get(fieldName);
+        }
+        if (Model._.fieldsCompute.get(fieldName)) {
+            if (!Model._.fieldsEager.get(fieldName)) {
+                onChange(recordProxy, fieldName, () => {
+                    if (this.fieldsComputing.get(fieldName)) {
+                        /**
+                         * Use a reactive to reset the computeInNeed flag when there is
+                         * a change. This assumes when other reactive are still
+                         * observing the value, its own callback will reset the flag to
+                         * true through the proxy getters.
+                         */
+                        this.fieldsComputeInNeed.delete(fieldName);
+                    }
+                });
+                // reset flags triggered by registering onChange
+                this.fieldsComputeInNeed.delete(fieldName);
+                this.fieldsSortInNeed.delete(fieldName);
+            }
+            const cb = function computeObserver() {
+                self.requestCompute(record, fieldName);
+            };
+            const computeProxy2 = reactive(recordProxy, cb);
+            this.fieldsComputeProxy2.set(fieldName, computeProxy2);
+        }
+        if (Model._.fieldsSort.get(fieldName)) {
+            if (!Model._.fieldsEager.get(fieldName)) {
+                onChange(recordProxy, fieldName, () => {
+                    if (this.fieldsSorting.get(fieldName)) {
+                        /**
+                         * Use a reactive to reset the inNeed flag when there is a
+                         * change. This assumes if another reactive is still observing
+                         * the value, its own callback will reset the flag to true
+                         * through the proxy getters.
+                         */
+                        this.fieldsSortInNeed.delete(fieldName);
+                    }
+                });
+                // reset flags triggered by registering onChange
+                this.fieldsComputeInNeed.delete(fieldName);
+                this.fieldsSortInNeed.delete(fieldName);
+            }
+            const sortProxy2 = reactive(recordProxy, function sortObserver() {
+                self.requestSort(record, fieldName);
+            });
+            this.fieldsSortProxy2.set(fieldName, sortProxy2);
+        }
+        if (Model._.fieldsOnUpdate.get(fieldName)) {
+            const store = Model.store;
+            store._onChange(recordProxy, fieldName, (obs) => {
+                this.fieldsOnUpdateObserves.set(fieldName, obs);
+                if (store._.UPDATE !== 0) {
+                    store.ADD_QUEUE("onUpdate", record, fieldName);
+                } else {
+                    this.onUpdate(record, fieldName);
+                }
+            });
+        }
+    }
+
+    requestCompute(record, fieldName, { force = false } = {}) {
+        const Model = record.Model;
+        if (!Model._.fieldsCompute.get(fieldName)) {
+            return;
+        }
+        const store = record._store;
+        if (store._.UPDATE !== 0 && !force) {
+            store.ADD_QUEUE("compute", record, fieldName);
+        } else {
+            if (Model._.fieldsEager.get(fieldName) || this.fieldsComputeInNeed.get(fieldName)) {
+                this.compute(record, fieldName);
+            } else {
+                this.fieldsComputeOnNeed.set(fieldName, true);
+            }
+        }
+    }
+    requestSort(record, fieldName, { force } = {}) {
+        const Model = record.Model;
+        if (!Model._.fieldsSort.get(fieldName)) {
+            return;
+        }
+        const store = record._store;
+        if (store._.UPDATE !== 0 && !force) {
+            store.ADD_QUEUE("sort", record, fieldName);
+        } else {
+            if (Model._.fieldsEager.get(fieldName) || this.fieldsSortInNeed.get(fieldName)) {
+                this.sort(record, fieldName);
+            } else {
+                this.fieldsSortOnNeed.set(fieldName, true);
+            }
+        }
+    }
+    /**
+     * @param {Record} record
+     * @param {string} fieldName
+     */
+    compute(record, fieldName) {
+        const Model = record.Model;
+        const store = record._store;
+        this.fieldsComputing.set(fieldName, true);
+        this.fieldsComputeOnNeed.delete(fieldName);
+        store.updateFields(record, {
+            [fieldName]: Model._.fieldsCompute
+                .get(fieldName)
+                .call(this.fieldsComputeProxy2.get(fieldName)),
+        });
+        this.fieldsComputing.delete(fieldName);
+    }
+    /**
+     * @param {Record} record
+     * @param {string} fieldName
+     */
+    sort(record, fieldName) {
+        const Model = record.Model;
+        if (!Model._.fieldsSort.get(fieldName)) {
+            return;
+        }
+        const store = record._store;
+        this.fieldsSortOnNeed.delete(fieldName);
+        this.fieldsSorting.set(fieldName, true);
+        const proxy2Sort = this.fieldsSortProxy2.get(fieldName);
+        store.sortRecordList(
+            proxy2Sort._fieldsValue.get(fieldName)._proxy,
+            Model._.fieldsSort.get(fieldName).bind(proxy2Sort)
+        );
+        this.fieldsSorting.delete(fieldName);
+    }
+    onUpdate(record, fieldName) {
+        const Model = record.Model;
+        if (!Model._.fieldsOnUpdate.get(fieldName)) {
+            return;
+        }
+        /**
+         * Forward internal proxy for performance as onUpdate does not
+         * need reactive (observe is called separately).
+         */
+        Model._.fieldsOnUpdate.get(fieldName).call(record._proxyInternal);
+        this.fieldsOnUpdateObserves.get(fieldName)?.();
+    }
+}
