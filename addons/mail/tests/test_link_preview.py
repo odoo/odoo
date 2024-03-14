@@ -12,6 +12,63 @@ import requests
 discuss_channel_new_test_user = partial(mail_new_test_user, context={'discuss_channel_nosubscribe': False})
 
 
+<<<<<<< HEAD
+||||||| parent of 083445dc58d0 (temp)
+def _patched_get_html(*args, **kwargs):
+    response = requests.Response()
+    response.status_code = 200
+    response._content = b"""
+    <html>
+    <head>
+    <meta property="og:title" content="Test title">
+    <meta property="og:description" content="Test description">
+    </head>
+    </html>
+    """
+    response.headers["Content-Type"] = 'text/html'
+    return response
+
+def _patch_head_html(*args, **kwargs):
+    response = requests.Response()
+    response.status_code = 200
+    response.headers["Content-Type"] = 'text/html'
+    return response
+
+
+=======
+def _patched_get_html(*args, **kwargs):
+    response = requests.Response()
+    response.status_code = 200
+    response._content = b"""
+    <html>
+    <head>
+    <meta property="og:title" content="Test title">
+    <meta property="og:description" content="Test description">
+    </head>
+    </html>
+    """
+    response.headers["Content-Type"] = 'text/html'
+    return response
+
+def _patch_head_html(*args, **kwargs):
+    response = requests.Response()
+    response.status_code = 200
+    response.headers["Content-Type"] = 'text/html'
+    return response
+
+def _patched_get_no_content_type(*args, **kwargs):
+    response = requests.Response()
+    response.status_code = 200
+    response._content = b""""""
+    return response
+
+def _patched_head_no_content_type(*args, **kwargs):
+    response = requests.Response()
+    response.status_code = 200
+    return response
+
+
+>>>>>>> 083445dc58d0 (temp)
 class TestLinkPreview(MailCommon):
 
     @classmethod
@@ -120,6 +177,7 @@ class TestLinkPreview(MailCommon):
                     }
                 }]
             )
+<<<<<<< HEAD
 
     def test_get_link_preview_from_url(self):
         test_cases = [
@@ -155,3 +213,17 @@ class TestLinkPreview(MailCommon):
             with self.subTest(get_patch=get_patch, url=url, expected=expected), patch.object(requests.Session, 'get', get_patch):
                 preview = link_preview.get_link_preview_from_url(url, session)
                 self.assertEqual(preview, expected)
+||||||| parent of 083445dc58d0 (temp)
+=======
+
+    def test_03_link_preview_create_no_content_type(self):
+        with patch.object(requests.Session, 'get', _patched_get_no_content_type), patch.object(requests.Session, 'head', _patched_head_no_content_type):
+            message = self.env['mail.message'].create({
+                'model': self.thread._name,
+                'res_id': self.thread.id,
+                'body': '<a href="https://thisdomainedoentexist.nothing">Nothing link</a>',
+            })
+            self.env['mail.link.preview']._create_link_previews(message)
+            link_preview_count = self.env['mail.link.preview'].search_count([('source_url', '=', 'https://thisdomainedoentexist.nothing')])
+            self.assertEqual(link_preview_count, 0)
+>>>>>>> 083445dc58d0 (temp)

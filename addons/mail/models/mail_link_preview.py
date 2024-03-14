@@ -87,6 +87,108 @@ class LinkPreview(models.Model):
         link_preview_throttle = int(self.env['ir.config_parameter'].get_param('mail.link_preview_throttle', 99))
         return call_counter > link_preview_throttle
 
+<<<<<<< HEAD
+||||||| parent of 083445dc58d0 (temp)
+    @api.model
+    def _get_link_preview_from_url(self, url, request_session):
+        try:
+            response = request_session.head(url, timeout=3, allow_redirects=True)
+        except requests.exceptions.RequestException:
+            return False
+        if response.status_code != requests.codes.ok:
+            return False
+        image_mimetype = (
+            'image/bmp',
+            'image/gif',
+            'image/jpeg',
+            'image/png',
+            'image/tiff',
+            'image/x-icon',
+        )
+        # Content-Type header can return a charset, but we just need the
+        # mimetype (eg: image/jpeg;charset=ISO-8859-1)
+        content_type = response.headers['Content-Type'].split(';')
+        if response.headers['Content-Type'].startswith(image_mimetype):
+            return {
+                'image_mimetype': content_type[0],
+                'source_url': url,
+            }
+        if response.headers['Content-Type'].startswith('text/html'):
+            return self._get_link_preview_from_html(url, request_session)
+        return False
+
+    def _get_link_preview_from_html(self, url, request_session):
+        response = request_session.get(url, timeout=3)
+        parser = etree.HTMLParser(encoding=response.encoding)
+        tree = html.fromstring(response.content, parser=parser)
+        og_title = tree.xpath('//meta[@property="og:title"]/@content')
+        if not og_title:
+            return False
+        og_description = tree.xpath('//meta[@property="og:description"]/@content')
+        og_type = tree.xpath('//meta[@property="og:type"]/@content')
+        og_image = tree.xpath('//meta[@property="og:image"]/@content')
+        og_mimetype = tree.xpath('//meta[@property="og:image:type"]/@content')
+        return {
+            'og_description': og_description[0] if og_description else None,
+            'og_image': og_image[0] if og_image else None,
+            'og_mimetype': og_mimetype[0] if og_mimetype else None,
+            'og_title': og_title[0],
+            'og_type': og_type[0] if og_type else None,
+            'source_url': url,
+        }
+
+=======
+    @api.model
+    def _get_link_preview_from_url(self, url, request_session):
+        try:
+            response = request_session.head(url, timeout=3, allow_redirects=True)
+        except requests.exceptions.RequestException:
+            return False
+        if response.status_code != requests.codes.ok:
+            return False
+        image_mimetype = (
+            'image/bmp',
+            'image/gif',
+            'image/jpeg',
+            'image/png',
+            'image/tiff',
+            'image/x-icon',
+        )
+        if not response.headers.get('Content-Type'):
+            return False
+        # Content-Type header can return a charset, but we just need the
+        # mimetype (eg: image/jpeg;charset=ISO-8859-1)
+        content_type = response.headers['Content-Type'].split(';')
+        if response.headers['Content-Type'].startswith(image_mimetype):
+            return {
+                'image_mimetype': content_type[0],
+                'source_url': url,
+            }
+        if response.headers['Content-Type'].startswith('text/html'):
+            return self._get_link_preview_from_html(url, request_session)
+        return False
+
+    def _get_link_preview_from_html(self, url, request_session):
+        response = request_session.get(url, timeout=3)
+        parser = etree.HTMLParser(encoding=response.encoding)
+        tree = html.fromstring(response.content, parser=parser)
+        og_title = tree.xpath('//meta[@property="og:title"]/@content')
+        if not og_title:
+            return False
+        og_description = tree.xpath('//meta[@property="og:description"]/@content')
+        og_type = tree.xpath('//meta[@property="og:type"]/@content')
+        og_image = tree.xpath('//meta[@property="og:image"]/@content')
+        og_mimetype = tree.xpath('//meta[@property="og:image:type"]/@content')
+        return {
+            'og_description': og_description[0] if og_description else None,
+            'og_image': og_image[0] if og_image else None,
+            'og_mimetype': og_mimetype[0] if og_mimetype else None,
+            'og_title': og_title[0],
+            'og_type': og_type[0] if og_type else None,
+            'source_url': url,
+        }
+
+>>>>>>> 083445dc58d0 (temp)
     def _link_preview_format(self):
         return [{
             'id': preview.id,
