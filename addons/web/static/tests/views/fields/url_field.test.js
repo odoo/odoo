@@ -10,13 +10,13 @@ import {
     onRpc,
 } from "../../web_test_helpers";
 
-onRpc("/web/dataset/call_kw/res.users/has_group", () => true);
-
 class Product extends models.Model {
     url = fields.Char();
 }
 
 defineModels([Product]);
+
+onRpc("has_group", () => true);
 
 test("UrlField in form view", async () => {
     Product._records = [{ id: 1, url: "https://www.example.com" }];

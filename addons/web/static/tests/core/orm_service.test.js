@@ -2,7 +2,7 @@ import { after, describe, expect, test } from "@odoo/hoot";
 import { on } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 
-import { makeMockEnv, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
+import { getService, makeMockEnv, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 import { rpcBus } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 
@@ -425,7 +425,7 @@ test("webSearchRead method", async () => {
 });
 
 test("orm is specialized for component", async () => {
-    const env = await makeMockEnv();
+    await makeMockEnv();
 
     class MyComponent extends Component {
         static props = {};
@@ -435,9 +435,9 @@ test("orm is specialized for component", async () => {
         }
     }
 
-    const component = await mountWithCleanup(MyComponent, { env });
+    const component = await mountWithCleanup(MyComponent);
 
-    expect(component.orm).not.toBe(env.services.orm);
+    expect(component.orm).not.toBe(getService("orm"));
 });
 
 test("silent mode", async () => {

@@ -1,4 +1,4 @@
-import { queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import { queryAll, queryAllTexts, queryOne, queryText } from "@odoo/hoot-dom";
 import { contains, fields, models } from "@web/../tests/web_test_helpers";
 
 export class Partner extends models.Model {
@@ -85,40 +85,40 @@ export function getTreeEditorContent(options = {}) {
     return content;
 }
 
-export function get(selector, index = 0, target = document) {
-    return queryAll(selector, { root: target }).at(index);
+export function get(selector, index, root) {
+    return queryAll(selector, { root }).at(index || 0);
 }
 
-function getValue(target) {
-    if (target) {
-        const el = queryOne("input,select,span:not(.o_tag)", { root: target });
+function getValue(root) {
+    if (root) {
+        const el = queryOne("input,select,span:not(.o_tag)", { root });
         switch (el.tagName) {
             case "INPUT":
                 return el.value;
             case "SELECT":
                 return el.options[el.selectedIndex].label;
-            case "SPAN":
+            default:
                 return el.innerText;
         }
     }
 }
 
-export function getCurrentPath(index = 0, target = document) {
+export function getCurrentPath(index, target) {
     const pathEditor = get(SELECTORS.pathEditor, index, target);
     if (pathEditor) {
         if (pathEditor.querySelector(".o_model_field_selector")) {
             return getModelFieldSelectorValues(pathEditor).join(" > ");
         }
-        return pathEditor.textContent;
+        return pathEditor.innerText;
     }
 }
 
-export function getCurrentOperator(index = 0, target = document) {
+export function getCurrentOperator(index, target) {
     const operatorEditor = get(SELECTORS.operatorEditor, index, target);
     return getValue(operatorEditor);
 }
 
-export function getCurrentValue(index = 0, target = document) {
+export function getCurrentValue(index, target) {
     const valueEditor = get(SELECTORS.valueEditor, index, target);
     const value = getValue(valueEditor);
     if (valueEditor) {
@@ -134,7 +134,7 @@ export function getCurrentValue(index = 0, target = document) {
     return value;
 }
 
-export function getOperatorOptions(index = 0, target = document) {
+export function getOperatorOptions(index, target) {
     const el = get(SELECTORS.operatorEditor, index, target);
     if (el) {
         const select = queryOne("select", { root: el });
@@ -142,7 +142,7 @@ export function getOperatorOptions(index = 0, target = document) {
     }
 }
 
-export function getValueOptions(index = 0, target = document) {
+export function getValueOptions(index, target) {
     const el = get(SELECTORS.valueEditor, index, target);
     if (el) {
         const select = queryOne("select", { root: el });
@@ -150,26 +150,19 @@ export function getValueOptions(index = 0, target = document) {
     }
 }
 
-function getCurrentComplexCondition(index = 0, target = document) {
+function getCurrentComplexCondition(index, target) {
     const input = get(SELECTORS.complexConditionInput, index, target);
     return input?.value;
 }
 
-export function getConditionText(index = 0, target = document) {
+export function getConditionText(index, target) {
     const condition = get(SELECTORS.condition, index, target);
     if (condition) {
-        const texts = [];
-        for (const t of Array.from(condition.childNodes).map((n) => n.textContent)) {
-            const t2 = t.trim();
-            if (t2) {
-                texts.push(t2);
-            }
-        }
-        return texts.join(" ");
+        return queryAllTexts(condition.childNodes).filter(Boolean).join(" ");
     }
 }
 
-function getCurrentCondition(index = 0, target = document) {
+function getCurrentCondition(index, target) {
     const values = [getCurrentPath(index, target), getCurrentOperator(index, target)];
     const valueEditor = get(SELECTORS.valueEditor, index, target);
     if (valueEditor) {
@@ -178,63 +171,65 @@ function getCurrentCondition(index = 0, target = document) {
     return values;
 }
 
-function getCurrentConnector(index = 0, target = document) {
-    const connector = get(
-        `${SELECTORS.connector} .dropdown-toggle, ${SELECTORS.connector} > span:nth-child(2), ${SELECTORS.connector} > span > strong`,
-        index,
-        target
+function getCurrentConnector(index, target) {
+    const connectorText = queryText(
+        get(
+            `${SELECTORS.connector} .dropdown-toggle, ${SELECTORS.connector} > span:nth-child(2), ${SELECTORS.connector} > span > strong`,
+            index,
+            target
+        )
     );
-    return connector?.textContent.search("all") >= 0 ? "all" : connector?.textContent;
+    return connectorText.includes("all") ? "all" : connectorText;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export function isNotSupportedPath(index = 0, target = document) {
+export function isNotSupportedPath(index, target) {
     const pathEditor = get(SELECTORS.pathEditor, index, target);
     return Boolean(queryOne(SELECTORS.clearNotSupported, { root: pathEditor }));
 }
 
-export function isNotSupportedOperator(index = 0, target = document) {
+export function isNotSupportedOperator(index, target) {
     const operatorEditor = get(SELECTORS.operatorEditor, index, target);
     return Boolean(queryOne(SELECTORS.clearNotSupported, { root: operatorEditor }));
 }
 
-export function isNotSupportedValue(index = 0, target = document) {
+export function isNotSupportedValue(index, target) {
     const valueEditor = get(SELECTORS.valueEditor, index, target);
     return Boolean(queryOne(SELECTORS.clearNotSupported, { root: valueEditor }));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export async function selectOperator(operator, index = 0, target = document) {
+export async function selectOperator(operator, index, target) {
     await contains(get(SELECTORS.operatorEditor + " select", index, target)).select(
         JSON.stringify(operator)
     );
 }
 
-export async function selectValue(value, index = 0, target = document) {
+export async function selectValue(value, index, target) {
     await contains(get(SELECTORS.valueEditor + " select", index, target)).select(
         JSON.stringify(value)
     );
 }
 
-export async function editValue(value, options = {}, index = 0, target = document) {
+export async function editValue(value, options, index, target) {
     await contains(get(SELECTORS.valueEditor + " input", index, target)).edit(value, options);
 }
 
-export async function clickOnButtonAddNewRule(index = 0, target = document) {
+export async function clickOnButtonAddNewRule(index, target) {
     await contains(get(SELECTORS.buttonAddNewRule, index, target)).click();
 }
 
-export async function clickOnButtonAddBranch(index = 0, target = document) {
+export async function clickOnButtonAddBranch(index, target) {
     await contains(get(SELECTORS.buttonAddBranch, index, target)).click();
 }
 
-export async function clickOnButtonDeleteNode(index = 0, target = document) {
+export async function clickOnButtonDeleteNode(index, target) {
     await contains(get(SELECTORS.buttonDeleteNode, index, target)).click();
 }
 
-export async function clearNotSupported(index = 0, target = document) {
+export async function clearNotSupported(index, target) {
     await contains(get(SELECTORS.clearNotSupported, index, target)).click();
 }
 
@@ -249,13 +244,11 @@ export async function toggleArchive() {
 ////////////////////////////////////////////////////////////////////////////////
 
 export async function openModelFieldSelectorPopover(index = 0) {
-    await contains(queryAll(".o_model_field_selector")[index]).click();
+    await contains(`.o_model_field_selector:eq(${index})`).click();
 }
 
-export function getModelFieldSelectorValues(target = document) {
-    return queryAll("span.o_model_field_selector_chain_part", { root: target }).map(
-        (n) => n.textContent
-    );
+export function getModelFieldSelectorValues(root) {
+    return queryAllTexts("span.o_model_field_selector_chain_part", { root });
 }
 
 export function getDisplayedFieldNames() {
@@ -263,8 +256,7 @@ export function getDisplayedFieldNames() {
 }
 
 export function getTitle() {
-    return queryOne(".o_model_field_selector_popover .o_model_field_selector_popover_title")
-        .innerText;
+    return queryText(".o_model_field_selector_popover .o_model_field_selector_popover_title");
 }
 
 export async function clickPrev() {
@@ -272,9 +264,9 @@ export async function clickPrev() {
 }
 
 export async function followRelation(index = 0) {
-    await contains(queryAll(".o_model_field_selector_popover_item_relation")[index]).click();
+    await contains(`.o_model_field_selector_popover_item_relation:eq(${index})`).click();
 }
 
 export function getFocusedFieldName() {
-    return queryOne(".o_model_field_selector_popover_item.active").innerText;
+    return queryText(".o_model_field_selector_popover_item.active");
 }

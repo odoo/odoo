@@ -7,7 +7,7 @@ import {
     onRpc,
 } from "@web/../tests/web_test_helpers";
 import { expect, test } from "@odoo/hoot";
-import { click, edit, queryFirst, queryOne } from "@odoo/hoot-dom";
+import { click, edit, pointerDown, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { getNextTabableElement } from "@web/core/utils/ui";
 import { animationFrame } from "@odoo/hoot-mock";
 
@@ -75,7 +75,7 @@ test("PhoneField in editable list view on normal screens", async () => {
         arch: '<tree editable="bottom"><field name="foo" widget="phone"/></tree>',
     });
     expect("tbody td:not(.o_list_record_selector).o_data_cell").toHaveCount(2);
-    expect(queryFirst("tbody td:not(.o_list_record_selector) a")).toHaveText("yop");
+    expect("tbody td:not(.o_list_record_selector) a:first").toHaveText("yop");
     expect(".o_field_widget a.o_form_uri").toHaveCount(2);
 
     // Edit a line and check the result
@@ -91,7 +91,7 @@ test("PhoneField in editable list view on normal screens", async () => {
     await animationFrame();
 
     expect(".o_selected_row").toHaveCount(0);
-    expect(queryFirst("tbody td:not(.o_list_record_selector) a")).toHaveText("new");
+    expect("tbody td:not(.o_list_record_selector) a:first").toHaveText("new");
     expect(".o_field_widget a.o_form_uri").toHaveCount(2);
 });
 
@@ -111,9 +111,10 @@ test("use TAB to navigate to a PhoneField", async () => {
             </form>`,
     });
 
-    queryOne(".o_field_widget[name=display_name] input").focus();
-    expect(queryOne(".o_field_widget[name=display_name] input")).toBe(document.activeElement);
-    expect(queryOne('[name="foo"] input')).toBe(getNextTabableElement());
+    pointerDown(".o_field_widget[name=display_name] input");
+
+    expect(".o_field_widget[name=display_name] input").toBeFocused();
+    expect(queryOne`[name="foo"] input:only`).toBe(getNextTabableElement());
 });
 
 test("phone field with placeholder", async () => {

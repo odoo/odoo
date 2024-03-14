@@ -500,7 +500,7 @@ export async function triggerHotkey(hotkey, addOverlayModParts = false, eventAtt
 }
 
 function log(ok, message) {
-    __debug__.expect(ok).toBeTruthy({ message });
+    __debug__.expect(Boolean(ok)).toBe(true, { message });
 }
 
 let hasUsedContainsPositively = false;
