@@ -3554,7 +3554,7 @@ class BaseModel(metaclass=MetaModel):
                     operation=operation,
                 )
 
-                if self.env.user._has_group('base.group_no_one'):
+                if self.env.user._is_internal():
                     def format_groups(field):
                         if field.groups == '.':
                             return _("always forbidden")

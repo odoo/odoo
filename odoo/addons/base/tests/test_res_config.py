@@ -130,7 +130,7 @@ class TestResConfig(TransactionCase):
                 <xpath expr="//form" position="inside">
                     <t groups="base.group_system">
                         <app data-string="Foo"
-                            string="Foo" name="foo" groups="base.group_no_one">
+                            string="Foo" name="foo" groups="base.group_erp_manager">
                             <h2>Foo</h2>
                         </app>
                     </t>

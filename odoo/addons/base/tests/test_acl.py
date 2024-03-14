@@ -48,13 +48,12 @@ class TestACL(TransactionCaseWithUserDemo):
 
         # Verify the test environment first
         original_fields = currency.fields_get([])
-        with self.debug_mode():
-            # <group groups="base.group_no_one">
-            #     <group string="Price Accuracy">
-            #         <field name="rounding"/>
-            #         <field name="decimal_places"/>
-            #     </group>
-            form_view = currency.get_view(False, 'form')
+        # <group technical-chm="">
+        #     <group string="Price Accuracy">
+        #         <field name="rounding"/>
+        #         <field name="decimal_places"/>
+        #     </group>
+        form_view = currency.get_view(False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
         has_group_system = self.user_demo.has_group(GROUP_SYSTEM)
         self.assertFalse(has_group_system, "`demo` user should not belong to the restricted group before the test")
@@ -71,28 +70,29 @@ class TestACL(TransactionCaseWithUserDemo):
         form_view = currency.get_view(False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
         self.assertNotIn('decimal_places', fields, "'decimal_places' field should be gone")
-        self.assertEqual(view_arch.xpath("//field[@name='decimal_places']"), [],
-                          "Field 'decimal_places' must not be found in view definition")
-        self.assertEqual(view_arch.xpath("//label[@for='decimal_places']"), [],
-                          "Label for 'decimal_places' must not be found in view definition")
+        self.assertEqual(len(view_arch.xpath("//field[@name='decimal_places']")), 1,
+                          "Field 'decimal_places' is visible if the user active the technical mode")
+        self.assertEqual(len(view_arch.xpath("//label[@for='decimal_places']")), 1,
+                          "Label for 'decimal_places' is visible if the user active the technical mode")
 
         # Make demo user a member of the restricted group and check that the field is back
         self.erp_system_group.users += self.user_demo
         has_group_system = self.user_demo.has_group(GROUP_SYSTEM)
         fields = currency.fields_get([])
-        with self.debug_mode():
-            form_view = currency.get_view(False, 'form')
+        form_view = currency.get_view(False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
         self.assertTrue(has_group_system, "`demo` user should now belong to the restricted group")
         self.assertIn('decimal_places', fields, "'decimal_places' field must be properly visible again")
         self.assertNotEqual(view_arch.xpath("//field[@name='decimal_places']"), [],
-                             "Field 'decimal_places' must be found in view definition again")
+                             "Field 'decimal_places' is visible if the user active the technical mode")
         self.assertNotEqual(view_arch.xpath("//label[@for='decimal_places']"), [],
-                             "Label for 'decimal_places' must be found in view definition again")
+                             "Label for 'decimal_places' is visible if the user active the technical mode")
 
     @mute_logger('odoo.models')
     def test_field_crud_restriction(self):
         "Read/Write RPC access to restricted field should be forbidden"
+        self.user_demo.sudo().write({'groups_id': [(4, self.env.ref('base.group_partner_manager').id)]})
+
         partner = self.env['res.partner'].browse(1).with_user(self.user_demo)
 
         # Verify the test environment first

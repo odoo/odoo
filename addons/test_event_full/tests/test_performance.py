@@ -109,7 +109,7 @@ class TestEventPerformance(EventPerformanceCase):
         with freeze_time(self.reference_now), self.assertQueryCount(event_user=108):  # tef 103 / com 103
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             # Require for `website_menu` to be visible
-            # <div name="event_menu_configuration" groups="base.group_no_one">
+            # <div name="event_menu_configuration">
             with self.debug_mode():
                 with Form(self.env['event.event']) as event_form:
                     event_form.name = 'Test Event'
@@ -130,7 +130,7 @@ class TestEventPerformance(EventPerformanceCase):
         with freeze_time(self.reference_now), self.assertQueryCount(event_user=429):  # tef 379 / com 380
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             # Require for `website_menu` to be visible
-            # <div name="event_menu_configuration" groups="base.group_no_one">
+            # <div name="event_menu_configuration">
             with self.debug_mode():
                 with Form(self.env['event.event']) as event_form:
                     event_form.name = 'Test Event'
@@ -152,7 +152,7 @@ class TestEventPerformance(EventPerformanceCase):
         with freeze_time(self.reference_now), self.assertQueryCount(event_user=472):  # tef 426 / com 428
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             # Require for `website_menu` to be visible
-            # <div name="event_menu_configuration" groups="base.group_no_one">
+            # <div name="event_menu_configuration">
             with self.debug_mode():
                 with Form(self.env['event.event']) as event_form:
                     event_form.name = 'Test Event'

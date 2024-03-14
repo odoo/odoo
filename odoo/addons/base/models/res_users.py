@@ -1040,9 +1040,6 @@ class Users(models.Model):
         ``group_spec``, i.e., whether it is member of at least one of the groups,
         and is not a member of any of the groups preceded by ``!``.
 
-        Note that the group ``"base.group_no_one"`` is only effective in debug
-        mode, just like method :meth:`~.has_group` does.
-
         :param str group_spec: comma-separated list of fully-qualified group
             external IDs, optionally preceded by ``!``.
             Example:``"base.group_user,base.group_portal,!base.group_system"``.
@@ -1069,10 +1066,6 @@ class Users(models.Model):
     def has_group(self, group_ext_id: str) -> bool:
         """ Return whether user ``self`` belongs to the given group (given by its
         fully-qualified external ID).
-
-        Note that the group ``"base.group_no_one"`` is only effective in debug
-        mode: the method returns ``True`` if the user belongs to the group and
-        the current request is in debug mode.
         """
         self.ensure_one()
 
@@ -1081,10 +1074,7 @@ class Users(models.Model):
             # information about other users
             raise AccessError(_("You can ony call user.has_group() with your current user."))
 
-        result = self._has_group(group_ext_id)
-        if group_ext_id == 'base.group_no_one':
-            result = result and bool(request and request.session.debug)
-        return result
+        return self._has_group(group_ext_id)
 
     @tools.ormcache('self.id', 'group_ext_id')
     def _has_group(self, group_ext_id: str) -> bool:
