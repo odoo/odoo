@@ -41,9 +41,32 @@ export class ComboPage extends Component {
             qty: 1,
         });
 
+        this.addPreselectedChoices();
+
         onWillUnmount(() => {
             this.selfOrder.editedLine = null;
         });
+    }
+
+    addPreselectedChoices() {
+        for (const comboId of this.props.product.pos_combo_ids.filter(
+            (posComboId) => !this.comboIds.includes(posComboId)
+        )) {
+            const combo = this.selfOrder.comboByIds[comboId];
+            const product = this.selfOrder.productByIds[combo.combo_line_ids[0].product_id[0]];
+            const selectedCombo = {
+                id: combo.id,
+                name: combo.name,
+                combo_line_id: this.env.currentComboLineId.value,
+                product: {
+                    id: product.id,
+                    name: product.name,
+                    variants: {},
+                    customValues: {},
+                },
+            };
+            this.state.selectedCombos.push(selectedCombo);
+        }
     }
 
     get editableProductLine() {
@@ -56,7 +79,7 @@ export class ComboPage extends Component {
     }
 
     get currentComboId() {
-        return this.props.product.pos_combo_ids[this.state.currentComboIndex];
+        return this.comboIds[this.state.currentComboIndex];
     }
 
     get currentCombo() {
@@ -110,7 +133,7 @@ export class ComboPage extends Component {
             return;
         }
         this.state.currentComboIndex++;
-        if (this.state.currentComboIndex == this.props.product.pos_combo_ids.length) {
+        if (this.state.currentComboIndex == this.comboIds.length) {
             this.state.showResume = true;
         }
     }
@@ -168,9 +191,7 @@ export class ComboPage extends Component {
     }
 
     editCombo(combo_id) {
-        this.state.currentComboIndex = this.state.selectedCombos.findIndex(
-            (c) => c.id === combo_id
-        );
+        this.state.currentComboIndex = this.comboIds.findIndex((c) => c === combo_id);
         this.state.showResume = false;
         this.state.editMode = true;
         this.state.showQtyButtons = false;
@@ -178,5 +199,18 @@ export class ComboPage extends Component {
 
     get showQtyButtons() {
         return this.state.showQtyButtons && this.props.product.self_order_available;
+    }
+
+    get comboIds() {
+        return this.props.product.pos_combo_ids.filter(
+            (comboId) =>
+                this.selfOrder.comboByIds[comboId].combo_line_ids.length > 1 ||
+                (this.selfOrder.productByIds[
+                    this.selfOrder.comboByIds[comboId].combo_line_ids[0].product_id[0]
+                ].attributes.length != 0 &&
+                    !this.selfOrder.productByIds[
+                        this.selfOrder.comboByIds[comboId].combo_line_ids[0].product_id[0]
+                    ].isCombo)
+        );
     }
 }
