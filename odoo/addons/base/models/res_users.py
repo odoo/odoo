@@ -1514,11 +1514,10 @@ class GroupsView(models.Model):
             xml = E.field(name="groups_id", position="after")
 
         else:
-            group_no_one = view.env.ref('base.group_no_one')
-            group_employee = view.env.ref('base.group_user')
+            group_employee_id = self.env['ir.model.data']._xmlid_to_res_id('base.group_user', raise_if_not_found=False)
             xml0, xml1, xml2, xml3, xml4 = [], [], [], [], []
             xml_by_category = {}
-            xml1.append(E.separator(string='User Type', colspan="2", groups='base.group_no_one'))
+            xml1.append(E.separator(string='User Type', colspan="2"))
 
             user_type_field_name = ''
             user_type_readonly = str({})
@@ -1526,9 +1525,9 @@ class GroupsView(models.Model):
                                    key=lambda t: t[0].xml_id != 'base.module_category_user_type')
             for app, kind, gs, category_name in sorted_tuples:  # we process the user type first
                 attrs = {}
-                # hide groups in categories 'Hidden' and 'Extra' (except for group_no_one)
+                # hide groups in categories 'Hidden' and 'Extra'
                 if app.xml_id in self._get_hidden_extra_categories():
-                    attrs['groups'] = 'base.group_no_one'
+                    attrs['technical-chm'] = '1'
 
                 # User type (employee, portal or public) is a separated group. This is the only 'selection'
                 # group of res.groups without implied groups (with each other).
@@ -1541,7 +1540,7 @@ class GroupsView(models.Model):
                     # and is therefore removed when not in debug mode.
                     xml0.append(E.field(name=field_name, invisible="1", on_change="1"))
                     user_type_field_name = field_name
-                    user_type_readonly = f'{user_type_field_name} != {group_employee.id}'
+                    user_type_readonly = f'{user_type_field_name} != {group_employee_id}'
                     attrs['widget'] = 'radio'
                     # Trigger the on_change of this "virtual field"
                     attrs['on_change'] = '1'
@@ -1559,8 +1558,8 @@ class GroupsView(models.Model):
                     xml_by_category[category_name].append(E.field(name=field_name, **attrs))
                     xml_by_category[category_name].append(E.newline())
                     # add duplicate invisible field so default values are saved on create
-                    if attrs.get('groups') == 'base.group_no_one':
-                        xml0.append(E.field(name=field_name, **dict(attrs, invisible="1", groups='!base.group_no_one')))
+                    if attrs.get('technical-chm'):
+                        xml0.append(E.field(name=field_name, **{**attrs, "invisible": "1", "technical-chm": "0"}))
 
                 else:
                     # application separator with boolean fields
@@ -1573,19 +1572,16 @@ class GroupsView(models.Model):
                     for g in gs:
                         field_name = name_boolean_group(g.id)
                         dest_group = left_group if group_count % 2 == 0 else right_group
-                        if g == group_no_one:
-                            # make the group_no_one invisible in the form view
-                            dest_group.append(E.field(name=field_name, invisible="1", **attrs))
-                        else:
-                            dest_group.append(E.field(name=field_name, **attrs))
+                        dest_group.append(E.field(name=field_name, **attrs))
                         # add duplicate invisible field so default values are saved on create
-                        xml0.append(E.field(name=field_name, **dict(attrs, invisible="1", groups='!base.group_no_one')))
+                        if attrs.get('technical-chm'):
+                            xml0.append(E.field(name=field_name, **{**attrs, "invisible": "1", "technical-chm": "0"}))
                         group_count += 1
                     xml4.append(E.group(*left_group))
                     xml4.append(E.group(*right_group))
 
             xml4.append({'class': "o_label_nowrap"})
-            user_type_invisible = f'{user_type_field_name} != {group_employee.id}' if user_type_field_name else None
+            user_type_invisible = f'{user_type_field_name} != {group_employee_id}' if user_type_field_name else None
 
             for xml_cat in sorted(xml_by_category.keys(), key=lambda it: it[0]):
                 master_category_name = xml_cat[1]
@@ -1608,10 +1604,10 @@ class GroupsView(models.Model):
 
             xml = E.field(
                 *(xml0),
-                E.group(*(xml1), groups="base.group_no_one"),
+                E.group(*(xml1),  **{"technical-chm": "1"}),
                 E.group(*(xml2), invisible=user_type_invisible),
                 E.group(*(xml3), invisible=user_type_invisible),
-                E.group(*(xml4), invisible=user_type_invisible, groups="base.group_no_one"), name="groups_id", position="replace")
+                E.group(*(xml4), invisible=user_type_invisible, **{"technical-chm": "1"}), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
 
         # serialize and update the view
@@ -1695,14 +1691,10 @@ class UsersView(models.Model):
     user_group_warning = fields.Text(string="User Group Warning", compute="_compute_user_group_warning")
 
     @api.depends('groups_id', 'share')
-    @api.depends_context('show_user_group_warning')
     def _compute_user_group_warning(self):
         self.user_group_warning = False
-        if self._context.get('show_user_group_warning'):
-            for user in self.filtered_domain([('share', '=', False)]):
-                group_inheritance_warnings = self._prepare_warning_for_group_inheritance(user)
-                if group_inheritance_warnings:
-                    user.user_group_warning = group_inheritance_warnings
+        for user in self.filtered_domain([('share', '=', False)]):
+            user.user_group_warning = self._prepare_warning_for_group_inheritance(user) or False
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1775,8 +1767,7 @@ class UsersView(models.Model):
             missing_implied_groups = missing_implied_groups.filtered(
                 lambda g:
                 g.category_id not in (group.category_id | categories_to_ignore) and
-                g not in current_groups_by_category[g.category_id] and
-                (self.env.user.has_group('base.group_no_one') or g.category_id)
+                g not in current_groups_by_category[g.category_id]
             )
             if missing_implied_groups:
                 # prepare missing group message, by categories
