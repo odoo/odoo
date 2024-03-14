@@ -44,10 +44,12 @@ export class ImportDataContent extends Component {
     }
 
     makeChoices(fields) {
-        return fields.map((field) => ({
-            label: field.label,
-            value: field.fieldPath,
-        }));
+        return fields
+            .filter((field) => !field['technical-chm'] || this.props.options.advanced)
+            .map((field) => ({
+                label: field.label,
+                value: field.fieldPath,
+            }));
     }
 
     getTooltipDetails(field) {
