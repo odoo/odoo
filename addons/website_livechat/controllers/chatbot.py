@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http, Command
+from datetime import timedelta
+from odoo import http, Command, fields
 from odoo.http import request
 from odoo.addons.mail.tools.discuss import StoreData
 
@@ -27,7 +28,10 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
                 Command.create(
                     {
                         "partner_id": chatbot_script.operator_partner_id.id,
-                        "is_pinned": False,
+                        # making sure the unpin_dt is always later than the last_interest_dt
+                        # so that the channel is unpinned
+                        "unpin_dt": fields.Datetime.now(),
+                        "last_interest_dt": fields.Datetime.now() - timedelta(seconds=30),
                     }
                 ),
                 Command.create(
