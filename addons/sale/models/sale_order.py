@@ -786,6 +786,11 @@ class SaleOrder(models.Model):
             ]
         return super().copy_data(default)
 
+    def write(self, values):
+        if 'pricelist_id' in values and any(so.state == 'sale' for so in self):
+            raise UserError(_("You cannot change the pricelist of a confirmed order !"))
+        return super().write(values)
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_draft_or_cancel(self):
         for order in self:
