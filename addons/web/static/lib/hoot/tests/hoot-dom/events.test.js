@@ -88,6 +88,7 @@ describe(parseUrl(import.meta.url), () => {
             "input.select",
             "input.keyup",
             "input.keydown",
+            "input.beforeinput",
             "input.input",
             "input.keyup",
         ]).toVerifySteps();
@@ -556,7 +557,12 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("input").toHaveValue("Test value");
         expect([
-            ...[..."Test value"].flatMap(() => ["input.keydown", "input.input", "input.keyup"]),
+            ...[..."Test value"].flatMap(() => [
+                "input.keydown",
+                "input.beforeinput",
+                "input.input",
+                "input.keyup",
+            ]),
         ]).toVerifySteps();
     });
 
@@ -756,7 +762,7 @@ describe(parseUrl(import.meta.url), () => {
 
         keyDown("a");
 
-        expect(["input.keydown", "input.input"]).toVerifySteps();
+        expect(["input.keydown", "input.beforeinput", "input.input"]).toVerifySteps();
 
         keyUp("a");
 
@@ -799,7 +805,12 @@ describe(parseUrl(import.meta.url), () => {
         press("a");
 
         expect("input").toHaveValue("a");
-        expect(["input.keydown", "input.input", "input.keyup"]).toVerifySteps();
+        expect([
+            "input.keydown",
+            "input.beforeinput",
+            "input.input",
+            "input.keyup",
+        ]).toVerifySteps();
     });
 
     test("press key on number input", async () => {
@@ -925,6 +936,7 @@ describe(parseUrl(import.meta.url), () => {
         expect([
             // Key press
             "input.keydown",
+            "input.beforeinput",
             "input.input",
             "input.keyup",
             // Click triggered by key press
@@ -1033,6 +1045,7 @@ describe(parseUrl(import.meta.url), () => {
         expect([
             "keydown:Shift.shift",
             "keydown:b.shift",
+            "beforeinput",
             "input",
             "keyup:b.shift",
             "keyup:Shift.shift",

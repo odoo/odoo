@@ -230,6 +230,8 @@ const getEventConstructor = (eventType) => {
             return [DragEvent, mapBubblingEvent];
 
         // Input events
+        case "beforeinput":
+            return [InputEvent, mapCancelableInputEvent];
         case "input":
             return [InputEvent, mapInputEvent];
 
@@ -1032,7 +1034,7 @@ const _keyDown = (target, eventInit) => {
 
     if (target.value !== nextValue) {
         target.value = nextValue;
-        dispatch(target, "input", {
+        dispatchEventSequence(target, ["beforeinput", "input"], {
             data: inputData,
             inputType,
         });
@@ -1359,6 +1361,14 @@ const mapNonCancelableTouchEvent = (eventInit) => ({
 
 // Keyboard & input event mappers
 // ------------------------------
+
+/**
+ * @param {InputEventInit} [eventInit]
+ */
+const mapCancelableInputEvent = (eventInit) => ({
+    ...mapInputEvent(eventInit),
+    cancelable: true,
+});
 
 /**
  * @param {InputEventInit} [eventInit]
