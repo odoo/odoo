@@ -58,5 +58,6 @@
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">sale_timesheet.report_timesheet_account_move</field>
         <field name="binding_model_id" ref="model_account_move"/>
+        <field name="domain" eval="[('timesheet_ids', '!=', False)]"/>
     </record>
 </odoo>

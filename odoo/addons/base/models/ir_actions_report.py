@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from ast import literal_eval
 from markupsafe import Markup
 from urllib.parse import urlparse
 
@@ -139,6 +140,7 @@ class IrActionsReport(models.Model):
                                     help='If enabled, then the second time the user prints with same attachment name, it returns the previous report.')
     attachment = fields.Char(string='Save as Attachment Prefix',
                              help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.')
+    domain = fields.Char(string='Filter domain', help='If set, the action will only appear on records that matches the domain.')
 
     @api.depends('model')
     def _compute_model_id(self):
@@ -178,6 +180,7 @@ class IrActionsReport(models.Model):
             "context", "data",
             # and this one is used by the frontend later on.
             "close_on_report_download",
+            "domain",
         }
 
     def associated_view(self):
@@ -1038,3 +1041,17 @@ class IrActionsReport(models.Model):
         py_ctx['report_action'] = report_action
         action['context'] = py_ctx
         return action
+
+    def get_valid_action_reports(self, model, record_ids):
+        """ Return the list of ids of actions for which the domain is
+        satisfied by at least one record in record_ids.
+        :param model: the model of the records to validate
+        :param record_ids: list of ids of records to validate
+        """
+        records = self.env[model].browse(record_ids)
+        actions_with_domain = self.filtered('domain')
+        valid_action_report_ids = (self - actions_with_domain).ids  # actions without domain are always valid
+        for action in actions_with_domain:
+            if records.filtered_domain(literal_eval(action.domain)):
+                valid_action_report_ids.append(action.id)
+        return valid_action_report_ids
