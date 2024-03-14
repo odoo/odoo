@@ -95,24 +95,6 @@
         action="action_view_mail_tracking_value"
         sequence="5"/>
 
-    <menuitem
-      id="menu_mail_activity_type"
-      action="mail_activity_type_action"
-      parent="mail.mail_menu_technical"
-      sequence="10"
-    />
-    <menuitem
-      id="menu_mail_activities"
-      action="mail_activity_action"
-      parent="mail.mail_menu_technical"
-      sequence="11"
-    />
-    <menuitem
-        id="menu_mail_activity_plan"
-        action="mail_activity_plan_action"
-        parent="mail.mail_menu_technical"
-        sequence="12"/>
-
     <menuitem name="Notifications"
         id="mail_notification_menu"
         parent="mail.mail_menu_technical"
@@ -166,6 +148,26 @@
         action="discuss_gif_favorite_action"
         parent="mail.mail_menu_technical"
         sequence="56"/>
+
+    <menuitem name="Activities"
+        id="menu_mail_activities_section"
+        parent="base.menu_custom"
+        sequence="2" />
+    <menuitem
+      id="menu_mail_activities"
+      action="mail_activity_action"
+      parent="mail.menu_mail_activities_section"
+      sequence="10"/>
+    <menuitem
+      id="menu_mail_activity_type"
+      action="mail_activity_type_action"
+      parent="mail.menu_mail_activities_section"
+      sequence="20"/>
+    <menuitem
+        id="menu_mail_activity_plan"
+        action="mail_activity_plan_action"
+        parent="mail.menu_mail_activities_section"
+        sequence="30"/>
 
     <!--
         This menuitem will be activated by integrations modules (like github, twitter, ...). It

@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date, timedelta
+from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.addons.mail.tests.test_mail_activity import ActivityScheduleCase
 from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged, users
+from odoo.tools.misc import format_date
 
 
 @tagged('mail_activity', 'mail_activity_plan')
@@ -30,11 +32,17 @@ class TestActivitySchedule(ActivityScheduleCase):
             'template_ids': [
                 Command.create({
                     'activity_type_id': cls.activity_type_todo.id,
+                    'delay_count': 1,
+                    'delay_from': 'before_plan_date',
+                    'delay_unit': 'days',
                     'responsible_type': 'on_demand',
                     'sequence': 10,
                     'summary': 'Book a place',
                 }), Command.create({
                     'activity_type_id': cls.activity_type_todo.id,
+                    'delay_count': 1,
+                    'delay_from': 'after_plan_date',
+                    'delay_unit': 'weeks',
                     'responsible_id': cls.user_admin.id,
                     'responsible_type': 'other',
                     'sequence': 20,
@@ -48,12 +56,18 @@ class TestActivitySchedule(ActivityScheduleCase):
             'template_ids': [
                 Command.create({
                     'activity_type_id': cls.activity_type_todo.id,
+                    'delay_count': 3,
+                    'delay_from': 'before_plan_date',
+                    'delay_unit': 'days',
                     'responsible_id': cls.user_admin.id,
                     'responsible_type': 'other',
                     'sequence': 10,
                     'summary': 'Plan training',
                 }), Command.create({
                     'activity_type_id': cls.activity_type_todo.id,
+                    'delay_count': 2,
+                    'delay_from': 'after_plan_date',
+                    'delay_unit': 'weeks',
                     'responsible_id': cls.user_admin.id,
                     'responsible_type': 'other',
                     'sequence': 20,
@@ -194,40 +208,50 @@ class TestActivitySchedule(ActivityScheduleCase):
             test_records = test_records_all[test_idx].with_env(self.env)
             with self.subTest(test_case=test_case, test_records=test_records), \
                  freeze_time(self.reference_now):
-                # No date_deadline specified, No responsible specified
+                # No plan_date specified (-> self.reference_now is used), No responsible specified
                 form = self._instantiate_activity_schedule_wizard(test_records)
-                self.assertFalse(form.plan_assignation_summary)
+                self.assertFalse(form.plan_summary)
                 form.plan_id = self.plan_onboarding
-                self.assertEqual(form.plan_assignation_summary,
-                                 '<ul><li>To-Do: Plan training</li><li>To-Do: Training</li></ul>')
+                self.assertEqual("<ul><li>To-Do: Plan training</li><li>To-Do: Training</li></ul>", form.plan_summary)
                 self.assertTrue(form._get_modifier('plan_on_demand_user_id', 'invisible'))
                 form.plan_id = self.plan_party
-                self.assertIn('Book a place', form.plan_assignation_summary)
+                self.assertEqual("<ul><li>To-Do: Book a place</li><li>To-Do: Invite special guest</li></ul>",
+                                 form.plan_summary)
                 self.assertFalse(form._get_modifier('plan_on_demand_user_id', 'invisible'))
-                with self._mock_activities():
-                    form.save().action_schedule_plan()
-
-                self.assertPlanExecution(self.plan_party, test_records)
-
-                # date_deadline specified, responsible specified
-                force_base_date_deadline = date(2050, 1, 15)
-                force_responsible_id = self.user_admin
-                form = self._instantiate_activity_schedule_wizard(test_records)
-                form.plan_id = self.plan_party
-                form.plan_date_deadline = force_base_date_deadline
-                form.plan_on_demand_user_id = self.env['res.users']
-                self.assertTrue(form.has_error)
-                self.assertIn(f'No responsible specified for {self.activity_type_todo.name}: Book a place',
-                              form.error)
-                form.plan_on_demand_user_id = force_responsible_id
-                self.assertFalse(form.has_error)
                 with self._mock_activities():
                     form.save().action_schedule_plan()
 
                 self.assertPlanExecution(
                     self.plan_party, test_records,
-                    force_base_date_deadline=force_base_date_deadline,
-                    force_responsible_id=force_responsible_id)
+                    expected_deadlines=[(self.reference_now + relativedelta(days=-1)).date(),
+                                        (self.reference_now + relativedelta(days=7)).date()])
+
+                # plan_date specified, responsible specified
+                plan_date = self.reference_now.date() + relativedelta(days=14)
+                responsible_id = self.user_admin
+                form = self._instantiate_activity_schedule_wizard(test_records)
+                form.plan_id = self.plan_party
+                form.plan_date = plan_date
+                form.plan_on_demand_user_id = self.env['res.users']
+                self.assertTrue(form.has_error)
+                self.assertIn(f'No responsible specified for {self.activity_type_todo.name}: Book a place',
+                              form.error)
+                form.plan_on_demand_user_id = responsible_id
+                self.assertFalse(form.has_error)
+                deadline_1 = format_date(self.env, plan_date + relativedelta(days=-1))
+                deadline_2 = format_date(self.env, plan_date + relativedelta(days=7))
+                self.assertEqual(
+                    form.plan_summary,
+                    f"<ul><li>To-Do: Book a place ({deadline_1})</li>"
+                    f"<li>To-Do: Invite special guest ({deadline_2})</li></ul>")
+                with self._mock_activities():
+                    form.save().action_schedule_plan()
+
+                self.assertPlanExecution(
+                    self.plan_party, test_records,
+                    expected_deadlines=[plan_date + relativedelta(days=-1),
+                                        plan_date + relativedelta(days=7)],
+                    expected_responsible=responsible_id)
 
     @users('admin')
     def test_plan_setup_model_consistency(self):

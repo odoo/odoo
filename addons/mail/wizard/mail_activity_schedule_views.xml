@@ -13,22 +13,23 @@
                     <field name="plan_has_user_on_demand" invisible="1"/>
                     <field name="res_ids" invisible="1"/>
                     <field name="plan_available_ids" invisible="1"/>
-                    <header invisible="not bool(plan_available_ids)">
-                        <group>
-                            <field name="plan_id" options='{"no_open": True, "no_create": True}'/>
-                        </group>
-                    </header>
                     <sheet>
+                        <group invisible="not plan_available_ids">
+                            <group>
+                                <field name="plan_id" options='{"no_open": True, "no_create": True}'
+                                       placeholder="Pick an Activity Plan to launch"/>
+                            </group>
+                        </group>
                         <group invisible="not plan_id">
                             <group>
-                                <field name="plan_date_deadline"/>
+                                <field name="plan_date" placeholder="Default deadline for the activities..."/>
                                 <field name="plan_on_demand_user_id" widget="many2one_avatar_user"
                                        invisible="not plan_has_user_on_demand"/>
                             </group>
                             <group>
-                                <label for="plan_assignation_summary" class="o_form_label"
+                                <label for="plan_summary" class="o_form_label"
                                        string="Plan summary" colspan="2"/>
-                                <field name="plan_assignation_summary" colspan="2" nolabel="1"/>
+                                <field name="plan_summary" colspan="2" nolabel="1" class="text-muted"/>
                             </group>
                         </group>
                         <group invisible="plan_id">
