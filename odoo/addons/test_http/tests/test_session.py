@@ -31,10 +31,10 @@ class TestHttpSession(TestHttpBase):
         self.assertEqual(session.debug, '')
         self.db_url_open('/test_http/greeting').raise_for_status()
         self.assertEqual(session.debug, '')
-        self.db_url_open('/test_http/greeting?debug=1').raise_for_status()
-        self.assertEqual(session.debug, '1')
+        self.db_url_open('/test_http/greeting?debug=assets').raise_for_status()
+        self.assertEqual(session.debug, 'assets')
         self.db_url_open('/test_http/greeting').raise_for_status()
-        self.assertEqual(session.debug, '1')
+        self.assertEqual(session.debug, 'assets')
         self.db_url_open('/test_http/greeting?debug=').raise_for_status()
         self.assertEqual(session.debug, '')
 

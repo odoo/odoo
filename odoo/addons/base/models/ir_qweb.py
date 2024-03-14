@@ -1838,7 +1838,6 @@ class IrQWeb(models.AbstractModel):
         part that wrap the rest of the compiled code of this element.
         """
         groups = el.attrib.pop('t-groups', el.attrib.pop('groups', None))
-
         strip = self._rstrip_text(compile_context)
         code = self._flush_text(compile_context, level)
         code.append(indent_code(f"if self.env.user.has_groups({groups!r}):", level))
@@ -2203,7 +2202,7 @@ class IrQWeb(models.AbstractModel):
                 {xmlid!r},
                 css={css},
                 js={js},
-                debug=values.get("debug"),
+                debug_assets='assets' in (values.get("debug") or ''),
                 defer_load={defer_load},
                 lazy_load={lazy_load},
                 media={media!r},
@@ -2458,23 +2457,22 @@ class IrQWeb(models.AbstractModel):
 
         return (attributes, content, inherit_branding)
 
-    def _get_asset_nodes(self, bundle, css=True, js=True, debug=False, defer_load=False, lazy_load=False, media=None):
+    def _get_asset_nodes(self, bundle, css=True, js=True, debug_assets=False, defer_load=False, lazy_load=False, media=None):
         """Generates asset nodes.
         If debug=assets, the assets will be regenerated when a file which composes them has been modified.
         Else, the assets will be generated only once and then stored in cache.
         """
         media = css and media or None
-        links = self._get_asset_links(bundle, css=css, js=js, debug=debug)
+        links = self._get_asset_links(bundle, css=css, js=js, debug_assets=debug_assets)
         return self._links_to_nodes(links, defer_load=defer_load, lazy_load=lazy_load, media=media)
 
-    def _get_asset_links(self, bundle, css=True, js=True, debug=None):
+    def _get_asset_links(self, bundle, css=True, js=True, debug_assets=None):
         """Generates asset nodes.
         If debug=assets, the assets will be regenerated when a file which composes them has been modified.
         Else, the assets will be generated only once and then stored in cache.
         """
         rtl = self.env['res.lang'].sudo()._get_data(code=(self.env.lang or self.env.user.lang)).direction == 'rtl'
         assets_params = self.env['ir.asset']._get_asset_params() # website_id
-        debug_assets = debug and 'assets' in debug
 
         if debug_assets:
             return self._generate_asset_links(bundle, css=css, js=js, debug_assets=True, assets_params=assets_params, rtl=rtl)
@@ -2612,8 +2610,8 @@ class IrQWeb(models.AbstractModel):
         asset_bundle = self._get_asset_bundle(bundle, css=css, js=js, debug_assets=debug_assets, rtl=rtl, assets_params=assets_params)
         return asset_bundle.get_links()
 
-    def _get_asset_link_urls(self, bundle, debug=False):
-        asset_nodes = self._get_asset_nodes(bundle, js=False, debug=debug)
+    def _get_asset_link_urls(self, bundle, debug_assets=False):
+        asset_nodes = self._get_asset_nodes(bundle, js=False, debug_assets=debug_assets)
         return [node[1]['href'] for node in asset_nodes if node[0] == 'link']
 
     def _pregenerate_assets_bundles(self):

@@ -558,7 +558,7 @@ css_error_message {
 
         return css_attachment
 
-    def preprocess_css(self, debug=False, old_attachments=None):
+    def preprocess_css(self):
         """
             Checks if the bundle contains any sass/less content, then compiles it to css.
             If user language direction is Right to Left then consider css files to call run_rtlcss,
@@ -578,10 +578,6 @@ css_error_message {
                 stylesheet_assets = [asset for asset in self.stylesheets if not isinstance(asset, (SassStylesheetAsset, ScssStylesheetAsset, LessStylesheetAsset))]
                 compiled += '\n'.join([asset.get_source() for asset in stylesheet_assets])
                 compiled = self.run_rtlcss(compiled)
-
-            if not self.css_errors and old_attachments:
-                self._unlink_attachments(old_attachments)
-                old_attachments = None
 
             fragments = self.rx_css_split.split(compiled)
             at_rules = fragments.pop(0)
