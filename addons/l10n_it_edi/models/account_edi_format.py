@@ -350,14 +350,20 @@ class AccountEdiFormat(models.Model):
         '''
 
         company = proxy_user.company_id
-        if self.env['ir.attachment'].search([('name', '=', filename), ('res_model', '=', 'account.move')], limit=1):
+        # Name should be unique per company, the invoice already exists
+        Attachment = self.env['ir.attachment'].sudo().with_company(company)
+        if Attachment.search_count([
+            ('name', '=', filename),
+            ('res_model', '=', 'account.move'),
+            ('company_id', '=', proxy_user.company_id.id),
+        ], limit=1):
             # name should be unique, the invoice already exists
             _logger.info('E-invoice already exists: %s', filename)
             return True
 
         raw_content = proxy_user._decrypt_data(content, key)
         invoice = self.env['account.move'].with_company(company).create({'move_type': 'in_invoice'})
-        attachment = self.env['ir.attachment'].create({
+        attachment = Attachment.create({
             'name': filename,
             'raw': raw_content,
             'type': 'binary',
