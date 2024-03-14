@@ -21,8 +21,8 @@ class WebManifestRoutesTest(HttpCaseWithUserDemo):
         self.assertEqual(response.headers["Content-Type"], "application/manifest+json")
         data = response.json()
         self.assertEqual(data["name"], "Odoo")
-        self.assertEqual(data["scope"], "/web")
-        self.assertEqual(data["start_url"], "/web")
+        self.assertEqual(data["scope"], "/odoo")
+        self.assertEqual(data["start_url"], "/odoo")
         self.assertEqual(data["display"], "standalone")
         self.assertEqual(data["background_color"], "#714B67")
         self.assertEqual(data["theme_color"], "#714B67")
@@ -36,7 +36,7 @@ class WebManifestRoutesTest(HttpCaseWithUserDemo):
             self.assertGreater(len(shortcut["name"]), 0)
             self.assertGreater(len(shortcut["description"]), 0)
             self.assertGreater(len(shortcut["icons"]), 0)
-            self.assertTrue(shortcut["url"].startswith("/web#menu_id="))
+            self.assertTrue(shortcut["url"].startswith("/odoo?menu_id="))
 
     def test_webmanifest_unauthenticated(self):
         """
@@ -47,8 +47,8 @@ class WebManifestRoutesTest(HttpCaseWithUserDemo):
         self.assertEqual(response.headers["Content-Type"], "application/manifest+json")
         data = response.json()
         self.assertEqual(data["name"], "Odoo")
-        self.assertEqual(data["scope"], "/web")
-        self.assertEqual(data["start_url"], "/web")
+        self.assertEqual(data["scope"], "/odoo")
+        self.assertEqual(data["start_url"], "/odoo")
         self.assertEqual(data["display"], "standalone")
         self.assertEqual(data["background_color"], "#714B67")
         self.assertEqual(data["theme_color"], "#714B67")
@@ -66,13 +66,13 @@ class WebManifestRoutesTest(HttpCaseWithUserDemo):
         response = self.url_open("/web/service-worker.js")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers["Content-Type"], "text/javascript")
-        self.assertEqual(response.headers["Service-Worker-Allowed"], "/web")
+        self.assertEqual(response.headers["Service-Worker-Allowed"], "/odoo")
 
     def test_offline_url(self):
         """
         This route returns the offline page
         """
-        response = self.url_open("/web/offline")
+        response = self.url_open("/odoo/offline")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers["Content-Type"], "text/html; charset=utf-8")
 
@@ -85,7 +85,7 @@ class WebManifestRoutesTest(HttpCaseWithUserDemo):
         response = self.url_open("/web/static/img/odoo-icon-ios.png")
         self.assertEqual(response.status_code, 200)
 
-        document = self.url_open("/web")
+        document = self.url_open("/odoo")
         self.assertIn(
             '<link rel="apple-touch-icon" href="/web/static/img/odoo-icon-ios.png"/>', document.text,
             "Icon for iOS is present in the head of the document.",
