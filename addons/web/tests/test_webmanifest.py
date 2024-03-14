@@ -21,8 +21,8 @@ class WebManifestRoutesTest(HttpCaseWithUserDemo):
         self.assertEqual(response.headers["Content-Type"], "application/manifest+json")
         data = response.json()
         self.assertEqual(data["name"], "Odoo")
-        self.assertEqual(data["scope"], "/web")
-        self.assertEqual(data["start_url"], "/web")
+        self.assertEqual(data["scope"], "/")
+        self.assertEqual(data["start_url"], "/odoo")
         self.assertEqual(data["display"], "standalone")
         self.assertEqual(data["background_color"], "#714B67")
         self.assertEqual(data["theme_color"], "#714B67")
@@ -47,8 +47,8 @@ class WebManifestRoutesTest(HttpCaseWithUserDemo):
         self.assertEqual(response.headers["Content-Type"], "application/manifest+json")
         data = response.json()
         self.assertEqual(data["name"], "Odoo")
-        self.assertEqual(data["scope"], "/web")
-        self.assertEqual(data["start_url"], "/web")
+        self.assertEqual(data["scope"], "/")
+        self.assertEqual(data["start_url"], "/odoo")
         self.assertEqual(data["display"], "standalone")
         self.assertEqual(data["background_color"], "#714B67")
         self.assertEqual(data["theme_color"], "#714B67")
@@ -66,7 +66,7 @@ class WebManifestRoutesTest(HttpCaseWithUserDemo):
         response = self.url_open("/web/service-worker.js")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers["Content-Type"], "text/javascript")
-        self.assertEqual(response.headers["Service-Worker-Allowed"], "/web")
+        self.assertEqual(response.headers["Service-Worker-Allowed"], "/")
 
     def test_offline_url(self):
         """
@@ -85,7 +85,7 @@ class WebManifestRoutesTest(HttpCaseWithUserDemo):
         response = self.url_open("/web/static/img/odoo-icon-ios.png")
         self.assertEqual(response.status_code, 200)
 
-        document = self.url_open("/web")
+        document = self.url_open("/odoo")
         self.assertIn(
             '<link rel="apple-touch-icon" href="/web/static/img/odoo-icon-ios.png"/>', document.text,
             "Icon for iOS is present in the head of the document.",

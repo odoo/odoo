@@ -48,8 +48,8 @@ class WebManifest(http.Controller):
         web_app_name = request.env['ir.config_parameter'].sudo().get_param('web.web_app_name', 'Odoo')
         manifest = {
             'name': web_app_name,
-            'scope': '/web',
-            'start_url': '/web',
+            'scope': '/',
+            'start_url': '/odoo',
             'display': 'standalone',
             'background_color': '#714B67',
             'theme_color': '#714B67',
@@ -74,7 +74,7 @@ class WebManifest(http.Controller):
             self._get_service_worker_content(),
             [
                 ('Content-Type', 'text/javascript'),
-                ('Service-Worker-Allowed', '/web'),
+                ('Service-Worker-Allowed', '/'),
             ]
         )
         return response
