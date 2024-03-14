@@ -765,8 +765,17 @@ var FieldMany2One = AbstractField.extend({
         var self = this;
         if (this.mode === 'readonly') {
             event.preventDefault();
+            if ($(event.currentTarget).hasClass('o_link_disabled')) {
+                // If someone presses a disabled button, you do not want them
+                // to perform any action.
+                event.stopPropagation();
+                return;
+            }
             if (!this.noOpen) {
                 event.stopPropagation();
+                // All visible links are disabled to avoid launching a double redirect,
+                // which may cause a double save and duplicate lines in a form.
+                $("a.o_form_uri").addClass("o_link_disabled")
                 this._rpc({
                     model: this.field.relation,
                     method: 'get_formview_action',
