@@ -29,7 +29,7 @@ class StockMoveLine(models.Model):
             'target': 'new',
         }
 
-    def _add_to_wave(self, wave=False):
+    def _add_to_wave(self, wave=False, description=False):
         """ Detach lines (and corresponding stock move from a picking to another). If wave is
         passed, attach new picking into it. If not attach line to their original picking.
 
@@ -40,6 +40,7 @@ class StockMoveLine(models.Model):
                 'is_wave': True,
                 'picking_type_id': self.picking_type_id and self.picking_type_id[0].id,
                 'user_id': self.env.context.get('active_owner_id'),
+                'description': description,
             })
         line_by_picking = defaultdict(lambda: self.env['stock.move.line'])
         for line in self:
@@ -108,5 +109,150 @@ class StockMoveLine(models.Model):
                     group['picking_type_id_count'] = super().search_count(group['__domain'])
             grouped_stock_moves = [group for group in grouped_stock_moves if group['picking_type_id']]
             return grouped_stock_moves
-
         return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+
+    def _find_auto_wave(self):
+        # Try to find compatible waves to attach the move lines to, if wave grouping is enabled
+        line_by_wave = defaultdict(lambda: self.env['stock.move.line'])
+        for line in self:
+            if line.batch_id.is_wave or (line.picking_type_id.should_group_waves == 'fully_available' and line.state != 'assigned'):
+                continue
+            if line.picking_type_id.wave_grouping:
+                nearest_parent_location = line.env['stock.location']
+                if line.picking_type_id.wave_group_by_location:
+                    nearest_parent_locations = line.env['stock.location'].sudo().search(domain=[('id', 'in', line.picking_type_id.wave_location_ids.ids), ('id', 'parent_of', line.location_id.id)])
+                    if len(nearest_parent_locations) == 0:
+                        continue
+                    nearest_parent_locations = nearest_parent_locations.sorted(key=lambda l: len(l.complete_name), reverse=True)
+                    nearest_parent_location = nearest_parent_locations[0]
+                possible_waves = line._get_possible_waves(nearest_parent_location)
+                compatible_wave_found = False
+                for wave in possible_waves:
+                    if wave._is_line_auto_mergeable(line):
+                        line_by_wave[wave] |= line
+                        compatible_wave_found = True
+
+                # If no wave was found, try fo find compatible lines and put them in a new wave.
+                possible_lines = line.env['stock.move.line'].sudo().search(line._get_possible_lines_domain(nearest_parent_location))
+                if not line.picking_type_id.wave_group_by_location:
+                    possible_lines |= line
+                    possible_lines._add_to_wave(description=line._get_new_wave_description())
+                else:
+                    possible_lines = possible_lines.sorted(key=lambda l: len(l.location_id.complete_name), reverse=True)
+                    if len(possible_lines) == 0:
+                        if not compatible_wave_found:
+                            line._add_to_wave(description=line._get_new_wave_description(nearest_parent_location))
+                    elif not compatible_wave_found:
+                        grouped_lines = line.env['stock.move.line']
+                        grouped_lines |= possible_lines[0]
+                        grouped_lines |= line
+                        grouped_lines._add_to_wave(description=line._get_new_wave_description(nearest_parent_location))
+
+        for wave, lines in line_by_wave.items():
+            lines._add_to_wave(wave)
+
+    def _get_possible_waves(self, nearest_parent_location=False):
+        self.ensure_one()
+
+        domain = [
+            ('state', 'not in', ('done', 'cancel') if self.picking_type_id.batch_auto_confirm else ('draft',)),
+            ('picking_type_id', '=', self.picking_type_id.id),
+            ('company_id', '=', self.company_id.id if self.company_id else False),
+            ('batch_id.is_wave', '=', True),
+        ]
+        if self.picking_type_id.batch_group_by_partner:
+            domain = expression.AND([domain, [('batch_id.picking_ids.partner_id', '=', self.picking_id.partner_id.id)]])
+        if self.picking_type_id.batch_group_by_destination:
+            domain = expression.AND([domain, [('batch_id.picking_ids.partner_id.country_id', '=', self.picking_id.partner_id.country_id.id)]])
+        if self.picking_type_id.batch_group_by_src_loc:
+            domain = expression.AND([domain, [('batch_id.picking_ids.location_id', '=', self.picking_id.location_id.id)]])
+        if self.picking_type_id.batch_group_by_dest_loc:
+            domain = expression.AND([domain, [('batch_id.picking_ids.location_dest_id', '=', self.picking_id.location_dest_id.id)]])
+
+        groupby = ['batch_id']
+
+        if self.picking_type_id.wave_group_by_product:
+            groupby.append('product_id')
+        if self.picking_type_id.wave_group_by_category:
+            groupby.append('product_id.categ_id')
+
+        # Because move_ids field on stock.picking.batch model is not stored, we use read_group and then filter incompatible waves
+        grouped_lines = self.env['stock.move.line'].read_group(domain=domain, fields=['id'], groupby=groupby, lazy=False)
+        seen_waves = set()
+        waves_to_remove = []
+        for group in grouped_lines:
+            if group['batch_id'] not in seen_waves:
+                seen_waves.add(group['batch_id'])
+            else:
+                waves_to_remove.append(group['batch_id'])
+        grouped_lines = [group for group in grouped_lines if group['batch_id'] not in waves_to_remove]
+        if self.picking_type_id.wave_group_by_product:
+            grouped_lines = [group for group in grouped_lines if group['product_id'][0] == self.product_id.id]
+        if self.picking_type_id.wave_group_by_category:
+            grouped_lines = [group for group in grouped_lines if group['product_id.categ_id'][0] == self.product_id.categ_id.id]
+
+        possible_waves = self.env['stock.picking.batch']
+        for group in grouped_lines:
+            possible_waves |= self.env['stock.picking.batch'].browse(group['batch_id'][0])
+
+        if self.picking_type_id.wave_group_by_location and nearest_parent_location:
+            for wave in possible_waves:
+                locations_search_domain = [('id', 'in', self.picking_type_id.wave_location_ids.ids)]
+                for location in wave.move_line_ids.location_id:
+                    locations_search_domain = expression.AND([locations_search_domain, [('id', 'parent_of', location.id)]])
+                wave_parent_locations = self.env['stock.location'].sudo().search(locations_search_domain)
+                wave_parent_locations = wave_parent_locations.sorted(key=lambda l: len(l.complete_name), reverse=True)
+                wave_nearest_parent_location = wave_parent_locations[0]
+                if wave_nearest_parent_location != nearest_parent_location:
+                    possible_waves -= wave
+        return possible_waves
+
+    def _get_possible_lines_domain(self, nearest_parent_location=False):
+        self.ensure_one()
+        domain = [
+            ('id', '!=', self.id),
+            ('company_id', '=', self.company_id.id if self.company_id else False),
+            ('picking_id.state', '=', 'assigned'),
+            ('picking_type_id', '=', self.picking_type_id.id),
+            '|',
+            ('batch_id', '=', False),
+            ('batch_id.is_wave', '=', False)
+        ]
+
+        if self.picking_type_id.batch_group_by_partner:
+            domain = expression.AND([domain, [('move_id.partner_id', '=', self.move_id.partner_id.id)]])
+        if self.picking_type_id.batch_group_by_destination:
+            domain = expression.AND([domain, [('move_id.partner_id.country_id', '=', self.move_id.partner_id.country_id.id)]])
+        if self.picking_type_id.batch_group_by_src_loc:
+            domain = expression.AND([domain, [('location_id', '=', self.location_id.id)]])
+        if self.picking_type_id.batch_group_by_dest_loc:
+            domain = expression.AND([domain, [('location_dest_id', '=', self.location_dest_id.id)]])
+        if self.picking_type_id.wave_group_by_product:
+            domain = expression.AND([domain, [('product_id', '=', self.product_id.id)]])
+        if self.picking_type_id.wave_group_by_category:
+            domain = expression.AND([domain, [('product_id.categ_id', '=', self.product_id.categ_id.id)]])
+        if self.picking_type_id.wave_group_by_location and nearest_parent_location:
+            # We want to get the lines that share the same parent location, however, we should exclude lines with a more specific (descendant) location
+            # because they should be added to a more specific wave
+            nearest_parent_children = self.env['stock.location'].sudo().search(
+                [('id', 'child_of', nearest_parent_location.id), ('id', '!=', nearest_parent_location.id), ('id', 'in', self.picking_type_id.wave_location_ids.ids)])
+            domain = expression.AND([domain, [('location_id', 'child_of', nearest_parent_location.id)]])
+            domain = expression.AND([domain, ['!', ('location_id', 'child_of', nearest_parent_children.ids)]])
+        return domain
+
+    def _get_new_wave_description(self, nearest_parent_location=False):
+        self.ensure_one()
+        description = self.picking_id._get_new_batch_description()
+        description_items = []
+        if description:
+            description_items.append(description)
+
+        if self.picking_type_id.wave_group_by_product:
+            description_items.append(self.product_id.display_name)
+        if self.picking_type_id.wave_group_by_category:
+            description_items.append(self.product_id.categ_id.display_name)
+        if self.picking_type_id.wave_group_by_location:
+            description_items.append(nearest_parent_location.complete_name)
+
+        description = ', '.join(description_items)
+        return description

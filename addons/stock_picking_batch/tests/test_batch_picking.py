@@ -447,7 +447,8 @@ class TestBatchPicking(TransactionCase):
         self.assertTrue(picking_out_1.batch_id)
         self.assertTrue(picking_out_3.batch_id)
         self.assertEqual(picking_out_1.batch_id.id, picking_out_3.batch_id.id)
-        self.assertFalse(picking_out_2.batch_id)
+        self.assertTrue(picking_out_2.batch_id)
+        self.assertNotEqual(picking_out_2.batch_id.id, picking_out_1.batch_id.id)
         # If Picking 1 is validated without Picking 3, Picking 1 should be removed from the batch
         picking_out_1.move_ids.write({'quantity': 10, 'picked': True})
         picking_out_1.button_validate()

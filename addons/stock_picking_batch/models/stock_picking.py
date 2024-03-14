@@ -17,6 +17,15 @@ class StockPickingType(models.Model):
     batch_group_by_destination = fields.Boolean('Destination Country', help="Automatically group batches by destination country.")
     batch_group_by_src_loc = fields.Boolean('Source Location',
                                             help="Automatically group batches by their source location.")
+    batch_grouping = fields.Boolean(compute='_compute_batch_grouping')
+    wave_group_by_product = fields.Boolean('Product', help="Automatically group waves by products.")
+    wave_group_by_category = fields.Boolean('Product Category', help="Automatically group waves by product categories.")
+    wave_group_by_location = fields.Boolean('Location', help="Automatically group waves by locations.")
+    wave_location_ids = fields.Many2many('stock.location', help="Locations to consider when grouping waves.")
+    should_group_waves = fields.Selection([
+        ('partially_available', 'Partially Available'),
+        ('fully_available', 'Fully Available')], help='When to group waves', default='partially_available', required=True)
+    wave_grouping = fields.Boolean('Automatic Waves', compute='_compute_wave_grouping')
     batch_group_by_dest_loc = fields.Boolean('Destination Location',
                                              help="Automatically group batches by their destination location.")
     batch_max_lines = fields.Integer("Maximum lines per batch",
@@ -37,9 +46,20 @@ class StockPickingType(models.Model):
             record.count_picking_wave = count.get((record.id, True), 0)
             record.count_picking_batch = count.get((record.id, False), 0)
 
+    @api.depends('batch_group_by_partner', 'batch_group_by_destination', 'batch_group_by_src_loc', 'batch_group_by_dest_loc')
+    def _compute_batch_grouping(self):
+        for picking_type in self:
+            picking_type.batch_grouping = any(picking_type[key] for key in ['batch_group_by_partner', 'batch_group_by_destination', 'batch_group_by_src_loc', 'batch_group_by_dest_loc'])
+
+    @api.depends('wave_group_by_product', 'wave_group_by_category', 'wave_group_by_location')
+    def _compute_wave_grouping(self):
+        for picking_type in self:
+            picking_type.wave_grouping = any(picking_type[key] for key in ['wave_group_by_product', 'wave_group_by_category', 'wave_group_by_location'])
+
     @api.model
     def _get_batch_group_by_keys(self):
-        return ['batch_group_by_partner', 'batch_group_by_destination', 'batch_group_by_src_loc', 'batch_group_by_dest_loc']
+        return ['batch_group_by_partner', 'batch_group_by_destination', 'batch_group_by_src_loc', 'batch_group_by_dest_loc',
+                'wave_group_by_product', 'wave_group_by_category', 'wave_group_by_location']
 
     @api.constrains(lambda self: self._get_batch_group_by_keys() + ['auto_batch'])
     def _validate_auto_batch_group_by(self):
@@ -170,21 +190,28 @@ class StockPicking(models.Model):
 
         # If no batch were found, try to find a compatible picking and put them both in a new batch.
         possible_pickings = self.env['stock.picking'].search(self._get_possible_pickings_domain())
+        new_batch_data = {
+            'picking_ids': [Command.link(self.id)],
+            'company_id': self.company_id.id if self.company_id else False,
+            'picking_type_id': self.picking_type_id.id,
+            'description': self._get_new_batch_description()
+        }
         for picking in possible_pickings:
             if self._is_auto_batchable(picking):
-                # Create new batch with both pickings
-                new_batch = self.env['stock.picking.batch'].sudo().create({
-                    'picking_ids': [Command.link(self.id), Command.link(picking.id)],
-                    'company_id': self.company_id.id if self.company_id else False,
-                    'picking_type_id': self.picking_type_id.id,
-                    'description': self._get_new_batch_description()
-                })
+                # Add the picking to the new batch
+                new_batch_data['picking_ids'].append(Command.link(picking.id))
+                new_batch = self.env['stock.picking.batch'].sudo().create(new_batch_data)
                 if picking.picking_type_id.batch_auto_confirm:
                     new_batch.action_confirm()
                 return new_batch
 
-        # If nothing was found after those two steps, then no batch is doable given the conditions
-        return False
+        # If nothing was found after those two steps, then create a batch with the current picking alone only if one of
+        # the batch grouping criteria at least is activated.
+        if self.picking_type_id.batch_grouping:
+            new_batch = self.env['stock.picking.batch'].sudo().create(new_batch_data)
+            if self.picking_type_id.batch_auto_confirm:
+                new_batch.action_confirm()
+            return new_batch
 
     def _is_auto_batchable(self, picking=None):
         """ Verifies if a picking can be put in a batch with another picking without violating auto_batch constrains.
@@ -227,6 +254,7 @@ class StockPicking(models.Model):
             ('state', 'in', ('draft', 'in_progress') if self.picking_type_id.batch_auto_confirm else ('draft',)),
             ('picking_type_id', '=', self.picking_type_id.id),
             ('company_id', '=', self.company_id.id if self.company_id else False),
+            ('is_wave', '=', False)
         ]
         if self.picking_type_id.batch_group_by_partner:
             domain = expression.AND([domain, [('picking_ids.partner_id', '=', self.partner_id.id)]])
@@ -244,15 +272,15 @@ class StockPicking(models.Model):
         Get the description of the newly created batch based on the grouped pickings and grouping criteria
         """
         self.ensure_one()
-        description_items = set()
+        description_items = []
         if self.picking_type_id.batch_group_by_partner and self.partner_id:
-            description_items.add(self.partner_id.name)
+            description_items.append(self.partner_id.name)
         if self.picking_type_id.batch_group_by_destination and self.partner_id.country_id:
-            description_items.add(self.partner_id.country_id.name)
+            description_items.append(self.partner_id.country_id.name)
         if self.picking_type_id.batch_group_by_src_loc and self.location_id:
-            description_items.add(self.location_id.display_name)
+            description_items.append(self.location_id.display_name)
         if self.picking_type_id.batch_group_by_dest_loc and self.location_dest_id:
-            description_items.add(self.location_dest_id.display_name)
+            description_items.append(self.location_dest_id.display_name)
         return ', '.join(description_items)
 
     def assign_batch_user(self, user_id):

@@ -21,6 +21,12 @@ class StockPickingType(models.Model):
         for picking_type in self:
             picking_type.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
 
+    @api.depends('batch_group_by_carrier')
+    def _compute_batch_grouping(self):
+        super()._compute_batch_grouping()
+        for picking_type in self:
+            picking_type.batch_grouping |= picking_type.batch_group_by_carrier
+
     @api.model
     def _get_batch_group_by_keys(self):
         return super()._get_batch_group_by_keys() + ['batch_group_by_carrier']
