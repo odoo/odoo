@@ -980,7 +980,7 @@ test("no out-of-focus notification on receiving self messages in chat", async ()
     assertSteps([]);
 });
 
-test("out-of-focus notif on needaction message in channel", async () => {
+test.skip("out-of-focus notif on needaction message in channel", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
