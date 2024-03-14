@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
@@ -23,16 +25,32 @@ class MailActivityPlanTemplate(models.Model):
         domain="['|', ('res_model', '=', False), '&', ('res_model', '!=', False), ('res_model', '=', parent.res_model)]",
         ondelete='restrict', required=True
     )
+    # Activity type delay fields are ignored in favor of these
+    delay_count = fields.Integer(
+        'Interval', default=0,
+        help='Number of days/week/month before executing the action after or before the scheduled plan date.')
+    delay_unit = fields.Selection([
+        ('days', 'days'),
+        ('weeks', 'weeks'),
+        ('months', 'months')],
+        string="Delay units", help="Unit of delay", required=True, default='days')
+    delay_from = fields.Selection([
+        ('before_plan_date', 'Before Plan Date'),
+        ('after_plan_date', 'After Plan Date'),
+    ],
+        string='Trigger', default="before_plan_date", required=True)
+    icon = fields.Char('Icon', related='activity_type_id.icon', readonly=True)
     summary = fields.Char('Summary', compute="_compute_summary", store=True, readonly=False)
     responsible_type = fields.Selection([
         ('on_demand', 'Ask at launch'),
         ('other', 'Default user'),
-    ], default='on_demand', string='Assignment', required=True)
+    ], default='on_demand', string='Assignment', required=True,
+        compute="_compute_responsible_type", store=True, readonly=False)
     responsible_id = fields.Many2one(
         'res.users',
         'Assigned to',
-        check_company=True, store=True, compute="_compute_responsible_id", readonly=False)
-    note = fields.Html('Note')
+        check_company=True, compute="_compute_responsible_id", store=True, readonly=False)
+    note = fields.Html('Note', compute="_compute_note", store=True, readonly=False)
 
     @api.constrains('activity_type_id', 'plan_id')
     def _check_activity_type_res_model(self):
@@ -60,15 +78,38 @@ class MailActivityPlanTemplate(models.Model):
                 raise ValidationError(_('When selecting "Default user" assignment, you must specify a responsible.'))
 
     @api.depends('activity_type_id')
+    def _compute_note(self):
+        for template in self:
+            template.note = template.activity_type_id.default_note
+
+    @api.depends('activity_type_id', 'responsible_type')
+    def _compute_responsible_id(self):
+        for template in self:
+            template.responsible_id = template.activity_type_id.default_user_id
+            if template.responsible_type != 'other' and template.responsible_id:
+                template.responsible_id = False
+
+    @api.depends('activity_type_id')
+    def _compute_responsible_type(self):
+        for template in self:
+            if template.activity_type_id.default_user_id:
+                template.responsible_type = 'other'
+            else:
+                template.responsible_type = 'on_demand'
+
+    @api.depends('activity_type_id')
     def _compute_summary(self):
         for template in self:
             template.summary = template.activity_type_id.summary
 
-    @api.depends('responsible_type')
-    def _compute_responsible_id(self):
-        for template in self:
-            if template.responsible_type != 'other' and template.responsible_id:
-                template.responsible_id = False
+    def _get_date_deadline(self, base_date=False):
+        """ Return the deadline of the activity to be created given the base date. """
+        self.ensure_one()
+        base_date = base_date or fields.Date.context_today(self)
+        delta = relativedelta(**{self.delay_unit: self.delay_count})
+        if self.delay_from == 'after_plan_date':
+            return base_date + delta
+        return base_date - delta
 
     def _determine_responsible(self, on_demand_responsible, applied_on_record):
         """ Determine the responsible for the activity based on the template

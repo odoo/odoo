@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
 import logging
 import pytz
 
@@ -179,33 +180,10 @@ class MailActivity(models.Model):
         if self.activity_type_id:
             if self.activity_type_id.summary:
                 self.summary = self.activity_type_id.summary
-            self.date_deadline = self._calculate_date_deadline(self.activity_type_id)
+            self.date_deadline = self.activity_type_id._get_date_deadline()
             self.user_id = self.activity_type_id.default_user_id or self.env.user
             if self.activity_type_id.default_note:
                 self.note = self.activity_type_id.default_note
-
-    @api.model
-    def _calculate_date_deadline(self, activity_type, force_base_date=None):
-        """ Compute the activity deadline given its type, the force_base_date and the context.
-
-        The deadline is computed by adding the activity type delay to a base date defined as:
-        - the force_base_date
-        - or the activity_previous_deadline context value if the activity type delay_from is
-          previous_activity
-        - or the current date
-
-        :param activity_type: activity type
-        :param date force_base_date: if set, this force the base date for computation
-        """
-        if force_base_date:
-            # Date.context_today is correct because date_deadline is a Date and is meant to be
-            # expressed in user TZ
-            base = force_base_date
-        elif activity_type.delay_from == 'previous_activity' and 'activity_previous_deadline' in self.env.context:
-            base = fields.Date.from_string(self.env.context.get('activity_previous_deadline'))
-        else:
-            base = fields.Date.context_today(self)
-        return base + relativedelta(**{activity_type.delay_unit: activity_type.delay_count})
 
     @api.onchange('recommended_activity_type_id')
     def _onchange_recommended_activity_type_id(self):
@@ -487,6 +465,32 @@ class MailActivity(models.Model):
         """ Wrapper without feedback because web button add context as
         parameter, therefore setting context to feedback """
         return self.action_feedback()
+
+    def action_done_redirect_to_other(self):
+        """ Mark activity as done and return action mail.mail_activity_without_access_action.
+
+        Goal: Unless "keep done" activity is enabled, when marking an activity as done,
+        the activity is deleted and can no more be displayed. To overcome this, we return
+        an action that will launch the list view displaying the activities corresponding
+        to the active_ids from the context (i.e.: the remaining "other activities"). If the
+        right context is not available, we recompute the activities to display.
+        """
+        self.action_done()
+        action = self.env["ir.actions.actions"]._for_xml_id('mail.mail_activity_without_access_action')
+        action_context = literal_eval(action.get('context', '{}'))
+        if self.env.context.get('active_model') == 'mail.activity':
+            active_ids = self.env.context.get('active_ids', [])
+        else:
+            # Wrong context -> we recompute the activities for which the user has no access to the underlying record
+            activity_groups = self.env['res.users']._get_activity_groups()
+            activity_model_id = self.env['ir.model']._get_id('mail.activity')
+            active_ids = next((g['activity_ids'] for g in activity_groups if g['id'] == activity_model_id), [])
+        action['context'] = {
+            **action_context,
+            'active_ids': active_ids,
+            'active_model': 'mail.activity',
+        }
+        return action
 
     def action_feedback(self, feedback=False, attachment_ids=None):
         messages, _next_activities = self.with_context(

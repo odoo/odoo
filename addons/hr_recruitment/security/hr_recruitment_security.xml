@@ -79,4 +79,20 @@
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
     </record>
+
+    <record id="mail_plan_rule_group_hr_recruitment_manager_applicant" model="ir.rule">
+        <field name="name">Manager can manage applicant plans</field>
+        <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
+        <field name="model_id" ref="mail.model_mail_activity_plan"/>
+        <field name="domain_force">[('res_model', '=', 'hr.applicant')]</field>
+        <field name="perm_read" eval="False"/>
+    </record>
+
+    <record id="mail_plan_templates_rule_group_hr_recruitment_manager_applicant" model="ir.rule">
+        <field name="name">Manager can manage applicant plan templates</field>
+        <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
+        <field name="model_id" ref="mail.model_mail_activity_plan_template"/>
+        <field name="domain_force">[('plan_id.res_model', '=', 'hr.applicant')]</field>
+        <field name="perm_read" eval="False"/>
+    </record>
 </odoo>

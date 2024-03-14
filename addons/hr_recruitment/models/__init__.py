@@ -14,3 +14,4 @@ from . import utm_campaign
 from . import utm_source
 from . import res_users
 from . import ir_ui_menu
+from . import mail_activity_plan
