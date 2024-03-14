@@ -289,3 +289,21 @@ class Pricelist(models.Model):
                 '\n'.join(linked_items.base_pricelist_id.mapped('display_name')),
                 '\n'.join(linked_items.pricelist_id.mapped('display_name'))
             ))
+
+    def write(self, values):
+        """
+        Overriding to correctly assign applied on when records are imported
+        """
+        if values.get('item_ids'):
+            for item in values['item_ids']:
+                item_list = list(item)
+                item_values = item_list[2]
+                if item_values and isinstance(item_values, dict):
+                    if item_values.get('product_id'):
+                        item_values.update(dict(applied_on='0_product_variant'))
+                    elif item_values.get('product_tmpl_id'):
+                        item_values.update(dict(applied_on='1_product'))
+                    elif item_values.get('categ_id'):
+                        item_values.update(dict(applied_on='2_product_category'))
+                    item = tuple(item_list)
+        return super().write(values)
