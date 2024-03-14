@@ -583,3 +583,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_mobile_order_with_drag_and_drop(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_mobile_order_with_drag_and_drop', login='admin')
+
+    def test_focus_on_input_search(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'focus_on_input_search', login='admin')

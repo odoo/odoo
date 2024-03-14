@@ -63,6 +63,7 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
         this.dialog = useService("dialog");
         this.websiteService = useService("website");
         this._notActivableElementsSelector += ', .o_mega_menu_toggle';
+        this.searchInput = useRef("search-input");
 
         onWillStart(async () => {
             this.isDesigner = await user.hasGroup("website.group_website_designer");
@@ -75,6 +76,19 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
                 this.state.hasAnimatedText = !!this.getEditableArea().find('.o_animated_text').length;
             },
             () => [this.state.isTextAnimated],
+        );
+
+        // Focus the search input depending on the current tab.
+        useEffect(
+            (currentTab) => {
+                if (currentTab === weSnippetEditor.SnippetsMenu.tabs.BLOCKS) {
+                    requestAnimationFrame(() => this.searchInput.el.focus());
+                } else {
+                    // Clear the search input when switching to another tab.
+                    this.state.search = "";
+                }
+            },
+            () => [this.state.currentTab]
         );
     }
     /**
