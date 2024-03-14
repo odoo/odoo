@@ -8,7 +8,7 @@
             </attribute>
         </div>
         <div name="ptal" position="after">
-            <t t-elif="isSelectedPTAVCustom() || this.props.create_variant == 'no_variant'">
+            <t t-elif="isSelectedPTAVCustom() || this.props.create_variant === 'no_variant'">
                 <div t-out="getReadOnlyPtal()" class="text-muted small"/>
             </t>
         </div>
