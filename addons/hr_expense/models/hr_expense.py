@@ -480,7 +480,7 @@ class HrExpense(models.Model):
     def _check_payment_mode(self):
         self.sheet_id._check_payment_mode()
 
-    def _convert_to_tax_base_line_dict(self, base_line=None, currency=None, price_unit=None, quantity=None):
+    def _convert_to_tax_base_line_dict(self, base_line=None, currency=None, price_unit=None, quantity=None, account=None):
         self.ensure_one()
         return self.env['account.tax']._convert_to_tax_base_line_dict(
             base_line,
@@ -489,7 +489,7 @@ class HrExpense(models.Model):
             taxes=self.tax_ids,
             price_unit=price_unit or self.total_amount,
             quantity=quantity if quantity is not None else 1,
-            account=self.account_id,
+            account=account or self.account_id,
             analytic_distribution=self.analytic_distribution,
             extra_context={'force_price_include': True},
         )
@@ -813,7 +813,7 @@ class HrExpense(models.Model):
             raise UserError(_("You need to add a manual payment method on the journal (%s)", journal.name))
         move_lines = []
         tax_data = self.env['account.tax']._compute_taxes(
-            [self._convert_to_tax_base_line_dict(price_unit=self.total_amount_currency, currency=self.currency_id)],
+            [self._convert_to_tax_base_line_dict(price_unit=self.total_amount_currency, currency=self.currency_id, account=self._get_base_account())],
             self.company_id,
         )
         rate = abs(self.total_amount_currency / self.total_amount) if self.total_amount else 1.0
@@ -879,16 +879,43 @@ class HrExpense(models.Model):
                 for attachment in self.message_main_attachment_id]
         }
 
+    def _get_base_account(self):
+        """
+        Returns the expense account or forces default values if none was found
+        We need to do this as the installation process may delete the original account, and it doesn't recompute properly after
+        Returned expense accounts are the first expense account encountered in the following list:
+        1. expense account of the expense itself
+        2. expense account of the product
+        3. expense account of the product category
+        4. expense account on the purchase journal for employee expense
+        """
+
+        # expense account of the expense itself
+        account = self.account_id
+
+        if account:
+            return account
+
+        # expense account of the product then the product category
+        if self.product_id:
+            account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
+        else:
+            account = self.env['ir.property']._get('property_account_expense_categ_id', 'product.category')
+
+        if account:
+            return account
+
+        # expense account on the purchase journal for employee expense
+        journal = self.sheet_id.journal_id
+        if journal.type == 'purchase':
+            account = journal.default_account_id
+
+        return account
+
     def _prepare_move_lines_vals(self):
         self.ensure_one()
-        account = self.account_id
-        if not account:
-            # We need to do this as the installation process may delete the original account, and it doesn't recompute properly after.
-            # This forces the default values if none is found
-            if self.product_id:
-                account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
-            else:
-                account = self.env['ir.property']._get('property_account_expense_categ_id', 'product.category')
+        account = self._get_base_account()
+
         expense_name = self.name.split('\n')[0][:64]
         return {
             'name': f'{self.employee_id.name}: {expense_name}',
