@@ -4,6 +4,7 @@ import { isVisible } from "@web/core/utils/ui";
 import { Deferred, tick } from "@odoo/hoot-mock";
 import { __debug__, after, afterAll, beforeAll, expect, getFixture } from "@odoo/hoot";
 import { isMacOS } from "@web/core/browser/feature_detection";
+import { queryAll, queryFirst } from "@odoo/hoot-dom";
 
 /** @param {EventInit} [args] */
 const mapBubblingEvent = (args) => ({ ...args, bubbles: true });
@@ -828,10 +829,10 @@ class Contains {
             return;
         }
         let elems;
-        if (target === getFixture() && document.querySelector(this.selector) === target) {
+        if (target === getFixture() && queryFirst(this.selector) === target) {
             elems = [target];
         } else {
-            elems = [...target.querySelectorAll(this.selector)];
+            elems = [...queryAll(this.selector, { root: target })];
         }
         const baseRes = elems
             .map((el) => (this.options.shadowRoot ? el.shadowRoot : el))

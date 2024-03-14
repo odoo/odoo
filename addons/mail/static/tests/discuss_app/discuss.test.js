@@ -56,7 +56,7 @@ test("sanity check", async () => {
         '/mail/inbox/messages - {"limit":30}',
     ]);
     await contains(".o-mail-DiscussSidebar");
-    await contains("h4", { text: "Your inbox is empty" });
+    await contains("h4:contains(Your inbox is empty)");
 });
 
 test("can change the thread name of #general [REQUIRE FOCUS]", async () => {
@@ -74,12 +74,12 @@ test("can change the thread name of #general [REQUIRE FOCUS]", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input:focus");
-    await contains("input.o-mail-Discuss-threadName", { value: "general" });
+    await contains("input.o-mail-Discuss-threadName:value(general)");
     await insertText("input.o-mail-Discuss-threadName:enabled", "special", { replace: true });
     triggerHotkey("Enter");
     await assertSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
-    await contains(".o-mail-DiscussSidebarChannel", { text: "special" });
-    await contains("input.o-mail-Discuss-threadName", { value: "special" });
+    await contains(".o-mail-DiscussSidebarChannel:contains(special)");
+    await contains("input.o-mail-Discuss-threadName:value(special)");
 });
 
 test("can active change thread from messaging menu", async () => {
@@ -90,12 +90,12 @@ test("can active change thread from messaging menu", async () => {
     ]);
     await start();
     await openDiscuss(teamId);
-    await contains(".o-mail-DiscussSidebar-item", { text: "general" });
-    await contains(".o-mail-DiscussSidebar-item.o-active", { text: "team" });
+    await contains(".o-mail-DiscussSidebar-item:contains(general)");
+    await contains(".o-mail-DiscussSidebar-item.o-active:contains(team)");
     await click(".o_main_navbar i[aria-label='Messages']");
-    await click(".o-mail-DiscussSidebar-item", { text: "general" });
-    await contains(".o-mail-DiscussSidebar-item.o-active", { text: "general" });
-    await contains(".o-mail-DiscussSidebar-item", { text: "team" });
+    await click(".o-mail-DiscussSidebar-item:contains(general)");
+    await contains(".o-mail-DiscussSidebar-item.o-active:contains(general)");
+    await contains(".o-mail-DiscussSidebar-item:contains(team)");
 });
 
 test("can change the thread description of #general [REQUIRE FOCUS]", async () => {
@@ -114,17 +114,13 @@ test("can change the thread description of #general [REQUIRE FOCUS]", async () =
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input:focus");
-    await contains("input.o-mail-Discuss-threadDescription", {
-        value: "General announcements...",
-    });
+    await contains("input.o-mail-Discuss-threadDescription:value(General announcements...)");
     await insertText("input.o-mail-Discuss-threadDescription:enabled", "I want a burger today!", {
         replace: true,
     });
     triggerHotkey("Enter");
     await assertSteps(["/web/dataset/call_kw/discuss.channel/channel_change_description"]);
-    await contains("input.o-mail-Discuss-threadDescription", {
-        value: "I want a burger today!",
-    });
+    await contains("input.o-mail-Discuss-threadDescription:value(I want a burger today!)");
 });
 
 test("Message following a notification should not be squashed", async () => {
@@ -143,7 +139,7 @@ test("Message following a notification should not be squashed", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello world!");
-    await click(".o-mail-Composer button:enabled", { text: "Send" });
+    await click(".o-mail-Composer button:enabled:contains(Send)");
     await contains(".o-mail-Message-sidebar .o-mail-Message-avatarContainer");
 });
 
