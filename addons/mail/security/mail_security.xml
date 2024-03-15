@@ -276,4 +276,32 @@
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
+
+        <record id="ir_rule_mail_canned_response_admin" model="ir.rule">
+            <field name="name">Canned response: admin can do all</field>
+            <field name="model_id" ref="model_mail_canned_response"/>
+            <field name="groups" eval="[Command.link(ref('group_mail_canned_response_admin'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- Internal user: rationale is that they read their own or the one belonging to
+        their user groups. They can modify only their own -->
+        <record id="ir_rule_mail_canned_response_user_read" model="ir.rule">
+            <field name="name">Canned response: User read: own or in groups</field>
+            <field name="model_id" ref="model_mail_canned_response"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="domain_force">['|', ('create_uid', '=', user.id), ('group_ids', 'in', user.groups_id.ids)]</field>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record id="ir_rule_mail_canned_response_user_update" model="ir.rule">
+            <field name="name">Canned response: User write/unlink: own only</field>
+            <field name="model_id" ref="model_mail_canned_response"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="False"/>
+        </record>
+
 </odoo>

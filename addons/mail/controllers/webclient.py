@@ -89,5 +89,10 @@ class WebclientController(http.Controller):
             })
         if kwargs.get("canned_responses"):
             field_names = ["source", "substitution"]
-            canned_responses = request.env["mail.shortcode"].sudo().search_read([], field_names)
+            domain = [
+                "|",
+                ("create_uid", "=", request.env.user.id),
+                ("group_ids", "in", request.env.user.groups_id.ids),
+            ]
+            canned_responses = request.env["mail.canned.response"].search_read(domain, field_names)
             store.add({"CannedResponse": canned_responses})
