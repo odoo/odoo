@@ -1,19 +1,28 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< saas-18.1
 from odoo import _, api, fields, models
+<<<<<<< saas-18.2
 from odoo.tools import groupby
+||||||| 7e236c726ce1a8f5af5a46a73118747de3695678
+=======
+||||||| 1e7d7b83814c17933e15eaed75e0ba7233491247
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+=======
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.tools import groupby
+>>>>>>> 577e1d52c0c606762a35b603eac907bac6000f76
+>>>>>>> 02a441732fc597eb7de8f199884ee0b73c6bf286
 
 
 class AccountMove(models.Model):
     _name = 'account.move'
     _inherit = ['account.move', 'utm.mixin']
 
-    @api.model
-    def _get_invoice_default_sale_team(self):
-        return self.env['crm.team']._get_default_team_id()
-
     team_id = fields.Many2one(
-        'crm.team', string='Sales Team', default=_get_invoice_default_sale_team,
+        'crm.team', string='Sales Team',
         compute='_compute_team_id', store=True, readonly=False,
         ondelete="set null", tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
@@ -38,8 +47,20 @@ class AccountMove(models.Model):
             sale_moves,
             key=lambda m: (m.invoice_user_id.id, m.company_id.id)
         ):
+<<<<<<< saas-18.2
             self.env['account.move'].concat(*moves).team_id = self.env['crm.team'].with_context(
                 allowed_company_ids=[company_id],
+||||||| 7e236c726ce1a8f5af5a46a73118747de3695678
+        for move in self:
+            if not move.invoice_user_id.sale_team_id or not move.is_sale_document(include_receipts=True):
+                continue
+            move.team_id = self.env['crm.team']._get_default_team_id(
+                user_id=move.invoice_user_id.id,
+                domain=[('company_id', '=', move.company_id.id)])
+=======
+            self.concat(*moves).team_id = self.env['crm.team'].with_context(
+                allowed_company_ids=[company_id]
+>>>>>>> 02a441732fc597eb7de8f199884ee0b73c6bf286
             )._get_default_team_id(
                 user_id=user_id,
             )
