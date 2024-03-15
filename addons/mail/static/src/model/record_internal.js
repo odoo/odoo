@@ -217,10 +217,18 @@ export class RecordInternal {
         this.fieldsSortOnNeed.delete(fieldName);
         this.fieldsSorting.set(fieldName, true);
         const proxy2Sort = this.fieldsSortProxy2.get(fieldName);
-        store._.sortRecordList(
-            proxy2Sort._fieldsValue.get(fieldName)._proxy,
-            Model._.fieldsSort.get(fieldName).bind(proxy2Sort)
-        );
+        const func = Model._.fieldsSort.get(fieldName).bind(proxy2Sort);
+        if (isRelation(Model, fieldName)) {
+            store._.sortRecordList(proxy2Sort._fieldsValue.get(fieldName)._proxy, func);
+        } else {
+            // sort on copy of list so that reactive observers not triggered while sorting
+            const copy = [...proxy2Sort[fieldName]];
+            copy.sort(func);
+            const hasChanged = copy.some((item, index) => item !== record[fieldName][index]);
+            if (hasChanged) {
+                proxy2Sort[fieldName] = copy;
+            }
+        }
         this.fieldsSorting.delete(fieldName);
     }
     onUpdate(record, fieldName) {
