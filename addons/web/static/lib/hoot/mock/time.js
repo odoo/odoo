@@ -140,6 +140,13 @@ let timeOffset = 0;
 //-----------------------------------------------------------------------------
 
 /**
+ * @param {number} [frameCount]
+ */
+export async function advanceFrame(frameCount) {
+    return advanceTime(frameDelay * Math.max(1, frameCount));
+}
+
+/**
  * Advances the current time by the given amount of milliseconds. This will
  * affect all timeouts, intervals, animations and date objects.
  *
@@ -149,7 +156,6 @@ let timeOffset = 0;
  * @returns {Promise<number>} time consumed by timers (in ms).
  */
 export async function advanceTime(ms) {
-    const results = [];
     const sortedTimers = [...timers.values()]
         .map(([handler, init, delay]) => [handler, init + delay])
         .sort((a, b) => a[1] - b[1]);
@@ -161,22 +167,21 @@ export async function advanceTime(ms) {
         if (timeout <= currentTs) {
             // Should have already been triggered
             // => simply triggers the handler
-            results.push(handler());
+            handler();
         } else if (timeout <= currentTs + ms) {
             // Will trigger after ms diff
             // => advances time
             const diff = timeout - currentTs;
             timeOffset += diff;
             ms = Math.max(ms - diff, 0);
-            results.push(handler());
+            handler();
         }
     }
 
     timeOffset += ms;
 
     // Waits for callbacks to execute
-    await Promise.all(results);
-    await delay(1);
+    await animationFrame();
 
     return baseMs;
 }
@@ -282,9 +287,12 @@ export function mockedRequestAnimationFrame(callback) {
         return 0;
     }
 
-    const handler = () => {
+    /**
+     * @param {number} delta
+     */
+    const handler = (delta) => {
         mockedCancelAnimationFrame(handle);
-        return callback(now() - animationValues[1]);
+        return callback(delta ?? now() - animationValues[1]);
     };
 
     const animationValues = [handler, now(), frameDelay];

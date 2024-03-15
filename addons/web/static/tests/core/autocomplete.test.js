@@ -110,7 +110,6 @@ test("autocomplete with resetOnSelect='true'", async () => {
 
     await contains(".o-autocomplete input").edit("Blip", { confirm: false });
     await runAllTimers();
-    await animationFrame();
     await contains(queryLast(".o-autocomplete--dropdown-item")).click();
     expect(".test_value").toHaveText("Hello");
     expect(".o-autocomplete input").toHaveValue("");
@@ -135,7 +134,6 @@ test("open dropdown on input", async () => {
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
     await contains(".o-autocomplete input").fill("a", { confirm: false });
     await runAllTimers();
-    await animationFrame();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
 });
 
@@ -157,7 +155,6 @@ test("close dropdown on escape keydown", async () => {
 
     await contains(".o-autocomplete input").click();
     await runAllTimers();
-    await animationFrame();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
 
     await contains(".o-autocomplete input").press("Escape");
@@ -176,7 +173,6 @@ test("select input text on first focus", async () => {
     await mountWithCleanup(Parent);
     await contains(".o-autocomplete input").click();
     await runAllTimers();
-    await animationFrame();
     expect(getSelection().toString()).toBe("Bar");
 });
 
@@ -202,11 +198,9 @@ test("scroll outside should close dropdown", async () => {
 
     await contains(".o-autocomplete input").click();
     await runAllTimers();
-    await animationFrame();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
 
     await contains(".autocomplete_container").scroll({ top: 10 });
-    await animationFrame();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
 });
 
@@ -232,11 +226,9 @@ test("scroll inside should keep dropdown open", async () => {
 
     await contains(".o-autocomplete input").click();
     await runAllTimers();
-    await animationFrame();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
 
     await contains(".o-autocomplete .dropdown-menu").scroll({ top: 10 });
-    await animationFrame();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
 });
 
@@ -258,7 +250,6 @@ test("losing focus should close dropdown", async () => {
 
     await contains(".o-autocomplete input").click();
     await runAllTimers();
-    await animationFrame();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
 
     await contains(document.body).click();
@@ -293,7 +284,6 @@ test("open twice should not display previous results", async () => {
 
     await contains(".o-autocomplete input").click();
     await runAllTimers();
-    await animationFrame();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
     expect(".o-autocomplete--dropdown-item").toHaveCount(1);
     expect(".o-autocomplete--dropdown-item .fa-spin").toHaveCount(1); // loading
@@ -306,12 +296,10 @@ test("open twice should not display previous results", async () => {
     def = new Deferred();
     await contains(".o-autocomplete input").fill("A", { confirm: false });
     await runAllTimers();
-    await animationFrame();
     expect(".o-autocomplete--dropdown-item").toHaveCount(1);
     expect(".o-autocomplete--dropdown-item .fa-spin").toHaveCount(1); // loading
     def.resolve();
     await runAllTimers();
-    await animationFrame();
     expect(".o-autocomplete--dropdown-item").toHaveCount(2);
     expect(".fa-spin").toHaveCount(0);
 
@@ -322,7 +310,6 @@ test("open twice should not display previous results", async () => {
     def = new Deferred();
     await contains(".o-autocomplete input").click();
     await runAllTimers();
-    await animationFrame();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
     expect(".o-autocomplete--dropdown-item").toHaveCount(1);
     expect(".o-autocomplete--dropdown-item .fa-spin").toHaveCount(1); // loading
@@ -347,7 +334,6 @@ test("press enter on autocomplete with empty source", async () => {
     // click inside the input and press "enter", because why not
     await contains(".o-autocomplete input").click();
     await runAllTimers();
-    await animationFrame();
     await contains(".o-autocomplete input").press("Enter");
 
     expect(".o-autocomplete input").toHaveCount(1);
@@ -380,13 +366,11 @@ test("press enter on autocomplete with empty source (2)", async () => {
 
     await contains(".o-autocomplete input").edit("test", { confirm: false });
     await runAllTimers();
-    await animationFrame();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
     expect(".o-autocomplete .dropdown-menu .o-autocomplete--dropdown-item").toHaveCount(3);
 
     await contains(".o-autocomplete input").edit("t", { confirm: false });
     await runAllTimers();
-    await animationFrame();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
 
     await contains(".o-autocomplete input").press("Enter");
@@ -440,7 +424,6 @@ test.tags("desktop")("autocomplete in edition keep edited value before select op
     await mountWithCleanup(Parent);
     await contains(".o-autocomplete input").edit("Yolo", { confirm: false });
     await runAllTimers();
-    await animationFrame();
     expect(".o-autocomplete input").toHaveValue("Yolo");
 
     // We want to simulate an external value edition (like a delayed onChange)
@@ -450,7 +433,6 @@ test.tags("desktop")("autocomplete in edition keep edited value before select op
     // Leave inEdition mode when selecting an option
     await contains(".o-autocomplete input").click();
     await runAllTimers();
-    await animationFrame();
     await contains(queryFirst(".o-autocomplete--dropdown-item")).click();
     expect(".o-autocomplete input").toHaveValue("My Selection");
 
@@ -483,7 +465,6 @@ test.tags("desktop")("autocomplete in edition keep edited value before blur", as
     await mountWithCleanup(Parent);
     await contains(".o-autocomplete input").edit("", { confirm: false });
     await runAllTimers();
-    await animationFrame();
     expect(".o-autocomplete input").toHaveValue("");
 
     // We want to simulate an external value edition (like a delayed onChange)
@@ -544,7 +525,6 @@ test("correct sequence of blur, focus and select", async () => {
     // Start typing hello and click on the result
     await contains(".o-autocomplete input").edit("h", { confirm: false });
     await runAllTimers();
-    await animationFrame();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
     await contains(queryLast(".o-autocomplete--dropdown-item")).click();
     expect(["change", "select Hello"]).toVerifySteps();
@@ -553,7 +533,6 @@ test("correct sequence of blur, focus and select", async () => {
     // Clear input and focus out
     await contains(".o-autocomplete input").edit("", { confirm: false });
     await runAllTimers();
-    await animationFrame();
     await contains(document.body).click();
     expect(["blur", "change"]).toVerifySteps();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
