@@ -834,6 +834,18 @@ async function processRequest(request) {
             Thread: DiscussChannel._channel_info(channels.map((channel) => channel.id)),
         });
     }
+    if (args.canned_responses) {
+        const domain = [
+            "|",
+            ["create_uid", "=", this.env.user.id],
+            ["group_ids", "in", this.env.user.groups_id.map((group) => group.id)],
+        ];
+        addToRes(res, {
+            CannedResponse: this.env["mail.canned.response"].search_read(domain, {
+                fields: ["source", "substitution"],
+            }),
+        });
+    }
     return res;
 }
 

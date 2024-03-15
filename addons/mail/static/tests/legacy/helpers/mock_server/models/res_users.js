@@ -62,9 +62,6 @@ patch(MockServer.prototype, {
             ["partner_id", "=", user.partner_id],
         ]);
         return {
-            CannedResponse: this.pyEnv["mail.shortcode"].search_read([], {
-                fields: ["source", "substitution"],
-            }),
             Store: {
                 discuss: {
                     inbox: {
