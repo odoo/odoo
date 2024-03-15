@@ -63,7 +63,9 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).action_post()
 
         # We cannot change lines content on locked SO, changes on invoices are not forwarded to the SO if the SO is locked
-        downpayment_lines = self.line_ids.sale_line_ids.filtered(lambda l: l.is_downpayment and not l.display_type and not l.order_id.locked)
+        dp_lines = self.line_ids.sale_line_ids.filtered(lambda l: l.is_downpayment and not l.display_type)
+        dp_lines._compute_name()  # Update the description of DP lines (Draft -> Posted)
+        downpayment_lines = dp_lines.filtered(lambda sol: not sol.order_id.locked)
         other_so_lines = downpayment_lines.order_id.order_line - downpayment_lines
         real_invoices = set(other_so_lines.invoice_lines.move_id)
         for so_dpl in downpayment_lines:
