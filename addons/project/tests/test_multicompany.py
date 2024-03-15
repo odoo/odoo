@@ -352,10 +352,9 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
         })
         self.assertFalse(task.company_id, "Creating a task in a project without company set its company_id to False.")
 
-        with self.debug_mode():
-            task_form = Form(task)
-            task_form.company_id = self.company_a
-            task = task_form.save()
+        task_form = Form(task)
+        task_form.company_id = self.company_a
+        task = task_form.save()
         self.assertFalse(project.company_id, "Setting a new company on a task should not update the company of its project.")
         self.assertEqual(task.company_id, self.company_a, "The company of the task should have been updated.")
 
@@ -364,10 +363,9 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
         self.assertEqual(task.company_id, self.company_b, "The company of the task should have been updated.")
 
 
-        with self.debug_mode():
-            task_form = Form(task)
-            task_form.company_id = self.company_a
-            task = task_form.save()
+        task_form = Form(task)
+        task_form.company_id = self.company_a
+        task = task_form.save()
         self.assertEqual(task.company_id, self.company_a, "The company of the task should have been updated.")
         self.assertFalse(task.project_id, "The task should now be a private task.")
         self.assertEqual(project.company_id, self.company_b, "the company of the project should not have been updated.")
@@ -421,19 +419,18 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
                 self.assertEqual(task.company_id, self.project_company_b.company_id, "The company of the subtask should be the one from its project, and not from its parent.")
 
                 # For `parent_id` to  be visible in the view, you need
-                # 1. The debug mode
+                # 1. The advanced mode
                 # <field name="parent_id"/>
                 view = self.env.ref('project.view_task_form2').sudo()
                 tree = etree.fromstring(view.arch)
                 for node in tree.xpath('//field[@name="parent_id"][@invisible]'):
                     node.attrib.pop('invisible')
                 view.arch = etree.tostring(tree)
-                with self.debug_mode():
-                    with Form(self.task_2) as task_form:
-                        task_form.name = 'Test Task 2 becomes child of Task 1 (other company)'
-                        task_form.parent_id = self.task_1
-                        task_form.project_id = self.env['project.project']
-                    task = task_form.save()
+                with Form(self.task_2) as task_form:
+                    task_form.name = 'Test Task 2 becomes child of Task 1 (other company)'
+                    task_form.parent_id = self.task_1
+                    task_form.project_id = self.env['project.project']
+                task = task_form.save()
 
                 self.assertEqual(task.project_id, task.parent_id.project_id, "The subtask should have the same project as its parents")
                 self.assertEqual(task.company_id, task.parent_id.company_id, "The company of the subtask should be the one from its parent when no project is set.")
@@ -441,7 +438,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
     def test_cross_subtask_project(self):
 
         # For `parent_id` to  be visible in the view, you need
-        # 1. The debug mode
+        # 1. The advanced mode
         # <field name="parent_id"/>
         view = self.env.ref('project.view_task_form2').sudo()
         tree = etree.fromstring(view.arch)
@@ -451,12 +448,11 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
 
         with self.sudo('employee-a'):
             with self.allow_companies([self.company_a.id, self.company_b.id]):
-                with self.debug_mode():
-                    with Form(self.env['project.task'].with_context({'tracking_disable': True})) as task_form:
-                        task_form.name = 'Test Subtask in company B'
-                        task_form.parent_id = self.task_1
+                with Form(self.env['project.task'].with_context({'tracking_disable': True})) as task_form:
+                    task_form.name = 'Test Subtask in company B'
+                    task_form.parent_id = self.task_1
 
-                    task = task_form.save()
+                task = task_form.save()
 
                 self.assertEqual(task.project_id, task.parent_id.project_id, "The subtask should have the same project as its parents")
                 self.assertEqual(task.company_id, task.parent_id.company_id, "The company of the subtask should be the one from its parent.")

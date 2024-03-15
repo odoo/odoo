@@ -403,27 +403,6 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
             self.env = self.env(user=self.uid)
 
     @contextmanager
-    def debug_mode(self):
-        """ Enable the effects of debug mode. """
-        request = Mock(
-            httprequest=Mock(host='localhost'),
-            db=self.env.cr.dbname,
-            env=self.env,
-            session=DotDict(odoo.http.get_default_session(), debug='1'),
-        )
-        try:
-            self.env.flush_all()
-            self.env.invalidate_all()
-            odoo.http._request_stack.push(request)
-            yield
-            self.env.flush_all()
-            self.env.invalidate_all()
-        finally:
-            popped_request = odoo.http._request_stack.pop()
-            if popped_request is not request:
-                raise Exception('Wrong request stack cleanup.')
-
-    @contextmanager
     def _assertRaises(self, exception, *, msg=None):
         """ Context manager that clears the environment upon failure. """
         with ExitStack() as init:

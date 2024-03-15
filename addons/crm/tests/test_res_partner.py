@@ -34,8 +34,7 @@ class TestPartner(TestCrmCommon):
 
         # test form tool
         # <field name="team_id"/>
-        with self.debug_mode():
-            partner_form = Form(self.env['res.partner'], 'base.view_partner_form')
+        partner_form = Form(self.env['res.partner'], 'base.view_partner_form')
         partner_form.parent_id = contact_company
         partner_form.company_type = 'person'
         partner_form.name = 'Hermes Conrad'
@@ -47,8 +46,7 @@ class TestPartner(TestCrmCommon):
 
         # test form tool
         # <field name="team_id"/>
-        with self.debug_mode():
-            partner_form = Form(self.env['res.partner'], 'base.view_partner_form')
+        partner_form = Form(self.env['res.partner'], 'base.view_partner_form')
         # `parent_id` is invisible when `is_company` is True (`company_type == 'company'`)
         # and parent_id is not set
         # So, set a temporary `parent_id` before setting the contact as company

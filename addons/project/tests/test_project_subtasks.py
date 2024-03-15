@@ -123,28 +123,27 @@ class TestProjectSubtasks(TestProjectCommon):
         self.assertEqual(self.task_1.project_id, self.project_pigs, "Parent project should change back.")
         self.assertEqual(self.task_1.child_ids.project_id, self.project_goats, "The project of the subtask should have the one set by the user")
 
-        # Debug mode required for `parent_id` to be visible in the view
-        with self.debug_mode():
-            # 6)
-            with Form(self.task_1.child_ids.with_context({'tracking_disable': True})) as subtask_form:
-                subtask_form.parent_id = self.env['project.task']
+        # advanced mode required for `parent_id` to be visible in the view
+        # 6)
+        with Form(self.task_1.child_ids.with_context({'tracking_disable': True})) as subtask_form:
+            subtask_form.parent_id = self.env['project.task']
             orphan_subtask = subtask_form.save()
 
             self.assertEqual(orphan_subtask.project_id, self.project_goats, "The project of the orphan task should stay the same even if it no longer has a parent task")
             self.assertFalse(orphan_subtask.parent_id, "Parent should be false")
 
-            # 7)
-            with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
-                with task_form.child_ids.new() as child_task_form:
-                    child_task_form.name = 'Test Subtask 1'
-                    child_task_form.project_id = self.project_goats
-            with Form(self.task_1.child_ids.with_context({'tracking_disable': True})) as subtask_form:
-                subtask_form.project_id = self.env['project.project']
-                subtask_form.parent_id = self.env['project.task']
-            orphan_subtask = subtask_form.save()
+        # 7)
+        with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
+            with task_form.child_ids.new() as child_task_form:
+                child_task_form.name = 'Test Subtask 1'
+                child_task_form.project_id = self.project_goats
+        with Form(self.task_1.child_ids.with_context({'tracking_disable': True})) as subtask_form:
+            subtask_form.project_id = self.env['project.project']
+            subtask_form.parent_id = self.env['project.task']
+        orphan_subtask = subtask_form.save()
 
-            self.assertFalse(orphan_subtask.project_id, "The project should be removed as expected.")
-            self.assertFalse(orphan_subtask.project_id, "The Parent should be removed as expected.")
+        self.assertFalse(orphan_subtask.project_id, "The project should be removed as expected.")
+        self.assertFalse(orphan_subtask.project_id, "The Parent should be removed as expected.")
 
     def test_subtask_stage(self):
         """
