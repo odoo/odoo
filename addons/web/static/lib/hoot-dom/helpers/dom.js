@@ -1773,7 +1773,7 @@ export async function waitUntil(predicate, options) {
 
     let disconnect = () => {};
     return new Promise((resolve, reject) => {
-        const timeout = Math.floor(options?.timeout ?? 1_000);
+        const timeout = Math.floor(options?.timeout ?? 200);
         let message = options?.message || `'waitUntil' timed out after %timeout% milliseconds`;
         if (typeof message === "function") {
             message = message();
