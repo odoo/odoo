@@ -121,7 +121,7 @@ const mockEventListeners = (target) => {
                     return originalCallback(...args);
                 };
             }
-            registerListener(listeners, type, callback);
+            registerListener(listeners, type, callback, options);
         }
         return addEventListener.call(target, type, callback, options);
     };
@@ -143,12 +143,14 @@ const mockEventListeners = (target) => {
  * @param {EventTarget} target
  * @param {string} type
  * @param {EventListener} callback
+ * @param {AddEventListenerOptions} options
  */
-const registerListener = (listeners, type, callback) => {
+const registerListener = (listeners, type, callback, options) => {
     if (!listeners[type]) {
         listeners[type] = new Set();
     }
     listeners[type].add(callback);
+    optionsMap.set(callback, options);
 };
 
 /**
@@ -173,7 +175,9 @@ export const mockLocation = new MockLocation();
 
 /** @type {{ descriptor: PropertyDescriptor; owner: any; property: string; target: any }[]} */
 const originalDescriptors = [];
+/** @type {Map<EventTarget, Record<string, Set<EventListener>>} */
 const listenerMap = new Map();
+const optionsMap = new WeakMap();
 
 const mockCookie = new MockCookie();
 const mockHistory = new MockHistory(mockLocation);
@@ -248,7 +252,7 @@ export function cleanupWindow() {
         }
         for (const [type, callbacks] of $entries(listeners)) {
             for (const callback of callbacks) {
-                target.removeEventListener(type, callback);
+                target.removeEventListener(type, callback, optionsMap.get(callback));
             }
         }
     }
