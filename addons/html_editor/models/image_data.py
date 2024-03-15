@@ -37,6 +37,11 @@ class ImageData(models.Model):
     scale_x = fields.Integer(help='')
     scale_y = fields.Integer(help='')
     aspect_ratio = fields.Char(help='Ratio of the width of an image over its height')
+    # HoverEffect options
+    hover_effect = fields.Char(help='Name of the hover effect')
+    hover_effect_color = fields.Char(help='Color of the hover effect')
+    hover_effect_stroke_width = fields.Char(help='Stroke width of the hover effect')
+    hover_effect_intensity = fields.Char(help='Intensity of the hover effect')
 
     @api.constrains('res_model', 'res_field', 'res_id')
     def check_unique_record(self):
@@ -82,7 +87,8 @@ class ImageData(models.Model):
         return [
             'original_mimetype', 'resize_width', 'gl_filter', 'shape', 'shape_animation_speed',
             'shape_colors', 'shape_flip', 'shape_rotate', 'file_name', 'is_cropped', 'x', 'y',
-            'width', 'height', 'rotate', 'scale_x', 'scale_y', 'aspect_ratio',
+            'width', 'height', 'rotate', 'scale_x', 'scale_y', 'aspect_ratio', 'hover_effect',
+            'hover_effect_color', 'hover_effect_stroke_width', 'hover_effect_intensity',
         ]
 
     def _update_image_data(self, vals):

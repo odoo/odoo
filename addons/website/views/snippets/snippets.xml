@@ -540,23 +540,23 @@
     <!-- Hover effects options -->
     <xpath expr="//div[@data-js='ImageTools']" position="inside">
         <div id="o_hover_effects_options">
-            <we-select string="Effect" class="o_we_sublevel_1" data-attribute-name="hoverEffect"
+            <we-select string="Effect" class="o_we_sublevel_1" data-option-name="hover_effect"
                 data-set-img-shape-hover-effect="true">
-                <we-button data-select-data-attribute="" data-name="hover_effect_none_opt">None</we-button>
-                <we-button data-select-data-attribute="overlay" data-name="hover_effect_overlay_opt">Overlay</we-button>
-                <we-button data-select-data-attribute="image_zoom_in" data-name="hover_effect_zoom_in_opt">Zoom In</we-button>
-                <we-button data-select-data-attribute="image_zoom_out" data-name="hover_effect_zoom_out_opt">Zoom Out</we-button>
-                <we-button data-select-data-attribute="dolly_zoom" data-name="hover_effect_dolly_zoom_opt">Dolly Zoom</we-button>
-                <we-button data-select-data-attribute="outline" data-name="hover_effect_outline_opt">Outline</we-button>
-                <we-button data-select-data-attribute="image_mirror_blur" data-name="hover_effect_mirror_blur_opt">Mirror Blur</we-button>
+                <we-button data-select-image-option="" data-name="hover_effect_none_opt">None</we-button>
+                <we-button data-select-image-option="overlay" data-name="hover_effect_overlay_opt">Overlay</we-button>
+                <we-button data-select-image-option="image_zoom_in" data-name="hover_effect_zoom_in_opt">Zoom In</we-button>
+                <we-button data-select-image-option="image_zoom_out" data-name="hover_effect_zoom_out_opt">Zoom Out</we-button>
+                <we-button data-select-image-option="dolly_zoom" data-name="hover_effect_dolly_zoom_opt">Dolly Zoom</we-button>
+                <we-button data-select-image-option="outline" data-name="hover_effect_outline_opt">Outline</we-button>
+                <we-button data-select-image-option="image_mirror_blur" data-name="hover_effect_mirror_blur_opt">Mirror Blur</we-button>
             </we-select>
-            <we-range string="Intensity" class="o_we_sublevel_2" data-select-data-attribute="" data-attribute-name="hoverEffectIntensity"
+            <we-range string="Intensity" class="o_we_sublevel_2" data-select-image-option="" data-option-name="hover_effect_intensity"
                 data-dependencies="hover_effect_zoom_in_opt, hover_effect_zoom_out_opt, hover_effect_mirror_blur_opt, hover_effect_dolly_zoom_opt"
                 data-min="1" data-max="100" data-step="1" data-display-range-value="true" data-no-preview="true"/>
             <we-colorpicker string="Color" class="o_we_sublevel_2" data-set-hover-effect-color="true" data-excluded="theme, common"
                 data-dependencies="hover_effect_dolly_zoom_opt, hover_effect_overlay_opt, hover_effect_zoom_in_opt, hover_effect_zoom_out_opt, hover_effect_outline_opt"
                 data-no-preview="true" data-name="hover_effect_color_opt"/>
-            <we-input string="Stroke Width" class="o_we_sublevel_2" data-select-data-attribute="" data-attribute-name="hoverEffectStrokeWidth"
+            <we-input string="Stroke Width" class="o_we_sublevel_2" data-select-image-option="" data-option-name="hover_effect_stroke_width"
                 data-step="1" data-min="1" data-unit="px" data-dependencies="hover_effect_outline_opt" data-no-preview="true"/>
         </div>
     </xpath>

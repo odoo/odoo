@@ -491,6 +491,7 @@ export async function loadImageInfo(img, recordInfo, attachmentSrc = "") {
         res_type: recordInfo.type,
         search_image_data: !isImageReplaced,
         src: relativeSrc,
+        src_before_hover: img.dataset.originalSrcBeforeHover,
     });
     // If src was an absolute "external" URL, we consider unlikely that its
     // relative part matches something from the DB and even if it does, nothing
@@ -503,6 +504,11 @@ export async function loadImageInfo(img, recordInfo, attachmentSrc = "") {
     // "local" image even if the domain name is now "mycompany.be".
     if (imageData) {
         weUtils.updateImageDataRegistry(imgSrc, imageData);
+        if (img.dataset.originalSrcBeforeHover) {
+            // Also linked the image data to the source before an hover effect
+            // was applied.
+            weUtils.updateImageDataRegistry(img.dataset.originalSrcBeforeHover, imageData);
+        }
         return;
     }
     // No image.data or original attachment has been found (e.g; image field

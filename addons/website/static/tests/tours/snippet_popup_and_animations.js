@@ -162,9 +162,9 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     ...clickOnEditAndWaitEditMode(),
     clickOnElement("Image of the 'Columns' snippet with the overlay effect", ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='overlay']"),
     changeOption("WebsiteAnimate", 'we-toggler:contains("Overlay")'),
-    changeOption("WebsiteAnimate", 'we-button[data-select-data-attribute="outline"]'),
+    changeOption("WebsiteAnimate", 'we-button[data-select-image-option="outline"]'),
     {
-        trigger: ".snippet-option-WebsiteAnimate we-select[data-attribute-name='hoverEffect'] we-toggler:contains('Outline')",
+        trigger: ".snippet-option-WebsiteAnimate we-select[data-option-name='hover_effect'] we-toggler:contains('Outline')",
     },
     {
         content: "Check that the outline effect has been applied on the image",
