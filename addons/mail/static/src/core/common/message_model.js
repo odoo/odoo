@@ -115,8 +115,16 @@ export class Message extends Record {
      */
     now = DateTime.now().set({ milliseconds: 0 });
 
+    /**
+     * True if the backend would technically allow edition
+     * @returns {boolean}
+     */
+    get allowsEdition() {
+        return this._store.self.isAdmin || this.isSelfAuthored;
+    }
+
     get editable() {
-        if (!this._store.self.isAdmin && !this.isSelfAuthored) {
+        if (!this.allowsEdition) {
             return false;
         }
         return this.message_type === "comment";
