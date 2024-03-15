@@ -392,7 +392,8 @@ class AccountPaymentRegister(models.TransientModel):
                 # Same currency.
                 wizard.amount = wizard.source_amount_currency
             else:
-                wizard.amount = wizard.source_currency_id._convert(wizard.source_amount_currency, wizard.currency_id, wizard.company_id, wizard.payment_date or fields.Date.today())
+                wizard.amount = wizard.source_currency_id._convert(wizard.source_amount_currency, wizard.currency_id, wizard.company_id,
+wizard.payment_date or fields.Date.today())
 
     @api.depends('amount')
     def _compute_payment_difference(self):
@@ -638,6 +639,7 @@ class AccountPaymentRegister(models.TransientModel):
 
     def _create_payments(self):
         self.ensure_one()
+        is_async_payment = self._context.get('is_async_payment', False)
         batches = self._get_batches()
         edit_mode = self.can_edit_wizard and (len(batches[0]['lines']) == 1 or self.group_payment)
         to_process = []
@@ -671,11 +673,20 @@ class AccountPaymentRegister(models.TransientModel):
                     'to_reconcile': batch_result['lines'],
                     'batch': batch_result,
                 })
-
-        payments = self._init_payments(to_process, edit_mode=edit_mode)
-        self._post_payments(to_process, edit_mode=edit_mode)
-        self._reconcile_payments(to_process, edit_mode=edit_mode)
+        if is_async_payment:
+            payments = self.to_chunk_payments_async_execution(
+                to_process,
+                edit_mode=edit_mode
+            )
+        else:
+            payments = self._init_payments(to_process, edit_mode=edit_mode)
+            self._post_payments(to_process, edit_mode=edit_mode)
+            self._reconcile_payments(to_process, edit_mode=edit_mode)
         return payments
+
+    @api.model
+    def to_chunk_payments_async_execution(self, to_process, edit_mode=False):
+        raise NotImplementedError("This method should be implemented in your project.")
 
     def action_create_payments(self):
         payments = self._create_payments()
