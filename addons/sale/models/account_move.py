@@ -3,18 +3,15 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import groupby
 
 
 class AccountMove(models.Model):
     _name = 'account.move'
     _inherit = ['account.move', 'utm.mixin']
 
-    @api.model
-    def _get_invoice_default_sale_team(self):
-        return self.env['crm.team']._get_default_team_id()
-
     team_id = fields.Many2one(
-        'crm.team', string='Sales Team', default=_get_invoice_default_sale_team,
+        'crm.team', string='Sales Team',
         compute='_compute_team_id', store=True, readonly=False,
         ondelete="set null", tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
@@ -34,12 +31,15 @@ class AccountMove(models.Model):
 
     @api.depends('invoice_user_id')
     def _compute_team_id(self):
-        for move in self:
-            if not move.invoice_user_id.sale_team_id:
-                continue
-            move.team_id = self.env['crm.team']._get_default_team_id(
-                user_id=move.invoice_user_id.id,
-                domain=[('company_id', '=', move.company_id.id)])
+        for ((user_id, company_id), moves) in groupby(
+            self,
+            key=lambda m: (m.invoice_user_id.id, m.company_id.id)
+        ):
+            self.concat(*moves).team_id = self.env['crm.team'].with_context(
+                allowed_company_ids=[company_id]
+            )._get_default_team_id(
+                user_id=user_id,
+            )
 
     @api.depends('line_ids.sale_line_ids')
     def _compute_origin_so_count(self):
