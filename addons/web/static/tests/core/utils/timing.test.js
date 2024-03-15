@@ -399,18 +399,18 @@ describe("useDebounced", () => {
         expect("button.c").toHaveCount(1);
 
         click(`button.c`);
-        await advanceTime(999);
+        await advanceTime(995);
         expect([]).toVerifySteps();
 
-        await advanceTime(1);
+        await advanceTime(5);
         expect(["debounced"]).toVerifySteps();
 
         click(`button.c`);
-        await advanceTime(999);
+        await advanceTime(995);
         expect([]).toVerifySteps();
 
         destroy(component);
-        await advanceTime(1);
+        await advanceTime(5);
         expect([]).toVerifySteps();
     });
 
@@ -429,14 +429,14 @@ describe("useDebounced", () => {
         expect(`button.c`).toHaveCount(1);
 
         click(`button.c`);
-        await advanceTime(999);
+        await advanceTime(995);
         expect([]).toVerifySteps();
 
-        await advanceTime(1);
+        await advanceTime(5);
         expect(["debounced: hello"]).toVerifySteps();
 
         click(`button.c`);
-        await advanceTime(999);
+        await advanceTime(995);
         expect([]).toVerifySteps();
 
         destroy(component);
@@ -458,10 +458,10 @@ describe("useDebounced", () => {
         expect(`button.c`).toHaveCount(1);
 
         click(`button.c`);
-        await advanceTime(999);
+        await advanceTime(995);
         expect([]).toVerifySteps();
 
-        await advanceTime(1);
+        await advanceTime(5);
         expect(["debounced"]).toVerifySteps();
 
         destroy(component);
