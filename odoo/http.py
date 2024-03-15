@@ -615,7 +615,11 @@ class JsonRequest(WebRequest):
         request_id = args.get('id')
 
         # regular jsonrpc2
-        request = self.httprequest.get_data().decode(self.httprequest.charset)
+        if not hasattr(self.httprequest._HTTPRequest__wrapped, 'charset'):
+            # see https://github.com/pallets/werkzeug/pull/2768
+            request = self.httprequest.get_data().decode('utf-8')
+        else:
+            request = self.httprequest.get_data().decode(self.httprequest.charset)
 
         # Read POST content or POST Form Data named "request"
         try:
