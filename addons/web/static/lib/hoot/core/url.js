@@ -15,7 +15,15 @@ import { CONFIG_KEYS, CONFIG_SCHEMA, FILTER_KEYS, FILTER_SCHEMA } from "./config
 // Global
 //-----------------------------------------------------------------------------
 
-const { history, location, Object, Set, URIError, URL, URLSearchParams } = globalThis;
+const {
+    history,
+    location,
+    Object: { entries: $entries },
+    Set,
+    URIError,
+    URL,
+    URLSearchParams,
+} = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -24,7 +32,7 @@ const { history, location, Object, Set, URIError, URL, URLSearchParams } = globa
 const debouncedUpdateUrl = debounce(function updateUrl() {
     const url = createURL({});
     url.search = "";
-    for (const [key, value] of Object.entries(urlParams)) {
+    for (const [key, value] of $entries(urlParams)) {
         if (isIterable(value)) {
             for (const value of urlParams[key]) {
                 if (value) {
@@ -72,7 +80,7 @@ export function refresh() {
  * @param {Partial<DEFAULT_CONFIG & DEFAULT_FILTERS>} params
  */
 export function setParams(params) {
-    for (const [key, value] of Object.entries(params)) {
+    for (const [key, value] of $entries(params)) {
         if (!CONFIG_KEYS.includes(key) && !FILTER_KEYS.includes(key)) {
             throw new URIError(`unknown URL param key: "${key}"`);
         }
@@ -107,7 +115,7 @@ export const urlParams = reactive({});
 
 const searchParams = new URLSearchParams(location.search);
 const searchKeys = new Set(searchParams.keys());
-for (const [configKey, { aliases, parse }] of Object.entries({
+for (const [configKey, { aliases, parse }] of $entries({
     ...CONFIG_SCHEMA,
     ...FILTER_SCHEMA,
 })) {

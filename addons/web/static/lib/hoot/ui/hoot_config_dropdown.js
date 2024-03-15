@@ -19,7 +19,9 @@ import { HootCopyButton } from "./hoot_copy_button";
 // Global
 //-----------------------------------------------------------------------------
 
-const { Object } = globalThis;
+const {
+    Object: { entries: $entries },
+} = globalThis;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -209,7 +211,7 @@ export class HootConfigDropdown extends Component {
         </div>
     `;
 
-    logLevels = Object.entries(logLevels)
+    logLevels = $entries(logLevels)
         .filter(([, value]) => value)
         .map(([label, value]) => ({ label, value }));
 
