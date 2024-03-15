@@ -651,6 +651,54 @@ test("lazy sort should re-sort while they are observed", async () => {
     expect(["render 2,1"]).toVerifySteps();
 });
 
+test("sort works on Record.attr()", async () => {
+    (class Thread extends Record {
+        static id = "id";
+        id;
+        messages = Record.attr([], {
+            sort: (m1, m2) => m1.sequence - m2.sequence,
+        });
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert(1);
+    thread.messages.push({ id: 1, sequence: 1 }, { id: 2, sequence: 2 });
+    expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
+    let observe = true;
+    function render() {
+        if (observe) {
+            expect.step(`render ${reactiveChannel.messages.map((m) => m.id)}`);
+        }
+    }
+    const reactiveChannel = reactive(thread, render);
+    render();
+    const message = thread.messages[0];
+    expect(["render 1,2"]).toVerifySteps();
+    message.sequence = 3;
+    expect(["render 2,1"]).toVerifySteps();
+    message.sequence = 4;
+    expect([]).toVerifySteps();
+    message.sequence = 5;
+    expect([]).toVerifySteps();
+    message.sequence = 1;
+    expect(["render 1,2"]).toVerifySteps();
+    observe = false;
+    message.sequence = 10;
+    expect(`${toRaw(thread)._raw.messages.map((msg) => toRaw(msg).id)}`).toBe("2,1", {
+        message: "observed one last time when it changes",
+    });
+    expect([]).toVerifySteps();
+    message.sequence = 1;
+    expect(`${toRaw(thread)._raw.messages.map((msg) => toRaw(msg).id)}`).toBe("2,1", {
+        message: "no longer observed",
+    });
+    expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
+    observe = true;
+    render();
+    expect(["render 1,2"]).toVerifySteps();
+    message.sequence = 10;
+    expect(["render 2,1"]).toVerifySteps();
+});
+
 test("store updates can be observed", async () => {
     const store = await start();
     function onUpdate() {
