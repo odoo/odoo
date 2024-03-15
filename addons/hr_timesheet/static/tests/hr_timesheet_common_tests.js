@@ -39,9 +39,9 @@ export const getServerData = () => JSON.parse(JSON.stringify({
                 progress: { string: "progress", type: "float" },
             },
             records: [
-                { id: 1, name: "Task 1\u00A0AdditionalInfo", project_id: 1, progress: 50 },
-                { id: 2, name: "Task 2\u00A0AdditionalInfo", project_id: 1, progress: 80 },
-                { id: 3, name: "Task 3\u00A0AdditionalInfo", project_id: 1, progress: 104 },
+                { id: 1, name: "Task 1\u00A0AdditionalInfo", project_id: 1, progress: 0.5 },
+                { id: 2, name: "Task 2\u00A0AdditionalInfo", project_id: 1, progress: 0.8 },
+                { id: 3, name: "Task 3\u00A0AdditionalInfo", project_id: 1, progress: 1.04 },
             ],
         },
     },
