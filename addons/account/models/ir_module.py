@@ -39,17 +39,18 @@ class IrModule(models.Model):
                 else:
                     templates = {
                         fct._l10n_template[0]: {
-                            'name': fct(ChartTemplate).get('name'),
-                            'parent': fct(ChartTemplate).get('parent'),
-                            'sequence': fct(ChartTemplate).get('sequence', 1),
-                            'country': fct(ChartTemplate).get('country', ''),
-                            'visible': fct(ChartTemplate).get('visible', True),
+                            'name': template_values.get('name'),
+                            'parent': template_values.get('parent'),
+                            'sequence': template_values.get('sequence', 1),
+                            'country': template_values.get('country', ''),
+                            'visible': template_values.get('visible', True),
                             'installed': module.state == "installed",
                             'module': module.name,
                         }
                         for _name, mdl in getmembers(python_module, template_module)
                         for _name, cls in getmembers(mdl, template_class)
                         for _name, fct in getmembers(cls, template_function)
+                        if (template_values := fct(ChartTemplate))
                     }
 
             module.account_templates = {
