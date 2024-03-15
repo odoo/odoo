@@ -362,6 +362,7 @@
         <record id="action_hr_contract" model="ir.actions.act_window">
             <field name="name">Contracts</field>
             <field name="res_model">hr.contract</field>
+            <field name="path">employee-contracts</field>
             <field name="view_mode">tree,kanban,form,activity</field>
             <field name="domain">[('employee_id', '!=', False)]</field>
             <field name="context">{'search_default_group_by_state': 1}</field>
