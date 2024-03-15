@@ -9,13 +9,13 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, useExternalListener, useState, reactive } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/generic_components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
-import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
+import { Numpad, getButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
 import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 import { ProductInfoPopup } from "./product_info_popup/product_info_popup";
-import { fuzzyLookup } from "@web/core/utils/search";
+import { fuzzyLookup } from "@point_of_sale/utils";
 import { ProductCard } from "@point_of_sale/app/generic_components/product_card/product_card";
 import {
     ControlButtons,
@@ -23,6 +23,7 @@ import {
 } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { pick } from "@web/core/utils/objects";
 import { useScrollDirection } from "@point_of_sale/app/utils/useScrollDirection";
+import { unaccent } from "@web/core/utils/strings";
 
 export class ProductScreen extends Component {
     static template = "point_of_sale.ProductScreen";
@@ -94,54 +95,31 @@ export class ProductScreen extends Component {
             ? [...selectedCategory.child_id]
             : this.pos.models["pos.category"].filter((category) => !category.parent_id);
     }
-    getChildCategoriesInfo(selectedCategory) {
-        return this.getCategoriesInfo(this.getChildCategories(selectedCategory), selectedCategory);
-    }
     getCategoriesAndSub() {
         return this.getAncestorsAndCurrent().flatMap((category) =>
             this.getChildCategoriesInfo(category)
         );
     }
 
-    getCategoriesInfo(categories, selectedCategory) {
-        return categories.map((category) => ({
+    getChildCategoriesInfo(selectedCategory) {
+        return this.getChildCategories(selectedCategory).map((category) => ({
             ...pick(category, "id", "name", "color"),
             imgSrc:
                 this.pos.config.show_category_images && category.has_image
                     ? `/web/image?model=pos.category&field=image_128&id=${category.id}`
                     : undefined,
-            isSelected:
-                selectedCategory &&
-                this.getAncestorsAndCurrent().includes(category) &&
-                !this.ui.isSmall,
+            isSelected: this.getAncestorsAndCurrent().includes(category) && !this.ui.isSmall,
             isChildren: this.getChildCategories(this.pos.selectedCategory).includes(category),
         }));
     }
 
     getNumpadButtons() {
-        return [
-            { value: "1" },
-            { value: "2" },
-            { value: "3" },
+        return getButtons(this.env, [
             { value: "quantity", text: "Qty" },
-            { value: "4" },
-            { value: "5" },
-            { value: "6" },
-            {
-                value: "discount",
-                text: "% Disc",
-                disabled: !this.pos.config.manual_discount,
-            },
-            { value: "7" },
-            { value: "8" },
-            { value: "9" },
+            { value: "discount", text: "% Disc", disabled: !this.pos.config.manual_discount },
             { value: "price", text: "Price", disabled: !this.pos.cashierHasPriceControlRights() },
             { value: "-", text: "+/-" },
-            { value: "0" },
-            { value: this.env.services.localization.decimalPoint },
-            // Unicode: https://www.compart.com/en/unicode/U+232B
-            { value: "Backspace", text: "⌫" },
-        ].map((button) => ({
+        ]).map((button) => ({
             ...button,
             class: this.pos.numpadMode === button.value ? "active border-primary" : "",
         }));
@@ -345,17 +323,7 @@ export class ProductScreen extends Component {
         let list = [];
 
         if (this.searchWord !== "") {
-            const product = this.pos.selectedCategory?.id
-                ? this.getProductsByCategory(this.pos.selectedCategory.id)
-                : this.pos.models["product.product"].getAll();
-            if (!product) {
-                return list;
-            }
-            list = fuzzyLookup(
-                this.searchWord,
-                product,
-                (product) => product.display_name + product.description_sale
-            );
+            list = this.getProductsBySearchWord(this.searchWord);
         } else if (this.pos.selectedCategory?.id) {
             list = this.getProductsByCategory(this.pos.selectedCategory.id);
         } else {
@@ -366,9 +334,25 @@ export class ProductScreen extends Component {
             .filter((product) => !this.getProductListToNotDisplay().includes(product.id))
             .slice(0, 100);
 
-        return list.sort(function (a, b) {
-            return a.display_name.localeCompare(b.display_name);
-        });
+        return this.searchWord !== ""
+            ? list
+            : list.sort((a, b) => a.display_name.localeCompare(b.display_name));
+    }
+
+    getProductsBySearchWord(searchWord) {
+        const products = this.pos.selectedCategory?.id
+            ? this.getProductsByCategory(this.pos.selectedCategory.id)
+            : this.pos.models["product.product"].getAll();
+
+        const fuzzyMatches = fuzzyLookup(unaccent(searchWord, false), products, (product) =>
+            unaccent(product.searchString, false)
+        );
+
+        const barcodeMatches = products.filter(
+            (product) => product.barcode && product.barcode.includes(searchWord)
+        );
+
+        return Array.from(new Set([...barcodeMatches, ...fuzzyMatches]));
     }
 
     getProductsByCategory(categoryId) {

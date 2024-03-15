@@ -162,7 +162,7 @@ test("setting a char field to empty string is saved as a false value", async () 
     onRpc("web_save", (_route, { args }) => {
         expect(args[1].name).toBe(false);
     });
-    await fieldInput("name").edit("");
+    await fieldInput("name").clear();
     await clickSave();
 });
 
@@ -291,7 +291,7 @@ test("char field translatable", async () => {
         message: "Spanish translation should be filled",
     });
     await contains(translations[0]).edit("bar");
-    await contains(translations[2]).edit("");
+    await contains(translations[2]).clear();
     await contains("footer .btn.btn-primary").click();
     expect(".o_field_widget.o_field_char input").toHaveValue("bar", {
         message: "the new translation should be transfered to modified record",
@@ -849,7 +849,7 @@ test.tags("desktop")("input field: set and remove value, then wait for onchange"
     await contains(".o_field_x2many_list_row_add a").click();
     expect(".o_field_widget[name=name] input").toHaveValue("");
     await fieldInput("name").edit("test", { confirm: false });
-    await fieldInput("name").edit("", { confirm: false });
+    await fieldInput("name").clear({ confirm: false });
 
     // trigger the onchange by setting a product
     await contains(".o-autocomplete--input").click();
@@ -935,24 +935,22 @@ test("edit a char field should display the status indicator buttons without flic
             </field>
         </form>`,
     });
-    onRpc(async (route, { method, args, kwargs }) => {
-        if (method === "onchange") {
-            expect.step("onchange");
-            await def;
-        }
+    onRpc("onchange", async () => {
+        expect.step("onchange");
+        await def;
     });
-    expect(".o_form_status_indicator_buttons.invisible").toHaveCount(1, {
+    expect(queryOne(".o_form_status_indicator_buttons")).not.toBeVisible({
         message: "form view is not dirty",
     });
     await contains(".o_data_cell").click();
     await fieldInput("name").edit("a");
-    expect(".o_form_status_indicator_buttons:not(.invisible)").toHaveCount(1, {
+    expect(queryOne(".o_form_status_indicator_buttons")).toBeVisible({
         message: "form view is dirty",
     });
     def.resolve();
     expect(["onchange"]).toVerifySteps();
     await animationFrame();
-    expect(".o_form_status_indicator_buttons:not(.invisible)").toHaveCount(1, {
+    expect(queryOne(".o_form_status_indicator_buttons")).toBeVisible({
         message: "form view is dirty",
     });
     expect(["onchange"]).toVerifySteps();

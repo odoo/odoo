@@ -1,4 +1,5 @@
 /** @odoo-module **/
+import { loadAllImages } from "@point_of_sale/utils";
 
 import { Reactive } from "@web/core/utils/reactive";
 
@@ -41,6 +42,7 @@ export class PrinterService extends Reactive {
     async print(component, props, options) {
         this.state.isPrinting = true;
         const el = await this.renderer.toHtml(component, props);
+        await loadAllImages(el);
         try {
             return await this.printHtml(el, options);
         } finally {

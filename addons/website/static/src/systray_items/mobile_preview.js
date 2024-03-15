@@ -17,4 +17,4 @@ export const systrayItem = {
     Component: MobilePreviewSystray,
 };
 
-registry.category("website_systray").add("MobilePreview", systrayItem, { sequence: 12 });
+registry.category("website_systray").add("MobilePreview", systrayItem, { sequence: 11 });

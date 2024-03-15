@@ -55,8 +55,8 @@ import { MockServerError } from "./mock_server_utils";
  *  relation: string;
  *  relation_field?: string;
  *  type: keyof typeof DEFAULT_RELATIONAL_FIELD_VALUES;
- *  _inverse_fname_by_model_name?: Record<string, string>;
- *  _model_name_ref_fname: string;
+ *  inverse_fname_by_model_name?: Record<string, string>;
+ *  model_name_ref_fname: string;
  * }} RelationalFieldDefinition
  *
  * @typedef {CommonFieldDefinition & {
@@ -190,6 +190,8 @@ export const Generic = makeFieldGenerator("generic");
 
 export const Html = makeFieldGenerator("html");
 
+export const Image = makeFieldGenerator("image");
+
 export const Integer = makeFieldGenerator("integer", {
     groupOperator: "sum",
 });
@@ -254,6 +256,7 @@ export const DEFAULT_STANDARD_FIELD_VALUES = {
     float: () => 0,
     html: () => false,
     number: () => 0,
+    image: () => false,
     integer: () => 0,
     json: () => false,
     properties: () => false,

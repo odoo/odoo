@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
@@ -11,7 +11,7 @@ QUnit.module("message (patch)");
 
 QUnit.test("Notification Processing", async (assert) => {
     const { partnerId } = await _prepareSmsNotification("process");
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await _assertContainsSmsNotification(assert);
     await _assertContainsPopoverWithIcon(assert, "fa-hourglass-half");
@@ -19,7 +19,7 @@ QUnit.test("Notification Processing", async (assert) => {
 
 QUnit.test("Notification Pending", async (assert) => {
     const { partnerId } = await _prepareSmsNotification("pending");
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await _assertContainsSmsNotification(assert);
     await _assertContainsPopoverWithIcon(assert, "fa-paper-plane-o");
@@ -27,7 +27,7 @@ QUnit.test("Notification Pending", async (assert) => {
 
 QUnit.test("Notification Sent", async (assert) => {
     const { partnerId } = await _prepareSmsNotification("sent");
-    const { openFormView } = await start();
+    await start();
     await openFormView("res.partner", partnerId);
     await _assertContainsPopoverWithIcon(assert, "fa-check");
 });
@@ -35,7 +35,7 @@ QUnit.test("Notification Sent", async (assert) => {
 QUnit.test("Notification Error", async (assert) => {
     const openResendActionDef = makeDeferred();
     const { partnerId, messageId } = await _prepareSmsNotification("exception");
-    const { env, openFormView } = await start();
+    const { env } = await start();
     await openFormView("res.partner", partnerId);
     patchWithCleanup(env.services.action, {
         doAction(action, options) {

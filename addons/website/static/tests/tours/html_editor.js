@@ -16,7 +16,7 @@ wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
             content: "drop a snippet",
             trigger: ".oe_snippet:has(.s_cover) .oe_snippet_thumbnail",
             // id starting by 'oe_structure..' will actually create an inherited view
-            run: "drag_and_drop_native iframe #oe_structure_test_ui",
+            run: "drag_and_drop_native :iframe #oe_structure_test_ui",
         },
         ...wTourUtils.clickOnSave(),
         // 2. Edit generic view
@@ -64,8 +64,8 @@ wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
         },
         {
            content: "check that the page has both modification",
-           extra_trigger: 'iframe #wrapwrap:contains("anothernewcontent")',
-           trigger: 'iframe #wrapwrap:contains("somenewcontent")',
+           extra_trigger: ':iframe #wrapwrap:contains("anothernewcontent")',
+           trigger: ':iframe #wrapwrap:contains("somenewcontent")',
            run: function () {}, // it's a check
        },
     ]
@@ -79,7 +79,7 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
         // 1. Open Html Editor and select a scss file
         {
             content: "open site menu",
-            extra_trigger: 'iframe #wrap:visible', // ensure state for later
+            extra_trigger: ':iframe #wrap:visible', // ensure state for later
             trigger: 'button[data-menu-xmlid="website.menu_site"]',
         },
         {
@@ -114,7 +114,7 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
         },
         {
             content: "check that the scss modification got applied",
-            trigger: 'iframe body:has(#wrap:hidden)',
+            trigger: ':iframe body:has(#wrap:hidden)',
             run: function () {}, // it's a check
             timeout: 30000, // SCSS compilation might take some time
         },
@@ -128,7 +128,7 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
         },
         {
             content: "check that the scss file was reset correctly, wrap content should now be visible again",
-            trigger: 'iframe #wrap:visible',
+            trigger: ':iframe #wrap:visible',
             run: function () {}, // it's a check
             timeout: 30000, // SCSS compilation might take some time
         },
@@ -148,7 +148,7 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
         },
         {
             content: "check that the scss modification got applied",
-            trigger: 'iframe body:has(#wrap:hidden)',
+            trigger: ':iframe body:has(#wrap:hidden)',
             run: function () {}, // it's a check
         },
     ]

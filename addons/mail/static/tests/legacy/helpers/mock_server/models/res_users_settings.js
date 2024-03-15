@@ -80,10 +80,10 @@ patch(MockServer.prototype, {
             }
         }
         this.pyEnv["res.users.settings"].write([id], changedSettings);
-        const [relatedUser] = this.pyEnv["res.users"].searchRead([
+        const [relatedUser] = this.pyEnv["res.users"].search_read([
             ["id", "=", oldSettings.user_id],
         ]);
-        const [relatedPartner] = this.pyEnv["res.partner"].searchRead([
+        const [relatedPartner] = this.pyEnv["res.partner"].search_read([
             ["id", "=", relatedUser.partner_id[0]],
         ]);
         this.pyEnv["bus.bus"]._sendone(relatedPartner, "res.users.settings", {

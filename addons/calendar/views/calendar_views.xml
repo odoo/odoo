@@ -108,7 +108,7 @@
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button icon="fa-bars" type="object" name="action_open_calendar_event" invisible="not res_id">
+                        <button icon="fa-bars" type="object" name="action_open_calendar_event" invisible="not (res_id and res_model_name)">
                             <field name="res_model_name"/>
                         </button>
                     </div>
@@ -283,10 +283,7 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids" readonly="not user_can_edit"/>
-                    <field name="message_ids" readonly="not user_can_edit"/>
-                </div>
+                <chatter/>
             </form>
         </field>
     </record>
@@ -411,6 +408,7 @@
 
     <record id="action_calendar_event" model="ir.actions.act_window">
         <field name="name">Meetings</field>
+        <field name="path">calendar</field>
         <field name="res_model">calendar.event</field>
         <field name="view_mode">calendar,tree,form</field>
         <field name="view_id" ref="view_calendar_event_calendar"/>

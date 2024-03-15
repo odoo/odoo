@@ -1,17 +1,17 @@
 /** @odoo-module alias=@mail/../tests/web/fields/m2x_avatar_user_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { EventBus } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
-import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
-import { click, contains } from "@web/../tests/utils";
+import { triggerHotkey } from "@web/../tests/helpers/utils";
+import { assertSteps, click, contains, step } from "@web/../tests/utils";
 import { getOrigin } from "@web/core/utils/urls";
 
 const fakeMultiTab = {
@@ -45,7 +45,7 @@ const fakeImStatusService = {
 
 QUnit.module("M2XAvatarUser");
 
-QUnit.test("many2many_avatar_user in kanban view", async () => {
+test("many2many_avatar_user in kanban view", async () => {
     const pyEnv = await startServer();
     const userIds = pyEnv["res.users"].create([
         { name: "Mario" },
@@ -91,7 +91,7 @@ QUnit.test("many2many_avatar_user in kanban view", async () => {
     await contains(".o_popover > .o_field_tags > :nth-child(4 of .o_tag)", { text: "Mario" });
 });
 
-QUnit.test('many2one_avatar_user widget edited by the smart action "Assign to..."', async () => {
+test('many2one_avatar_user widget edited by the smart action "Assign to..."', async () => {
     const pyEnv = await startServer();
     const [userId_1] = pyEnv["res.users"].create([
         { name: "Mario" },
@@ -103,15 +103,8 @@ QUnit.test('many2one_avatar_user widget edited by the smart action "Assign to...
         "m2x.avatar.user,false,form":
             '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
     };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_id: avatarUserId_1,
-        type: "ir.actions.act_window",
-        target: "current",
-        res_model: "m2x.avatar.user",
-        view_mode: "form",
-        views: [[false, "form"]],
-    });
+    await start({ serverData: { views } });
+    await openFormView("m2x.avatar.user", avatarUserId_1);
     await contains(".o_field_many2one_avatar_user input", { value: "Mario" });
     triggerHotkey("control+k");
     await click(".o_command", { text: "Assign to ...ALT + I" });
@@ -126,7 +119,7 @@ QUnit.test('many2one_avatar_user widget edited by the smart action "Assign to...
     await contains(".o_field_many2one_avatar_user input", { value: "Luigi" });
 });
 
-QUnit.test('many2one_avatar_user widget edited by the smart action "Assign to me"', async () => {
+test('many2one_avatar_user widget edited by the smart action "Assign to me"', async () => {
     const pyEnv = await startServer();
     const userId_1 = pyEnv["res.users"].create({ name: "Mario" });
     const avatarUserId_1 = pyEnv["m2x.avatar.user"].create({ user_id: userId_1 });
@@ -134,15 +127,8 @@ QUnit.test('many2one_avatar_user widget edited by the smart action "Assign to me
         "m2x.avatar.user,false,form":
             '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
     };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_id: avatarUserId_1,
-        type: "ir.actions.act_window",
-        target: "current",
-        res_model: "m2x.avatar.user",
-        view_mode: "form",
-        views: [[false, "form"]],
-    });
+    await start({ serverData: { views } });
+    await openFormView("m2x.avatar.user", avatarUserId_1);
     await contains(".o_field_many2one_avatar_user input", { value: "Mario" });
     triggerHotkey("control+k");
     await contains(".o_command", { text: "Assign to meALT + SHIFT + I" });
@@ -157,7 +143,7 @@ QUnit.test('many2one_avatar_user widget edited by the smart action "Assign to me
     await contains(".o_field_many2one_avatar_user input", { value: "" });
 });
 
-QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to..."', async () => {
+test('many2many_avatar_user widget edited by the smart action "Assign to..."', async () => {
     const pyEnv = await startServer();
     const [userId_1, userId_2] = pyEnv["res.users"].create([
         { name: "Mario" },
@@ -171,15 +157,8 @@ QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to..
         "m2x.avatar.user,false,form":
             '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
     };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_id: m2xAvatarUserId1,
-        type: "ir.actions.act_window",
-        target: "current",
-        res_model: "m2x.avatar.user",
-        view_mode: "form",
-        views: [[false, "form"]],
-    });
+    await start({ serverData: { views } });
+    await openFormView("m2x.avatar.user", m2xAvatarUserId1);
     await contains(".o_tag_badge_text", { count: 2 });
     await contains(":nth-child(1 of .o_tag) .o_tag_badge_text", { text: "Mario" });
     await contains(":nth-child(2 of .o_tag) .o_tag_badge_text", { text: "Yoshi" });
@@ -198,131 +177,112 @@ QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to..
     await contains(":nth-child(3 of .o_tag) .o_tag_badge_text", { text: "Luigi" });
 });
 
-QUnit.test(
-    'many2one_avatar_user widget edited by the smart action "Assign to me" in form view',
-    async () => {
-        const pyEnv = await startServer();
-        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
-            { name: "Mario" },
-            { name: "Luigi" },
-        ]);
-        const [userId_1, userId_2] = pyEnv["res.users"].create([
-            { name: "Mario", partner_id: partnerId_1 },
-            { name: "Luigi", partner_id: partnerId_2 },
-        ]);
-        const avatarUserId_1 = pyEnv["m2x.avatar.user"].create({ user_id: userId_1 });
-        const views = {
-            "m2x.avatar.user,false,form":
-                '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
-        };
-        await pyEnv.withUser(userId_2, async () => {
-            const { openView } = await start({ serverData: { views } });
-            await openView({
-                res_id: avatarUserId_1,
-                type: "ir.actions.act_window",
-                target: "current",
-                res_model: "m2x.avatar.user",
-                view_mode: "form",
-                views: [[false, "form"]],
-            });
-            await contains(".o_field_many2one_avatar_user input", { value: "Mario" });
-            await triggerHotkey("control+k");
-            await contains(".o_command", { text: "Assign to meALT + SHIFT + I" });
+test('many2one_avatar_user widget edited by the smart action "Assign to me" in form view', async () => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "Mario" },
+        { name: "Luigi" },
+    ]);
+    const [userId_1, userId_2] = pyEnv["res.users"].create([
+        { name: "Mario", partner_id: partnerId_1 },
+        { name: "Luigi", partner_id: partnerId_2 },
+    ]);
+    const avatarUserId_1 = pyEnv["m2x.avatar.user"].create({ user_id: userId_1 });
+    const views = {
+        "m2x.avatar.user,false,form":
+            '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
+    };
+    await pyEnv.withUser(userId_2, async () => {
+        await start({ serverData: { views } });
+        await openFormView("m2x.avatar.user", avatarUserId_1);
+        await contains(".o_field_many2one_avatar_user input", { value: "Mario" });
+        await triggerHotkey("control+k");
+        await contains(".o_command", { text: "Assign to meALT + SHIFT + I" });
 
-            // Assign me (Luigi)
-            await triggerHotkey("alt+shift+i");
-            await contains(".o_field_many2one_avatar_user input", { value: "Luigi" });
+        // Assign me (Luigi)
+        await triggerHotkey("alt+shift+i");
+        await contains(".o_field_many2one_avatar_user input", { value: "Luigi" });
 
-            // Unassign me
-            await triggerHotkey("control+k");
-            await click("#o_command_2");
-            await contains(".o_field_many2one_avatar_user input", { value: "" });
+        // Unassign me
+        await triggerHotkey("control+k");
+        await click("#o_command_2");
+        await contains(".o_field_many2one_avatar_user input", { value: "" });
+    });
+});
+
+test('many2one_avatar_user widget edited by the smart action "Assign to me" in list view', async () => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "Mario" },
+        { name: "Luigi" },
+    ]);
+    const [userId_1, userId_2] = pyEnv["res.users"].create([
+        { name: "Mario", partner_id: partnerId_1 },
+        { name: "Luigi", partner_id: partnerId_2 },
+    ]);
+    pyEnv["m2x.avatar.user"].create([{ user_id: userId_2 }, { user_id: userId_1 }]);
+    const views = {
+        "m2x.avatar.user,false,list":
+            '<tree multi_edit="1"><field name="user_id" widget="many2one_avatar_user"/></tree>',
+    };
+    await pyEnv.withUser(userId_2, async () => {
+        const { openView } = await start({ serverData: { views } });
+        await openView({
+            type: "ir.actions.act_window",
+            target: "current",
+            res_model: "m2x.avatar.user",
+            view_mode: "list",
+            views: [[false, "list"]],
         });
-    }
-);
-
-QUnit.test(
-    'many2one_avatar_user widget edited by the smart action "Assign to me" in list view',
-    async () => {
-        const pyEnv = await startServer();
-        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
-            { name: "Mario" },
-            { name: "Luigi" },
-        ]);
-        const [userId_1, userId_2] = pyEnv["res.users"].create([
-            { name: "Mario", partner_id: partnerId_1 },
-            { name: "Luigi", partner_id: partnerId_2 },
-        ]);
-        pyEnv["m2x.avatar.user"].create([{ user_id: userId_2 }, { user_id: userId_1 }]);
-        const views = {
-            "m2x.avatar.user,false,list":
-                '<tree multi_edit="1"><field name="user_id" widget="many2one_avatar_user"/></tree>',
-        };
-        await pyEnv.withUser(userId_2, async () => {
-            const { openView } = await start({ serverData: { views } });
-            await openView({
-                type: "ir.actions.act_window",
-                target: "current",
-                res_model: "m2x.avatar.user",
-                view_mode: "list",
-                views: [[false, "list"]],
-            });
-            await contains(
-                ":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user span > span",
-                { text: "Luigi" }
-            );
-            await contains(
-                ":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user span > span",
-                { text: "Mario" }
-            );
-            // Select all
-            await click(".o_list_table > thead .o_list_controller input");
-            await triggerHotkey("control+k");
-            await contains(".o_command", { text: "Assign to meALT + SHIFT + I" });
-
-            // Assign me (Luigi)
-            await triggerHotkey("alt+shift+i");
-            // Multi-edit confirmation dialog
-            await contains(".o_dialog");
-            // Cancel
-            await click(".o_dialog .modal-footer button:nth-child(2)");
-            await contains(
-                ":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user span > span",
-                { text: "Luigi" }
-            );
-            await contains(
-                ":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user span > span",
-                { text: "Mario" }
-            );
-
-            // Assign me (Luigi)
-            await triggerHotkey("alt+shift+i");
-            // Multi-edit confirmation dialog
-            await contains(".o_dialog");
-            // Confirm
-            await click(".o_dialog .modal-footer button:nth-child(1)");
-            await contains(".o_dialog", { count: 0 });
-            await contains(
-                ":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user span > span",
-                { text: "Luigi" }
-            );
-            await contains(
-                ":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user span > span",
-                { text: "Luigi" }
-            );
-
-            // Unassign me (Luigi)
-            await triggerHotkey("alt+shift+u");
-            // Multi-edit confirmation dialog
-            await contains(".o_dialog");
-            // Confirm
-            await click(".o_dialog .modal-footer button:nth-child(1)");
-            await contains(".o_field_many2one_avatar_user .o_form_uri span", { count: 0 });
+        await contains(":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user span > span", {
+            text: "Luigi",
         });
-    }
-);
+        await contains(":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user span > span", {
+            text: "Mario",
+        });
+        // Select all
+        await click(".o_list_table > thead .o_list_controller input");
+        await triggerHotkey("control+k");
+        await contains(".o_command", { text: "Assign to meALT + SHIFT + I" });
 
-QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to me"', async () => {
+        // Assign me (Luigi)
+        await triggerHotkey("alt+shift+i");
+        // Multi-edit confirmation dialog
+        await contains(".o_dialog");
+        // Cancel
+        await click(".o_dialog .modal-footer button:nth-child(2)");
+        await contains(":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user span > span", {
+            text: "Luigi",
+        });
+        await contains(":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user span > span", {
+            text: "Mario",
+        });
+
+        // Assign me (Luigi)
+        await triggerHotkey("alt+shift+i");
+        // Multi-edit confirmation dialog
+        await contains(".o_dialog");
+        // Confirm
+        await click(".o_dialog .modal-footer button:nth-child(1)");
+        await contains(".o_dialog", { count: 0 });
+        await contains(":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user span > span", {
+            text: "Luigi",
+        });
+        await contains(":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user span > span", {
+            text: "Luigi",
+        });
+
+        // Unassign me (Luigi)
+        await triggerHotkey("alt+shift+u");
+        // Multi-edit confirmation dialog
+        await contains(".o_dialog");
+        // Confirm
+        await click(".o_dialog .modal-footer button:nth-child(1)");
+        await contains(".o_field_many2one_avatar_user .o_form_uri span", { count: 0 });
+    });
+});
+
+test('many2many_avatar_user widget edited by the smart action "Assign to me"', async () => {
     const pyEnv = await startServer();
     const [userId_1, userId_2] = pyEnv["res.users"].create([{ name: "Mario" }, { name: "Yoshi" }]);
     const m2xAvatarUserId1 = pyEnv["m2x.avatar.user"].create({
@@ -332,15 +292,8 @@ QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to m
         "m2x.avatar.user,false,form":
             '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
     };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_id: m2xAvatarUserId1,
-        type: "ir.actions.act_window",
-        target: "current",
-        res_model: "m2x.avatar.user",
-        view_mode: "form",
-        views: [[false, "form"]],
-    });
+    await start({ serverData: { views } });
+    await openFormView("m2x.avatar.user", m2xAvatarUserId1);
     await contains(".o_tag_badge_text", { count: 2 });
     await contains(":nth-child(1 of .o_tag) .o_tag_badge_text", { text: "Mario" });
     await contains(":nth-child(2 of .o_tag) .o_tag_badge_text", { text: "Yoshi" });
@@ -361,7 +314,7 @@ QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to m
     await contains(":nth-child(2 of .o_tag) .o_tag_badge_text", { text: "Yoshi" });
 });
 
-QUnit.test("avatar_user widget displays the appropriate user image in list view", async () => {
+test("avatar_user widget displays the appropriate user image in list view", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Mario" });
     const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_id: userId });
@@ -378,7 +331,7 @@ QUnit.test("avatar_user widget displays the appropriate user image in list view"
     await contains(`.o_m2o_avatar > img[data-src="/web/image/res.users/${userId}/avatar_128"]`);
 });
 
-QUnit.test("avatar_user widget displays the appropriate user image in kanban view", async () => {
+test("avatar_user widget displays the appropriate user image in kanban view", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Mario" });
     const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_id: userId });
@@ -403,7 +356,7 @@ QUnit.test("avatar_user widget displays the appropriate user image in kanban vie
     await contains(`.o_m2o_avatar > img[data-src="/web/image/res.users/${userId}/avatar_128"]`);
 });
 
-QUnit.test("avatar card preview", async (assert) => {
+test("avatar card preview", async (assert) => {
     registry.category("services").add("multi_tab", fakeMultiTab, { force: true });
     registry.category("services").add("im_status", fakeImStatusService, { force: true });
     const pyEnv = await startServer();
@@ -416,7 +369,7 @@ QUnit.test("avatar card preview", async (assert) => {
     const mockRPC = (route, args) => {
         if (route === "/web/dataset/call_kw/res.users/read") {
             assert.deepEqual(args.args[1], ["name", "email", "phone", "im_status", "share"]);
-            assert.step("user read");
+            step("user read");
         }
     };
     const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_id: userId });
@@ -439,25 +392,19 @@ QUnit.test("avatar card preview", async (assert) => {
         views: [[false, "kanban"]],
     });
 
-    patchWithCleanup(browser, {
-        setTimeout: (callback, delay) => {
-            assert.step(`setTimeout of ${delay}ms`);
-            callback();
-        },
-    });
     // Open card
     await click(".o_m2o_avatar > img");
     await contains(".o_avatar_card");
     await contains(".o_card_user_infos > span", { text: "Mario" });
     await contains(".o_card_user_infos > a", { text: "Mario@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+78786987" });
-    assert.verifySteps(["setTimeout of 250ms", "user read"]);
+    await assertSteps(["user read"]);
     // Close card
     await click(".o_action_manager");
     await contains(".o_avatar_card", { count: 0 });
 });
 
-QUnit.test("avatar_user widget displays the appropriate user image in form view", async () => {
+test("avatar_user widget displays the appropriate user image in form view", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Mario" });
     const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_ids: [userId] });
@@ -465,20 +412,14 @@ QUnit.test("avatar_user widget displays the appropriate user image in form view"
         "m2x.avatar.user,false,form":
             '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
     };
-    const { openView } = await start({
-        serverData: { views },
-    });
-    await openView({
-        res_model: "m2x.avatar.user",
-        res_id: avatarUserId,
-        views: [[false, "form"]],
-    });
+    await start({ serverData: { views } });
+    await openFormView("m2x.avatar.user", avatarUserId);
     await contains(
         `.o_field_many2many_avatar_user.o_field_widget .o_avatar img[data-src="${getOrigin()}/web/image/res.users/${userId}/avatar_128"]`
     );
 });
 
-QUnit.test("many2one_avatar_user widget in list view", async () => {
+test("many2one_avatar_user widget in list view", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 1" });
     const userId = pyEnv["res.users"].create({
@@ -504,7 +445,7 @@ QUnit.test("many2one_avatar_user widget in list view", async () => {
     await contains(".o_card_user_infos > a", { text: "+45687468" });
 });
 
-QUnit.test("many2many_avatar_user widget in form view", async () => {
+test("many2many_avatar_user widget in form view", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 1" });
     const userId = pyEnv["res.users"].create({
@@ -520,12 +461,8 @@ QUnit.test("many2many_avatar_user widget in form view", async () => {
                 <field name="user_ids" widget="many2many_avatar_user"/>
             </form>`,
     };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_model: "m2x.avatar.user",
-        res_id: avatarUserId,
-        views: [[false, "form"]],
-    });
+    await start({ serverData: { views } });
+    await openFormView("m2x.avatar.user", avatarUserId);
     await click(".o_field_many2many_avatar_user .o_avatar img");
     await contains(".o_avatar_card");
     await contains(".o_card_user_infos > span", { text: "Mario" });

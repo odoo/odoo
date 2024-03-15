@@ -194,11 +194,16 @@ class Company(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         companies = super().create(vals_list)
+        # Unarchive inter-company location when multi-company is enabled.
+        inter_company_location = self.env.ref('stock.stock_location_inter_company')
+        if not inter_company_location.active:
+            inter_company_location.sudo().write({'active': True})
         for company in companies:
             company.sudo()._create_per_company_locations()
             company.sudo()._create_per_company_sequences()
             company.sudo()._create_per_company_picking_types()
             company.sudo()._create_per_company_rules()
+            company.sudo()._set_per_company_inter_company_locations(inter_company_location)
         self.env['stock.warehouse'].sudo().create([{
             'name': company.name,
             'code': self.env.context.get('default_code') or company.name[:5],
@@ -206,3 +211,18 @@ class Company(models.Model):
             'partner_id': company.partner_id.id
         } for company in companies])
         return companies
+
+    def _set_per_company_inter_company_locations(self, inter_company_location):
+        self.ensure_one()
+        if not self.env.user.has_group('base.group_multi_company'):
+            return
+        other_companies = self.env['res.company'].search([('id', '!=', self.id)])
+        for company in other_companies:
+            company.partner_id.with_company(self).write({
+                'property_stock_customer': inter_company_location.id,
+                'property_stock_supplier': inter_company_location.id,
+            })
+            self.partner_id.with_company(company).write({
+                'property_stock_customer': inter_company_location.id,
+                'property_stock_supplier': inter_company_location.id,
+            })

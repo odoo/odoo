@@ -13,7 +13,7 @@ wTourUtils.registerWebsitePreviewTour('website_image_quality', {
     }),
     {
         content: "Select image",
-        trigger: 'iframe .s_text_image img',
+        trigger: ':iframe .s_text_image img',
     },
     {
         content: "Set low quality",
@@ -22,7 +22,7 @@ wTourUtils.registerWebsitePreviewTour('website_image_quality', {
     },
     {
         content: "Wait for image update: NOT original image",
-        trigger: 'iframe .s_text_image img:not([src$="s_text_image_default_image"])',
+        trigger: ':iframe .s_text_image img:not([src$="s_text_image_default_image"])',
         run: () => {}, // It is a check.
     },
     {
@@ -44,7 +44,7 @@ wTourUtils.registerWebsitePreviewTour('website_image_quality', {
     },
     {
         content: "Wait for image update: back to original image",
-        trigger: 'iframe .s_text_image img[src$="0sOnkdNPFFV0lRVRLK+B7PJ5F4If2IY8ngQsDP//Z"]',
+        trigger: ':iframe .s_text_image img[src$="0sOnkdNPFFV0lRVRLK+B7PJ5F4If2IY8ngQsDP//Z"]',
         run: () => {}, // It is a check.
     },
     {

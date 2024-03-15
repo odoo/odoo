@@ -14,113 +14,125 @@
 <template id="event_description_full" name="Event Description" track="1">
     <t t-set="hide_submenu" t-value="True"/>
     <t t-set="hide_register_cta" t-value="True"/>
+    <t t-set="opt_event_description_cover_hidden" t-value="is_view_active('website_event.opt_event_description_cover_hidden')"/>
+    <t t-set="opt_event_description_cover_top" t-value="is_view_active('website_event.opt_event_description_cover_top')"/>
+    <t t-set="edition_cover_only" t-value="opt_event_description_cover_hidden and request.env.user.has_group('event.group_event_manager')"/>
+
     <t t-call="website_event.event_details">
-        <section class="h-100" t-cache="event if not editable and event.website_published else None">
-            <div class="container overflow-hidden h-100 pb-5">
-                <div class="row h-100">
-                <div class="col">
-                    <t t-call="website_event.navbar"/>
-                    <!-- Show the button tickets only on mobile -->
-                    <div class="container d-lg-none py-3">
-                        <t t-call="website_event.registration_template"/>
-                    </div>
-                    <!-- Description -->
-                    <div id="o_wevent_event_main_col">
-                        <t t-call="website.record_cover">
-                            <t t-set="_record" t-value="event"/>
-                            <t t-set="use_filters" t-value="True"/>
-                            <t t-set="use_size" t-value="False"/>
-                            <t t-set="use_text_align" t-value="True"/>
-                            <div class="container d-flex flex-column flex-grow-1 justify-content-around">
-                                <div class="o_wevent_event_title p-3 my-5">
-                                    <span t-if="event.is_participating" class="badge text-bg-success o_wevent_badge"><i class="fa fa-check me-2"/>Registered</span>
-                                    <h1 t-field="event.name" class="o_wevent_event_name" itemprop="name" placeholder="Event Title"/>
-                                    <h2 t-field="event.subtitle" class="o_wevent_event_subtitle" placeholder="Event Subtitle"/>
-                                </div>
-                            </div>
-                        </t>
-                        <div class="mt-4" t-field="event.description" itemprop="description"/>
+        <t t-if="opt_event_description_cover_top" t-call="website.record_cover">
+            <t t-set="_record" t-value="event"/>
+            <t t-set="use_filters" t-value="True"/>
+            <t t-set="use_size" t-value="True"/>
+            <t t-set="use_text_align" t-value="True"/>
+            <t t-set="additionnal_classes" t-value="'o_wevent_event_main_cover o_wevent_event_main_cover_top overflow-hidden h-auto'"/>
+
+            <div class="container d-flex flex-grow-1 h-100 w-100">
+                <div id="o_wevent_event_main_cover_content" class="d-flex flex-column align-items-baseline w-100 py-3">
+                    <span t-if="event.is_participating" class="badge text-bg-success o_wevent_badge">
+                        <i class="fa fa-check me-2" role="img"/>Registered
+                    </span>
+                    <div class="w-100 mt-auto">
+                        <h2 t-field="event.name" itemprop="name" placeholder="Event Title" class="mt-3"/>
+                        <p class="lead" t-field="event.subtitle" placeholder="Event Subtitle"/>
                     </div>
                 </div>
-                    <!-- Sidebar -->
-                    <div class="d-lg-flex justify-content-end col-lg-4 col-xl-3 mb-3 mb-lg-0 d-print-none">
-                        <div class="mt-3">
-                            <!-- Tickets Desktop -->
-                            <div class="container d-none d-lg-block">
-                                <t t-call="website_event.registration_template"/>
-                            </div>
-                            <!-- Date & Time -->
-                            <div class="o_wevent_sidebar_block border-bottom pb-3 my-3">
-                                <h6 class="o_wevent_sidebar_title text-muted text-uppercase">Date &amp; Time</h6>
-                                <div class="d-flex">
-                                    <h6 t-field="event.date_begin" class="my-1" t-options="{'tz_name': event.date_tz, 'format': 'full', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
-                                </div>
-                                <t t-if="not event.is_one_day">Start -</t>
-                                <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
-                                <t t-if="event.is_one_day">
-                                    <i class="fa fa-long-arrow-right mx-1"/>
-                                </t>
-                                <t t-else="">
-                                    (<span t-out="event.date_tz"/>)
-                                    <i class="fa fa-long-arrow-down d-block text-muted mx-3 my-2" style="font-size: 1.5rem"/>
-                                    <div class="d-flex">
-                                        <h6 t-field="event.date_end" class="my-1" t-options="{'tz_name': event.date_tz, 'format': 'full', 'date_only': 'true'}"/>
-                                    </div>
-                                    <t t-if="not event.is_one_day">End -</t>
-                                </t>
-                                <span t-if="not event.is_one_day" t-out="event.date_end" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
-                                <span t-else="" t-field="event.date_end" t-options="{'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}" t-att-datetime="event.date_end"/>
-                                (<span t-out="event.date_tz"/>)
+            </div>
+        </t>
 
-                                <a href="#" role="button" data-bs-toggle="dropdown" class="btn btn-secondary text-bg-secondary dropdown w-100 mt-3">
-                                    <p class="mb-0"><i class="fa fa-calendar me-2"/>Add to Calendar</p>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a t-att-href="iCal_url" class="dropdown-item">iCal/Outlook</a>
-                                    <a t-att-href="google_url" class="dropdown-item" target="_blank">Google</a>
+        <section id="o_wevent_event_main" class="h-100" t-cache="event if not editable and event.website_published else None">
+            <div class="container overflow-hidden pb-5">
+                <div class="row">
+                    <div class="col pe-xxl-5">
+                        <t t-call="website_event.navbar"/>
+                        <!-- Show the button tickets only on mobile -->
+                        <div class="o_wevent_event_main_cta_block d-lg-none  mb-3">
+                            <t t-call="website_event.registration_template"/>
+                        </div>
+                        <!-- Description -->
+                        <div id="o_wevent_event_main_col">
+                            <div t-if="edition_cover_only" class="css_non_editable_mode_hidden o_not_editable bg-info-light border border-info border-bottom-0 rounded-top p-2">
+                                <em>Hidden for visitors</em>
+                            </div>
+                            <t t-if="not opt_event_description_cover_top" t-call="website.record_cover">
+                                <t t-set="_record" t-value="event"/>
+                                <t t-set="use_filters" t-value="True"/>
+                                <t t-set="use_size" t-value="False"/>
+                                <t t-set="use_text_align" t-value="True"/>
+                                <t t-set="additionnal_classes" t-value="'o_wevent_event_main_cover overflow-hidden ' + ('css_non_editable_mode_hidden border border-info rounded-bottom' if edition_cover_only else 'd-none' if opt_event_description_cover_hidden else 'rounded')"/>
+
+                                <div id="o_wevent_event_main_cover_content" class="p-3 mt-auto">
+                                    <span t-if="event.is_participating" class="badge text-bg-success o_wevent_badge">
+                                        <i class="fa fa-check me-2" role="img"/>Registered
+                                    </span>
+                                    <h2 t-field="event.name" itemprop="name" placeholder="Event Title" class="mt-3"/>
+                                    <p class="lead" t-field="event.subtitle" placeholder="Event Subtitle"/>
                                 </div>
+                            </t>
+                            <div class="o_wevent_event_main_dates_mobile d-lg-none mt-3">
+                                <t t-call="website_event.event_description_dates"/>
                             </div>
-                            <!-- Location -->
-                            <div t-if="event.address_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-3">
-                                <h6 class="o_wevent_sidebar_title text-muted text-uppercase">Location</h6>
-                                <h4 t-field="event.address_id" class="" t-options='{
-                                    "widget": "contact",
-                                    "fields": ["name"]
-                                }'/>
-                                <div itemprop="location" class="mb-2" t-field="event.address_id" t-options='{
-                                    "widget": "contact",
-                                    "fields": ["address"],
-                                    "no_marker": True
-                                }'/>
-                                <div class="mb-3" t-field="event.address_id" t-options='{
-                                    "widget": "contact",
-                                    "fields": ["phone", "mobile", "email"]
-                                }'/>
-                                <a t-att-href="event._google_map_link()" target="_blank" class="btn btn-secondary text-bg-secondary w-100">
-                                    <p class="mb-0"><i class="fa fa-map-marker fa-fw" role="img"/>Get the direction</p>
-                                </a>
-                            </div>
-                            <h6 t-else="">
-                                <i class="fa fa-map-marker" title="Location"/> Online event
-                            </h6>
-                            <!-- Organizer -->
-                            <div t-if="event.organizer_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-3">
-                                <h6 class="o_wevent_sidebar_title text-muted text-uppercase">Organizer</h6>
-                                <h4 t-field="event.organizer_id"/>
-                                <div itemprop="location" t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email']}"/>
-                            </div>
-                            <!-- Social -->
-                            <div class="o_wevent_sidebar_block">
-                                <h6 class="o_wevent_sidebar_title text-muted text-uppercase">SHARE</h6>
-                                <p class="mb-2">Find out what people see and say about this event, and join the conversation.</p>
-                                <t t-snippet-call="website.s_share">
-                                    <t t-set="_no_title" t-value="True"/>
-                                    <t t-set="_classes" t-valuef="o_wevent_sidebar_social mx-n1"/>
-                                    <t t-set="_link_classes" t-valuef="o_wevent_social_link"/>
-                                </t>
-                            </div>
+                            <div class="mt-4" t-field="event.description" itemprop="description"/>
                         </div>
                     </div>
+
+                    <!-- Sidebar -->
+                    <aside id="o_wevent_event_main_sidebar" class="col-lg-4 my-3 mb-lg-0 d-print-none">
+                        <!-- CTA (desktop only) -->
+                        <div class="d-none d-lg-block mb-3">
+                            <t t-call="website_event.registration_template"/>
+                        </div>
+                        <!-- Date & Time (desktop only) -->
+                        <div class="d-none d-lg-block border-bottom pb-2 mb-3">
+                            <t t-call="website_event.event_description_dates"/>
+                        </div>
+                        <header class="d-lg-none mt-4 mb-2 py-3 border-top">
+                            <h5 class="my-0">Event Info</h5>
+                        </header>
+                        <!-- Location -->
+                        <div t-if="event.address_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-4">
+                            <h6 class="o_wevent_sidebar_title">Location</h6>
+                            <div class="mb-1" t-field="event.address_id" t-options='{
+                                "widget": "contact",
+                                "fields": ["name"]
+                            }'/>
+                            <small itemprop="location" class="d-block mb-2" t-field="event.address_id" t-options='{
+                                "widget": "contact",
+                                "fields": ["address"],
+                                "no_marker": True
+                            }'/>
+                            <small t-field="event.address_id" class="d-block mb-2" t-options='{
+                                "widget": "contact",
+                                "fields": ["phone", "mobile", "email"]
+                            }'/>
+                            <a t-att-href="event._google_map_link()" target="_blank" class="btn btn-light" title="Get directions">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="align-text-top" role="img" style="height: 1em; width: 1em">
+                                    <rect width="24" height="24" opacity="0"/>
+                                    <path role="presentation" fill="currentColor" d="M13.67 22h-.06a1 1 0 0 1-.92-.8l-1.54-7.57a1 1 0 0 0-.78-.78L2.8 11.31a1 1 0 0 1-.12-1.93l16-5.33A1 1 0 0 1 20 5.32l-5.33 16a1 1 0 0 1-1 .68z"/>
+                                </svg>
+                                Get directions
+                            </a>
+                        </div>
+                        <div t-else="" class="o_wevent_sidebar_block border-bottom pb-3 mb-4">
+                            <h6 class="o_wevent_sidebar_title">Location</h6>
+                            <i class="fa fa-map-marker" title="Location"/> Online event
+                        </div>
+                        <!-- Organizer -->
+                        <div t-if="event.organizer_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-4">
+                            <h6 class="o_wevent_sidebar_title">Organizer</h6>
+                            <div class="mb-1" t-field="event.organizer_id"/>
+                            <small itemprop="location" t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email']}"/>
+                        </div>
+                        <!-- Social -->
+                        <div class="o_wevent_sidebar_block">
+                            <h6 class="o_wevent_sidebar_title">Share</h6>
+                            <p>Find out what people see and say about this event, and join the conversation.</p>
+                            <t t-snippet-call="website.s_share">
+                                <t t-set="_no_title" t-value="True"/>
+                                <t t-set="_classes" t-valuef="o_wevent_sidebar_social mx-n1"/>
+                                <t t-set="_link_classes" t-valuef="o_wevent_social_link"/>
+                            </t>
+                        </div>
+                    </aside>
                 </div>
             </div>
         </section>
@@ -130,46 +142,84 @@
 
 <!-- Event - Registration -->
 <template id="registration_template" name="Registration">
-    <!-- Show the tickets button only on desktop -->
-    <div t-attf-class="d-flex d-lg-block flex-wrap justify-content-between align-items-center {{event.event_registrations_open and 'pb-3 border-bottom' or ''}}">
-        <div class="d-flex flex-wrap justify-content-between align-items-center w-100 mb-3">
-            <h4 class="mb-0">Tickets</h4>
-            <t t-call="website_event.registration_configure_tickets_button" t-if="request.env.user.has_group('event.group_event_manager')">
-                <t t-set="linkClasses" t-translation="off">ms-2</t>
+    <button t-if="event.event_registrations_open" type="button" data-bs-toggle="modal" data-bs-target="#modal_ticket_registration" class="btn btn-primary w-100">Register</button>
+    <div t-if="toast_message" class="o_wevent_register_toaster d-none" t-att-data-message="toast_message"/>
+    <t t-if="not event.event_registrations_open">
+        <!-- Delayed registration time -->
+        <div t-if="not event.event_registrations_started and not event.event_registrations_sold_out" class="alert alert-info mb-3 small" role="status">
+            Registrations will open on
+            <b t-out="event.start_sale_datetime" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'MMMM dd, y'}"/>, at
+            <b t-out="event.start_sale_datetime" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'h:mm a'}"/>
+            <small>(<t t-out="event.date_tz"/> time)</small>
+        </div>
+        <!-- Sold Out -->
+        <div t-elif="event.event_registrations_sold_out" class="alert alert-danger mb-3 small" role="status">
+            <b>Sold Out</b>
+        </div>
+        <!-- Registrations Closed -->
+        <div t-else="" class="alert alert-warning mb-3 small" role="status">
+            <em>Registrations <b>Closed</b></em>
+        </div>
+    </t>
+</template>
+
+<!-- Event - Description Dates -->
+<template id="event_description_dates" name="Event Description Dates">
+    <div t-attf-class="o_wevent_dates_block mb-3 {{event.is_one_day and 'd-flex flex-wrap justify-content-between align-items-center gap-2'}}">
+        <div class="flex-wrap gap-3 w-lg-100">
+            <div t-if="event.is_one_day" class="card bg-transparent d-inline-flex align-items-end flex-row flex-grow-1 w-lg-100 gap-2 p-2 p-md-3">
+                <time t-field="event.date_begin" class="o_wevent_day_header_number lh-1" t-options="{'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
+                <div class="small">
+                    <time t-field="event.date_begin" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
+                    <time t-out="event.date_begin"  t-att-datetime="event.date_begin" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                    <i class="fa fa-long-arrow-right mx-1 text-muted" role="img"/>
+                    <time t-out="event.date_end"  t-att-datetime="event.date_end" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                </div>
+            </div>
+
+            <t t-else="">
+                <div class="d-flex flex-lg-column flex-wrap gap-2 w-100">
+                    <div class="flex-grow-1 w-lg-100">
+                        <small class="fw-bold">Starts</small>
+                        <div class="card bg-transparent d-flex align-items-end flex-row flex-grow-1 gap-2 py-3 px-2 px-md-3">
+                            <time t-field="event.date_begin" class="o_wevent_day_header_number lh-1" t-options="{'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
+                            <div class="small">
+                                <time t-field="event.date_begin" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
+                                <time t-out="event.date_begin"  t-att-datetime="event.date_begin" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 w-lg-100">
+                        <small class="fw-bold">Ends</small>
+                        <div class="card bg-transparent d-flex align-items-end flex-row flex-grow-1 gap-2 py-3 px-2 px-md-3">
+                            <time t-field="event.date_end" class="o_wevent_day_header_number lh-1" t-options="{'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}" t-att-datetime="event.date_end"/>
+                            <div class="small">
+                                <time t-field="event.date_end" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}" t-att-datetime="event.date_end"/>
+                                <time t-out="event.date_end"  t-att-datetime="event.date_end" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </t>
         </div>
-        <button t-if="event.event_registrations_open" type="button" data-bs-toggle="modal" data-bs-target="#modal_ticket_registration" class="btn btn-primary w-100">Register</button>
-    </div>
-    <div t-if="toast_message" class="o_wevent_register_toaster d-none" t-att-data-message="toast_message"/>
-    <div t-if="not event.event_registrations_open" class="mb-3">
-        <div class="alert alert-info mb-0 d-flex flex-wrap gap-2 justify-content-between align-items-center" role="status">
-            <t t-if="not event.event_registrations_started and not event.event_registrations_sold_out">
-                <div class="d-flex flex-column">
-                    <em class="me-2">Ticket Sales starting on
-                        <span class="" t-out="event.start_sale_datetime"
-                            t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
-                        <span t-out="event.date_tz"/>
-                    </em>
-                    <t t-call="website_event.registration_configure_tickets_button"
-                        t-if="request.env.user.has_group('event.group_event_manager')">
-                            <t t-set="linkClasses" t-translation="off">alert-link my-3</t>
-                    </t>
-                </div>
-                <button class="btn btn-danger" disabled="1">Registrations not yet open</button>
-            </t>
-            <t t-else="">
-                <div>
-                    <em t-if="event.event_registrations_sold_out">Tickets for this Event are <b>Sold Out</b></em>
-                    <em t-else="">Registrations are <b>closed</b></em>
-                </div>
-                <button class="btn btn-danger py-2 w-100" disabled="1">
-                    <span t-if="event.event_registrations_sold_out">Sold Out</span>
-                    <span t-else="">Registrations Closed</span>
-                </button>
-            </t>
+
+        <div t-attf-class="d-flex align-items-center flex-wrap gap-2 {{'flex-basis-50 flex-basis-md-auto' if event.is_one_day else 'mt-3'}}">
+            <small class="text-muted">Add to calendar:</small>
+            <div t-attf-class="d-flex align-items-center flex-shrink-0 flex-grow-1 {{'gap-1 gap-md-2' if event.is_one_day else 'gap-2'}}">
+                <a t-att-href="iCal_url" class="btn btn-light" title="Add to iCal">
+                    <i role="img" class="fa fa-apple"/>
+                </a>
+                <a t-att-href="iCal_url" class="btn btn-light" title="Add to Outlook">
+                    <i role="img" class="fa fa-windows"/>
+                </a>
+                <a t-att-href="google_url" class="btn btn-light" title="Add to Google" target="_blank">
+                    <i role="img" class="fa fa-google"/>
+                </a>
+            </div>
         </div>
     </div>
 </template>
+
 
 <template id="registration_attendee_details" name="Registration Attendee Details">
     <div id="modal_attendees_registration" class="modal fade" tabindex="-1" role="dialog">
@@ -354,7 +404,7 @@
             <div class="modal-content">
             <div class="modal-header">
                 <div class="o_wevent_registration_title modal-title fs-5" id="staticBackdropLabel">Tickets</div>
-                <div t-if="len(event.event_ticket_ids) &gt; 1" class="o_wevent_price_range ms-2"/>
+                <div t-if="len(event.event_ticket_ids) &gt; 2" class="o_wevent_price_range ms-2"/>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -377,10 +427,10 @@
                         </span>
                         <div id="o_wevent_tickets_collapse" class="modal-body collapse show">
                             <div t-foreach="tickets" t-as="ticket"
-                                class="d-flex justify-content-between o_wevent_ticket_selector"
+                                t-attf-class="d-flex justify-content-between o_wevent_ticket_selector mb-2 pb-2 {{not ticket_last and 'border-bottom' or ''}}"
                                 t-att-name="ticket.name">
                                 <div itemscope="itemscope" itemtype="http://schema.org/Offer">
-                                    <h5 itemprop="name" t-field="ticket.name" class="my-0"/>
+                                    <h5 itemprop="name" t-field="ticket.name" class="h6 my-0"/>
                                     <t t-if="ticket.description">
                                         <small t-field="ticket.description" class="text-muted py-2"/>
                                         <br/>
@@ -398,8 +448,8 @@
                                         (<span t-out="ticket.event_id.date_tz"/>)
                                     </small>
                                 </div>
-                                <div class="d-flex align-items-center justify-content-between p-0">
-                                    <div class="o_wevent_registration_multi_select flex-md-grow-1 me-2 text-end"/>
+                                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+                                    <div class="o_wevent_registration_multi_select flex-md-grow-1 text-end"/>
                                     <div class="ms-auto">
                                         <select t-if="not ticket.is_expired and ticket.sale_available"
                                             t-attf-name="nb_register-#{ticket.id}"
@@ -419,7 +469,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer flex-lg-row-reverse border-top">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary o_wait_lazy_js a-submit" disabled="" t-attf-id="#{event.id}">
                                 Register
@@ -469,7 +519,7 @@
                                 </t>
                             </div>
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer flex-lg-row-reverse border-top">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary o_wait_lazy_js a-submit" t-attf-id="#{event.id}" disabled="disabled">
                                 Register
@@ -485,5 +535,10 @@
         </div>
     </div>
 </template>
+
+
+<!-- Cover Options -->
+<template id="opt_event_description_cover_hidden" name="Event Description Cover Hidden Option" inherit_id="website_event.event_description_full" active="False"/>
+<template id="opt_event_description_cover_top" name="Event Description Cover Top Option" inherit_id="website_event.event_description_full" active="False"/>
 
 </odoo>

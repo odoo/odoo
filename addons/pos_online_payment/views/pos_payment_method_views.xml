@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//form/sheet" position="before">
                 <field name="has_an_online_payment_provider" invisible="1"/>
-                <div class="alert alert-danger mb-0" role="alert" invisible="not is_online_payment or has_an_online_payment_provider">
+                <div class="alert alert-danger" role="alert" invisible="not is_online_payment or has_an_online_payment_provider">
                     You have not activated any <bold><a type="action" name="%(payment.action_payment_provider)d" class="alert-link" role="button">payment provider</a></bold> to allow online payments.
                 </div>
             </xpath>
@@ -16,6 +16,15 @@
             </xpath>
             <xpath expr="//form/sheet/group/group/field[@name='split_transactions']" position="attributes">
                 <attribute name="invisible">is_online_payment</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='payment_method_type']" position="attributes">
+                <attribute name="invisible">is_online_payment</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='qr_code_method']" position="attributes">
+                <attribute name="invisible">is_online_payment or hide_qr_code_method</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/div[@name='tips']" position="attributes">
+                <attribute name="invisible">is_online_payment or not hide_use_payment_terminal or payment_method_type != 'terminal'</attribute>
             </xpath>
             <xpath expr="//form/sheet/group/group/field[@name='journal_id']" position="attributes">
                 <attribute name="invisible">is_online_payment</attribute>

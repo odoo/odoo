@@ -6,6 +6,8 @@
 #
 
 from odoo import fields, models, api
+from odoo.tools.query import Query
+from odoo.tools.sql import SQL
 
 
 class PurchaseReport(models.Model):
@@ -148,28 +150,12 @@ class PurchaseReport(models.Model):
         """
         return group_by_str
 
-    @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        """
-        This is a hack to allow us to correctly calculate the average price of product.
-        """
-        if 'price_average:avg' in fields:
-            fields.extend(['aggregated_qty_ordered:array_agg(qty_ordered)'])
-            fields.extend(['aggregated_price_average:array_agg(price_average)'])
-
-        res = []
-        if fields:
-            res = super(PurchaseReport, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
-
-        if 'price_average:avg' in fields:
-            qties = 'aggregated_qty_ordered'
-            special_field = 'aggregated_price_average'
-            for data in res:
-                if data[special_field] and data[qties]:
-                    total_unit_cost = sum(float(value) * float(qty) for value, qty in zip(data[special_field], data[qties]) if qty and value)
-                    total_qty_ordered = sum(float(qty) for qty in data[qties] if qty)
-                    data['price_average'] = (total_unit_cost / total_qty_ordered) if total_qty_ordered else 0
-                del data[special_field]
-                del data[qties]
-
-        return res
+    def _read_group_select(self, aggregate_spec: str, query: Query) -> SQL:
+        """ This override allows us to correctly calculate the average price of products. """
+        if aggregate_spec != 'price_average:avg':
+            return super()._read_group_select(aggregate_spec, query)
+        return SQL(
+            'SUM(%(f_price)s * %(f_qty)s) / SUM(%(f_qty)s)',
+            f_qty=self._field_to_sql(self._table, 'qty_ordered', query),
+            f_price=self._field_to_sql(self._table, 'price_average', query),
+        )

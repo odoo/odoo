@@ -16,6 +16,7 @@ import { useNavigation } from "@web/core/navigation/navigation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { mergeClasses } from "@web/core/utils/classname";
 import { useChildRef, useService } from "@web/core/utils/hooks";
+import { deepMerge } from "@web/core/utils/objects";
 import { effect } from "@web/core/utils/reactive";
 
 function getFirstElementOfNode(node) {
@@ -95,14 +96,19 @@ export class Dropdown extends Component {
             optional: true,
         },
         manual: { type: Boolean, optional: true },
-        virtualFocus: { type: Boolean, optional: true },
+
+        /**
+         * Override the internal navigation hook options
+         * @type {import("@web/core/navigation/navigation").NavigationOptions}
+         */
+        navigationOptions: { type: Object, optional: true },
     };
     static defaultProps = {
         disabled: false,
         holdOnHover: false,
         menuClass: "",
         state: undefined,
-        virtualFocus: false,
+        navigationOptions: {},
     };
 
     setup() {
@@ -114,17 +120,17 @@ export class Dropdown extends Component {
         this.navigation = useNavigation(this.menuRef, {
             focusInitialElementOnDisabled: () => !this.group.isInGroup,
             itemsSelector: ":scope .o-navigable, :scope .o-dropdown",
-            virtualFocus: this.props.virtualFocus,
-            ...this.nesting.navigationOptions,
+            // Using deepMerge allows to keep entries of both option.hotkeys
+            ...deepMerge(this.nesting.navigationOptions, this.props.navigationOptions),
         });
 
         // Set up UI active element related behavior ---------------------------
         let activeEl;
-        const uiService = useService("ui");
+        this.uiService = useService("ui");
         useEffect(
             () => {
                 Promise.resolve().then(() => {
-                    activeEl = uiService.activeElement;
+                    activeEl = this.uiService.activeElement;
                 });
             },
             () => []
@@ -133,7 +139,9 @@ export class Dropdown extends Component {
         this.popover = usePopover(DropdownPopover, {
             animation: false,
             arrow: false,
-            closeOnClickAway: (target) => uiService.getActiveElementOf(target) === activeEl,
+            closeOnClickAway: (target) => {
+                return this.popoverCloseOnClickAway(target, activeEl);
+            },
             closeOnEscape: false, // Handled via navigation and prevents closing root of nested dropdown
             env: this.__owl__.childEnv,
             holdOnHover: this.props.holdOnHover,
@@ -219,6 +227,10 @@ export class Dropdown extends Component {
         } else {
             this.closePopover();
         }
+    }
+
+    popoverCloseOnClickAway(target, activeEl) {
+        return this.uiService.getActiveElementOf(target) === activeEl;
     }
 
     setTargetElement(target) {

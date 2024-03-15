@@ -583,11 +583,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                 for (const name in fields) {
                     const field = fields[name];
                     if (field.type === "many2one") {
-                        result[name] = record[name] ? record[name].id : undefined;
+                        result[name] = record[name] ? record[name].id : null;
                     } else if (X2MANY_TYPES.has(field.type)) {
                         result[name] = [...record[name]].map((record) => record.id);
                     } else {
-                        result[name] = record[name];
+                        result[name] = record[name] || null;
                     }
                 }
                 return result;

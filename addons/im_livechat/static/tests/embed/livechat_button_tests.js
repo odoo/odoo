@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
@@ -5,7 +7,7 @@ import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/tes
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
 
-QUnit.test("open/close temporary channel", async () => {
+test("open/close temporary channel", async () => {
     await startServer();
     await loadDefaultConfig();
     start();
@@ -17,7 +19,7 @@ QUnit.test("open/close temporary channel", async () => {
     await contains(".o-livechat-LivechatButton", { count: 1 });
 });
 
-QUnit.test("open/close persisted channel", async () => {
+test("open/close persisted channel", async () => {
     await startServer();
     await loadDefaultConfig();
     start();
@@ -32,7 +34,7 @@ QUnit.test("open/close persisted channel", async () => {
     await contains(".o-livechat-LivechatButton", { count: 1 });
 });
 
-QUnit.test("livechat not available", async () => {
+test("livechat not available", async () => {
     await startServer();
     await loadDefaultConfig();
     start({
@@ -46,7 +48,7 @@ QUnit.test("livechat not available", async () => {
     await contains(".o-livechat-LivechatButton", { count: 0 });
 });
 
-QUnit.test("clicking on notification opens the chat", async () => {
+test("clicking on notification opens the chat", async () => {
     await startServer();
     await loadDefaultConfig();
     await start({

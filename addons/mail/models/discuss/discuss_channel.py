@@ -2,7 +2,6 @@
 
 import base64
 import logging
-from babel.lists import format_list
 from collections import defaultdict
 from hashlib import sha512
 from secrets import choice
@@ -12,7 +11,7 @@ from odoo import _, api, fields, models, tools, Command
 from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import html_escape, get_lang
+from odoo.tools import format_list, get_lang, html_escape
 from odoo.tools.misc import babel_locale_parse
 
 _logger = logging.getLogger(__name__)
@@ -1070,6 +1069,8 @@ class Channel(models.Model):
             ])
         ])
         member = self.env['discuss.channel.member'].search(channel_member_domain)
+        if not member:
+            return
         member.write({
             'fetched_message_id': max(member.fetched_message_id.id, last_message.id),
             'seen_message_id': last_message.id,
@@ -1267,8 +1268,8 @@ class Channel(models.Model):
             if channel_members:
                 member_names = Markup(
                     format_list(
+                        self.env,
                         [f"<b>@%(member_{member.id})s</b>" for member in channel_members],
-                        locale=babel_locale_parse(get_lang(self.env).code),
                     )
                 ) % {
                     f"member_{member.id}": member.partner_id.name or member.guest_id.name for member in channel_members

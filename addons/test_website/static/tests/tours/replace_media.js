@@ -39,7 +39,7 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     }),
     {
         content: "select image",
-        trigger: "iframe .s_picture figure img",
+        trigger: ":iframe .s_picture figure img",
     },
     {
         content: "ensure image size is displayed",
@@ -58,7 +58,7 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     },
     {
         content: "ensure the svg doesn't have a shape",
-        trigger: "iframe .s_picture figure img:not([data-shape])",
+        trigger: ":iframe .s_picture figure img:not([data-shape])",
         run: function () {}, // check
     },
     {
@@ -85,11 +85,11 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     },
     {
         content: "select footer",
-        trigger: "iframe footer",
+        trigger: ":iframe footer",
     },
     {
         content: "select icon",
-        trigger: "iframe .s_picture figure span.fa-lemon-o",
+        trigger: ":iframe .s_picture figure span.fa-lemon-o",
     },
     {
         content: "ensure icon block is still displayed",
@@ -113,7 +113,7 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "wait for preview to appear",
         // "about:blank" because the VideoWidget was patched at the start of this tour
-        trigger: ".o_select_media_dialog div.media_iframe_video iframe[src='about:blank']",
+        trigger: ".o_select_media_dialog div.media_iframe_video [src='about:blank']:iframe body",
         run: function () {}, // check
     },
     {
@@ -144,11 +144,11 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     },
     {
         content: "select footer",
-        trigger: "iframe footer",
+        trigger: ":iframe footer",
     },
     {
         content: "select icon",
-        trigger: "iframe .s_picture figure span.fa-lemon-o",
+        trigger: ":iframe .s_picture figure span.fa-lemon-o",
     },
     {
         content: "ensure icon block is still displayed",

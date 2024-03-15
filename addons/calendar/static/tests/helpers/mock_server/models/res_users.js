@@ -50,7 +50,7 @@ patch(MockServer.prototype, {
     /** @override */
     _mockResUsers_getActivityGroups() {
         const activities = super._mockResUsers_getActivityGroups(...arguments);
-        const meetingsLines = this.pyEnv["calendar.event"].searchRead(
+        const meetingsLines = this.pyEnv["calendar.event"].search_read(
             this._mockResUsers_SystrayGetCalendarEventDomain(),
             {
                 fields: ["id", "start", "name", "allday"],

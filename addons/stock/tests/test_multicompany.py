@@ -108,6 +108,17 @@ class TestMultiCompany(TransactionCase):
         with self.assertRaises(UserError):
             shared_partner.with_user(self.user_b).property_stock_customer = self.stock_location_a
 
+    def test_partner_2(self):
+        """On the partners of companies A and B:
+        - As a user of Company A, the customer/vendor location of Company B should be the inter-company location
+        - As a user of Company B, the customer/vendor location of Company A should be the inter-company location
+        """
+        inter_company_loc = self.env.ref('stock.stock_location_inter_company')
+        self.assertEqual(self.company_a.partner_id.with_user(self.user_b).property_stock_customer, inter_company_loc)
+        self.assertEqual(self.company_a.partner_id.with_user(self.user_b).property_stock_supplier, inter_company_loc)
+        self.assertEqual(self.company_b.partner_id.with_user(self.user_a).property_stock_customer, inter_company_loc)
+        self.assertEqual(self.company_b.partner_id.with_user(self.user_a).property_stock_supplier, inter_company_loc)
+
     def test_inventory_1(self):
         """Create a quant (inventory adjustment) in Company A for a product limited to Company A and
         as a user of company B, apply the inventory adjustment and set its counted quantity to 10
@@ -164,33 +175,15 @@ class TestMultiCompany(TransactionCase):
         with self.assertRaises(UserError):
             self.stock_location_b.location_id = self.stock_location_a
 
-    def test_lot_1(self):
-        """Check it is possible to create a stock.production.lot with the same name in Company A and
-        Company B"""
-        product_lot = self.env['product.product'].create({
-            'type': 'product',
-            'tracking': 'lot',
-            'name': 'product lot',
-        })
-        self.env['stock.lot'].create({
-            'name': 'lotA',
-            'company_id': self.company_a.id,
-            'product_id': product_lot.id,
-        })
-        self.env['stock.lot'].create({
-            'name': 'lotA',
-            'company_id': self.company_b.id,
-            'product_id': product_lot.id,
-        })
-
     def test_lot_2(self):
         """Validate a picking of Company A receiving lot1 while being logged into Company B. Check
-        the lot is created in Company A.
+        the lot is created in Company A since the product belongs to Company A.
         """
         product = self.env['product.product'].create({
             'type': 'product',
             'tracking': 'serial',
             'name': 'product',
+            'company_id': self.company_a.id,
         })
         picking = self.env['stock.picking'].with_user(self.user_a).create({
             'picking_type_id': self.warehouse_a.in_type_id.id,
@@ -415,7 +408,7 @@ class TestMultiCompany(TransactionCase):
         with previous move, and no product are reserved from inter-company
         transit. """
         supplier_location = self.env.ref('stock.stock_location_suppliers')
-        intercom_location = self.env.ref('stock.stock_location_inter_wh')
+        intercom_location = self.env.ref('stock.stock_location_inter_company')
         intercom_location.write({'active': True})
 
         self.user_a.company_ids = [(6, 0, [self.company_a.id])]
@@ -510,10 +503,8 @@ class TestMultiCompany(TransactionCase):
         picking_receipt.move_ids.picked = True
         picking_receipt.button_validate()
         lot_2 = move_line_3.lot_id
-        self.assertEqual(lot_1.company_id, self.company_a)
         self.assertEqual(lot_1.name, 'lot 1')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, intercom_location, lot_1), 1.0)
-        self.assertEqual(lot_2.company_id, self.company_b)
         self.assertEqual(lot_2.name, 'lot 2')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, self.stock_location_b, lot_2), 1.0)
 
@@ -523,7 +514,7 @@ class TestMultiCompany(TransactionCase):
         inter-company transit location."""
         customer_location = self.env.ref('stock.stock_location_customers')
         supplier_location = self.env.ref('stock.stock_location_suppliers')
-        intercom_location = self.env.ref('stock.stock_location_inter_wh')
+        intercom_location = self.env.ref('stock.stock_location_inter_company')
         intercom_location.write({'active': True})
         partner = self.env['res.partner'].create({'name': 'Deco Addict'})
         self.warehouse_a.resupply_wh_ids = [(6, 0, [self.warehouse_b.id])]
@@ -614,9 +605,7 @@ class TestMultiCompany(TransactionCase):
         move_wha_to_cus.picking_id.button_validate()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, customer_location, lot_a), 1.0)
 
-        self.assertEqual(lot_a.company_id, self.company_a)
         self.assertEqual(lot_a.name, 'lot a')
-        self.assertEqual(lot_b.company_id, self.company_b)
         self.assertEqual(lot_b.name, 'lot b')
 
     def test_route_rules_company_consistency(self):

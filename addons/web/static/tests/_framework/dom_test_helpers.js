@@ -1,5 +1,6 @@
 import {
     check,
+    clear,
     click,
     drag,
     edit,
@@ -62,6 +63,20 @@ const dragEffectDelay = async () => {
     await animationFrame();
 };
 
+/**
+ * These params are used to move the pointer from an arbitrary distance in the
+ * element to trigger a drag sequence (the distance required to trigger a drag
+ * is defined by the `tolerance` option in the draggable hook builder).
+ * @see {draggable_hook_builder.js}
+ */
+const DRAG_TOLERANCE_PARAMS = {
+    position: {
+        x: 100,
+        y: 100,
+    },
+    relative: true,
+};
+
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
@@ -89,6 +104,14 @@ export function contains(target, options) {
          */
         check: async (options) => {
             check(await nodePromise, options);
+            await animationFrame();
+        },
+        /**
+         * @param {FillOptions} [options]
+         */
+        clear: async (options) => {
+            await focusCurrent();
+            clear({ confirm: true, ...options });
             await animationFrame();
         },
         /**
@@ -146,13 +169,7 @@ export function contains(target, options) {
             const { cancel, drop, moveTo } = drag(node, options);
             await dragEffectDelay();
 
-            hover(node, {
-                position: {
-                    x: 100,
-                    y: 100,
-                },
-                relative: true,
-            });
+            hover(node, DRAG_TOLERANCE_PARAMS);
             await dragEffectDelay();
 
             return {
@@ -166,10 +183,14 @@ export function contains(target, options) {
          * @param {PointerOptions} [options]
          */
         dragAndDrop: async (target, options) => {
-            const { drop, moveTo } = drag(await nodePromise);
+            const [from, to] = await Promise.all([nodePromise, waitFor(target)]);
+            const { drop, moveTo } = drag(from);
             await dragEffectDelay();
 
-            moveTo(target, options);
+            hover(from, DRAG_TOLERANCE_PARAMS);
+            await dragEffectDelay();
+
+            moveTo(to, options);
             await dragEffectDelay();
 
             drop();
@@ -203,10 +224,11 @@ export function contains(target, options) {
         },
         /**
          * @param {KeyStrokes} keyStrokes
+         * @param {KeyboardEventInit} [options]
          */
-        press: async (keyStrokes) => {
+        press: async (keyStrokes, options) => {
             await focusCurrent();
-            press(keyStrokes);
+            press(keyStrokes, options);
             await animationFrame();
         },
         /**
@@ -220,8 +242,7 @@ export function contains(target, options) {
          * @param {InputValue} value
          */
         select: async (value) => {
-            await focusCurrent();
-            select(value);
+            select(value, { target: await nodePromise });
             await animationFrame();
         },
         /**

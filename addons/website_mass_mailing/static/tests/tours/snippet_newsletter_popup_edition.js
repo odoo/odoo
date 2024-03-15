@@ -14,14 +14,14 @@ wTourUtils.registerWebsitePreviewTour("snippet_newsletter_popup_edition", {
     }),
     {
         content: "Check the modal is opened for edition",
-        trigger: 'iframe .o_newsletter_popup .modal:visible',
+        trigger: ':iframe .o_newsletter_popup .modal:visible',
         in_modal: false,
         run: () => null,
     },
     ...wTourUtils.clickOnSave(),
     {
         content: "Check the modal has been saved, closed",
-        trigger: 'iframe body:has(.o_newsletter_popup)',
+        trigger: ':iframe body:has(.o_newsletter_popup)',
         run: snippetNewsletterPopupUseTour.ensurePopupNotVisible,
     }
 ]);

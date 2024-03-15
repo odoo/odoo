@@ -1,15 +1,16 @@
 /** @odoo-module alias=@mail/../tests/web/fields/many2many_tags_email_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { selectDropdownItem } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 
 QUnit.module("FieldMany2ManyTagsEmail");
 
-QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
+test("fieldmany2many tags email (edition)", async (assert) => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { name: "gold", email: "coucou@petite.perruche" },
@@ -30,27 +31,19 @@ QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
                 <field name="email"/>
             </form>`,
     };
-    const { openView } = await start({
+    await start({
         serverData: { views },
         mockRPC(route, args) {
             if (args.method === "web_read" && args.model === "res.partner") {
-                assert.step(JSON.stringify(args.args[0]));
+                step(JSON.stringify(args.args[0]));
                 assert.ok("email" in args.kwargs.specification);
             } else if (args.method === "get_formview_id") {
                 return false;
             }
         },
     });
-    await openView(
-        {
-            res_id: messageId,
-            res_model: "mail.message",
-            views: [[false, "form"]],
-        },
-        { mode: "edit" }
-    );
-
-    assert.verifySteps([]);
+    await openFormView("mail.message", messageId, { props: { mode: "edit" } });
+    await assertSteps([]);
     await contains('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0');
 
     // add an other existing tag
@@ -74,10 +67,10 @@ QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
     assert.hasAttrValue(firstTag.querySelector(".o_badge_text"), "title", "coucou@petite.perruche");
     // should have read Partner_1 three times: when opening the dropdown, when opening the modal, and
     // after the save
-    assert.verifySteps([`[${partnerId_2}]`, `[${partnerId_2}]`, `[${partnerId_1},${partnerId_2}]`]);
+    await assertSteps([`[${partnerId_2}]`, `[${partnerId_2}]`, `[${partnerId_1},${partnerId_2}]`]);
 });
 
-QUnit.test("many2many_tags_email widget can load more than 40 records", async () => {
+test("many2many_tags_email widget can load more than 40 records", async () => {
     const pyEnv = await startServer();
     const partnerIds = [];
     for (let i = 100; i < 200; i++) {
@@ -88,13 +81,8 @@ QUnit.test("many2many_tags_email widget can load more than 40 records", async ()
         "mail.message,false,form":
             '<form><field name="partner_ids" widget="many2many_tags"/></form>',
     };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_id: messageId,
-        res_model: "mail.message",
-        views: [[false, "form"]],
-    });
-
+    await start({ serverData: { views } });
+    await openFormView("mail.message", messageId);
     await contains('.o_field_widget[name="partner_ids"] .badge', { count: 100 });
     await contains(".o_form_editable");
 

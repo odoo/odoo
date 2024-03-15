@@ -290,6 +290,38 @@ class TestProcRule(TransactionCase):
         self.assertEqual(receipt_move2.date.date(), date.today())
         self.assertEqual(receipt_move2.product_uom_qty, 10.0)
 
+    def test_reordering_rule_3(self):
+        """Test how qty_multiple affects qty_to_order"""
+        stock_location = self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.productA = self.env['product.product'].create({
+            'name': 'Desk Combination',
+            'type': 'product',
+        })
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.productA.id,
+            'location_id': stock_location.id,
+            'inventory_quantity': 14.5,
+        }).action_apply_inventory()
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'ProductA RR',
+            'product_id': self.productA.id,
+            'product_min_qty': 15.0,
+            'product_max_qty': 30.0,
+            'qty_multiple': 10,
+        })
+        orderpoint._compute_qty_to_order()
+        self.assertEqual(orderpoint.qty_to_order, 10.0)  # 15.0 < 14.5 + 10 <= 30.0
+        orderpoint.write({
+            'qty_multiple': 1,
+        })
+        orderpoint._compute_qty_to_order()
+        self.assertEqual(orderpoint.qty_to_order, 15.0)  # 15.0 < 14.5 + 15 <= 30.0
+        orderpoint.write({
+            'qty_multiple': 0,
+        })
+        orderpoint._compute_qty_to_order()
+        self.assertEqual(orderpoint.qty_to_order, 15.5)  # 15.0 < 14.5 + 15.5 <= 30.0
+
     def test_fixed_procurement_01(self):
         """ Run a procurement for 5 products when there are only 4 in stock then
         check that MTO is applied on the moves when the rule is set to 'mts_else_mto'
@@ -527,6 +559,31 @@ class TestProcRule(TransactionCase):
         self.assertEqual(orderpoint.qty_forecast, 10.0)
         orderpoint.action_replenish(force_to_max=True)
         self.assertEqual(orderpoint.qty_forecast, 200.0)
+
+    def test_orderpoint_location_archive(self):
+        warehouse = self.env['stock.warehouse'].create({
+            'name': 'Test Warehouse',
+            'code': 'TWH'
+        })
+        stock_loc = warehouse.lot_stock_id
+        shelf1 = self.env['stock.location'].create({
+            'location_id': stock_loc.id,
+            'usage': 'internal',
+            'name': 'shelf1'
+        })
+        product = self.env['product.product'].create({'name': 'Test Product', 'type': 'product'})
+        stock_move = self.env['stock.move'].create({
+            'name': 'Test Move',
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 1,
+            'location_id': shelf1.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+        })
+        stock_move._action_confirm()
+        shelf1.active = False
+        # opening the replenishment should not raise a KeyError even if the location is archived
+        self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
 
 
 class TestProcRuleLoad(TransactionCase):

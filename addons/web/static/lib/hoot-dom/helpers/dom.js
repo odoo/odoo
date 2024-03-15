@@ -38,6 +38,10 @@ import { HootDomError, getTag, isFirefox, isIterable, parseRegExp } from "../hoo
  *  visible?: boolean;
  * }} QueryOptions
  *
+ * @typedef {{
+ *  raw?: boolean;
+ * }} QueryTextOptions
+ *
  * @typedef {MaybeIterable<Node> | string | null | undefined | false} Target
  *
  * @typedef {{
@@ -265,7 +269,7 @@ const isWindow = (object) => object?.window === object && object.constructor.nam
 /**
  * @param {string} [char]
  */
-const isWhiteSpace = (char) => Boolean(char) && R_WHITESPACE.test(char);
+const isWhiteSpace = (char) => Boolean(char) && R_HORIZONTAL_WHITESPACE.test(char);
 
 /**
  * @param {string} pseudoClass
@@ -618,7 +622,11 @@ const selectorError = (pseudoClass, message) =>
 const R_CHAR = /[\w-]/;
 const R_QUOTE_CONTENT = /^\s*(['"])?([^]*?)\1\s*$/;
 const R_ROOT_ELEMENT = /^(HTML|HEAD|BODY)$/;
-const R_WHITESPACE = /\s/;
+/**
+ * \s without \n and \v
+ */
+const R_HORIZONTAL_WHITESPACE =
+    /[\r\t\f \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+/g;
 
 // Following selector is based on this spec:
 // https://html.spec.whatwg.org/multipage/interaction.html#dom-tabindex
@@ -750,6 +758,11 @@ customPseudoClasses
             return !matches(node, content);
         };
     })
+    .set("only", () => {
+        return function only(node, i, nodes) {
+            return nodes.length === 1;
+        };
+    })
     .set("scrollable", () => {
         return function scrollable(node) {
             return isNodeScrollable(node);
@@ -779,7 +792,12 @@ let rCustomPseudoClass = compilePseudoClassRegex();
 // Exports
 //-----------------------------------------------------------------------------
 
-export function cleanupObservers() {
+export function cleanupDOM() {
+    // Dimensions
+    currentDimensions.width = null;
+    currentDimensions.height = null;
+
+    // Observers
     const remainingObservers = observers.size;
     if (remainingObservers) {
         console.warn(`${remainingObservers} observers still running`);
@@ -932,14 +950,20 @@ export function getNodeValue(node) {
 
 /**
  * @param {Node} node
+ * @param {QueryTextOptions} [options]
  * @returns {string}
  */
-export function getNodeText(node) {
+export function getNodeText(node, options) {
+    let content;
     if (typeof node.innerText === "string") {
-        return node.innerText.trim();
+        content = node.innerText;
     } else {
-        return node.textContent.trim();
+        content = node.textContent;
     }
+    if (options?.raw) {
+        return content;
+    }
+    return content.replace(R_HORIZONTAL_WHITESPACE, " ").trim();
 }
 
 /**
@@ -962,7 +986,7 @@ export function getParentFrame(node) {
 }
 
 /**
- * Returns the previous focusable element after the current active element if it is
+ * Returns the previous focusable element before the current active element if it is
  * contained in the given parent.
  *
  * @see {@link getFocusableElements}
@@ -1281,10 +1305,7 @@ export function mockedMatchMedia(query) {
     return {
         addEventListener: (type, callback) => window.addEventListener("resize", callback),
         get matches() {
-            let { width, height } = currentDimensions;
-            width ||= window.innerWidth;
-            height ||= window.innerHeight;
-            return matchesQuery(query, width, height);
+            return matchesQuery(query, window.innerWidth, window.innerHeight);
         },
         media: query,
         get onchange() {
@@ -1379,7 +1400,7 @@ export function parsePosition(position) {
  * - a string representing a *custom selector* (which will be queried in the `root` option);
  *
  * This function allows all string selectors supported by the native {@link Element.querySelector}
- * along with some additional custom pseudo-classes[1]:
+ * along with some additional custom pseudo-classes:
  *
  * - `:contains(text)`: matches nodes whose *content* matches the given *text*;
  *      * given *text* supports regular expression syntax (e.g. `:contains(/^foo.+/)`)
@@ -1403,7 +1424,7 @@ export function parsePosition(position) {
  * - `:scrollable`: matches nodes that are scrollable (see {@link isScrollable});
  * - `:visible`: matches nodes that are "visible" (see {@link isVisible});
  *
- * An `options` object can be specified to filter[2] the results:
+ * An `options` object can be specified to filter[1] the results:
  * - `displayed`: whether the nodes must be "displayed" (see {@link isDisplayed});
  * - `exact`: the exact number of nodes to match (throws an error if the number of
  *  nodes doesn't match);
@@ -1412,10 +1433,7 @@ export function parsePosition(position) {
  * - `visible`: whether the nodes must be "visible" (see {@link isVisible}).
  *      * This option implies `displayed`
  *
- * [1] combinations of nested standard pseudo-classes with custom pseudo-classes
- *  are not supported (e.g. `:not(:empty)`, `:has(:contains(foo))`, etc.).
- *
- * [2] these filters (except for `exact` and `root`) achieve the same result as
+ * [1] these filters (except for `exact` and `root`) achieve the same result as
  *  using their homonym pseudo-classes on the final group of the given selector
  *  string (e.g. ```queryAll`ul > li:visible`;``` = ```queryAll("ul > li", { visible: true })```).
  *
@@ -1547,11 +1565,11 @@ export function queryAllProperties(target, property, options) {
  * *texts* of the matching nodes.
  *
  * @param {Target} target
- * @param {QueryOptions} [options]
+ * @param {QueryOptions & QueryTextOptions} [options]
  * @returns {string[]}
  */
 export function queryAllTexts(target, options) {
-    return queryAll(target, options).map(getNodeText);
+    return queryAll(target, options).map((node) => getNodeText(node, options));
 }
 
 /**
@@ -1617,11 +1635,11 @@ export function queryOne(target, options) {
  * the matching node.
  *
  * @param {Target} target
- * @param {QueryOptions} [options]
+ * @param {QueryOptions & QueryTextOptions} [options]
  * @returns {string}
  */
 export function queryText(target, options) {
-    return getNodeText(queryOne(target, options));
+    return getNodeText(queryOne(target, options), options);
 }
 
 /**
@@ -1656,11 +1674,11 @@ export function setDimensions(width, height) {
     const defaultRoot = getDefaultRoot();
     if (!Number.isNaN(width)) {
         currentDimensions.width = width;
-        defaultRoot.style.setProperty("width", `${width}px`, "important");
+        defaultRoot.style?.setProperty("width", `${width}px`, "important");
     }
     if (!Number.isNaN(height)) {
         currentDimensions.height = height;
-        defaultRoot.style.setProperty("height", `${height}px`, "important");
+        defaultRoot.style?.setProperty("height", `${height}px`, "important");
     }
 }
 
@@ -1681,8 +1699,6 @@ export function toSelector(node, options) {
     }
     return options?.object ? parts : Object.values(parts).join("");
 }
-
-export function useFixture() {}
 
 /**
  * Combination of {@link queryAll} and {@link waitUntil}: waits for a given target

@@ -395,7 +395,7 @@
                     <field name="move_name" string="Journal Entry" widget="open_move_widget"/>
                     <field name="partner_id" optional="show" readonly="move_type != 'entry'"/>
                     <field name="ref" readonly="False"/>
-                    <field name="display_name" optional="show"/>
+                    <field name="name" optional="show"/>
                     <field name="discount_amount_currency" string="Discount Amount" optional="show" invisible="not discount_amount_currency"/>
                     <field name="amount_residual" sum="Total Residual" string="Residual" readonly="1" invisible="not is_account_reconcile"/>
                     <field name="amount_residual_currency" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile"/>
@@ -422,6 +422,7 @@
                         '|', '|', '|',
                         ('name', 'ilike', self), ('ref', 'ilike', self), ('account_id', 'ilike', self), ('partner_id', 'ilike', self)]"/>
                     <field name="name"/>
+                    <field name="move_id"/>
                     <field name="ref"/>
                     <field name="payment_date" string="Due Date"/>
                     <field name="partner_id"/>
@@ -729,66 +730,66 @@
                                 invisible="not to_check" data-hotkey="k" />
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>
-                    <div class="alert alert-warning mb-0 w-100 d-flex align-items-center gap-1" invisible="state != 'draft' or not duplicated_ref_ids"  role="alert">
+                    <div class="alert alert-warning w-100 d-flex align-items-center gap-1" invisible="state != 'draft' or not duplicated_ref_ids"  role="alert">
                         <span>Warning: this document might be a duplicate of</span>
                         <field name="duplicated_ref_ids" widget="x2many_buttons" string="Duplicated Documents" context="{'name_as_amount_total': True}"/>
                     </div>
-                    <div class="alert alert-info mb-0" role="alert" invisible="not is_being_sent">
+                    <div class="alert alert-info" role="alert" invisible="not is_being_sent">
                         This invoice is being sent in the background.
                     </div>
                     <!-- Invoice outstanding credits -->
                     <div groups="account.group_account_invoice,account.group_account_readonly"
-                         class="alert alert-warning mb-0" role="alert"
+                         class="alert alert-warning" role="alert"
                          invisible="state != 'draft' or not tax_lock_date_message">
                         <field name="tax_lock_date_message" nolabel="1"/>
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
-                         class="alert alert-info mb-0" role="alert"
+                         class="alert alert-info" role="alert"
                          invisible="move_type not in ('out_invoice', 'out_receipt') or not invoice_has_outstanding or payment_state not in ('not_paid', 'partial')">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding credits</a></bold> for this customer. You can allocate them to mark this invoice as paid.
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
-                         class="alert alert-info mb-0" role="alert"
+                         class="alert alert-info" role="alert"
                          invisible="move_type not in ('in_invoice', 'in_receipt') or not invoice_has_outstanding or payment_state not in ('not_paid', 'partial')">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this vendor. You can allocate them to mark this bill as paid.
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
-                         class="alert alert-info mb-0" role="alert"
+                         class="alert alert-info" role="alert"
                          invisible="move_type != 'out_refund' or not invoice_has_outstanding or payment_state not in ('not_paid', 'partial')">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this customer. You can allocate them to mark this credit note as paid.
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
-                         class="alert alert-info mb-0" role="alert"
+                         class="alert alert-info" role="alert"
                          invisible="move_type != 'in_refund' or not invoice_has_outstanding or payment_state not in ('not_paid', 'partial')">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding credits</a></bold> for this vendor. You can allocate them to mark this credit note as paid.
                     </div>
-                    <div class="alert alert-info mb-0" role="alert"
+                    <div class="alert alert-info" role="alert"
                          invisible="state != 'draft' or auto_post != 'at_date'">
                         This move is configured to be posted automatically at the accounting date: <field name="date" readonly="1"/>.
                     </div>
-                    <div class="alert alert-info mb-0" role="alert"
+                    <div class="alert alert-info" role="alert"
                          invisible="state != 'draft' or auto_post == 'no' or auto_post == 'at_date'">
                          <field name="auto_post" readonly="1"/> auto-posting enabled. Next accounting date: <field name="date" readonly="1"/>.<span invisible="not auto_post_until"> The recurrence will end on <field name="auto_post_until" readonly="1"/> (included).</span>
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
-                         class="alert alert-warning mb-0" role="alert"
+                         class="alert alert-warning" role="alert"
                          invisible="partner_credit_warning == ''">
                         <field name="partner_credit_warning"/>
                     </div>
                     <!-- Currency consistency -->
-                    <div class="alert alert-warning mb-0" role="alert"
+                    <div class="alert alert-warning" role="alert"
                          invisible="not display_inactive_currency_warning or move_type not in ('in_invoice', 'in_refund', 'in_receipt')">
                         In order to validate this bill, you must <button class="oe_link" type="object" name="action_activate_currency" style="padding: 0; vertical-align: baseline;">activate the currency of the bill</button>. The journal entries need to be computed by Odoo before being posted in your company's currency.
                     </div>
-                    <div class="alert alert-warning mb-0" role="alert"
+                    <div class="alert alert-warning" role="alert"
                          invisible="not display_inactive_currency_warning or move_type not in ('out_invoice', 'out_refund', 'out_receipt')">
                         In order to validate this invoice, you must <button class="oe_link" type="object" name="action_activate_currency" style="padding: 0; vertical-align: baseline;">activate the currency of the invoice</button>. The journal entries need to be computed by Odoo before being posted in your company's currency.
                     </div>
-                    <div class="alert alert-warning mb-0" role="alert"
+                    <div class="alert alert-warning" role="alert"
                          invisible="not abnormal_amount_warning">
                         <field name="abnormal_amount_warning"/>
                     </div>
-                    <div class="alert alert-warning mb-0" role="alert"
+                    <div class="alert alert-warning" role="alert"
                          invisible="not abnormal_date_warning">
                         <field name="abnormal_date_warning"/>
                     </div>
@@ -1377,10 +1378,7 @@
                     <div class="o_attachment_preview"
                          invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund') or state != 'draft'" />
                     <!-- Chatter -->
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" groups="base.group_user"/>
-                        <field name="message_ids"/>
-                    </div>
+                    <chatter/>
                 </form>
             </field>
         </record>
@@ -1663,6 +1661,7 @@
 
         <record id="action_move_out_invoice_type" model="ir.actions.act_window">
             <field name="name">Invoices</field>
+            <field name="path">invoicing</field>
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,kanban,form,activity</field>
             <field name="view_id" ref="view_out_invoice_tree"/>
@@ -1736,7 +1735,7 @@
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_move_line_payment_tree"/>
             <field name="search_view_id" ref="view_account_move_line_payment_filter"/>
-            <field name="domain">[('parent_state', '=', 'posted'), ('amount_residual', '&lt;', 0), ('account_id.reconcile', '=', True), ('journal_id.type', '=', 'sale')]</field>
+            <field name="domain">[('parent_state', '=', 'posted'), ('date_maturity', '!=', False), ('amount_residual', '&lt;', 0), ('account_id.reconcile', '=', True), ('journal_id.type', '=', 'sale')]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Amounts to settle
@@ -1752,7 +1751,7 @@
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_move_line_payment_tree"/>
             <field name="search_view_id" ref="view_account_move_line_payment_filter"/>
-            <field name="domain">[('parent_state', '=', 'posted'), ('amount_residual', '&lt;', 0), ('account_id.reconcile', '=', True), ('journal_id.type', '=', 'purchase')]</field>
+            <field name="domain">[('parent_state', '=', 'posted'), ('date_maturity', '!=', False), ('amount_residual', '&lt;', 0), ('account_id.reconcile', '=', True), ('journal_id.type', '=', 'purchase')]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Amounts to settle

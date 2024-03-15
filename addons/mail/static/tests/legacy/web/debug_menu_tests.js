@@ -1,9 +1,11 @@
 /** @odoo-module alias=@mail/../tests/web/debug_menu_tests default=false */
+const test = QUnit.test; // QUnit.test()
 
 import { manageMessages } from "@mail/js/tools/debug_manager";
 
 import { registry } from "@web/core/registry";
 import { click, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { assertSteps, step } from "@web/../tests/utils";
 import {
     createWebClient,
     doAction,
@@ -12,7 +14,7 @@ import {
 
 QUnit.module("debug menu");
 
-QUnit.test("Manage Messages", async (assert) => {
+test("Manage Messages", async (assert) => {
     patchWithCleanup(odoo, { debug: "1" });
     const serverData = getActionManagerServerData();
     // Add fake "mail.message" model and arch
@@ -31,7 +33,7 @@ QUnit.test("Manage Messages", async (assert) => {
             return true;
         }
         if (method === "web_search_read" && model === "mail.message") {
-            assert.step("message_read");
+            step("message_read");
             const { context, domain } = kwargs;
             assert.strictEqual(context.default_res_id, 5);
             assert.strictEqual(context.default_res_model, "partner");
@@ -47,7 +49,7 @@ QUnit.test("Manage Messages", async (assert) => {
     assert.strictEqual(dropdownItems[0].innerText.trim(), "Manage Messages");
 
     await click(dropdownItems[0]);
-    assert.verifySteps(["message_read"]);
+    await assertSteps(["message_read"]);
     assert.strictEqual(
         target.querySelector(".o_breadcrumb .active > span").innerText.trim(),
         "Manage Messages"

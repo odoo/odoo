@@ -30,12 +30,22 @@ import { logger } from "./logger";
 import { Test } from "./test";
 
 /**
+ *
+ * @typedef {{
+ *  aborted: boolean;
+ * }} AfterTestOptions
+ *
  * @typedef {import("../hoot_utils").ArgumentType} ArgumentType
+ *
+ * @typedef {{
+ *  headless: boolean;
+ * }} ExpectBuilderParams
  *
  * @typedef {{
  *  message?: string;
  * }} ExpectOptions
  *
+ * @typedef {import("@odoo/hoot-dom").QueryTextOptions} QueryTextOptions
  * @typedef {import("@odoo/hoot-dom").Target} Target
  */
 
@@ -70,17 +80,17 @@ import { Test } from "./test";
 // Global
 //-----------------------------------------------------------------------------
 
-const { Boolean, Error, Object, Promise, TypeError, console, performance } = globalThis;
+const { Boolean, Error, Object, Promise, TypeError, performance } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
 
 /**
- * @param {import("./runner").TestRunner} runner
  * @param {Test} test
+ * @param {AfterTestOptions} options
  */
-const afterTest = (runner, test) => {
+const afterTest = (test, options) => {
     currentResult.duration = performance.now() - currentResult.ts;
 
     // Steps
@@ -154,7 +164,7 @@ const afterTest = (runner, test) => {
         }
     }
 
-    if (runner.aborted) {
+    if (options?.aborted) {
         registerAssertion(
             new Assertion({
                 label: "aborted",
@@ -165,7 +175,7 @@ const afterTest = (runner, test) => {
     }
 
     // Set test status
-    if (runner.aborted) {
+    if (options?.aborted) {
         test.status = Test.ABORTED;
     } else if (currentResult.pass) {
         test.status ||= Test.PASSED;
@@ -216,10 +226,9 @@ const assertions = (expected) => {
 };
 
 /**
- * @param {import("./runner").TestRunner} runner
  * @param {Test} test
  */
-const beforeTest = (runner, test) => {
+const beforeTest = (test) => {
     test.results.push(new TestResult());
 
     // Must be retrieved from the list to be proxified
@@ -256,6 +265,17 @@ const errors = (expected) => {
 /** @type {(typeof Matchers)["extend"]} */
 const extend = (matcher) => {
     return Matchers.extend(matcher);
+};
+
+/**
+ * @param {Error} [error]
+ */
+const formatError = (error) => {
+    let strError = error ? String(error) : "";
+    if (error?.cause) {
+        strError += `\n${formatError(error.cause)}`;
+    }
+    return strError;
 };
 
 /**
@@ -296,7 +316,12 @@ const getStyleValues = (node, keys) => {
     if (!nodeStyle) {
         return {};
     }
-    return Object.fromEntries(keys.map((key) => [key, nodeStyle[key]]));
+    return Object.fromEntries(
+        keys.map((key) => [
+            key,
+            key.includes("-") ? nodeStyle.getPropertyValue(key) : nodeStyle[key],
+        ])
+    );
 };
 
 /**
@@ -305,10 +330,7 @@ const getStyleValues = (node, keys) => {
  * @param {Record<string, string | RegExp>} styleDef
  */
 const hasStyle = (node, styleDef) => {
-    const nodeStyle = getStyle(node);
-    if (!nodeStyle) {
-        return false;
-    }
+    const nodeStyle = getStyleValues(node, Object.keys(styleDef));
     for (const [prop, value] of Object.entries(styleDef)) {
         if (!regexMatchOrStrictEqual(nodeStyle[prop], value)) {
             return false;
@@ -377,9 +399,10 @@ let currentStack = "";
 //-----------------------------------------------------------------------------
 
 /**
- * @param {import("./runner").TestRunner} runner
+ * @param {ExpectBuilderParams} params
+ * @returns {[typeof enrichedExpect, typeof expectHooks]}
  */
-export function makeExpectFunction(runner) {
+export function makeExpect(params) {
     /**
      * Main entry point to write assertions in tests.
      *
@@ -398,18 +421,21 @@ export function makeExpectFunction(runner) {
             throw scopeError("expect");
         }
 
-        return new Matchers(received, {}, runner.config.headless);
+        return new Matchers(received, {}, params.headless);
     }
 
-    return Object.assign(expect, {
+    const enrichedExpect = Object.assign(expect, {
         assertions,
         errors,
         extend,
         step,
-        // Private members
-        __after: afterTest,
-        __before: beforeTest,
     });
+    const expectHooks = {
+        after: afterTest,
+        before: beforeTest,
+    };
+
+    return [enrichedExpect, expectHooks];
 }
 
 export class Assertion {
@@ -602,7 +628,7 @@ export class Matchers {
 
         return this.#resolve({
             name: "toBeEmpty",
-            acceptedType: ["string", "node", "node[]"],
+            acceptedType: ["any"],
             predicate: isEmpty,
             message: (pass) =>
                 options?.message ||
@@ -719,7 +745,7 @@ export class Matchers {
      * @param {ArgumentType} type
      * @param {ExpectOptions} [options]
      * @example
-     *  expect("foo").toBeOfType("");
+     *  expect("foo").toBeOfType("string");
      * @example
      *  expect({ foo: 1 }).toBeOfType("object");
      */
@@ -1013,10 +1039,17 @@ export class Matchers {
         return this.#resolve({
             name: "toVerifyErrors",
             acceptedType: ["string[]", "regex[]"],
-            predicate: (actual) => {
+            predicate: (expected) => {
                 receivedErrors = currentResult.errors;
                 currentResult.errors = [];
-                return receivedErrors.every((error, i) => !actual[i] || match(error, actual[i]));
+                return (
+                    receivedErrors.length === expected.length &&
+                    receivedErrors.every(
+                        (error, i) =>
+                            match(error, expected[i]) ||
+                            (error.cause && match(error.cause, expected[i]))
+                    )
+                );
             },
             message: (pass) =>
                 options?.message ||
@@ -1025,11 +1058,15 @@ export class Matchers {
                         ? receivedErrors.map(formatHumanReadable).join(" > ")
                         : "no errors"
                     : `expected the following errors`),
-            details: (actual) => [
-                [Markup.green("Expected:"), actual],
-                [Markup.red("Received:"), receivedErrors],
-                [Markup.text("Diff:"), Markup.diff(actual, receivedErrors)],
-            ],
+            details: (actual) => {
+                const fActual = actual.map(formatError);
+                const fReceived = receivedErrors.map(formatError);
+                return [
+                    [Markup.green("Expected:"), fActual],
+                    [Markup.red("Received:"), fReceived],
+                    [Markup.text("Diff:"), Markup.diff(fActual, fReceived)],
+                ];
+            },
         });
     }
 
@@ -1312,7 +1349,7 @@ export class Matchers {
      * @param {string | string[]} className
      * @param {ExpectOptions} [options]
      * @example
-     *  expect("button").toHaveClass("btn");
+     *  expect("button").toHaveClass("btn btn-primary");
      * @example
      *  expect("body").toHaveClass(["o_webclient", "o_dark"]);
      */
@@ -1454,7 +1491,7 @@ export class Matchers {
     /**
      * Expects the received {@link Target} to have the given class name(s).
      *
-     * @param {string | Record<string, string, RegExp>} style
+     * @param {string | Record<string, string | RegExp>} style
      * @param {ExpectOptions} [options]
      * @example
      *  expect("button").toHaveStyle({ color: "red" });
@@ -1499,7 +1536,7 @@ export class Matchers {
      * - match a given regular expression;
      *
      * @param {string | RegExp} [text]
-     * @param {ExpectOptions} [options]
+     * @param {ExpectOptions & QueryTextOptions} [options]
      * @example
      *  expect("p").toHaveText("lorem ipsum dolor sit amet");
      * @example
@@ -1520,7 +1557,7 @@ export class Matchers {
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
             predicate: each((node) => {
-                const nodeText = getNodeText(node);
+                const nodeText = getNodeText(node, options);
                 if (!expectsText) {
                     return nodeText.length > 0;
                 }

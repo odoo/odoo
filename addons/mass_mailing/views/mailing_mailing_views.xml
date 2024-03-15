@@ -22,6 +22,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
                         <filter string="Sent By" name="sent_by" domain="[]" context="{'group_by': 'email_from'}"/>
+                        <filter string="Mailing List" name="group_by_contact_list_ids" domain="[]" context="{'group_by': 'contact_list_ids'}"/>
                         <separator/>
                         <filter string="Sent Period" name="sent_date" domain="[]" context="{'group_by': 'sent_date'}"/>
                     </group>
@@ -236,8 +237,7 @@
                                             <field name="contact_list_ids" widget="many2many_tags"
                                                 placeholder="Select mailing lists..." class="oe_inline mb-0"
                                                 context="{'form_view_ref': 'mass_mailing.mailing_list_view_form_simplified'}"
-                                                readonly="state in ('sending', 'done')"
-                                                required="mailing_on_mailing_list"/>
+                                                readonly="state in ('sending', 'done')"/>
                                             <button icon="fa-user-plus" type="object" class="btn btn-secondary py-0 px-1 ms-1"
                                                 invisible="not contact_list_ids or not contact_list_ids or state in ('sending', 'done')"
                                                 name="action_view_mailing_contacts" title="Add Mailing Contacts"/>
@@ -393,10 +393,7 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" groups="base.group_user"/>
-                        <field name="message_ids"/>
-                    </div>
+                    <chatter/>
                 </form>
             </field>
         </record>
@@ -502,21 +499,11 @@
             </field>
         </record>
 
-        <record id="view_mail_mass_mailing_graph" model="ir.ui.view">
-            <field name="name">mailing.mailing.graph</field>
-            <field name="model">mailing.mailing</field>
-            <field name="arch" type="xml">
-                <graph string="Mailing" sample="1">
-                    <field name="state"/>
-                    <field name="color" invisible="1"/>
-                </graph>
-            </field>
-        </record>
-
         <record id="mailing_mailing_action_mail" model="ir.actions.act_window">
             <field name="name">Mailings</field>
+            <field name="path">email-marketing</field>
             <field name="res_model">mailing.mailing</field>
-            <field name="view_mode">tree,kanban,form,calendar,graph</field>
+            <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain">[('mailing_type', '=', 'mail')]</field>
             <field name="context">{
                     'search_default_assigned_to_me': 1,
@@ -545,11 +532,6 @@
         <record id="mailing_mailing_action_mail_fullwidth_calendar" model="ir.actions.act_window.view">
             <field name="sequence" eval="3"/>
             <field name="view_mode">calendar</field>
-            <field name="act_window_id" ref="mass_mailing.mailing_mailing_action_mail"/>
-        </record>
-        <record id="mailing_mailing_action_mail_fullwidth_graph" model="ir.actions.act_window.view">
-            <field name="sequence" eval="4"/>
-            <field name="view_mode">graph</field>
             <field name="act_window_id" ref="mass_mailing.mailing_mailing_action_mail"/>
         </record>
 

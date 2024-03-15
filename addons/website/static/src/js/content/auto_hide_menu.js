@@ -115,7 +115,9 @@ async function autoHideMenu(el, options) {
         const wysiwyg = window.$ && $('#wrapwrap').data('wysiwyg');
         const odooEditor = wysiwyg && wysiwyg.odooEditor;
         if (odooEditor) {
+            odooEditor.observerUnactive("adapt");
             odooEditor.withoutRollback(__adapt);
+            odooEditor.observerActive("adapt");
             return;
         }
         __adapt();
@@ -215,13 +217,17 @@ async function autoHideMenu(el, options) {
 
         dropdownMenu.className = 'dropdown-menu';
         extraItemsToggle.className = 'nav-item dropdown o_extra_menu_items';
+        extraItemsToggle.setAttribute("role", "presentation");
         extraItemsToggleIcon.className = 'fa fa-plus';
+        const extraItemsToggleAriaLabel = el.closest("[data-extra-items-toggle-aria-label]")
+            ?.dataset.extraItemsToggleAriaLabel;
         Object.entries({
-            role: 'button',
+            role: 'menuitem',
             href: '#',
             class: 'nav-link dropdown-toggle o-no-caret',
             'data-bs-toggle': 'dropdown',
             'aria-expanded': false,
+            'aria-label': extraItemsToggleAriaLabel || " ",
         }).forEach(([key, value]) => {
             extraItemsToggleLink.setAttribute(key, value);
         });
@@ -275,7 +281,7 @@ async function autoHideMenu(el, options) {
 document.addEventListener('DOMContentLoaded', async () => {
     const header = document.querySelector('header#top');
     if (header) {
-        const topMenu = header.querySelector('#top_menu');
+        const topMenu = header.querySelector(".top_menu");
         if (header.classList.contains('o_no_autohide_menu')) {
             topMenu.classList.remove('o_menu_loading');
             return;

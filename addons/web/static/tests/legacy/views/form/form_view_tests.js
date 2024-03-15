@@ -58,7 +58,6 @@ import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field"
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormController } from "@web/views/form/form_controller";
 import { companyService } from "@web/webclient/company_service";
-import { router } from "@web/core/browser/router";
 
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
@@ -430,7 +429,7 @@ QUnit.module("Views", (hooks) => {
                 });
                 return {
                     bus: new EventBus(),
-                    size: 9,
+                    size: 6,
                     isSmall: false,
                 };
             },
@@ -6108,11 +6107,9 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
-        assert.strictEqual(router.current.id, 1);
 
         await click(target.querySelector(".o_pager_next"));
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "2");
-        assert.strictEqual(router.current.id, 2);
     });
 
     QUnit.test("switching to non-existing record", async function (assert) {
@@ -6133,19 +6130,18 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
         assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "3");
-        assert.strictEqual(router.current.id, 1);
+
         await click(target.querySelector(".o_pager_next"));
 
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
         assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
-        assert.strictEqual(router.current.id, 1);
+
         await nextTick();
         assert.containsN(target, ".o_notification_body", 1, "should have a notification");
 
         await click(target.querySelector(".o_pager_next"));
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "2");
         assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
-        assert.strictEqual(router.current.id, 2);
         assert.containsN(target, ".o_notification_body", 1, "notification should be sticky");
     });
 
@@ -8431,7 +8427,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("correct amount of buttons", async function (assert) {
-        let screenSize = 7;
+        let screenSize = 6;
         const uiService = {
             start(env) {
                 Object.defineProperty(env, "isSmall", {
@@ -8485,7 +8481,7 @@ QUnit.module("Views", (hooks) => {
         await assertFormContainsNButtonsWithSizeClass(0, 2);
         await assertFormContainsNButtonsWithSizeClass(1, 3);
         await assertFormContainsNButtonsWithSizeClass(2, 4);
-        await assertFormContainsNButtonsWithSizeClass(3, 6);
+        await assertFormContainsNButtonsWithSizeClass(3, 7);
         await assertFormContainsNButtonsWithSizeClass(4, 3);
         await assertFormContainsNButtonsWithSizeClass(5, 4);
         await assertFormContainsNButtonsWithSizeClass(6, 7);

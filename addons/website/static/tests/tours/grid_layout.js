@@ -20,7 +20,7 @@ wTourUtils.registerWebsitePreviewTour('website_replace_grid_image', {
     },
     {
         content: "Replace image",
-        trigger: 'iframe .s_text_image img',
+        trigger: ':iframe .s_text_image img',
         run: 'dblclick',
     },
     {
@@ -33,7 +33,7 @@ wTourUtils.registerWebsitePreviewTour('website_replace_grid_image', {
     },
     {
         content: "Replace new image",
-        trigger: 'iframe .s_text_image img[src="/web/image/website.s_text_image_default_image"]',
+        trigger: ':iframe .s_text_image img[src="/web/image/website.s_text_image_default_image"]',
         run: 'dblclick',
     },
     {

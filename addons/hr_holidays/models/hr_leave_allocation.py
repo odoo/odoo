@@ -629,12 +629,11 @@ class HolidaysAllocation(models.Model):
                     current_level._get_previous_date(today),
                     allocation.date_from + get_timedelta(current_level.start_count, current_level.start_type)
                 )
-            if not allocation.nextcall and allocation.lastcall < today:
+            if current_level and not allocation.nextcall:
                 accrual_plan = allocation.accrual_plan_id
-                next_level = False
                 allocation.nextcall = current_level._get_next_date(allocation.lastcall)
                 if current_level_idx < (len(accrual_plan.level_ids) - 1) and accrual_plan.transition_mode == 'immediately':
-                    next_level = allocation.accrual_plan_id.level_ids[current_level_idx + 1]
+                    next_level = accrual_plan.level_ids[current_level_idx + 1]
                     next_level_start = allocation.date_from + get_timedelta(next_level.start_count, next_level.start_type)
                     allocation.nextcall = min(allocation.nextcall, next_level_start)
 
@@ -804,16 +803,16 @@ class HolidaysAllocation(models.Model):
     # before every run, as if it was run from date_from, after an optional change in the allocation value
     # the user can simply confirm and validate the allocation. The record is in correct state for the next
     # call of the cron job.
-    @api.onchange('date_from', 'accrual_plan_id')
+    @api.onchange('date_from', 'accrual_plan_id', 'date_to')
     def _onchange_date_from(self):
-        now = date.today()
         if self.allocation_type != 'accrual' or self.state == 'validate' or not self.accrual_plan_id\
-           or not self.employee_id or not (not self.date_to or self.date_to > now):
+           or not self.employee_id:
             return
         self.lastcall = self.date_from
         self.nextcall = False
         self.number_of_days_display = 0.0
-        self._process_accrual_plans()
+        date_to = min(self.date_to, date.today()) if self.date_to else False
+        self._process_accrual_plans(date_to)
 
     # ------------------------------------------------------------
     # Activity methods

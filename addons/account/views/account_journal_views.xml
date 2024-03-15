@@ -158,9 +158,9 @@
                                     <group class="oe_edit_only" name="group_alias_edit" string="Create Invoices upon Emails"
                                            invisible="type not in ('sale', 'purchase') or not alias_domain_id">
                                         <label string="Email Alias" for="alias_name"/>
-                                        <div class="oe_inline" name="edit_alias" style="display: inline;" >
-                                            <field name="alias_name" class="oe_inline"/>@
-                                            <field name="alias_domain_id" class="oe_inline" placeholder="e.g. domain.com"
+                                        <div class="oe_inline" name="edit_alias" style="display: inline;" dir="ltr" >
+                                            <field name="alias_name" placeholder="alias" class="oe_inline"/>@
+                                            <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
                                                    options="{'no_create': True, 'no_open': True}"/>
                                         </div>
                                     </group>
@@ -175,10 +175,7 @@
                             </page>
                         </notebook>
                     </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
                 </form>
             </field>
         </record>

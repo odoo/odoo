@@ -187,6 +187,7 @@ class PosConfig(models.Model):
     access_token = fields.Char("Access Token", default=lambda self: uuid4().hex[:16])
     show_product_images = fields.Boolean(string="Show Product Images", help="Show product images in the Point of Sale interface.", default=True)
     show_category_images = fields.Boolean(string="Show Category Images", help="Show category images in the Point of Sale interface.", default=True)
+    note_ids = fields.Many2many('pos.note', string='Note Models', help='The predefined notes of this point of sale.')
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):
@@ -363,14 +364,6 @@ class PosConfig(models.Model):
             for trusted_config in config.trusted_config_ids:
                 if trusted_config.currency_id != config.currency_id:
                     raise ValidationError(_("You cannot share open orders with configuration that does not use the same currency."))
-
-    def _compute_display_name(self):
-        for config in self:
-            last_session = self.env['pos.session'].search([('config_id', '=', config.id)], limit=1)
-            if (not last_session) or (last_session.state == 'closed'):
-                config.display_name = _("%(pos_name)s (not used)", pos_name=config.name)
-            else:
-                config.display_name = f"{config.name} ({last_session.user_id.name})"
 
     def _check_header_footer(self, values):
         if not self.env.is_admin() and {'is_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():

@@ -47,6 +47,17 @@ class SurveyQuestion(models.Model):
     _rec_name = 'title'
     _order = 'sequence,id'
 
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if default_survey_id := self.env.context.get('default_survey_id'):
+            survey = self.env['survey.survey'].browse(default_survey_id)
+            if 'is_time_limited' in fields_list and 'is_time_limited' not in res:
+                res['is_time_limited'] = survey.session_speed_rating
+            if 'time_limit' in fields_list and 'time_limit' not in res:
+                res['time_limit'] = survey.session_speed_rating_time_limit
+        return res
+
     # question generic data
     title = fields.Char('Title', required=True, translate=True)
     description = fields.Html(
@@ -58,6 +69,7 @@ class SurveyQuestion(models.Model):
     survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade')
     scoring_type = fields.Selection(related='survey_id.scoring_type', string='Scoring Type', readonly=True)
     sequence = fields.Integer('Sequence', default=10)
+    session_available = fields.Boolean(related='survey_id.session_available', string='Live Session available', readonly=True)
     # page specific
     is_page = fields.Boolean('Is a page?')
     question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_question_ids")
@@ -75,6 +87,7 @@ class SurveyQuestion(models.Model):
         ('text_box', 'Multiple Lines Text Box'),
         ('char_box', 'Single Line Text Box'),
         ('numerical_box', 'Numerical Value'),
+        ('scale', 'Scale'),
         ('date', 'Date'),
         ('datetime', 'Datetime'),
         ('matrix', 'Matrix')], string='Question Type',
@@ -83,6 +96,8 @@ class SurveyQuestion(models.Model):
         'Scored', compute='_compute_is_scored_question',
         readonly=False, store=True, copy=True,
         help="Include this question as part of quiz scoring. Requires an answer and answer score to be taken into account.")
+    has_image_only_suggested_answer = fields.Boolean(
+        "Has image only suggested answer", compute='_compute_has_image_only_suggested_answer')
     # -- scoreable/answerable simple answer_types: numerical_box / date / datetime
     answer_numerical_box = fields.Float('Correct numerical answer', help="Correct number answer for this question.")
     answer_date = fields.Date('Correct date answer', help="Correct date answer for this question.")
@@ -106,9 +121,16 @@ class SurveyQuestion(models.Model):
     matrix_row_ids = fields.One2many(
         'survey.question.answer', 'matrix_question_id', string='Matrix Rows', copy=True,
         help='Labels used for proposed choices: rows of matrix')
+    # -- scale
+    scale_min = fields.Integer("Scale Minimum Value", default=0)
+    scale_max = fields.Integer("Scale Maximum Value", default=10)
+    scale_min_label = fields.Char("Scale Minimum Label", translate=True)
+    scale_mid_label = fields.Char("Scale Middle Label", translate=True)
+    scale_max_label = fields.Char("Scale Maximum Label", translate=True)
     # -- display & timing options
     is_time_limited = fields.Boolean("The question is limited in time",
         help="Currently only supported for live sessions.")
+    is_time_customized = fields.Boolean("Customized speed rewards")
     time_limit = fields.Integer("Time limit (seconds)")
     # -- comments (simple choice, multiple choice, matrix (without count as an answer))
     comments_allowed = fields.Boolean('Show Comments Field')
@@ -168,6 +190,10 @@ class SurveyQuestion(models.Model):
             'All "Is a scored question = True" and "Question Type: Datetime" questions need an answer'),
         ('scored_date_have_answers', "CHECK (is_scored_question != True OR question_type != 'date' OR answer_date is not null)",
             'All "Is a scored question = True" and "Question Type: Date" questions need an answer'),
+        ('scale', "CHECK (question_type != 'scale' OR (scale_min >= 0 AND scale_max <= 10 AND scale_min < scale_max))",
+            'The scale must be a growing non-empty range between 0 and 10 (inclusive)'),
+        ('is_time_limited_have_time_limit', "CHECK (is_time_limited != TRUE OR time_limit IS NOT NULL AND time_limit > 0)",
+            'All time-limited questions need a positive time limit'),
     ]
 
     # -------------------------------------------------------------------------
@@ -183,6 +209,13 @@ class SurveyQuestion(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('suggested_answer_ids', 'suggested_answer_ids.value')
+    def _compute_has_image_only_suggested_answer(self):
+        questions_with_image_only_answer = self.env['survey.question'].search(
+            [('id', 'in', self.ids), ('suggested_answer_ids.value', 'in', [False, ''])])
+        questions_with_image_only_answer.has_image_only_suggested_answer = True
+        (self - questions_with_image_only_answer).has_image_only_suggested_answer = False
 
     @api.depends('question_type')
     def _compute_question_placeholder(self):
@@ -370,9 +403,14 @@ class SurveyQuestion(models.Model):
                 new_question.triggering_answer_ids = old_question.triggering_answer_ids
         return new_questions
 
-    # ------------------------------------------------------------
-    # CRUD
-    # ------------------------------------------------------------
+    def create(self, vals_list):
+        questions = super().create(vals_list)
+        questions.filtered(
+            lambda q: q.survey_id
+            and (q.survey_id.session_speed_rating != q.is_time_limited
+                 or q.is_time_limited and q.survey_id.session_speed_rating_time_limit != q.time_limit)
+        ).is_time_customized = True
+        return questions
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_live_sessions_in_progress(self):
@@ -417,6 +455,8 @@ class SurveyQuestion(models.Model):
                 return self._validate_choice(answer, comment)
             elif self.question_type == 'matrix':
                 return self._validate_matrix(answer)
+            elif self.question_type == 'scale':
+                return self._validate_scale(answer)
         return {}
 
     def _validate_char_box(self, answer):
@@ -485,6 +525,13 @@ class SurveyQuestion(models.Model):
             return {self.id: self.constr_error_msg or _('This question requires an answer.')}
         return {}
 
+    def _validate_scale(self, answer):
+        if not self.survey_id.users_can_go_back \
+                and self.constr_mandatory \
+                and not answer:
+            return {self.id: self.constr_error_msg or _('This question requires an answer.')}
+        return {}
+
     def _index(self):
         """We would normally just use the 'sequence' field of questions BUT, if the pages and questions are
         created without ever moving records around, the sequence field can be set to 0 for all the questions.
@@ -492,6 +539,36 @@ class SurveyQuestion(models.Model):
         However, the order of the recordset is always correct so we can rely on the index method."""
         self.ensure_one()
         return list(self.survey_id.question_and_page_ids).index(self)
+
+    # ------------------------------------------------------------
+    # SPEED RATING
+    # ------------------------------------------------------------
+
+    def _update_time_limit_from_survey(self, is_time_limited=None, time_limit=None):
+        """Update the speed rating values after a change in survey's speed rating configuration.
+
+        * Questions that were not customized will take the new default values from the survey
+        * Questions that were customized will not change their values, but this method will check
+          and update the `is_time_customized` flag if necessary (to `False`) such that the user
+          won't need to "actively" do it to make the question sensitive to change in survey values.
+
+        This is not done with `_compute`s because `is_time_limited` (and `time_limit`) would depend
+        on `is_time_customized` and vice versa.
+        """
+        write_vals = {}
+        if is_time_limited is not None:
+            write_vals['is_time_limited'] = is_time_limited
+        if time_limit is not None:
+            write_vals['time_limit'] = time_limit
+        non_time_customized_questions = self.filtered(lambda s: not s.is_time_customized)
+        non_time_customized_questions.write(write_vals)
+
+        # Reset `is_time_customized` as necessary
+        customized_questions = self - non_time_customized_questions
+        back_to_default_questions = customized_questions.filtered(
+            lambda q: q.is_time_limited == q.survey_id.session_speed_rating
+            and (q.is_time_limited is False or q.time_limit == q.survey_id.session_speed_rating_time_limit))
+        back_to_default_questions.is_time_customized = False
 
     # ------------------------------------------------------------
     # STATISTICS / REPORTING
@@ -545,6 +622,9 @@ class SurveyQuestion(models.Model):
             return table_data, [{'key': self.title, 'values': graph_data}]
         elif self.question_type == 'matrix':
             return self._get_stats_graph_data_matrix(user_input_lines)
+        elif self.question_type == 'scale':
+            table_data, graph_data = self._get_stats_data_scale(user_input_lines)
+            return table_data, [{'key': self.title, 'values': graph_data}]
         return [line for line in user_input_lines], []
 
     def _get_stats_data_answers(self, user_input_lines):
@@ -563,16 +643,16 @@ class SurveyQuestion(models.Model):
                 count_data[line.suggested_answer_id] += 1
 
         table_data = [{
-            'value': _('Other (see comments)') if not sug_answer else sug_answer.value,
-            'suggested_answer': sug_answer,
-            'count': count_data[sug_answer]
+            'value': _('Other (see comments)') if not suggested_answer else suggested_answer.value_label,
+            'suggested_answer': suggested_answer,
+            'count': count_data[suggested_answer]
             }
-            for sug_answer in suggested_answers]
+            for suggested_answer in suggested_answers]
         graph_data = [{
-            'text': _('Other (see comments)') if not sug_answer else sug_answer.value,
-            'count': count_data[sug_answer]
+            'text': _('Other (see comments)') if not suggested_answer else suggested_answer.value_label,
+            'count': count_data[suggested_answer]
             }
-            for sug_answer in suggested_answers]
+            for suggested_answer in suggested_answers]
 
         return table_data, graph_data
 
@@ -588,19 +668,41 @@ class SurveyQuestion(models.Model):
         table_data = [{
             'row': row,
             'columns': [{
-                'suggested_answer': sug_answer,
-                'count': count_data[(row, sug_answer)]
-            } for sug_answer in suggested_answers],
+                'suggested_answer': suggested_answer,
+                'count': count_data[(row, suggested_answer)]
+            } for suggested_answer in suggested_answers],
         } for row in matrix_rows]
         graph_data = [{
-            'key': sug_answer.value,
+            'key': suggested_answer.value,
             'values': [{
                 'text': row.value,
-                'count': count_data[(row, sug_answer)]
+                'count': count_data[(row, suggested_answer)]
                 }
                 for row in matrix_rows
             ]
-        } for sug_answer in suggested_answers]
+        } for suggested_answer in suggested_answers]
+
+        return table_data, graph_data
+
+    def _get_stats_data_scale(self, user_input_lines):
+        suggested_answers = range(self.scale_min, self.scale_max + 1)
+        # Scale doesn't support comment as answer, so no extra value added
+
+        count_data = dict.fromkeys(suggested_answers, 0)
+        for line in user_input_lines:
+            if not line.skipped and line.value_scale in count_data:
+                count_data[line.value_scale] += 1
+
+        table_data = []
+        graph_data = []
+        for sug_answer in suggested_answers:
+            table_data.append({'value': str(sug_answer),
+                               'suggested_answer': self.env['survey.question.answer'],
+                               'count': count_data[sug_answer],
+                               })
+            graph_data.append({'text': str(sug_answer),
+                               'count': count_data[sug_answer]
+                               })
 
         return table_data, graph_data
 
@@ -610,8 +712,10 @@ class SurveyQuestion(models.Model):
             stats.update(self._get_stats_summary_data_choice(user_input_lines))
         elif self.question_type == 'numerical_box':
             stats.update(self._get_stats_summary_data_numerical(user_input_lines))
+        elif self.question_type == 'scale':
+            stats.update(self._get_stats_summary_data_numerical(user_input_lines, 'value_scale'))
 
-        if self.question_type in ['numerical_box', 'date', 'datetime']:
+        if self.question_type in ['numerical_box', 'date', 'datetime', 'scale']:
             stats.update(self._get_stats_summary_data_scored(user_input_lines))
         return stats
 
@@ -633,8 +737,8 @@ class SurveyQuestion(models.Model):
             'partial_inputs_count': len(partial_inputs),
         }
 
-    def _get_stats_summary_data_numerical(self, user_input_lines):
-        all_values = user_input_lines.filtered(lambda line: not line.skipped).mapped('value_numerical_box')
+    def _get_stats_summary_data_numerical(self, user_input_lines, fname='value_numerical_box'):
+        all_values = user_input_lines.filtered(lambda line: not line.skipped).mapped(fname)
         lines_sum = sum(all_values)
         return {
             'numerical_max': max(all_values, default=0),
@@ -710,34 +814,54 @@ class SurveyQuestionAnswer(models.Model):
     sequence = fields.Integer('Label Sequence order', default=10)
     scoring_type = fields.Selection(related='question_id.scoring_type')
     # answer related fields
-    value = fields.Char('Suggested value', translate=True, required=True)
+    value = fields.Char('Suggested value', translate=True)
     value_image = fields.Image('Image', max_width=1024, max_height=1024)
     value_image_filename = fields.Char('Image Filename')
+    value_label = fields.Char('Value Label', compute='_compute_value_label',
+                              help="Answer label as either the value itself if not empty "
+                                   "or a letter representing the index of the answer otherwise.")
     is_correct = fields.Boolean('Correct')
     answer_score = fields.Float('Score', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
 
-    @api.depends('value', 'question_id.question_type', 'question_id.title', 'matrix_question_id')
+    _sql_constraints = [
+        ('value_not_empty', "CHECK (value IS NOT NULL OR value_image_filename IS NOT NULL)",
+         'Suggested answer value must not be empty (a text and/or an image must be provided).'),
+    ]
+
+    @api.depends('value_label', 'question_id.question_type', 'question_id.title', 'matrix_question_id')
     def _compute_display_name(self):
-        """Render an answer name as "Question title : Answer value", making sure it is not too long.
+        """Render an answer name as "Question title : Answer label value", making sure it is not too long.
 
         Unless the answer is part of a matrix-type question, this implementation makes sure we have
         at least 30 characters for the question title, then we elide it, leaving the rest of the
         space for the answer.
         """
         for answer in self:
+            answer_label = answer.value_label
             if not answer.question_id or answer.question_id.question_type == 'matrix':
-                answer.display_name = answer.value
+                answer.display_name = answer_label
                 continue
             title = answer.question_id.title or _("[Question Title]")
-            n_extra_characters = len(title) + len(answer.value) + 3 - self.MAX_ANSWER_NAME_LENGTH  # 3 for `" : "`
+            n_extra_characters = len(title) + len(answer_label) + 3 - self.MAX_ANSWER_NAME_LENGTH  # 3 for `" : "`
             if n_extra_characters <= 0:
-                answer.display_name = f'{title} : {answer.value}'
+                answer.display_name = f'{title} : {answer_label}'
             else:
                 answer.display_name = shorten(
-                    f'{shorten(title, max(30, len(title) - n_extra_characters), placeholder="...")} : {answer.value}',
+                    f'{shorten(title, max(30, len(title) - n_extra_characters), placeholder="...")} : {answer_label}',
                     self.MAX_ANSWER_NAME_LENGTH,
                     placeholder="..."
                 )
+
+    @api.depends('question_id.suggested_answer_ids', 'sequence', 'value')
+    def _compute_value_label(self):
+        """ Compute the label as the value if not empty or a letter representing the index of the answer otherwise. """
+        for answer in self:
+            # using image -> use a letter to represent the value
+            if not answer.value and answer.question_id and answer.id:
+                answer_idx = answer.question_id.suggested_answer_ids.ids.index(answer.id)
+                answer.value_label = chr(65 + answer_idx) if answer_idx < 27 else ''
+            else:
+                answer.value_label = answer.value or ''
 
     @api.constrains('question_id', 'matrix_question_id')
     def _check_question_not_empty(self):

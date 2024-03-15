@@ -1,8 +1,9 @@
 /* @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
+import { openDiscuss, start } from "@mail/../tests/helpers/test_utils";
 
 import { contains } from "@web/../tests/utils";
 
@@ -17,12 +18,12 @@ QUnit.test("out of office message on direct chat with out of office partner", as
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
-    const { openDiscuss } = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".alert", { text: "Out of office until Jan 1, 2023" });
 });

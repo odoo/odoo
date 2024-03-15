@@ -46,7 +46,7 @@ patch(MockServer.prototype, {
         channels.push("broadcast");
         const authenticatedUserId = this.pyEnv.cookie.get("authenticated_user_sid");
         const authenticatedPartner = authenticatedUserId
-            ? this.pyEnv["res.partner"].searchRead([["user_ids", "in", [authenticatedUserId]]], {
+            ? this.pyEnv["res.partner"].search_read([["user_ids", "in", [authenticatedUserId]]], {
                   context: { active_test: false },
               })[0]
             : null;

@@ -330,16 +330,9 @@
                                 <field name="request_hour_to" invisible="not request_unit_hours" readonly="state == 'validate'" required="request_unit_hours" />
                             </div>
 
-                            <label for="number_of_days_display" string="Duration" invisible="request_unit_half and leave_type_request_unit != 'hour'" />
-                            <div name="duration_display" invisible="request_unit_half and leave_type_request_unit != 'hour'">
-                                <div invisible="request_unit_half or request_unit_hours">
-                                    <field name="number_of_days_display" class="oe_inline" />
-                                    <span class="ms-3">Days</span>
-                                </div>
-                                <div invisible="leave_type_request_unit != 'hour'" class="o_row">
-                                    <field name="number_of_hours_text" />
-                                </div>
-                            </div>
+                            <field name="number_of_days" invisible="1"/>
+                            <field name="number_of_hours" invisible="1"/>
+                            <field name="duration_display" readonly="1"/>
                             <field name="name" readonly="state not in ('draft', 'confirm')" widget="text" placeholder="Add a description..." />
                             <field name="user_id" invisible="1" />
                             <field name="leave_type_support_document" invisible="1" />
@@ -350,10 +343,7 @@
                 </div>
             </sheet>
             <div class="o_attachment_preview"/>
-            <div class="oe_chatter">
-                <field name="message_follower_ids"/>
-                <field name="message_ids" options="{'post_refresh': 'always'}"/>
-            </div>
+            <chatter reload_on_post="True" reload_on_attachment="True"/>
             </form>
         </field>
     </record>
@@ -626,6 +616,7 @@
 
     <record id="hr_leave_action_new_request" model="ir.actions.act_window">
         <field name="name">Dashboard</field>
+        <field name="path">time-off</field>
         <field name="res_model">hr.leave</field>
         <field name="view_mode">calendar,tree,form,activity</field>
         <field name="domain">[('user_id', '=', uid), ('employee_id.company_id', 'in', allowed_company_ids)]</field>

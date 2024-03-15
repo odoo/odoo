@@ -9,7 +9,6 @@ import { queryAll } from "@odoo/hoot-dom";
 import {
     callWithUnloadCheck,
     getConsumeEventType,
-    getNodesFromSelector,
     getScrollParent,
     RunningTourActionHelper,
 } from "./tour_utils";
@@ -47,7 +46,7 @@ function findTrigger(selector, shadowDOM, inModal) {
         }
     }
     if (!nodes) {
-        nodes = getNodesFromSelector(selector, target);
+        nodes = queryAll(selector, { root: target });        
     }
     return nodes;
 }
@@ -423,10 +422,7 @@ export function compileStepAuto(stepIndex, step, options) {
                 }
 
                 // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
-                const actionHelper = new RunningTourActionHelper({
-                    consume_event: consumeEvent,
-                    anchor: stepEl,
-                });
+                const actionHelper = new RunningTourActionHelper(stepEl, consumeEvent);
 
                 let result;
                 if (typeof step.run === "function") {

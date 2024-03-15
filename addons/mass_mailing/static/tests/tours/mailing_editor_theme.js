@@ -33,13 +33,13 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Pick the basic theme",
-            trigger: 'iframe #basic',
-            extra_trigger: 'iframe .o_mail_theme_selector_new',
+            trigger: ':iframe #basic',
+            extra_trigger: ':iframe .o_mail_theme_selector_new',
         },
         {
             content: "Make sure the snippets menu is hidden",
             trigger: 'html:has(#oe_snippets.d-none)',
-            extra_trigger: 'iframe html:not(:has(.o_mail_theme_selector_new))',
+            extra_trigger: ':iframe html:not(:has(.o_mail_theme_selector_new))',
             run: () => null, // no click, just check
         },
         {
@@ -49,7 +49,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         {
             content: "Fill in Subject",
             trigger: '#subject_0',
-            extra_trigger: 'iframe .o_mail_theme_selector_new',
+            extra_trigger: ':iframe .o_mail_theme_selector_new',
             run: 'text Test Newsletter Theme',
         },
         {
@@ -63,7 +63,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Pick the newsletter theme",
-            trigger: 'iframe #newsletter',
+            trigger: ':iframe #newsletter',
         },
         {
             content: "Make sure the snippets menu is displayed",
@@ -85,12 +85,12 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Add some content to be selected afterwards",
-            trigger: 'iframe p',
+            trigger: ':iframe p',
             run: 'text content',
         },
         {
             content: "Select text",
-            trigger: 'iframe p:contains(content)',
+            trigger: ':iframe p:contains(content)',
             run() {
                 setSelection(...boundariesIn(this.anchor), false);
             }
@@ -114,7 +114,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Check that color was applied",
-            trigger: 'iframe p font.text-o-color-1',
+            trigger: ':iframe p font.text-o-color-1',
             run: () => null,
         },
         {
@@ -136,7 +136,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Select content",
-            trigger: 'iframe p:contains(content)',
+            trigger: ':iframe p:contains(content)',
             run() {
                 setSelection(...boundariesIn(this.anchor), false);
             }

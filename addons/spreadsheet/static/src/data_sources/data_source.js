@@ -48,10 +48,6 @@ export class LoadableDataSource {
         return this.odooDataProvider.orm;
     }
 
-    get metadataRepository() {
-        return this.odooDataProvider.metadataRepository;
-    }
-
     get serverData() {
         return this.odooDataProvider.serverData;
     }
@@ -96,6 +92,10 @@ export class LoadableDataSource {
      */
     isReady() {
         return this._isFullyLoaded;
+    }
+
+    isLoadedAndValid() {
+        return this.isReady() && this._isValid;
     }
 
     /**

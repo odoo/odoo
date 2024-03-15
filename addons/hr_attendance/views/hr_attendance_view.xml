@@ -158,9 +158,7 @@
                         </group>
                     </group>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>
         </field>
     </record>
@@ -229,6 +227,7 @@
 
     <record id="hr_attendance_action" model="ir.actions.act_window">
         <field name="name">Attendances</field>
+        <field name="path">attendances</field>
         <field name="res_model">hr.attendance</field>
         <field name="view_mode">tree,form</field>
         <field name="context">

@@ -86,7 +86,6 @@ patch(PosStore.prototype, {
         if (this.config.gift_card_settings == "scan_use") {
             const code = await makeAwaitable(this.dialog, TextInputPopup, {
                 title: _t("Generate a Gift Card"),
-                startingValue: "",
                 placeholder: _t("Enter the gift card code"),
             });
             if (!code) {
@@ -179,22 +178,26 @@ patch(PosStore.prototype, {
                 const considerTheReward =
                     program.applies_on !== "both" || (program.applies_on == "both" && hasLine);
                 if (reward.reward_type === "product" && considerTheReward) {
-                    const product = this.models["product.product"].get(
-                        reward.reward_product_ids[0].id
-                    );
-                    const potentialQty = order._computePotentialFreeProductQty(
-                        reward,
-                        product,
-                        points
-                    );
-                    if (potentialQty <= 0) {
-                        continue;
+                    let hasPotentialQty = true;
+                    let potentialQty;
+                    for (const { id } of reward.reward_product_ids) {
+                        const product = this.models["product.product"].get(id);
+                        potentialQty = order._computePotentialFreeProductQty(
+                            reward,
+                            product,
+                            points
+                        );
+                        if (potentialQty <= 0) {
+                            hasPotentialQty = false;
+                        }
                     }
-                    result.push({
-                        coupon_id: couponProgram.coupon_id,
-                        reward: reward,
-                        potentialQty,
-                    });
+                    if (hasPotentialQty) {
+                        result.push({
+                            coupon_id: couponProgram.coupon_id,
+                            reward: reward,
+                            potentialQty,
+                        });
+                    }
                 }
             }
         }
@@ -214,6 +217,15 @@ patch(PosStore.prototype, {
 
         for (const reward of this.models["loyalty.reward"].getAll()) {
             this.compute_discount_product_ids(reward, this.models["product.product"].getAll());
+        }
+
+        for (const program of this.models["loyalty.program"].getAll()) {
+            if (program.date_to) {
+                program.date_to = new Date(program.date_to);
+            }
+            if (program.date_from) {
+                program.date_from = new Date(program.date_from);
+            }
         }
     },
 

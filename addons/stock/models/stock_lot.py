@@ -46,7 +46,7 @@ class StockLot(models.Model):
     product_qty = fields.Float('On Hand Quantity', compute='_product_qty', search='_search_product_qty')
     note = fields.Html(string='Description')
     display_complete = fields.Boolean(compute='_compute_display_complete')
-    company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company.id)
+    company_id = fields.Many2one('res.company', 'Company', index=True, store=True, readonly=False, compute='_compute_company_id')
     delivery_ids = fields.Many2many('stock.picking', compute='_compute_delivery_ids', string='Transfers')
     delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
     last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_last_delivery_partner_id')
@@ -81,7 +81,7 @@ class StockLot(models.Model):
         """Return the next serial number to be attributed to the product."""
         if product.tracking != "none":
             last_serial = self.env['stock.lot'].search(
-                [('company_id', '=', company.id), ('product_id', '=', product.id)],
+                ['|', ('company_id', '=', company.id), ('company_id', '=', False), ('product_id', '=', product.id)],
                 limit=1, order='id DESC')
             if last_serial:
                 return self.env['stock.lot'].generate_lot_names(last_serial.name, 2)[1]['lot_name']
@@ -90,15 +90,22 @@ class StockLot(models.Model):
     @api.constrains('name', 'product_id', 'company_id')
     def _check_unique_lot(self):
         domain = [('product_id', 'in', self.product_id.ids),
-                  ('company_id', 'in', self.company_id.ids),
                   ('name', 'in', self.mapped('name'))]
         groupby = ['company_id', 'product_id', 'name']
-        records = self._read_group(domain, groupby, having=[('__count', '>', 1)])
+        if any(not lot.company_id for lot in self):
+            # We need to check across other companies to not have duplicates between 'no-company' and a company.
+            self = self.sudo()
+        records = self._read_group(domain, groupby, order='company_id DESC')
         error_message_lines = []
-        for __, product, name in records:
-            error_message_lines.append(_(" - Product: %s, Serial Number: %s", product.display_name, name))
+        cross_lots = set()
+        for company, product, name in records:
+            if not company:
+                cross_lots.add((product, name))
+                continue
+            if (product, name) in cross_lots:
+                error_message_lines.append(_(" - Product: %s, Serial Number: %s", product.display_name, name))
         if error_message_lines:
-            raise ValidationError(_('The combination of serial number and product must be unique across a company.\nFollowing combination contains duplicates:\n') + '\n'.join(error_message_lines))
+            raise ValidationError(_('The combination of serial number and product must be unique across a company and no company defined.\nFollowing combination contains duplicates:\n') + '\n'.join(error_message_lines))
 
     def _check_create(self):
         active_picking_id = self.env.context.get('active_picking_id', False)
@@ -106,6 +113,11 @@ class StockLot(models.Model):
             picking_id = self.env['stock.picking'].browse(active_picking_id)
             if picking_id and not picking_id.picking_type_id.use_create_lots:
                 raise UserError(_('You are not allowed to create a lot or serial number with this operation type. To change this, go on the operation type and tick the box "Create New Lots/Serial Numbers".'))
+
+    @api.depends('product_id.company_id')
+    def _compute_company_id(self):
+        for lot in self:
+            lot.company_id = lot.product_id.company_id
 
     @api.depends('name')
     def _compute_display_complete(self):
@@ -155,8 +167,8 @@ class StockLot(models.Model):
     def write(self, vals):
         if 'company_id' in vals:
             for lot in self:
-                if lot.company_id.id != vals['company_id']:
-                    raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
+                if lot.location_id.company_id and vals['company_id'] and lot.location_id.company_id.id != vals['company_id']:
+                    raise UserError(_("You cannot change the company of a lot/serial number currently in a location belonging to another company."))
         if 'product_id' in vals and any(vals['product_id'] != lot.product_id.id for lot in self):
             move_lines = self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('product_id', '!=', vals['product_id'])])
             if move_lines:

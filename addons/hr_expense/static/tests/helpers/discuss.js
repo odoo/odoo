@@ -10,10 +10,10 @@ patch(MockServer.prototype, {
     async _mockRouteMailThreadData(thread_model, thread_id, request_list) {
         if (thread_model === "hr.expense.sheet" && request_list.includes("attachments")) {
             const res = await super._mockRouteMailThreadData(thread_model, thread_id, request_list);
-            const sheet = this.pyEnv["hr.expense.sheet"].searchRead([
+            const sheet = this.pyEnv["hr.expense.sheet"].search_read([
                 ["id", "=", thread_id],
             ]);
-            const attachments = this.pyEnv["ir.attachment"].searchRead([
+            const attachments = this.pyEnv["ir.attachment"].search_read([
                 ["res_id", "in", sheet[0].expense_line_ids],
                 ["res_model", "=", "hr.expense"],
             ]);

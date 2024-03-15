@@ -1,24 +1,24 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 
 import { contains } from "@web/../tests/utils";
 
 QUnit.module("chatter");
 
-QUnit.test("Send message button activation (access rights dependent)", async function (assert) {
+test("Send message button activation (access rights dependent)", async function (assert) {
     const pyEnv = await startServer();
     const view = `
         <form string="Simple">
             <sheet>
                 <field name="name"/>
             </sheet>
-            <div class="oe_chatter">
-                <field name="message_ids"/>
-            </div>
+            <chatter/>
         </form>`;
     let userAccess = {};
-    const { openView } = await start({
+    await start({
         serverData: {
             views: {
                 "mail.test.multi.company,false,form": view,
@@ -49,11 +49,7 @@ QUnit.test("Send message button activation (access rights dependent)", async fun
         hasWriteAccess = false
     ) {
         userAccess = { hasReadAccess, hasWriteAccess };
-        await openView({
-            res_id: resId,
-            res_model: model,
-            views: [[false, "form"]],
-        });
+        await openFormView(model, resId);
         if (enabled) {
             await contains(".o-mail-Chatter-topbar button:enabled", { text: "Send message" });
         } else {
@@ -97,7 +93,7 @@ QUnit.test("Send message button activation (access rights dependent)", async fun
     await assertSendButton(true, "Draft record", "mail.test.multi.company.read");
 });
 
-QUnit.test("basic chatter rendering with a model without activities", async () => {
+test("basic chatter rendering with a model without activities", async () => {
     const pyEnv = await startServer();
     const recordId = pyEnv["mail.test.simple"].create({ name: "new record" });
     const views = {
@@ -106,18 +102,11 @@ QUnit.test("basic chatter rendering with a model without activities", async () =
                 <sheet>
                     <field name="name"/>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>`,
     };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_model: "mail.test.simple",
-        res_id: recordId,
-        views: [[false, "form"]],
-    });
+    await start({ serverData: { views } });
+    await openFormView("mail.test.simple", recordId);
     await contains(".o-mail-Chatter");
     await contains(".o-mail-Chatter-topbar");
     await contains("button[aria-label='Attach files']");

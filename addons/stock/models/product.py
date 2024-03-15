@@ -514,11 +514,14 @@ class Product(models.Model):
     def action_open_product_lot(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_product_production_lot_form")
-        action['domain'] = [('product_id', '=', self.id)]
+        action['domain'] = [
+            ('product_id', '=', self.id),
+            '|', ('location_id', '=', False),
+                 ('location_id', 'any', self.env['stock.location']._check_company_domain(self._context['allowed_company_ids']))
+        ]
         action['context'] = {
             'default_product_id': self.id,
             'set_product_readonly': True,
-            'default_company_id': (self.company_id or self.env.company).id,
             'search_default_group_by_location': True,
         }
         return action
@@ -975,10 +978,13 @@ class ProductTemplate(models.Model):
     def action_open_product_lot(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_product_production_lot_form")
-        action['domain'] = [('product_id.product_tmpl_id', '=', self.id)]
+        action['domain'] = [
+            ('product_id.product_tmpl_id', '=', self.id),
+            '|', ('location_id', '=', False),
+                 ('location_id', 'any', self.env['stock.location']._check_company_domain(self._context['allowed_company_ids']))
+        ]
         action['context'] = {
             'default_product_tmpl_id': self.id,
-            'default_company_id': (self.company_id or self.env.company).id,
             'search_default_group_by_location': True,
         }
         if self.product_variant_count == 1:
@@ -1021,9 +1027,10 @@ class ProductCategory(models.Model):
         help="Set a specific removal strategy that will be used regardless of the source location for this product category.\n\n"
              "FIFO: products/lots that were stocked first will be moved out first.\n"
              "LIFO: products/lots that were stocked last will be moved out first.\n"
-             "Closet location: products/lots closest to the target location will be moved out first.\n"
+             "Closest location: products/lots closest to the target location will be moved out first.\n"
              "FEFO: products/lots with the closest removal date will be moved out first "
-             "(the availability of this method depends on the \"Expiration Dates\" setting)."
+             "(the availability of this method depends on the \"Expiration Dates\" setting).\n"
+             "Least Packages: FIFO but with the least number of packages possible when there are several packages containing the same product."
     )
     total_route_ids = fields.Many2many(
         'stock.route', string='Total routes', compute='_compute_total_route_ids',

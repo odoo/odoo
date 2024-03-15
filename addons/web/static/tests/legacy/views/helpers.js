@@ -40,7 +40,7 @@ const rootDialogTemplate = xml`<Dialog><View t-props="props.viewProps"/></Dialog
  * @returns {Promise<T>}
  */
 async function _makeView(params, inDialog = false) {
-    const props = { ...params };
+    const props = { resId: false, ...params };
     const serverData = props.serverData;
     const mockRPC = props.mockRPC;
     const config = {

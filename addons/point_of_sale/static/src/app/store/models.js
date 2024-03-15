@@ -16,7 +16,9 @@ import {
     floatIsZero,
 } from "@web/core/utils/numbers";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
 import { _t } from "@web/core/l10n/translation";
+import { ConnectionLostError } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
 import { ProductCustomAttribute } from "./models/product_custom_attribute";
 import { omit } from "@web/core/utils/objects";
@@ -89,7 +91,7 @@ export class Orderline extends PosModel {
         this.set_product_lot(this.product);
         options.quantity ? this.set_quantity(options.quantity) : this.set_quantity(1);
         this.discount = 0;
-        this.note = "";
+        this.note = this.note || "";
         this.custom_attribute_value_ids = [];
         this.hasChange = false;
         this.skipChange = false;
@@ -161,6 +163,7 @@ export class Orderline extends PosModel {
             );
             this.pack_lot_lines.push(pack_lot_line);
         }
+        this.note = json.note;
         this.tax_ids = this.compute_related_tax(
             json.tax_ids && json.tax_ids.length !== 0 ? json.tax_ids[0][2] : undefined
         );
@@ -170,9 +173,7 @@ export class Orderline extends PosModel {
         this.saved_quantity = json.qty;
         this.uuid = json.uuid;
         this.skipChange = json.skip_change;
-        this.combo_line_id = json.combo_line_id
-            ? this.pos.data["pos.combo.line"][json.combo_line_id]
-            : false;
+        this.combo_line_id = json.combo_line_id;
 
         // FIXME rename to orderline_children_ids
         this.combo_line_ids = json.combo_line_ids;
@@ -199,6 +200,7 @@ export class Orderline extends PosModel {
         orderline.selected = false;
         orderline.price_type = this.price_type;
         orderline.customerNote = this.customerNote;
+        orderline.note = this.note;
         return orderline;
     }
     getDisplayClasses() {
@@ -527,6 +529,7 @@ export class Orderline extends PosModel {
             combo_line_ids: this.combo_line_ids?.map((line) => line.id),
             combo_parent_id: this.combo_parent_id?.id,
             combo_line_id: this.combo_line_id?.id,
+            note: this.note,
         };
     }
 
@@ -947,8 +950,53 @@ export class Payment extends PosModel {
         return Boolean(this.get_payment_status());
     }
 
+    async showQR() {
+        let qr;
+        try {
+            qr = await this.env.services.orm.call("pos.payment.method", "get_qr_code", [
+                [this.payment_method.id],
+                this.amount,
+                this.order.name,
+                this.order.name,
+                this.pos.currency.id,
+                this.order.partner?.id,
+            ]);
+        } catch (error) {
+            qr = this.payment_method.default_qr;
+            if (!qr) {
+                let message;
+                if (error instanceof ConnectionLostError) {
+                    message = _t(
+                        "Connection to the server has been lost. Please check your internet connection."
+                    );
+                } else {
+                    message = error.data.message;
+                }
+                this.env.services.dialog.add(AlertDialog, {
+                    title: _t("Failure to generate Payment QR Code"),
+                    body: message,
+                });
+                return false;
+            }
+        }
+        return await ask(
+            this.env.services.dialog,
+            {
+                title: _t(this.name),
+                line: this,
+                order: this.order,
+                qrCode: qr,
+            },
+            {},
+            QRPopup
+        );
+    }
+
     async pay() {
         this.set_payment_status("waiting");
+        if (this.payment_method.payment_method_type === "qr_code") {
+            return this.handle_payment_response(await this.showQR());
+        }
         return this.handle_payment_response(
             await this.payment_method.payment_terminal.send_payment_request(this.cid)
         );
@@ -956,7 +1004,9 @@ export class Payment extends PosModel {
     handle_payment_response(isPaymentSuccessful) {
         if (isPaymentSuccessful) {
             this.set_payment_status("done");
-            this.can_be_reversed = this.payment_method.payment_terminal.supports_reversals;
+            if (this.payment_method.payment_method_type !== "qr_code") {
+                this.can_be_reversed = this.payment_method.payment_terminal.supports_reversals;
+            }
         } else {
             this.set_payment_status("retry");
         }
@@ -1016,6 +1066,11 @@ export class Order extends PosModel {
                 if (combo_parent_id) {
                     line.combo_parent_id = combo_parent_id;
                 }
+
+                const combo_line_id = this.pos.models["pos.combo.line"].get(line.combo_line_id);
+                if (combo_line_id) {
+                    line.combo_line_id = combo_line_id;
+                }
             }
         } else {
             this.set_pricelist(this.pos.config.pricelist_id);
@@ -1064,6 +1119,7 @@ export class Order extends PosModel {
         let partner;
         if (json.state && ["done", "invoiced", "paid"].includes(json.state)) {
             this.sequence_number = json.sequence_number;
+            this.pos_session_id = json.pos_session_id;
         } else if (json.pos_session_id !== this.pos.session.id) {
             this.sequence_number = this.pos.session.sequence_number++;
         } else {
@@ -1228,7 +1284,7 @@ export class Order extends PosModel {
             date: this.receiptDate,
             pos_qr_code:
                 this.pos.company.point_of_sale_use_ticket_qr_code &&
-                this.finalized &&
+                (this.finalized || ["paid", "done", "invoiced"].includes(this.state)) &&
                 qrCodeSrc(
                     `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}`
                 ),
@@ -1668,7 +1724,7 @@ export class Order extends PosModel {
             attributes_prices[parentLine.id] = this.compute_child_lines(
                 parentLine.product,
                 parentLine.combo_line_ids.map((childLine) => {
-                    const comboLineCopy = { ...childLine };
+                    const comboLineCopy = { combo_line_id: childLine.combo_line_id };
                     if (childLine.attribute_value_ids) {
                         comboLineCopy.configuration = {
                             attribute_value_ids: childLine.attribute_value_ids,
@@ -1785,10 +1841,6 @@ export class Order extends PosModel {
         if (options.comboConfigurator?.length) {
             const childLines = this.addComboLines(line, options);
             line.combo_line_ids = childLines;
-
-            for (const child of childLines) {
-                child.combo_parent_id = line;
-            }
 
             this.select_orderline(line);
         }
@@ -1929,6 +1981,12 @@ export class Order extends PosModel {
         if (options.tax_ids) {
             orderline.compute_related_tax(options.tax_ids);
         }
+        if (options.combo_parent_id) {
+            orderline.combo_parent_id = options.combo_parent_id;
+        }
+        if (options.combo_line_id) {
+            orderline.combo_line_id = options.combo_line_id;
+        }
     }
     get_selected_orderline() {
         return this.selected_orderline;
@@ -1968,7 +2026,10 @@ export class Order extends PosModel {
             }
             newPaymentline.set_amount(this.get_due());
 
-            if (payment_method.payment_terminal) {
+            if (
+                payment_method.payment_terminal ||
+                payment_method.payment_method_type === "qr_code"
+            ) {
                 newPaymentline.set_payment_status("pending");
             }
             return newPaymentline;
@@ -2109,14 +2170,16 @@ export class Order extends PosModel {
         const taxDetails = {};
         for (const line of this.orderlines) {
             const taxValuesList = line.get_all_prices().taxValuesList;
-            for (const [i, taxValues] of taxValuesList.entries()) {
+            for (const taxValues of taxValuesList) {
                 const taxId = taxValues.id;
                 if (!taxDetails[taxId]) {
-                    taxDetails[taxId] = Object.assign({}, taxValues, { amount: 0.0, base: 0.0 });
+                    taxDetails[taxId] = Object.assign({}, taxValues, {
+                        amount: 0.0,
+                        base: 0.0,
+                        tax_percentage: taxValues.amount,
+                    });
                 }
-                if (i === 0) {
-                    taxDetails[taxId].base += taxValues.display_base;
-                }
+                taxDetails[taxId].base += taxValues.display_base;
                 taxDetails[taxId].amount += taxValues.tax_amount_factorized;
             }
         }

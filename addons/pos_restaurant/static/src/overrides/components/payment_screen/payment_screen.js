@@ -22,10 +22,9 @@ patch(PaymentScreen.prototype, {
             (t) => t.parent_id && t.parent_id.id === this.currentOrder.tableId
         );
         if (changedTables?.length) {
-            changedTables.forEach((t) => {
-                t.update({ parent_id: null });
-            });
-            this.pos.updateTables(...changedTables);
+            for (const table of changedTables) {
+                this.pos.data.write("restaurant.table", [table.id], { parent_id: null });
+            }
         }
         return await super.afterOrderValidation(...arguments);
     },

@@ -1367,7 +1367,7 @@ class MrpProduction(models.Model):
         name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
         exist_lot = not name or self.env['stock.lot'].search([
             ('product_id', '=', self.product_id.id),
-            ('company_id', '=', self.company_id.id),
+            '|', ('company_id', '=', False), ('company_id', '=', self.company_id.id),
             ('name', '=', name),
         ], limit=1)
         if exist_lot:
@@ -1376,7 +1376,6 @@ class MrpProduction(models.Model):
             raise UserError(_("Please set the first Serial Number or a default sequence"))
         return {
             'product_id': self.product_id.id,
-            'company_id': self.company_id.id,
             'name': name,
         }
 

@@ -8,7 +8,7 @@
  * @typedef {import("@spreadsheet").SPTableCell} SPTableCell
  */
 
-import { helpers } from "@odoo/o-spreadsheet";
+import { helpers, CommandResult as SpreadsheetCommandResult } from "@odoo/o-spreadsheet";
 import { makePivotFormula } from "../pivot_helpers";
 import { getMaxObjectId } from "@spreadsheet/helpers/helpers";
 import { SpreadsheetPivotTable } from "../pivot_table";
@@ -17,7 +17,7 @@ import { _t } from "@web/core/l10n/translation";
 import { deepCopy } from "@web/core/utils/objects";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
 
-const { isDefined } = helpers;
+const { isDefined, deepEquals } = helpers;
 
 export class PivotCorePlugin extends OdooCorePlugin {
     static getters = /** @type {const} */ ([
@@ -53,6 +53,12 @@ export class PivotCorePlugin extends OdooCorePlugin {
      */
     allowDispatch(cmd) {
         switch (cmd.type) {
+            case "UPDATE_PIVOT": {
+                if (deepEquals(cmd.pivot, this.pivots[cmd.pivotId])) {
+                    return SpreadsheetCommandResult.NoChanges;
+                }
+                break;
+            }
             case "RENAME_PIVOT":
                 if (!(cmd.pivotId in this.pivots)) {
                     return CommandResult.PivotIdNotFound;
@@ -112,11 +118,15 @@ export class PivotCorePlugin extends OdooCorePlugin {
                 const { pivotId, newPivotId } = cmd;
                 const pivot = deepCopy(this.pivots[pivotId]);
                 this._addPivot(newPivotId, pivot);
-                this.history.update("nextFormulaId", parseInt(newPivotId, 10) + 1);
                 break;
             }
+            // this command is deprecated. use UPDATE_PIVOT instead
             case "UPDATE_ODOO_PIVOT_DOMAIN": {
                 this.history.update("pivots", cmd.pivotId, "domain", cmd.domain);
+                break;
+            }
+            case "UPDATE_PIVOT": {
+                this.history.update("pivots", cmd.pivotId, cmd.pivot);
                 break;
             }
         }

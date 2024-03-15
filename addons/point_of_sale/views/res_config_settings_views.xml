@@ -163,7 +163,7 @@
                                     Default sales tax for products
                                 </div>
                                 <div class="content-group mt16">
-                                    <field name="sale_tax_id" colspan="4" nolabel="1" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
+                                    <field name="sale_tax_id" colspan="4" nolabel="1" domain="[('type_tax_use', 'in', ('sale', 'all'))]"/>
                                 </div>
                                 <div class="mt8">
                                     <button name="%(account.action_tax_form)d" icon="oi-arrow-right" type="action" string="Taxes" class="btn-link"/>
@@ -175,18 +175,18 @@
                                 <div class="text-muted">
                                     Intermediary account used for unidentified customers.
                                 </div>
-                                <field name="account_default_pos_receivable_account_id" colspan="4" nolabel="1" domain="[('reconcile', '=', True), ('account_type', '=', 'asset_receivable'), ('company_id', '=', company_id)]"/>
+                                <field name="account_default_pos_receivable_account_id" colspan="4" nolabel="1" domain="[('reconcile', '=', True), ('account_type', '=', 'asset_receivable')]"/>
                             </setting>
                             <setting id="flexible_taxes" title="Choose a specific fiscal position at the order depending on the kind of customer (tax exempt, onsite vs. takeaway, etc.)." string="Flexible Taxes" help="Use fiscal positions to get different taxes by order">
                                 <field name="pos_tax_regime_selection"/>
                                 <div class="content-group mt16" invisible="not pos_tax_regime_selection">
                                     <div class="row">
                                         <label string="Default" for="pos_default_fiscal_position_id" class="col-lg-3 o_light_label"/>
-                                        <field name="pos_default_fiscal_position_id" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
+                                        <field name="pos_default_fiscal_position_id"/>
                                     </div>
                                     <div class="row">
                                         <label string="Allowed" for="pos_fiscal_position_ids" class="col-lg-3 o_light_label"/>
-                                        <field name="pos_fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
+                                        <field name="pos_fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}"/>
                                     </div>
                                     <div>
                                         <button name="%(account.action_account_fiscal_position_form)d" icon="oi-arrow-right" type="action" string="Fiscal Positions" class="btn-link"/>
@@ -318,6 +318,9 @@
                             <setting title="The transactions are processed by PayTM. Set your PayTM credentials on the related payment method." string="PayTM" help="Accept payments with a PayTM payment terminal">
                                 <field name="module_pos_paytm"/>
                             </setting>
+                            <setting id="pos_razorpay_setting" title="The transactions are processed by Razorpay. Set your Razorpay credentials on the related payment method." string="Razorpay" help="Accept payments with a Razorpay payment terminal">
+                                <field name="module_pos_razorpay"/>
+                            </setting>
                         </block>
 
                         <block title="Connected Devices" id="pos_connected_devices_section">
@@ -364,6 +367,9 @@
                                     </div>
                                 </div>
                             </setting>
+                        </block>
+
+                        <block title="Preparation" id="pos_preparation_section">
                             <setting string="Preparation Printers" help="Print orders at the kitchen, at the bar, etc." id="is_order_printer">
                                 <field name="pos_is_order_printer"/>
                                 <div class="content-group" invisible="not pos_is_order_printer">
@@ -378,6 +384,17 @@
                             </setting>
                             <setting string="Preparation Display" help="Display orders on the preparation display" id="preparation_display">
                                 <field name="module_pos_preparation_display" widget="upgrade_boolean"/>
+                            </setting>
+                            <setting string="Internal Notes" help="Add internal notes on order lines for the kitchen" id="iface_orderline_notes">
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <label string="Note Models" for="pos_note_ids" class="o_light_label me-2"/>
+                                        <field name="pos_note_ids" widget="many2many_tags" readonly="pos_has_active_session" placeholder="All notes"/>
+                                    </div>
+                                    <div>
+                                        <button name="%(point_of_sale.action_pos_note_model)d" icon="oi-arrow-right" type="action" string="Notes" class="btn-link"/>
+                                    </div>
+                                </div>
                             </setting>
                         </block>
 

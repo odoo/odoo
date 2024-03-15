@@ -54,40 +54,38 @@
                                 </p>
                             </div>
                         </div>
-
-                        <t t-if="campaign_id">
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <p><strong>Campaign</strong></p>
-                                </div>
-                                <div class="col-md-10">
-                                    <p><t t-esc="campaign_id[1]"/></p>
-                                </div>
+                        <div t-if="campaign_id" class="row">
+                            <div class="col-md-2">
+                                <p><strong>Campaign</strong></p>
                             </div>
-                        </t>
-
-                        <t t-if="medium_id">
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <p><strong>Medium</strong></p>
-                                </div>
-                                <div class="col-md-10">
-                                    <p><t t-esc="medium_id[1]"/></p>
-                                </div>
+                            <div class="col-md-10">
+                                <p><t t-esc="campaign_id[1]"/></p>
                             </div>
-                        </t>
-
-                        <t t-if="source_id">
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <p><strong>Source</strong></p>
-                                </div>
-                                <div class="col-md-10">
-                                    <p><t t-esc="source_id[1]"/></p>
-                                </div>
+                        </div>
+                        <div t-if="medium_id" class="row">
+                            <div class="col-md-2">
+                                <p><strong>Medium</strong></p>
                             </div>
-                        </t>
-
+                            <div class="col-md-10">
+                                <p><t t-esc="medium_id[1]"/></p>
+                            </div>
+                        </div>
+                        <div t-if="source_id" class="row">
+                            <div class="col-md-2">
+                                <p><strong>Source</strong></p>
+                            </div>
+                            <div class="col-md-10">
+                                <p><t t-esc="source_id[1]"/></p>
+                            </div>
+                        </div>
+                        <div t-if="label" class="row" >
+                            <div class="col-md-2">
+                                <p><strong>Label</strong></p>
+                            </div>
+                            <div class="col-md-10">
+                                <p t-out="label"/>
+                            </div>
+                        </div>
 
                         <h1 class="o_page_header">Statistics
                             <small class="float-end d-none d-md-block mt16" id="filters">

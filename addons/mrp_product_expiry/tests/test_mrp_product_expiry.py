@@ -27,13 +27,11 @@ class TestStockLot(TestStockCommon):
         lot_form = Form(cls.LotObj)
         lot_form.name = 'good-apple-lot'
         lot_form.product_id = cls.product_apple
-        lot_form.company_id = cls.env.company
         cls.lot_good_apple = lot_form.save()
         # Creates an expired apple lot.
         lot_form = Form(cls.LotObj)
         lot_form.name = 'expired-apple-lot-01'
         lot_form.product_id = cls.product_apple
-        lot_form.company_id = cls.env.company
         cls.lot_expired_apple = lot_form.save()
         lot_form = Form(cls.lot_expired_apple)  # Edits the lot to make it expired.
         lot_form.expiration_date = datetime.today() - timedelta(days=10)

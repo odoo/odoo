@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
@@ -10,7 +12,7 @@ import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferr
 
 QUnit.module("livechat session");
 
-QUnit.test("Session is reset after failing to persist the channel", async () => {
+test("Session is reset after failing to persist the channel", async () => {
     await startServer();
     await loadDefaultConfig();
     const { advanceTime } = mockTimeout();
@@ -33,7 +35,7 @@ QUnit.test("Session is reset after failing to persist the channel", async () => 
     await contains(".o-mail-ChatWindow");
 });
 
-QUnit.test("Fold state is saved on the server", async (assert) => {
+test("Fold state is saved on the server", async (assert) => {
     const pyEnv = await startServer();
     await loadDefaultConfig();
     const env = await start();
@@ -42,14 +44,14 @@ QUnit.test("Fold state is saved on the server", async (assert) => {
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello World!" });
-    let [member] = pyEnv["discuss.channel.member"].searchRead([
+    let [member] = pyEnv["discuss.channel.member"].search_read([
         ["guest_id", "=", pyEnv.currentGuest.id],
         ["channel_id", "=", env.services["im_livechat.livechat"].thread.id],
     ]);
     assert.strictEqual(member.fold_state, "open");
     await click(".o-mail-ChatWindow-header");
     await contains(".o-mail-Thread", { count: 0 });
-    [member] = pyEnv["discuss.channel.member"].searchRead([
+    [member] = pyEnv["discuss.channel.member"].search_read([
         ["guest_id", "=", pyEnv.currentGuest.id],
         ["channel_id", "=", env.services["im_livechat.livechat"].thread.id],
     ]);
@@ -57,7 +59,7 @@ QUnit.test("Fold state is saved on the server", async (assert) => {
     await click(".o-mail-ChatWindow-header");
 });
 
-QUnit.test("Seen message is saved on the server", async (assert) => {
+test("Seen message is saved on the server", async (assert) => {
     const pyEnv = await startServer();
     await loadDefaultConfig();
     const env = await start();
@@ -83,7 +85,7 @@ QUnit.test("Seen message is saved on the server", async (assert) => {
     await contains(".o-mail-Thread-newMessage");
     await contains(".o-mail-Composer-input", { setFocus: true });
     await contains(".o-mail-Thread-newMessage", { count: 0 });
-    const [member] = pyEnv["discuss.channel.member"].searchRead([
+    const [member] = pyEnv["discuss.channel.member"].search_read([
         ["guest_id", "=", pyEnv.currentGuest.id],
         ["channel_id", "=", env.services["im_livechat.livechat"].thread.id],
     ]);

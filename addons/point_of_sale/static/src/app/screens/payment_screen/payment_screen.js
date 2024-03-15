@@ -15,7 +15,7 @@ import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_sc
 import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/payment_status/payment_status";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, useState, onMounted } from "@odoo/owl";
-import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
+import { Numpad, enhancedButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { floatIsZero } from "@web/core/utils/numbers";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
@@ -54,24 +54,7 @@ export class PaymentScreen extends Component {
     }
 
     getNumpadButtons() {
-        return [
-            { value: "1" },
-            { value: "2" },
-            { value: "3" },
-            { value: "+10" },
-            { value: "4" },
-            { value: "5" },
-            { value: "6" },
-            { value: "+20" },
-            { value: "7" },
-            { value: "8" },
-            { value: "9" },
-            { value: "+50" },
-            { value: "-", text: "+/-" },
-            { value: "0" },
-            { value: this.env.services.localization.decimalPoint },
-            { value: "Backspace", text: "⌫" },
-        ];
+        return enhancedButtons(this.env);
     }
 
     showMaxValueError() {
@@ -170,10 +153,8 @@ export class PaymentScreen extends Component {
 
         this.dialog.add(NumberPopup, {
             title: tip ? _t("Change Tip") : _t("Add Tip"),
-            startingValue: value,
-            isInputSelected: true,
-            nbrDecimal: this.pos.currency.decimal_places,
-            inputSuffix: this.pos.currency.symbol,
+            startingValue: this.env.utils.formatCurrency(value, false),
+            formatDisplayedValue: (x) => `${this.pos.currency.symbol} ${x}`,
             getPayload: (num) => {
                 this.currentOrder.set_tip(parseFloat(num ?? ""));
             },
@@ -193,6 +174,11 @@ export class PaymentScreen extends Component {
     }
     deletePaymentLine(cid) {
         const line = this.paymentLines.find((line) => line.cid === cid);
+        if (line.payment_method.payment_method_type === "qr_code") {
+            this.currentOrder.remove_paymentline(line);
+            this.numberBuffer.reset();
+            return;
+        }
         // If a paymentline with a payment terminal linked to
         // it is removed, the terminal should get a cancel
         // request.
@@ -387,17 +373,7 @@ export class PaymentScreen extends Component {
             return "/point_of_sale/static/src/img/card-bank.png";
         }
     }
-    async _isOrderValid(isForceValidate) {
-        if (this.currentOrder.get_orderlines().length === 0 && this.currentOrder.is_to_invoice()) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Empty Order"),
-                body: _t(
-                    "There must be at least one product in your order before it can be validated and invoiced."
-                ),
-            });
-            return false;
-        }
-
+    async _askForCustomerIfRequired() {
         const splitPayments = this.paymentLines.filter(
             (payment) => payment.payment_method.split_transactions
         );
@@ -410,6 +386,22 @@ export class PaymentScreen extends Component {
             if (confirmed) {
                 this.pos.selectPartner();
             }
+            return false;
+        }
+    }
+
+    async _isOrderValid(isForceValidate) {
+        if (this.currentOrder.get_orderlines().length === 0 && this.currentOrder.is_to_invoice()) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Empty Order"),
+                body: _t(
+                    "There must be at least one product in your order before it can be validated and invoiced."
+                ),
+            });
+            return false;
+        }
+
+        if ((await this._askForCustomerIfRequired()) === false) {
             return false;
         }
 

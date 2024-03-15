@@ -72,36 +72,47 @@
         <t t-set="show_record" t-value="len(docs.ids) == 1"/>
         <t t-set="title" t-value="docs._description"/>
         <t t-set="company" t-value="docs.company_id if len(docs) == 1 else docs.env.company"/>
+        <t t-set="show_task" t-value="True"/>
+        <t t-if="not from_project">
+            <t t-set="show_task" t-value="False"/>
+            <t t-set="timesheet_report_data" t-value="docs._get_timesheet_report_data()"/>
+            <t t-set="timesheets_per_task" t-value="timesheet_report_data['timesheets_per_task']"/>
+            <t t-set="subtask_ids_per_task_id" t-value="timesheet_report_data['subtask_ids_per_task_id']"/>
+        </t>
         <t t-call="web.html_container">
             <t t-call="web.internal_layout">
                 <div class="page">
                     <t t-foreach="docs" t-as="doc">
-                        <t t-if="from_project" t-set="show_task"
-                            t-value="bool(doc.timesheet_ids.task_id)"/>
                         <div class="oe_structure"/>
-                        <div class="row mt8">
-                            <div class="col-12">
-                                <t t-if="doc.allow_timesheets and doc.timesheet_ids">
-                                    <h1 class="my-4">
-                                        <t t-if="not show_record">
-                                            <t t-out="title"/>: <span t-field="doc.name"/>
-                                        </t>
-                                    </h1>
-                                    <h2>
-                                        <span>Timesheets
-                                            <t t-if="show_record">
-                                                for the <t t-out="doc.name"/> <t t-out="title"/>
-                                            </t>
-                                        </span>
-                                    </h2>
-                                    <t t-set='lines' t-value='doc.timesheet_ids'/>
-                                    <t t-call="hr_timesheet.timesheet_table"/>
-                                </t>
-                            </div>
+                        <div class="mt8">
+                            <h1>
+                                <t t-out="title"/>: <t t-out="doc.name"/>
+                            </h1>
+                            <t t-set="lines" t-value="doc.timesheet_ids if from_project else timesheets_per_task.get(doc, doc.env['account.analytic.line'])"/>
+                            <t t-call="hr_timesheet.timesheet_table"/>
+                            <t t-if="not from_project">
+                                <t t-set="task_id" t-value="doc.id"/>
+                                <t t-call="hr_timesheet.timesheet_report_subtask"/>
+                            </t>
                         </div>
                     </t>
                 </div>
             </t>
+        </t>
+    </template>
+
+    <template id="timesheet_report_subtask">
+        <t t-set="subtasks" t-value="doc.browse(subtask_ids_per_task_id.get(task_id, []))"/>
+        <t t-foreach="subtasks.sorted('sequence')" t-as="subtask">
+            <t t-if="subtask in timesheets_per_task">
+                <h2 class="my-4">
+                    Sub-Task: <t t-out="subtask.name"/>
+                </h2>
+                <t t-set="lines" t-value="timesheets_per_task[subtask]"/>
+                <t t-call="hr_timesheet.timesheet_table"/>
+            </t>
+            <t t-set="task_id" t-value="subtask.id"/>
+            <t t-call="hr_timesheet.timesheet_report_subtask"/>
         </t>
     </template>
 

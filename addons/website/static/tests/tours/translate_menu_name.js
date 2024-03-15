@@ -8,8 +8,12 @@ wTourUtils.registerWebsitePreviewTour('translate_menu_name', {
     edition: false,
 }, () => [
     {
+        content: "Open Edit dropdown",
+        trigger: '.o_edit_website_container button',
+    },
+    {
         content: "activate translate mode",
-        trigger: '.o_translate_website_container a',
+        trigger: '.o_translate_website_dropdown_item',
     },
     {
         content: "Close the dialog",
@@ -18,7 +22,7 @@ wTourUtils.registerWebsitePreviewTour('translate_menu_name', {
     wTourUtils.clickOnExtraMenuItem({}, true),
     {
         content: "translate the menu entry",
-        trigger: 'iframe a[href="/englishURL"] span',
+        trigger: ':iframe a[href="/englishURL"] span',
         run: 'text value pa-GB',
     },
     ...wTourUtils.clickOnSave(),

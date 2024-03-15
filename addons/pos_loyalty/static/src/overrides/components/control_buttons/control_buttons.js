@@ -92,7 +92,6 @@ patch(ControlButtons.prototype, {
     async clickPromoCode() {
         this.dialog.add(TextInputPopup, {
             title: _t("Enter Code"),
-            startingValue: "",
             placeholder: _t("Gift card or Discount code"),
             getPayload: (code) => {
                 code = code.trim();
@@ -181,12 +180,12 @@ patch(ControlButtons.prototype, {
         if (rewards.length >= 1) {
             const rewardsList = rewards.map((reward) => ({
                 id: reward.reward.id,
-                label: reward.reward.description,
-                description: reward.reward.program_id.name,
+                label: reward.reward.program_id.name,
+                description: `Add "${reward.reward.description}"`,
                 item: reward,
             }));
             this.dialog.add(SelectionPopup, {
-                title: _t("Please select a reward"),
+                title: _t("Available rewards"),
                 list: rewardsList,
                 getPayload: (selectedReward) => {
                     this._applyReward(

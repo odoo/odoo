@@ -57,7 +57,7 @@ function assertCartContains({productName, backend, notContains = false} = {}) {
     }
     return {
         content: `Checking if ${productName} is in the cart`,
-        trigger: `${backend ? "iframe" : ""} ${trigger}`,
+        trigger: `${backend ? ":iframe" : ""} ${trigger}`,
         run: () => {}
     };
 }
@@ -105,7 +105,7 @@ function fillAdressForm(adressParams = {
 function goToCart({quantity = 1, position = "bottom", backend = false} = {}) {
     return {
         content: _t("Go to cart"),
-        trigger: `${backend ? "iframe" : ""} a sup.my_cart_quantity:contains(/^${quantity}$/)`,
+        trigger: `${backend ? ":iframe" : ""} a sup.my_cart_quantity:contains(/^${quantity}$/)`,
         position: position,
         run: "click",
     };

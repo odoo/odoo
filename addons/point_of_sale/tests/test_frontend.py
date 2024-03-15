@@ -54,7 +54,6 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'groups_id': [
                 (4, cls.env.ref('base.group_user').id),
                 (4, cls.env.ref('point_of_sale.group_pos_user').id),
-                (4, cls.env.ref('account.group_account_invoice').id),
             ],
         })
         cls.pos_admin = cls.env['res.users'].create({
@@ -540,7 +539,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
 
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_pricelist', login="pos_user")
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order', login="pos_user")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order_01', login="pos_user")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order_02', login="pos_user")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order_03', login="pos_user")
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ProductScreenTour', login="pos_user")
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour', login="pos_user")
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenTour', login="pos_user")
@@ -1108,7 +1109,53 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'limitedProductPricelistLoading', login="pos_user")
 
+    def test_multi_product_options(self):
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+        })
+
+        chair_multi_attribute = self.env['product.attribute'].create({
+            'name': 'Multi',
+            'display_type': 'multi',
+            'create_variant': 'no_variant',
+        })
+        chair_multi_value_1 = self.env['product.attribute.value'].create({
+            'name': 'Value 1',
+            'attribute_id': chair_multi_attribute.id,
+        })
+        chair_multi_value_2 = self.env['product.attribute.value'].create({
+            'name': 'Value 2',
+            'attribute_id': chair_multi_attribute.id,
+        })
+        self.chair_multi_line = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_a.product_tmpl_id.id,
+            'attribute_id': chair_multi_attribute.id,
+            'value_ids': [(6, 0, [chair_multi_value_1.id, chair_multi_value_2.id])]
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'MultiProductOptionsTour', login="pos_user")
+
+    def test_translate_product_name(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.pos_user.write({'lang': 'fr_FR'})
+
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 100,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+        product.update_field_translations('name', {'fr_FR': 'Testez le produit'})
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'TranslateProductNameTour', login="pos_user")
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'
     touch_enabled = True
+    allow_inherited_tests_method = True

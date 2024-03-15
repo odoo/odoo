@@ -28,10 +28,7 @@
                         </group>
                     </group>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids" groups="base.group_user"/>
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>
         </field>
     </record>
@@ -57,7 +54,7 @@
         <field name="priority">48</field>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="replace"/>
-            <xpath expr="//div[hasclass('oe_chatter')]" position="replace"/>
+            <xpath expr="//chatter" position="replace"/>
         </field>
     </record>
 

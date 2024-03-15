@@ -296,7 +296,7 @@ export async function startServer({ actions, views = {} } = {}) {
                  * @param {Object} kwargs
                  * @returns {Object[]} array of records corresponding to the given domain.
                  */
-                searchRead(domain, kwargs = {}) {
+                search_read(domain, kwargs = {}) {
                     return target.mockServer.mockSearchRead(name, [domain], kwargs);
                 },
                 /**
@@ -337,7 +337,7 @@ export async function startServer({ actions, views = {} } = {}) {
         _cookie = {};
     });
     if ("res.users" in pyEnv.mockServer.models) {
-        const adminUser = pyEnv["res.users"].searchRead([["id", "=", pyEnv.adminUserId]])[0];
+        const adminUser = pyEnv["res.users"].search_read([["id", "=", pyEnv.adminUserId]])[0];
         pyEnv.authenticate(adminUser.login, adminUser.password);
     }
     return pyEnv;
@@ -351,3 +351,12 @@ export async function startServer({ actions, views = {} } = {}) {
 export function getPyEnv() {
     return pyEnv || startServer();
 }
+
+export const serverState = {
+    get partnerId() {
+        return pyEnv?.currentPartnerId;
+    },
+    get userId() {
+        return pyEnv?.currentUserId;
+    },
+};

@@ -1,11 +1,12 @@
 /** @odoo-module */
 
 import { Component, useState, xml } from "@odoo/owl";
-import { createURL, setParams } from "../core/url";
+import { createURL } from "../core/url";
 import { useWindowListener } from "../hoot_utils";
 import { HootButtons } from "./hoot_buttons";
 import { HootConfigDropdown } from "./hoot_config_dropdown";
 import { HootDebugToolBar } from "./hoot_debug_toolbar";
+import { HootPresets } from "./hoot_presets";
 import { HootReporting } from "./hoot_reporting";
 import { HootSearch } from "./hoot_search";
 import { HootSideBar } from "./hoot_side_bar";
@@ -17,10 +18,6 @@ import { HootStatusPanel } from "./hoot_status_panel";
  */
 
 //-----------------------------------------------------------------------------
-// Internal
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
@@ -30,6 +27,7 @@ export class HootMain extends Component {
         HootButtons,
         HootConfigDropdown,
         HootDebugToolBar,
+        HootPresets,
         HootReporting,
         HootSearch,
         HootSideBar,
@@ -57,7 +55,10 @@ export class HootMain extends Component {
                         </h1>
                         <HootButtons />
                         <HootSearch />
-                        <HootConfigDropdown />
+                        <div class="flex gap-1">
+                            <HootPresets />
+                            <HootConfigDropdown />
+                        </div>
                     </nav>
                 </header>
                 <HootStatusPanel />
@@ -108,7 +109,7 @@ export class HootMain extends Component {
             case "d": {
                 if (ev.altKey) {
                     ev.preventDefault();
-                    setParams({ debugTest: !runner.config.debugTest });
+                    runner.config.debugTest = !runner.config.debugTest;
                 }
                 break;
             }
@@ -120,6 +121,9 @@ export class HootMain extends Component {
                 break;
             }
             case "Escape": {
+                if (ev.ctrlKey && runner.config.debugTest) {
+                    runner.config.debugTest = false;
+                }
                 if (runner.state.status === "running") {
                     ev.preventDefault();
                     runner.stop();

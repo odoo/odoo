@@ -62,7 +62,7 @@
             // move first test back to new stage to be able to test rainbowman a second time
             trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 1')",
             content: "move back to new stage",
-            run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(0) "
+            run: "drag_and_drop_native .o_opportunity_kanban .o_kanban_group:eq(0) "
         }, {
             trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 2')",
             content: "click on second lead",

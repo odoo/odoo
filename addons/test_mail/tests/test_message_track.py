@@ -747,6 +747,88 @@ class TestTrackingInternals(MailCommon):
             )
 
     @users('employee')
+    def test_track_multi_models(self):
+        """ Some models track value coming from another model e.g. when having
+        a sub model (lines) on which some value should be tracked on a parent
+        model. Test there is no model mismatch. """
+        main_track = self.env['mail.test.track.all'].create({
+            'name': 'Multi Models Tracking',
+            'char_field': 'char_value',
+        })
+        self.flush_tracking()
+        self.assertEqual(len(main_track.message_ids), 1)
+        self.assertFalse(main_track.message_ids.tracking_value_ids)
+
+        sub_track = self.env['mail.test.track.groups'].create({
+            'name': 'Groups',
+            'secret': 'secret',
+        })
+        # some custom code generates tracking values on main_track
+        main_track.message_post(
+            body='Custom Log with Tracking',
+            tracking_value_ids=[
+                (0, 0, {
+                    'field_id': self.env['ir.model.fields']._get(sub_track._name, 'secret').id,
+                    'new_value_char': 'secret',
+                    'old_value_char': False,
+                }),
+                (0, 0, {
+                    'field_id': False,
+                    'new_value_integer': self.env.uid,
+                    'old_value_integer': False,
+                }),
+                (0, 0, {
+                    'field_id': False,
+                    'field_info': {
+                        'desc': 'Old integer',
+                        'name': 'Removed',
+                        'sequence': 35,
+                        'type': 'integer',
+                    },
+                    'new_value_integer': 35,
+                    'old_value_integer': 30,
+                }),
+            ],
+        )
+        trackings = main_track.message_ids.sudo().tracking_value_ids
+        self.assertEqual(len(trackings), 3)
+
+        # check groups, as it depends on model
+        for tracking, exp_groups in zip(trackings, ['base.group_user', 'base.group_system', 'base.group_system']):
+            self.assertEqual(tracking.field_groups, exp_groups)
+
+        # check formatting, as it fetches info on model
+        formatted = trackings._tracking_value_format()
+        self.assertEqual(
+            formatted,
+            [
+                {
+                    'changedField': 'Secret',
+                    'id': trackings[0].id,
+                    'fieldName': 'secret',
+                    'fieldType': 'char',
+                    'newValue': {'currencyId': False, 'value': 'secret'},
+                    'oldValue': {'currencyId': False, 'value': False}
+                }, {
+                    'changedField': 'Old integer',
+                    'id': trackings[2].id,
+                    'fieldName': 'Removed',
+                    'fieldType': 'integer',
+                    'newValue': {'currencyId': False, 'value': 35},
+                    'oldValue': {'currencyId': False, 'value': 30}
+                }, {
+                    'changedField': 'Unknown',
+                    'id': trackings[1].id,
+                    'fieldName': 'unknown',
+                    'fieldType': 'char',
+                    'newValue': {'currencyId': False, 'value': False},
+                    'oldValue': {'currencyId': False, 'value': False}
+                }
+            ]
+        )
+
+
+    @users('employee')
     def test_track_sequence(self):
         """ Update some tracked fields and check that the mail.tracking.value
         are ordered according to their tracking_sequence """

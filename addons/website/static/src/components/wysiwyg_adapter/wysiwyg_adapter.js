@@ -16,6 +16,7 @@ import { WebsiteDialog } from '../dialog/dialog';
 import { PageOption } from "./page_options";
 import { Component, onWillStart, useEffect, onWillUnmount } from "@odoo/owl";
 import { EditHeadBodyDialog } from "../edit_head_body_dialog/edit_head_body_dialog";
+import { router } from "@web/core/browser/router";
 
 /**
  * Show/hide the dropdowns associated to the given toggles and allows to wait
@@ -46,6 +47,25 @@ function toggleDropdown($toggles, show) {
             $toggle.dropdown(toShow ? 'show' : 'hide');
         });
     })).then(() => $toggles);
+}
+
+/**
+ * Checks if the classes that changed during the mutation are all to be ignored.
+ * (The mutation can be discarded if it is the case, when filtering the mutation
+ * records).
+ *
+ * @param {Object} record the current mutation
+ * @param {Array} excludedClasses the classes to ignore
+ * @returns {Boolean}
+ */
+function checkForExcludedClasses(record, excludedClasses) {
+    const classBefore = (record.oldValue && record.oldValue.split(" ")) || [];
+    const classAfter = [...record.target.classList];
+    const changedClasses = [
+        ...classBefore.filter(c => c && !classAfter.includes(c)),
+        ...classAfter.filter(c => c && !classBefore.includes(c)),
+    ];
+    return changedClasses.every(c => excludedClasses.includes(c));
 }
 
 /**
@@ -124,13 +144,13 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         useEffect(() => {
             // Back navigation is handled with an additional state in the
             // history, used to capture the popstate event.
-            history.pushState(null, '');
+            history.pushState({ skipRouteChange: true }, '');
             let hasFakeState = true;
             const leaveOnBackNavigation = () => {
                 hasFakeState = false;
                 this.leaveEditMode({
                     onStay: () => {
-                        history.pushState(null, '');
+                        history.pushState({ skipRouteChange: true }, '');
                         hasFakeState = true;
                     },
                     onLeave: () => history.back(),
@@ -141,6 +161,9 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             return () => {
                 window.removeEventListener('popstate', leaveOnBackNavigation);
                 if (hasFakeState) {
+                    // prevent router from reloading state from scratch
+                    // we just want to pop the fake history entry
+                    router.skipLoad = true;
                     history.back();
                 }
             };
@@ -166,12 +189,11 @@ export class WysiwygAdapterComponent extends Wysiwyg {
 
         const $editableWindow = this.$editable[0].ownerDocument.defaultView;
         // Dropdown menu initialization: handle dropdown openings by hand
-        var $dropdownMenuToggles = $editableWindow.$('.o_mega_menu_toggle, #o_main_nav .dropdown-toggle');
+        const $dropdownMenuToggles = $editableWindow.$(".o_mega_menu_toggle, .o_main_nav .dropdown-toggle");
         $dropdownMenuToggles.removeAttr('data-bs-toggle').dropdown('dispose');
         // Since bootstrap 5.1.3, removing bsToggle is not sufficient anymore.
         $dropdownMenuToggles.siblings(".dropdown-menu").addClass("o_wysiwyg_submenu");
         $dropdownMenuToggles.on('click.wysiwyg_megamenu', ev => {
-            this.odooEditor.observerUnactive();
             var $toggle = $(ev.currentTarget);
 
             // Each time we toggle a dropdown, we will destroy the dropdown
@@ -188,10 +210,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                     if (!this.options.enableTranslation) {
                         this._toggleMegaMenu($toggle[0]);
                     }
-                })
-                // FIXME this is not right, the observer should not be inactive
-                // for async periods of time.
-                .then(() => this.odooEditor.observerActive());
+                });
         });
 
         // Ensure :blank oe_structure elements are in fact empty as ':blank'
@@ -202,6 +221,66 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             }
         }
         await super.startEdition();
+
+        // Overriding the `filterMutationRecords` function so it can be used to
+        // filter website-specific mutations.
+        const webEditorFilterMutationRecords = this.odooEditor.options.filterMutationRecords;
+        Object.assign(this.odooEditor.options, {
+            /**
+             * @override
+             */
+            filterMutationRecords(records) {
+                const filteredRecords = webEditorFilterMutationRecords(records);
+
+                // Dropdown attributes to ignore.
+                const dropdownClasses = ["show"];
+                const dropdownToggleAttributes = ["aria-expanded"];
+                const dropdownMenuAttributes = ["data-popper-placement", "style", "data-bs-popper"];
+                // Offcanvas attributes to ignore.
+                const offcanvasClasses = ["show"];
+                const offcanvasAttributes = ["aria-modal", "aria-hidden", "role", "style"];
+
+                return filteredRecords.filter(record => {
+                    if (record.type === "attributes") {
+                        if (record.target.closest("header#top")) {
+                            // Do not record when showing/hiding a dropdown.
+                            if (record.target.matches(".dropdown-toggle, .dropdown-menu")
+                                    && record.attributeName === "class") {
+                                if (checkForExcludedClasses(record, dropdownClasses)) {
+                                    return false;
+                                }
+                            } else if (record.target.matches(".dropdown-menu")
+                                    && dropdownMenuAttributes.includes(record.attributeName)) {
+                                return false;
+                            } else if (record.target.matches(".dropdown-toggle")
+                                    && dropdownToggleAttributes.includes(record.attributeName)) {
+                                return false;
+                            }
+
+                            // Do not record when showing/hiding an offcanvas.
+                            if (record.target.matches(".offcanvas, .offcanvas-backdrop")
+                                    && record.attributeName === "class") {
+                                if (checkForExcludedClasses(record, offcanvasClasses)) {
+                                    return false;
+                                }
+                            } else if (record.target.matches(".offcanvas")
+                                    && offcanvasAttributes.includes(record.attributeName)) {
+                                return false;
+                            }
+                        }
+                    } else if (record.type === "childList") {
+                        const addedOrRemovedNode = record.addedNodes[0] || record.removedNodes[0];
+                        // Do not record the addition/removal of the offcanvas
+                        // backdrop.
+                        if (addedOrRemovedNode.nodeType === Node.ELEMENT_NODE
+                                && addedOrRemovedNode.matches(".offcanvas-backdrop")) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+            }
+        });
 
         // Disable OdooEditor observer's while setting up classes
         this.odooEditor.observerUnactive();

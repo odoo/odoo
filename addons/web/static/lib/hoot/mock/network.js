@@ -135,7 +135,7 @@ export async function mockedFetch(input, init) {
         });
     } else {
         // JSON response (i.e. anything that isn't a string)
-        logResponse(() => result);
+        logResponse(() => JSON.parse(JSON.stringify(result)));
         return new MockResponse(JSON.stringify(result), {
             headers: { [HEADER.contentType]: headers.get(HEADER.contentType) || HEADER.json },
         });
@@ -540,7 +540,7 @@ export class MockResponse extends Response {
     }
 
     arrayBuffer() {
-        return new TextEncoder().encode(this[BODY_SYMBOL]);
+        return new TextEncoder().encode(this[BODY_SYMBOL]).buffer;
     }
 
     blob() {
@@ -677,6 +677,10 @@ export class MockXMLHttpRequest extends EventTarget {
     #status = 0;
     #url = "";
 
+    abort() {}
+
+    upload = new MockXMLHttpRequestUpload();
+
     get response() {
         return this.#response;
     }
@@ -718,6 +722,22 @@ export class MockXMLHttpRequest extends EventTarget {
         this.#headers[name] = value;
     }
     getResponseHeader() {}
+}
+
+export class MockXMLHttpRequestUpload extends EventTarget {
+    constructor() {
+        super(...arguments);
+
+        makePublicListeners(this, [
+            "abort",
+            "error",
+            "load",
+            "loadend",
+            "loadstart",
+            "progress",
+            "timeout",
+        ]);
+    }
 }
 
 export class ServerWebSocket extends EventTarget {

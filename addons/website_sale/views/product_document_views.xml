@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="sale.product_document_form"/>
         <field name="arch" type="xml">
             <sheet position="inside">
-                <group name="website_sale" string="E-commerce">
+                <group name="website_sale" string="E-commerce" invisible="res_model == 'product.product'">
                     <field name="shown_on_product_page"/>
                 </group>
             </sheet>
@@ -20,8 +20,8 @@
         <field name="inherit_id" ref="sale.product_document_kanban"/>
         <field name="arch" type="xml">
             <div name="bottom" position="inside">
-                <div class="mt-2">
-                    <span>Show on product page</span>
+                <div class="mt-2" invisible="res_model == 'product.product'">
+                    <span>Publish on website</span>
                     <field name="shown_on_product_page" class="ms-2" widget="boolean_toggle"/>
                 </div>
             </div>
@@ -34,7 +34,7 @@
         <field name="inherit_id" ref="sale.product_document_list"/>
         <field name="arch" type="xml">
             <field name="attached_on" position="after">
-                <field name="shown_on_product_page"/>
+                <field name="shown_on_product_page" invisible="res_model == 'product.product'"/>
             </field>
         </field>
     </record>

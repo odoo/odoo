@@ -70,7 +70,7 @@ export class OdooPivot extends OdooViewsDataSource {
             },
             {
                 orm: this._orm,
-                metadataRepository: this.metadataRepository,
+                serverData: this.odooDataProvider.serverData,
             }
         );
         await this._model.load(this._searchParams);
@@ -195,6 +195,15 @@ export class OdooPivot extends OdooViewsDataSource {
         return this._model.getPivotCellDomain(domain);
     }
 
+    /**
+     * @param {string} fieldName
+     * @returns {{ value: string | number | boolean, label: string }[]}
+     */
+    getPossibleFieldValues(fieldName) {
+        this._assertDataIsLoaded();
+        return this._model.getPossibleFieldValues(fieldName);
+    }
+
     async copyModelWithOriginalDomain() {
         await this.loadMetadata();
         this._runtimeDefinition = new OdooPivotRuntimeDefinition(
@@ -209,10 +218,7 @@ export class OdooPivot extends OdooViewsDataSource {
                 definition: this._runtimeDefinition,
                 searchParams: this._initialSearchParams,
             },
-            {
-                orm: this._orm,
-                metadataRepository: this.metadataRepository,
-            }
+            { orm: this._orm }
         );
 
         const domain = new Domain(this._initialSearchParams.domain).toList({
@@ -226,15 +232,15 @@ export class OdooPivot extends OdooViewsDataSource {
     }
 }
 
-class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
+export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
     /**
      * @param {OdooPivotDefinition} definition
      * @param {Fields} fields
      */
     constructor(definition, fields) {
         super(definition, fields);
-        /** @type {Array} */
-        this._domain = definition.domain;
+        /** @type {Domain} */
+        this._domain = new Domain(definition.domain);
         /** @type {Object} */
         this._context = definition.context;
         /** @type {string} */

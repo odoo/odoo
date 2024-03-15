@@ -4,7 +4,6 @@
 import { registry } from "@web/core/registry";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { roundDecimals as round_di } from "@web/core/utils/numbers";
-import { nbsp } from "@web/core/utils/strings";
 import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
@@ -123,11 +122,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
                 trigger: ".btn-switchpane.review-button",
                 mobile: true,
             },
-            {
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                mobile: true,
-            },
+            ...ProductScreen.controlButtonMore(),
             {
                 content: "click pricelist button",
                 trigger: ".control-buttons button.o_pricelist_button",
@@ -149,11 +144,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
                 content: "select Deco Addict",
                 trigger: ".partner-line:contains('Deco Addict')",
             },
-            {
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                mobile: true,
-            },
+            ...ProductScreen.controlButtonMore(),
             {
                 content: "click pricelist button",
                 trigger: ".control-buttons button.o_pricelist_button",
@@ -172,11 +163,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
                 content: "select Lumber Inc",
                 trigger: ".partner-line:contains('Lumber Inc')",
             },
-            {
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                mobile: true,
-            },
+            ...ProductScreen.controlButtonMore(),
             {
                 content: "click pricelist button",
                 trigger: ".control-buttons button.o_pricelist_button",
@@ -208,11 +195,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
                 quantity: "1.0",
                 withClass: ".selected",
             }),
-            {
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                mobile: true,
-            },
+            ...ProductScreen.controlButtonMore(),
             {
                 content: "click pricelist button",
                 trigger: ".control-buttons button.o_pricelist_button",
@@ -228,7 +211,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
                 withClass: ".selected",
             }),
             // verify that unit price of shelf changed to $1
-            Order.hasTotal(`$${nbsp}2.00`),
+            Order.hasTotal(`$ 2.00`),
             {
                 content: "go back to the products",
                 trigger: ".floor-button",
@@ -254,11 +237,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
             ...Order.hasLine({ productName: "Small Shelf", price: "5.0", withClass: ".selected" }),
             Numpad.click("Qty"),
             Numpad.isActive("Qty"),
-            {
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                mobile: true,
-            },
+            ...ProductScreen.controlButtonMore(),
             {
                 content: "click pricelist button",
                 trigger: ".control-buttons button.o_pricelist_button",
@@ -268,12 +247,8 @@ registry.category("web_tour.tours").add("pos_pricelist", {
                 trigger: ".selection-item:contains('Public Pricelist')",
             },
             // verify that the boni shelf have been recomputed and the shelf have not (their price was manually overridden)
-            Order.hasTotal(`$${nbsp}8.96`),
-            {
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                mobile: true,
-            },
+            Order.hasTotal(`$ 8.96`),
+            ...ProductScreen.controlButtonMore(),
             {
                 content: "click pricelist button",
                 trigger: ".control-buttons button.o_pricelist_button",

@@ -167,21 +167,19 @@ export function ascending_process_taxes_batch(batch) {
  * [!] Mirror of the same method in account_tax.py.
  * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
 */
-export function prepare_taxes_computation(tax_values_list, kwargs={}) {
-    // Kwargs.
-    const force_price_include = kwargs.hasOwnProperty("force_price_include") ? kwargs.force_price_include : false;
-    const is_refund = kwargs.hasOwnProperty("is_refund") ? kwargs.is_refund : false;
-    const include_caba_tags = kwargs.hasOwnProperty("include_caba_tags") ? kwargs.include_caba_tags : false;
-
+export function prepare_taxes_computation(
+    tax_values_list,
+    {force_price_include=null, is_refund=false, include_caba_tags=false}={},
+) {
     // Flatten the taxes and order them.
     const sorted_tax_values_list = tax_values_list.sort(
-        (v1, v2) => v1.sequence - v2.sequence || v1.tax_id - v2.tax_id
+        (v1, v2) => v1.sequence - v2.sequence || v1.id - v2.id
     );
     let flatten_tax_values_list = [];
     for (const tax_values of sorted_tax_values_list) {
         if (tax_values.amount_type === "group") {
             const sorted_children_tax_ids = tax_values._children_tax_ids.sort(
-                (v1, v2) => v1.sequence - v2.sequence || v1.tax_id - v2.tax_id
+                (v1, v2) => v1.sequence - v2.sequence || v1.id - v2.id
             );
             for (const child_tax_values of sorted_children_tax_ids) {
                 flatten_tax_values_list.push(child_tax_values);
@@ -193,7 +191,7 @@ export function prepare_taxes_computation(tax_values_list, kwargs={}) {
     flatten_tax_values_list = flatten_tax_values_list.map(
         (tax_values, index) => Object.assign(
             {
-                price_include: tax_values.price_include || force_price_include,
+                price_include: force_price_include === null ? tax_values.price_include : force_price_include,
                 index: index,
                 eval_context: {},
             },
@@ -306,7 +304,7 @@ export function prepare_taxes_computation(tax_values_list, kwargs={}) {
         if (batch.include_base_amount) {
             for (const next_batch of ascending_batches.toSpliced(0, i + 1)) {
                 for (const next_tax_values of next_batch.taxes) {
-                    subsequent_tax_ids.push(next_tax_values.tax_id);
+                    subsequent_tax_ids.push(next_tax_values.id);
                     if (include_caba_tags || next_tax_values.tax_exigibility !== "on_payment") {
                         for (const tag_id of next_tax_values[base_tags_field]) {
                             subsequent_tag_ids.add(tag_id);
@@ -348,12 +346,11 @@ export function eval_taxes_computation_product_fields(){
  * [!] Mirror of the same method in account_tax.py.
  * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
 */
-export function eval_taxes_computation_prepare_context(price_unit, quantity, kwargs={}) {
-    const rounding_method = kwargs.hasOwnProperty("rounding_method") ? kwargs.rounding_method : "round_per_line";
-    const precision_rounding = kwargs.hasOwnProperty("precision_rounding") ? kwargs.precision_rounding : 0.01;
-    const reverse = kwargs.hasOwnProperty("reverse") ? kwargs.reverse : false;
-    const product = kwargs.product || {};
-
+export function eval_taxes_computation_prepare_context(
+    price_unit,
+    quantity,
+    {product={}, rounding_method="round_per_line", precision_rounding=0.01, reverse=false}={},
+) {
     const product_values = {};
     for(const field_name of eval_taxes_computation_product_fields()){
         product_values.field_name = product[field_name];
@@ -453,7 +450,7 @@ export function eval_taxes_computation(taxes_computation, eval_context) {
                 reverse: reverse,
             });
             if (tax_amount === undefined) {
-                skipped.add(tax_values.tax_id);
+                skipped.add(tax_values.id);
                 tax_amount = 0.0;
             }
             tax_values.tax_amount = tax_amount;
@@ -488,7 +485,7 @@ export function eval_taxes_computation(taxes_computation, eval_context) {
     }
 
     if (skipped.length > 0) {
-        eval_tax_values_list = eval_tax_values_list.filter(tax_values => !skipped.has(tax_values.tax_id));
+        eval_tax_values_list = eval_tax_values_list.filter(tax_values => !skipped.has(tax_values.id));
     }
 
     let total_excluded = null;
@@ -520,7 +517,7 @@ export function eval_taxes_computation(taxes_computation, eval_context) {
 
 export function adapt_price_unit_to_another_taxes(price_unit, original_tax_values_list, new_tax_values_list) {
     const original_tax_ids = new Set(original_tax_values_list.map(x => x.id));
-    const new_tax_ids = new Set(new_tax_values_list.map(x => x.tax_id));
+    const new_tax_ids = new Set(new_tax_values_list.map(x => x.id));
     if (
         (
             original_tax_ids.size === new_tax_ids.size
@@ -532,13 +529,15 @@ export function adapt_price_unit_to_another_taxes(price_unit, original_tax_value
     }
 
     let taxes_computation = prepare_taxes_computation(original_tax_values_list);
-    let evaluation_context = eval_taxes_computation_prepare_context(price_unit, 1.0, { rounding_method: 'round_globally' });
+    let evaluation_context = eval_taxes_computation_prepare_context(price_unit, 1.0, {
+        rounding_method: "round_globally",
+    });
     taxes_computation = eval_taxes_computation(taxes_computation, evaluation_context);
     price_unit = taxes_computation.total_excluded;
 
     taxes_computation = prepare_taxes_computation(new_tax_values_list);
     evaluation_context = eval_taxes_computation_prepare_context(price_unit, 1.0, {
-        rounding_method: 'round_globally',
+        rounding_method: "round_globally",
         reverse: true,
     });
     taxes_computation = eval_taxes_computation(taxes_computation, evaluation_context);
@@ -555,7 +554,14 @@ export function adapt_price_unit_to_another_taxes(price_unit, original_tax_value
 // PURE JS HELPERS
 // -------------------------------------------------------------------------
 
-export function computeSingleLineTaxes(tax_values_list, eval_context, kwargs={}) {
-    const taxes_computation = prepare_taxes_computation(tax_values_list, kwargs);
+export function computeSingleLineTaxes(
+    tax_values_list,
+    eval_context,
+    {force_price_include=false, is_refund=false, include_caba_tags=false}={},
+) {
+    const taxes_computation = prepare_taxes_computation(
+        tax_values_list,
+        {force_price_include: force_price_include, is_refund: is_refund, include_caba_tags: include_caba_tags},
+    );
     return eval_taxes_computation(taxes_computation, eval_context);
 }

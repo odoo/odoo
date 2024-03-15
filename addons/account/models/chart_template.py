@@ -267,6 +267,11 @@ class AccountChartTemplate(models.AbstractModel):
             return (
                 tax.amount_type != template.get('amount_type', 'percent')
                 or tax.amount != template.get('amount', 0)
+                or (
+                    len(tax.repartition_line_ids) != len(template.get('repartition_line_ids', []))
+                    # Taxes that don't have repartition lines in their templates get theirs created by default
+                    and len(template.get('repartition_line_ids', [])) != 0
+                )
             )
 
         obsolete_xmlid = set()
@@ -308,18 +313,19 @@ class AccountChartTemplate(models.AbstractModel):
                 elif model_name == 'account.account':
                     # Point or create xmlid to existing record to avoid duplicate code
                     account = self.ref(xmlid, raise_if_not_found=False)
-                    if not account or (account and account.code != values['code']):
-                        existing_account = self.env['account.account'].search([
-                            *self.env['account.account']._check_company_domain(company),
-                            ('code', '=', values['code']),
-                        ])
-                        if existing_account:
+                    normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
+                    if not account or not re.match(f'^{values["code"]}0*$', account.code):
+                        query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
+                        query.add_where("account_account.code SIMILAR TO %s", [f'{values["code"]}0*'])
+                        accounts = self.env['account.account'].browse(query)
+                        account = accounts.sorted(key=lambda x: x.code != normalized_code)[0] if accounts else None
+                        if account:
                             self.env['ir.model.data']._update_xmlids([{
                                 'xml_id': f"account.{company.id}_{xmlid}",
-                                'record': existing_account,
+                                'record': account,
                                 'noupdate': True,
                             }])
-                            account = existing_account
+
                     # on existing accounts, only tag_ids are to be updated using default data
                     if account and 'tag_ids' in data[model_name][xmlid]:
                         data[model_name][xmlid] = {'tag_ids': data[model_name][xmlid]['tag_ids']}
@@ -426,6 +432,7 @@ class AccountChartTemplate(models.AbstractModel):
             This allows to define all the data before the records even exist in the database.
             """
             fields = ((model._fields[k], k, v) for k, v in values.items() if k in model._fields)
+            failed_fields = []
             for field, fname, value in fields:
                 if not value:
                     values[fname] = False
@@ -437,7 +444,7 @@ class AccountChartTemplate(models.AbstractModel):
                         values[fname] = self.ref(value).id if value not in ('', 'False', 'None') else False
                     except ValueError as e:
                         _logger.warning("Failed when trying to recover %s for field=%s", value, field)
-                        raise e
+                        failed_fields.append(fname)
                 elif field.type in ('one2many', 'many2many') and isinstance(value[0], (list, tuple)):
                     for i, (command, _id, *last_part) in enumerate(value):
                         if last_part:
@@ -458,6 +465,8 @@ class AccountChartTemplate(models.AbstractModel):
                         for v in value.split(',')
                         if v
                     ])]
+            for fname in failed_fields:
+                del values[fname]
             return values
 
         def defer(all_data):
@@ -955,7 +964,7 @@ class AccountChartTemplate(models.AbstractModel):
         return parents
 
     def _get_tag_mapper(self, country_id):
-        tags = {x.name: x.id for x in self.env['account.account.tag'].search([
+        tags = {x.name: x.id for x in self.env['account.account.tag'].with_context(active_test=False).search([
             ('applicability', '=', 'taxes'),
             ('country_id', '=', country_id),
         ])}

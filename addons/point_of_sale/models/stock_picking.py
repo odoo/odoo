@@ -169,7 +169,7 @@ class StockPickingType(models.Model):
     @api.constrains('active')
     def _check_active(self):
         for picking_type in self:
-            pos_config = self.env['pos.config'].search([('picking_type_id', '=', picking_type.id)], limit=1)
+            pos_config = self.env['pos.config'].sudo().search([('picking_type_id', '=', picking_type.id)], limit=1)
             if pos_config:
                 raise ValidationError(_("You cannot archive '%s' as it is used by a POS configuration '%s'.", picking_type.name, pos_config.name))
 
@@ -215,7 +215,7 @@ class StockMove(models.Model):
             lots = lines.pack_lot_ids.filtered(lambda l: l.lot_name and l.product_id.id in moves_product_ids)
             lots_data = set(lots.mapped(lambda l: (l.product_id.id, l.lot_name)))
             existing_lots = self.env['stock.lot'].search([
-                ('company_id', '=', moves[0].picking_type_id.company_id.id),
+                '|', ('company_id', '=', False), ('company_id', '=', moves[0].picking_type_id.company_id.id),
                 ('product_id', 'in', lines.product_id.ids),
                 ('name', 'in', lots.mapped('lot_name')),
             ])

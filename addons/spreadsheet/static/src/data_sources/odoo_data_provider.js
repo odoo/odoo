@@ -1,5 +1,4 @@
 import { EventBus } from "@odoo/owl";
-import { MetadataRepository } from "./metadata_repository";
 import { ServerData } from "./server_data";
 
 export class OdooDataProvider extends EventBus {
@@ -9,8 +8,6 @@ export class OdooDataProvider extends EventBus {
         this.serverData = new ServerData(this.orm, {
             whenDataStartLoading: (promise) => this.notifyWhenPromiseResolves(promise),
         });
-        this.metadataRepository = new MetadataRepository(env);
-        this.metadataRepository.addEventListener("labels-fetched", () => this.notify());
         this.pendingPromises = new Set();
     }
 

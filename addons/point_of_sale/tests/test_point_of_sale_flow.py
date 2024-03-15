@@ -158,12 +158,10 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         lot1 = self.env['stock.lot'].create({
             'name': '1001',
             'product_id': self.product2.id,
-            'company_id': self.env.company.id,
         })
         lot2 = self.env['stock.lot'].create({
             'name': '1002',
             'product_id': self.product2.id,
-            'company_id': self.env.company.id,
         })
 
         self.env['stock.quant'].with_context(inventory_mode=True).create({
@@ -476,7 +474,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         lot = self.env['stock.lot'].create({
             'name': 'SuperLot',
             'product_id': tracked_product.id,
-            'company_id': self.env.company.id,
         })
         qty = 2
         self.env['stock.quant']._update_available_quantity(tracked_product, shelf1_location, qty, lot_id=lot)
@@ -1038,7 +1035,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         tracked_product_2_lot = self.env['stock.lot'].create({
             'name': '80085',
             'product_id': tracked_product_2.id,
-            'company_id': self.env.company.id,
         })
         stock_location = self.company_data['default_warehouse'].lot_stock_id
         self.env['stock.quant'].with_context(inventory_mode=True).create({
@@ -1472,7 +1468,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         lot1 = self.env['stock.lot'].create({
             'name': '1001',
             'product_id': self.product2.id,
-            'company_id': self.env.company.id,
         })
 
         self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1, lot_id=lot1, owner_id=self.partner1)
@@ -1925,3 +1920,61 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.pos_config.current_session_id.action_pos_session_closing_control()
         self.assertEqual(quant2.quantity, 4)
         self.assertEqual(quant1.quantity, 3)
+
+    def test_pos_branch_account(self):
+        branch = self.env['res.company'].create({
+            'name': 'Branch 1',
+            'parent_id': self.env.company.id,
+            'chart_template': self.env.company.chart_template,
+        })
+
+        outstanding_receipts = self.env.company.account_journal_payment_debit_account_id.copy()
+        outstanding_receipts.company_id = branch
+
+        self.env.cr.precommit.run()
+        branch.account_journal_payment_debit_account_id = outstanding_receipts
+
+        bank_payment_method = self.bank_payment_method.copy()
+        bank_payment_method.company_id = branch.id
+
+        b_pos_config = self.env['pos.config'].with_company(branch).create({
+            'name': 'Main',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_journal_id': self.company_data['default_journal_sale'].id,
+            'payment_method_ids': [(4, bank_payment_method.id)],
+        })
+
+        b_pos_config.open_ui()
+        current_session = b_pos_config.current_session_id
+
+        order = self.PosOrder.create({
+            'session_id': current_session.id,
+            'partner_id': self.partner1.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product3.id,
+                'price_unit': 450,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [[6, False, []]],
+                'price_subtotal': 450,
+                'price_subtotal_incl': 450,
+            })],
+            'pricelist_id': b_pos_config.pricelist_id.id,
+            'amount_paid': 450.0,
+            'amount_total': 450.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+            'last_order_preparation_change': '{}'
+        })
+
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.PosMakePayment.with_context(payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': bank_payment_method.id,
+        })
+        order_payment.with_context(payment_context).check()
+        b_pos_config.current_session_id.action_pos_session_closing_control()
+
+        self.assertEqual(current_session.state, 'closed', msg='State of current session should be closed.')

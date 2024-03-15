@@ -207,10 +207,7 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" groups="base.group_user" options="{'post_refresh': 'recipients'}"/>
-                        <field name="message_ids"/>
-                    </div>
+                    <chatter reload_on_follower="True"/>
                 </form>
             </field>
         </record>
@@ -395,6 +392,7 @@
 
         <record id="open_view_employee_list_my" model="ir.actions.act_window">
             <field name="name">Employees</field>
+            <field name="path">employees</field>
             <field name="res_model">hr.employee</field>
             <field name="view_mode">kanban,tree,form,activity,graph,pivot</field>
             <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>

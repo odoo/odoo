@@ -12,15 +12,19 @@
             <span t-field="submenu.name"/>
         </a>
     </li>
-    <li t-elif="show_dropdown" t-attf-class="#{item_class or ''} dropdown #{submenu.is_mega_menu and 'position-static'}">
+    <li t-elif="show_dropdown" t-attf-class="#{item_class or ''} dropdown #{submenu.is_mega_menu and 'position-static'}" role="presentation">
         <a t-attf-class="#{link_class or ''} dropdown-toggle #{submenu.is_mega_menu and 'o_mega_menu_toggle'} #{submenu._is_active() and 'active'} #{dropdown_toggler_classes}"
-           data-bs-toggle="dropdown" href="#" t-att-data-bs-display="'static' if submenu.is_mega_menu else None">
+           data-bs-toggle="dropdown" href="#" t-att-data-bs-display="'static' if submenu.is_mega_menu else None"
+           role="menuitem">
             <span t-field="submenu.name"/>
         </a>
-        <div t-if="submenu.is_mega_menu"
-             t-attf-class="dropdown-menu o_mega_menu #{submenu.mega_menu_classes}"
-             data-name="Mega Menu"
-             t-field="submenu.mega_menu_content"/>
+        <t t-if="submenu.is_mega_menu">
+            <div t-if="not is_mobile"
+                 t-attf-class="dropdown-menu o_mega_menu #{submenu.mega_menu_classes}"
+                 data-name="Mega Menu"
+                 t-field="submenu.mega_menu_content"
+                 role="menuitem"/>
+        </t>
         <ul t-else="" t-attf-class="dropdown-menu #{dropdown_menu_classes}" role="menu">
             <t t-foreach="submenu.child_id" t-as="submenu">
                 <t t-call="website.submenu">
@@ -52,6 +56,8 @@
             'data-translatable': '1' if translatable else None,
             'data-view-xmlid': xmlid,
             'data-viewid': viewid,
+            'data-default-lang-name': website.default_lang_id.name.split('/').pop() if translatable else None,
+            'data-lang-name': website.env['res.lang']._get_data(code=lang).name.split('/').pop() if translatable else None,
         })"/>
     </xpath>
 
@@ -142,6 +148,7 @@
 
     <xpath expr="//header" position="attributes">
         <attribute name="data-name">Header</attribute>
+        <attribute name="t-att-data-extra-items-toggle-aria-label">extra_items_toggle_aria_label</attribute>
     </xpath>
 
     <xpath expr="//header/t[@t-cache]" position="attributes">
@@ -154,6 +161,7 @@
     <xpath expr="//header" position="before">
         <t t-set="cta_btn_text" t-value="False"/>
         <t t-set="cta_btn_href">/contactus</t>
+        <t t-set="extra_items_toggle_aria_label">Extra items button</t>
     </xpath>
 
     <xpath expr="//footer" position="attributes">
@@ -223,7 +231,7 @@
                        t-attf-href="/web#menu_id=#{menu['id']}&amp;action=#{menu['action'] and menu['action'].split(',')[1] or ''}"/>
                 </div>
                 <a groups="website.group_website_restricted_editor" href="#" title="Edit this content" class="o_frontend_to_backend_edit_btn px-3 d-flex align-items-center justify-content-center text-decoration-none">
-                    <img src="/website/static/description/icon.png"/>Editor
+                    <img src="/website/static/description/icon.png" alt=""/>Editor
                 </a>
             </div>
         </div>
@@ -292,7 +300,7 @@
 </template>
 
 <template id="navbar_nav" name="Navbar Nav">
-    <ul id="top_menu" t-attf-class="nav navbar-nav #{'' if _no_autohide_menu_mobile else 'o_menu_loading'} #{_nav_class}" role="menu">
+    <ul t-att-id="not is_mobile and 'top_menu'" t-attf-class="nav navbar-nav top_menu #{'' if _no_autohide_menu_mobile else 'o_menu_loading'} #{_nav_class}" role="menu">
         <t t-out="0"/>
     </ul>
 </template>
@@ -306,7 +314,7 @@
         <t t-set="_navbar_expand_class" t-valuef="None"/>
         <t t-set="_navbar_name" t-valuef="Mobile"/>
 
-        <div id="o_main_nav" class="container flex-wrap justify-content-between">
+        <div class="o_main_nav container flex-wrap justify-content-between">
             <!-- Brand -->
             <t t-call="website.placeholder_header_brand"/>
             <ul class="o_header_mobile_buttons_wrap navbar-nav flex-row align-items-center gap-2 mb-0">
@@ -340,6 +348,7 @@
                         <!-- Navbar -->
                         <t t-call="website.navbar_nav">
                             <t t-set="_no_autohide_menu_mobile" t-valuef="True"/>
+                            <t t-set="is_mobile" t-value="True"/>
 
                             <!-- Menu -->
                             <t t-foreach="website.menu_id.child_id" t-as="submenu">
@@ -434,7 +443,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block shadow-sm"/>
 
-            <div id="o_main_nav" class="container">
+            <div id="o_main_nav" class="o_main_nav container">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand">
                     <t t-set="_link_class" t-valuef="me-4"/>
@@ -510,7 +519,7 @@
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block shadow-sm"/>
             <t t-set="_navbar_expand_class" t-valuef="None"/>
 
-            <div id="o_main_nav" class="container d-grid py-0 o_grid_header_3_cols">
+            <div id="o_main_nav" class="o_main_nav container d-grid py-0 o_grid_header_3_cols">
                 <!-- Nav Toggler -->
                 <t t-call="website.navbar_toggler">
                     <t t-set="_toggler_class" t-valuef="btn me-auto p-2"/>
@@ -639,7 +648,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block py-0 shadow-sm"/>
 
-            <div id="o_main_nav" class="container align-items-stretch">
+            <div id="o_main_nav" class="o_main_nav container align-items-stretch">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand">
                     <t t-set="_link_class" t-valuef="d-flex align-items-center me-4 p-2"/>
@@ -725,7 +734,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block pt-3 shadow-sm"/>
 
-            <div id="o_main_nav" class="container flex-wrap">
+            <div id="o_main_nav" class="o_main_nav container flex-wrap">
                 <div class="o_header_hide_on_scroll d-grid align-items-center w-100 o_grid_header_3_cols pb-3">
                     <ul class="navbar-nav align-items-center gap-1">
                         <!-- Search bar -->
@@ -794,7 +803,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block p-0 shadow-sm"/>
 
-            <div id="o_main_nav" class="flex-wrap">
+            <div id="o_main_nav" class="o_main_nav flex-wrap">
                 <div aria-label="Top" class="o_header_hide_on_scroll border-bottom o_border_contrast">
                     <div class="container d-flex justify-content-between flex-wrap w-100">
                         <ul class="o_header_search_left_col navbar-nav flex-wrap">
@@ -899,7 +908,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="o_header_force_no_radius d-none d-lg-block p-0 shadow-sm"/>
 
-            <div id="o_main_nav">
+            <div id="o_main_nav" class="o_main_nav">
                 <div aria-label="Top" class="container d-flex align-items-center justify-content-between py-3">
                     <!-- Brand -->
                     <t t-call="website.placeholder_header_brand">
@@ -991,7 +1000,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="o_header_force_no_radius d-none d-lg-block p-0 shadow-sm"/>
 
-            <div id="o_main_nav">
+            <div id="o_main_nav" class="o_main_nav">
                 <div class="o_header_hide_on_scroll">
                     <div aria-label="Top" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links') or is_view_active('website.header_language_selector')" class="o_header_sales_two_top py-1">
                         <ul class="navbar-nav container d-grid h-100 px-3 o_grid_header_3_cols">
@@ -1095,7 +1104,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="o_header_force_no_radius d-none d-lg-block p-0 shadow-sm rounded-0"/>
 
-            <div id="o_main_nav">
+            <div id="o_main_nav" class="o_main_nav">
                 <div aria-label="Top" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links') or is_view_active('website.header_search_box') or is_view_active('website.header_call_to_action')"
                      class="o_header_sales_three_top o_header_hide_on_scroll position-relative border-bottom z-index-1 o_border_contrast">
                     <div class="container d-flex justify-content-between gap-3 h-100">
@@ -1180,7 +1189,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="o_header_sales_four_top o_header_force_no_radius d-none d-lg-block p-0 shadow-sm z-index-1"/>
 
-            <div id="o_main_nav">
+            <div id="o_main_nav" class="o_main_nav">
                 <div aria-label="Top" class="container d-flex">
                     <!-- Navbar -->
                     <t t-call="website.navbar_nav">
@@ -1284,7 +1293,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="o_border_right_only d-none d-lg-block shadow"/>
 
-            <div id="o_main_nav" class="navbar-nav d-flex flex-column justify-content-between h-100 w-100">
+            <div id="o_main_nav" class="o_main_nav navbar-nav d-flex flex-column justify-content-between h-100 w-100">
                <div class="d-flex flex-column w-100 h-100">
                     <div class="d-flex pb-3">
                         <!-- Brand -->
@@ -1405,7 +1414,7 @@
             <t t-call="website.navbar">
                 <t t-set="_navbar_classes" t-valuef="o_full_border d-none d-lg-block rounded-pill py-2 px-3 shadow-sm"/>
 
-                <div id="o_main_nav" class="container">
+                <div id="o_main_nav" class="o_main_nav container">
                     <!-- Brand -->
                     <t t-call="website.placeholder_header_brand">
                         <t t-set="_link_class" t-valuef="me-4"/>
@@ -1554,7 +1563,7 @@
 </template>
 
 <template id="header_navbar_pills_style" inherit_id="website.navbar_nav" name="Navbar Links Style" active="False">
-    <xpath expr="//ul[@id='top_menu']" position="attributes">
+    <xpath expr="//ul[contains(@t-attf-class, 'top_menu')]" position="attributes">
         <attribute name="t-attf-class" add="nav-pills" separator=" "/>
     </xpath>
 </template>
@@ -1617,16 +1626,16 @@
                             </ul>
                             <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
-                                <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
+                                <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank" aria-label="Facebook">
                                     <i class="fa fa-facebook rounded-circle shadow-sm o_editable_media"/>
                                 </a>
-                                <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
+                                <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank" aria-label="Twitter">
                                     <i class="fa fa-twitter rounded-circle shadow-sm o_editable_media"/>
                                 </a>
-                                <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank">
+                                <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank" aria-label="LinkedIn">
                                     <i class="fa fa-linkedin rounded-circle shadow-sm o_editable_media"/>
                                 </a>
-                                <a href="/" class="text-800">
+                                <a href="/" class="text-800" aria-label="Extra page">
                                     <i class="fa fa-home rounded-circle shadow-sm o_editable_media"/>
                                 </a>
                             </div>
@@ -1690,13 +1699,13 @@
                 <div class="container s_allow_columns">
                     <div class="s_social_media text-center mb-4 o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                         <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
-                        <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
+                        <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank" aria-label="Facebook">
                             <i class="fa fa-facebook rounded-circle rounded shadow-sm o_editable_media"/>
                         </a>
-                        <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
+                        <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank" aria-label="Twitter">
                             <i class="fa fa-twitter rounded-circle rounded shadow-sm o_editable_media"/>
                         </a>
-                        <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank">
+                        <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank" aria-label="LinkedIn">
                             <i class="fa fa-linkedin rounded-circle rounded shadow-sm o_editable_media"/>
                         </a>
                     </div>
@@ -1975,13 +1984,13 @@
                         <div class="col-lg-3 pb24">
                             <div class="s_social_media text-end o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow Us</h5>
-                                <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
+                                <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank" aria-label="Facebook">
                                     <i class="fa fa-1x fa-facebook rounded-circle shadow-sm o_editable_media"/>
                                 </a>
-                                <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
+                                <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank" aria-label="Twitter">
                                     <i class="fa fa-1x fa-twitter rounded-circle shadow-sm o_editable_media"/>
                                 </a>
-                                <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank">
+                                <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank" aria-label="Instagram">
                                     <i class="fa fa-1x fa-instagram rounded-circle shadow-sm o_editable_media"/>
                                 </a>
                             </div>
@@ -2071,7 +2080,9 @@
 
 <!-- Language selector templates -->
 <template id="lang_flag" name="Language Flag">
-    <img t-attf-class="o_lang_flag #{_flag_class}" t-attf-src="#{flag_image_url}?height=25"/>
+    <img t-attf-class="o_lang_flag #{_flag_class}"
+         t-attf-src="#{flag_image_url}?height=25"
+         t-att-alt="flag_lang_alt or ''"/>
 </template>
 
 <template id="language_selector" inherit_id="portal.language_selector">
@@ -2089,6 +2100,7 @@
     <!-- Add the 'flags' possibility -->
     <xpath expr="//button[contains(@t-attf-class, 'dropdown-toggle')]/span" position="before">
         <t t-if="flags" t-call="website.lang_flag">
+            <t t-if="no_text and not codes" t-set="flag_lang_alt" t-value="active_lang.name.split('/').pop()"/>
             <t t-set="flag_image_url" t-value="active_lang.flag_image_url"/>
         </t>
     </xpath>
@@ -2828,16 +2840,16 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             <div t-attf-class="o_header_social_links #{_div_class}">
                 <div class="s_social_media o_not_editable oe_unmovable oe_unremovable" data-snippet="s_social_media" data-name="Social Media">
                     <h5 class="s_social_media_title d-none">Follow us</h5>
-                    <a href="/website/social/facebook" class="s_social_media_facebook o_nav-link_secondary nav-link m-0 p-0 text-decoration-none" target="_blank">
+                    <a href="/website/social/facebook" class="s_social_media_facebook o_nav-link_secondary nav-link m-0 p-0 text-decoration-none" target="_blank" aria-label="Facebook">
                         <i class="fa fa-facebook fa-stack p-1 o_editable_media"/>
                     </a>
-                    <a href="/website/social/twitter" class="s_social_media_twitter o_nav-link_secondary nav-link m-0 p-0 text-decoration-none" target="_blank">
+                    <a href="/website/social/twitter" class="s_social_media_twitter o_nav-link_secondary nav-link m-0 p-0 text-decoration-none" target="_blank" aria-label="Twitter">
                         <i class="fa fa-twitter fa-stack p-1 o_editable_media"/>
                     </a>
-                    <a href="/website/social/linkedin" class="s_social_media_linkedin o_nav-link_secondary nav-link m-0 p-0 text-decoration-none" target="_blank">
+                    <a href="/website/social/linkedin" class="s_social_media_linkedin o_nav-link_secondary nav-link m-0 p-0 text-decoration-none" target="_blank" aria-label="LinkedIn">
                         <i class="fa fa-linkedin fa-stack p-1 o_editable_media"/>
                     </a>
-                    <a href="/website/social/instagram" class="s_social_media_instagram o_nav-link_secondary nav-link m-0 p-0 text-decoration-none" target="_blank">
+                    <a href="/website/social/instagram" class="s_social_media_instagram o_nav-link_secondary nav-link m-0 p-0 text-decoration-none" target="_blank" aria-label="Instagram">
                         <i class="fa fa-instagram fa-stack p-1 o_editable_media"/>
                     </a>
                 </div>

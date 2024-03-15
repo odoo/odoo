@@ -20,7 +20,7 @@ wTourUtils.registerWebsitePreviewTour("widget_lifecycle", {
     }),
     {
         content: "Wait for the widget to be started and empty the widgetAndWysiwygLifecycle list",
-        trigger: "iframe .s_countdown.public_widget_started",
+        trigger: ":iframe .s_countdown.public_widget_started",
         run: () => {
             // Start recording the calls to the "start" and "destroy" method of
             // the widget and the wysiwyg.
@@ -30,13 +30,13 @@ wTourUtils.registerWebsitePreviewTour("widget_lifecycle", {
     ...wTourUtils.clickOnSave(),
     {
         content: "Wait for the widget to be started",
-        trigger: "iframe .s_countdown.public_widget_started",
+        trigger: ":iframe .s_countdown.public_widget_started",
         run: () => {}, // It's a check
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "Wait for the widget to be started and check the order of the lifecycle method call of the widget and the wysiwyg",
-        trigger: "iframe .s_countdown.public_widget_started",
+        trigger: ":iframe .s_countdown.public_widget_started",
         run: () => {
             const result = JSON.parse(window.localStorage.widgetAndWysiwygLifecycle);
             const expected = ["widgetStop", "wysiwygStop", "widgetStart",

@@ -4,12 +4,13 @@ import { animationFrame, advanceTime, runAllTimers } from "@odoo/hoot-mock";
 import {
     clearRegistry,
     contains,
+    defineMenus,
+    getService,
     makeMockEnv,
     makeMockServer,
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { defineMenus } from "@web/../tests/_framework/mock_server/mock_server";
 
 import { Component, onRendered, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
@@ -67,7 +68,30 @@ test("href attribute on apps menu items", async () => {
     ]);
     await mountWithCleanup(NavBar);
     await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
-    expect(".o-dropdown--menu .dropdown-item").toHaveAttribute("href", "#menu_id=1&action=339");
+    expect(".o-dropdown--menu .dropdown-item").toHaveAttribute("href", "/odoo/act-339");
+});
+
+test("href attribute with paht on apps menu items", async () => {
+    defineMenus([
+        {
+            id: "root",
+            children: [
+                {
+                    id: 1,
+                    children: [],
+                    name: "My app",
+                    appID: 1,
+                    actionID: 339,
+                    actionPath: "my-path",
+                },
+            ],
+            name: "root",
+            appID: "root",
+        },
+    ]);
+    await mountWithCleanup(NavBar);
+    await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
+    expect(".o-dropdown--menu .dropdown-item").toHaveAttribute("href", "/odoo/my-path");
 });
 
 test.tags("desktop")("many sublevels in app menu items", async () => {
@@ -142,8 +166,8 @@ test.tags("desktop")("many sublevels in app menu items", async () => {
             appID: "root",
         },
     ]);
-    const env = await makeMockEnv();
-    env.services.menu.setCurrentMenu(1);
+    await makeMockEnv();
+    getService("menu").setCurrentMenu(1);
     await mountWithCleanup(NavBar);
     await contains(".o_menu_sections .o-dropdown").click();
     expect(
@@ -165,8 +189,8 @@ test.tags("desktop")("many sublevels in app menu items", async () => {
 
 test.tags("desktop")("data-menu-xmlid attribute on AppsMenu items", async () => {
     const server = await makeMockServer();
-    server.menus = [];
-    defineMenus([
+    // Replace all default menus and setting new one
+    server.menus = [
         {
             id: 1,
             children: [
@@ -192,8 +216,7 @@ test.tags("desktop")("data-menu-xmlid attribute on AppsMenu items", async () => 
             xmlid: "wowl",
         },
         { id: 2, children: [], name: "App1 without xmlid", appID: 2 },
-    ]);
-    const env = await makeMockEnv();
+    ];
     await mountWithCleanup(NavBar);
 
     // check apps
@@ -204,7 +227,7 @@ test.tags("desktop")("data-menu-xmlid attribute on AppsMenu items", async () => 
     });
 
     // check menus
-    env.services.menu.setCurrentMenu(1);
+    getService("menu").setCurrentMenu(1);
     await animationFrame();
     expect(".o_menu_sections .dropdown-item[data-menu-xmlid=menu_3]").toHaveCount(1);
 
@@ -217,7 +240,6 @@ test.tags("desktop")("data-menu-xmlid attribute on AppsMenu items", async () => 
 });
 
 test("navbar can display current active app", async () => {
-    const env = await makeMockEnv();
     await mountWithCleanup(NavBar);
     // Open apps menu
     await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
@@ -227,7 +249,7 @@ test("navbar can display current active app", async () => {
     });
 
     // Activate an app
-    env.services.menu.setCurrentMenu(1);
+    getService("menu").setCurrentMenu(1);
     await animationFrame();
     expect(".o-dropdown--menu .dropdown-item.focus").toHaveCount(1, {
         message: "should show the current active app",
@@ -348,13 +370,13 @@ test.tags("desktop")("can adapt with 'more' menu sections behavior", async () =>
             appID: "root",
         },
     ]);
-    const env = await makeMockEnv();
+    await makeMockEnv();
 
     // Force the parent width, to make this test independent of screen size
     getFixture().style.width = "1080px";
 
     // Set menu and mount
-    env.services.menu.setCurrentMenu(1);
+    getService("menu").setCurrentMenu(1);
     await mountWithCleanup(MyNavbar);
     expect(".o_menu_sections > *:not(.o_menu_sections_more):not(.d-none)").toHaveCount(3, {
         message: "should have 3 menu sections displayed (that are not the 'more' menu)",
@@ -437,7 +459,6 @@ test.tags("desktop")(
         // Force the parent width, to make this test independent of screen size
         getFixture().style.width = "600px";
 
-        const env = await makeMockEnv();
         const navbar = await mountWithCleanup(MyNavbar);
         expect(navbar.currentAppSections.length).toBe(0, { message: "0 app sub menus" });
         expect(".o_navbar").toHaveProperty("offsetWidth", 600);
@@ -458,7 +479,7 @@ test.tags("desktop")(
         });
 
         // Set menu
-        env.services.menu.setCurrentMenu(1);
+        getService("menu").setCurrentMenu(1);
         await animationFrame();
         expect(navbar.currentAppSections.length).toBe(3, { message: "3 app sub menus" });
         expect(navbar.currentAppSectionsExtra.length).toBe(3, {
@@ -550,13 +571,13 @@ test.tags("desktop")("'more' menu sections properly updated on app change", asyn
             appID: "root",
         },
     ]);
-    const env = await makeMockEnv();
+    await makeMockEnv();
 
     // Force the parent width, to make this test independent of screen size
     getFixture().style.width = "1080px";
 
     // Set menu and mount
-    env.services.menu.setCurrentMenu(1);
+    getService("menu").setCurrentMenu(1);
     await mountWithCleanup(NavBar);
 
     // Force minimal width and dispatch window resize event
@@ -581,7 +602,7 @@ test.tags("desktop")("'more' menu sections properly updated on app change", asyn
     await contains(".o_menu_sections_more .dropdown-toggle").click();
 
     // Set App2 menu
-    env.services.menu.setCurrentMenu(2);
+    getService("menu").setCurrentMenu(2);
     await animationFrame();
 
     // Open the more menu
@@ -602,10 +623,10 @@ test("Do not execute adapt when navbar is destroyed", async () => {
         }
     }
 
-    const env = await makeMockEnv();
+    await makeMockEnv();
 
     // Set menu and mount
-    env.services.menu.setCurrentMenu(1);
+    getService("menu").setCurrentMenu(1);
     const navbar = await mountWithCleanup(MyNavbar);
     expect(["adapt NavBar"]).toVerifySteps();
     resize(window);

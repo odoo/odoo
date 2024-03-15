@@ -1,4 +1,6 @@
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+const test = QUnit.test; // QUnit.test()
+
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
 
@@ -11,7 +13,7 @@ import { browser } from "@web/core/browser/browser";
 
 QUnit.module("livechat service");
 
-QUnit.test("persisted session history", async () => {
+test("persisted session history", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
@@ -41,7 +43,7 @@ QUnit.test("persisted session history", async () => {
     await contains(".o-mail-Message-content", { text: "Old message in history" });
 });
 
-QUnit.test("previous operator prioritized", async () => {
+test("previous operator prioritized", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
     const userId = pyEnv["res.users"].create({ name: "John Doe", im_status: "online" });
@@ -56,7 +58,7 @@ QUnit.test("previous operator prioritized", async () => {
     await contains(".o-mail-Message-author", { text: "John Doe" });
 });
 
-QUnit.test("Only necessary requests are made when creating a new chat", async () => {
+test("Only necessary requests are made when creating a new chat", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
     await start({
@@ -99,10 +101,10 @@ QUnit.test("Only necessary requests are made when creating a new chat", async ()
             },
             failures: true, // called because mail/core/web is loaded in qunit bundle
             systray_get_activities: true, // called because mail/core/web is loaded in qunit bundle
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
         `/mail/message/post - ${JSON.stringify({
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId, temporary_id: 0.81 },
+            context: { lang: "en", tz: "taht", uid: serverState.userId, temporary_id: 0.81 },
             post_data: {
                 body: "Hello!",
                 attachment_ids: [],

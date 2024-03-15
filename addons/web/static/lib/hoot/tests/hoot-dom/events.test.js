@@ -4,6 +4,7 @@ import { Component, xml } from "@odoo/owl";
 import {
     clear,
     click,
+    dblclick,
     drag,
     fill,
     hover,
@@ -19,6 +20,7 @@ import {
     scroll,
     select,
     setInputFiles,
+    setInputRange,
     uncheck,
 } from "../../../hoot-dom/hoot-dom";
 import { after, describe, expect, mountOnFixture, test } from "../../hoot";
@@ -86,6 +88,7 @@ describe(parseUrl(import.meta.url), () => {
             "input.select",
             "input.keyup",
             "input.keydown",
+            "input.beforeinput",
             "input.input",
             "input.keyup",
         ]).toVerifySteps();
@@ -153,6 +156,38 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
+    test("dblclick", async () => {
+        await mountOnFixture(/* xml */ `<button autofocus="" type="button">Click me</button>`);
+        monitorEvents("button");
+
+        dblclick("button");
+
+        expect([
+            // Hover
+            "button.pointerover",
+            "button.mouseover",
+            "button.pointerenter",
+            "button.mouseenter",
+            "button.pointermove",
+            "button.mousemove",
+            // Click 1
+            "button.pointerdown",
+            "button.mousedown",
+            "button.focus",
+            "button.pointerup",
+            "button.mouseup",
+            "button.click",
+            // Click 2
+            "button.pointerdown",
+            "button.mousedown",
+            "button.pointerup",
+            "button.mouseup",
+            "button.click",
+            // Double click event
+            "button.dblclick",
+        ]).toVerifySteps();
+    });
+
     test("drag & drop: draggable items", async () => {
         await mountOnFixture(/* xml */ `
             <ul>
@@ -179,7 +214,6 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
-            "first-item.dragstart",
             // Cancel
             "keydown:Escape",
             "keyup:Escape",
@@ -192,8 +226,8 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
-            "first-item.dragstart",
             // Leave first
+            "first-item.dragstart",
             "first-item.drag",
             "first-item.dragover",
             "first-item.dragleave",
@@ -226,8 +260,8 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
-            "first-item.dragstart",
             // Leave first
+            "first-item.dragstart",
             "first-item.drag",
             "first-item.dragover",
             "first-item.dragleave",
@@ -261,8 +295,8 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
-            "first-item.dragstart",
             // Leave first
+            "first-item.dragstart",
             "first-item.drag",
             "first-item.dragover",
             "first-item.dragleave",
@@ -295,8 +329,8 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
-            "first-item.dragstart",
             // Leave first
+            "first-item.dragstart",
             "first-item.drag",
             "first-item.dragover",
             "first-item.dragleave",
@@ -523,7 +557,12 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("input").toHaveValue("Test value");
         expect([
-            ...[..."Test value"].flatMap(() => ["input.keydown", "input.input", "input.keyup"]),
+            ...[..."Test value"].flatMap(() => [
+                "input.keydown",
+                "input.beforeinput",
+                "input.input",
+                "input.keyup",
+            ]),
         ]).toVerifySteps();
     });
 
@@ -633,6 +672,48 @@ describe(parseUrl(import.meta.url), () => {
         expect("input").toHaveValue(/file\.txt/);
     });
 
+    test("setInputRange: basic case and events", async () => {
+        await mountOnFixture(/* xml */ `<input type="range" min="10" max="40" />`);
+
+        monitorEvents("input");
+
+        setInputRange("input", 30);
+
+        expect("input").toHaveValue(30);
+        expect([
+            // Hover input
+            "input.pointerover",
+            "input.mouseover",
+            "input.pointerenter",
+            "input.mouseenter",
+            "input.pointermove",
+            "input.mousemove",
+            // Pointer down
+            "input.pointerdown",
+            "input.mousedown",
+            "input.focus",
+            // Set range
+            "input.input",
+            "input.change",
+            // Pointer up
+            "input.pointerup",
+            "input.mouseup",
+            "input.click",
+        ]).toVerifySteps();
+    });
+
+    test("setInputRange: out of min and max values", async () => {
+        await mountOnFixture(/* xml */ `<input type="range" min="10" max="40" />`);
+
+        setInputRange("input", 5);
+
+        expect("input").toHaveValue(10);
+
+        setInputRange("input", 50);
+
+        expect("input").toHaveValue(40);
+    });
+
     test("hover", async () => {
         await mountOnFixture(/* xml */ `<button type="button">Click me</button>`);
         monitorEvents("button");
@@ -681,7 +762,7 @@ describe(parseUrl(import.meta.url), () => {
 
         keyDown("a");
 
-        expect(["input.keydown", "input.input"]).toVerifySteps();
+        expect(["input.keydown", "input.beforeinput", "input.input"]).toVerifySteps();
 
         keyUp("a");
 
@@ -724,7 +805,12 @@ describe(parseUrl(import.meta.url), () => {
         press("a");
 
         expect("input").toHaveValue("a");
-        expect(["input.keydown", "input.input", "input.keyup"]).toVerifySteps();
+        expect([
+            "input.keydown",
+            "input.beforeinput",
+            "input.input",
+            "input.keyup",
+        ]).toVerifySteps();
     });
 
     test("press key on number input", async () => {
@@ -850,6 +936,7 @@ describe(parseUrl(import.meta.url), () => {
         expect([
             // Key press
             "input.keydown",
+            "input.beforeinput",
             "input.input",
             "input.keyup",
             // Click triggered by key press
@@ -958,6 +1045,7 @@ describe(parseUrl(import.meta.url), () => {
         expect([
             "keydown:Shift.shift",
             "keydown:b.shift",
+            "beforeinput",
             "input",
             "keyup:b.shift",
             "keyup:Shift.shift",

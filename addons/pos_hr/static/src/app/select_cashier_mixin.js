@@ -42,7 +42,7 @@ export function useCashierSelector(
     async function checkPin(employee) {
         const employee_security = pos.employee_security;
         const inputPin = await makeAwaitable(dialog, NumberPopup, {
-            isPassword: true,
+            formatDisplayedValue: (x) => x.replace(/./g, "•"),
             title: _t("Password?"),
         });
         if (!inputPin || employee_security[employee.id].pin !== Sha1.hash(inputPin)) {

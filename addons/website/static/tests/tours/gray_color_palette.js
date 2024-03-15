@@ -15,7 +15,7 @@ function waitForCSSReload() {
         wTourUtils.goToTheme(),
         {
             content: "Wait for no loading",
-            trigger: 'body:not(:has(.o_we_ui_loading)) iframe body:not(:has(.o_we_ui_loading))',
+            trigger: 'body:not(:has(.o_we_ui_loading)) :iframe body:not(:has(.o_we_ui_loading))',
             run: () => null,
         },
     ];
@@ -63,7 +63,7 @@ wTourUtils.registerWebsitePreviewTour('website_gray_color_palette', {
     ...waitForCSSReload(),
     {
         content: "Wait for the iframe to be loaded",
-        trigger: 'iframe body',
+        trigger: ':iframe body',
         run: () => {
             const iframeEl = document.querySelector('.o_website_preview .o_iframe');
             const styles = iframeEl.contentWindow.getComputedStyle(iframeEl.contentDocument.documentElement);

@@ -127,7 +127,7 @@ class PosSession(models.Model):
             },
             'pos.payment.method': {
                 'domain': ['|', ('active', '=', False), ('active', '=', True)],
-                'fields': ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence'],
+                'fields': ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence', 'payment_method_type', 'default_qr'],
             },
             'pos.printer': {
                 'domain': [('id', 'in', config_id.printer_ids.ids)],
@@ -150,7 +150,8 @@ class PosSession(models.Model):
                     'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids',
                 ],
                 'order': 'sequence,default_code,name',
-                'context': {'display_default_code': False},
+                'limit': config_id.get_limited_product_count(),
+                'context': {**self.env.context, 'display_default_code': False},
             },
             'product.attribute': {
                 'domain': [('create_variant', '=', 'no_variant')],
@@ -226,7 +227,7 @@ class PosSession(models.Model):
                 'fields': ['id', 'name', 'display_name', 'discount_policy', 'item_ids']
             },
             'product.pricelist.item' : {
-                'domain': self._prepare_pricelist_domain,
+                'domain': [('pricelist_id', 'in', config_id.available_pricelist_ids.ids)] if config_id.use_pricelist else [('pricelist_id', '=', config_id.pricelist_id.id)],
                 'fields': ['product_tmpl_id', 'product_id', 'pricelist_id', 'price_surcharge', 'price_discount', 'price_round',
                     'price_min_margin', 'price_max_margin', 'company_id', 'currency_id', 'date_start', 'date_end', 'compute_price',
                     'fixed_price', 'percent_price', 'base_pricelist_id', 'base', 'categ_id', 'min_quantity']
@@ -254,6 +255,10 @@ class PosSession(models.Model):
             'res.currency': {
                 'domain': [('id', '=', config_id.currency_id.id)],
                 'fields': ['id', 'name', 'symbol', 'position', 'rounding', 'rate', 'decimal_places'],
+            },
+            'pos.note': {
+                'domain': [('id', '=', config_id.note_ids.ids)] if config_id.note_ids else [],
+                'fields': ['name'],
             },
         }
 
@@ -318,12 +323,14 @@ class PosSession(models.Model):
                             value['domain'],
                             value['fields'],
                             order=value.get('order', []),
+                            limit=value.get('limit', None),
                             load=False)
                     else:
                         response['data'][key] = self.env[key].with_context(value.get('context', [])).search_read(
                             value['domain'](response['data']),
                             value['fields'],
                             order=value.get('order', []),
+                            limit=value.get('limit', None),
                             load=False)
 
                 if not only_data:
@@ -1252,6 +1259,7 @@ class PosSession(models.Model):
             'ref': _('Combine %s POS payments from %s', payment_method.name, self.name),
             'pos_payment_method_id': payment_method.id,
             'pos_session_id': self.id,
+            'company_id': self.company_id.id,
         })
 
         diff_amount_compare_to_zero = self.currency_id.compare_amounts(diff_amount, 0)

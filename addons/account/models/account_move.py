@@ -769,7 +769,7 @@ class AccountMove(models.Model):
 
     @api.depends('posted_before', 'state', 'journal_id', 'date', 'move_type', 'payment_id')
     def _compute_name(self):
-        self = self.sorted(lambda m: (m.date, m.ref or '', m.id))
+        self = self.sorted(lambda m: (m.date, m.ref or '', m._origin.id))
 
         for move in self:
             move_has_name = move.name and move.name != '/'
@@ -1304,7 +1304,7 @@ class AccountMove(models.Model):
                             taxes = self.env['account.tax'].browse(grouping_dict['tax_ids'][0][2])
 
                         kwargs['base_lines'].append(self.env['account.tax']._convert_to_tax_base_line_dict(
-                            None,
+                            grouping_dict,
                             partner=move.partner_id,
                             currency=move.currency_id,
                             taxes=taxes,
@@ -1447,11 +1447,11 @@ class AccountMove(models.Model):
         for move in self:
             move.has_reconciled_entries = len(move.line_ids._reconciled_lines()) > 1
 
-    @api.depends('restrict_mode_hash_table', 'state')
+    @api.depends('restrict_mode_hash_table', 'state', 'is_move_sent')
     def _compute_show_reset_to_draft_button(self):
         for move in self:
             move.show_reset_to_draft_button = (
-                not move.restrict_mode_hash_table \
+                not self._is_move_restricted(move) \
                 and (move.state == 'cancel' or (move.state == 'posted' and not move.need_cancel_request))
             )
 
@@ -2707,7 +2707,7 @@ class AccountMove(models.Model):
             return True
         self._sanitize_vals(vals)
         for move in self:
-            if (move.restrict_mode_hash_table and move.state == "posted" and set(vals).intersection(move._get_integrity_hash_fields())):
+            if (self._is_move_restricted(move) and set(vals).intersection(move._get_integrity_hash_fields())):
                 raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.", ', '.join(move._get_integrity_hash_fields())))
             if (move.restrict_mode_hash_table and move.inalterable_hash and 'inalterable_hash' in vals) or (move.secure_sequence_number and 'secure_sequence_number' in vals):
                 raise UserError(_('You cannot overwrite the values ensuring the inalterability of the accounting.'))
@@ -2761,10 +2761,11 @@ class AccountMove(models.Model):
                     posted_move._check_fiscalyear_lock_date()
                     posted_move.line_ids._check_tax_lock_date()
 
-                # Hash the move
-                if vals.get('state') == 'posted':
+                # Hash the moves that fit the move hash domain
+                if vals.get('is_move_sent') or vals.get('state') == 'posted':
                     self.flush_recordset()  # Ensure that the name is correctly computed before it is used to generate the hash
-                    for move in self.filtered(lambda m: m.restrict_mode_hash_table and not(m.secure_sequence_number or m.inalterable_hash)).sorted(lambda m: (m.date, m.ref or '', m.id)):
+                    filter_domain = self._get_move_hash_domain(common_domain=[('inalterable_hash', '=', False)])
+                    for move in self.filtered_domain(filter_domain).sorted(lambda m: (m.date, m.ref or '', m.id)):
                         new_number = move.journal_id.secure_sequence_id.next_by_id()
                         res |= super(AccountMove, move).write({
                             'secure_sequence_number': new_number,
@@ -3228,6 +3229,22 @@ class AccountMove(models.Model):
         #build and return the hash
         return self._compute_hash(prev_move.inalterable_hash if prev_move else u'')
 
+    @api.model
+    def _get_move_hash_domain(self, common_domain=False):
+        # hash customer invoices/refunds on send, the rest on post
+        out_types = self.get_sale_types(include_receipts=True)
+        common_domain = (common_domain or []) + [('restrict_mode_hash_table', '=', True)]
+        return expression.AND(
+            [common_domain, expression.OR([
+                [('move_type', 'in', out_types), ('is_move_sent', '=', True)],
+                [('move_type', 'not in', out_types), ('state', '=', 'posted')],
+            ])]
+        )
+
+    @api.model
+    def _is_move_restricted(self, move):
+        return move.filtered_domain(self._get_move_hash_domain())
+
     def _compute_hash(self, previous_hash):
         """ Computes the hash of the browse_record given as self, based on the hash
         of the previous record in the company's securisation sequence given as parameter"""
@@ -3421,11 +3438,9 @@ class AccountMove(models.Model):
                 except RedirectWarning:
                     raise
                 except Exception:
-                    _logger.exception(
-                        "Error importing attachment '%s' as invoice (decoder=%s)",
-                        file_data['filename'],
-                        decoder.__name__
-                    )
+                    message = _("Error importing attachment '%s' as invoice (decoder=%s)", file_data['filename'], decoder.__name__)
+                    invoice.sudo().message_post(body=message)
+                    _logger.exception(message)
 
             passed_file_data_list.append(file_data)
             close_file(file_data)
@@ -3679,7 +3694,6 @@ class AccountMove(models.Model):
                     'name': _("Early Payment Discount (%s)", tax.name),
                     'amount_currency': payment_term_line.currency_id.round(tax_detail['amount_currency'] * percentage_paid),
                     'balance': payment_term_line.company_currency_id.round(tax_detail['balance'] * percentage_paid),
-                    'tax_tag_invert': True,
                 }
 
             for grouping_dict, base_detail in bases_details.items():
@@ -4402,8 +4416,8 @@ class AccountMove(models.Model):
                 # so we also check tax_cash_basis_origin_move_id, which stays unchanged
                 # (we need both, as tax_cash_basis_origin_move_id did not exist in older versions).
                 raise UserError(_('You cannot reset to draft a tax cash basis journal entry.'))
-            if move.restrict_mode_hash_table and move.state == 'posted':
-                raise UserError(_('You cannot modify a posted entry of this journal because it is in strict mode.'))
+            if self._is_move_restricted(move):
+                raise UserError(_('You cannot modify a sent entry of this journal because it is in strict mode.'))
             # We remove all the analytics entries for this journal
             move.mapped('line_ids.analytic_line_ids').unlink()
 

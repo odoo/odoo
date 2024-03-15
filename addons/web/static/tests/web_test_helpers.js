@@ -12,6 +12,9 @@ import { ResGroups } from "./_framework/mock_server/mock_models/res_groups";
 import { ResPartner } from "./_framework/mock_server/mock_models/res_partner";
 import { ResUsers } from "./_framework/mock_server/mock_models/res_users";
 import { defineModels } from "./_framework/mock_server/mock_server";
+import { translatedTerms, translationLoaded } from "@web/core/l10n/translation";
+
+translatedTerms[translationLoaded] = true;
 
 /**
  * @typedef {import("./_framework/mock_server/mock_fields").FieldType} FieldType
@@ -28,7 +31,11 @@ import { defineModels } from "./_framework/mock_server/mock_server";
  * @typedef {import("./_framework/mock_server/mock_server").RouteCallback<T>} RouteCallback
  */
 
-export { findComponent, mountWithCleanup } from "./_framework/component_test_helpers";
+export {
+    findComponent,
+    getDropdownMenu,
+    mountWithCleanup,
+} from "./_framework/component_test_helpers";
 export { contains, editAce } from "./_framework/dom_test_helpers";
 export {
     clearRegistry,
@@ -50,7 +57,12 @@ export {
 } from "./_framework/mock_server/mock_server";
 export { makeServerError } from "./_framework/mock_server/mock_server_utils";
 export { serverState } from "./_framework/mock_server_state.hoot";
-export { patchWithCleanup } from "./_framework/patch_test_helpers";
+export {
+    patchDate,
+    patchTimeZone,
+    patchTranslations,
+    patchWithCleanup,
+} from "./_framework/patch_test_helpers";
 export { preventResizeObserverError } from "./_framework/resize_observer_error_catcher";
 export {
     deleteFavorite,

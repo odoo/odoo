@@ -19,6 +19,7 @@ const OR_SYM = Symbol("or");
 const AND_SYM = Symbol("and");
 const IS_RECORD_SYM = Symbol("isRecord");
 const IS_FIELD_SYM = Symbol("isField");
+const IS_DELETED_SYM = Symbol("isDeleted");
 
 export function AND(...args) {
     return [AND_SYM, ...args];
@@ -172,7 +173,7 @@ function sortRecordList(recordListFullProxy, func) {
 }
 
 /** @returns {import("models").Store} */
-export function makeStore(env) {
+export function makeStore(env, { localRegistry } = {}) {
     Record.UPDATE = 0;
     const recordByLocalId = reactive(new Map());
     const res = {
@@ -185,7 +186,8 @@ export function makeStore(env) {
         },
     };
     const Models = {};
-    for (const [name, _OgClass] of modelRegistry.getEntries()) {
+    const chosenModelRegistry = localRegistry ?? modelRegistry;
+    for (const [name, _OgClass] of chosenModelRegistry.getEntries()) {
         /** @type {typeof Record} */
         const OgClass = _OgClass;
         if (res.store[name]) {
@@ -1044,6 +1046,10 @@ export class Record {
      */
     static trusted = false;
     static id;
+    /** @type {import("@web/env").OdooEnv} */
+    static env;
+    /** @type {import("@web/env").OdooEnv} */
+    env;
     /** @type {Object<string, Record>} */
     static records;
     /** @type {import("models").Store} */
@@ -1130,7 +1136,6 @@ export class Record {
                 }
                 while (RD_QUEUE.length > 0) {
                     const record = RD_QUEUE.pop();
-                    // effectively delete the record
                     for (const name of record._fields.keys()) {
                         record[name] = undefined;
                     }
@@ -1159,6 +1164,7 @@ export class Record {
                 }
                 while (RHD_QUEUE.length > 0) {
                     const record = RHD_QUEUE.pop();
+                    record[IS_DELETED_SYM] = true;
                     delete record.Model.records[record.localId];
                     record.Model._rawStore.recordByLocalId.delete(record.localId);
                 }
@@ -1320,8 +1326,13 @@ export class Record {
         const Model = toRaw(this);
         return this.records[Model.localId(data)];
     }
-    static register() {
-        modelRegistry.add(this.name, this);
+    static register(localRegistry) {
+        if (localRegistry) {
+            // Record-specific tests use local registry as to not affect other tests
+            localRegistry.add(this.name, this);
+        } else {
+            modelRegistry.add(this.name, this);
+        }
     }
     static localId(data) {
         const Model = toRaw(this);
@@ -1659,6 +1670,10 @@ export class Record {
         return Record.MAKE_UPDATE(function recordDelete() {
             Record.ADD_QUEUE(record, "delete");
         });
+    }
+
+    exists() {
+        return !this[IS_DELETED_SYM];
     }
 
     /** @param {Record} record */

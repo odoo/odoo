@@ -26,17 +26,23 @@ commandProviderRegistry.add("debug", {
                 name: _t("Deactivate debug mode"),
             });
             result.push({
-                action: () => browser.open("/web/tests/next?debug=assets"),
+                action() {
+                    browser.open("/web/tests/next?debug=assets");
+                },
                 category: "debug",
                 name: _t("Run unit tests"),
             });
             result.push({
-                action: () => browser.open("/web/tests?debug=assets"),
+                action() {
+                    browser.open("/web/tests?debug=assets");
+                },
                 category: "debug",
                 name: _t("Run QUnit tests (legacy)"),
             });
             result.push({
-                action: () => browser.open("/web/tests/mobile?debug=assets"),
+                action() {
+                    browser.open("/web/tests/mobile?debug=assets");
+                },
                 category: "debug",
                 name: _t("Run QUnit mobile tests (legacy)"),
             });

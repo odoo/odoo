@@ -1,12 +1,12 @@
 /* @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { getOrigin } from "@web/core/utils/urls";
 import { assertSteps, click, contains, step } from "@web/../tests/utils";
 import { nextTick } from "@web/../tests/helpers/utils";
 
-import { start } from "@mail/../tests/helpers/test_utils";
+import { openFormView, start } from "@mail/../tests/helpers/test_utils";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { ROUTES_TO_IGNORE as MAIL_ROUTES_TO_IGNORE } from "@mail/../tests/helpers/webclient_setup";
 
@@ -21,7 +21,7 @@ QUnit.module("Views", {}, function () {
     QUnit.module("ExpenseLineWidget");
 
     const OpenPreparedView = async (size, sheet) => {
-        const pyEnv = await startServer();
+        await startServer();
         const views = {
             "hr.expense.sheet,false,form": `<form>
                     <sheet name="Expenses">
@@ -37,14 +37,11 @@ QUnit.module("Views", {}, function () {
                         </notebook>
                     </sheet>
                     <div class="o_attachment_preview"/>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="message_ids"/>
-                    </div>
+                    <chatter/>
                 </form>`,
         };
         patchUiSize({ size: size });
-        const { openView } = await start({
+        await start({
             serverData: { views },
             mockRPC: function (route, args) {
                 if (ROUTES_TO_IGNORE.includes(route)) {
@@ -61,14 +58,10 @@ QUnit.module("Views", {}, function () {
                 init_messaging: {},
                 failures: true,
                 systray_get_activities: true,
-                context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+                context: { lang: "en", tz: "taht", uid: serverState.userId },
             })}`,
         ]);
-        await openView({
-            res_model: "hr.expense.sheet",
-            res_id: sheet,
-            views: [[false, "form"]],
-        });
+        await openFormView("hr.expense.sheet", sheet);
     };
 
     QUnit.test("ExpenseLineWidget test attachments change on expense line click", async () => {
@@ -103,7 +96,7 @@ QUnit.module("Views", {}, function () {
                 method: "get_views",
                 args: [],
                 kwargs: {
-                    context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+                    context: { lang: "en", tz: "taht", uid: serverState.userId },
                     views: [
                         [false, "form"],
                         [false, "search"],
@@ -119,7 +112,7 @@ QUnit.module("Views", {}, function () {
                     context: {
                         lang: "en",
                         tz: "taht",
-                        uid: pyEnv.currentUserId,
+                        uid: serverState.userId,
                         bin_size: true,
                     },
                     specification: {

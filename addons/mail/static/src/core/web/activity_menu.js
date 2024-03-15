@@ -48,6 +48,7 @@ export class ActivityMenu extends Component {
                 .doAction("mail.mail_activity_without_access_action", {
                     additionalContext: {
                         active_ids: group.activity_ids,
+                        active_model: 'mail.activity',
                     },
                 })
                 .catch((error) => {
@@ -55,6 +56,7 @@ export class ActivityMenu extends Component {
                         this.action.doAction("mail.mail_activity_action", {
                             additionalContext: {
                                 active_ids: group.activity_ids,
+                                active_model: 'mail.activity',
                             },
                         });
                     }

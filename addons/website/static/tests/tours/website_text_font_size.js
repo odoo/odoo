@@ -20,7 +20,7 @@ classNameInfo.set("o_small-fs", {scssVariableName: "small-font-size", start: 14,
 function checkComputedFontSize(fontSizeClass, stage) {
     return {
         content: `Check that the computed font size for ${fontSizeClass} is correct`,
-        trigger: `iframe #wrap .s_text_block .${fontSizeClass}`,
+        trigger: `:iframe #wrap .s_text_block .${fontSizeClass}`,
         run: function () {
             const computedFontSize = parseInt(getComputedStyle(this.anchor).fontSize);
             const expectedFontSize = classNameInfo.get(fontSizeClass)[stage];
@@ -39,7 +39,7 @@ function getFontSizeTestSteps(fontSizeClass) {
         wTourUtils.dragNDrop({id: "s_text_block", name: "Text"}),
         {
             content: `[${fontSizeClass}] Click on the text block first paragraph (to auto select)`,
-            trigger: "iframe .s_text_block p",
+            trigger: ":iframe .s_text_block p",
         }, {
             content: `Open the font size dropdown to select ${fontSizeClass}`,
             trigger: "#font-size button",
@@ -84,7 +84,7 @@ function getFontSizeTestSteps(fontSizeClass) {
         checkComputedFontSize(fontSizeClass, "end"),
         {
             content: `Click again on the text with class ${fontSizeClass}`,
-            trigger: `iframe #wrap .s_text_block .${fontSizeClass}`,
+            trigger: `:iframe #wrap .s_text_block .${fontSizeClass}`,
         }, {
             content: `Remove the text snippet containing the text with class ${fontSizeClass}`,
             trigger: `.oe_snippet_remove`,
@@ -117,7 +117,7 @@ wTourUtils.registerWebsitePreviewTour("website_text_font_size", {
     // The last step has to be a check.
     {
         content: "Verify that the text block has been deleted",
-        trigger: "iframe #wrap:not(:has(.s_text_block))",
+        trigger: ":iframe #wrap:not(:has(.s_text_block))",
         isCheck: true,
     },
 ]);

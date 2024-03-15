@@ -213,9 +213,6 @@ const fieldNotFoundError = (modelName, fieldName, consequence) => {
  * @param {ViewType} viewType
  */
 const findView = (model, viewId, viewType) => {
-    if (viewType === "tree") {
-        viewType = "list";
-    }
     const key = model._getViewKey(viewType, viewId);
     if (model._views[key]) {
         return [model._views[key], viewId];
@@ -343,14 +340,23 @@ const getRelation = (field, record = {}) => {
     } else if (field.type === "many2one_reference") {
         relation = record[field.model_field];
     }
-    const comodel = relation || record[field._model_name_ref_fname];
+    const comodel = relation || record[field.model_name_ref_fname];
     return comodel && MockServer.env[comodel];
 };
 
 /**
- * @param {Node} node
+ * @param {Node | string} [node]
+ * @returns {string}
  */
-const getTag = (node) => node.nodeName.toLowerCase();
+const getTag = (node) => {
+    if (typeof node === "string") {
+        return node === "tree" ? "list" : node;
+    } else if (node) {
+        return getTag(node.nodeName.toLowerCase());
+    } else {
+        return node;
+    }
+};
 
 /**
  * @param {Model} model
@@ -366,7 +372,7 @@ const getView = (model, args, kwargs) => {
             requestViewId = kwargs.context[contextKey];
         }
     }
-    const [arch, viewId] = findView(model, requestViewId, viewType);
+    const [arch, viewId] = findView(model, requestViewId, getTag(viewType));
     if (!arch) {
         throw viewNotFoundError(model._name, viewType, viewId);
     }
@@ -457,6 +463,26 @@ const isM2OField = (field) => {
 const isRelationalView = (viewType) => ["form", "kanban", "list"].includes(viewType);
 
 /**
+ * @param {[number, number?, any?]} command
+ */
+const isValidCommand = (command) => {
+    const [action, id, data] = command;
+    if (!command.length) {
+        return false;
+    }
+    if (action < 0 || action > 6) {
+        return false;
+    }
+    if (command.length > 1 && !Number.isInteger(id)) {
+        return false;
+    }
+    if (command.length > 2 && typeof data !== "object") {
+        return false;
+    }
+    return command.length <= 3;
+};
+
+/**
  * @param {ModelRecord} record
  * @param {FieldDefinition} fieldDef
  * @param {unknown} value
@@ -492,7 +518,16 @@ const isValidFieldValue = (record, fieldDef) => {
         }
         case "many2many":
         case "one2many": {
-            return Array.isArray(value) && value.every((id) => isValidId(id, fieldDef, record));
+            return (
+                Array.isArray(value) &&
+                value.every((id) => {
+                    if (Array.isArray(id)) {
+                        return isValidCommand(id);
+                    } else {
+                        return isValidId(id, fieldDef, record);
+                    }
+                })
+            );
         }
         case "many2one":
         case "many2one_reference": {
@@ -530,7 +565,8 @@ const isValidId = (id, field, record) => {
     if (!Number.isInteger(id)) {
         return false;
     }
-    return getRelation(field, record)?.some((record) => record.id === id);
+    const rel = getRelation(field, record);
+    return rel && rel.some((record) => record.id === id);
 };
 
 /**
@@ -542,7 +578,6 @@ const isViewEditable = (element, modelName) => {
         case "form":
             return true;
         case "list":
-        case "tree":
             return element.getAttribute("editable") || element.getAttribute("multi_edit");
         case "field": {
             const fname = element.getAttribute("name");
@@ -586,7 +621,7 @@ const orderByField = (model, orderBy, records) => {
     }
     const orderBys = safeSplit(orderBy);
     const [fieldNameSpec, direction = "ASC"] = safeSplit(orderBys.pop(), " ");
-    const field = getOrderByField(model, fieldNameSpec);
+    const field = getOrderByField(model.env[model._name], fieldNameSpec);
 
     // Prepares a values map if needed to easily retrieve the ordering
     // factor associated to a certain id or value.
@@ -716,7 +751,7 @@ const parseView = (model, params) => {
         typeof arch === "string"
             ? domParser.parseFromString(arch, "text/xml").documentElement
             : arch;
-    const viewType = getTag(doc) === "tree" ? "list" : getTag(doc);
+    const viewType = getTag(doc);
     const isEditable = editable && isViewEditable(doc, model._name);
 
     traverseElement(doc, (node) => {
@@ -773,20 +808,16 @@ const parseView = (model, params) => {
             ) {
                 const inlineViewTypes = [...node.childNodes].map(getTag);
                 const missingViewtypes = [];
-                const mode = node.getAttribute("mode") || "kanban,tree";
-                if (!intersection(inlineViewTypes, safeSplit(mode))) {
+                const nodeMode = getTag(node.getAttribute("mode"));
+                if (!intersection(inlineViewTypes, safeSplit(nodeMode || "kanban,list")).length) {
                     // TODO: use a kanban view by default in mobile
-                    missingViewtypes.push(safeSplit(node.getAttribute("mode") || "list")[0]);
+                    missingViewtypes.push(safeSplit(nodeMode || "list")[0]);
                 }
                 for (const type of missingViewtypes) {
                     // in a lot of tests, we don't need the form view, so it doesn't even exist
                     let [arch] = findView(relModel, false, type);
                     if (!arch) {
-                        if (type === "form") {
-                            arch = /* xml */ `<form />`;
-                        } else {
-                            throw viewNotFoundError(getRelation(field)?._name, type, false);
-                        }
+                        arch = /* xml */ `<${type} />`;
                     }
                     node.appendChild(domParser.parseFromString(arch, "text/xml").documentElement);
                 }
@@ -1059,7 +1090,7 @@ const updateComodelRelationalFields = (model, record, originalRecord) => {
         const field = model._fields[fname];
         const coModel = getRelation(field, record);
         const inverseFieldName =
-            field._inverse_fname_by_model_name && field._inverse_fname_by_model_name[coModel._name];
+            field.inverse_fname_by_model_name && field.inverse_fname_by_model_name[coModel._name];
         if (!inverseFieldName) {
             // field has no inverse, skip it.
             continue;
@@ -1085,14 +1116,14 @@ const updateComodelRelationalFields = (model, record, originalRecord) => {
                 }
                 const data = { [inverseFieldName]: inverseFieldNewValue };
                 if (comodelInverseField.type === "many2one_reference") {
-                    data[comodelInverseField._model_name_ref_fname] = model._name;
+                    data[comodelInverseField.model_name_ref_fname] = model._name;
                 }
                 coModel._write(data, relatedRecordId);
             }
         } else if (field.type === "many2one_reference") {
             // we need to clean the many2one_field as well.
             const model_many2one_field =
-                comodelInverseField._inverse_fname_by_model_name[model._name];
+                comodelInverseField.inverse_fname_by_model_name[model._name];
             model._write({ [model_many2one_field]: false }, record.id);
         }
         // it's an update, get the records that were originally referenced but are not
@@ -1220,6 +1251,9 @@ export class Model extends Array {
                         delete model[key];
                     }
                 }
+                if (!model._rec_name && "name" in model._fields) {
+                    model._rec_name = "name";
+                }
 
                 // Views
                 for (const [key, value] of Object.entries(model._views)) {
@@ -1262,6 +1296,13 @@ export class Model extends Array {
     }
     static set _name(value) {
         this.definition._name = value;
+    }
+
+    static get _onChanges() {
+        return this.definition._onChanges;
+    }
+    static set _onChanges(value) {
+        this.definition._onChanges = value;
     }
 
     static get _order() {
@@ -1656,7 +1697,7 @@ export class Model extends Array {
                     if (!modelMap[coModel._name]) {
                         modelMap[coModel._name] = {};
                     }
-                    modelMap[coModel._name][record.id] = record;
+                    modelMap[coModel._name][record[fieldName]] = record[fieldName];
                 }
             } else {
                 const coModel = getRelation(field);
@@ -1691,7 +1732,11 @@ export class Model extends Array {
                 } else if (isM2OField(field)) {
                     const relRecord = modelMap[getRelation(field, record)._name][record[fieldName]];
                     if (relRecord) {
-                        result[fieldName] = [record[fieldName], relRecord.display_name];
+                        if (field.type === "many2one_reference") {
+                            result[fieldName] = record[fieldName];
+                        } else {
+                            result[fieldName] = [record[fieldName], relRecord.display_name];
+                        }
                     } else {
                         result[fieldName] = false;
                     }
@@ -2525,7 +2570,7 @@ export class Model extends Array {
         if (this._rec_name) {
             for (const record of this) {
                 const value = record[this._rec_name];
-                record.display_name = value && String(value);
+                record.display_name = (value && String(value)) ?? false;
             }
         } else {
             for (const record of this) {
@@ -2742,9 +2787,13 @@ export class Model extends Array {
      */
     _write(values, id) {
         const record = this.find((r) => r.id === id);
-        for (const fieldName in values) {
+        const todoValsMap = new Map(Object.entries(values));
+        const MAX_ITER = todoValsMap.size;
+        let i = 0;
+        while (todoValsMap.size > 0 && i < MAX_ITER) {
+            let [fieldName, value] = todoValsMap.entries().next().value;
+            todoValsMap.delete(fieldName);
             const field = this._fields[fieldName];
-            let value = values[fieldName];
             if (!field) {
                 throw fieldNotFoundError(
                     this._name,
@@ -2773,8 +2822,7 @@ export class Model extends Array {
                     if (command[0] === 0) {
                         // CREATE
                         const inverseData = command[2]; // write in place instead of copy, because some tests rely on the object given being updated
-                        const inverseFieldName =
-                            field._inverse_fname_by_model_name?.[coModel._name];
+                        const inverseFieldName = field.inverse_fname_by_model_name?.[coModel._name];
                         if (inverseFieldName) {
                             inverseData[inverseFieldName] = id;
                         }
@@ -2812,6 +2860,11 @@ export class Model extends Array {
             } else if (isM2OField(field)) {
                 if (value) {
                     if (!isValidId(value, field, record)) {
+                        if (todoValsMap.has(field.model_name_ref_fname)) {
+                            // handle it later as it might likely become valid
+                            todoValsMap.set(fieldName, value);
+                            continue;
+                        }
                         throw new MockServerError(
                             `invalid ID "${JSON.stringify(
                                 value
@@ -2825,6 +2878,7 @@ export class Model extends Array {
             } else if (!isComputed(field)) {
                 record[fieldName] = value;
             }
+            i++;
         }
     }
 }

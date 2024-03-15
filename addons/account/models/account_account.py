@@ -4,7 +4,6 @@ from contextlib import nullcontext
 from odoo import api, fields, models, _, tools, Command
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.float_utils import float_is_zero
 from odoo.tools.sql import SQL
 from bisect import bisect_left
 from collections import defaultdict
@@ -42,6 +41,7 @@ class AccountAccount(models.Model):
     name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True, translate=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency', tracking=True,
         help="Forces all journal items in this account to have a specific currency (i.e. bank journals). If no currency is set, entries can use any currency.")
+    company_currency_id = fields.Many2one(related='company_id.currency_id')
     code = fields.Char(size=64, required=True, tracking=True, index=True)
     deprecated = fields.Boolean(default=False, tracking=True)
     used = fields.Boolean(compute='_compute_used', search='_search_used')
@@ -99,7 +99,13 @@ class AccountAccount(models.Model):
     note = fields.Text('Internal Notes', tracking=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=False,
         default=lambda self: self.env.company)
-    tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting", ondelete='restrict')
+    tag_ids = fields.Many2many(
+        'account.account.tag', 'account_account_account_tag',
+        compute='_compute_account_tags', readonly=False, store=True, precompute=True,
+        string='Tags',
+        help="Optional tags you may want to assign for custom reporting",
+        ondelete='restrict',
+    )
     group_id = fields.Many2one('account.group', compute='_compute_account_group', store=True, readonly=True,
                                help="Account prefixes can determine account groups.")
     root_id = fields.Many2one('account.root', compute='_compute_account_root', store=True, precompute=True)
@@ -109,9 +115,9 @@ class AccountAccount(models.Model):
         help="Define in which journals this account can be used. If empty, can be used in all journals.",
         check_company=True,
     )
-    opening_debit = fields.Monetary(string="Opening Debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit')
-    opening_credit = fields.Monetary(string="Opening Credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit')
-    opening_balance = fields.Monetary(string="Opening Balance", compute='_compute_opening_debit_credit', inverse='_set_opening_balance')
+    opening_debit = fields.Monetary(string="Opening Debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit', currency_field='company_currency_id')
+    opening_credit = fields.Monetary(string="Opening Credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', currency_field='company_currency_id')
+    opening_balance = fields.Monetary(string="Opening Balance", compute='_compute_opening_debit_credit', inverse='_set_opening_balance', currency_field='company_currency_id')
 
     current_balance = fields.Float(compute='_compute_current_balance')
     related_taxes_amount = fields.Integer(compute='_compute_related_taxes_amount')
@@ -460,25 +466,38 @@ class AccountAccount(models.Model):
 
     @api.depends('code')
     def _compute_account_type(self):
-        """ Compute the account type based on the account code.
-        Search for the closest parent account code and sets the account type according to the parent.
-        If there is no parent (e.g. the account code is lower than any other existing account code),
-        the account type will be set to 'asset_current'.
+        accounts_to_process = self.filtered(lambda account: account.code and not account.account_type)
+        self._get_closest_parent_account(accounts_to_process, 'account_type', default_value='asset_current')
+
+    @api.depends('code')
+    def _compute_account_tags(self):
+        accounts_to_process = self.filtered(lambda account: account.code and not account.tag_ids)
+        self._get_closest_parent_account(accounts_to_process, 'tag_ids', default_value=[])
+
+    def _get_closest_parent_account(self, accounts_to_process, field_name, default_value):
         """
-        accounts_to_process = self.filtered(lambda r: r.code and not r.account_type)
+            This helper function retrieves the closest parent account based on account codes
+            for the given accounts to process and assigns the value of the parent to the specified field.
+
+            :param accounts_to_process: Records of accounts to be processed.
+            :param field_name: Name of the field to be updated with the closest parent account value.
+            :param default_value: Default value to be assigned if no parent account is found.
+        """
+        assert field_name in self._fields
+
         all_accounts = self.search_read(
             domain=[('company_id', 'in', accounts_to_process.company_id.ids)],
-            fields=['code', 'account_type', 'company_id'],
+            fields=['code', field_name, 'company_id'],
             order='code',
         )
         accounts_with_codes = defaultdict(dict)
         # We want to group accounts by company to only search for account codes of the current company
         for account in all_accounts:
-            accounts_with_codes[account['company_id'][0]][account['code']] = account['account_type']
+            accounts_with_codes[account['company_id'][0]][account['code']] = account[field_name]
         for account in accounts_to_process:
             codes_list = list(accounts_with_codes[account.company_id.id].keys())
             closest_index = bisect_left(codes_list, account.code) - 1
-            account.account_type = accounts_with_codes[account.company_id.id][codes_list[closest_index]] if closest_index != -1 else 'asset_current'
+            account[field_name] = accounts_with_codes[account.company_id.id][codes_list[closest_index]] if closest_index != -1 else default_value
 
     @api.depends('account_type')
     def _compute_include_initial_balance(self):
@@ -505,10 +524,11 @@ class AccountAccount(models.Model):
             record._set_opening_debit_credit(record.opening_credit, 'credit')
 
     def _set_opening_balance(self):
+        # Tracking of the balances to be used after the import to populate the opening move in batch.
         for account in self:
-            if account.opening_balance:
-                side = 'debit' if account.opening_balance > 0 else 'credit'
-                account._set_opening_debit_credit(abs(account.opening_balance), side)
+            balance = account.opening_balance
+            account._set_opening_debit_credit(abs(balance) if balance > 0.0 else 0.0, 'debit')
+            account._set_opening_debit_credit(abs(balance) if balance < 0.0 else 0.0, 'credit')
 
     def _set_opening_debit_credit(self, amount, field):
         """ Generic function called by both opening_debit and opening_credit's
@@ -516,61 +536,15 @@ class AccountAccount(models.Model):
         either 'debit' or 'credit', depending on which one of these two fields
         got assigned.
         """
-        # only set the opening debit/credit if the amount is not zero,
-        # otherwise return early
-        if float_is_zero(amount, precision_digits=2):
-            return
-
-        self.company_id.create_op_move_if_non_existant()
-        opening_move = self.company_id.account_opening_move_id
-
-        if opening_move.state == 'draft':
-            with self.env['account.move']._check_balanced({'records': opening_move}):
-                # check whether we should create a new move line or modify an existing one
-                account_op_lines = self.env['account.move.line'].search([
-                    ('account_id', '=', self.id),
-                    ('move_id', '=', opening_move.id),
-                    (field, '!=', False),
-                    (field, '!=', 0.0),  # 0.0 condition important for import
-                ])
-
-                if account_op_lines:
-                    op_aml_debit = sum(account_op_lines.mapped('debit'))
-                    op_aml_credit = sum(account_op_lines.mapped('credit'))
-
-                    # There might be more than one line on this account if the opening entry was manually edited
-                    # If so, we need to merge all those lines into one before modifying its balance
-                    opening_move_line = account_op_lines[0]
-                    if len(account_op_lines) > 1:
-                        merge_write_cmd = [Command.update(opening_move_line.id, {
-                            'debit': op_aml_debit,
-                            'credit': op_aml_credit,
-                            'partner_id': False,
-                            'name': _("Opening balance"),
-                        })]
-                        unlink_write_cmd = [Command.unlink(line.id) for line in account_op_lines[1:]]
-                        opening_move.write({'line_ids': merge_write_cmd + unlink_write_cmd})
-
-                    if amount:
-                        # modify the line
-                        opening_move_line[field] = amount
-                    else:
-                        # delete the line (no need to keep a line with value = 0)
-                        opening_move_line.unlink()
-
-                elif amount:
-                    # create a new line, as none existed before
-                    self.env['account.move.line'].create({
-                            'name': _('Opening balance'),
-                            field: amount,
-                            'move_id': opening_move.id,
-                            'account_id': self.id,
-                    })
-
-                # Then, we automatically balance the opening move, to make sure it stays valid
-                if not 'import_file' in self.env.context:
-                    # When importing a file, avoid recomputing the opening move for each account and do it at the end, for better performances
-                    self.company_id._auto_balance_opening_move()
+        self.ensure_one()
+        if 'import_account_opening_balance' not in self._cr.precommit.data:
+            data = self._cr.precommit.data['import_account_opening_balance'] = {}
+            self._cr.precommit.add(self._load_precommit_update_opening_move)
+        else:
+            data = self._cr.precommit.data['import_account_opening_balance']
+        data.setdefault(self.id, [None, None])
+        index = 0 if field == 'debit' else 1
+        data[self.id][index] = amount
 
     @api.model
     def default_get(self, default_fields):
@@ -702,34 +676,23 @@ class AccountAccount(models.Model):
             }], dirty=True)
 
     @api.model
-    def load(self, fields, data):
-        """ Overridden for better performances when importing a list of account
-        with opening debit/credit. In that case, the auto-balance is postpone
-        until the whole file has been imported.
+    def _load_precommit_update_opening_move(self):
+        """ precommit callback to recompute the opening move according the opening balances that changed.
+        This is particularly useful when importing a csv containing the 'opening_balance' column.
+        In that case, we don't want to use the inverse method set on field since it will be
+        called for each account separately. That would be quite costly in terms of performances.
+        Instead, the opening balances are collected and this method is called once at the end
+        to update the opening move accordingly.
         """
-        importing = 'import_file' in self.env.context and 'opening_balance' in fields
-        if importing:
-            container = {'records': self.env['account.move']}
-            manager = self.env['account.move']._check_balanced(container)
-        else:
-            manager = nullcontext()
-        with manager:
-            rslt = super(AccountAccount, self).load(fields, data)
-            if importing:
-                companies = self.search([('id', 'in', rslt['ids'])]).mapped('company_id')
-                container['records'] = companies.account_opening_move_id
-                for company in companies:
-                    if company.account_opening_move_id.filtered(lambda m: m.state == "posted"):
-                        raise UserError(_(
-                            'You cannot import the "openning_balance" if the opening move (%s) is already posted. '
-                            'If you are absolutely sure you want to modify the opening balance of your accounts, reset the move to draft.',
-                            company.account_opening_move_id.name,
-                        ))
-                    company._auto_balance_opening_move()
-                    # the current_balance of the account only includes posted moves and
-                    # would always amount to 0 after the import if we didn't post the opening move
-                companies.account_opening_move_id.action_post()
-        return rslt
+        data = self._cr.precommit.data.pop('import_account_opening_balance', {})
+        accounts = self.browse(data.keys())
+
+        accounts_per_company = defaultdict(lambda: self.env['account.account'])
+        for account in accounts:
+            accounts_per_company[account.company_id] |= account
+
+        for company, company_accounts in accounts_per_company.items():
+            company._update_opening_move({account: data[account.id] for account in company_accounts})
 
     def _toggle_reconcile_to_true(self):
         '''Toggle the `reconcile´ boolean from False -> True

@@ -15,7 +15,6 @@ import subprocess
 import sys
 import threading
 import time
-import unittest
 
 import psutil
 import werkzeug.serving
@@ -1264,8 +1263,7 @@ def load_test_file_py(registry, test_file):
             for mod_mod in loader.get_test_modules(mod):
                 mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
                 if test_path == config._normalize(mod_path):
-                    tests = loader.unwrap_suite(
-                        unittest.TestLoader().loadTestsFromModule(mod_mod))
+                    tests = loader.get_module_test_cases(mod_mod)
                     suite = OdooSuite(tests)
                     _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
                     suite(registry._assertion_report)

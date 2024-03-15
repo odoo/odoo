@@ -137,6 +137,7 @@ export const useNestedSortable = makeDraggableHook({
             ctx.prevNestX = ctx.pointer.x;
         }
         ctx.current.placeHolder = ctx.current.element.cloneNode(false);
+        ctx.current.placeHolder.removeAttribute("id");
         ctx.current.placeHolder.classList.add("w-100", "d-block", "py-0");
         if (ctx.useElementSize) {
             ctx.current.placeHolder.style.height = getComputedStyle(ctx.current.element).height;
@@ -242,14 +243,16 @@ export const useNestedSortable = makeDraggableHook({
             return list;
         };
 
-        const position = {
-            previous: ctx.current.placeHolder.previousElementSibling,
-            next: ctx.current.placeHolder.nextElementSibling,
-            parent: ctx.nest
-                ? ctx.current.placeHolder.parentElement.closest(ctx.elementSelector)
-                : false,
-            group: ctx.groupSelector ? ctx.current.placeHolder.closest(ctx.groupSelector) : false,
+        const getPosition = (el) => {
+            return {
+                previous: el.previousElementSibling,
+                next: el.nextElementSibling,
+                parent: el.parentElement?.closest(ctx.elementSelector) || null,
+                group: ctx.groupSelector ? el.closest(ctx.groupSelector) : false,
+            };
         };
+        const position = getPosition(ctx.current.placeHolder);
+
         /** If nesting elements is allowed, horizontal moves may change the
          * parent of the placeholder element (the placeholder does not move
          * above or under an element, but it changes parent):
@@ -327,6 +330,7 @@ export const useNestedSortable = makeDraggableHook({
         const element = closestEl.closest(ctx.elementSelector);
         // Vertical moves should move the placeholder element up or down.
         if (element && element !== ctx.current.placeHolder) {
+            const elementPosition = getPosition(element);
             const eRect = element.getBoundingClientRect();
             const pos = ctx.current.placeHolder.compareDocumentPosition(element);
             // Place placeholder before the hovered element in its parent's
@@ -337,8 +341,8 @@ export const useNestedSortable = makeDraggableHook({
             // instead.
             if (currentTop - eRect.y < 10) {
                 if (
-                    pos === Node.DOCUMENT_POSITION_PRECEDING ||
-                    pos === (Node.DOCUMENT_POSITION_PRECEDING | Node.DOCUMENT_POSITION_CONTAINS)
+                    pos & Node.DOCUMENT_POSITION_PRECEDING &&
+                    (ctx.nest || elementPosition.parent === position.parent)
                 ) {
                     element.before(ctx.current.placeHolder);
                     onMove(position);
@@ -364,14 +368,14 @@ export const useNestedSortable = makeDraggableHook({
                     }
                     // Recenter the pointer coordinates to this step
                     ctx.prevNestX = ctx.pointer.x;
-                } else {
+                } else if (elementPosition.parent === position.parent) {
                     element.after(ctx.current.placeHolder);
                     onMove(position);
                 }
             }
         } else {
             const group = closestEl.closest(ctx.groupSelector);
-            if (group && group !== position.group) {
+            if (group && group !== position.group && (ctx.nest || !position.parent)) {
                 if (
                     group.compareDocumentPosition(position.group) ===
                     Node.DOCUMENT_POSITION_PRECEDING
@@ -384,10 +388,10 @@ export const useNestedSortable = makeDraggableHook({
                 }
                 // Recenter the pointer coordinates to this step
                 ctx.prevNestX = ctx.pointer.x;
-                callHandler("onGroupEnter", { group, element: ctx.current.placeHolder });
+                callHandler("onGroupEnter", { group, placeholder: ctx.current.placeHolder });
                 callHandler("onGroupLeave", {
                     group: position.group,
-                    element: ctx.current.placeHolder,
+                    placeholder: ctx.current.placeHolder,
                 });
             }
         }

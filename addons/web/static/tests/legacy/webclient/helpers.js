@@ -26,7 +26,7 @@ import { commandService } from "@web/core/commands/command_service";
 import { CustomFavoriteItem } from "@web/search/custom_favorite_item/custom_favorite_item";
 import { overlayService } from "@web/core/overlay/overlay_service";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, onMounted, xml } from "@odoo/owl";
 import { fieldService } from "@web/core/field_service";
 import { nameService } from "@web/core/name_service";
 import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
@@ -133,6 +133,11 @@ export function getActionManagerServerData() {
                 ClientAction_<t t-esc="props.action.params?.description"/>
             </div>`;
         static props = ["*"];
+        setup() {
+            onMounted(() =>
+                this.env.config.setDisplayName(`Client action ${this.props.action.id}`)
+            );
+        }
     }
     actionRegistry.add("__test__client__action__", TestClientAction);
 
@@ -272,6 +277,32 @@ export function getActionManagerServerData() {
             target: "new",
             type: "ir.actions.act_window",
             views: [[false, "list"]],
+        },
+        {
+            id: 27,
+            xml_id: "action_27",
+            name: "Partners Action 27",
+            res_model: "partner",
+            mobile_view_mode: "kanban",
+            type: "ir.actions.act_window",
+            path: "partners",
+            views: [
+                [false, "list"],
+                [1, "kanban"],
+                [false, "form"],
+            ],
+        },
+        {
+            id: 28,
+            xml_id: "action_28",
+            name: "Partners Action 28",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [1, "kanban"],
+                [2, "list"],
+                [false, "form"],
+            ],
         },
         {
             id: 1001,

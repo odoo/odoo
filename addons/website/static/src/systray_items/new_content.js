@@ -299,4 +299,4 @@ export const systrayItem = {
     Component: NewContentSystray,
 };
 
-registry.category("website_systray").add("NewContent", systrayItem, { sequence: 10 });
+registry.category("website_systray").add("NewContent", systrayItem, { sequence: 9 });

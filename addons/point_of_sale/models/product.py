@@ -45,6 +45,30 @@ class ProductTemplate(models.Model):
                 if combo_name:
                     raise UserError(_('You must first remove this product from the %s combo', combo_name))
 
+    def _create_variant_ids(self):
+        res = super()._create_variant_ids()
+        for template in self:
+            archived_product = self.env['product.product'].search([('product_tmpl_id', '=', template.id), ('active', '=', False)], limit=1)
+            if archived_product:
+                combo_choices_to_delete = self.env['pos.combo.line'].search([
+                    ('product_id', '=', archived_product.id)
+                ])
+                if combo_choices_to_delete:
+                    # Delete old combo line
+                    combo_ids = combo_choices_to_delete.mapped('combo_id')
+                    combo_choices_to_delete.unlink()
+                    # Create new combo line (one for each new variant) in each combo
+                    new_variants = template.product_variant_ids.filtered(lambda v: v.active)
+                    self.env['pos.combo.line'].create([
+                        {
+                            'product_id': variant.id,
+                            'combo_id': combo_id.id,
+                        }
+                        for variant in new_variants for combo_id in combo_ids
+                    ])
+        return res
+
+
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 

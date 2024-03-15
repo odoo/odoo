@@ -30,6 +30,7 @@ class IrUiMenu(models.Model):
                     "xmlid": "",
                     "actionID": False,
                     "actionModel": False,
+                    "actionPath": False,
                     "webIcon": None,
                     "webIconData": None,
                     "webIconDataMimetype": None,
@@ -47,6 +48,10 @@ class IrUiMenu(models.Model):
 
                 action_model, action_id = action.split(',') if action else (False, False)
                 action_id = int(action_id) if action_id else False
+                if action_model and action_id:
+                    action_path = self.env[action_model].browse(action_id).sudo().path
+                else:
+                    action_path = False
 
                 web_menus[menu['id']] = {
                     "id": menu['id'],
@@ -56,6 +61,7 @@ class IrUiMenu(models.Model):
                     "xmlid": menu['xmlid'],
                     "actionID": action_id,
                     "actionModel": action_model,
+                    "actionPath": action_path,
                     "webIcon": menu['web_icon'],
                     "webIconData": menu['web_icon_data'],
                     "webIconDataMimetype": menu['web_icon_data_mimetype'],

@@ -196,7 +196,6 @@ from .tools import (config, consteq, date_utils, file_path, parse_version,
                     profiler, submap, unique, ustr,)
 from .tools.func import filter_kwargs, lazy_property
 from .tools.mimetypes import guess_mimetype
-from .tools.misc import pickle
 from .tools._vendor import sessions
 from .tools._vendor.useragents import UserAgent
 
@@ -960,7 +959,7 @@ class Session(collections.abc.MutableMapping):
         return self.__data[item]
 
     def __setitem__(self, item, value):
-        value = pickle.loads(pickle.dumps(value))
+        value = json.loads(json.dumps(value))
         if item not in self.__data or self.__data[item] != value:
             self.is_dirty = True
         self.__data[item] = value
@@ -1816,6 +1815,8 @@ class Request:
 
             return self._transactioning(_serve_fallback, readonly=True)
         else:
+            self._set_request_dispatcher(rule)
+
             ro = rule.endpoint.routing['readonly']
             if callable(ro):
                 ro = ro(registry, request)
@@ -1826,7 +1827,6 @@ class Request:
             return self._transactioning(_serve_ir_http, readonly=ro)
 
     def _serve_ir_http(self, rule, args):
-        self._set_request_dispatcher(rule)
         self.registry['ir.http']._authenticate(rule.endpoint)
         self.registry['ir.http']._pre_dispatch(rule, args)
         response = self.dispatcher.dispatch(rule.endpoint, args)

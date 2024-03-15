@@ -1,11 +1,11 @@
 import importlib
 import importlib.util
 import inspect
-import itertools
+import logging
 import sys
 import threading
-import unittest
 from pathlib import Path
+from unittest import case
 
 from .. import tools
 from .tag_selector import TagsSelector
@@ -13,9 +13,41 @@ from .suite import OdooSuite
 from .result import OdooTestResult
 
 
+_logger = logging.getLogger(__name__)
+
+
+def get_module_test_cases(module):
+    """Return a suite of all test cases contained in the given module"""
+    for obj in module.__dict__.values():
+        if not isinstance(obj, type):
+            continue
+        if not issubclass(obj, case.TestCase):
+            continue
+        if obj.__module__ != module.__name__:
+            continue
+
+        test_case_class = obj
+        test_cases = test_case_class.__dict__.items()
+        if getattr(test_case_class, 'allow_inherited_tests_method', False):
+            # keep iherited method for specific classes.
+            # This is likely to be removed once a better solution is found
+            test_cases = inspect.getmembers(test_case_class, callable)
+        else:
+            # sort test case to keep the initial behaviour.
+            # This is likely to be removed in the future
+            test_cases = sorted(test_cases, key=lambda pair: pair[0])
+
+        for method_name, method in test_cases:
+            if not callable(method):
+                continue
+            if not method_name.startswith('test'):
+                continue
+            yield test_case_class(method_name)
+
+
 def get_test_modules(module):
     """ Return a list of module for the addons potentially containing tests to
-    feed unittest.TestLoader.loadTestsFromModule() """
+    feed get_module_test_cases() """
     results = _get_tests_modules(importlib.util.find_spec(f'odoo.addons.{module}'))
     results += list(_get_upgrade_test_modules(module))
 
@@ -70,47 +102,21 @@ def make_suite(module_names, position='at_install'):
         t
         for module_name in module_names
         for m in get_test_modules(module_name)
-        for t in unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
+        for t in get_module_test_cases(m)
         if position_tag.check(t) and config_tags.check(t)
     )
     return OdooSuite(sorted(tests, key=lambda t: t.test_sequence))
 
 
-def run_suite(suite, module_name=None):
+def run_suite(suite):
     # avoid dependency hell
     from ..modules import module
-    module.current_test = module_name
+    module.current_test = True
     threading.current_thread().testing = True
 
     results = OdooTestResult()
     suite(results)
 
     threading.current_thread().testing = False
-    module.current_test = None
+    module.current_test = False
     return results
-
-
-def unwrap_suite(test):
-    """
-    Attempts to unpack testsuites (holding suites or cases) in order to
-    generate a single stream of terminals (either test cases or customized
-    test suites). These can then be checked for run/skip attributes
-    individually.
-
-    An alternative would be to use a variant of @unittest.skipIf with a state
-    flag of some sort e.g. @unittest.skipIf(common.runstate != 'at_install'),
-    but then things become weird with post_install as tests should *not* run
-    by default there
-    """
-    if isinstance(test, unittest.TestCase):
-        yield test
-        return
-
-    subtests = list(test)
-    ## custom test suite (no test cases)
-    #if not len(subtests):
-    #    yield test
-    #    return
-
-    for item in itertools.chain.from_iterable(unwrap_suite(t) for t in subtests):
-        yield item

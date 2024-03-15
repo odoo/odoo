@@ -298,7 +298,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         query_string = '&message=sign_ok'
         if order_sudo._has_to_be_paid():
-            query_string += '#allow_payment=yes'
+            query_string += '&allow_payment=yes'
         return {
             'force_refresh': True,
             'redirect_url': order_sudo.get_portal_url(query_string=query_string),

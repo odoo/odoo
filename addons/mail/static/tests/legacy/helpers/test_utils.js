@@ -21,6 +21,7 @@ import {
 import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
+import { DISCUSS_ACTION_ID } from "./test_constants";
 
 // load emoji data and lamejs once, when the test suite starts.
 QUnit.begin(loadEmoji);
@@ -31,28 +32,29 @@ registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
 // Public: test lifecycle
 //------------------------------------------------------------------------------
 
-function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {}) {
-    return async function openDiscuss(pActiveId) {
-        const actionOpenDiscuss = {
-            context: { ...context, active_id: pActiveId },
-            id: "mail.action_discuss",
-            params,
-            tag: "mail.action_discuss",
-            type: "ir.actions.client",
-        };
-        await doAction(webClient, actionOpenDiscuss, { props });
-    };
+let currentEnv = null;
+
+export async function openDiscuss(activeId, { target } = {}) {
+    const env = target ?? currentEnv;
+    await env.services.action.doAction({
+        context: { active_id: activeId },
+        id: DISCUSS_ACTION_ID,
+        tag: "mail.action_discuss",
+        type: "ir.actions.client",
+    });
 }
 
-function getOpenFormView(openView) {
-    return async function openFormView(res_model, res_id, { props } = {}) {
-        const action = {
-            res_model,
-            res_id,
+export async function openFormView(resModel, resId, { props = {}, target } = {}) {
+    const env = target ?? currentEnv;
+    await env.services.action.doAction(
+        {
+            res_model: resModel,
+            res_id: resId,
+            type: "ir.actions.act_window",
             views: [[false, "form"]],
-        };
-        await openView(action, props);
-    };
+        },
+        { props }
+    );
 }
 
 //------------------------------------------------------------------------------
@@ -130,8 +132,6 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
  * @param {boolean} [param0.asTab] Whether or not the resulting WebClient should
  * be considered as a separate tab.
  * @param {Object} [param0.serverData] The data to pass to the webClient
- * @param {Object} [param0.discuss={}] provide data that is passed to the
- * discuss action.
  * @param {Object} [param0.legacyServices]
  * @param {Object} [param0.services]
  * @param {function} [param0.mockRPC]
@@ -140,7 +140,7 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
  * @returns {Object}
  */
 export async function start(param0 = {}) {
-    const { discuss = {}, hasTimeControl } = param0;
+    const { hasTimeControl } = param0;
     patchWithCleanup(timings, {
         // make throttle instantaneous during tests
         throttle: (func) => func,
@@ -197,12 +197,14 @@ export async function start(param0 = {}) {
         action["type"] = action["type"] || "ir.actions.act_window";
         await doAction(webClient, action, { props: options });
     };
+    currentEnv = webClient.env;
+    registerCleanup(() => (currentEnv = undefined));
     return {
         advanceTime,
         env: webClient.env,
-        openDiscuss: getOpenDiscuss(webClient, discuss),
+        openDiscuss: (activeId) => openDiscuss(activeId, { target: webClient.env }),
         openView,
-        openFormView: getOpenFormView(openView),
+        openFormView: (resModel, resId) => openFormView(resModel, resId, { target: webClient.env }),
         pyEnv,
         target,
         webClient,

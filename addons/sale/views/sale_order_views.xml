@@ -282,7 +282,7 @@
                 <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
             </header>
             <div
-                 class="alert alert-warning mb-0" role="alert"
+                 class="alert alert-warning" role="alert"
                  invisible="partner_credit_warning == ''">
                 <field name="partner_credit_warning"/>
             </div>
@@ -314,11 +314,13 @@
                                placeholder="Type to find a customer..." readonly="state in ['cancel', 'sale']"/>
                         <field name="partner_invoice_id"
                               groups="account.group_delivery_invoice_address"
-                              context="{'default_type':'invoice', 'show_address': False, 'show_vat': False}"
+                              options="{'no_quick_create': True}"
+                              context="{'default_type':'invoice', 'show_address': False, 'show_vat': False, 'default_parent_id': partner_id}"
                               readonly="state == 'cancel' or locked"/>
                         <field name="partner_shipping_id"
                               groups="account.group_delivery_invoice_address"
-                              context="{'default_type':'delivery', 'show_address': False, 'show_vat': False}"
+                              options="{'no_quick_create': True}"
+                              context="{'default_type':'delivery', 'show_address': False, 'show_vat': False, 'default_parent_id': partner_id}"
                               readonly="state == 'cancel' or locked"/>
                     </group>
                     <group name="order_details">
@@ -752,10 +754,7 @@
                     </page>
                 </notebook>
             </sheet>
-            <div class="oe_chatter">
-                <field name="message_follower_ids"/>
-                <field name="message_ids"/>
-            </div>
+            <chatter/>
             </form>
         </field>
     </record>
@@ -891,6 +890,7 @@
 
     <record id="action_quotations_with_onboarding" model="ir.actions.act_window">
         <field name="name">Quotations</field>
+        <field name="path">sales</field>
         <field name="res_model">sale.order</field>
         <field name="view_id" ref="view_quotation_tree_with_onboarding"/>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>

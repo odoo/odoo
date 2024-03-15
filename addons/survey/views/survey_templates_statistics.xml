@@ -145,7 +145,7 @@
                     t-call="survey.question_result_text"/>
                 <t t-elif="question.question_type in ['numerical_box', 'date', 'datetime']"
                     t-call="survey.question_result_number_or_date_or_datetime"/>
-                <t t-elif="question.question_type in ['simple_choice', 'multiple_choice']"
+                <t t-elif="question.question_type in ['simple_choice', 'multiple_choice', 'scale']"
                     t-call="survey.question_result_choice"/>
                 <t t-elif="question.question_type in ['matrix']"
                     t-call="survey.question_result_matrix"/>
@@ -270,24 +270,25 @@
         <t t-call="survey.question_table_pagination"/>
     </template>
 
-    <template id="question_result_number_or_date_or_datetime" name="Question: number or date (and time) result (numerical_box or date or datetime)">
-        <t t-if="question.question_type == 'numerical_box'">
-            <span class="float-end mt8">
-                <div class="btn-group o_survey_results_question_pill" role="group" aria-label="Maximum">
-                    <span class="badge text-bg-secondary only_left_radius px-2 pt-1">Maximum </span>
-                    <span class="badge text-bg-success only_right_radius px-2 pt-1" t-esc="question_data['numerical_max']"></span>
-                </div>
-                <div class="btn-group o_survey_results_question_pill" role="group" aria-label="Minimum">
-                    <span class="badge text-bg-secondary only_left_radius px-2 pt-1">Minimum </span>
-                    <span class="badge text-bg-danger only_right_radius px-2 pt-1" t-esc="question_data['numerical_min']"></span>
-                </div>
-                <div class="btn-group o_survey_results_question_pill" role="group" aria-label="Average">
-                    <span class="badge text-bg-secondary only_left_radius px-2 pt-1">Average </span>
-                    <span class="badge text-bg-warning only_right_radius px-2 pt-1" t-esc="question_data['numerical_average']"></span>
-                </div>
-            </span>
-        </t>
+    <template id="question_result_summary_stat_numbers">
+        <span class="d-none d-sm-block float-end mt8">
+            <div class="btn-group o_survey_results_question_pill" role="group" aria-label="Maximum">
+                <span class="badge text-bg-secondary only_left_radius px-2 pt-1">Maximum </span>
+                <span class="badge text-bg-success only_right_radius px-2 pt-1" t-esc="question_data['numerical_max']"></span>
+            </div>
+            <div class="btn-group o_survey_results_question_pill" role="group" aria-label="Minimum">
+                <span class="badge text-bg-secondary only_left_radius px-2 pt-1">Minimum </span>
+                <span class="badge text-bg-danger only_right_radius px-2 pt-1" t-esc="question_data['numerical_min']"></span>
+            </div>
+            <div class="btn-group o_survey_results_question_pill" role="group" aria-label="Average">
+                <span class="badge text-bg-secondary only_left_radius px-2 pt-1">Average </span>
+                <span class="badge text-bg-warning only_right_radius px-2 pt-1" t-esc="question_data['numerical_average']"></span>
+            </div>
+        </span>
+    </template>
 
+    <template id="question_result_number_or_date_or_datetime" name="Question: number or date (and time) result (numerical_box or date or datetime)">
+        <t t-if="question.question_type == 'numerical_box'" t-call="survey.question_result_summary_stat_numbers"/>
         <ul class="nav nav-tabs d-print-none" role="tablist">
             <li class="nav-item">
                 <a t-att-href="'#survey_stats_question_%d' % question.id"
@@ -392,7 +393,8 @@
         </div>
     </template>
 
-    <template id="question_result_choice" name="Question: choice result (simple_choice, multiple_choice)">
+    <template id="question_result_choice" name="Question: choice result (simple_choice, multiple_choice, scale)">
+        <t t-if="question.question_type == 'scale'" t-call="survey.question_result_summary_stat_numbers"/>
         <ul class="nav nav-tabs d-print-none" role="tablist">
             <li t-if="question_answered" class="nav-item">
                 <a t-att-href="'#survey_graph_question_%d' % question.id"
@@ -418,9 +420,9 @@
                 t-att-data-question-id="question.id"
                 t-att-data-graph-type="'pie' if question.question_type == 'simple_choice' else 'bar'"
                 t-att-data-graph-data="graph_data"
-                t-att-data-right-answers="list(question_data['right_answers'].mapped('value'))">
+                t-att-data-right-answers="list(question_data['answer_line_done_ids'].mapped('value_scale')) if question.question_type in ['scale'] else list(question_data['right_answers'].mapped('value'))">
                 <!-- canvas element for drawing bar chart -->
-                <canvas class="mx-auto"/>
+                <canvas class="mx-auto w-100 h-auto"/>
             </div>
             <div role="tabpanel" t-att-id="'survey_data_question_%d' % question.id"
                 t-attf-class="tab-pane #{'active' if not question_answered else ''}">
@@ -494,7 +496,7 @@
                 data-graph-type= "multi_bar"
                 t-att-data-graph-data="graph_data">
                 <!-- canvas element for drawing Multibar chart -->
-                <canvas class="mx-auto"/>
+                <canvas class="mx-auto w-100 h-auto"/>
             </div>
             <div role="tabpanel" t-attf-class="tab-pane #{'active' if not question_answered else ''}" t-att-id="'survey_data_question_%d' % question.id">
                 <table class="table table-hover table-sm text-end">

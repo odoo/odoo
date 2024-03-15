@@ -78,3 +78,39 @@ export function pick(object, ...properties) {
         properties.filter((prop) => prop in object).map((prop) => [prop, object[prop]])
     );
 }
+
+/**
+ * Deeply merges two objects, recursively combining properties.
+ * Works like the spread operator but will merge nested objects.
+ *
+ * This function doesn't merge arrays.
+ *
+ * @param {Object} target - The target object to merge into.
+ * @param {Object} extension - The extension to apply.
+ * @returns {Object} - The merged object.
+ *
+ * @example
+ * const target = { a: 1, b: { c: 2 } };
+ * const source = { a: 2, b: { d: 3 } };
+ * const output = deepMerge(target, source);
+ * // output => { a: 2, b: { c: 2, d: 3 } }
+ */
+export function deepMerge(target, extension) {
+    if (!isObject(target) && !isObject(extension)) {
+        return;
+    }
+
+    target = target || {};
+    const output = Object.assign({}, target);
+    if (isObject(extension)) {
+        for (const key of Reflect.ownKeys(extension)) {
+            if (key in target && isObject(extension[key]) && !Array.isArray(extension[key])) {
+                output[key] = deepMerge(target[key], extension[key]);
+            } else {
+                Object.assign(output, { [key]: extension[key] });
+            }
+        }
+    }
+
+    return output;
+}

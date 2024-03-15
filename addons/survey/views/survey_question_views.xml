@@ -8,13 +8,14 @@
         <field name="arch" type="xml">
             <form string="Survey Question" create="false" class="o_survey_question_view_form">
                 <field name="is_placed_before_trigger" invisible="1"/>
-                <div class="alert alert-warning mb-0 text-center" role="alert" invisible="not is_placed_before_trigger">
+                <div class="alert alert-warning text-center" role="alert" invisible="not is_placed_before_trigger">
                     ⚠️ This question is positioned before some or all of its triggers and could be skipped.
                 </div>
                 <field name="is_page" invisible="1"/>
                 <field name="page_id" invisible="1" required="False"/>
                 <field name="sequence" invisible="1"/>
                 <field name="scoring_type" invisible="1"/>
+                <field name="has_image_only_suggested_answer" invisible="1"/>
                 <sheet>
                     <field name="survey_id" invisible="not context.get('show_survey_field')" readonly="1"/>
                     <div class="float-end d-flex flex-column text-center" invisible="not is_page">
@@ -109,12 +110,35 @@
                                         <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
                                     </div>
                                 </div>
+                                <!-- Scale -->
+                                <div invisible="question_type != 'scale'">
+                                    <span>Do you like it?</span><br/>
+                                    <div class="btn-group w-100" role="group" aria-label="Scale">
+                                        <a role="button" type="button" class="btn btn-secondary disabled o_preview_questions_choice">1</a>
+                                        <a role="button" type="button" class="btn btn-secondary disabled o_preview_questions_choice">2</a>
+                                        <a role="button" type="button" class="btn btn-secondary disabled o_preview_questions_choice">3</a>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <div>Label</div>
+                                        <div>Label</div>
+                                        <div>Label</div>
+                                    </div>
+                                </div>
                             </div>
                         </group>
                     </group>
                     <notebook>
                         <page string="Answers" name="answers" invisible="is_page or question_type == 'text_box' or scoring_type == 'no_scoring' and question_type in ['numerical_box', 'date', 'datetime']">
                             <group>
+                                <group invisible="question_type != 'scale'">
+                                    <field name="scale_min" placeholder="Scale Minimum Value (0 to 10)"/>
+                                    <field name="scale_max" placeholder="Scale Maximum Value (0 to 10)"/>
+                                </group>
+                                <group invisible="question_type != 'scale'">
+                                    <field name="scale_min_label" placeholder="Not likely at all"/>
+                                    <field name="scale_mid_label" placeholder="Neutral"/>
+                                    <field name="scale_max_label" placeholder="Extremely likely"/>
+                                </group>
                                 <group invisible="question_type not in ['char_box', 'numerical_box', 'date', 'datetime']">
                                     <field name="answer_numerical_box" string="Correct Answer" class="oe_inline"
                                         invisible="question_type != 'numerical_box'"
@@ -143,14 +167,14 @@
                             <field name="suggested_answer_ids" context="{'default_question_id': id}" invisible="question_type not in ['simple_choice', 'multiple_choice', 'matrix']">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="value" string="Choices"/>
+                                    <field name="value" string="Choices" required="not value_image"/>
                                     <field name="is_correct"
                                         column_invisible="parent.scoring_type == 'no_scoring' or parent.question_type == 'matrix'"/>
                                     <field name="answer_score"
                                         column_invisible="parent.scoring_type == 'no_scoring' or parent.question_type == 'matrix'"/>
-                                    <field name="value_image_filename" column_invisible="True"/>
+                                    <field name="value_image_filename" column_invisible="not parent.has_image_only_suggested_answer"/>
                                     <field name="value_image" width="200px" filename="value_image_filename" options="{'accepted_file_extensions': 'image/*'}"
-                                        column_invisible="parent.question_type == 'matrix'"/>
+                                           column_invisible="parent.question_type in ['matrix', 'scale']" required="not value"/>
                                 </tree>
                             </field>
 
@@ -168,7 +192,7 @@
                         </page>
                         <page string="Options" name="options" invisible="is_page">
                             <group>
-                                <group string="Answers">
+                                <group string="Answers" invisible="question_type == 'scale'">
                                     <!-- Global validation setting -->
                                     <field name="validation_required"
                                            invisible="question_type not in ['char_box', 'numerical_box', 'date', 'datetime']"/>
@@ -237,12 +261,22 @@
                                         placeholder="This question requires an answer."/>
                                 </group>
                                 <group string="Live Sessions">
-                                    <label for="is_time_limited" string="Question Time Limit"/>
-                                    <div>
-                                        <field name="is_time_limited" nolabel="1"/>
+                                    <field name="is_time_customized" invisible="True"/>
+                                    <field name="session_available" invisible="True"/>
+                                    <p class="text-muted" colspan="2" invisible="session_available">
+                                        Time limits are only available for Live Sessions.
+                                    </p>
+                                    <label for="is_time_limited" string="Time Limit (seconds)" invisible="not session_available"/>
+                                    <div invisible="not session_available">
+                                        <field name="is_time_limited" nolabel="1" class="oe_inline"
+                                            widget="boolean_update_flag"
+                                            options="{'flagFieldName': 'is_time_customized'}"
+                                            context="{'referenceValue': parent.session_speed_rating}"/>
                                         <field name="time_limit" nolabel="1" class="oe_inline"
+                                            widget="integer_update_flag"
+                                            options="{'flagFieldName': 'is_time_customized'}"
+                                            context="{'referenceValue': parent.session_speed_rating_time_limit}"
                                             invisible="not is_time_limited" />
-                                        <span invisible="not is_time_limited"> seconds</span>
                                     </div>
                                 </group>
                             </group>

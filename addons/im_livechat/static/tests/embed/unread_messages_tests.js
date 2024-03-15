@@ -1,6 +1,8 @@
+const test = QUnit.test; // QUnit.test()
+
 import { rpc } from "@web/core/network/rpc";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
 
@@ -11,7 +13,7 @@ import { browser } from "@web/core/browser/browser";
 
 QUnit.module("thread service");
 
-QUnit.test("new message from operator displays unread counter", async () => {
+test("new message from operator displays unread counter", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
@@ -46,7 +48,7 @@ QUnit.test("new message from operator displays unread counter", async () => {
             },
             failures: true, // called because mail/core/web is loaded in qunit bundle
             systray_get_activities: true, // called because mail/core/web is loaded in qunit bundle
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
@@ -60,7 +62,7 @@ QUnit.test("new message from operator displays unread counter", async () => {
     await contains(".o-mail-ChatWindow-counter", { text: "1" });
 });
 
-QUnit.test("focus on unread livechat marks it as read", async () => {
+test("focus on unread livechat marks it as read", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
@@ -95,7 +97,7 @@ QUnit.test("focus on unread livechat marks it as read", async () => {
             },
             failures: true, // called because mail/core/web is loaded in qunit bundle
             systray_get_activities: true, // called because mail/core/web is loaded in qunit bundle
-            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging

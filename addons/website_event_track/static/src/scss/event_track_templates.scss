@@ -26,10 +26,16 @@
 }
 
 .o_we_online_agenda {
+    $-events-spacing: $grid-gutter-width * 0.5;
+
+    border-top: $border-width solid transparent;
     overflow-x: auto;
+
     table {
         border-collapse: separate;
         border-spacing: 0em 0em;
+        font-size: .9em;
+
         tr {
             height: 15px;
             line-height: 1em;
@@ -43,7 +49,7 @@
         }
         th.active, td:not(.active) {
             border: 0px;
-            border-right: 1em solid $body-bg;
+            border-right: $-events-spacing solid $body-bg;
             vertical-align: middle;
             span {
                 word-break: break-word;
@@ -62,7 +68,7 @@
                 @if #{$size} != 1 {
                     &.o_location_size_#{$size} {
                         width: calc(100% / (#{$size} - 1));
-                        min-width: 150px;
+                        min-width: 220px;
                     }
                 } @else {
                     width: calc(100%);
@@ -70,10 +76,13 @@
             }
 
             &.active {
+                --bg-opacity: 0.8;
+
                 z-index: 1;
                 position: sticky;
                 left: 0;
-                min-width: 100px;
+                white-space: nowrap;
+                backdrop-filter: blur(2px);
             }
             div.o_we_agenda_card_content {
                 height: 100%;
@@ -84,17 +93,12 @@
                     cursor: pointer;
                 }
             }
-            .badge {
-                height: fit-content;
-                max-width: 100%;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                font-size: 0.55em;
-                padding: 0.2em 0.5em;
-                border-radius: 1em;
-                line-height: 10px;
+
+            .o_we_agenda_card_filter_badges .badge {
+                padding: $btn-padding-y $btn-padding-x;
+                cursor: pointer;
             }
+            
             &.invisible {
                 visibility: visible !important;
                 opacity: 0.3;
@@ -150,13 +154,35 @@
     }
 }
 
-/*
- * EVENT TOOL: DATE
- */
-.o_wevent_event {
+.o_weagenda_index {
     .o_we_track_day_header {
-        a.collapsed {
-            transform: rotate(-90deg);
-        }
+        z-index: 2;
+    }
+
+    .o_we_online_agenda_overlay {
+        @include o-position-absolute(0, 0, 63px);
+        background-image: linear-gradient(90deg, rgba($body-color, 0), rgba($body-color, 0.1), rgba($body-color, 0.3));
+        opacity: 0;
+        transition: opacity .1s ease;
+    }
+
+    .o_we_online_agenda_has_scroll {
+        border-top-color: $border-color;
+    }
+
+    .o_we_online_agenda_has_content_hidden + .o_we_online_agenda_overlay {
+        opacity: 1;
+        transition: opacity .5s ease;
+    }
+
+
+    .o_we_online_agenda_has_scroll.o_we_online_agenda_is_scrolling + .o_we_online_agenda_overlay {
+        opacity: .5;
+    }
+}
+
+.o_wevent_event {
+    .o_wesession_list li.border-bottom:has(.collapse.show) {
+        border-bottom-color: transparent !important;
     }
 }

@@ -2,7 +2,7 @@
 
 {
     'name': 'Discuss',
-    'version': '1.16',
+    'version': '1.17',
     'category': 'Productivity/Discuss',
     'sequence': 145,
     'summary': 'Chat, mail gateway and private channels',
@@ -123,12 +123,12 @@ For more specific needs, you may also assign custom-defined actions
     ],
     'installable': True,
     'application': True,
+    'post_init_hook': '_mail_post_init',
     'assets': {
         'web._assets_primary_variables': [
             'mail/static/src/**/primary_variables.scss',
         ],
         'web.assets_backend': [
-            'mail/static/src/model/**/*',
             # depends on BS variables, can't be loaded in assets_primary or assets_secondary
             'mail/static/src/scss/variables/derived_variables.scss',
             'mail/static/src/scss/*.scss',

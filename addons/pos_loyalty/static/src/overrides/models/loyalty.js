@@ -993,15 +993,17 @@ patch(Order.prototype, {
                     continue;
                 }
                 let unclaimedQty;
-                if (reward.reward_type === "product" && !reward.multi_product) {
-                    const product = reward.reward_product_ids[0];
-                    unclaimedQty = this._computeUnclaimedFreeProductQty(
-                        reward,
-                        couponProgram.coupon_id,
-                        product,
-                        points
-                    );
-                    if (unclaimedQty <= 0) {
+                if (reward.reward_type === "product") {
+                    if (!reward.multi_product) {
+                        const product = reward.reward_product_ids[0];
+                        unclaimedQty = this._computeUnclaimedFreeProductQty(
+                            reward,
+                            couponProgram.coupon_id,
+                            product,
+                            points
+                        );
+                    }
+                    if (!unclaimedQty || unclaimedQty <= 0) {
                         continue;
                     }
                 }
@@ -1379,7 +1381,10 @@ patch(Order.prototype, {
         }
         let freeQty;
         if (reward.program_id.trigger == "auto") {
-            if (this._isRewardProductPartOfRules(reward, product)) {
+            if (
+                this._isRewardProductPartOfRules(reward, product) &&
+                reward.program_id.applies_on !== "future"
+            ) {
                 // OPTIMIZATION: Pre-calculate the factors for each reward-product combination during the loading.
                 // For points not based on quantity, need to normalize the points to compute free quantity.
                 const appliedRulesIds = this.couponPointChanges[coupon_id].appliedRules;
@@ -1439,7 +1444,10 @@ patch(Order.prototype, {
     },
     _computePotentialFreeProductQty(reward, product, remainingPoints) {
         if (reward.program_id.trigger == "auto") {
-            if (this._isRewardProductPartOfRules(reward, product)) {
+            if (
+                this._isRewardProductPartOfRules(reward, product) &&
+                reward.program_id.applies_on !== "future"
+            ) {
                 const line = this.get_orderlines().find(
                     (line) => line.reward_product_id === product.id
                 );

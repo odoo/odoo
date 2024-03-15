@@ -39,4 +39,4 @@ export const systrayItem = {
     isDisplayed: env => env.services.website.currentWebsite && env.services.website.currentWebsite.metadata.editableInBackend,
 };
 
-registry.category("website_systray").add("EditInBackend", systrayItem, { sequence: 9 });
+registry.category("website_systray").add("EditInBackend", systrayItem, { sequence: 10 });

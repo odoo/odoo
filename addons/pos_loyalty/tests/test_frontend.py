@@ -1346,3 +1346,111 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.open_ui()
         self.start_pos_tour("ExpiredEWalletProgramTour")
+
+    def test_loyalty_program_with_tagged_free_product(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        free_product_tag = self.env['product.tag'].create({'name': 'Free Product'})
+
+        self.env['product.product'].create([
+            {
+                'name': 'Free Product A',
+                'type': 'product',
+                'list_price': 1,
+                'available_in_pos': True,
+                'taxes_id': False,
+                'product_tag_ids': [(4, free_product_tag.id)],
+            },
+            {
+                'name': 'Free Product B',
+                'type': 'product',
+                'list_price': 1,
+                'available_in_pos': True,
+                'taxes_id': False,
+                'product_tag_ids': [(4, free_product_tag.id)],
+            },
+            {
+                'name': 'Product Test',
+                'type': 'product',
+                'list_price': 1,
+                'available_in_pos': True,
+                'taxes_id': False,
+            }
+        ])
+
+        self.env['loyalty.program'].create({
+            'name': 'Free Product with Tag',
+            'program_type': 'loyalty',
+            'applies_on': 'both',
+            'trigger': 'auto',
+            'portal_visible': True,
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'unit',
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_tag_id': free_product_tag.id,
+                'reward_product_qty': 1,
+                'required_points': 1,
+            })],
+        })
+
+        self.env['res.partner'].create({'name': 'AAA Partner'})
+        self.main_pos_config.open_ui()
+        self.start_pos_tour("PosLoyaltyTour10")
+
+    def test_loyalty_program_with_next_order_coupon_free_product(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        free_product = self.env['product.product'].create({
+                'name': 'Free Product',
+                'type': 'product',
+                'list_price': 1,
+                'available_in_pos': True,
+                'taxes_id': False,
+            })
+        self.env['product.product'].create({
+                'name': 'Product Test',
+                'type': 'product',
+                'list_price': 50,
+                'available_in_pos': True,
+                'taxes_id': False,
+            })
+
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Next Order Coupon Program',
+            'program_type': 'next_order_coupons',
+            'applies_on': 'future',
+            'trigger': 'auto',
+            'portal_visible': True,
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'unit',
+                'minimum_amount': 100,
+                'minimum_qty': 0,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': free_product.id,
+                'reward_product_qty': 1,
+                'required_points': 1,
+            })],
+        })
+
+        self.env['res.partner'].create({'name': 'AAA Partner'})
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_user').id),
+            ]
+        })
+        self.main_pos_config.open_ui()
+        self.start_pos_tour("PosLoyaltyTour11.1")
+
+        coupon = loyalty_program.coupon_ids
+        self.assertEqual(len(coupon), 1, "Coupon not generated")
+        self.assertEqual(coupon.points, 3, "Coupon not generated with correct points")
+        coupon.write({"code": "123456"})
+
+        self.main_pos_config.open_ui()
+        self.start_pos_tour("PosLoyaltyTour11.2")
+        self.assertEqual(coupon.points, 0, "Coupon not used")

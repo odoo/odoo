@@ -306,10 +306,8 @@ class TestUsers2(TransactionCase):
             if fname.startswith(('in_group_', 'sel_groups_'))
         )
 
-        # check that the reified field name has no effect in fields
-        res_with_reified = User.read_group([], fnames + [reified_fname], ['company_id'])
-        res_without_reified = User.read_group([], fnames, ['company_id'])
-        self.assertEqual(res_with_reified, res_without_reified, "Reified fields should be ignored in read_group")
+        # check that the reified field name is not aggregable
+        self.assertFalse(User.fields_get([reified_fname], ['aggregator'])[reified_fname].get('aggregator'))
 
         # check that the reified fields are not considered invalid in search_read
         # and are ignored

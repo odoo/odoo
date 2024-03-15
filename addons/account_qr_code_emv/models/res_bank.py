@@ -4,7 +4,7 @@ import re
 
 from odoo import _, api, fields, models
 from odoo.tools.misc import remove_accents
-
+from odoo.tools import float_is_zero
 from odoo.addons.account_qr_code_emv.const import CURRENCY_MAPPING
 
 
@@ -52,7 +52,10 @@ class ResPartnerBank(models.Model):
     def _get_qr_code_vals_list(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         tag, merchant_account_info = self._get_merchant_account_info()
         currency_code = CURRENCY_MAPPING[currency.name]
-        amount = amount.is_integer() and int(amount) or amount
+        if not float_is_zero(amount, currency.rounding):
+            amount = amount.is_integer() and int(amount) or amount
+        else:
+            amount = None
         merchant_name = self.partner_id.name and self._remove_accents(self.partner_id.name)[:25] or 'NA'
         merchant_city = self.partner_id.city and self._remove_accents(self.partner_id.city)[:15] or ''
         comment = structured_communication or free_communication or ''
@@ -110,3 +113,10 @@ class ResPartnerBank(models.Model):
         rslt = super()._get_available_qr_methods()
         rslt.append(('emv_qr', _("EMV Merchant-Presented QR-code"), 30))
         return rslt
+
+    def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
+        """ Return an error for emv_qr if the account's country does no match any methods found in inheriting modules."""
+        if qr_method == 'emv_qr':
+            return _("No EMV QR Code is available for the country of the account %(account_number)s.", account_number=self.acc_number)
+
+        return super()._get_error_messages_for_qr(qr_method, debtor_partner, currency)

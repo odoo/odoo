@@ -196,13 +196,23 @@ class ResPartnerBank(models.Model):
                and int(''.join(str(int(x, 36)) for x in clean(reference[4:] + reference[:4], ' -.,/:').upper().strip())) % 97 == 1
                # see https://github.com/arthurdejong/python-stdnum/blob/master/stdnum/iso11649.py
 
+    def _l10n_ch_qr_debtor_check(self, debtor_partner):
+        """  This method should be used in _get_error_messages_for_qr and _check_for_qr_code_errors
+             It allows is to permit to set this qr method if a partner is not yet provided when executing _get_error_messages_for_qr
+             while preventing to print qr code when executing _check_for_qr_code_errors if the partner is not provided
+        """
+        if not debtor_partner or debtor_partner.country_id.code not in ('CH', 'LI'):
+            return _("The debtor partner's address isn't located in Switzerland.")
+        return False
+
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         def _get_error_for_ch_qr():
             error_messages = [_("The Swiss QR code could not be generated for the following reason(s):")]
             if self.acc_type != 'iban':
                 error_messages.append(_("The account type isn't QR-IBAN or IBAN."))
-            if not debtor_partner or debtor_partner.country_id.code not in ('CH', 'LI'):
-                error_messages.append(_("The debtor partner's address isn't located in Switzerland."))
+            debtor_check = self._l10n_ch_qr_debtor_check(debtor_partner)
+            if debtor_partner and debtor_check:
+                error_messages.append(debtor_check)
             if currency.id not in (self.env.ref('base.EUR').id, self.env.ref('base.CHF').id):
                 error_messages.append(_("The currency isn't EUR nor CHF."))
             return '\r\n'.join(error_messages) if len(error_messages) > 1 else None
@@ -227,6 +237,10 @@ class ResPartnerBank(models.Model):
 
             if self.l10n_ch_qr_iban and not self._is_qr_reference(structured_communication):
                 return _("When using a QR-IBAN as the destination account of a QR-code, the payment reference must be a QR-reference.")
+
+            debtor_check = self._l10n_ch_qr_debtor_check(debtor_partner)
+            if debtor_check:
+                return debtor_check
 
         return super()._check_for_qr_code_errors(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 

@@ -635,7 +635,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             assert.equal(cell.value, 42669);
 
             hasAccessRights = false;
-            model.dispatch("REFRESH_ODOO_LIST", { listId: "1" });
+            model.dispatch("REFRESH_ALL_DATA_SOURCES");
             await waitForDataLoaded(model);
             headerCell = getEvaluatedCell(model, "A3");
             cell = getEvaluatedCell(model, "C3");

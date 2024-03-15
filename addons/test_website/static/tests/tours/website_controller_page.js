@@ -19,7 +19,7 @@ wTourUtils.registerWebsitePreviewTour('website_controller_page_listing_layout', 
     },
     {
         content: "records are listed in grid mode by default",
-        trigger: 'iframe .o_website_grid',
+        trigger: ':iframe .o_website_grid',
         run: () => {
             const iframeDocument = document.querySelector('.o_website_preview .o_iframe').contentDocument;
             // grid option is selected by default in the switch
@@ -42,7 +42,7 @@ wTourUtils.registerWebsitePreviewTour('website_controller_page_listing_layout', 
     },
     {
         content: "records are now displayed in list mode",
-        trigger: 'iframe .o_website_list',
+        trigger: ':iframe .o_website_list',
         run: () => {
             const iframeDocument = document.querySelector('.o_website_preview .o_iframe').contentDocument;
             // list option is now selected in the switch
@@ -58,7 +58,7 @@ wTourUtils.registerWebsitePreviewTour('website_controller_page_default_page_chec
 }, () => [
     {
         content: "records are listed in list mode by default",
-        trigger: 'iframe .o_website_list',
+        trigger: ':iframe .o_website_list',
         run: () => {
             const iframeDocument = document.querySelector('.o_website_preview .o_iframe').contentDocument;
             // list option is selected by default in the switch

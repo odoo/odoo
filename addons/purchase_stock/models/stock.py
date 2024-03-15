@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
 from odoo.osv.expression import AND
-from dateutil.relativedelta import relativedelta
 
 
 class StockPicking(models.Model):
@@ -19,7 +20,7 @@ class StockWarehouse(models.Model):
 
     buy_to_resupply = fields.Boolean('Buy to Resupply', default=True,
                                      help="When products are bought, they can be delivered to this warehouse")
-    buy_pull_id = fields.Many2one('stock.rule', 'Buy rule')
+    buy_pull_id = fields.Many2one('stock.rule', 'Buy rule', copy=False)
 
     def _generate_global_route_rules_values(self):
         rules = super()._generate_global_route_rules_values()
@@ -215,14 +216,13 @@ class StockLot(models.Model):
 
     @api.depends('name')
     def _compute_purchase_order_ids(self):
+        purchase_orders = defaultdict(lambda: self.env['purchase.order'])
+        for move_line in self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('state', '=', 'done')]):
+            move = move_line.move_id
+            if move.picking_id.location_id.usage in ('supplier', 'transit') and move.purchase_line_id.order_id:
+                purchase_orders[move_line.lot_id.id] |= move.purchase_line_id.order_id
         for lot in self:
-            stock_moves = self.env['stock.move.line'].search([
-                ('lot_id', '=', lot.id),
-                ('state', '=', 'done')
-            ]).mapped('move_id')
-            stock_moves = stock_moves.search([('id', 'in', stock_moves.ids)]).filtered(
-                lambda move: move.picking_id.location_id.usage == 'supplier' and move.state == 'done')
-            lot.purchase_order_ids = stock_moves.mapped('purchase_line_id.order_id')
+            lot.purchase_order_ids = purchase_orders[lot.id]
             lot.purchase_order_count = len(lot.purchase_order_ids)
 
     def action_view_po(self):

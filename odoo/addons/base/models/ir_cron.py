@@ -70,6 +70,14 @@ class ir_cron(models.Model):
     lastcall = fields.Datetime(string='Last Execution Date', help="Previous time the cron ran successfully, provided to the job through the context on the `lastcall` key")
     priority = fields.Integer(default=5, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
 
+    _sql_constraints = [
+        (
+            'check_strictly_positive_interval',
+            'CHECK(interval_number > 0)',
+            'The interval number must be a strictly positive number.'
+        ),
+    ]
+
     @api.depends('ir_actions_server_id.name')
     def _compute_cron_name(self):
         for cron in self.with_context(lang='en_US'):
@@ -91,10 +99,13 @@ class ir_cron(models.Model):
         return super(ir_cron, self).default_get(fields_list)
 
     def method_direct_trigger(self):
+        self.ensure_one()
         self.check_access_rights('write')
-        for cron in self:
-            cron.with_user(cron.user_id).with_context({'lastcall': cron.lastcall}).ir_actions_server_id.run()
-            cron.lastcall = fields.Datetime.now()
+        self._try_lock()
+        _logger.info('Manually starting job `%s`.', self.name)
+        self.with_user(self.user_id).with_context({'lastcall': self.lastcall}).ir_actions_server_id.run()
+        _logger.info('Job `%s` done.', self.name)
+        self.lastcall = fields.Datetime.now()
         return True
 
     @classmethod

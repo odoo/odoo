@@ -28,7 +28,7 @@ function changeTemplate(templateKey) {
         wTourUtils.changeOption(optionBlock, `we-button[data-select-data-attribute="website_sale.${templateKey}"]`),
         {
             content: 'Check the template is applied',
-            trigger: `iframe .s_dynamic_snippet_products.${templateClass} .carousel`,
+            trigger: `:iframe .s_dynamic_snippet_products.${templateClass} .carousel`,
             run: () => null, // It's a check
         },
     ];
@@ -51,7 +51,7 @@ wTourUtils.registerWebsitePreviewTour('website_sale.snippet_products', {
         ...changeTemplate('dynamic_filter_template_product_product_add_to_cart'),
         ...wTourUtils.clickOnSave(),
         {
-            trigger: "iframe .s_dynamic_snippet_products .o_carousel_product_card_body .js_add_cart",
+            trigger: ":iframe .s_dynamic_snippet_products .o_carousel_product_card_body .js_add_cart",
             run: 'click',
         },
         wSaleTourUtils.goToCart({backend: true}),
@@ -80,7 +80,7 @@ wTourUtils.registerWebsitePreviewTour('website_sale.products_snippet_recently_vi
         }
     },
     {
-        trigger: 'iframe .s_dynamic_snippet_products .o_carousel_product_card .js_remove',
+        trigger: ':iframe .s_dynamic_snippet_products .o_carousel_product_card .js_remove',
         run: 'click',
     },
 ]);

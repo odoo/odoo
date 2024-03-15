@@ -52,6 +52,8 @@ import {
  *
  * @typedef {import("./dom").QueryOptions} QueryOptions
  *
+ * @typedef {{ target: Target }} SelectOptions
+ *
  * @typedef {"bottom" | "left" | "right" | "top"} Side
  *
  * @typedef {import("./dom").Target} Target
@@ -74,7 +76,7 @@ const { console, DataTransfer, document, Math, Object, String, Touch, TypeError 
 
 /**
  * @param {EventTarget} target
- * @param {string[]} eventSequence
+ * @param {EventType[]} eventSequence
  * @param {EventInit} eventInit
  */
 const dispatchEventSequence = (target, eventSequence, eventInit) => {
@@ -88,6 +90,20 @@ const dispatchEventSequence = (target, eventSequence, eventInit) => {
         }
     }
     return false;
+};
+
+/**
+ * @param {Iterable<Event>} events
+ * @param {EventType} eventType
+ * @param {EventInit} eventInit
+ */
+const dispatchRelatedEvents = (events, eventType, eventInit) => {
+    for (const event of events) {
+        if (!event.target || isPrevented(event)) {
+            break;
+        }
+        dispatch(event.target, eventType, eventInit);
+    }
 };
 
 /**
@@ -214,6 +230,8 @@ const getEventConstructor = (eventType) => {
             return [DragEvent, mapBubblingEvent];
 
         // Input events
+        case "beforeinput":
+            return [InputEvent, mapCancelableInputEvent];
         case "input":
             return [InputEvent, mapInputEvent];
 
@@ -405,14 +423,18 @@ const logEvents = (actionName) => {
 
 /**
  * @param {KeyStrokes} keyStrokes
+ * @param {KeyboardEventInit} [options]
  * @returns {KeyboardEventInit}
  */
-const parseKeyStrokes = (keyStrokes) =>
+const parseKeyStrokes = (keyStrokes, options) =>
     (isIterable(keyStrokes) ? [...keyStrokes] : [keyStrokes])
         .flatMap((keyStroke) => keyStroke.split(/\s*[,+]\s*/))
         .map((key) => {
             const lower = key.toLowerCase();
-            return { key: lower.length === 1 ? key : KEY_ALIASES[lower] || key };
+            return {
+                ...options,
+                key: lower.length === 1 ? key : KEY_ALIASES[lower] || key,
+            };
         });
 
 /**
@@ -436,12 +458,12 @@ const registerForChange = (target, initialValue, confirmNow) => {
         removeChangeTargetListeners();
 
         if (target.value !== initialValue) {
-            dispatch(target, "change");
+            afterNextDispatch = () => dispatch(target, "change");
         }
     };
 
-    const isInput = getTag(target) === "input";
-    if (isInput) {
+    const canTriggerEnter = getTag(target) === "input";
+    if (canTriggerEnter) {
         changeTargetListeners.push(
             on(target, "keydown", (ev) => !isPrevented(ev) && ev.key === "Enter" && triggerChange())
         );
@@ -454,13 +476,11 @@ const registerForChange = (target, initialValue, confirmNow) => {
 
     if (confirmNow) {
         // Triggers confirm action right away
-        if (isInput) {
+        if (canTriggerEnter) {
             _press(target, { key: "Enter" });
         } else {
-            const parent = target.parentElement || getDocument(target).body;
-            _click(parent, {
-                position: { x: 1, y: 1 },
-                relative: true,
+            _click(getDocument(target).body, {
+                position: { x: 0, y: 0 },
             });
         }
     }
@@ -505,7 +525,9 @@ const removeChangeTargetListeners = () => {
  * @param {HTMLElement | null} target
  */
 const setPointerDownTarget = (target) => {
-    runTime.previousPointerDownTarget = runTime.currentPointerDownTarget;
+    if (runTime.currentPointerDownTarget) {
+        runTime.previousPointerDownTarget = runTime.currentPointerDownTarget;
+    }
     runTime.currentPointerDownTarget = target;
     runTime.canStartDrag = false;
 };
@@ -519,7 +541,14 @@ const setPointerTarget = (target, options) => {
     runTime.currentPointerTarget = target;
 
     if (runTime.currentPointerTarget !== runTime.previousPointerTarget && runTime.canStartDrag) {
-        runTime.isDragging = true;
+        /**
+         * Special action: drag start
+         *  On: unprevented 'pointerdown' on a draggable element (DESKTOP ONLY)
+         *  Do: triggers a 'dragstart' event
+         */
+        const dragStartEvent = dispatch(runTime.previousPointerTarget, "dragstart");
+
+        runTime.isDragging = !isPrevented(dragStartEvent);
         runTime.canStartDrag = false;
     }
 
@@ -685,22 +714,37 @@ const _click = (target, options) => {
 const _fill = (target, value, options) => {
     const initialValue = target.value;
 
-    if (getTag(target) === "input" && target.type === "file") {
-        const dataTransfer = new DataTransfer();
-        const files = ensureArray(value);
-        if (files.length > 1 && !target.multiple) {
-            throw new HootDomError(`input[type="file"] does not support multiple files`);
-        }
-        for (const file of files) {
-            if (!(file instanceof File)) {
-                throw new TypeError(`file input only accept 'File' objects`);
-            }
-            dataTransfer.items.add(file);
-        }
-        target.files = dataTransfer.files;
+    if (getTag(target) === "input") {
+        switch (target.type) {
+            case "file": {
+                const dataTransfer = new DataTransfer();
+                const files = ensureArray(value);
+                if (files.length > 1 && !target.multiple) {
+                    throw new HootDomError(`input[type="file"] does not support multiple files`);
+                }
+                for (const file of files) {
+                    if (!(file instanceof File)) {
+                        throw new TypeError(`file input only accept 'File' objects`);
+                    }
+                    dataTransfer.items.add(file);
+                }
+                target.files = dataTransfer.files;
 
-        dispatch(target, "change");
-        return;
+                dispatch(target, "change");
+                return;
+            }
+            case "range": {
+                const numberValue = Number(value);
+                if (Number.isNaN(numberValue)) {
+                    throw new TypeError(`input[type="range"] only accept 'number' values`);
+                }
+
+                target.value = String(numberValue);
+                dispatch(target, "input");
+                dispatch(target, "change");
+                return;
+            }
+        }
     }
 
     if (options?.instantly) {
@@ -761,12 +805,11 @@ const _hover = (target, options) => {
                 ["pointerout", !hasTouch() && "mouseout"],
                 leaveEventInit
             );
-            for (const element of getDifferentParents(current, previous)) {
-                dispatchEventSequence(
-                    element,
-                    ["pointerleave", !hasTouch() && "mouseleave"],
-                    leaveEventInit
-                );
+            const leaveEvents = getDifferentParents(current, previous).map((element) =>
+                dispatch(element, "pointerleave", leaveEventInit)
+            );
+            if (!hasTouch()) {
+                dispatchRelatedEvents(leaveEvents, "mouseleave", leaveEventInit);
             }
         }
     }
@@ -790,12 +833,11 @@ const _hover = (target, options) => {
                     ["pointerover", !hasTouch() && "mouseover"],
                     enterEventInit
                 );
-                for (const element of getDifferentParents(previous, current)) {
-                    dispatchEventSequence(
-                        element,
-                        ["pointerenter", !hasTouch() && "mouseenter"],
-                        enterEventInit
-                    );
+                const enterEvents = getDifferentParents(previous, current).map((element) =>
+                    dispatch(element, "pointerenter", enterEventInit)
+                );
+                if (!hasTouch()) {
+                    dispatchRelatedEvents(enterEvents, "mouseenter", enterEventInit);
                 }
             }
             dispatchEventSequence(
@@ -926,6 +968,10 @@ const _keyDown = (target, eventInit) => {
                 // Get selection from window
                 const text = globalThis.getSelection().toString();
                 globalThis.navigator.clipboard.writeTextSync(text);
+
+                dispatch(target, "copy", {
+                    clipboardData: eventInit.dataTransfer || new DataTransfer(),
+                });
             }
             break;
         }
@@ -957,6 +1003,10 @@ const _keyDown = (target, eventInit) => {
                 nextValue = value;
 
                 inputType = "insertFromPaste";
+
+                dispatch(target, "paste", {
+                    clipboardData: eventInit.dataTransfer || new DataTransfer(),
+                });
             }
             break;
         }
@@ -973,6 +1023,10 @@ const _keyDown = (target, eventInit) => {
 
                 nextValue = deleteSelection(target);
                 inputType = "deleteByCut";
+
+                dispatch(target, "cut", {
+                    clipboardData: eventInit.dataTransfer || new DataTransfer(),
+                });
             }
             break;
         }
@@ -980,7 +1034,7 @@ const _keyDown = (target, eventInit) => {
 
     if (target.value !== nextValue) {
         target.value = nextValue;
-        dispatch(target, "input", {
+        dispatchEventSequence(target, ["beforeinput", "input"], {
             data: inputData,
             inputType,
         });
@@ -1054,13 +1108,7 @@ const _pointerDown = (target, options) => {
     triggerFocus(target);
 
     if (eventInit.button === 0 && !hasTouch() && runTime.currentPointerDownTarget.draggable) {
-        /**
-         * Special action: drag start
-         *  On: unprevented 'pointerdown' on a draggable element (DESKTOP ONLY)
-         *  Do: triggers a 'dragstart' event
-         */
-        const dragStartEvent = dispatch(target, "dragstart", eventInit);
-        runTime.canStartDrag = !isPrevented(dragStartEvent);
+        runTime.canStartDrag = true;
     } else if (eventInit.button === 2) {
         /**
          * Special action: context menu
@@ -1115,6 +1163,9 @@ const _pointerUp = (target, options) => {
     }
 
     setPointerDownTarget(null);
+    if (runTime.currentPointerDownTimeout) {
+        globalThis.clearTimeout(runTime.currentPointerDownTimeout);
+    }
     runTime.currentPointerDownTimeout = globalThis.setTimeout(() => {
         // Use `globalThis.setTimeout` to potentially make use of the mock timeouts
         // since the events run in the same temporal context as the tests
@@ -1198,6 +1249,8 @@ const LOG_COLORS = {
     lightBlue: "#9bbbdc",
     reset: "inherit",
 };
+/** @type {(() => void) | null} */
+let afterNextDispatch = null;
 let allowLogs = false;
 /** @type {Event[]} */
 let currentEvents = [];
@@ -1308,6 +1361,14 @@ const mapNonCancelableTouchEvent = (eventInit) => ({
 
 // Keyboard & input event mappers
 // ------------------------------
+
+/**
+ * @param {InputEventInit} [eventInit]
+ */
+const mapCancelableInputEvent = (eventInit) => ({
+    ...mapInputEvent(eventInit),
+    cancelable: true,
+});
 
 /**
  * @param {InputEventInit} [eventInit]
@@ -1493,6 +1554,12 @@ export function dispatch(target, type, eventInit) {
 
     target.dispatchEvent(event);
     currentEvents.push(event);
+
+    if (afterNextDispatch) {
+        const callback = afterNextDispatch;
+        afterNextDispatch = null;
+        callback();
+    }
 
     return event;
 }
@@ -1700,12 +1767,13 @@ export function hover(target, options) {
  *  element.
  *
  * @param {KeyStrokes} keyStrokes
+ * @param {KeyboardEventInit} [options]
  * @returns {Event[]}
  * @example
  *  keyDown(" "); // Space key
  */
-export function keyDown(keyStrokes) {
-    const eventInits = parseKeyStrokes(keyStrokes);
+export function keyDown(keyStrokes, options) {
+    const eventInits = parseKeyStrokes(keyStrokes, options);
     for (const eventInit of eventInits) {
         _keyDown(getActiveElement(), eventInit);
     }
@@ -1720,12 +1788,13 @@ export function keyDown(keyStrokes) {
  *  - `keyup`
  *
  * @param {KeyStrokes} keyStrokes
+ * @param {KeyboardEventInit} [options]
  * @returns {Event[]}
  * @example
  *  keyUp("Enter");
  */
-export function keyUp(keyStrokes) {
-    const eventInits = parseKeyStrokes(keyStrokes);
+export function keyUp(keyStrokes, options) {
+    const eventInits = parseKeyStrokes(keyStrokes, options);
     for (const eventInit of eventInits) {
         _keyUp(getActiveElement(), eventInit);
     }
@@ -1841,6 +1910,7 @@ export function pointerUp(target, options) {
  *  - `keyup`
  *
  * @param {KeyStrokes} keyStrokes
+ * @param {KeyboardEventInit} [options]
  * @returns {Event[]}
  * @example
  *  pointerDown("button[type=submit]"); // Moves focus to <button>
@@ -1850,8 +1920,8 @@ export function pointerUp(target, options) {
  * @example
  *  keyDown(["ctrl", "v"]); // Pastes current clipboard content
  */
-export function press(keyStrokes) {
-    const eventInits = parseKeyStrokes(keyStrokes);
+export function press(keyStrokes, options) {
+    const eventInits = parseKeyStrokes(keyStrokes, options);
     const activeElement = getActiveElement();
 
     for (const eventInit of eventInits) {
@@ -1882,6 +1952,22 @@ export function setInputFiles(files) {
     runTime.currentFileInput = null;
 
     return logEvents("setInputFiles");
+}
+
+/**
+ * @param {Target} target
+ * @param {number} value
+ * @param {PointerOptions} options
+ */
+export function setInputRange(target, value, options) {
+    const element = getFirstTarget(target, options);
+
+    _implicitHover(element, options);
+    _pointerDown(element, options);
+    _fill(element, value);
+    _pointerUp(element, options);
+
+    return logEvents("setInputRange");
 }
 
 /**
@@ -1970,18 +2056,26 @@ export function scroll(target, position, options) {
  *  - `change`
  *
  * @param {string | number | (string | number)[]} value
+ * @param {SelectOptions} [options]
  * @returns {Event[]}
  * @example
  *  click("select[name=country]"); // Focuses <select> element
  *  select("belgium"); // Selects the <option value="belgium"> element
  */
-export function select(value) {
-    const element = getActiveElement();
+export function select(value, options) {
+    const element = options?.target ? getFirstTarget(options.target) : getActiveElement();
     if (!hasTagName(element, "select")) {
         throw new HootDomError(`cannot call \`select()\`: target should be a <select> element`);
     }
 
+    if (options?.target) {
+        _implicitHover(element);
+        _pointerDown(element);
+    }
     _select(element, value);
+    if (options?.target) {
+        _pointerUp(element);
+    }
 
     return logEvents("select");
 }

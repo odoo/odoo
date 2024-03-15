@@ -1,3 +1,5 @@
+const test = QUnit.test; // QUnit.test()
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start, loadDefaultConfig } from "@im_livechat/../tests/embed/helper/test_utils";
@@ -10,7 +12,7 @@ import { contains } from "@web/../tests/utils";
 
 QUnit.module("chat request");
 
-QUnit.test("chat request opens chat window", async () => {
+test("chat request opens chat window", async () => {
     const pyEnv = await startServer();
     const livechatId = await loadDefaultConfig();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
@@ -25,7 +27,7 @@ QUnit.test("chat request opens chat window", async () => {
         livechat_channel_id: livechatId,
         livechat_operator_id: pyEnv.adminPartnerId,
     });
-    const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
+    const [channel] = pyEnv["discuss.channel"].search_read([["id", "=", channelId]]);
     patchWithCleanup(session.livechatData, {
         options: {
             ...session.livechatData.options,

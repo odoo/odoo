@@ -181,6 +181,7 @@
 
         <record id="act_project_project_2_project_task_all" model="ir.actions.act_window">
             <field name="name">Tasks</field>
+            <field name="path">tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
             <field name="domain">[('project_id', '=', active_id), ('display_in_project', '=', True)]</field>
@@ -507,10 +508,7 @@
                         </page>
                     </notebook>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" options="{'post_refresh':True}" groups="base.group_user"/>
-                        <field name="message_ids"/>
-                    </div>
+                    <chatter reload_on_follower="True"/>
                 </form>
             </field>
         </record>
@@ -702,7 +700,7 @@
                     <field name="milestone_id" invisible="not allow_milestones" context="{'default_project_id': project_id}" groups="project.group_project_milestone" optional="hide"/>
                     <field name="partner_id" optional="hide" widget="res_partner_many2one" invisible="not project_id" options="{'no_open': True}"/>
                     <field name="user_ids" optional="show" widget="many2many_avatar_user"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="show" column_invisible="context.get('default_project_id')"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show" column_invisible="context.get('default_project_id')" options="{'no_create': True}"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" invisible="state in ['1_done', '1_canceled']"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" context="{'project_id': project_id}"/>
@@ -1037,11 +1035,82 @@
             </field>
         </record>
 
+        <!-- Views for 'Tasks' stat button via Contact form -->
+        <record id="view_task_form_res_partner" model="ir.ui.view">
+            <field name="name">project.task.form.res.partner</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="view_task_form2"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//group//field[@name='project_id']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="quick_create_task_form_res_partner" model="ir.ui.view">
+            <field name="name">project.task.form.quick_create.res.partner</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="quick_create_task_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//group//field[@name='project_id']" position="attributes">
+                    <attribute name="required">1</attribute>
+                    <attribute name="placeholder"></attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_task_kanban_res_partner" model="ir.ui.view">
+            <field name="name">project.task.kanban.res.partner</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="view_task_kanban_inherit_all_task"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="quick_create_view">project.quick_create_task_form_res_partner</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record id="project_task_action_from_partner" model="ir.actions.act_window">
-            <field name="name">Tasks</field>
+            <field name="name">Partner's Tasks</field>
             <field name="res_model">project.task</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field name="search_view_id" ref="view_task_search_form"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No tasks found. Let's create one!
+                </p>
+                <p>
+                    Organize your tasks by dispatching them across the pipeline.<br/>
+                    Collaborate efficiently by chatting in real-time or via email.
+                </p>
+            </field>
+        </record>
+
+        <record id="project_task_action_from_partner_tree_view" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="project_task_action_from_partner"/>
+            <field name="view_id" ref="open_view_all_tasks_list_view"/>
+        </record>
+
+        <record id="project_task_action_from_partner_kanban_view" model="ir.actions.act_window.view">
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="project_task_action_from_partner"/>
+            <field name="view_id" ref="view_task_kanban_res_partner"/>
+        </record>
+
+        <record id="project_task_action_from_partner_form_view" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="act_window_id" ref="project_task_action_from_partner"/>
+            <field name="view_id" ref="view_task_form_res_partner"/>
+        </record>
+
+        <record id="project_task_action_from_partner_calendar_view" model="ir.actions.act_window.view">
+            <field name="view_mode">calendar</field>
+            <field name="act_window_id" ref="project_task_action_from_partner"/>
+            <field name="view_id" ref="view_task_all_calendar"/>
         </record>
 
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">

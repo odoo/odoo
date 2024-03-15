@@ -2,7 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 
 import { markRaw, reactive, toRaw, whenReady } from "@odoo/owl";
-import { cleanupObservers, watchKeys } from "@web/../lib/hoot-dom/helpers/dom";
+import { cleanupDOM, watchKeys } from "@web/../lib/hoot-dom/helpers/dom";
 import { enableEventLogs, on } from "@web/../lib/hoot-dom/helpers/events";
 import { isIterable, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
@@ -10,6 +10,7 @@ import {
     Markup,
     batch,
     createReporting,
+    deepEqual,
     ensureArray,
     ensureError,
     formatTechnical,
@@ -19,11 +20,11 @@ import {
     normalize,
 } from "../hoot_utils";
 import { MockMath, internalRandom } from "../mock/math";
-import { cleanupNavigator } from "../mock/navigator";
+import { cleanupNavigator, mockUserAgent } from "../mock/navigator";
 import { cleanupTime, setFrameRate } from "../mock/time";
-import { cleanupWindow, watchListeners } from "../mock/window";
+import { cleanupWindow, mockTouch, watchListeners } from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
-import { makeExpectFunction } from "./expect";
+import { makeExpect } from "./expect";
 import { makeFixtureManager } from "./fixture";
 import { logLevels, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
@@ -46,6 +47,15 @@ import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
  * @typedef {Suite | Test} Job
  *
  * @typedef {import("./job").JobConfig} JobConfig
+ *
+ * @typedef {{
+ *  browser?: import("../mock/navigator").Browser;
+ *  icon?: string;
+ *  label: string;
+ *  platform?: import("../mock/navigator").Platform;
+ *  tags?: string[];
+ *  touch?: boolean;
+ * }} Preset
  *
  * @typedef {{
  *  auto?: boolean;
@@ -117,6 +127,41 @@ const formatAssertions = (assertions) => {
     }
     return lines.join("\n");
 };
+
+/**
+ * @returns {Map<Job, Preset>}
+ */
+const getDefaultPresets = () =>
+    new Map([
+        [
+            "",
+            {
+                label: "No preset",
+            },
+        ],
+        [
+            "desktop",
+            {
+                browser: "chrome",
+                icon: "fa-desktop",
+                label: "Desktop",
+                platform: "linux",
+                tags: ["-mobile"],
+                touch: false,
+            },
+        ],
+        [
+            "mobile",
+            {
+                browser: "chrome",
+                icon: "fa-mobile",
+                label: "Mobile",
+                platform: "android",
+                tags: ["-desktop"],
+                touch: true,
+            },
+        ],
+    ]);
 
 const noop = () => {};
 
@@ -191,6 +236,11 @@ export class TestRunner {
     aborted = false;
     /** @type {boolean | Test | Suite} */
     debug = false;
+    /** @type {ReturnType<typeof makeExpect>[0]} */
+    expect;
+    /** @type {ReturnType<typeof makeExpect>[1]} */
+    expectHooks;
+    presets = reactive(getDefaultPresets());
     /** @type {Suite[]} */
     rootSuites = [];
     /** @type {Map<string, Suite>} */
@@ -257,6 +307,7 @@ export class TestRunner {
     #hasIncludeFilter = false;
     /** @type {(() => MaybePromise<void>)[]} */
     #missedCallbacks = [];
+    #prepared = false;
     /** @type {Suite[]} */
     #suiteStack = [];
     #startTime = 0;
@@ -272,21 +323,28 @@ export class TestRunner {
     constructor(config) {
         // Main test methods
         this.describe = this.#addConfigurators(this.addSuite, () => this.#suiteStack.at(-1));
-        this.expect = makeExpectFunction(this);
         this.fixture = makeFixtureManager(this);
         this.test = this.#addConfigurators(this.addTest, false);
 
         const initialConfig = { ...DEFAULT_CONFIG, ...config };
-        this.config = reactive({ ...initialConfig, ...urlParams }, () => {
+        const reactiveConfig = reactive({ ...initialConfig, ...urlParams }, () => {
             setParams(
                 Object.fromEntries(
                     Object.entries(this.config).map(([key, value]) => [
                         key,
-                        value === initialConfig[key] ? null : value,
+                        deepEqual(value, initialConfig[key]) ? null : value,
                     ])
                 )
             );
         });
+
+        [this.expect, this.expectHooks] = makeExpect({
+            get headless() {
+                return reactiveConfig.headless;
+            },
+        });
+
+        this.config = reactiveConfig;
 
         // Debug
         this.debug = Boolean(this.config.debugTest);
@@ -590,7 +648,8 @@ export class TestRunner {
         this.#dry = true;
 
         await callback();
-        this.#currentJobs = this.prepareJobs();
+
+        this.#prepareRunner();
 
         this.#dry = false;
 
@@ -698,6 +757,14 @@ export class TestRunner {
     }
 
     /**
+     * @param {string} name
+     * @param {Preset} preset
+     */
+    registerPreset(name, preset) {
+        this.presets.set(name, preset);
+    }
+
+    /**
      * Boot function starting all registered tests and suites.
      *
      * The returned promise is resolved after all tests (and teardowns) have been
@@ -720,10 +787,8 @@ export class TestRunner {
         }
         this.state.status = "running";
 
+        this.#prepareRunner();
         this.#startTime = performance.now();
-        if (!this.#currentJobs.length) {
-            this.#currentJobs = this.prepareJobs();
-        }
 
         // Config log
         const table = { ...toRaw(this.config) };
@@ -744,10 +809,12 @@ export class TestRunner {
             );
             if (activeSingleTests.length !== 1) {
                 logger.warn(`disabling debug mode: ${activeSingleTests.length} tests will be run`);
-                setParams({ debugTest: null });
+                this.config.debugTest = false;
                 this.debug = false;
             }
         }
+
+        const { debugTest, fps, watchkeys } = this.config;
 
         // Register default hooks
         const [addTestDone, flushTestDone] = batch((test) => this.state.done.push(test), 10);
@@ -757,21 +824,21 @@ export class TestRunner {
             on(window, "error", (ev) => this.#onError(ev)),
             on(window, "unhandledrejection", (ev) => this.#onError(ev)),
             // Warn user events
-            on(window, "pointermove", warnUserEvent),
-            on(window, "pointerdown", warnUserEvent),
-            on(window, "keydown", warnUserEvent),
-            watchListeners(window, document, document.head, document.body)
+            !debugTest && on(window, "pointermove", warnUserEvent),
+            !debugTest && on(window, "pointerdown", warnUserEvent),
+            !debugTest && on(window, "keydown", warnUserEvent),
+            watchListeners(window, document, document.documentElement, document.head, document.body)
         );
         this.__beforeEach(this.fixture.setup);
         this.__afterEach(
             cleanupWindow,
             cleanupNavigator,
             this.fixture.cleanup,
-            cleanupObservers,
+            cleanupDOM,
             cleanupTime
         );
-        if (this.config.watchkeys) {
-            const keys = this.config.watchkeys?.split(/\s*,\s*/g) || [];
+        if (watchkeys) {
+            const keys = watchkeys?.split(/\s*,\s*/g) || [];
             this.__afterEach(watchKeys(window, keys), watchKeys(document, keys));
         }
 
@@ -779,7 +846,7 @@ export class TestRunner {
             logger.level = logLevels.DEBUG;
         }
         enableEventLogs(this.debug);
-        setFrameRate(this.config.frameRate);
+        setFrameRate(fps);
 
         await this.#callbacks.call("before-all");
 
@@ -851,7 +918,7 @@ export class TestRunner {
                 await callbackRegistry.call("before-test", test);
             }
 
-            this.expect.__before(this, test);
+            this.expectHooks.before(test);
 
             let timeoutId = 0;
 
@@ -906,7 +973,7 @@ export class TestRunner {
             }
 
             // Log test errors and increment counters
-            this.expect.__after(this, test);
+            this.expectHooks.after(test, this);
             test.visited++;
             if (lastResults.pass) {
                 logger.logTest(test);
@@ -1181,6 +1248,23 @@ export class TestRunner {
     }
 
     /**
+     * @param {Preset} preset
+     */
+    #applyPreset(preset) {
+        if (preset.tags?.length) {
+            this.#include("tags", preset.tags, true);
+        }
+        const { browser, platform } = preset;
+        if (browser || platform) {
+            mockUserAgent(browser, platform);
+        }
+
+        if (typeof preset.touch === "boolean") {
+            mockTouch(preset.touch);
+        }
+    }
+
+    /**
      * @param {Job} job
      */
     #applyTagModifiers(job) {
@@ -1365,6 +1449,23 @@ export class TestRunner {
         return false;
     }
 
+    #prepareRunner() {
+        if (this.#prepared) {
+            return;
+        }
+        this.#prepared = true;
+
+        if (this.config.preset) {
+            const preset = this.presets.get(this.config.preset);
+            if (!preset) {
+                throw new HootError(`unknown preset: "${this.config.preset}"`);
+            }
+            this.#applyPreset(preset);
+        }
+
+        this.#currentJobs = this.prepareJobs();
+    }
+
     /**
      * @param {Error | ErrorEvent | PromiseRejectionEvent} ev
      */
@@ -1382,11 +1483,13 @@ export class TestRunner {
                 }
             }
 
-            ev.preventDefault();
-            ev.stopPropagation();
-            ev.stopImmediatePropagation();
-
             const { lastResults } = this.state.currentTest;
+            if (!lastResults) {
+                return;
+            }
+
+            ev.preventDefault();
+
             lastResults.errors.push(error);
             lastResults.caughtErrors++;
             if (lastResults.expectedErrors >= lastResults.caughtErrors) {

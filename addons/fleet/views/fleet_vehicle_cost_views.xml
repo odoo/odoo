@@ -57,10 +57,7 @@
                     <separator string="Terms and Conditions"/>
                     <field name="notes" nolabel="1" placeholder="Write here all other information relative to this contract" />
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>
         </field>
     </record>
@@ -169,10 +166,9 @@
         <field name="model">fleet.vehicle.log.contract</field>
         <field name="arch" type="xml">
             <activity string="Vehicles Contracts">
-                <field name="purchaser_id"/>
                 <templates>
                     <div t-name="activity-box">
-                        <img t-att-src="activity_image('res.partner', 'avatar_128', record.purchaser_id.raw_value)" t-att-title="record.purchaser_id.value" t-att-alt="record.purchaser_id.value"/>
+                        <field name="user_id" widget="many2one_avatar_user"/>
                         <div class="ms-2">
                             <field name="vehicle_id" display="full" class="o_text_block"/>
                         </div>
@@ -247,10 +243,7 @@
                     <separator string="Notes"/>
                     <field nolabel="1" name="notes" placeholder="Write here any other information related to the service completed."/>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>
         </field>
     </record>

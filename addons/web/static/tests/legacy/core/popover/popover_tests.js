@@ -4,7 +4,7 @@ import { Popover } from "@web/core/popover/popover";
 import { usePosition } from "@web/core/position/position_hook";
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { getFixture, makeDeferred, mount, nextTick, triggerEvent } from "../../helpers/utils";
+import { click, getFixture, makeDeferred, mount, nextTick, triggerEvent } from "../../helpers/utils";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
@@ -373,4 +373,32 @@ QUnit.test("popover fixed position", async (assert) => {
     await nextTick();
 
     assert.verifySteps([]);
+});
+
+QUnit.test("click in iframe should close popover [REQUIRE FOCUS]", async (assert) => {
+    const iframe = document.createElement("iframe");
+    iframe.srcdoc = `<button>Within iframe</button>`;
+
+    const def = makeDeferred();
+    iframe.onload = def.resolve;
+    fixture.appendChild(iframe);
+    await def;
+
+    await mount(Popover, fixture, {
+        env,
+        props: {
+            target: popoverTarget,
+            component: Content,
+            animation: false,
+            close: () => assert.step("close"),
+        },
+    });
+
+    assert.containsOnce(fixture, ".o_popover");
+    assert.verifySteps([]);
+
+    iframe.contentDocument.body.querySelector("button").focus();
+    await click(iframe.contentDocument.querySelector("button"));
+
+    assert.verifySteps(["close"]);
 });

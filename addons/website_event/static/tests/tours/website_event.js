@@ -43,15 +43,15 @@
         trigger: "#oe_snippets.o_loaded #snippet_structure .oe_snippet:eq(2) .oe_snippet_thumbnail",
         content: _t("Drag this block and drop it in your page."),
         position: "bottom",
-        run: "drag_and_drop_native iframe #wrapwrap > main",
+        run: "drag_and_drop_native :iframe #wrapwrap > main",
     }, {
         trigger: "button[data-action=save]",
         content: _t("Once you click on save, your event is updated."),
         position: "bottom",
-        extra_trigger: "iframe .o_dirty",
+        extra_trigger: ":iframe .o_dirty",
     }, {
-        trigger: ".o_menu_systray_item .o_switch_danger_success",
-        extra_trigger: "iframe body:not(.editor_enable)",
+        trigger: ".o_menu_systray_item.o_website_publish_container a",
+        extra_trigger: ":iframe body:not(.editor_enable)",
         content: _t("Click to publish your event."),
         position: "top",
     }, {

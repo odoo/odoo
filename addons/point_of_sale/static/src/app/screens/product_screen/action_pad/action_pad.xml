@@ -6,7 +6,9 @@
             <button class="button mobile-more-button btn btn-secondary flex-fill border-bottom" t-if="ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
                 <span>More...</span>
             </button>
-            <SelectPartnerButton partner="props.partner"/>
+            <t t-if="ui.isSmall">
+                <SelectPartnerButton partner="props.partner"/>
+            </t>
             <button class="pay validation pay-order-button btn-primary"
                 t-attf-class="{{getMainButtonClasses()}}" 
                 t-att-class="{ 'with-more-button': props.onClickMore and ui.isSmall }" 

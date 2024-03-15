@@ -4,6 +4,7 @@
  * Provides a way to start JS code for snippets' initialization and animations.
  */
 
+import { _t } from "@web/core/l10n/translation";
 import { loadJS } from "@web/core/assets";
 import { uniqueId } from "@web/core/utils/functions";
 import { escape } from "@web/core/utils/strings";
@@ -786,6 +787,7 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
             src: src,
             frameborder: '0',
             allowfullscreen: 'allowfullscreen',
+            "aria-label": _t("Media video"),
         })[0];
         this.$el.append(iframeEl);
         return iframeEl;
@@ -1212,42 +1214,6 @@ registry.FooterSlideout = publicWidget.Widget.extend({
         this._super(...arguments);
         this.el.classList.remove('o_footer_effect_enable');
         this.__pixelEl.remove();
-    },
-});
-
-registry.TopMenuCollapse = publicWidget.Widget.extend({
-    selector: "header #top_menu_collapse",
-
-    /**
-     * @override
-     */
-    async start() {
-        this.throttledResize = throttleForAnimation(() => this._onResize());
-        window.addEventListener("resize", this.throttledResize);
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this._super(...arguments);
-        window.removeEventListener("resize", this.throttledResize);
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onResize() {
-        if (this.el.classList.contains("show")) {
-            const togglerEl = this.el.closest("nav").querySelector(".navbar-toggler");
-            if (getComputedStyle(togglerEl).display === "none") {
-                this.$el.collapse("hide");
-            }
-        }
     },
 });
 
