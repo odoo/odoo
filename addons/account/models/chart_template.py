@@ -512,31 +512,36 @@ class AccountChartTemplate(models.AbstractModel):
 
         def defer(all_data):
             """Defer writing some relations if the related records don't exist yet."""
+
+            def should_defer(created_models, yet_to_be_created_models, model, field_name, field_val, parent_models=None):
+                parent_models = (parent_models or []) + [model]
+                field = self.env[model]._fields.get(field_name)
+                if not field or not field.relational or field.comodel_name in created_models:
+                    return False
+                field_yet_to_be_created = field.comodel_name in parent_models + yet_to_be_created_models
+                if not isinstance(field_val, list | tuple):
+                    return field_yet_to_be_created
+                # Check recursively if there are subfields that should be delayed
+                for element in field_val:
+                    match element:
+                        case Command.CREATE, _, dict() as values:
+                            for subkey, subvalue in values.items():
+                                if should_defer(created_models, yet_to_be_created_models, field.comodel_name, subkey, subvalue, parent_models):
+                                    return True
+                        case int() as command, *_ if command in tuple(Command):
+                            if field_yet_to_be_created:
+                                return True
+                return False
+
             created_models = set()
             while all_data:
                 (model, data), *all_data = all_data
+                yet_to_be_created_models = [model for model, _data in all_data]
                 to_delay = defaultdict(dict)
                 for xml_id, vals in data.items():
                     to_be_removed = []
                     for field_name, field_val in vals.items():
-                        field = self.env[model]._fields.get(field_name, None)
-                        if (
-                            field
-                            and field.relational
-                            and field_val
-                            and (  # allow create commands but delay all other related fields
-                                not isinstance(field_val, (list, tuple))
-                                or (
-                                    isinstance(field_val[0], (list, tuple))
-                                    and {command for command, *dummy in field_val} != {Command.CREATE}
-                                )
-                            )
-                            and field.comodel_name not in created_models
-                            and (
-                                field.comodel_name in dict(all_data)
-                                or field.comodel_name == model
-                            )
-                        ):
+                        if should_defer(created_models, yet_to_be_created_models, model, field_name, field_val):
                             to_be_removed.append(field_name)
                             to_delay[xml_id][field_name] = field_val
                     for field_name in to_be_removed:
@@ -1045,13 +1050,12 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _deref_account_tags(self, template_code, tax_data):
         mapper = self._get_tag_mapper(self._get_chart_template_mapping()[template_code]['country_id'])
-        for tax in tax_data.values():
-            for fname in ('invoice_repartition_line_ids', 'refund_repartition_line_ids', 'repartition_line_ids'):
-                if tax.get(fname):
-                    for _command, _id, repartition in tax[fname]:
-                        tags = repartition.get('tag_ids')
-                        if isinstance(tags, str):
-                            repartition['tag_ids'] = [Command.set(mapper(*tags.split(TAX_TAG_DELIMITER)))]
+        for tax_values in tax_data.values():
+            for field_name in ('repartition_line_ids', 'invoice_repartition_line_ids', 'refund_repartition_line_ids'):
+                for element in tax_values.get(field_name, []):
+                    match element:
+                        case Command(), _, {'tag_ids': str() as tags} as values:
+                            values['tag_ids'] = [Command.set(mapper(*tags.split(TAX_TAG_DELIMITER)))]
 
     def _parse_csv(self, template_code, model, module=None):
         Model = self.env[model]
