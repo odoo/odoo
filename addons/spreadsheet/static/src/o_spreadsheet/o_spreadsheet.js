@@ -21824,7 +21824,7 @@
     function clamp(value, min, max) {
         return Math.min(Math.max(value, min), max);
     }
-    function dragFigureForResize(initialFigure, dirX, dirY, { x: mouseX, y: mouseY }, { x: mouseInitialX, y: mouseInitialY }, keepRatio, minFigSize) {
+    function dragFigureForResize(initialFigure, dirX, dirY, { x: mouseX, y: mouseY }, { x: mouseInitialX, y: mouseInitialY }, keepRatio, minFigSize, { scrollX, scrollY }) {
         let { x, y, width, height } = initialFigure;
         if (keepRatio && dirX != 0 && dirY != 0) {
             const deltaX = Math.min(dirX * (mouseInitialX - mouseX), initialFigure.width - minFigSize);
@@ -21851,14 +21851,14 @@
                 y = initialFigure.y - deltaY;
             }
         }
-        // Restrict resizing if x or y reaches header boundaries
-        if (x < 0) {
-            width += x;
-            x = 0;
+        // Adjusts figure dimensions to ensure it remains within header boundaries and viewport during resizing.
+        if (x + scrollX <= 0) {
+            width = width + x + scrollX;
+            x = -scrollX;
         }
-        if (y < 0) {
-            height += y;
-            y = 0;
+        if (y + scrollY <= 0) {
+            height = height + y + scrollY;
+            y = -scrollY;
         }
         return { ...initialFigure, x, y, width, height };
     }
@@ -22275,7 +22275,7 @@
             const minFigSize = figureRegistry.get(figure.tag).minFigSize || MIN_FIG_SIZE;
             const onMouseMove = (ev) => {
                 const currentMousePosition = { x: ev.clientX, y: ev.clientY };
-                const draggedFigure = dragFigureForResize(initialFig, dirX, dirY, currentMousePosition, initialMousePosition, keepRatio, minFigSize);
+                const draggedFigure = dragFigureForResize(initialFig, dirX, dirY, currentMousePosition, initialMousePosition, keepRatio, minFigSize, this.env.model.getters.getActiveSheetScrollInfo());
                 const otherFigures = this.getOtherFigures(figure.id);
                 const snapResult = snapForResize(this.env.model.getters, dirX, dirY, draggedFigure, otherFigures);
                 this.dnd.draggedFigure = snapResult.snappedFigure;
@@ -30703,6 +30703,15 @@
                     return this.checkFigureExists(cmd.sheetId, cmd.id);
                 default:
                     return 0 /* CommandResult.Success */;
+            }
+        }
+        beforeHandle(cmd) {
+            switch (cmd.type) {
+                case "DELETE_SHEET":
+                    this.getters.getFigures(cmd.sheetId).forEach((figure) => {
+                        this.dispatch("DELETE_FIGURE", { id: figure.id, sheetId: cmd.sheetId });
+                    });
+                    break;
             }
         }
         handle(cmd) {
@@ -48039,9 +48048,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.28';
-    __info__.date = '2024-03-12T08:03:33.209Z';
-    __info__.hash = 'f0ddf07';
+    __info__.version = '16.3.29';
+    __info__.date = '2024-03-15T12:11:02.769Z';
+    __info__.hash = 'd86234a';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
