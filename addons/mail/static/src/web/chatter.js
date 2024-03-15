@@ -111,7 +111,10 @@ export class Chatter extends Component {
         this.scrollPosition = useScrollPosition("root", undefined, "top");
         this.rootRef = useRef("root");
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
-        useChildSubEnv({ inChatter: true });
+        useChildSubEnv({
+            inChatter: true,
+            reloadParentView: () => this.reloadParentView(),
+        });
         useDropzone(
             this.rootRef,
             async (ev) => {
@@ -395,17 +398,18 @@ export class Chatter extends Component {
         this.state.showActivities = !this.state.showActivities;
     }
 
+    async schedule(threadId) {
+        await this.activityService.schedule(this.props.threadModel, threadId);
+        this.load(this.props.threadId, ["activities", "messages"]);
+    }
+
     async scheduleActivity() {
-        const schedule = async (threadId) => {
-            await this.activityService.schedule(this.props.threadModel, threadId);
-            this.load(this.props.threadId, ["activities", "messages"]);
-        };
         if (this.props.threadId) {
-            schedule(this.props.threadId);
+            this.schedule(this.props.threadId);
         } else {
             this.onNextUpdate = (nextProps) => {
                 if (nextProps.threadId) {
-                    schedule(nextProps.threadId);
+                    this.schedule(nextProps.threadId);
                 } else {
                     return true;
                 }
