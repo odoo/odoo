@@ -43,3 +43,9 @@ class ResPartner(models.Model):
         else:
             action['domain'] = [('partner_id', '=', self.id)]
         return action
+
+    def open_commercial_entity(self):
+        return {
+            **super().open_commercial_entity(),
+            **({'target': 'new'} if self.env.context.get('target') == 'new' else {}),
+        }

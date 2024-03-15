@@ -281,6 +281,11 @@ class PosSession(models.Model):
                 'domain': [('id', '=', config_id.note_ids.ids)] if config_id.note_ids else [],
                 'fields': ['name'],
             },
+            'ir.ui.view': {
+                'domain': [],
+                'fields': ['id', 'name'],
+                'load_manually': True,
+            },
         }
 
     def load_data(self, models_to_load, only_data=False):
@@ -314,46 +319,38 @@ class PosSession(models.Model):
                     continue
 
                 try:
-                    if isinstance(value['domain'], list):
-                        response['data'][key] = self.env[key].with_context(value.get('context', [])).search_read(
-                            value['domain'],
-                            value['fields'],
-                            order=value.get('order', []),
-                            limit=value.get('limit', None),
-                            load=False)
-                    else:
-                        response['data'][key] = self.env[key].with_context(value.get('context', [])).search_read(
-                            value['domain'](response['data']),
-                            value['fields'],
-                            order=value.get('order', []),
-                            limit=value.get('limit', None),
-                            load=False)
+                    response['data'][key] = [] if value.get('load_manually') else self.env[key].with_context(value.get('context', [])).search_read(
+                        value['domain'] if isinstance(value['domain'], list) else value['domain'](response['data']),
+                        value['fields'],
+                        order=value.get('order', []),
+                        limit=value.get('limit', None),
+                        load=False)
                 except AccessError as e:
                     response['errors'][key] = e.args[0]
                     response['data'][key] = []
 
                 if not only_data:
                     model_fields = self.env[key].fields_get(allfields=value['fields'] or None)
-                    for name, params in model_fields.items():
+                    for name, field in model_fields.items():
                         if not response['relations'].get(key):
                             response['relations'][key] = {}
 
-                        if params.get("relation"):
+                        if field.get("relation"):
 
                             response['relations'][key][name] = {
                                 'name': name,
                                 'model': key,
-                                'relation': params['relation'],
-                                'type': params['type'],
+                                'relation': field['relation'],
+                                'type': field['type'],
                             }
-                            if params['type'] == 'one2many' and params.get('relation_field'):
-                                response['relations'][key][name]['inverse_name'] = params['relation_field']
-                            if params['type'] == 'many2many':
+                            if field['type'] == 'one2many' and field.get('relation_field'):
+                                response['relations'][key][name]['inverse_name'] = field['relation_field']
+                            if field['type'] == 'many2many':
                                 response['relations'][key][name]['relation_table'] = self.env[key]._fields[name].relation
                         else:
                             response['relations'][key][name] = {
                                 'name': name,
-                                'type': params['type'],
+                                'type': field['type'],
                             }
 
         # pos_config adaptation
@@ -406,7 +403,7 @@ class PosSession(models.Model):
                 response['fields']['account.fiscal.position'],
                 response['relations']['account.fiscal.position']
             )
-
+        response['data']['ir.ui.view'] = self.env.ref('base.view_partner_form').sudo().read(params['ir.ui.view']['fields'])
         return response
 
     def _process_pos_ui_account_tax(self, account_tax, account_fields, account_relations):

@@ -5,7 +5,7 @@
         <Dialog bodyClass="'partner-list overflow-y-auto'" contentClass="'h-100'">
             <t t-set-slot="header">
                 <button class="btn btn-primary" role="img" aria-label="Add a customer"
-                        t-on-click="createPartner"
+                        t-on-click="() => this.pos.editPartner()"
                         title="Add a customer">
                     <i t-if="ui.isSmall" class="fa fa-plus"/>
                     <t t-else="">Create</t>
@@ -29,13 +29,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <PartnerLine t-foreach="partners" t-as="partner" t-key="partner.id"
+                    <t t-foreach="getPartners()" t-as="partner" t-key="partner.id">
+                        <PartnerLine
+                                close="props.close"
                                 partner="partner"
                                 isSelected="props.partner?.id === partner.id"
                                 isBalanceDisplayed="isBalanceDisplayed"
-                                onClickEdit.bind="editPartner"
+                                onClickEdit.bind="(p) => this.pos.editPartner(p)"
                                 onClickUnselect.bind="() => this.clickPartner()"
+                                onClickOrders.bind="(p) => this.goToOrders(p)"
                                 onClickPartner.bind="clickPartner"/>
+                    </t>
                 </tbody>
             </table>
             <div t-if="state.query" class="search-more-button d-flex justify-content-center my-2">

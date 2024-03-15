@@ -153,6 +153,16 @@
             'web/static/src/legacy/js/libs/jquery.js',
             # account
             'account/static/src/helpers/*.js',
+
+            "web/static/src/core/browser/router.js",
+            "web/static/src/core/debug/**/*",
+            'web/static/src/model/**/*',
+            'web/static/src/views/**/*',
+            'web/static/src/search/**/*',
+            'web/static/src/webclient/actions/**/*',
+            ('remove', 'web/static/src/webclient/actions/reports/layout_assets/**/*'),
+            ('remove', 'web/static/src/webclient/actions/**/*css'),
+            'web/static/src/webclient/company_service.js',
         ],
         'point_of_sale.base_tests': [
             "web/static/lib/jquery/jquery.js",
