@@ -45,7 +45,7 @@ class AccountMoveSend(models.TransientModel):
     @api.depends('enable_peppol')
     def _compute_checkbox_send_peppol(self):
         for wizard in self:
-            wizard.checkbox_send_peppol = wizard.enable_peppol
+            wizard.checkbox_send_peppol = wizard.enable_peppol and not wizard.peppol_warning
 
     @api.depends('checkbox_send_peppol')
     def _compute_checkbox_ubl_cii_xml(self):
