@@ -76,7 +76,7 @@ QUnit.module("M2XAvatarUser", ({ beforeEach }) => {
                 "job_title",
                 "department_id",
                 "employee_parent_id",
-                "employee_id"]);
+                "employee_ids"]);
                 assert.step("user read");
             }
         };
