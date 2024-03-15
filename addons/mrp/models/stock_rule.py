@@ -76,19 +76,38 @@ class StockRule(models.Model):
                         subtype_id=self.env.ref('mail.mt_note').id)
         return True
 
+    def _is_post_production(self):
+        self.ensure_one()
+        # To Keep as shortcut?
+        # warehouse_id = self.warehouse_id if self.warehouse_id else self.location_dest_id.warehouse_id
+        # if self.picking_type_id == warehouse_id.sam_type_id:
+        #   return True
+        route_has_manufacturing = self.env['stock.rule'].search_count([('action', '=', 'manufacture'), ('route_id', '=', self.route_id.id)], limit=1) > 0
+        if not route_has_manufacturing:
+            return False
+        ordered_route_rules = self.route_id.rule_ids.sorted(key=lambda r: (r.route_sequence, r.sequence, r.id))
+        if not ordered_route_rules or self.id != ordered_route_rules[-1].id:
+            return False
+
+        tmp_rules = ordered_route_rules[-1]  # Take last rule as strating point
+        while len(tmp_rules) != 0:
+            ordered_route_rules -= tmp_rules
+            if any(r.action == 'manufacture' for r in tmp_rules):
+                return True
+            tmp_rules = ordered_route_rules.filtered(lambda r: r.location_dest_id in tmp_rules.location_src_id)
+        return False
+
     @api.model
     def _run_pull(self, procurements):
         # Override to correctly assign the move generated from the pull
         # in its production order (pbm_sam only)
         for procurement, rule in procurements:
-            warehouse_id = rule.warehouse_id
-            if not warehouse_id:
-                warehouse_id = rule.location_dest_id.warehouse_id
-            if rule.picking_type_id == warehouse_id.sam_type_id:
+            if rule._is_post_production():
                 if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) < 0:
                     procurement.values['group_id'] = procurement.values['group_id'].stock_move_ids.filtered(
                         lambda m: m.state not in ['done', 'cancel']).move_orig_ids.group_id[:1]
                     continue
+                warehouse_id = rule.warehouse_id if rule.warehouse_id else rule.location_dest_id.warehouse_id
                 manu_type_id = warehouse_id.manu_type_id
                 if manu_type_id:
                     name = manu_type_id.sequence_id.next_by_id()
