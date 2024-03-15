@@ -25,7 +25,7 @@ def update_ec_codes(cr, env):
     companies = env['res.company'].search([('chart_template_id', '=', env.ref('l10n_ec.l10n_ec_ifrs').id)])
     for company in companies:
         taxes_to_update = [
-            (f'{company.id}_tax_withhold_profit_3440', '3340', '3940')
+            (f'{company.id}_tax_withhold_profit_3440', '3440', '3940')
         ]
         for xml_id, l10n_ec_code_base, l10n_ec_code_applied in taxes_to_update:
             cr.execute("UPDATE account_tax SET l10n_ec_code_base=%s, l10n_ec_code_applied=%s "
@@ -51,6 +51,7 @@ def inactivate_taxes_replaced(cr, env):
             f'{company.id}_tax_withhold_profit_314D',  # replaced by tax_withhold_profit_314D_10
             f'{company.id}_tax_withhold_profit_320',  # replaced by tax_withhold_profit_320_10
             f'{company.id}_tax_withhold_profit_322',  # replaced by tax_withhold_profit_322_1
+            f'{company.id}_tax_withhold_profit_319',  # replaced by tax_withhold_profit_319_2
         ]
         for xml_id in taxes_to_inactivate:
             cr.execute("UPDATE account_tax SET active=False "
