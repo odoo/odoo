@@ -211,7 +211,6 @@ test("default `showSearchInput` option", async () => {
         ".o_model_field_selector_popover .o_model_field_selector_popover_search input"
     ).edit("xx", { confirm: false });
     await runAllTimers();
-    await animationFrame();
     expect(getDisplayedFieldNames()).toBeEmpty();
 
     // search 'Pro'
@@ -219,7 +218,6 @@ test("default `showSearchInput` option", async () => {
         ".o_model_field_selector_popover .o_model_field_selector_popover_search input"
     ).edit("Pro", { confirm: false });
     await runAllTimers();
-    await animationFrame();
     expect(getDisplayedFieldNames()).toEqual(["Product"]);
 });
 
@@ -825,7 +823,6 @@ test("search on field string and name in debug mode", async () => {
         ".o_model_field_selector_popover .o_model_field_selector_popover_search input"
     ).edit("uct", { confirm: false });
     await runAllTimers();
-    await animationFrame();
     expect(getDisplayedFieldNames()).toEqual([
         "Product\nproduct_id (many2one)",
         "Some string\nucit (char)",
