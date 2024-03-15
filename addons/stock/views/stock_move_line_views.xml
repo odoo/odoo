@@ -37,7 +37,7 @@
         <field name="model">stock.move.line</field>
         <field name="priority">25</field>
         <field name="arch" type="xml">
-            <list string="Move Lines" create="0" default_order="date">
+            <list string="Move Lines" create="0" default_order="date" action="action_open_reference" type="object">
                 <field name="scheduled_date" optional="hide"/>
                 <field name="picking_id"/>
                 <field name="picking_partner_id"/>
@@ -46,8 +46,8 @@
                 <field name="location_id" groups="stock.group_stock_multi_locations" />
                 <field name="location_dest_id" groups="stock.group_stock_multi_locations" />
                 <field name="package_id" groups="stock.group_tracking_lot"/>
-                <field name="quantity" string="Quantity" optional="hide"/>
-                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" optional="hide" string="Unit of Measure" groups="uom.group_uom"/>
+                <field name="quantity" string="Quantity" optional="show"/>
+                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" optional="show" string="Unit of Measure" groups="uom.group_uom"/>
                 <field name="company_id" groups="base.group_multi_company" force_save="1" optional="hide"/>
                 <field name="state" widget='badge' optional="show"
                        decoration-danger="state=='cancel'"
