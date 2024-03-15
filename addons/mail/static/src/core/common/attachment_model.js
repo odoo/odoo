@@ -35,6 +35,9 @@ export class Attachment extends FileModelMixin(Record) {
     create_date = Record.attr(undefined, { type: "datetime" });
 
     get isDeletable() {
+        if (this.message) {
+            return this.message.allowsEdition;
+        }
         return true;
     }
 
