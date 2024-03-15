@@ -1270,6 +1270,14 @@ export function makeActionManager(env, router = _router) {
         if (typeof nextAction === "object") {
             nextAction.path ||= action.path;
         }
+        // Update the nextAction and the diplayName on controllers with the same action
+        controllerStack
+            .filter((c) => c.action.id === action.id)
+            .forEach((c) => {
+                c.action = nextAction; // update the action
+                c.displayName = nextAction.display_name || nextAction.name || ""; // update the displayName
+                c.nextAction = nextAction; // update the state to restore with the new action
+            });
         return doAction(nextAction, options);
     }
 
@@ -1502,6 +1510,9 @@ export function makeActionManager(env, router = _router) {
             }
             const { actionRequest, options } = actionParams;
             options.index = index;
+            if (controller.nextAction) {
+                return doAction(controller.nextAction, options);
+            }
             return doAction(actionRequest, options);
         }
         if (controller.action.type === "ir.actions.act_window") {

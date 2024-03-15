@@ -671,21 +671,43 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("server action loading with id", async (assert) => {
+        serverData.actions[5566] = {
+            id: 2,
+            xml_id: "action_2",
+            type: "ir.actions.server",
+            path: "my_action",
+        };
         const mockRPC = async (route, args) => {
             if (route === "/web/action/run") {
                 assert.step(`action: ${args.action_id}`);
-                return new Promise(() => {});
+                return {
+                    id: 5567,
+                    name: "Partner",
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [
+                        [false, "list"],
+                        [false, "form"],
+                    ],
+                };
             }
         };
-        redirect("/odoo/action-2/2");
+        redirect("/odoo/my_action/2");
         logHistoryInteractions(assert);
         await createWebClient({ serverData, mockRPC });
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partner", "Second record"]);
+        assert.containsOnce(target, ".o_form_view");
         assert.strictEqual(
             browser.location.href,
-            "http://example.com/odoo/action-2/2",
+            "http://example.com/odoo/my_action/2",
             "url did not change"
         );
-        assert.verifySteps(["action: 2"], "pushState was not called");
+        await click(target.querySelector(".o_control_panel .breadcrumb-item"));
+        assert.containsOnce(target, ".o_list_view");
+
+        assert.verifySteps(["action: 2"], "/web/action/run is called only once");
+        await nextTick(); // pushState is debounced
+        assert.verifySteps(["pushState http://example.com/odoo/my_action"]);
     });
 
     QUnit.test("state with integer active_ids should not crash", async function (assert) {
