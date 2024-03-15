@@ -198,6 +198,49 @@ class TestSaleToInvoice(TestSaleCommon):
         sale_order.invoice_ids.action_post()
         self.assertEqual(downpayment_line[0].price_unit, 50, 'The down payment unit price should not change on SO')
 
+    def test_downpayment_line_name(self):
+        """ Test downpayment's SO line name is updated when invoice is posted. """
+        # Create the SO with one line
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+            'order_line': [Command.create({
+                'product_id': self.company_data['product_order_no'].id,
+                'product_uom_qty': 5,
+                'tax_id': False,
+            }),]
+        })
+        # Confirm the SO
+        sale_order.action_confirm()
+        # Update delivered quantity of SO line
+        sale_order.order_line.write({'qty_delivered': 5.0})
+        context = {
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        # Let's do an invoice for a down payment of 50
+        self.env['sale.advance.payment.inv'].with_context(context).create({
+            'sale_order_ids': [Command.set(sale_order.ids)],
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 50,
+            'deposit_account_id': self.company_data['default_account_revenue'].id
+        }).create_invoices()
+        dp_line = sale_order.order_line.filtered(
+            lambda sol: sol.is_downpayment and not sol.display_type
+        )
+
+        dp_line.name = 'whatever'
+
+        # Confirm the invoice
+        invoice = sale_order.invoice_ids
+        invoice.action_post()
+
+        self.assertNotEqual(
+            dp_line.name, 'whatever',
+            "DP lines description should be recomputed when the linked invoice is posted",
+        )
+
     def test_downpayment_fixed_amount_with_zero_total_amount(self):
         # Create the SO with one line and amount total is zero
         sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
