@@ -729,7 +729,14 @@ class PosConfig(models.Model):
             ('sale_ok', '=', True),
         ]
         if self.limit_categories and self.iface_available_categ_ids:
+            # Retrieve all combo products, combine restrict categories and combo product categories, and apply to the domain
+            valid_combos = self.env['product.product'].search([
+                ('detailed_type', '=', 'combo'),
+                ('pos_categ_ids', 'in', self.iface_available_categ_ids.ids)
+                ]).combo_ids
+            combo_product_ids = valid_combos.combo_line_ids.product_id
             domain.append(('pos_categ_ids', 'in', self.iface_available_categ_ids.ids))
+            domain = OR([domain, [('id', 'in', combo_product_ids.ids)]])
         if self.iface_tipproduct:
             domain = OR([domain, [('id', '=', self.tip_product_id.id)]])
         return domain
