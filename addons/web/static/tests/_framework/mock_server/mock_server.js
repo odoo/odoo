@@ -1,4 +1,4 @@
-import { after, createJobScopedGetter, globals, registerDebugInfo } from "@odoo/hoot";
+import { after, before, createJobScopedGetter, globals, registerDebugInfo } from "@odoo/hoot";
 import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
 import { assets } from "@web/core/assets";
 import { registry } from "@web/core/registry";
@@ -991,24 +991,26 @@ export function defineModels(ModelClasses) {
  * @param {"add" | "replace"} [mode="replace"]
  */
 export function defineParams(params, mode) {
-    const currentParams = getCurrentParams();
-    for (const [key, value] of Object.entries(params)) {
-        if (mode === "add" && isObject(value)) {
-            if (isIterable(value)) {
-                currentParams[key] ||= [];
-                currentParams[key].push(...value);
+    before(() => {
+        const currentParams = getCurrentParams();
+        for (const [key, value] of Object.entries(params)) {
+            if (mode === "add" && isObject(value)) {
+                if (isIterable(value)) {
+                    currentParams[key] ||= [];
+                    currentParams[key].push(...value);
+                } else {
+                    currentParams[key] ||= {};
+                    Object.assign(currentParams[key], value);
+                }
             } else {
-                currentParams[key] ||= {};
-                Object.assign(currentParams[key], value);
+                currentParams[key] = value;
             }
-        } else {
-            currentParams[key] = value;
         }
-    }
 
-    if (MockServer.current) {
-        MockServer.current.configure(params);
-    }
+        if (MockServer.current) {
+            MockServer.current.configure(params);
+        }
+    });
 
     return params;
 }
