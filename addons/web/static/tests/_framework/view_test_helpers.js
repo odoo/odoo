@@ -38,35 +38,6 @@ import { MockServer } from "./mock_server/mock_server";
 //-----------------------------------------------------------------------------
 
 /**
- *
- * @param {string} base
- * @param {SelectorOptions} [params]
- */
-const buildSelector = (base, params) => {
-    let selector = base;
-    params ||= {};
-    if (params.id) {
-        selector += `#${params.id}`;
-    }
-    if (params.class) {
-        selector += `.${params.class}`;
-    }
-    if (params.modifier) {
-        selector += `:${params.modifier}`;
-    }
-    if (params.text) {
-        selector += `:contains(${params.text})`;
-    }
-    if (params.index) {
-        selector += `:eq(${params.index})`;
-    }
-    if (params.target) {
-        selector += ` ${params.target}`;
-    }
-    return selector;
-};
-
-/**
  * @param {MountViewParams} params
  * @returns {typeof View.props}
  */
@@ -136,6 +107,35 @@ class ViewDialog extends Component {
 //-----------------------------------------------------------------------------
 
 /**
+ *
+ * @param {string} base
+ * @param {SelectorOptions} [params]
+ */
+export function buildSelector(base, params) {
+    let selector = base;
+    params ||= {};
+    if (params.id) {
+        selector += `#${params.id}`;
+    }
+    if (params.class) {
+        selector += `.${params.class}`;
+    }
+    if (params.modifier) {
+        selector += `:${params.modifier}`;
+    }
+    if (params.text) {
+        selector += `:contains(${params.text})`;
+    }
+    if ("index" in params) {
+        selector += `:eq(${params.index})`;
+    }
+    if (params.target) {
+        selector += ` ${params.target}`;
+    }
+    return selector;
+}
+
+/**
  * @param {SelectorOptions} [options]
  */
 export async function clickButton(options) {
@@ -147,13 +147,6 @@ export async function clickButton(options) {
  */
 export async function clickCancel(options) {
     await contains(buildSelector(`.o_form_button_cancel:enabled`, options)).click();
-}
-
-/**
- * @param {SelectorOptions} [options]
- */
-export async function clickKanbanCard(options) {
-    await contains(buildSelector(`.o_kanban_record`, options)).click();
 }
 
 /**
@@ -183,13 +176,6 @@ export async function clickViewButton(options) {
  */
 export function fieldInput(name, options) {
     return contains(buildSelector(`.o_field_widget[name='${name}'] input`, options));
-}
-
-/**
- * @param {SelectorOptions} options
- */
-export function kanbanCard(options) {
-    return contains(buildSelector(`.o_kanban_record`, options));
 }
 
 /**
