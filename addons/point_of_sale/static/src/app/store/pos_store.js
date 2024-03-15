@@ -1532,11 +1532,16 @@ export class PosStore extends Reactive {
                 percent_amount += tax_factor;
             }
 
-            if(company.country && company.country.code === "IN"){
+            if (company.country && company.country.code === "IN") {
+                let total_tax_amount = 0.0;
                 for(const [i, tax_factor] of incl_tax_amounts.percent_taxes){
                     const tax_amount = round_pr(base_amount * tax_factor / (100 + percent_amount), currency_rounding);
+                    total_tax_amount += tax_amount;
                     cached_tax_amounts[i] = tax_amount;
                     fixed_amount += tax_amount;
+                }
+                for (const [i,] of incl_tax_amounts.percent_taxes) {
+                    cached_base_amounts[i] = base - total_tax_amount;
                 }
                 percent_amount = 0.0;
             }
@@ -1569,9 +1574,11 @@ export class PosStore extends Reactive {
         }
 
         var cached_tax_amounts = {};
+        var cached_base_amounts = {};
+        let is_base_affected = true;
         if (handle_price_include) {
             taxes.reverse().forEach(function (tax) {
-                if (tax.include_base_amount) {
+                if (tax.include_base_amount && is_base_affected) {
                     base = recompute_base(base, incl_tax_amounts);
                     store_included_tax_total = true;
                 }
@@ -1593,6 +1600,7 @@ export class PosStore extends Reactive {
                     }
                 }
                 i -= 1;
+                is_base_affected = tax.is_base_affected;
             });
         }
 
@@ -1609,22 +1617,19 @@ export class PosStore extends Reactive {
         i = 0;
         var cumulated_tax_included_amount = 0;
         taxes.reverse().forEach(function (tax) {
-            if (tax.price_include || tax.is_base_affected) {
+            if (tax.price_include && i in cached_base_amounts) {
+                var tax_base_amount = cached_base_amounts[i];
+            } else if (tax.price_include || tax.is_base_affected) {
                 var tax_base_amount = base;
             } else {
                 tax_base_amount = total_excluded;
             }
 
-            if (
-                !skip_checkpoint &&
-                tax.price_include &&
-                total_included_checkpoints[i] !== undefined &&
-                tax.sum_repartition_factor != 0
-            ) {
+            if (tax.price_include && cached_tax_amounts.hasOwnProperty(i)) {
+                var tax_amount = cached_tax_amounts[i];
+            } else if (!skip_checkpoint && tax.price_include && total_included_checkpoints[i] !== undefined) {
                 var tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount);
                 cumulated_tax_included_amount = 0;
-            }else if(tax.price_include && cached_tax_amounts.hasOwnProperty(i)){
-                var tax_amount = cached_tax_amounts[i];
             }else{
                 var tax_amount = self._compute_all(tax, tax_base_amount, quantity, true);
             }
