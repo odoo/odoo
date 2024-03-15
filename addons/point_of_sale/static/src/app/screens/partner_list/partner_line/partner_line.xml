@@ -22,14 +22,24 @@
                 <div class="mb-2" t-if="props.partner.mobile">
                     <i class="fa fa-fw fa-mobile me-2"/><t t-esc="props.partner.mobile"/>
                 </div>
-                <div t-if="props.partner.email" class="email-field mb-2">
+                <div t-if="props.partner.email" class="email-field mb-2"> 
                     <i class="fa fa-fw fa-paper-plane-o me-2"/><t t-esc="props.partner.email" />
                 </div>
             </td>
             <!-- FIXME: this should be in pos_settle_due, not here -->
             <td class="partner-line-balance" t-if="props.isBalanceDisplayed"></td>
             <td class="edit-partner-button-cell">
-                <button class="edit-partner-button btn btn-light border" t-on-click.stop="() => props.onClickEdit(props.partner)">DETAILS</button>
+                <Dropdown>
+                    <button class="btn btn-ligth fa fa-bars" />
+                    <t t-set-slot="content">
+                        <DropdownItem onSelected="() => props.onClickEdit(props.partner)">
+                            Edit Details
+                        </DropdownItem>
+                        <DropdownItem onSelected="() => props.onClickOrders(props.partner)">
+                            All Orders
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
                 <button t-if="props.isSelected" t-on-click.stop="props.onClickUnselect" class="unselect-tag-mobile d-inline-block d-lg-none btn btn-light border ms-2">
                     <i class="fa fa-times"></i>
                     <span> UNSELECT </span>
