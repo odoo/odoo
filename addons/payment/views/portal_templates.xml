@@ -281,7 +281,7 @@
         </t>
         <t t-elif="tx.state == 'pending'">
             <t t-set="alert_style">warning</t>
-            <t t-set="status_message" t-value="tx.provider_id.sudo().pending_msg"/>
+            <t t-set="status_message" t-value="tx._get_pending_message()"/>
         </t>
         <t t-elif="tx.state == 'authorized'">
             <t t-set="alert_style">success</t>

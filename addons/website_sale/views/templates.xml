@@ -2465,7 +2465,7 @@
                         <i class="fa fa-pencil"></i>
                     </a>
                     <t t-if="tx_sudo.state == 'pending'">
-                        <t t-out="tx_sudo.provider_id.sudo().pending_msg"/>
+                        <t t-out="tx_sudo._get_pending_message()"/>
                     </t>
                     <t t-if="tx_sudo.state == 'done'">
                         <span t-if='tx_sudo.provider_id.sudo().done_msg' t-out="tx_sudo.provider_id.sudo().done_msg"/>
