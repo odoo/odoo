@@ -353,10 +353,12 @@ export function makeStore(env) {
                                 sort: () => {
                                     field.sortOnNeed = false;
                                     field.sorting = true;
-                                    sortRecordList(
-                                        proxy2._fields.get(name).value._proxy,
-                                        fieldDefinition.sort.bind(proxy2)
-                                    );
+                                    const func = fieldDefinition.sort.bind(proxy2);
+                                    if (Record.isRelation(field)) {
+                                        sortRecordList(proxy2._fields.get(name).value._proxy, func);
+                                    } else {
+                                        proxy2[name].sort(func);
+                                    }
                                     field.sorting = false;
                                 },
                                 requestSort: ({ force } = {}) => {
