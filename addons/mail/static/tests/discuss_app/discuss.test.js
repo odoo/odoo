@@ -980,7 +980,7 @@ test("no out-of-focus notification on receiving self messages in chat", async ()
     assertSteps([]);
 });
 
-test.skip("out-of-focus notif on needaction message in channel", async () => {
+test("out-of-focus notif on needaction message in channel", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -1002,10 +1002,16 @@ test.skip("out-of-focus notif on needaction message in channel", async () => {
             }
         },
     }));
+    onRpcBefore("/mail/action", async (args) => {
+        if (args.init_messaging) {
+            step("init_messaging");
+        }
+    });
     const env = await start();
     rpc = rpcWithEnv(env);
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
+    await assertSteps(["init_messaging"]);
     // simulate receiving a new needaction message with odoo out-of-focused
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1044,10 +1050,16 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
             }
         },
     }));
+    onRpcBefore("/mail/action", async (args) => {
+        if (args.init_messaging) {
+            step("init_messaging");
+        }
+    });
     const env = await start();
     rpc = rpcWithEnv(env);
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
+    await assertSteps(["init_messaging"]);
     // simulate receiving a new message with odoo out-of-focused
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1089,10 +1101,16 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
             }
         },
     }));
+    onRpcBefore("/mail/action", async (args) => {
+        if (args.init_messaging) {
+            step("init_messaging");
+        }
+    });
     const env = await start();
     rpc = rpcWithEnv(env);
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
+    await assertSteps(["init_messaging"]);
     // simulate receving new message
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1184,11 +1202,17 @@ test("should auto-pin chat when receiving a new DM", async () => {
         ],
         channel_type: "chat",
     });
+    onRpcBefore("/mail/action", async (args) => {
+        if (args.init_messaging) {
+            step("init_messaging");
+        }
+    });
     const env = await start();
     rpc = rpcWithEnv(env);
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Demo" });
+    await assertSteps(["init_messaging"]);
     // simulate receiving the first message on channel 11
     withUser(userId, () =>
         rpc("/mail/message/post", {
