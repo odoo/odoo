@@ -186,7 +186,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return {
                 "price_info": self._get_price_info(pos_config),
-                "has_image": bool(self.image_1920),
+                "has_image": bool(self.product_tmpl_id.image_128 or self.image_variant_128),
                 "attributes": self._get_attributes(pos_config),
                 "name": self._get_name(),
                 "id": self.id,
