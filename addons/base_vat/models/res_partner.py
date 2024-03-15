@@ -769,7 +769,7 @@ class ResPartner(models.Model):
 
         # VAT is only digits and of the right length, check the Luhn checksum.
         try:
-            luhn.validate(vat[0:9])
+            luhn.validate(vat[0:9] if len(vat) == 15 else vat[1:10])
         except (InvalidFormat, InvalidChecksum):
             return False
 
