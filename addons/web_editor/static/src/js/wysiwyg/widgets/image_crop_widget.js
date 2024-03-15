@@ -41,6 +41,7 @@ const ImageCropWidget = Widget.extend({
         this.aspectRatio = data.aspectRatio || "0/0";
         const mimetype = data.mimetype || src.endsWith('.png') ? 'image/png' : 'image/jpeg';
         this.mimetype = options.mimetype || mimetype;
+        this.resetImage = options.resetImage || false;
     },
     /**
      * @override
@@ -49,7 +50,9 @@ const ImageCropWidget = Widget.extend({
         await this._super.apply(this, arguments);
         await loadImageInfo(this.media, this._rpc.bind(this));
         const isIllustration = /^\/web_editor\/shape\/illustration\//.test(this.media.dataset.originalSrc);
-        await this._scrollToInvisibleImage();
+        if (!this.resetImage) {
+            await this._scrollToInvisibleImage();
+        }
         if (this.media.dataset.originalSrc && !isIllustration) {
             this.originalSrc = this.media.dataset.originalSrc;
             this.originalId = this.media.dataset.originalId;

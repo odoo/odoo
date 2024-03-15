@@ -342,7 +342,7 @@
     </we-customizeblock-option>
 
     <!-- ImageCropWidget controls (allows to crop images on the page) -->
-    <div t-name="wysiwyg.widgets.crop" class="o_we_crop_widget" contenteditable="false">
+    <div t-name="wysiwyg.widgets.crop" t-att-class="'o_we_crop_widget ' + ( widget.resetImage ? 'd-none' : '' ) " contenteditable="false">
         <div class="o_we_cropper_wrapper">
             <img class="o_we_cropper_img"/>
         </div>

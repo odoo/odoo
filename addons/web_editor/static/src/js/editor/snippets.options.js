@@ -6026,7 +6026,10 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async resetCrop() {
         const img = this._getImg();
-        const cropper = new weWidgets.ImageCropWidget(this, img, {mimetype: this._getImageMimetype(img)});
+        const cropper = new weWidgets.ImageCropWidget(this, img, {
+            mimetype: this._getImageMimetype(img),
+            resetImage: true,
+        });
         await cropper.appendTo(this.$el[0].ownerDocument.body);
         await cropper.reset();
         await this._reapplyCurrentShape();
