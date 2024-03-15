@@ -2,9 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import Form
-from datetime import datetime, timedelta
 
-from odoo.fields import Datetime as Dt
 from odoo.exceptions import UserError
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
@@ -15,7 +13,7 @@ class TestMrpCancelMO(TestMrpCommon):
         """ Cancel a Manufacturing Order with no routing, no production.
         """
         # Create MO
-        manufacturing_order = self.generate_mo()[0]
+        manufacturing_order = self.mo
         # Do nothing, cancel it
         manufacturing_order.action_cancel()
         # Check the MO and its moves are cancelled
@@ -31,7 +29,7 @@ class TestMrpCancelMO(TestMrpCommon):
         """ Cancel a Manufacturing Order with no routing but some productions.
         """
         # Create MO
-        manufacturing_order = self.generate_mo()[0]
+        manufacturing_order = self.mo
         # Produce some quantity
         mo_form = Form(manufacturing_order)
         mo_form.qty_producing = 2
@@ -82,7 +80,7 @@ class TestMrpCancelMO(TestMrpCommon):
         the unlink method will try to cancel MO before unlink them).
         """
         # Case #1: Create MO, do nothing and try to unlink it (can be deleted)
-        manufacturing_order = self.generate_mo()[0]
+        manufacturing_order = self.mo
         self.assertEqual(manufacturing_order.exists().state, 'confirmed')
         manufacturing_order.unlink()
         # Check the MO is deleted.
@@ -103,15 +101,12 @@ class TestMrpCancelMO(TestMrpCommon):
             manufacturing_order.unlink()
 
     def test_cancel_mo_without_component(self):
-        product_form = Form(self.env['product.product'])
-        product_form.name = "SuperProduct"
-        product = product_form.save()
-
         mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = product
+        mo_form.product_id = self.product_1
         mo = mo_form.save()
 
         mo.action_confirm()
+        self.assertFalse(mo.move_raw_ids)
         mo.action_cancel()
 
         self.assertEqual(mo.move_finished_ids.state, 'cancel')

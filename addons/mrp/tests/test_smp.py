@@ -12,8 +12,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         """Create a MO for a product not tracked by serial number.
         The smp wizard should not open.
         """
-        mo = self.generate_mo()[0]
-        self.assertEqual(mo.state, 'confirmed')
+        mo = self.mo
         res = mo.action_mass_produce()
         self.assertFalse(res)
 
@@ -115,10 +114,10 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         wizard.action_generate_production_text()
         wizard.action_prepare()
         # 1st & 2nd MO in sequence should have only 1 move lines (1 lot) for product_to_use_1 (2nd in bom)
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids[0].move_raw_ids[1].move_lines_count, 1)
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids[1].move_raw_ids[1].move_lines_count, 1)
+        self.assertEqual(mo.procurement_group_id.mrp_production_ids[0].move_raw_ids[0].move_lines_count, 1)
+        self.assertEqual(mo.procurement_group_id.mrp_production_ids[1].move_raw_ids[0].move_lines_count, 1)
         # 3rd MO should have 2 move lines (2 different lots) for product_to_use_1
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids[2].move_raw_ids[1].move_lines_count, 2)
+        self.assertEqual(mo.procurement_group_id.mrp_production_ids[2].move_raw_ids[0].move_lines_count, 2)
 
         # Verify mark as done
 

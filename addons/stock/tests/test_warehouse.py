@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from odoo.addons.stock.tests.common2 import TestStockCommon
+from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests import Form
 from odoo.exceptions import UserError
-from odoo.tools import mute_logger
 
 
 class TestWarehouse(TestStockCommon):
@@ -14,20 +13,19 @@ class TestWarehouse(TestStockCommon):
         cls.partner = cls.env['res.partner'].create({'name': 'Deco Addict'})
 
     def test_inventory_product(self):
-        self.product_1.type = 'product'
         product_1_quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': self.product_1.id,
+            'product_id': self.productA.id,
             'inventory_quantity': 50.0,
-            'location_id': self.warehouse_1.lot_stock_id.id,
+            'location_id': self.warehouse.lot_stock_id.id,
         })
         product_1_quant.action_apply_inventory()
 
         # Make sure the inventory was successful
-        move_in_id = self.env['stock.move'].search([('is_inventory', '=', True), ('product_id', '=', self.product_1.id)])
+        move_in_id = self.env['stock.move'].search([('is_inventory', '=', True), ('product_id', '=', self.productA.id)])
         self.assertEqual(len(move_in_id), 1)
         self.assertEqual(move_in_id.product_qty, 50.0)
         self.assertEqual(product_1_quant.quantity, 50.0)
-        self.assertEqual(move_in_id.product_uom, self.product_1.uom_id)
+        self.assertEqual(move_in_id.product_uom, self.productA.uom_id)
         self.assertEqual(move_in_id.state, 'done')
 
         # Update the inventory, set to 35
@@ -35,24 +33,23 @@ class TestWarehouse(TestStockCommon):
         product_1_quant.action_apply_inventory()
 
         # Check related move and quants
-        move_ids = self.env['stock.move'].search([('is_inventory', '=', True), ('product_id', '=', self.product_1.id)])
+        move_ids = self.env['stock.move'].search([('is_inventory', '=', True), ('product_id', '=', self.productA.id)])
         self.assertEqual(len(move_ids), 2)
         move_out_id = move_ids[-1]
         self.assertEqual(move_out_id.product_qty, 15.0)
-        self.assertEqual(move_out_id.location_id, self.warehouse_1.lot_stock_id)
-        self.assertEqual(move_out_id.location_dest_id, self.product_1.property_stock_inventory)  # Inventory loss
+        self.assertEqual(move_out_id.location_id, self.warehouse.lot_stock_id)
+        self.assertEqual(move_out_id.location_dest_id, self.productA.property_stock_inventory)  # Inventory loss
         self.assertEqual(move_out_id.state, 'done')
 
-        quants = self.env['stock.quant']._gather(self.product_1, self.product_1.property_stock_inventory)
+        quants = self.env['stock.quant']._gather(self.productA, self.productA.property_stock_inventory)
         self.assertEqual(len(quants), 1)  # One quant created for inventory loss
 
         # Check quantity of product in various locations: current, its parent, brother and other
-        self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.warehouse_1.lot_stock_id).quantity, 35.0)
-        self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.warehouse_1.lot_stock_id.location_id).quantity, 35.0)
-        self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.warehouse_1.view_location_id).quantity, 35.0)
+        self.assertEqual(self.env['stock.quant']._gather(self.productA, self.warehouse.lot_stock_id).quantity, 35.0)
+        self.assertEqual(self.env['stock.quant']._gather(self.productA, self.warehouse.lot_stock_id.location_id).quantity, 35.0)
+        self.assertEqual(self.env['stock.quant']._gather(self.productA, self.warehouse.view_location_id).quantity, 35.0)
 
-        self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.warehouse_1.wh_input_stock_loc_id).quantity, 0.0)
-        self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.env.ref('stock.stock_location_stock')).quantity, 0.0)
+        self.assertEqual(self.env['stock.quant']._gather(self.productA, self.warehouse.wh_input_stock_loc_id).quantity, 0.0)
 
     def test_initial_quant_location(self):
         """
@@ -62,16 +59,11 @@ class TestWarehouse(TestStockCommon):
         stock_location = self.env.ref('stock.stock_location_stock')
         suppliers_location = self.env.ref('stock.stock_location_suppliers')
 
-        warehouse = self.env['stock.warehouse'].create({
-            'name': 'Mixed locations',
-            'code': 'TEST',
-            'sequence': 0,
-        })
-        warehouse.in_type_id.default_location_dest_id = suppliers_location
-        warehouse.lot_stock_id = stock_location
+        self.warehouse.in_type_id.default_location_dest_id = suppliers_location
+        self.warehouse.lot_stock_id = stock_location
 
         quant = self.env['stock.quant'].new({
-            'product_id': self.product_1.id,
+            'product_id': self.productA.id,
             'inventory_quantity': 1,
         })
         quant._onchange_product_id()
@@ -81,17 +73,17 @@ class TestWarehouse(TestStockCommon):
     def test_inventory_wizard_as_manager(self):
         """ Using the "Update Quantity" wizard as stock manager.
         """
-        self.product_1.type = 'product'
+        self.existing_quants = self.env['stock.quant'].search([])
         InventoryWizard = self.env['stock.change.product.qty'].with_user(self.user_stock_manager)
         inventory_wizard = InventoryWizard.create({
-            'product_id': self.product_1.id,
-            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+            'product_id': self.productA.id,
+            'product_tmpl_id': self.productA.product_tmpl_id.id,
             'new_quantity': 50.0,
         })
         inventory_wizard.change_product_qty()
         # Check quantity was updated
-        self.assertEqual(self.product_1.virtual_available, 50.0)
-        self.assertEqual(self.product_1.qty_available, 50.0)
+        self.assertEqual(self.productA.virtual_available, 50.0)
+        self.assertEqual(self.productA.qty_available, 50.0)
 
         # Check associated quants: 2 quants for the product and the quantity (1 in stock, 1 in inventory adjustment)
         quant = self.env['stock.quant'].search([('id', 'not in', self.existing_quants.ids)])
@@ -100,11 +92,10 @@ class TestWarehouse(TestStockCommon):
     def test_inventory_wizard_as_user(self):
         """ Using the "Update Quantity" wizard as stock user.
         """
-        self.product_1.type = 'product'
         InventoryWizard = self.env['stock.change.product.qty'].with_user(self.user_stock_user)
         inventory_wizard = InventoryWizard.create({
-            'product_id': self.product_1.id,
-            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+            'product_id': self.productA.id,
+            'product_tmpl_id': self.productA.product_tmpl_id.id,
             'new_quantity': 50.0,
         })
         # User has no right on quant, must raise an AccessError
@@ -112,12 +103,11 @@ class TestWarehouse(TestStockCommon):
             inventory_wizard.change_product_qty()
 
     def test_basic_move(self):
-        product = self.product_3.with_user(self.user_stock_manager)
-        product.type = 'product'
+        product = self.productA.with_user(self.user_stock_manager)
         picking_out = self.env['stock.picking'].create({
             'partner_id': self.partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
-            'location_id': self.warehouse_1.lot_stock_id.id,
+            'location_id': self.warehouse.lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
         })
         customer_move = self.env['stock.move'].create({
@@ -126,13 +116,13 @@ class TestWarehouse(TestStockCommon):
             'product_uom_qty': 5,
             'product_uom': product.uom_id.id,
             'picking_id': picking_out.id,
-            'location_id': self.warehouse_1.lot_stock_id.id,
+            'location_id': self.warehouse.lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
         })
         # simulate create + onchange
         # test move values
         self.assertEqual(customer_move.product_uom, product.uom_id)
-        self.assertEqual(customer_move.location_id, self.warehouse_1.lot_stock_id)
+        self.assertEqual(customer_move.location_id, self.warehouse.lot_stock_id)
         self.assertEqual(customer_move.location_dest_id, self.env.ref('stock.stock_location_customers'))
 
         # confirm move, check quantity on hand and virtually available, without location context
@@ -146,7 +136,7 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(product.qty_available, -5.0)
 
         # compensate negative quants by receiving products from supplier
-        receive_move = self._create_move(product, self.env.ref('stock.stock_location_suppliers'), self.warehouse_1.lot_stock_id, product_uom_qty=15)
+        receive_move = self._create_move(product, self.env.ref('stock.stock_location_suppliers'), self.warehouse.lot_stock_id, product_uom_qty=15)
 
         receive_move._action_confirm()
         receive_move.quantity = 15
@@ -158,7 +148,7 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(product.virtual_available, 10.0)
 
         # new move towards customer
-        customer_move_2 = self._create_move(product, self.warehouse_1.lot_stock_id, self.env.ref('stock.stock_location_customers'), product_uom_qty=2)
+        customer_move_2 = self._create_move(product, self.warehouse.lot_stock_id, self.env.ref('stock.stock_location_customers'), product_uom_qty=2)
 
         customer_move_2._action_confirm()
         product._compute_quantities()
@@ -581,7 +571,7 @@ class TestWarehouse(TestStockCommon):
         wh.delivery_steps = "pick_pack_ship"
         warehouse = wh.save()
 
-        warehouse.resupply_wh_ids = [(6, 0, [self.warehouse_1.id])]
+        warehouse.resupply_wh_ids = [(6, 0, [self.warehouse.id])]
 
         custom_location = Form(self.env['stock.location'])
         custom_location.name = "A Trunk"
@@ -590,14 +580,14 @@ class TestWarehouse(TestStockCommon):
 
         # Add a warehouse on the route.
         warehouse.reception_route_id.write({
-            'warehouse_ids': [(4, self.warehouse_1.id)]
+            'warehouse_ids': [(4, self.warehouse.id)]
         })
 
         route = Form(self.env['stock.route'])
         route.name = "Stair"
         route = route.save()
 
-        route.warehouse_ids = [(6, 0, [warehouse.id, self.warehouse_1.id])]
+        route.warehouse_ids = [(6, 0, [warehouse.id, self.warehouse.id])]
 
         # Pre archive a location and a route
         warehouse.delivery_route_id.toggle_active()
@@ -670,18 +660,17 @@ class TestWarehouse(TestStockCommon):
         """ Check that the closest warehouse is selected
         in a warehouse within warehouse situation
         """
-        wh = self.env.ref("stock.warehouse0")
-        test_warehouse = self.warehouse_1
+        test_warehouse = self.warehouse.copy()
         location = test_warehouse.lot_stock_id
         self.assertEqual(location.warehouse_id, test_warehouse)
 
-        test_warehouse.view_location_id.location_id = wh.lot_stock_id.id
-        wh.sequence = 100
+        test_warehouse.view_location_id.location_id = self.warehouse.lot_stock_id.id
+        self.warehouse.sequence = 100
         test_warehouse.sequence = 1
         location._compute_warehouse_id()
         self.assertEqual(location.warehouse_id, test_warehouse)
 
-        wh.sequence = 1
+        self.warehouse.sequence = 1
         test_warehouse.sequence = 100
         location._compute_warehouse_id()
         self.assertEqual(location.warehouse_id, test_warehouse)

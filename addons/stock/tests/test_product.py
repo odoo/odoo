@@ -4,7 +4,7 @@
 # Author: Leonardo Pistone
 # Copyright 2015 Camptocamp SA
 
-from odoo.addons.stock.tests.common2 import TestStockCommon
+from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form
 
@@ -14,18 +14,18 @@ class TestVirtualAvailable(TestStockCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        # Make `product3` a storable product for this test. Indeed, creating quants
-        # and playing with owners is not possible for consumables.
-        cls.product_3.type = 'product'
         cls.env['stock.picking.type'].browse(cls.env.ref('stock.picking_type_out').id).reservation_method = 'manual'
+        cls.env['res.config.settings'].create({
+            'group_stock_multi_locations': True,
+        }).execute()
 
         cls.env['stock.quant'].create({
-            'product_id': cls.product_3.id,
+            'product_id': cls.productC.id,
             'location_id': cls.env.ref('stock.stock_location_stock').id,
             'quantity': 30.0})
 
         cls.env['stock.quant'].create({
-            'product_id': cls.product_3.id,
+            'product_id': cls.productC.id,
             'location_id': cls.env.ref('stock.stock_location_stock').id,
             'quantity': 10.0,
             'owner_id': cls.user_stock_user.partner_id.id})
@@ -36,9 +36,9 @@ class TestVirtualAvailable(TestStockCommon):
         })
         cls.env['stock.move'].create({
             'name': 'a move',
-            'product_id': cls.product_3.id,
+            'product_id': cls.productC.id,
             'product_uom_qty': 3.0,
-            'product_uom': cls.product_3.uom_id.id,
+            'product_uom': cls.productC.uom_id.id,
             'picking_id': cls.picking_out.id,
             'location_id': cls.env.ref('stock.stock_location_stock').id,
             'location_dest_id': cls.env.ref('stock.stock_location_customers').id})
@@ -49,21 +49,22 @@ class TestVirtualAvailable(TestStockCommon):
         cls.env['stock.move'].create({
             'restrict_partner_id': cls.user_stock_user.partner_id.id,
             'name': 'another move',
-            'product_id': cls.product_3.id,
+            'product_id': cls.productC.id,
             'product_uom_qty': 5.0,
-            'product_uom': cls.product_3.uom_id.id,
+            'product_uom': cls.productC.uom_id.id,
             'picking_id': cls.picking_out_2.id,
             'location_id': cls.env.ref('stock.stock_location_stock').id,
             'location_dest_id': cls.env.ref('stock.stock_location_customers').id})
+        cls.location_1 = cls.env.ref('stock.stock_location_stock')
 
     def test_without_owner(self):
-        self.assertAlmostEqual(40.0, self.product_3.virtual_available)
+        self.assertAlmostEqual(40.0, self.productC.virtual_available)
         self.picking_out.action_assign()
         self.picking_out_2.action_assign()
-        self.assertAlmostEqual(32.0, self.product_3.virtual_available)
+        self.assertAlmostEqual(32.0, self.productC.virtual_available)
 
     def test_with_owner(self):
-        prod_context = self.product_3.with_context(owner_id=self.user_stock_user.partner_id.id)
+        prod_context = self.productC.with_context(owner_id=self.user_stock_user.partner_id.id)
         self.assertAlmostEqual(10.0, prod_context.virtual_available)
         self.picking_out.action_assign()
         self.picking_out_2.action_assign()
@@ -71,40 +72,40 @@ class TestVirtualAvailable(TestStockCommon):
 
     def test_free_quantity(self):
         """ Test the value of product.free_qty. Free_qty = qty_on_hand - qty_reserved"""
-        self.assertAlmostEqual(40.0, self.product_3.free_qty)
+        self.assertAlmostEqual(40.0, self.productC.free_qty)
         self.picking_out.action_confirm()
         self.picking_out_2.action_confirm()
         # No reservation so free_qty is unchanged
-        self.assertAlmostEqual(40.0, self.product_3.free_qty)
+        self.assertAlmostEqual(40.0, self.productC.free_qty)
         self.picking_out.action_assign()
         self.picking_out_2.action_assign()
         # 8 units are now reserved
-        self.assertAlmostEqual(32.0, self.product_3.free_qty)
+        self.assertAlmostEqual(32.0, self.productC.free_qty)
         self.picking_out.do_unreserve()
         self.picking_out_2.do_unreserve()
         # 8 units are available again
-        self.assertAlmostEqual(40.0, self.product_3.free_qty)
+        self.assertAlmostEqual(40.0, self.productC.free_qty)
 
     def test_archive_product_1(self):
         """`qty_available` and `virtual_available` are computed on archived products"""
-        self.assertTrue(self.product_3.active)
-        self.assertAlmostEqual(40.0, self.product_3.qty_available)
-        self.assertAlmostEqual(40.0, self.product_3.virtual_available)
-        self.product_3.active = False
-        self.assertAlmostEqual(40.0, self.product_3.qty_available)
-        self.assertAlmostEqual(40.0, self.product_3.virtual_available)
+        self.assertTrue(self.productC.active)
+        self.assertAlmostEqual(40.0, self.productC.qty_available)
+        self.assertAlmostEqual(40.0, self.productC.virtual_available)
+        self.productC.active = False
+        self.assertAlmostEqual(40.0, self.productC.qty_available)
+        self.assertAlmostEqual(40.0, self.productC.virtual_available)
 
     def test_archive_product_2(self):
         """Archiving a product should archive its reordering rules"""
-        self.assertTrue(self.product_3.active)
+        self.assertTrue(self.productC.active)
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
-        orderpoint_form.product_id = self.product_3
+        orderpoint_form.product_id = self.productC
         orderpoint_form.location_id = self.env.ref('stock.stock_location_stock')
         orderpoint_form.product_min_qty = 0.0
         orderpoint_form.product_max_qty = 5.0
         orderpoint = orderpoint_form.save()
         self.assertTrue(orderpoint.active)
-        self.product_3.active = False
+        self.productC.active = False
         self.assertFalse(orderpoint.active)
 
     def test_change_product_company(self):
@@ -278,7 +279,7 @@ class TestVirtualAvailable(TestStockCommon):
         self.assertNotIn(template.id, res_ids)
 
     def test_product_qty_field_and_context(self):
-        main_warehouse = self.warehouse_1
+        main_warehouse = self.warehouse
         other_warehouse = self.env['stock.warehouse'].search([('id', '!=', main_warehouse.id)], limit=1)
         warehouses = main_warehouse | other_warehouse
         main_loc = main_warehouse.lot_stock_id
@@ -291,11 +292,11 @@ class TestVirtualAvailable(TestStockCommon):
             'location_id': main_loc.id,
         } for i in range(3)])
 
-        self.env['stock.quant'].search([('product_id', '=', self.product_3.id)]).unlink()
-        self.env['stock.quant']._update_available_quantity(self.product_3, other_loc, 1000)
-        self.env['stock.quant']._update_available_quantity(self.product_3, main_loc, 100)
-        self.env['stock.quant']._update_available_quantity(self.product_3, sub_loc01, 10)
-        self.env['stock.quant']._update_available_quantity(self.product_3, sub_loc02, 1)
+        self.env['stock.quant'].search([('product_id', '=', self.productC.id)]).unlink()
+        self.env['stock.quant']._update_available_quantity(self.productC, other_loc, 1000)
+        self.env['stock.quant']._update_available_quantity(self.productC, main_loc, 100)
+        self.env['stock.quant']._update_available_quantity(self.productC, sub_loc01, 10)
+        self.env['stock.quant']._update_available_quantity(self.productC, sub_loc02, 1)
 
         for wh, loc, expected in [
             (False, False, 1111.0),
@@ -318,7 +319,7 @@ class TestVirtualAvailable(TestStockCommon):
             (warehouses.ids, False, 1111.0),
             (warehouses.ids, (other_loc | sub_loc02).ids, 1001),
         ]:
-            product_qty = self.product_3.with_context(warehouse=wh, location=loc).qty_available
+            product_qty = self.productC.with_context(warehouse=wh, location=loc).qty_available
             self.assertEqual(product_qty, expected)
 
     def test_change_type_tracked_product(self):

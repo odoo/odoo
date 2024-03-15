@@ -20,9 +20,6 @@ class MrpBom(models.Model):
     _order = "sequence, id"
     _check_company_auto = True
 
-    def _get_default_product_uom_id(self):
-        return self.env['uom.uom'].search([], limit=1, order='id').id
-
     code = fields.Char('Reference')
     active = fields.Boolean('Active', default=True)
     type = fields.Selection([
@@ -46,7 +43,7 @@ class MrpBom(models.Model):
         help="This should be the smallest quantity that this product can be produced in. If the BOM contains operations, make sure the work center capacity is accurate.")
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
-        default=_get_default_product_uom_id, required=True,
+        readonly=False, required=True, compute='_compute_product_uom_id', store=True, copy=True, precompute=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control", domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_tmpl_id.uom_id.category_id')
     sequence = fields.Integer('Sequence')
@@ -103,6 +100,14 @@ class MrpBom(models.Model):
     def _compute_possible_product_template_attribute_value_ids(self):
         for bom in self:
             bom.possible_product_template_attribute_value_ids = bom.product_tmpl_id.valid_product_template_attribute_line_ids._without_no_variant_attributes().product_template_value_ids._only_active()
+
+    @api.depends('product_tmpl_id')
+    def _compute_product_uom_id(self):
+        for record in self:
+            default_uom_id = self.env.context.get('default_product_uom_id')
+            # Avoids updating the BoM's UoM in case a specific UoM was passed through as a default value.
+            if record.product_uom_id.category_id != record.product_tmpl_id.uom_id.category_id or self.product_uom_id.id != default_uom_id:
+                record.product_uom_id = record.product_tmpl_id.uom_id.id
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -214,10 +219,6 @@ class MrpBom(models.Model):
     @api.onchange('product_tmpl_id')
     def onchange_product_tmpl_id(self):
         if self.product_tmpl_id:
-            default_uom_id = self.env.context.get('default_product_uom_id')
-            # Avoids updating the BoM's UoM in case a specific UoM was passed through as a default value.
-            if self.product_uom_id.category_id != self.product_tmpl_id.uom_id.category_id or self.product_uom_id.id != default_uom_id:
-                self.product_uom_id = self.product_tmpl_id.uom_id.id
             if self.product_id.product_tmpl_id != self.product_tmpl_id:
                 self.product_id = False
             self.bom_line_ids.bom_product_template_attribute_value_ids = False
