@@ -1792,6 +1792,7 @@ registry.ImageShapeHoverEffet = publicWidget.Widget.extend({
                 this.el.dataset.originalSrcBeforeHover = this.originalImgSrc;
             }
             this.el.src = preloadedImg.getAttribute('src');
+            this.el.dispatchEvent(new Event("src_image_changed"));
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive("setImgHoverEffectSrc");
             this.lastImgSrc = preloadedImg.getAttribute('src');
             this.el.onload = () => {

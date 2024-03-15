@@ -6655,6 +6655,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         this.$target.on('image_changed.ImageOptimization', this._onImageChanged.bind(this));
         this.$target.on('image_cropped.ImageOptimization', this._onImageCropped.bind(this));
         this.$target.on('image_cropper_destroyed.ImageOptimization', this._onImageCropperDestroyed.bind(this));
+        this.$target.on('src_image_changed.ImageOptimization', this._onSrcImageChanged.bind(this));
         return this._super(...arguments);
     },
     /**
@@ -6782,7 +6783,7 @@ registry.ImageTools = ImageHandlerOption.extend({
     async setImgShape(previewMode, widgetValue, params) {
         const img = this._getImg();
         const saveData = previewMode === false;
-        if (img.dataset.hoverEffect && !widgetValue) {
+        if (this.imageData.hoverEffect && !widgetValue) {
             // When a shape is removed and there is a hover effect on the
             // image, we then place the "Square" shape as the default because a
             // shape is required for the hover effects to work.
@@ -6810,10 +6811,10 @@ registry.ImageTools = ImageHandlerOption.extend({
                         delete this.imageData.shapeRotate;
                     }
                     if (!this._canHaveHoverEffect()) {
-                        delete img.dataset.hoverEffect;
-                        delete img.dataset.hoverEffectColor;
-                        delete img.dataset.hoverEffectStrokeWidth;
-                        delete img.dataset.hoverEffectIntensity;
+                        delete this.imageData.hoverEffect;
+                        delete this.imageData.hoverEffectColor;
+                        delete this.imageData.hoverEffectStrokeWidth;
+                        delete this.imageData.hoverEffectIntensity;
                         img.classList.remove("o_animate_on_hover");
                     }
                     if (!this._isAnimatedShape()) {
@@ -6891,36 +6892,35 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @see this.selectClass for parameters
      */
     async setImgShapeHoverEffect(previewMode, widgetValue, params) {
-        const imgEl = this._getImg();
         if (previewMode !== "reset") {
-            this.prevHoverEffectColor = imgEl.dataset.hoverEffectColor;
-            this.prevHoverEffectIntensity = imgEl.dataset.hoverEffectIntensity;
-            this.prevHoverEffectStrokeWidth = imgEl.dataset.hoverEffectStrokeWidth;
+            this.prevHoverEffectColor = this.imageData.hoverEffectColor;
+            this.prevHoverEffectIntensity = this.imageData.hoverEffectIntensity;
+            this.prevHoverEffectStrokeWidth = this.imageData.hoverEffectStrokeWidth;
         }
-        delete imgEl.dataset.hoverEffectColor;
-        delete imgEl.dataset.hoverEffectIntensity;
-        delete imgEl.dataset.hoverEffectStrokeWidth;
+        delete this.imageData.hoverEffectColor;
+        delete this.imageData.hoverEffectIntensity;
+        delete this.imageData.hoverEffectStrokeWidth;
         if (previewMode === true) {
             if (params.name === "hover_effect_overlay_opt") {
-                imgEl.dataset.hoverEffectColor = this._getCSSColorValue("black-25");
+                this.imageData.hoverEffectColor = this._getCSSColorValue("black-25");
             } else if (params.name === "hover_effect_outline_opt") {
-                imgEl.dataset.hoverEffectColor = this._getCSSColorValue("primary");
-                imgEl.dataset.hoverEffectStrokeWidth = 10;
+                this.imageData.hoverEffectColor = this._getCSSColorValue("primary");
+                this.imageData.hoverEffectStrokeWidth = '10';
             } else {
-                imgEl.dataset.hoverEffectIntensity = 20;
+                this.imageData.hoverEffectIntensity = '20';
                 if (params.name !== "hover_effect_mirror_blur_opt") {
-                    imgEl.dataset.hoverEffectColor = "rgba(0, 0, 0, 0)";
+                    this.imageData.hoverEffectColor = "rgba(0, 0, 0, 0)";
                 }
             }
         } else {
             if (this.prevHoverEffectColor) {
-                imgEl.dataset.hoverEffectColor = this.prevHoverEffectColor;
+                this.imageData.hoverEffectColor = this.prevHoverEffectColor;
             }
             if (this.prevHoverEffectIntensity) {
-                imgEl.dataset.hoverEffectIntensity = this.prevHoverEffectIntensity;
+                this.imageData.hoverEffectIntensity = this.prevHoverEffectIntensity;
             }
             if (this.prevHoverEffectStrokeWidth) {
-                imgEl.dataset.hoverEffectStrokeWidth = this.prevHoverEffectStrokeWidth;
+                this.imageData.hoverEffectStrokeWidth = this.prevHoverEffectStrokeWidth;
             }
         }
         await this._reapplyCurrentShape();
@@ -6937,16 +6937,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async selectImageOption(previewMode, widgetValue, params) {
         await this._super(...arguments);
-        if (params.optionName === "shapeAnimationSpeed") {
-            await this._reapplyCurrentShape();
-        }
-    },
-    /**
-     * @see this.selectClass for parameters
-     */
-    async selectDataAttribute(previewMode, widgetValue, params) {
-        await this._super(...arguments);
-        if (["hoverEffectIntensity", "hoverEffectStrokeWidth"].includes(params.attributeName)) {
+        if (new Set(["shapeAnimationSpeed", "hoverEffectIntensity", "hoverEffectStrokeWidth"]).has(params.optionName)) {
             await this._reapplyCurrentShape();
         }
     },
@@ -6956,14 +6947,13 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @see this.selectClass for parameters
      */
     async setHoverEffectColor(previewMode, widgetValue, params) {
-        const img = this._getImg();
         let defaultColor = "rgba(0, 0, 0, 0)";
-        if (img.dataset.hoverEffect === "overlay") {
+        if (this.imageData.hoverEffect === "overlay") {
             defaultColor = "black-25";
-        } else if (img.dataset.hoverEffect === "outline") {
+        } else if (this.imageData.hoverEffect === "outline") {
             defaultColor = "primary";
         }
-        img.dataset.hoverEffectColor = this._getCSSColorValue(widgetValue || defaultColor);
+        this.imageData.hoverEffectColor = this._getCSSColorValue(widgetValue || defaultColor);
         await this._reapplyCurrentShape();
     },
 
@@ -7004,7 +6994,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         await this._super(...arguments);
         // Adapts the colorpicker label according to the selected "On Hover"
         // animation.
-        const hoverEffectName = this.$target[0].dataset.hoverEffect;
+        const hoverEffectName = this.imageData.hoverEffect;
         if (hoverEffectName) {
             const hoverEffectColorWidget = this.findWidget("hover_effect_color_opt");
             const needToAdaptLabel = ["image_zoom_in", "image_zoom_out", "dolly_zoom"].includes(hoverEffectName);
@@ -7159,7 +7149,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         let hasHoverEffect = false;
 
         // Add shape animations on hover.
-        if (img.dataset.hoverEffect && this._canHaveHoverEffect()) {
+        if (this.imageData.hoverEffect && this._canHaveHoverEffect()) {
             // The "ImageShapeHoverEffet" public widget needs to restart
             // (e.g. image replacement).
             needToRefreshPublicWidgets = true;
@@ -7232,7 +7222,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         }
 
         // Add shape animations on hover.
-        if (img.dataset.hoverEffect && this._canHaveHoverEffect()) {
+        if (this.imageData.hoverEffect && this._canHaveHoverEffect()) {
             this._addImageShapeHoverEffect(svg, img);
         }
 
@@ -7419,8 +7409,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                 return this.imageData.shapeFlip?.includes("y") || "";
             }
             case 'setHoverEffectColor': {
-                const imgEl = this._getImg();
-                return imgEl.dataset.hoverEffectColor || "";
+                return this.imageData.hoverEffectColor || "";
             }
         }
         return this._super(...arguments);
@@ -7496,7 +7485,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         if (img.dataset.shape && match) {
             this.imageShape = {};
             for (const option in img.dataset) {
-                if (weUtils.isDatasetImageOption(option)) {
+                if (weUtils.isImageShapeOption(option)) {
                     this.imageShape[option] = img.dataset[option];
                 }
             }
@@ -7529,10 +7518,10 @@ registry.ImageTools = ImageHandlerOption.extend({
                 delete this.imageData.originalMimetype;
                 delete this.imageData.shapeFlip;
                 delete this.imageData.shapeRotate;
-                delete img.dataset.hoverEffect;
-                delete img.dataset.hoverEffectColor;
-                delete img.dataset.hoverEffectStrokeWidth;
-                delete img.dataset.hoverEffectIntensity;
+                delete this.imageData.hoverEffect;
+                delete this.imageData.hoverEffectColor;
+                delete this.imageData.hoverEffectStrokeWidth;
+                delete this.imageData.hoverEffectIntensity;
                 img.classList.remove("o_animate_on_hover");
                 delete this.imageData.shapeAnimationSpeed;
                 weUtils.updateImageDataRegistry(img.getAttribute("src"), this.imageData);
@@ -7657,7 +7646,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         let rbg = null;
         let opacity = null;
         // Add the required parts for the hover effects to the SVG.
-        const hoverEffectName = img.dataset.hoverEffect;
+        const hoverEffectName = this.imageData.hoverEffect;
         if (!this.hoverEffectsSvg) {
             this.hoverEffectsSvg = await this._getHoverEffects();
         }
@@ -7671,8 +7660,8 @@ registry.ImageTools = ImageHandlerOption.extend({
         const animateTransformEls = svgEl.querySelectorAll("animateTransform");
         const animateElValues = animateEl?.getAttribute("values");
         let animateTransformElValues = animateTransformEls[0]?.getAttribute("values");
-        if (img.dataset.hoverEffectColor) {
-            rgba = convertCSSColorToRgba(img.dataset.hoverEffectColor);
+        if (this.imageData.hoverEffectColor) {
+            rgba = convertCSSColorToRgba(this.imageData.hoverEffectColor);
             rbg = `rgb(${rgba.red},${rgba.green},${rgba.blue})`;
             opacity = rgba.opacity / 100;
             if (!["outline", "image_mirror_blur"].includes(hoverEffectName)) {
@@ -7686,7 +7675,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                 svgEl.querySelector('[stroke-opacity="hover_effect_opacity"]').setAttribute("stroke-opacity", opacity);
                 // The stroke width needs to be multiplied by two because half
                 // of the stroke is invisible since it is centered on the path.
-                const strokeWidth = parseInt(img.dataset.hoverEffectStrokeWidth) * 2;
+                const strokeWidth = parseInt(this.imageData.hoverEffectStrokeWidth) * 2;
                 animateEl.setAttribute("values", animateElValues.replace("hover_effect_stroke_width", strokeWidth));
                 break;
             }
@@ -7709,7 +7698,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                 gEl.setAttribute("clip-path", clipPathValue);
                 imageEl.parentNode.replaceChild(gEl, imageEl);
                 gEl.appendChild(imageEl);
-                let zoomValue = 1.01 + parseInt(img.dataset.hoverEffectIntensity) / 200;
+                let zoomValue = 1.01 + parseInt(this.imageData.hoverEffectIntensity) / 200;
                 animateTransformEls[0].setAttribute("values", animateTransformElValues.replace("hover_effect_zoom", zoomValue));
                 if (hoverEffectName === "image_zoom_out") {
                     // Set zoom intensity for the image.
@@ -7719,7 +7708,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                 if (hoverEffectName === "dolly_zoom") {
                     clipPathEl.setAttribute("style", "transform-origin: center;");
                     // Set zoom intensity for clip-path and overlay.
-                    zoomValue = 0.99 - parseInt(img.dataset.hoverEffectIntensity) / 2000;
+                    zoomValue = 0.99 - parseInt(this.imageData.hoverEffectIntensity) / 2000;
                     animateTransformEls.forEach((animateTransformEl, index) => {
                         if (index > 0) {
                             animateTransformElValues = animateTransformEl.getAttribute("values");
@@ -7737,7 +7726,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                 imageMirrorEl.setAttribute("id", 'shapeImageMirror');
                 imageMirrorEl.setAttribute("filter", "url(#blurFilter)");
                 imageEl.insertAdjacentElement("beforebegin", imageMirrorEl);
-                const zoomValue = 0.99 - parseInt(img.dataset.hoverEffectIntensity) / 200;
+                const zoomValue = 0.99 - parseInt(this.imageData.hoverEffectIntensity) / 200;
                 animateTransformEls[0].setAttribute("values", animateTransformElValues.replace("hover_effect_zoom", zoomValue));
                 break;
             }
@@ -7765,12 +7754,11 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @private
      */
     async _disableHoverEffect() {
-        const imgEl = this._getImg();
         const shapeName = this.imageData.shape?.split("/")[2];
-        delete imgEl.dataset.hoverEffect;
-        delete imgEl.dataset.hoverEffectColor;
-        delete imgEl.dataset.hoverEffectStrokeWidth;
-        delete imgEl.dataset.hoverEffectIntensity;
+        delete this.imageData.hoverEffect;
+        delete this.imageData.hoverEffectColor;
+        delete this.imageData.hoverEffectStrokeWidth;
+        delete this.imageData.hoverEffectIntensity;
         await this._applyOptions();
         // If "Square" shape, remove it, it doesn't make sense to keep it
         // without hover effect.
@@ -7847,6 +7835,15 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     _onImageCropperDestroyed(ev) {
         this.imageData = weUtils.getImageData(this._getImg());
+    },
+    /**
+     * Updates the "image.data" registry as the source of the image changed.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onSrcImageChanged(ev) {
+        weUtils.updateImageDataRegistry(this._getImg().getAttribute("src"), this.imageData);
     },
 });
 

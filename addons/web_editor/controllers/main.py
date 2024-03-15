@@ -330,7 +330,7 @@ class Web_Editor(http.Controller):
         return removal_blocked_by
 
     @http.route('/web_editor/get_image_info', type='json', auth='user', website=True)
-    def get_image_info(self, res_model, res_id, res_field='', res_type='', search_image_data=True, src=''):
+    def get_image_info(self, res_model, res_id, res_field='', res_type='', search_image_data=True, src='', src_before_hover=''):
         """Returns the image data (mimetype, image options etc...) of a modified
         image. If the image has never been modified, it returns the mimetype,
         the image source and the id of the original attachment linked to the
@@ -345,9 +345,11 @@ class Web_Editor(http.Controller):
         :param search_image_data: If a 'web_editor.image.data' record has to
         be searched.
         :param src: The src of the image.
+        :param src_before_hover: The src of the image before an hover effect was
+        applied.
         :return: Object that contains the image data.
         """
-        image_data_res_info = self._get_image_data_res_info(res_model=res_model, res_id=res_id, res_field=res_field, res_type=res_type, src=src)
+        image_data_res_info = self._get_image_data_res_info(res_model=res_model, res_id=res_id, res_field=res_field, res_type=res_type, src=src, src_before_hover=src_before_hover)
         image_data_res_id = image_data_res_info['image_data_res_id']
         if isinstance(image_data_res_id, int) and search_image_data:
             # image_data_res_id could be a string (e.g. xmlid). In this case, do
@@ -453,7 +455,7 @@ class Web_Editor(http.Controller):
         context.pop('allowed_company_ids', None)
         request.update_env(context=context)
 
-    def _get_image_data_res_info(self, res_model, res_id, res_field='', res_type='', new_attachment_id=None, src=''):
+    def _get_image_data_res_info(self, res_model, res_id, res_field='', res_type='', new_attachment_id=None, src='', src_before_hover=''):
         """
         Returns the information needed to identify the 'web_editor.image.data'
         record to update if 'new_attachment_id' is set (if the image is being
@@ -468,6 +470,8 @@ class Web_Editor(http.Controller):
         :param new_attachment_id: The id of the attachment created if the image
         is being saved.
         :param src: The source of the image if it is not being saved.
+        :param src_before_hover: The src of the image before an hover effect was
+        applied.
         :return: Object that contains the information needed to identify the
         wanted 'web_editor.image.data' record.
         """
@@ -481,7 +485,8 @@ class Web_Editor(http.Controller):
             if res_type != 'image':
                 # The image is not a field. Search for a potential id of an
                 # attachment linked to a modified image.
-                matched_src = re.search(r'/(?:web/image|unsplash/[^/]*?)/(\d+|[^\s/]+)', src)
+                resIdRegex = r'/(?:web/image|unsplash/[^/]*?)/(\d+|[^\s/]+)'
+                matched_src = re.search(resIdRegex, src) or re.search(resIdRegex, src_before_hover)
                 image_data_res_id = matched_src and matched_src.group(1)
             if isinstance(image_data_res_id, str) and image_data_res_id.isdigit():
                 image_data_res_id = int(image_data_res_id)

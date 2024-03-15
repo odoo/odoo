@@ -139,11 +139,11 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     wTourUtils.clickOnElement("Image of the 'Columns' snippet with the overlay effect", ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='overlay']"),
     wTourUtils.changeOption("WebsiteAnimate", 'we-toggler:contains("Overlay")'),
-    wTourUtils.changeOption("WebsiteAnimate", 'we-button[data-select-data-attribute="outline"]'),
+    wTourUtils.changeOption("WebsiteAnimate", 'we-button[data-select-image-option="outline"]'),
     {
         content: "Check that the outline effect has been applied on the image",
         trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']",
-        extra_trigger: ".snippet-option-WebsiteAnimate we-select[data-attribute-name='hoverEffect'] we-toggler:contains('Outline')",
+        extra_trigger: ".snippet-option-WebsiteAnimate we-select[data-option-name='hoverEffect'] we-toggler:contains('Outline')",
     },
     ...wTourUtils.clickOnSave(),
     {

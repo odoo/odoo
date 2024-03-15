@@ -87,11 +87,17 @@ const DEFAULT_PALETTE = {
     '5': '#383E45',
 };
 /**
+ * Set of the image options related to the shape.
+ */
+const IMAGE_SHAPE_OPTIONS = new Set([
+    "shape", "shapeAnimationSpeed", "shapeColors", "shapeFlip", "shapeRotate", "fileName",
+    "originalMimetype",
+]);
+/**
  * Set of the image options to keep on the DOM.
  */
 const DATASET_IMAGE_OPTIONS = new Set([
-    "shape", "shapeAnimationSpeed", "shapeColors", "shapeFlip", "shapeRotate", "fileName",
-    "originalMimetype",
+    ...IMAGE_SHAPE_OPTIONS.keys(), "hoverEffect",
 ]);
 
 /**
@@ -430,6 +436,9 @@ function _getColorClass(el, colorNames, prefix) {
 function _isDatasetImageOption(option) {
     return DATASET_IMAGE_OPTIONS.has(option);
 }
+function _isImageShapeOption(option) {
+    return IMAGE_SHAPE_OPTIONS.has(option);
+}
 /**
  * Checks if an element supposedly marked with the o_editable_media class should
  * in fact be editable (checks if its environment looks like a non editable
@@ -588,6 +597,7 @@ export default {
     isMobileView: _isMobileView,
     getLinkLabel: _getLinkLabel,
     isDatasetImageOption: _isDatasetImageOption,
+    isImageShapeOption: _isImageShapeOption,
     getImageData: _getImageData,
     updateImageDataRegistry: _updateImageDataRegistry,
     convertSnakeToCamelOrCamelToSnakeObject: _convertSnakeToCamelOrCamelToSnakeObject,
