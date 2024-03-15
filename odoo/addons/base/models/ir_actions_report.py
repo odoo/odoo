@@ -992,11 +992,10 @@ class IrActionsReport(models.Model):
 
         return report_action
 
-    def _action_configure_external_report_layout(self, report_action):
-        action = self.env["ir.actions.actions"]._for_xml_id("web.action_base_document_layout_configurator")
+    def _action_configure_external_report_layout(self, report_action, xml_id="web.action_base_document_layout_configurator"):
+        action = self.env["ir.actions.actions"]._for_xml_id(xml_id)
         py_ctx = json.loads(action.get('context', {}))
         report_action['close_on_report_download'] = True
         py_ctx['report_action'] = report_action
-        py_ctx['dialog_size'] = 'large'
         action['context'] = py_ctx
         return action

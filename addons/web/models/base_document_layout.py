@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import markupsafe
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools
@@ -125,21 +124,21 @@ class BaseDocumentLayout(models.TransientModel):
 
         for wizard in self:
             if wizard.report_layout_id:
-                # guarantees that bin_size is always set to False,
-                # so the logo always contains the bin data instead of the binary size
-                if wizard.env.context.get('bin_size'):
-                    wizard_with_logo = wizard.with_context(bin_size=False)
-                else:
-                    wizard_with_logo = wizard
-                preview_css = markupsafe.Markup(self._get_css_for_preview(styles, wizard_with_logo.id))
-                ir_ui_view = wizard_with_logo.env['ir.ui.view']
-                wizard.preview = ir_ui_view._render_template('web.report_invoice_wizard_preview', {
+                preview_css, wizard_with_logo = wizard._get_render_information(styles)
+
+                wizard.preview = wizard_with_logo.env['ir.ui.view']._render_template('web.report_invoice_wizard_preview', {
                     'company': wizard_with_logo,
                     'preview_css': preview_css,
                     'is_html_empty': is_html_empty,
                 })
             else:
                 wizard.preview = False
+
+    def _get_render_information(self, styles):
+        self.ensure_one()
+        wizard_with_logo = self.with_context(bin_size=False)
+        preview_css = self._get_css_for_preview(styles, wizard_with_logo.id)
+        return preview_css, wizard_with_logo
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
@@ -292,7 +291,7 @@ class BaseDocumentLayout(models.TransientModel):
         bootstrap_path = file_path('web/static/lib/bootstrap/scss')
 
         try:
-            return libsass.compile(
+            compiled_css = libsass.compile(
                 string=scss_source,
                 include_paths=[
                     bootstrap_path,
@@ -300,6 +299,7 @@ class BaseDocumentLayout(models.TransientModel):
                 output_style=output_style,
                 precision=precision,
             )
+            return Markup(compiled_css) if isinstance(compiled_css, Markup) else compiled_css
         except libsass.CompileError as e:
             raise libsass.CompileError(e.args[0])
 
