@@ -1680,6 +1680,7 @@
         <record id="action_move_out_refund_type" model="ir.actions.act_window">
             <field name="name">Credit Notes</field>
             <field name="res_model">account.move</field>
+            <field name="path">credit-notes</field>
             <field name="view_mode">tree,kanban,form,activity</field>
             <field name="view_id" ref="view_out_credit_note_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
@@ -1698,6 +1699,7 @@
         <record id="action_move_in_invoice_type" model="ir.actions.act_window">
             <field name="name">Bills</field>
             <field name="res_model">account.move</field>
+            <field name="path">bills</field>
             <field name="view_mode">tree,kanban,form,activity</field>
             <field name="view_id" ref="view_in_invoice_bill_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>

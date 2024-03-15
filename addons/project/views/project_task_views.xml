@@ -924,6 +924,7 @@
         <record id="action_view_my_task" model="ir.actions.act_window">
             <field name="name">My Tasks</field>
             <field name="res_model">project.task</field>
+            <field name="path">my-tasks</field>
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
             <field name="context">{
                 'search_default_open_tasks': 1,
@@ -979,6 +980,7 @@
         <record id="action_view_all_task" model="ir.actions.act_window">
             <field name="name">All Tasks</field>
             <field name="res_model">project.task</field>
+            <field name="path">all-tasks</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field name="domain">[('display_in_project', '=', True)]</field>
             <field name="context">{'search_default_open_tasks': 1, 'default_user_ids': [(4, uid)]}</field>

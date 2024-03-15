@@ -471,6 +471,7 @@ env['res.partner'].create({'name': partner_name})
         <record id="action_server_action" model="ir.actions.act_window">
             <field name="name">Server Actions</field>
             <field name="res_model">ir.actions.server</field>
+            <field name="path">server-actions</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_server_action_tree"/>
             <field name="search_view_id" ref="view_server_action_search"/>

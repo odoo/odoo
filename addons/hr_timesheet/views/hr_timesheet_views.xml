@@ -363,6 +363,7 @@
         <record id="timesheet_action_all" model="ir.actions.act_window">
             <field name="name">All Timesheets</field>
             <field name="res_model">account.analytic.line</field>
+            <field name="path">all-timesheets</field>
             <field name="view_mode">tree,form,kanban,pivot,graph</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="domain">[('project_id', '!=', False)]</field>
@@ -429,6 +430,7 @@
         <record id="act_hr_timesheet_line_by_project" model="ir.actions.act_window">
             <field name="name">Timesheets</field>
             <field name="res_model">account.analytic.line</field>
+            <field name="path">project-timesheets</field>
             <field name="view_mode">tree,kanban,pivot,graph,form</field>
             <field name="view_id" ref="timesheet_view_tree_user"/>
             <field name="domain">[('project_id', '=', active_id)]</field>
