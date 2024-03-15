@@ -22,6 +22,8 @@ import {
 } from "./dom";
 
 /**
+ * @typedef {"blur" | "enter" | "tab" | false} ConfirmAction
+ *
  * @typedef {{
  *  cancel: () => Event[];
  *  drop: (to?: Target, options?: PointerOptions) => Event[];
@@ -35,7 +37,7 @@ import {
  * @typedef {keyof HTMLElementEventMap | keyof WindowEventMap} EventType
  *
  * @typedef {{
- *  confirm?: boolean;
+ *  confirm?: ConfirmAction;
  *  composition?: boolean;
  *  instantly?: boolean;
  * }} FillOptions
@@ -464,9 +466,9 @@ const registerFileInput = ({ target }) => {
 /**
  * @param {EventTarget} target
  * @param {string} initialValue
- * @param {boolean} confirmNow
+ * @param {ConfirmAction} confirmAction
  */
-const registerForChange = (target, initialValue, confirmNow) => {
+const registerForChange = (target, initialValue, confirmAction) => {
     const triggerChange = () => {
         removeChangeTargetListeners();
 
@@ -475,11 +477,19 @@ const registerForChange = (target, initialValue, confirmNow) => {
         }
     };
 
-    const canTriggerEnter = getTag(target) === "input";
-    if (canTriggerEnter) {
-        changeTargetListeners.push(
-            on(target, "keydown", (ev) => !isPrevented(ev) && ev.key === "Enter" && triggerChange())
-        );
+    confirmAction &&= confirmAction.toLowerCase();
+    if (confirmAction === "enter") {
+        if (getTag(target) === "input") {
+            changeTargetListeners.push(
+                on(
+                    target,
+                    "keydown",
+                    (ev) => !isPrevented(ev) && ev.key === "Enter" && triggerChange()
+                )
+            );
+        } else {
+            throw new HootDomError(`"enter" confirm action is only supported on <input/> elements`);
+        }
     }
 
     changeTargetListeners.push(
@@ -487,14 +497,20 @@ const registerForChange = (target, initialValue, confirmNow) => {
         on(target, "change", removeChangeTargetListeners)
     );
 
-    if (confirmNow) {
-        // Triggers confirm action right away
-        if (canTriggerEnter) {
-            _press(target, { key: "Enter" });
-        } else {
+    switch (confirmAction) {
+        case "blur": {
             _click(getDocument(target).body, {
                 position: { x: 0, y: 0 },
             });
+            break;
+        }
+        case "enter": {
+            _press(target, { key: "Enter" });
+            break;
+        }
+        case "tab": {
+            _press(target, { key: "Tab" });
+            break;
         }
     }
 };
@@ -1954,61 +1970,6 @@ export function press(keyStrokes, options) {
 }
 
 /**
- * Gives the given {@link File} list to the current file input. This helper only
- * works if a file input has been previously interacted with (by clicking on it).
- *
- * @param {MaybeIterable<File>} files
- */
-export function setInputFiles(files) {
-    if (!runTime.currentFileInput) {
-        throw new HootDomError(
-            `cannot call \`setInputFiles()\`: no file input has been interacted with`
-        );
-    }
-
-    _fill(runTime.currentFileInput, files);
-
-    runTime.currentFileInput = null;
-
-    return logEvents("setInputFiles");
-}
-
-/**
- * @param {Target} target
- * @param {number} value
- * @param {PointerOptions} options
- */
-export function setInputRange(target, value, options) {
-    const element = getFirstTarget(target, options);
-
-    _implicitHover(element, options);
-    _pointerDown(element, options);
-    _fill(element, value);
-    _pointerUp(element, options);
-
-    return logEvents("setInputRange");
-}
-
-/**
- * @param {HTMLElement} fixture
- */
-export function setupEventActions(fixture) {
-    if (runTime.currentPointerDownTimeout) {
-        globalThis.clearTimeout(runTime.currentPointerDownTimeout);
-    }
-
-    removeChangeTargetListeners();
-
-    fixture.addEventListener("click", registerFileInput, { capture: true });
-
-    // Runtime global variables
-    $assign(runTime, getDefaultRunTimeValue());
-
-    // Special keys
-    $assign(specialKeys, getDefaultSpecialKeysValue());
-}
-
-/**
  * Performs a resize event sequence on the given {@link Target}.
  *
  * The event sequence is as follow:
@@ -2097,6 +2058,61 @@ export function select(value, options) {
     }
 
     return logEvents("select");
+}
+
+/**
+ * Gives the given {@link File} list to the current file input. This helper only
+ * works if a file input has been previously interacted with (by clicking on it).
+ *
+ * @param {MaybeIterable<File>} files
+ */
+export function setInputFiles(files) {
+    if (!runTime.currentFileInput) {
+        throw new HootDomError(
+            `cannot call \`setInputFiles()\`: no file input has been interacted with`
+        );
+    }
+
+    _fill(runTime.currentFileInput, files);
+
+    runTime.currentFileInput = null;
+
+    return logEvents("setInputFiles");
+}
+
+/**
+ * @param {Target} target
+ * @param {number} value
+ * @param {PointerOptions} options
+ */
+export function setInputRange(target, value, options) {
+    const element = getFirstTarget(target, options);
+
+    _implicitHover(element, options);
+    _pointerDown(element, options);
+    _fill(element, value);
+    _pointerUp(element, options);
+
+    return logEvents("setInputRange");
+}
+
+/**
+ * @param {HTMLElement} fixture
+ */
+export function setupEventActions(fixture) {
+    if (runTime.currentPointerDownTimeout) {
+        globalThis.clearTimeout(runTime.currentPointerDownTimeout);
+    }
+
+    removeChangeTargetListeners();
+
+    fixture.addEventListener("click", registerFileInput, { capture: true });
+
+    // Runtime global variables
+    $assign(runTime, getDefaultRunTimeValue());
+
+    // Special keys
+    $assign(specialKeys, getDefaultSpecialKeysValue());
 }
 
 /**
