@@ -402,11 +402,11 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             // "/odoo?test=42", // This one was not push to the history because it's the current url (see router.js)
             "window_reload",
-            "/odoo/act-2",
+            "/odoo/action-2",
             "window_reload",
             "/odoo?menu_id=1",
             "window_reload",
-            "/odoo/act-1?menu_id=2",
+            "/odoo/action-1?menu_id=2",
             "window_reload",
         ]);
     });

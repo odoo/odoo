@@ -62,14 +62,14 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.module("Load State: new urls");
 
     QUnit.test("action loading", async (assert) => {
-        redirect("/odoo/act-1001");
+        redirect("/odoo/action-1001");
         logHistoryInteractions(assert);
         await createWebClient({ serverData });
         assert.containsOnce(target, ".test_client_action");
         assert.strictEqual(target.querySelector(".o_menu_brand").textContent, "App1");
         assert.strictEqual(
             browser.location.href,
-            "http://example.com/odoo/act-1001",
+            "http://example.com/odoo/action-1001",
             "url did not change"
         );
         assert.verifySteps([], "pushState was not called");
@@ -86,14 +86,14 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual(target.querySelector(".o_menu_brand").textContent, "App2");
         assert.strictEqual(
             browser.location.href,
-            "http://example.com/odoo/act-1002",
+            "http://example.com/odoo/action-1002",
             "url now points to the default action of the menu"
         );
-        assert.verifySteps(["pushState http://example.com/odoo/act-1002"]);
+        assert.verifySteps(["pushState http://example.com/odoo/action-1002"]);
     });
 
     QUnit.test("action and menu loading", async (assert) => {
-        redirect("/odoo/act-1001?menu_id=2");
+        redirect("/odoo/action-1001?menu_id=2");
         logHistoryInteractions(assert);
         await createWebClient({ serverData });
         assert.strictEqual(
@@ -112,14 +112,14 @@ QUnit.module("ActionManager", (hooks) => {
         });
         assert.strictEqual(
             browser.location.href,
-            "http://example.com/odoo/act-1001",
+            "http://example.com/odoo/action-1001",
             "menu is removed from url"
         );
-        assert.verifySteps(["pushState http://example.com/odoo/act-1001"]);
+        assert.verifySteps(["pushState http://example.com/odoo/action-1001"]);
     });
 
     QUnit.test("initial loading with action id", async (assert) => {
-        redirect("/odoo/act-1001");
+        redirect("/odoo/action-1001");
         logHistoryInteractions(assert);
         setupWebClientRegistries();
 
@@ -131,7 +131,7 @@ QUnit.module("ActionManager", (hooks) => {
         await mount(WebClient, getFixture(), { env });
         assert.strictEqual(
             browser.location.href,
-            "http://example.com/odoo/act-1001",
+            "http://example.com/odoo/action-1001",
             "url did not change"
         );
         assert.verifySteps([], "pushState was not called");
@@ -162,15 +162,15 @@ QUnit.module("ActionManager", (hooks) => {
 
         assert.strictEqual(browser.location.href, "http://example.com/odoo");
         await createWebClient({ serverData });
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-1001");
-        assert.verifySteps(["pushState http://example.com/odoo/act-1001"]);
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-1001");
+        assert.verifySteps(["pushState http://example.com/odoo/action-1001"]);
         assert.containsOnce(target, ".test_client_action");
         assert.strictEqual(target.querySelector(".o_menu_brand").innerText, "App1");
     });
 
     QUnit.test("correctly sends additional context", async (assert) => {
         // %2C is a URL-encoded comma
-        redirect("/odoo/4/act-1001?active_ids=4%2C8");
+        redirect("/odoo/4/action-1001?active_ids=4%2C8");
         logHistoryInteractions(assert);
         function mockRPC(route, params) {
             if (route === "/web/action/load") {
@@ -186,14 +186,14 @@ QUnit.module("ActionManager", (hooks) => {
         await createWebClient({ serverData, mockRPC });
         assert.strictEqual(
             browser.location.href,
-            "http://example.com/odoo/4/act-1001?active_ids=4%2C8",
+            "http://example.com/odoo/4/action-1001?active_ids=4%2C8",
             "url did not change"
         );
         assert.verifySteps([], "pushState was not called");
     });
 
     QUnit.test("supports action as xmlId", async (assert) => {
-        redirect("/odoo/act-wowl.client_action");
+        redirect("/odoo/action-wowl.client_action");
         logHistoryInteractions(assert);
         await createWebClient({ serverData });
         assert.strictEqual(
@@ -204,16 +204,16 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual(
             browser.location.href,
             // FIXME should we canonicalize the URL? If yes, shouldn't we use the client action tag instead?
-            "http://example.com/odoo/act-1099",
+            "http://example.com/odoo/action-1099",
             "url did not change"
         );
-        assert.verifySteps(["pushState http://example.com/odoo/act-1099"]);
+        assert.verifySteps(["pushState http://example.com/odoo/action-1099"]);
     });
 
     QUnit.test("supports opening action in dialog", async (assert) => {
         serverData.actions["wowl.client_action"].target = "new";
         // FIXME this is super weird: we open an action in target new from the url?
-        redirect("/odoo/act-wowl.client_action");
+        redirect("/odoo/action-wowl.client_action");
         logHistoryInteractions(assert);
         await createWebClient({ serverData });
         assert.containsOnce(target, ".test_client_action");
@@ -221,7 +221,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsNone(target, ".o_menu_brand");
         assert.strictEqual(
             browser.location.href,
-            "http://example.com/odoo/act-wowl.client_action",
+            "http://example.com/odoo/action-wowl.client_action",
             "action in target new doesn't affect the URL"
         );
         assert.verifySteps([], "pushState was not called");
@@ -277,7 +277,7 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async function (route, { method }) {
             assert.step(method || route);
         };
-        redirect("/odoo/act-1");
+        redirect("/odoo/action-1");
         logHistoryInteractions(assert);
         await createWebClient({ serverData, mockRPC });
         assert.containsOnce(target, ".o_control_panel");
@@ -290,7 +290,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
         assert.strictEqual(
             browser.location.href,
-            "http://example.com/odoo/act-1",
+            "http://example.com/odoo/action-1",
             "the url did not change"
         );
         assert.verifySteps([], "pushState was not called");
@@ -344,7 +344,7 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async function (route, { method }) {
             assert.step(method || route);
         };
-        redirect("/odoo/act-3/new");
+        redirect("/odoo/action-3/new");
         logHistoryInteractions(assert);
         await createWebClient({ serverData, mockRPC });
         assert.containsOnce(target, ".o_form_view");
@@ -356,7 +356,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
         assert.strictEqual(
             browser.location.href,
-            "http://example.com/odoo/act-3/new",
+            "http://example.com/odoo/action-3/new",
             "the url did not change"
         );
         assert.verifySteps([], "pushState was not called");
@@ -366,7 +366,7 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async function (route, { method }) {
             assert.step(method || route);
         };
-        redirect("/odoo/act-3?view_type=kanban");
+        redirect("/odoo/action-3?view_type=kanban");
         logHistoryInteractions(assert);
         await createWebClient({ serverData, mockRPC });
         assert.containsNone(target, ".o_list_view");
@@ -379,7 +379,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
         assert.strictEqual(
             browser.location.href,
-            "http://example.com/odoo/act-3?view_type=kanban",
+            "http://example.com/odoo/action-3?view_type=kanban",
             "the url did not change"
         );
         assert.verifySteps([], "pushState was not called");
@@ -395,7 +395,7 @@ QUnit.module("ActionManager", (hooks) => {
                     assert.step(method || route);
                 }
             };
-            redirect("/odoo/act-3/2");
+            redirect("/odoo/action-3/2");
             logHistoryInteractions(assert);
             await createWebClient({ serverData, mockRPC });
             assert.containsNone(target, ".o_list_view");
@@ -403,7 +403,7 @@ QUnit.module("ActionManager", (hooks) => {
             assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "Second record"]);
             assert.strictEqual(
                 browser.location.href,
-                "http://example.com/odoo/act-3/2",
+                "http://example.com/odoo/action-3/2",
                 "the url did not change"
             );
             assert.verifySteps(
@@ -416,8 +416,8 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsNone(target, ".o_form_view");
             assert.verifySteps(["web_search_read"]);
             await nextTick(); // pushState is debounced
-            assert.strictEqual(browser.location.href, "http://example.com/odoo/act-3");
-            assert.verifySteps(["pushState http://example.com/odoo/act-3"]);
+            assert.strictEqual(browser.location.href, "http://example.com/odoo/action-3");
+            assert.verifySteps(["pushState http://example.com/odoo/action-3"]);
         }
     );
 
@@ -426,8 +426,8 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 4);
         await nextTick(); // pushState is debounced
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-4");
-        assert.verifySteps(["pushState http://example.com/odoo/act-4"]);
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-4");
+        assert.verifySteps(["pushState http://example.com/odoo/action-4"]);
         assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 4"]);
         await doAction(webClient, 3, {
             props: { resId: 2 },
@@ -435,17 +435,17 @@ QUnit.module("ActionManager", (hooks) => {
         });
         assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 4", "Second record"]);
         await nextTick(); // pushState is debounced
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-4/act-3/2");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-4/action-3/2");
         assert.verifySteps(
-            ["pushState http://example.com/odoo/act-4/act-3/2"],
+            ["pushState http://example.com/odoo/action-4/action-3/2"],
             "pushState was called only once"
         );
         // go back to previous action
         await click(target.querySelector(".o_control_panel .breadcrumb .o_back_button a"));
         assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 4"]);
         await nextTick(); // pushState is debounced
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-4");
-        assert.verifySteps(["pushState http://example.com/odoo/act-4"]);
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-4");
+        assert.verifySteps(["pushState http://example.com/odoo/action-4"]);
     });
 
     QUnit.test(
@@ -456,28 +456,28 @@ QUnit.module("ActionManager", (hooks) => {
                     return Promise.reject();
                 }
             };
-            redirect("/odoo/act-3/2");
+            redirect("/odoo/action-3/2");
             logHistoryInteractions(assert);
             const webClient = await createWebClient({ serverData, mockRPC });
             assert.containsNone(target, ".o_form_view");
             assert.containsOnce(target, ".o_list_view"); // Show the lazy loaded list view
             assert.strictEqual(
                 browser.location.href,
-                "http://example.com/odoo/act-3",
+                "http://example.com/odoo/action-3",
                 "url reflects that we are not on the failing record"
             );
-            assert.verifySteps(["pushState http://example.com/odoo/act-3"]);
+            assert.verifySteps(["pushState http://example.com/odoo/action-3"]);
             await doAction(webClient, 1);
             assert.containsOnce(target, ".o_kanban_view");
             await nextTick(); // pushState is debounced
-            assert.strictEqual(browser.location.href, "http://example.com/odoo/act-3/act-1");
-            assert.verifySteps(["pushState http://example.com/odoo/act-3/act-1"]);
+            assert.strictEqual(browser.location.href, "http://example.com/odoo/action-3/action-1");
+            assert.verifySteps(["pushState http://example.com/odoo/action-3/action-1"]);
         }
     );
 
     QUnit.test("should push the correct state at the right time", async function (assert) {
         // formerly "should not push a loaded state"
-        redirect("/odoo/act-3");
+        redirect("/odoo/action-3");
         logHistoryInteractions(assert);
         await createWebClient({ serverData });
         assert.deepEqual(router.current, {
@@ -488,7 +488,7 @@ QUnit.module("ActionManager", (hooks) => {
                 },
             ],
         });
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-3");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-3");
         assert.verifySteps([], "loading the initial state shouldn't push the state");
         await click(target.querySelector("tr .o_data_cell"));
         await nextTick(); // pushState is debounced
@@ -509,9 +509,9 @@ QUnit.module("ActionManager", (hooks) => {
                 },
             ],
         });
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-3/1");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-3/1");
         assert.verifySteps(
-            ["pushState http://example.com/odoo/act-3/1"],
+            ["pushState http://example.com/odoo/action-3/1"],
             "should push the state if it changes afterwards"
         );
     });
@@ -532,13 +532,13 @@ QUnit.module("ActionManager", (hooks) => {
         await createWebClient({ serverData, mockRPC });
         assert.containsOnce(target, ".o_kanban_view", "should display a kanban view");
         assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 1"]);
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-1");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-1");
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
             "/web/dataset/call_kw/partner/web_search_read",
-            "pushState http://example.com/odoo/act-1",
+            "pushState http://example.com/odoo/action-1",
         ]);
     });
 
@@ -556,7 +556,7 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async (route) => {
             assert.step(route);
         };
-        redirect("/odoo/act-999/new");
+        redirect("/odoo/action-999/new");
         logHistoryInteractions(assert);
         await createWebClient({ serverData, mockRPC });
         assert.containsOnce(target, ".o_form_view");
@@ -568,7 +568,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/dataset/call_kw/partner/onchange",
         ]);
         assert.containsOnce(target, ".o_form_view .o_form_editable");
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-999/new");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-999/new");
         assert.verifySteps([], "pushState was not called");
     });
 
@@ -584,17 +584,17 @@ QUnit.module("ActionManager", (hooks) => {
                 [false, "form"],
             ],
         };
-        redirect("/odoo/act-1000/999");
+        redirect("/odoo/action-1000/999");
         logHistoryInteractions(assert);
         await createWebClient({ serverData });
         assert.containsOnce(target, ".o_list_view");
         assert.containsN(target, ".o_notification_body", 1, "should have a notification");
         assert.strictEqual(
             browser.location.href,
-            "http://example.com/odoo/act-1000",
+            "http://example.com/odoo/action-1000",
             "url reflects that we are not on the record"
         );
-        assert.verifySteps(["pushState http://example.com/odoo/act-1000"]);
+        assert.verifySteps(["pushState http://example.com/odoo/action-1000"]);
     });
 
     QUnit.test("server action loading with id", async (assert) => {
@@ -604,12 +604,12 @@ QUnit.module("ActionManager", (hooks) => {
                 return new Promise(() => {});
             }
         };
-        redirect("/odoo/act-2/2");
+        redirect("/odoo/action-2/2");
         logHistoryInteractions(assert);
         await createWebClient({ serverData, mockRPC });
         assert.strictEqual(
             browser.location.href,
-            "http://example.com/odoo/act-2/2",
+            "http://example.com/odoo/action-2/2",
             "url did not change"
         );
         assert.verifySteps(["action: 2"], "pushState was not called");
@@ -626,12 +626,12 @@ QUnit.module("ActionManager", (hooks) => {
                 return new Promise(() => {});
             }
         };
-        redirect("/odoo/act-2?active_ids=3");
+        redirect("/odoo/action-2?active_ids=3");
         logHistoryInteractions(assert);
         await createWebClient({ serverData, mockRPC });
         assert.strictEqual(
             browser.location.href,
-            "http://example.com/odoo/act-2?active_ids=3",
+            "http://example.com/odoo/action-2?active_ids=3",
             "url did not change"
         );
         assert.verifySteps(["action: 2, active_ids: [3]"], "pushState was not called");
@@ -649,12 +649,12 @@ QUnit.module("ActionManager", (hooks) => {
                 `,
             };
 
-            redirect("/odoo/act-3/new");
+            redirect("/odoo/action-3/new");
             logHistoryInteractions(assert);
             await createWebClient({ serverData });
             assert.strictEqual(
                 browser.location.href,
-                "http://example.com/odoo/act-3/new",
+                "http://example.com/odoo/action-3/new",
                 "url did not change"
             );
             assert.verifySteps([], "pushState was not called");
@@ -668,8 +668,8 @@ QUnit.module("ActionManager", (hooks) => {
 
             assert.containsN(target, ".o_list_view .o_data_row", 1);
             await nextTick(); // pushState is debounced
-            assert.strictEqual(browser.location.href, "http://example.com/odoo/act-3");
-            assert.verifySteps(["pushState http://example.com/odoo/act-3"]);
+            assert.strictEqual(browser.location.href, "http://example.com/odoo/action-3");
+            assert.verifySteps(["pushState http://example.com/odoo/action-3"]);
         }
     );
 
@@ -727,7 +727,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test(
         "initial loading with multiple path segments loads the breadcrumbs",
         async (assert) => {
-            redirect("/odoo/partners/2/act-28/1");
+            redirect("/odoo/partners/2/action-28/1");
             logHistoryInteractions(assert);
             setupWebClientRegistries();
 
@@ -740,7 +740,7 @@ QUnit.module("ActionManager", (hooks) => {
             await nextTick();
             assert.strictEqual(
                 browser.location.href,
-                "http://example.com/odoo/partners/2/act-28/1",
+                "http://example.com/odoo/partners/2/action-28/1",
                 "url did not change"
             );
             assert.verifySteps(

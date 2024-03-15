@@ -38,7 +38,7 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         urlState = router.current;
         assert.strictEqual(urlState.action, 1002);
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-1002");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-1002");
         assert.strictEqual(
             target.querySelector(".test_client_action").textContent.trim(),
             "ClientAction_Id 2"
@@ -56,7 +56,7 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         await nextTick();
         urlState = router.current;
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-1002");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-1002");
         assert.strictEqual(urlState.action, 1002);
         assert.strictEqual(
             target.querySelector(".test_client_action").textContent.trim(),
@@ -65,7 +65,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual(target.querySelector(".o_menu_brand").textContent, "App2");
         await doAction(webClient, 1001, { clearBreadcrumbs: true });
         await nextTick();
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-1001");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-1001");
         urlState = router.current;
         assert.strictEqual(urlState.action, 1001);
         assert.strictEqual(
@@ -147,7 +147,7 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         assert.strictEqual(
             browser.location.href,
-            "http://example.com/odoo/act-1001",
+            "http://example.com/odoo/action-1001",
             "client_action_pushes removed from url because action 1001 is in target main"
         );
         assert.strictEqual(browser.history.length, 4);
@@ -178,7 +178,7 @@ QUnit.module("ActionManager", (hooks) => {
         await click(target, ".o-dropdown-item:nth-child(3)");
         await nextTick();
         await nextTick();
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-1002");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-1002");
         urlState = router.current;
         assert.strictEqual(urlState.action, 1002);
     });
@@ -213,7 +213,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual(browser.history.length, 1);
         await doAction(webClient, 4);
         await nextTick();
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-4");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-4");
         assert.strictEqual(browser.history.length, 2);
         assert.deepEqual(router.current, {
             action: 4,
@@ -227,7 +227,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
         await doAction(webClient, 8);
         await nextTick();
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-4/act-8");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-4/action-8");
         assert.strictEqual(browser.history.length, 3);
         assert.deepEqual(router.current, {
             action: 8,
@@ -246,7 +246,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
         await testUtils.dom.click($(target).find("tr .o_data_cell:first"));
         await nextTick();
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-4/act-8/4");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-4/action-8/4");
         assert.strictEqual(browser.history.length, 4);
         assert.deepEqual(router.current, {
             action: 8,
@@ -291,7 +291,7 @@ QUnit.module("ActionManager", (hooks) => {
         def.resolve();
         await nextTick();
         await nextTick();
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-4");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-4");
         assert.strictEqual(browser.history.length, 2);
         assert.deepEqual(router.current, {
             action: 4,
@@ -316,7 +316,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual(browser.history.length, 1);
         await doAction(webClient, 8);
         await nextTick();
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-8");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-8");
         assert.strictEqual(browser.history.length, 2);
         assert.deepEqual(router.current, {
             action: 8,
@@ -332,7 +332,7 @@ QUnit.module("ActionManager", (hooks) => {
         // we make sure here that the list view is still in the dom
         assert.containsOnce(target, ".o_list_view", "there should still be a list view in dom");
         await nextTick(); // wait for possible debounced pushState
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-8");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-8");
         assert.strictEqual(browser.history.length, 2);
         assert.deepEqual(router.current, {
             action: 8,
@@ -352,7 +352,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual(browser.history.length, 1);
         await doAction(webClient, 3);
         await nextTick();
-        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-3");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-3");
         assert.strictEqual(browser.history.length, 2);
         assert.deepEqual(router.current, {
             action: 3,
@@ -369,7 +369,7 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         assert.strictEqual(
             browser.location.href,
-            "http://example.com/odoo/act-3?view_type=kanban"
+            "http://example.com/odoo/action-3?view_type=kanban"
         );
         assert.strictEqual(browser.history.length, 3, "created a history entry");
         assert.containsOnce(target, ".breadcrumb", "created a breadcrumb entry");
@@ -399,7 +399,7 @@ QUnit.module("ActionManager", (hooks) => {
             assert.strictEqual(browser.history.length, 1);
             await doAction(webClient, 3);
             await nextTick();
-            assert.strictEqual(browser.location.href, "http://example.com/odoo/act-3");
+            assert.strictEqual(browser.location.href, "http://example.com/odoo/action-3");
             assert.strictEqual(browser.history.length, 2);
             assert.deepEqual(router.current, {
                 action: 3,
@@ -416,7 +416,7 @@ QUnit.module("ActionManager", (hooks) => {
             await nextTick();
             assert.strictEqual(
                 browser.location.href,
-                "http://example.com/odoo/act-3?view_type=kanban"
+                "http://example.com/odoo/action-3?view_type=kanban"
             );
             assert.strictEqual(browser.history.length, 3, "created a history entry");
             assert.containsNone(target, ".breadcrumb", "didn't create a breadcrumb entry");

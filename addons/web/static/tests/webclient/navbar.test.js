@@ -68,7 +68,7 @@ test("href attribute on apps menu items", async () => {
     ]);
     await mountWithCleanup(NavBar);
     await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
-    expect(".o-dropdown--menu .dropdown-item").toHaveAttribute("href", "/odoo/act-339");
+    expect(".o-dropdown--menu .dropdown-item").toHaveAttribute("href", "/odoo/action-339");
 });
 
 test("href attribute with paht on apps menu items", async () => {

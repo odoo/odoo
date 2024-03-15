@@ -117,11 +117,11 @@ describe("stateToUrl", () => {
         expect(stateToUrl({ active_id: 5, action: "some-path", resId: "new" })).toBe(
             "/odoo/5/some-path/new"
         );
-        expect(stateToUrl({ action: 1, resId: 2 })).toBe("/odoo/act-1/2", {
+        expect(stateToUrl({ action: 1, resId: 2 })).toBe("/odoo/action-1/2", {
             message: "action id instead of path/tag",
         });
         expect(stateToUrl({ action: "module.xml_id", resId: 2 })).toBe(
-            "/odoo/act-module.xml_id/2",
+            "/odoo/action-module.xml_id/2",
             { message: "action xml_id instead of path/tag" }
         );
         // model
@@ -169,11 +169,11 @@ describe("stateToUrl", () => {
         expect(
             stateToUrl({ actionStack: [{ active_id: 5, action: "some-path", resId: "new" }] })
         ).toBe("/odoo/5/some-path/new");
-        expect(stateToUrl({ actionStack: [{ action: 1, resId: 2 }] })).toBe("/odoo/act-1/2", {
+        expect(stateToUrl({ actionStack: [{ action: 1, resId: 2 }] })).toBe("/odoo/action-1/2", {
             message: "numerical action id instead of path",
         });
         expect(stateToUrl({ actionStack: [{ action: "module.xml_id", resId: 2 }] })).toBe(
-            "/odoo/act-module.xml_id/2",
+            "/odoo/action-module.xml_id/2",
             { message: "action xml_id instead of path" }
         );
         // model
@@ -326,7 +326,7 @@ describe("stateToUrl", () => {
             stateToUrl({
                 actionStack: [{ action: 1 }, { active_id: 5, action: 6, resId: 2 }],
             })
-        ).toBe("/odoo/act-1/5/act-6/2", { message: "numerical actions" });
+        ).toBe("/odoo/action-1/5/action-6/2", { message: "numerical actions" });
         expect(
             stateToUrl({
                 actionStack: [
@@ -334,7 +334,7 @@ describe("stateToUrl", () => {
                     { active_id: 5, action: "module.other_xml_id", resId: 2 },
                 ],
             })
-        ).toBe("/odoo/act-module.xml_id/5/act-module.other_xml_id/2", {
+        ).toBe("/odoo/action-module.xml_id/5/action-module.other_xml_id/2", {
             message: "actions as xml_ids",
         });
         // same action twice
@@ -457,7 +457,7 @@ describe("stateToUrl", () => {
             stateToUrl({
                 actionStack: [{ action: 1 }, { active_id: 5, action: 1, resId: 2 }],
             })
-        ).toBe("/odoo/act-1/5/act-1/2", { message: "numerical actions" });
+        ).toBe("/odoo/action-1/5/action-1/2", { message: "numerical actions" });
         expect(
             stateToUrl({
                 actionStack: [
@@ -465,7 +465,7 @@ describe("stateToUrl", () => {
                     { active_id: 5, action: "module.xml_id", resId: 2 },
                 ],
             })
-        ).toBe("/odoo/act-module.xml_id/5/act-module.xml_id/2", { message: "actions as xml_ids" });
+        ).toBe("/odoo/action-module.xml_id/5/action-module.xml_id/2", { message: "actions as xml_ids" });
         // model
         expect(
             stateToUrl({ actionStack: [{ model: "some.model" }, { model: "other.model" }] })
@@ -615,7 +615,7 @@ describe("stateToUrl", () => {
                     { active_id: 5, model: "model_no_dot", resId: 2 },
                 ],
             })
-        ).toBe("/odoo/act-1/5/m-model_no_dot/2");
+        ).toBe("/odoo/action-1/5/m-model_no_dot/2");
         expect(
             stateToUrl({
                 actionStack: [
@@ -623,7 +623,7 @@ describe("stateToUrl", () => {
                     { active_id: 5, model: "model_no_dot", resId: 2 },
                 ],
             })
-        ).toBe("/odoo/act-module.xml_id/5/m-model_no_dot/2");
+        ).toBe("/odoo/action-module.xml_id/5/m-model_no_dot/2");
         // model + action
         expect(
             stateToUrl({ actionStack: [{ model: "some.model" }, { action: "other-path" }] })
@@ -698,7 +698,7 @@ describe("stateToUrl", () => {
                     { active_id: 5, action: 1, resId: 2 },
                 ],
             })
-        ).toBe("/odoo/m-model_no_dot/5/act-1/2");
+        ).toBe("/odoo/m-model_no_dot/5/action-1/2");
         expect(
             stateToUrl({
                 actionStack: [
@@ -706,7 +706,7 @@ describe("stateToUrl", () => {
                     { active_id: 5, action: "module.xml_id", resId: 2 },
                 ],
             })
-        ).toBe("/odoo/m-model_no_dot/5/act-module.xml_id/2");
+        ).toBe("/odoo/m-model_no_dot/5/action-module.xml_id/2");
 
         // edge cases
         expect(
@@ -882,12 +882,12 @@ describe("urlToState", () => {
                 },
             ],
         });
-        expect(_urlToState("/odoo/act-1/2")).toEqual({
+        expect(_urlToState("/odoo/action-1/2")).toEqual({
             action: 1,
             resId: 2,
             actionStack: [{ action: 1 }, { action: 1, resId: 2 }],
         });
-        expect(_urlToState("/odoo/act-module.xml_id/2")).toEqual({
+        expect(_urlToState("/odoo/action-module.xml_id/2")).toEqual({
             action: "module.xml_id",
             resId: 2,
             actionStack: [{ action: "module.xml_id" }, { action: "module.xml_id", resId: 2 }],
@@ -1026,7 +1026,7 @@ describe("urlToState", () => {
                 { active_id: 5, action: "other-path", resId: "new" },
             ],
         });
-        expect(_urlToState("/odoo/act-1/5/act-6/2")).toEqual({
+        expect(_urlToState("/odoo/action-1/5/action-6/2")).toEqual({
             active_id: 5,
             action: 6,
             resId: 2,
@@ -1037,7 +1037,7 @@ describe("urlToState", () => {
                 { active_id: 5, action: 6, resId: 2 },
             ],
         });
-        expect(_urlToState("/odoo/act-module.xml_id/5/act-module.other_xml_id/2")).toEqual({
+        expect(_urlToState("/odoo/action-module.xml_id/5/action-module.other_xml_id/2")).toEqual({
             active_id: 5,
             action: "module.other_xml_id",
             resId: 2,
@@ -1169,7 +1169,7 @@ describe("urlToState", () => {
                 { active_id: 5, model: "some.model", resId: "new" },
             ],
         });
-        expect(_urlToState("/odoo/act-1/5/m-model_no_dot/2")).toEqual({
+        expect(_urlToState("/odoo/action-1/5/m-model_no_dot/2")).toEqual({
             active_id: 5,
             model: "model_no_dot",
             resId: 2,
@@ -1179,7 +1179,7 @@ describe("urlToState", () => {
                 { active_id: 5, model: "model_no_dot", resId: 2 },
             ],
         });
-        expect(_urlToState("/odoo/act-module.xml_id/5/m-model_no_dot/2")).toEqual({
+        expect(_urlToState("/odoo/action-module.xml_id/5/m-model_no_dot/2")).toEqual({
             active_id: 5,
             model: "model_no_dot",
             resId: 2,
@@ -1239,7 +1239,7 @@ describe("urlToState", () => {
                 { active_id: 5, action: "other-path", resId: "new" },
             ],
         });
-        expect(_urlToState("/odoo/m-model_no_dot/5/act-1/2")).toEqual({
+        expect(_urlToState("/odoo/m-model_no_dot/5/action-1/2")).toEqual({
             active_id: 5,
             action: 1,
             resId: 2,
@@ -1249,7 +1249,7 @@ describe("urlToState", () => {
                 { active_id: 5, action: 1, resId: 2 },
             ],
         });
-        expect(_urlToState("/odoo/m-model_no_dot/5/act-module.xml_id/2")).toEqual({
+        expect(_urlToState("/odoo/m-model_no_dot/5/action-module.xml_id/2")).toEqual({
             active_id: 5,
             action: "module.xml_id",
             resId: 2,
