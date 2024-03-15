@@ -678,6 +678,7 @@
     <record id="hr_leave_action_my" model="ir.actions.act_window">
         <field name="name">My Time Off</field>
         <field name="res_model">hr.leave</field>
+        <field name="path">my-time-off</field>
         <field name="view_mode">tree,form,kanban,activity</field>
         <field name="context">{"search_default_group_date_from": True}</field>
         <field name="search_view_id" ref="hr_leave_view_search_my"/>
@@ -710,6 +711,7 @@
     <record id="hr_leave_action_action_approve_department" model="ir.actions.act_window">
         <field name="name">All Time Off</field>
         <field name="res_model">hr.leave</field>
+        <field name="path">time-off-approval</field>
         <field name="view_mode">tree,kanban,form,calendar,activity</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_manager"/>
         <field name="context">{

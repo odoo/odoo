@@ -86,6 +86,7 @@
         <record id="ir_cron_act" model="ir.actions.act_window">
             <field name="name">Scheduled Actions</field>
             <field name="res_model">ir.cron</field>
+            <field name="path">crons</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="context">{'search_default_all': 1}</field>
             <field name="view_id" ref="ir_cron_view_tree"/>

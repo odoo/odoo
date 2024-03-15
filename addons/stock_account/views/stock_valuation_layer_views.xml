@@ -109,6 +109,7 @@
     <record id="stock_valuation_layer_action" model="ir.actions.act_window">
         <field name="name">Stock Valuation</field>
         <field name="res_model">stock.valuation.layer</field>
+        <field name="path">stock-valuation</field>
         <field name="view_mode">tree,form,pivot</field>
         <field name="view_id" ref="stock_valuation_layer_tree"/>
         <field name="domain">[('product_id.type', '=', 'product')]</field>

@@ -137,6 +137,7 @@
     <record id="action_production_lot_form" model="ir.actions.act_window">
         <field name="name">Lots/Serial Numbers</field>
         <field name="res_model">stock.lot</field>
+        <field name="path">lots</field>
         <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('view_production_lot_tree')}),
