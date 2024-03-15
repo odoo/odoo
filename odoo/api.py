@@ -863,7 +863,7 @@ class Environment(Mapping):
         assert isinstance(query, SQL)
         self.flush_query(query)
         self.cr.execute(query)
-        return self.cr.fetchall() if self.cr.rowcount > 0 else []
+        return [] if self.cr.description is None else self.cr.fetchall()
 
 
 class Transaction:
