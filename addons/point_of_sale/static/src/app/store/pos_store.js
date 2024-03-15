@@ -32,6 +32,7 @@ import {
 } from "../models/utils/tax_utils";
 import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
 import { ConnectionLostError } from "@web/core/network/rpc";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 const { DateTime } = luxon;
 
@@ -1459,7 +1460,20 @@ export class PosStore extends Reactive {
             );
         });
     }
-
+    /**
+     * @param {Object?} partner leave undefined to create a new partner
+     */
+    editPartner(partner) {
+        this.dialog.add(FormViewDialog, {
+            resModel: "res.partner",
+            viewId: this.models["ir.ui.view"].find((r) => r.name === "res.partner.form").id,
+            resId: partner?.id,
+            context: { target: "new" },
+            onRecordSaved: (record) => {
+                this.data.read("res.partner", record.config.resIds);
+            },
+        });
+    }
     async closePos() {
         const customerDisplayService = this.env.services.customer_display;
         const openOrder = this.models["pos.order"].filter((order) => !order.finalized);
@@ -1486,7 +1500,7 @@ export class PosStore extends Reactive {
     async selectPricelist(pricelist) {
         await this.get_order().set_pricelist(pricelist);
     }
-    async selectPartner({ missingFields = [] } = {}) {
+    async selectPartner() {
         // FIXME, find order to refund when we are in the ticketscreen.
         const currentOrder = this.get_order();
         if (!currentOrder) {
@@ -1505,7 +1519,7 @@ export class PosStore extends Reactive {
         }
         const payload = await makeAwaitable(this.dialog, PartnerList, {
             partner: currentPartner,
-            missingFields,
+            getPayload: (newPartner) => currentOrder.set_partner(newPartner),
         });
 
         if (payload) {
