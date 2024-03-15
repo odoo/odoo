@@ -19,6 +19,7 @@ import {
     waitFor,
 } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
+import { getTag } from "@web/core/utils/xml";
 
 /**
  * @typedef {import("@odoo/hoot-dom").DragHelpers} DragHelpers
@@ -95,6 +96,7 @@ export function contains(target, options) {
         if (node !== getActiveElement()) {
             pointerDown(node);
         }
+        return node;
     };
 
     const nodePromise = waitFor(target, { visible: true, ...options });
@@ -110,8 +112,9 @@ export function contains(target, options) {
          * @param {FillOptions} [options]
          */
         clear: async (options) => {
-            await focusCurrent();
-            clear({ confirm: true, ...options });
+            const node = await focusCurrent();
+            const confirm = getTag(node) === "input" ? "enter" : "blur";
+            clear({ confirm, ...options });
             await animationFrame();
         },
         /**
@@ -201,8 +204,9 @@ export function contains(target, options) {
          * @param {FillOptions} [options]
          */
         edit: async (value, options) => {
-            await focusCurrent();
-            edit(value, { confirm: true, ...options });
+            const node = await focusCurrent();
+            const confirm = getTag(node) === "input" ? "enter" : "blur";
+            edit(value, { confirm, ...options });
             await animationFrame();
         },
         /**
@@ -210,8 +214,9 @@ export function contains(target, options) {
          * @param {FillOptions} [options]
          */
         fill: async (value, options) => {
-            await focusCurrent();
-            fill(value, { confirm: true, ...options });
+            const node = await focusCurrent();
+            const confirm = getTag(node) === "input" ? "enter" : "blur";
+            fill(value, { confirm, ...options });
             await animationFrame();
         },
         focus: async () => {
