@@ -198,7 +198,7 @@ function factory(dependencies) {
                 return;
             }
 
-            if (this.messages.length && this.originThread && this.originThread.model === 'mail.channel') {
+            if (this.messages.length) {
                 return this.messages.some(message => (
                     message.canBeDeleted ||
                     (message.author && message.author === this.messaging.currentPartner) ||
