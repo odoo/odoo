@@ -28,11 +28,6 @@ class TestDiscussFullPerformance(HttpCase):
         super().setUp()
         self.group_user = self.env.ref('base.group_user')
         self.password = 'Pl1bhD@2!kXZ'
-        self.env['mail.shortcode'].search([]).unlink()
-        self.shortcodes = self.env['mail.shortcode'].create([
-            {'source': 'hello', 'substitution': 'Hello, how may I help you?'},
-            {'source': 'bye', 'substitution': 'Thanks for your feedback. Goodbye!'},
-        ])
         self.users = self.env['res.users'].create([
             {
                 'email': 'e.e@example.com',

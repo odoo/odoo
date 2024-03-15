@@ -24,6 +24,7 @@ import { MailActivity } from "./mock_server/mock_models/mail_activity";
 import { MailActivitySchedule } from "./mock_server/mock_models/mail_activity_schedule";
 import { MailActivityType } from "./mock_server/mock_models/mail_activity_type";
 import { MailComposeMessage } from "./mock_server/mock_models/mail_composer_message";
+import { MailCannedResponse } from "./mock_server/mock_models/mail_canned_response";
 import { MailFollowers } from "./mock_server/mock_models/mail_followers";
 import { MailGuest } from "./mock_server/mock_models/mail_guest";
 import { MailLinkPreview } from "./mock_server/mock_models/mail_link_preview";
@@ -32,7 +33,6 @@ import { MailMessageReaction } from "./mock_server/mock_models/mail_message_reac
 import { MailMessageSubtype } from "./mock_server/mock_models/mail_message_subtype";
 import { MailNotification } from "./mock_server/mock_models/mail_notification";
 import { MailPushDevice } from "./mock_server/mock_models/mail_push_device";
-import { MailShortcode } from "./mock_server/mock_models/mail_shortcode";
 import { MailTemplate } from "./mock_server/mock_models/mail_template";
 import { MailThread } from "./mock_server/mock_models/mail_thread";
 import { MailTrackingValue } from "./mock_server/mock_models/mail_tracking_value";
@@ -88,6 +88,7 @@ export const mailModels = {
     MailActivitySchedule,
     MailActivityType,
     MailComposeMessage,
+    MailCannedResponse,
     MailFollowers,
     MailGuest,
     MailLinkPreview,
@@ -96,7 +97,6 @@ export const mailModels = {
     MailMessageSubtype,
     MailNotification,
     MailPushDevice,
-    MailShortcode,
     MailTemplate,
     MailThread,
     MailTrackingValue,

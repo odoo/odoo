@@ -31,7 +31,7 @@ addModelNamesToFetch([
     "mail.message.reaction",
     "mail.message.subtype",
     "mail.notification",
-    "mail.shortcode",
+    "mail.canned.response",
     "mail.template",
     "mail.tracking.value",
     "res.users.settings",

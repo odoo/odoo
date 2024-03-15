@@ -67,6 +67,13 @@ export class MailCoreCommon {
                     this.store[Model].insert(payload[Model], { html: true });
                 }
             });
+            this.busService.subscribe("mail.record/delete", (payload) => {
+                for (const Model in payload) {
+                    for (const data of payload[Model]) {
+                        this.store[Model].get(data)?.delete();
+                    }
+                }
+            });
         });
     }
 }

@@ -99,8 +99,6 @@ export class ResUsers extends webModels.ResUsers {
         const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").MailMessage} */
         const MailMessage = this.env["mail.message"];
-        /** @type {import("mock_models").MailShortcode} */
-        const MailShortcode = this.env["mail.shortcode"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
         /** @type {import("mock_models").ResUsers} */
@@ -113,9 +111,6 @@ export class ResUsers extends webModels.ResUsers {
             ["partner_id", "=", user.partner_id],
         ]);
         return {
-            CannedResponse: MailShortcode.search_read([], {
-                fields: ["source", "substitution"],
-            }),
             Store: {
                 discuss: {
                     inbox: {

@@ -16,11 +16,7 @@ export class SuggestionService {
     }
 
     getSupportedDelimiters(thread) {
-        const delimiters = [["@"], ["#"]];
-        if (thread && thread.model !== "discuss.channel") {
-            delimiters.push([":"]);
-        }
-        return delimiters;
+        return [["@"], ["#"], [":"]];
     }
 
     async fetchSuggestions({ delimiter, term }, { thread } = {}) {

@@ -84,9 +84,9 @@ class ThreadController(http.Controller):
             # Avoid serialization errors since last used update is not
             # essential and should not block message post.
             request.env.cr.execute("""
-                UPDATE mail_shortcode SET last_used=%(last_used)s
+                UPDATE mail_canned_response SET last_used=%(last_used)s
                 WHERE id IN (
-                    SELECT id from mail_shortcode WHERE id IN %(ids)s
+                    SELECT id from mail_canned_response WHERE id IN %(ids)s
                     FOR NO KEY UPDATE SKIP LOCKED
                 )
             """, {

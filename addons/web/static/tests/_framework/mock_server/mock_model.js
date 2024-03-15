@@ -116,6 +116,10 @@ const applyDefaults = ({ _fields }, record, context) => {
             record[fieldName] = true;
             continue;
         }
+        if (fieldName === "create_uid") {
+            record.create_uid = MockServer.current.env.uid;
+            continue;
+        }
         const fieldDef = _fields[fieldName];
         if (context && `default_${fieldName}` in context) {
             record[fieldName] = context[`default_${fieldName}`];
