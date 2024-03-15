@@ -88,7 +88,7 @@ class AccountMoveLine(models.Model):
         string='Account',
         compute='_compute_account_id', store=True, readonly=False, precompute=True,
         inverse='_inverse_account_id',
-        index=True,
+        index=False,  # covered by account_move_line_account_id_date_idx defined in init()
         auto_join=True,
         ondelete="cascade",
         domain="[('deprecated', '=', False), ('account_type', '!=', 'off_balance')]",
@@ -1432,6 +1432,16 @@ class AccountMoveLine(models.Model):
         # Match exactly how the ORM converts domains to ensure the query planner uses it
         create_index(self._cr, 'account_move_line__unreconciled_index', 'account_move_line', ['account_id', 'partner_id'],
                      where="(reconciled IS NULL OR reconciled = false OR reconciled IS NOT true) AND parent_state = 'posted'")
+        create_index(self.env.cr,
+                     indexname='account_move_line_journal_id_neg_amnt_residual_idx',
+                     tablename='account_move_line',
+                     expressions=['journal_id'],
+                     where="amount_residual < 0 AND parent_state = 'posted'")
+        # covers the standard index on account_id
+        create_index(self.env.cr,
+                     indexname='account_move_line_account_id_date_idx',
+                     tablename='account_move_line',
+                     expressions=['account_id', 'date'])
         super().init()
 
     def default_get(self, fields_list):
