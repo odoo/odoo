@@ -16,7 +16,16 @@ import { HootTestPath } from "./hoot_test_path";
 // Global
 //-----------------------------------------------------------------------------
 
-const { Object, Math, clearInterval, document, performance, setInterval } = globalThis;
+const {
+    Object: { values: $values },
+    Math: { ceil: $ceil, floor: $floor, max: $max, min: $min, random: $random },
+    clearInterval,
+    document,
+    performance,
+    setInterval,
+} = globalThis;
+/** @type {Performance["now"]} */
+const $now = performance.now.bind(performance);
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -26,7 +35,7 @@ const { Object, Math, clearInterval, document, performance, setInterval } = glob
  * @param {number} min
  * @param {number} max
  */
-const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const randInt = (min, max) => $floor($random() * (max - min + 1)) + min;
 
 /**
  * @param {string} content
@@ -62,7 +71,7 @@ const updateTitle = (failed) => {
     if (title.startsWith(toAdd)) {
         return;
     }
-    for (const prefix of Object.values(TITLE_PREFIX)) {
+    for (const prefix of $values(TITLE_PREFIX)) {
         if (title.startsWith(prefix)) {
             title = title.slice(prefix.length);
             break;
@@ -210,9 +219,9 @@ export class HootStatusPanel extends Component {
         const startTimer = () => {
             stopTimer();
 
-            currentTestStart = performance.now();
+            currentTestStart = $now();
             intervalId = setInterval(() => {
-                this.state.timer = Math.floor(performance.now() - currentTestStart);
+                this.state.timer = $floor($now() - currentTestStart);
             }, 1000);
         };
 
@@ -290,14 +299,14 @@ export class HootStatusPanel extends Component {
     }
 
     nextPage() {
-        this.uiState.resultsPage = Math.min(
+        this.uiState.resultsPage = $min(
             this.uiState.resultsPage + 1,
-            Math.floor(this.uiState.totalResults / this.uiState.resultsPerPage)
+            $floor(this.uiState.totalResults / this.uiState.resultsPerPage)
         );
     }
 
     previousPage() {
-        this.uiState.resultsPage = Math.max(this.uiState.resultsPage - 1, 0);
+        this.uiState.resultsPage = $max(this.uiState.resultsPage - 1, 0);
     }
 
     sortResults() {
@@ -325,7 +334,7 @@ export class HootStatusPanel extends Component {
 
         while (this.progressBarIndex < done.length) {
             const test = done[this.progressBarIndex];
-            const x = Math.floor(this.progressBarIndex * cellSize);
+            const x = $floor(this.progressBarIndex * cellSize);
             switch (test.status) {
                 case Test.ABORTED:
                     ctx.fillStyle = colors.abort;
@@ -340,7 +349,7 @@ export class HootStatusPanel extends Component {
                     ctx.fillStyle = colors.skip;
                     break;
             }
-            ctx.fillRect(x, 0, Math.ceil(cellSize), height);
+            ctx.fillRect(x, 0, $ceil(cellSize), height);
             this.progressBarIndex++;
         }
     }

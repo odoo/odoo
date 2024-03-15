@@ -25,7 +25,12 @@ import { HootTagButton } from "./hoot_tag_button";
 // Global
 //-----------------------------------------------------------------------------
 
-const { Boolean, localStorage, Object } = globalThis;
+const {
+    Boolean,
+    console: { warn: $warn },
+    localStorage,
+    Object: { entries: $entries, keys: $keys, values: $values },
+} = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -36,7 +41,7 @@ const { Boolean, localStorage, Object } = globalThis;
  * @param {Record<string, number>} values
  */
 const formatIncludes = (values) =>
-    Object.entries(values).map(([id, value]) => (value >= 0 ? id : `${EXCLUDE_PREFIX}${id}`));
+    $entries(values).map(([id, value]) => (value >= 0 ? id : `${EXCLUDE_PREFIX}${id}`));
 
 /**
  * @param {string} query
@@ -412,7 +417,7 @@ export class HootSearch extends Component {
         for (const category of this.categories) {
             let include = 0;
             let exclude = 0;
-            for (const value of Object.values(includeSpecs[category])) {
+            for (const value of $values(includeSpecs[category])) {
                 if (value > 0) {
                     include++;
                 } else if (value < 0) {
@@ -427,8 +432,8 @@ export class HootSearch extends Component {
     }
 
     getHasIncludeValue() {
-        return Object.values(this.runnerState.includeSpecs).some((values) =>
-            Object.values(values).some((value) => value > 0)
+        return $values(this.runnerState.includeSpecs).some((values) =>
+            $values(values).some((value) => value > 0)
         );
     }
 
@@ -462,9 +467,7 @@ export class HootSearch extends Component {
     hasFilters() {
         return Boolean(
             this.state.query.trim() ||
-                Object.values(this.runnerState.includeSpecs).some(
-                    (values) => Object.keys(values).length
-                )
+                $values(this.runnerState.includeSpecs).some((values) => $keys(values).length)
         );
     }
 
@@ -653,7 +656,7 @@ export class HootSearch extends Component {
         const checked = this.runnerState.includeSpecs;
         for (const category of [...this.categories].reverse()) {
             let foundItemToUncheck = false;
-            for (const [key, value] of Object.entries(checked[category])) {
+            for (const [key, value] of $entries(checked[category])) {
                 if (this.isReadonly(value)) {
                     continue;
                 }
@@ -747,7 +750,7 @@ export class HootSearch extends Component {
                 }
             }
             this.__owl__.app.root.render(true);
-            console.warn("Secret sequence activated: all tests pass!");
+            $warn("Secret sequence activated: all tests pass!");
         }
     }
 }

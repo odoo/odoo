@@ -52,17 +52,25 @@ import { DiffMatchPatch } from "./lib/diff_match_patch";
 const {
     Array,
     clearTimeout,
-    console,
+    console: { debug: $debug },
     Date,
     Error,
     ErrorEvent,
     Map,
-    Math,
-    navigator,
-    Object,
+    Math: { floor },
+    Number: { isInteger: $isInteger, isNaN: $isNaN, parseFloat: $parseFloat },
+    navigator: { clipboard: $clipboard },
+    Object: {
+        assign: $assign,
+        create: $create,
+        defineProperty: $defineProperty,
+        entries: $entries,
+        getPrototypeOf: $getPrototypeOf,
+        keys: $keys,
+    },
     Promise,
     PromiseRejectionEvent,
-    Reflect,
+    Reflect: { ownKeys },
     RegExp,
     Set,
     setTimeout,
@@ -70,6 +78,10 @@ const {
     TypeError,
     window,
 } = globalThis;
+/** @type {Clipboard["readText"]} */
+const $readText = $clipboard.readText.bind($clipboard);
+/** @type {Clipboard["writeText"]} */
+const $writeText = $clipboard.writeText.bind($clipboard);
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -133,8 +145,8 @@ export function consumeCallbackList(callbacks, method, ...args) {
  */
 export async function copy(text) {
     try {
-        await navigator.clipboard.writeText(text);
-        console.debug(`Copied to clipboard: "${text}"`);
+        await $writeText(text);
+        $debug(`Copied to clipboard: "${text}"`);
     } catch (err) {
         console.warn("Could not copy to clipboard:", err);
     }
@@ -148,7 +160,7 @@ export function createReporting(parentReporting) {
      * @param {Partial<Reporting>} values
      */
     const add = (values) => {
-        for (const [key, value] of Object.entries(values)) {
+        for (const [key, value] of $entries(values)) {
             reporting[key] += value;
         }
 
@@ -176,18 +188,18 @@ export function createReporting(parentReporting) {
  * @returns {T}
  */
 export function createMock(target, descriptors) {
-    const mock = Object.create(target);
+    const mock = $create(target);
     let owner = target;
     let keys;
 
     while (!keys?.length) {
-        keys = Reflect.ownKeys(owner);
-        owner = Object.getPrototypeOf(owner);
+        keys = ownKeys(owner);
+        owner = $getPrototypeOf(owner);
     }
 
     // Copy original descriptors
     for (const property of keys) {
-        Object.defineProperty(mock, property, {
+        $defineProperty(mock, property, {
             get() {
                 return target[property];
             },
@@ -199,8 +211,8 @@ export function createMock(target, descriptors) {
     }
 
     // Apply new descriptors
-    for (const [property, descriptor] of Object.entries(descriptors)) {
-        Object.defineProperty(mock, property, descriptor);
+    for (const [property, descriptor] of $entries(descriptors)) {
+        $defineProperty(mock, property, descriptor);
     }
 
     return mock;
@@ -289,8 +301,8 @@ export function deepEqual(a, b, cache = new Set()) {
             }
             return a.length === b.length && a.every((v, i) => deepEqual(v, b[i], cache));
         }
-        const aEntries = Object.entries(a);
-        if (aEntries.length !== Object.keys(b).length) {
+        const aEntries = $entries(a);
+        if (aEntries.length !== $keys(b).length) {
             return false;
         }
         return aEntries.every(([key, value]) => deepEqual(value, b[key], cache));
@@ -385,7 +397,7 @@ export function formatHumanReadable(value, options) {
             return `${constructorPrefix}[${content}]`;
         } else {
             const depth = options?.depth || 0;
-            const keys = Object.keys(value);
+            const keys = $keys(value);
             const constructorPrefix =
                 value.constructor.name === "Object" ? "" : `${value.constructor.name} `;
             let content = "";
@@ -450,7 +462,7 @@ export function formatTechnical(
             } else {
                 const proto =
                     value.constructor.name === "Object" ? "" : `${value.constructor.name} `;
-                return `${baseIndent}${proto}{\n${Object.entries(value)
+                return `${baseIndent}${proto}{\n${$entries(value)
                     .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
                     .map(
                         ([k, v]) =>
@@ -478,19 +490,19 @@ export function formatTime(value, unit) {
             value /= 1_000;
         }
         if (value < 10) {
-            value = Number(value.toFixed(3));
+            value = $parseFloat(value.toFixed(3));
         } else if (value < 100) {
-            value = Number(value.toFixed(2));
+            value = $parseFloat(value.toFixed(2));
         } else if (value < 1_000) {
-            value = Number(value.toFixed(1));
+            value = $parseFloat(value.toFixed(1));
         } else {
-            const str = String(Math.floor(value));
+            const str = String(floor(value));
             return `${str.slice(0, -3) + "," + str.slice(-3)}${unit}`;
         }
         return value + unit;
     }
 
-    value = Math.floor(value / 1_000);
+    value = floor(value / 1_000);
 
     const seconds = value % 60;
     value -= seconds;
@@ -588,7 +600,7 @@ export function isOfType(value, type) {
         case "error":
             return value instanceof Error;
         case "integer":
-            return Number.isInteger(value);
+            return $isInteger(value);
         case "node":
             return isNode(value);
         case "regex":
@@ -672,7 +684,7 @@ export function makeCallbacks() {
                 );
                 return originalCallback(...args);
             };
-            Object.assign(callback, { original: originalCallback });
+            $assign(callback, { original: originalCallback });
         }
 
         if (!callbackMap.has(type)) {
@@ -723,7 +735,7 @@ export function makeCallbacks() {
 export function makePublicListeners(target, types) {
     for (const type of types) {
         let listener = null;
-        Object.defineProperty(target, `on${type}`, {
+        $defineProperty(target, `on${type}`, {
             get() {
                 return listener;
             },
@@ -779,7 +791,7 @@ export function normalize(string) {
 
 export async function paste() {
     try {
-        await navigator.clipboard.readText();
+        await $readText();
     } catch (err) {
         console.warn("Could not paste from clipboard:", err);
     }
@@ -791,7 +803,7 @@ export async function paste() {
  * @returns {boolean}
  */
 export function strictEqual(a, b) {
-    return Number.isNaN(a) ? Number.isNaN(b) : a === b;
+    return $isNaN(a) ? $isNaN(b) : a === b;
 }
 
 /**
@@ -802,7 +814,7 @@ export function stringToNumber(string) {
     for (let i = 0; i < string.length; i++) {
         result += string.charCodeAt(i);
     }
-    return Number(result);
+    return $parseFloat(result);
 }
 
 /**

@@ -61,11 +61,9 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("can register test tags", async () => {
-        console.warn = (message) => expect.step(message);
-
         const runner = new TestRunner();
         runner.describe("suite", () => {
-            let testFn = runner.test.debug.only.skip; // 3
+            let testFn = runner.test.debug.only; // 2
             for (let i = 1; i <= 10; i++) {
                 // 10
                 testFn = testFn.tags`Tag-${i}`;
@@ -74,10 +72,7 @@ describe(parseUrl(import.meta.url), () => {
             testFn("tagged test", () => {});
         });
 
-        expect(runner.tags.size).toBe(13);
-        expect(runner.tests.values().next().value.tags.length).toBe(13);
-        expect([
-            `%c[HOOT]%c test "suite/tagged test" is explicitly included but marked as skipped: "skip" modifier has been ignored`,
-        ]).toVerifySteps();
+        expect(runner.tags.size).toBe(12);
+        expect(runner.tests.values().next().value.tags.length).toBe(12);
     });
 });

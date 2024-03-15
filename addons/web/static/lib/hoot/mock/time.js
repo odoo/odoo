@@ -19,17 +19,21 @@ import { isNil } from "../hoot_utils";
 //-----------------------------------------------------------------------------
 
 const {
-    Date,
-    Error,
-    Math,
-    Promise,
     cancelAnimationFrame,
     clearInterval,
     clearTimeout,
+    Date,
+    Error,
+    Math: { ceil: $ceil, max: $max },
+    performance,
+    Promise,
     requestAnimationFrame,
     setInterval,
     setTimeout,
 } = globalThis;
+const { now: $now, UTC: $UTC } = Date;
+/** @type {Performance["now"]} */
+const $performanceNow = performance.now.bind(performance);
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -58,7 +62,7 @@ const animationToId = (id) => ID_PREFIX.animation + String(id);
 
 const getDateParams = () => [
     ...dateParams.slice(0, -1),
-    dateParams.at(-1) + (Date.now() - dateTimeStamp) + timeOffset,
+    dateParams.at(-1) + ($now() - dateTimeStamp) + timeOffset,
 ];
 
 /**
@@ -96,7 +100,7 @@ const idToTimeout = (id) => Number(id.slice(ID_PREFIX.timeout.length));
  */
 const intervalToId = (id) => ID_PREFIX.interval + String(id);
 
-const now = () => performance.now() + timeOffset;
+const now = () => $performanceNow() + timeOffset;
 
 /**
  * @param {string | DateSpecs} dateSpecs
@@ -121,7 +125,7 @@ const parseDateParams = (dateSpecs) => {
  */
 const setDateParams = (newDateParams) => {
     dateParams = newDateParams;
-    dateTimeStamp = Date.now();
+    dateTimeStamp = $now();
     timeOffset = 0;
 };
 
@@ -147,7 +151,7 @@ const timerStack = [];
 
 let allowTimers = true;
 let dateParams = DEFAULT_DATE;
-let dateTimeStamp = Date.now();
+let dateTimeStamp = $now();
 let frameDelay = 1000 / 60;
 let targetTime = 0;
 /** @type {string | number} */
@@ -162,7 +166,7 @@ let timeOffset = 0;
  * @param {number} [frameCount]
  */
 export async function advanceFrame(frameCount) {
-    return advanceTime(frameDelay * Math.max(1, frameCount));
+    return advanceTime(frameDelay * $max(1, frameCount));
 }
 
 /**
@@ -411,8 +415,8 @@ export async function runAllTimers(preventTimers = false) {
         allowTimers = false;
     }
 
-    const endts = Math.max(...[...timers.values()].map(([, init, delay]) => init + delay));
-    const ms = await advanceTime(Math.ceil(endts - now()));
+    const endts = $max(...[...timers.values()].map(([, init, delay]) => init + delay));
+    const ms = await advanceTime($ceil(endts - now()));
 
     if (preventTimers) {
         allowTimers = true;
@@ -495,7 +499,7 @@ export class MockDate extends Date {
             for (let i = 0; i < params.length; i++) {
                 args[i] ??= params[i];
             }
-            super(Date.UTC(...args));
+            super($UTC(...args));
         }
     }
 
@@ -510,6 +514,6 @@ export class MockDate extends Date {
     }
 
     static now() {
-        return new this().getTime() + (Date.now() - dateTimeStamp) + timeOffset;
+        return new this().getTime() + ($now() - dateTimeStamp) + timeOffset;
     }
 }

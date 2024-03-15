@@ -11,15 +11,17 @@ import { mockedCancelAnimationFrame, mockedRequestAnimationFrame } from "./time"
 
 const {
     AbortController,
+    document,
     EventTarget,
     Headers,
+    Math: { max: $max, min: $min },
+    Object: { assign: $assign, entries: $entries, fromEntries: $fromEntries },
     ProgressEvent,
     Request,
     Response,
     SharedWorker,
     WebSocket,
     Worker,
-    document,
 } = globalThis;
 
 //-----------------------------------------------------------------------------
@@ -33,8 +35,8 @@ const makeWorkerScope = (worker) => {
     const execute = async () => {
         const scope = new MockDedicatedWorkerGlobalScope(worker);
         const keys = Reflect.ownKeys(scope);
-        const values = Object.fromEntries(keys.map((key) => [key, globalThis[key]]));
-        Object.assign(globalThis, scope);
+        const values = $fromEntries(keys.map((key) => [key, globalThis[key]]));
+        $assign(globalThis, scope);
 
         script(scope);
         mockWorkerConnection(worker);
@@ -43,7 +45,7 @@ const makeWorkerScope = (worker) => {
             globalThis.onconnect();
         }
 
-        Object.assign(globalThis, values);
+        $assign(globalThis, values);
     };
 
     const load = async () => {
@@ -244,7 +246,7 @@ export class MockCookie {
     }
 
     get() {
-        return Object.entries(this.#jar)
+        return $entries(this.#jar)
             .filter(([, value]) => value !== "kill")
             .map((entry) => entry.join("="))
             .join("; ");
@@ -268,7 +270,7 @@ export class MockDedicatedWorkerGlobalScope {
      * @param {SharedWorker | Worker} worker
      */
     constructor(worker) {
-        Object.assign(
+        $assign(
             this,
             {
                 cancelanimationframe: mockedCancelAnimationFrame,
@@ -317,21 +319,21 @@ export class MockHistory {
 
     /** @type {typeof History.prototype.back} */
     back() {
-        this.#index = Math.max(0, this.#index - 1);
+        this.#index = $max(0, this.#index - 1);
         this.#loc.assign(this.#stack[this.#index][1]);
         this.#dispatchPopState();
     }
 
     /** @type {typeof History.prototype.forward} */
     forward() {
-        this.#index = Math.min(this.#stack.length - 1, this.#index + 1);
+        this.#index = $min(this.#stack.length - 1, this.#index + 1);
         this.#loc.assign(this.#stack[this.#index][1]);
         this.#dispatchPopState();
     }
 
     /** @type {typeof History.prototype.go} */
     go(delta) {
-        this.#index = Math.max(0, Math.min(this.#stack.length - 1, this.#index + delta));
+        this.#index = $max(0, $min(this.#stack.length - 1, this.#index + delta));
         this.#loc.assign(this.#stack[this.#index][1]);
         this.#dispatchPopState();
     }
