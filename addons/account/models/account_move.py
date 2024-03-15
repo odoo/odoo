@@ -32,6 +32,7 @@ from odoo.tools import (
     groupby,
     index_exists,
     is_html_empty,
+    create_index,
 )
 
 _logger = logging.getLogger(__name__)
@@ -644,6 +645,13 @@ class AccountMove(models.Model):
                 CREATE INDEX account_move_sequence_index3
                           ON account_move (journal_id, sequence_prefix desc, (sequence_number+1) desc)
             """)
+
+    def init(self):
+        super().init()
+        create_index(self.env.cr,
+                     indexname='account_move_journal_id_company_id_idx',
+                     tablename='account_move',
+                     expressions=['journal_id', 'company_id', 'date'])
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
