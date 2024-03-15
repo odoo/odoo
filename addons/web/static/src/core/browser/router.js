@@ -91,7 +91,7 @@ function pathFromActionState(state) {
     }
     if (action) {
         if (typeof action === "number" || action.includes(".")) {
-            path.push(`act-${action}`);
+            path.push(`action-${action}`);
         } else {
             path.push(action);
         }
@@ -188,9 +188,9 @@ export function urlToState(urlObj) {
                 action.resId = parseInt(right);
             }
 
-            if (part.startsWith("act-")) {
+            if (part.startsWith("action-")) {
                 // numeric id or xml_id
-                const actionId = part.slice(4);
+                const actionId = part.slice(7);
                 action.action = isNumeric(actionId) ? parseInt(actionId) : actionId;
             } else if (part.startsWith("m-")) {
                 action.model = part.slice(2);
