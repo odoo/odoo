@@ -440,12 +440,6 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
         invite_url_no_user = self.channel_partner_no_user.invitation_link
         self.channel.visibility = 'members'
 
-        # No such channel
-        invite_url = "/slides/-1"
-        res = self.url_open(invite_url)
-        self.assertEqual(res.status_code, 200)
-        self.assertTrue('/slides?invite_error=no_channel' in res.url, "This channel does not exist. Redirect to the main /slides page.")
-
         # Hash is wrong
         invite_url_false_hash = invite_url_emp + 'abc'
         res = self.url_open(invite_url_false_hash)
@@ -457,6 +451,20 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
         res = self.url_open(invite_url_no_user)
         self.assertEqual(res.status_code, 200)
         self.assertTrue('/slides?invite_error=partner_fail' in res.url, "Using an other user's invitation link should redirect to the course page")
+
+        # slugification can give: "/slides/-ID" which should work, despite resulting in a negative ID
+        invite_url = f'/slides/-{self.channel.id}'
+        res = self.url_open(invite_url)
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(invite_url in res.url)
+
+        # No such channel
+        max_channel_id = self.env['slide.channel'].search([], order='id desc', limit=1).id
+        invite_url = f'/slides/{max_channel_id + 1}'
+        res = self.url_open(invite_url)
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue('/slides?invite_error=no_channel' in res.url,
+            "Should have redirected to the 'no_channel' page as this channel ID does not exist")
 
         # Expired Link. Redirects to the main slides page.
         self.channel_partner_emp.sudo().unlink()
