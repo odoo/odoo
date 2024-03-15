@@ -217,7 +217,7 @@ class TestTax(TestTaxCommon):
         )
 
     def test_tax_group_percent(self):
-        res = self.group_tax_percent.with_context({'force_price_include':True}).compute_all(100.0)
+        res = self.group_tax_percent.with_context({'force_price_include': True}).compute_all(100.0)
         self._check_compute_all_results(
             100,    # 'total_included'
             83.33,  # 'total_excluded'
@@ -232,15 +232,35 @@ class TestTax(TestTaxCommon):
         )
 
         self.env.company.country_id = self.env.ref('base.in')
-        res = self.group_tax_percent.with_context({'force_price_include':True}).compute_all(100.0)
+        self.group_tax_percent.children_tax_ids.price_include = True
+        res = self.group_tax_percent.compute_all(100.0)
         self._check_compute_all_results(
             100,    # 'total_included'
-            83.34,    # 'total_excluded'
+            83.34,  # 'total_excluded'
             [
                 # base , amount     | seq | amount | incl | incl_base
                 # ---------------------------------------------------
                 (83.34, 8.33),    # |  1  |    10% |      |
                 (83.34, 8.33),    # |  2  |    10% |      |
+                # ---------------------------------------------------
+            ],
+            res
+        )
+
+        self.group_tax_percent.children_tax_ids.write({
+            'amount': 2.5,
+            'include_base_amount': True,
+            'is_base_affected': False,
+        })
+        res = self.group_tax_percent.compute_all(295.0)
+        self._check_compute_all_results(
+            295.0,  # 'total_included'
+            280.96,  # 'total_excluded'
+            [
+                # base , amount     | seq | amount | incl | incl_base
+                # ---------------------------------------------------
+                (280.96, 7.02),   # |  1  |    10% |      |
+                (280.96, 7.02),   # |  2  |    10% |      |
                 # ---------------------------------------------------
             ],
             res
