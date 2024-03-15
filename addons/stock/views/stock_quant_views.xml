@@ -85,17 +85,17 @@
                             <label for="quantity" string="Quantity On Hand"/>
                             <div class="o_row">
                                 <field name="quantity"/>
-                                <field name="product_uom_id" groups="uom.group_uom"/>
+                                <field name="product_uom_id" groups="uom.group_uom" options="{'no_open': True}"/>
                             </div>
                             <label for="available_quantity" string="Available Quantity"/>
                             <div class="o_row">
                                 <field name="available_quantity"/>
-                                <field name="product_uom_id" groups="uom.group_uom"/>
+                                <field name="product_uom_id" groups="uom.group_uom" options="{'no_open': True}"/>
                             </div>
                             <label for="reserved_quantity" string="Quantity Reserved"/>
                             <div class="o_row">
                                 <field name="reserved_quantity"/>
-                                <field name="product_uom_id" groups="uom.group_uom"/>
+                                <field name="product_uom_id" groups="uom.group_uom" options="{'no_open': True}"/>
                             </div>
                         </group>
                     </group>
