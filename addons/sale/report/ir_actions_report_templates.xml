@@ -173,7 +173,7 @@
                 </div>
             </div>
             <div>
-                <span t-field="doc.note" name="order_note"/>
+                <span t-field="doc.note" t-attf-style="#{'text-align:justify;text-justify:inter-word;' if doc.company_id.terms_type != 'html' else ''}" name="order_note"/>
                 <p t-if="not is_html_empty(doc.payment_term_id.note)">
                     <span t-field="doc.payment_term_id.note">The payment should also be transmitted with love</span>
                 </p>
