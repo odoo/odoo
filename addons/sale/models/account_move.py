@@ -8,12 +8,8 @@ class AccountMove(models.Model):
     _name = 'account.move'
     _inherit = ['account.move', 'utm.mixin']
 
-    @api.model
-    def _get_invoice_default_sale_team(self):
-        return self.env['crm.team']._get_default_team_id()
-
     team_id = fields.Many2one(
-        'crm.team', string='Sales Team', default=_get_invoice_default_sale_team,
+        'crm.team', string='Sales Team',
         compute='_compute_team_id', store=True, readonly=False,
         ondelete="set null", tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
