@@ -32,7 +32,8 @@ import { Test } from "./test";
 /**
  *
  * @typedef {{
- *  aborted: boolean;
+ *  aborted?: boolean;
+ *  debug?: boolean;
  * }} AfterTestOptions
  *
  * @typedef {import("../hoot_utils").ArgumentType} ArgumentType
@@ -198,7 +199,9 @@ const afterTest = (test, options) => {
 
     test.parent.reporting.add(report);
 
-    currentResult = null;
+    if (!options?.debug) {
+        currentResult = null;
+    }
 };
 
 /**
