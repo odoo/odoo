@@ -222,19 +222,13 @@ class SaleAdvancePaymentInv(models.TransientModel):
             return invoice
 
     def _prepare_down_payment_section_values(self, order):
-        context = {'lang': order.partner_id.lang}
-
-        so_values = {
-            'name': _('Down Payments'),
+        return {
             'product_uom_qty': 0.0,
             'order_id': order.id,
             'display_type': 'line_section',
             'is_downpayment': True,
             'sequence': order.order_line and order.order_line[-1].sequence + 1 or 10,
         }
-
-        del context
-        return so_values
 
     def _prepare_down_payment_lines_values(self, order):
         """ Create one down payment line per tax or unique taxes combination and per account.
@@ -312,19 +306,13 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     def _prepare_base_downpayment_line_values(self, order):
         self.ensure_one()
-        context = {'lang': order.partner_id.lang}
-        so_values = {
-            'name': _(
-                'Down Payment: %(date)s (Draft)', date=format_date(self.env, fields.Date.today())
-            ),
+        return {
             'product_uom_qty': 0.0,
             'order_id': order.id,
             'discount': 0.0,
             'is_downpayment': True,
             'sequence': order.order_line and order.order_line[-1].sequence + 1 or 10,
         }
-        del context
-        return so_values
 
     def _prepare_invoice_values(self, order, so_lines, accounts):
         self.ensure_one()
