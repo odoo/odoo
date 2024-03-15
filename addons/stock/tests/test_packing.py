@@ -1049,7 +1049,6 @@ class TestPacking(TestPackingCommon):
         warehouse = self.stock_location.warehouse_id
         warehouse.reception_steps = "two_steps"
         self.productA.weight = 1.0
-        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
         # Required for `result_package_id` to be visible in the view
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_tracking_lot').id)]})
@@ -1087,6 +1086,7 @@ class TestPacking(TestPackingCommon):
             'location_out_id': self.stock_location.id,
             'package_type_ids': [(4, package_type.id)],
             'storage_category_id': stor_category.id,
+            'sublocation': 'closest_location',
         })
 
         # Receive 100 x P
@@ -1152,7 +1152,6 @@ class TestPacking(TestPackingCommon):
         warehouse.reception_steps = "two_steps"
         self.productA.weight = 1.0
         self.productB.weight = 1.0
-        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
         # Required for `result_package_id` to be visible in the view
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_tracking_lot').id)]})
@@ -1191,6 +1190,7 @@ class TestPacking(TestPackingCommon):
             'location_out_id': self.stock_location.id,
             'package_type_ids': [(4, package_type.id)],
             'storage_category_id': stor_category.id,
+            'sublocation': 'closest_location',
         })
 
         # Receive 50 x P_A and 50 x P_B
@@ -1286,6 +1286,7 @@ class TestPacking(TestPackingCommon):
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
+            'sublocation': 'closest_location',
             'package_type_ids': [(4, package_type.id, 0)],
         })
 

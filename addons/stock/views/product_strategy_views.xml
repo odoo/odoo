@@ -15,24 +15,31 @@
                 <field name="product_id" string="Product"
                        options="{'no_create': True, 'no_open': True}"
                        readonly="context.get('single_product', False) or category_id"
-                       required="not category_id and not package_type_ids"
+                       placeholder="All Products"
                        force_save="1"/>
                 <field name="category_id" string="Product Category"
                        options="{'no_create': True, 'no_open': True}"
                        readonly="context.get('fixed_category', False) or product_id"
-                       required="not product_id and not package_type_ids"
+                       placeholder="All Categories"
                        force_save="1"/>
                 <field name="package_type_ids" string="Package type"
                        options="{'no_create': True, 'no_open': True}"
                        groups="stock.group_tracking_lot" widget="many2many_tags"
                        optional="show"/>
-                <field name="location_out_id"
+                <field name="location_out_id" string="Store to"
                        readonly="not location_in_id"
                        options="{'no_create': True}"
                        optional="show"/>
+                <field name="sublocation"
+                       groups="stock.group_stock_multi_locations"
+                       optional="show"
+                       required="True"
+                       force_save="1"/>
                 <field name="storage_category_id" string="Having Category"
-                       groups="stock.group_stock_storage_categories"
+                       groups="stock.group_stock_multi_locations"
                        options="{'no_create': True}"
+                       invisible="sublocation != 'closest_location'"
+                       required="sublocation == 'closest_location'"
                        optional="show"/>
                 <field name="company_id" groups="stock.group_stock_multi_locations" force_save="1" readonly="context.get('fixed_location', False)" options="{'no_create': True}" optional="show"/>
             </tree>

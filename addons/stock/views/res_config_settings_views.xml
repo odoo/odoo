@@ -153,7 +153,6 @@
                                 <div class="content-group">
                                     <div class="mt8" invisible="not group_stock_multi_locations">
                                         <button name="%(stock.action_location_form)d" icon="oi-arrow-right" type="action" string="Locations" class="btn-link"/><br/>
-                                        <button name="stock.action_putaway_tree" icon="oi-arrow-right" type="action" string="Putaway Rules" class="btn-link"/>
                                     </div>
                                 </div>
                             </setting>
@@ -162,17 +161,6 @@
                                 <div class="content-group">
                                     <div class="mt8" invisible="not group_stock_adv_location">
                                         <button name="%(stock.action_warehouse_form)d" icon="oi-arrow-right" type="action" string="Set Warehouse Routes" class="btn-link"/>
-                                    </div>
-                                </div>
-                            </setting>
-                            <setting id="categorize_locations" help="Categorize your locations for smarter putaway rules" invisible="not group_stock_multi_locations">
-                                <field name="group_stock_storage_categories"/>
-                                <div class="content-group" invisible="not group_stock_storage_categories">
-                                    <div class="mt8">
-                                        <button name="%(stock.action_storage_category)d" icon="oi-arrow-right" type="action" string="Storage Categories" class="btn-link"/>
-                                    </div>
-                                    <div class="mt4" groups="base.group_no_one">
-                                        <button name="%(stock.action_storage_category_capacity)d" icon="oi-arrow-right" type="action" string="Storage Category Capacity" class="btn-link"/>
                                     </div>
                                 </div>
                             </setting>

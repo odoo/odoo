@@ -270,7 +270,7 @@ class StockMoveLine(models.Model):
                     excluded_smls -= sml
 
     def _get_default_dest_location(self):
-        if not self.user_has_groups('stock.group_stock_storage_categories'):
+        if not self.user_has_groups('stock.group_stock_multi_locations'):
             return self.location_dest_id[:1]
         if self.env.context.get('default_location_dest_id'):
             return self.env['stock.location'].browse([self.env.context.get('default_location_dest_id')])
@@ -592,6 +592,9 @@ class StockMoveLine(models.Model):
                     abs(available_qty), lot_id=ml.lot_id, package_id=ml.package_id,
                     owner_id=ml.owner_id, ml_ids_to_ignore=ml_ids_to_ignore)
             ml_ids_to_ignore.add(ml.id)
+            default_dest_location = ml._get_default_dest_location()
+            default_dest_location._update_last_used_putaway_rules(ml.product_id, ml.location_dest_id)
+
         # Reset the reserved quantity as we just moved it to the destination location.
         mls_todo.write({
             'date': fields.Datetime.now(),
