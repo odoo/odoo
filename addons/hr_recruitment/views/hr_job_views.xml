@@ -151,7 +151,7 @@
                         <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
                         <div class="oe_edit_only" name="edit_alias">
                             <field name="alias_name" class="oe_inline o_job_alias" placeholder="e.g. sales-manager"/>@
-                            <field name="alias_domain_id" class="oe_inline" placeholder="e.g. domain.com"
+                            <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
                                    options="{'no_create': True, 'no_open': True}"/>
                         </div>
                         <div class="text-muted">Applicants can send resume to this email address,<br/>it will create an application automatically</div>
@@ -195,8 +195,8 @@
                             <div name="alias_def">
                                 <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
                                 <div class="oe_edit_only" name="edit_alias">
-                                    <field name="alias_name" class="oe_inline"/>@
-                                    <field name="alias_domain_id" class="oe_inline" placeholder="e.g. domain.com"
+                                    <field name="alias_name" placeholder="alias" class="oe_inline"/>@
+                                    <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
                                            options="{'no_create': True, 'no_open': True}"/>
                                 </div>
                             </div>

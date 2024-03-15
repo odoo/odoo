@@ -115,12 +115,13 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name" decoration-bf="1"/>
-                <field name="display_lead_label" string="Number of Leads"/>
+                <field name="lead_number" string="Number of Leads"/>
                 <field name="search_type"/>
                 <field name="country_ids" widget="many2many_tags"/>
-                <field name="team_id"/>
-                <field name="user_id"/>
-                <field name="tag_ids" widget="many2many_tags"/>
+                <field name="industry_ids" widget="many2many_tags"/>
+                <field name="team_id" optional="hide"/>
+                <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                 <field name="state" readonly="1" decoration-info="state == 'draft'" decoration-success="state == 'done'" decoration-danger="state == 'error'" widget="badge"/>
             </tree>
         </field>
@@ -132,6 +133,8 @@
         <field name="arch" type="xml">
             <search string="Lead Mining Request">
                 <field name="name"/>
+                <field name="industry_ids"/>
+                <field name="country_ids"/>
                 <field name="team_id"/>
                 <field name="user_id"/>
                 <field name="tag_ids"/>

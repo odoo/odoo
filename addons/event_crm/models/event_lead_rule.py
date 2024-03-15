@@ -89,7 +89,7 @@ class EventLeadRule(models.Model):
              'Attended: when attendance is confirmed and registration set to done;')
     # Filters
     event_type_ids = fields.Many2many(
-        'event.type', string='Event Categories',
+        'event.type', string='Event Templates',
         help='Filter the attendees to include those of this specific event category. If not set, no event category restriction will be applied.')
     event_id = fields.Many2one(
         'event.event', string='Event',

@@ -1378,7 +1378,7 @@ class Lead(models.Model):
 
         See ``merge_opportunity`` for more details. """
         if len(self.ids) <= 1:
-            raise UserError(_('Please select more than one element (lead or opportunity) from the list view.'))
+            raise UserError(_('Select at least two Leads/Opportunities from the list to merge them.'))
 
         if max_length and len(self.ids) > max_length and not self.env.is_superuser():
             raise UserError(_("To prevent data loss, Leads and Opportunities can only be merged by groups of %(max_length)s.", max_length=max_length))

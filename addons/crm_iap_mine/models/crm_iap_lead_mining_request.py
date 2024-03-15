@@ -47,7 +47,6 @@ class CRMLeadMiningRequest(models.Model):
     # Lead / Opportunity Data
 
     lead_type = fields.Selection([('lead', 'Leads'), ('opportunity', 'Opportunities')], string='Type', required=True, default=_default_lead_type)
-    display_lead_label = fields.Char(compute='_compute_display_lead_label')
     team_id = fields.Many2one(
         'crm.team', string='Sales Team', ondelete="set null",
         domain="[('use_opportunities', '=', True)]", readonly=False, compute='_compute_team_id', store=True)
@@ -76,15 +75,6 @@ class CRMLeadMiningRequest(models.Model):
     lead_credits = fields.Char(compute='_compute_tooltip', readonly=True)
     lead_contacts_credits = fields.Char(compute='_compute_tooltip', readonly=True)
     lead_total_credits = fields.Char(compute='_compute_tooltip', readonly=True)
-
-    @api.depends('lead_type', 'lead_number')
-    def _compute_display_lead_label(self):
-        selection_description_values = {
-            e[0]: e[1] for e in self._fields['lead_type']._description_selection(self.env)}
-        for request in self:
-            lead_type = selection_description_values[request.lead_type]
-            request.display_lead_label = '%s %s' % (request.lead_number, lead_type)
-
 
     @api.onchange('lead_number', 'contact_number')
     def _compute_tooltip(self):
