@@ -15,7 +15,12 @@ import { HootMain } from "./hoot_main";
 // Global
 //-----------------------------------------------------------------------------
 
-const { customElements, document, HTMLElement } = globalThis;
+const {
+    customElements,
+    document,
+    HTMLElement,
+    Object: { entries: $entries },
+} = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -42,7 +47,7 @@ class HootContainer extends HTMLElement {
 
         const colorStyleElement = document.createElement("style");
         let colorStyleContent = "";
-        for (const [className, content] of Object.entries(generateStyleSheets())) {
+        for (const [className, content] of $entries(generateStyleSheets())) {
             const selector = className === "default" ? ":host" : `:host(.${className})`;
             colorStyleContent += `${selector}{${content}}`;
         }

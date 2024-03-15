@@ -13,7 +13,13 @@ import { createMock, makePublicListeners } from "../hoot_utils";
 // Global
 //-----------------------------------------------------------------------------
 
-const { EventTarget, navigator, Set, TypeError } = globalThis;
+const {
+    EventTarget,
+    navigator,
+    Object: { assign: $assign },
+    Set,
+    TypeError,
+} = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -268,7 +274,7 @@ export const mockNavigator = createMock(navigator, {
 
 export function cleanupNavigator() {
     permissionStatuses.clear();
-    Object.assign(currentPermissions, getPermissions());
+    $assign(currentPermissions, getPermissions());
     currentUserAgent = makeUserAgent("linux", "chrome");
 }
 
