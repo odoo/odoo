@@ -143,7 +143,6 @@ test("notifications aren't sticky by default", async () => {
     expect(".o_notification").toHaveCount(1);
     // Wait for the notification to close
     await runAllTimers();
-    await animationFrame();
     expect(".o_notification").toHaveCount(0);
 });
 
@@ -227,7 +226,6 @@ test("can close a non-sticky notification", async () => {
 
     // simulate end of timeout, which should try to close the notification as well
     await runAllTimers();
-    await animationFrame();
     expect(".o_notification").toHaveCount(0);
 });
 
@@ -278,7 +276,6 @@ test("close a non-sticky notification while another one remains", async () => {
 
     // simulate end of timeout, which should try to close notification 1 as well
     await runAllTimers();
-    await animationFrame();
     expect(".o_notification").toHaveCount(1);
 
     // close the non sticky notification
