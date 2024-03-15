@@ -108,14 +108,12 @@
             </t>
         </div>
     </template>
-
     <template id="web.login_layout" name="Login Layout">
         <t t-call="web.frontend_layout">
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
             <t t-set="body_classname" t-value="'bg-100'"/>
             <t t-set="no_header" t-value="True"/>
             <t t-set="no_footer" t-value="True"/>
-
             <div class="container py-5">
                 <div t-attf-class="card border-0 mx-auto bg-100 {{login_card_classes}} o_database_list" style="max-width: 300px;">
                     <div class="card-body">
@@ -134,7 +132,6 @@
             </div>
         </t>
     </template>
-
     <template id="web.login" name="Login">
         <t t-call="web.login_layout">
             <form class="oe_login_form" role="form" t-attf-action="/web/login" method="post" onsubmit="this.action = '/web/login' + location.hash">
