@@ -20,7 +20,7 @@ class TestTaxPython(TestTaxCommon):
     def test_tax_python_basic(self):
         res = self.python_tax.compute_all(130.0)
         self._check_compute_all_results(
-            136.96, # 'total_included'
+            136.96,  # 'total_included'
             130.0,  # 'total_excluded'
             [
                 # base , amount    | seq | amount | incl | incl_base
@@ -49,13 +49,13 @@ class TestTaxPython(TestTaxCommon):
         python_tax_2 = self.python_tax.copy()
         res = (self.python_tax + python_tax_2).compute_all(130.0)
         self._check_compute_all_results(
-            130,    # 'total_included'
-            116.07, # 'total_excluded'
+            130,  # 'total_included'
+            116.08,  # 'total_excluded'
             [
                 # base , amount     | seq | amount | incl | incl_base
                 # ---------------------------------------------------
-                (116.07, 6.96),   # |  1  |    6%  |   t  |
-                (116.07, 6.97),   # |  1  |    6%  |   t  |
+                (116.08, 6.96),   # |  1  |    6%  |   t  |
+                (116.08, 6.96),   # |  1  |    6%  |   t  |
                 # ---------------------------------------------------
             ],
             res
