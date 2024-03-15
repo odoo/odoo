@@ -44,6 +44,28 @@ export {
     makeMockEnv,
     mockService,
 } from "./_framework/env_test_helpers";
+export {
+    clickKanbanLoadMore,
+    clickKanbanRecord,
+    createKanbanRecord,
+    discardKanbanRecord,
+    editKanbanColumnName,
+    editKanbanRecord,
+    editKanbanRecordQuickCreateInput,
+    getKanbanColumn,
+    getKanbanColumnDropdownMenu,
+    getKanbanColumnTooltips,
+    getKanbanCounters,
+    getKanbanProgressBars,
+    getKanbanRecord,
+    getKanbanRecordTexts,
+    quickCreateKanbanColumn,
+    quickCreateKanbanRecord,
+    toggleKanbanColumnActions,
+    toggleKanbanRecordDropdown,
+    validateKanbanColumn,
+    validateKanbanRecord,
+} from "./_framework/kanban_test_helpers";
 export { Command } from "./_framework/mock_server/mock_model";
 export {
     MockServer,
@@ -100,13 +122,11 @@ export {
 export {
     clickButton,
     clickCancel,
-    clickKanbanCard,
     clickModalButton,
     clickSave,
     clickViewButton,
     expectMarkup,
     fieldInput,
-    kanbanCard,
     mountView,
     mountViewInDialog,
 } from "./_framework/view_test_helpers";

@@ -11,7 +11,7 @@ import {
     defineModels,
     fieldInput,
     fields,
-    kanbanCard,
+    clickKanbanRecord,
     models,
     mountView,
     onRpc,
@@ -268,7 +268,7 @@ test.tags("desktop")("many2many kanban: edition", async () => {
 
     // edit existing subrecord
 
-    await kanbanCard({ text: "gold" }).click();
+    await clickKanbanRecord({ text: "gold" });
 
     await fieldInput("name").edit("new name");
     await clickModalButton({ text: "Save" });
@@ -313,7 +313,7 @@ test.tags("desktop")("many2many kanban: edition", async () => {
     expect(".o_kanban_record:contains(A new type)").toBeVisible();
 
     // delete subrecords
-    await kanbanCard({ text: "silver" }).click();
+    await clickKanbanRecord({ text: "silver" });
 
     expect(".modal .modal-footer .o_btn_remove").toHaveCount(1);
     await clickModalButton({ text: "Remove" });
@@ -322,7 +322,7 @@ test.tags("desktop")("many2many kanban: edition", async () => {
     expect(".o_kanban_record:visible").toHaveCount(5);
     expect(".o_kanban_record:contains(silver)").toHaveCount(0);
 
-    await kanbanCard({ text: "blue", target: ".delete_icon" }).click();
+    await clickKanbanRecord({ text: "blue", target: ".delete_icon" });
 
     expect(".o_kanban_record:visible").toHaveCount(4);
     expect(".o_kanban_record:contains(blue)").toHaveCount(0);
