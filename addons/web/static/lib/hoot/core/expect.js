@@ -81,7 +81,20 @@ import { Test } from "./test";
 // Global
 //-----------------------------------------------------------------------------
 
-const { Boolean, Error, Object, Promise, TypeError, performance } = globalThis;
+const {
+    Boolean,
+    Error,
+    Object: {
+        assign: $assign,
+        create: $create,
+        fromEntries: $fromEntries,
+        entries: $entries,
+        keys: $keys,
+    },
+    Promise,
+    TypeError,
+    performance,
+} = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -319,7 +332,7 @@ const getStyleValues = (node, keys) => {
     if (!nodeStyle) {
         return {};
     }
-    return Object.fromEntries(
+    return $fromEntries(
         keys.map((key) => [
             key,
             key.includes("-") ? nodeStyle.getPropertyValue(key) : nodeStyle[key],
@@ -333,8 +346,8 @@ const getStyleValues = (node, keys) => {
  * @param {Record<string, string | RegExp>} styleDef
  */
 const hasStyle = (node, styleDef) => {
-    const nodeStyle = getStyleValues(node, Object.keys(styleDef));
-    for (const [prop, value] of Object.entries(styleDef)) {
+    const nodeStyle = getStyleValues(node, $keys(styleDef));
+    for (const [prop, value] of $entries(styleDef)) {
         if (!regexMatchOrStrictEqual(nodeStyle[prop], value)) {
             return false;
         }
@@ -354,7 +367,7 @@ const matcherModifierError = (modifier, message) =>
  * @returns {Record<string, string>}
  */
 const parseStyle = (styleString) =>
-    Object.fromEntries(styleString.split(";").map((prop) => prop.split(":").map((v) => v.trim())));
+    $fromEntries(styleString.split(";").map((prop) => prop.split(":").map((v) => v.trim())));
 
 /**
  * @param {unknown} value
@@ -427,7 +440,7 @@ export function makeExpect(params) {
         return new Matchers(received, {}, params.headless);
     }
 
-    const enrichedExpect = Object.assign(expect, {
+    const enrichedExpect = $assign(expect, {
         assertions,
         errors,
         extend,
@@ -458,7 +471,7 @@ export class Assertion {
      * @param {Partial<Assertion>} values
      */
     constructor(values) {
-        Object.assign(this, values);
+        $assign(this, values);
     }
 }
 
@@ -469,7 +482,7 @@ export class Assertion {
  */
 export class Matchers {
     /** @type {Record<string, (...args: any[]) => MatcherSpecifications>} */
-    static registry = Object.create(null);
+    static registry = $create(null);
 
     /** @type {A} */
     #actual = null;
@@ -493,7 +506,7 @@ export class Matchers {
         this.#headless = headless;
         this.#modifiers = modifiers;
 
-        for (const [fnName, fn] of Object.entries(this.constructor.registry)) {
+        for (const [fnName, fn] of $entries(this.constructor.registry)) {
             const resolve = this.#resolve.bind(this);
             const saveStack = this.#saveStack.bind(this);
             this[fnName] = {
@@ -1519,11 +1532,11 @@ export class Matchers {
                 options?.message ||
                 (pass
                     ? `%elements% have the expected style values for ${and(
-                          ...Object.keys(styleDef).map(formatHumanReadable)
+                          ...$keys(styleDef).map(formatHumanReadable)
                       )}`
                     : `expected %elements% [to have all!not to have any] of the given style properties`),
             details: (actual) => {
-                const styleValues = getStyleValues(actual[0], Object.keys(styleDef));
+                const styleValues = getStyleValues(actual[0], $keys(styleDef));
                 return [
                     [Markup.green("Expected:"), styleDef],
                     [Markup.red("Received:"), styleValues],

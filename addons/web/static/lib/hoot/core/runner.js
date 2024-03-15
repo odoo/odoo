@@ -83,10 +83,17 @@ import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
 
 const {
     clearTimeout,
-    console,
+    console: { warn: $warn, error: $error },
     document,
     Map,
-    Math,
+    Math: { floor: $floor },
+    Object: {
+        assign: $assign,
+        defineProperties: $defineProperties,
+        entries: $entries,
+        freeze: $freeze,
+        fromEntries: $fromEntries,
+    },
     performance,
     Promise,
     removeEventListener,
@@ -166,7 +173,9 @@ const getDefaultPresets = () =>
 const noop = () => {};
 
 const restoreConsole = () => {
-    Object.assign(console, ORINAL_CONSOLE_METHODS);
+    logger.ignoreErrors = false;
+
+    $assign(globalThis.console, ORINAL_CONSOLE_METHODS);
 };
 
 /**
@@ -177,7 +186,7 @@ const shuffle = (array) => {
     const copy = [...array];
     let randIndex;
     for (let i = 0; i < copy.length; i++) {
-        randIndex = Math.floor(internalRandom() * copy.length);
+        randIndex = $floor(internalRandom() * copy.length);
         [copy[i], copy[randIndex]] = [copy[randIndex], copy[i]];
     }
     return copy;
@@ -186,7 +195,7 @@ const shuffle = (array) => {
 /**
  * @param {string} reason
  */
-const suppressConsole = (reason) => {
+const suppressConsoleErrors = (reason) => {
     /**
      * @param {string} label
      * @param {string} color
@@ -194,13 +203,15 @@ const suppressConsole = (reason) => {
     const suppressedMethod = (label, color) => {
         const groupName = [`%c[${label}]%c suppressed by ${reason}`, `color: ${color}`, ""];
         return (...args) => {
-            console.group(...groupName);
-            console.log(...args);
-            console.groupEnd(...groupName);
+            logger.group(...groupName);
+            logger.log(...args);
+            logger.groupEnd(...groupName);
         };
     };
 
-    Object.assign(console, {
+    logger.ignoreErrors = true;
+
+    $assign(globalThis.console, {
         error: suppressedMethod("ERROR", "#9f1239"),
         warn: suppressedMethod("WARNING", "#f59e0b"),
     });
@@ -214,7 +225,7 @@ const warnUserEvent = (ev) => {
         return;
     }
 
-    console.warn(
+    logger.warn(
         `User event detected: "${ev.type}"\n\n`,
         `Note that this kind of interaction can interfere with the current test and should be avoided.`
     );
@@ -223,8 +234,8 @@ const warnUserEvent = (ev) => {
 };
 
 const ORINAL_CONSOLE_METHODS = {
-    error: console.error,
-    warn: console.warn,
+    error: $error,
+    warn: $warn,
 };
 
 //-----------------------------------------------------------------------------
@@ -329,8 +340,8 @@ export class TestRunner {
         const initialConfig = { ...DEFAULT_CONFIG, ...config };
         const reactiveConfig = reactive({ ...initialConfig, ...urlParams }, () => {
             setParams(
-                Object.fromEntries(
-                    Object.entries(this.config).map(([key, value]) => [
+                $fromEntries(
+                    $entries(this.config).map(([key, value]) => [
                         key,
                         deepEqual(value, initialConfig[key]) ? null : value,
                     ])
@@ -909,7 +920,7 @@ export class TestRunner {
             // (and not in debug).
             const suppressErrors = test.config.todo && !this.debug;
             if (suppressErrors) {
-                suppressConsole("test.todo");
+                suppressConsoleErrors("test.todo");
             }
 
             // Before test
@@ -926,7 +937,7 @@ export class TestRunner {
             // ! keep the smallest stack trace possible:
             // !    TestRunner.start() > Test.run() > Error
             const testPromise = Promise.resolve(test.run());
-            const timeout = Math.floor(test.config.timeout || this.config.timeout);
+            const timeout = $floor(test.config.timeout || this.config.timeout);
             const timeoutPromise = new Promise((resolve, reject) => {
                 // Set abort signal
                 this.#rejectCurrent = reject;
@@ -1214,7 +1225,7 @@ export class TestRunner {
          *  test.config({ multi: 100 })("non-deterministic test", async () => { ... });
          */
         const configure = (...configs) => {
-            Object.assign(currentConfig, ...configs);
+            $assign(currentConfig, ...configs);
 
             return taggedFn;
         };
@@ -1227,7 +1238,7 @@ export class TestRunner {
         };
 
         let currentConfig = { tags: [] };
-        Object.defineProperties(taggedFn, {
+        $defineProperties(taggedFn, {
             config: { get: configure },
             debug: { get: () => addTags("debug") },
             multi: { get: () => (count) => configure({ multi: count }) },
@@ -1239,7 +1250,7 @@ export class TestRunner {
         });
 
         if (getCurrent) {
-            Object.defineProperties(taggedFn, {
+            $defineProperties(taggedFn, {
                 current: { get: () => this.#createCurrentConfigurators(getCurrent) },
             });
         }
@@ -1330,7 +1341,7 @@ export class TestRunner {
         };
 
         /** @type {CurrentConfigurators} */
-        const currentConfigurators = Object.freeze({
+        const currentConfigurators = $freeze({
             config: configureCurrent,
             debug: () => addTagsToCurrent("debug"),
             multi: (count) => configureCurrent({ multi: count }),
@@ -1410,7 +1421,7 @@ export class TestRunner {
      */
     #isImplicitlyExcluded(job) {
         // By tag name
-        for (const [tagName, status] of Object.entries(this.state.includeSpecs.tags)) {
+        for (const [tagName, status] of $entries(this.state.includeSpecs.tags)) {
             if (status < 0 && job.tags.some((tag) => tag.name === tagName)) {
                 return true;
             }
@@ -1431,7 +1442,7 @@ export class TestRunner {
      */
     #isImplicitlyIncluded(job) {
         // By tag name
-        for (const [tagName, status] of Object.entries(this.state.includeSpecs.tags)) {
+        for (const [tagName, status] of $entries(this.state.includeSpecs.tags)) {
             if (status > 0 && job.tags.some((tag) => tag.name === tagName)) {
                 return true;
             }

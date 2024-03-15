@@ -973,7 +973,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("special keys modifiers: Windows", async () => {
-        mockUserAgent("Windows");
+        mockUserAgent("chrome", "windows");
 
         await mountOnFixture(/* xml */ `<input />`);
 
@@ -999,7 +999,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("special keys modifiers: Mac", async () => {
-        mockUserAgent("Macintosh");
+        mockUserAgent("chrome", "mac");
 
         await mountOnFixture(/* xml */ `<input />`);
 
@@ -1009,11 +1009,11 @@ describe(parseUrl(import.meta.url), () => {
 
         press("alt");
 
-        expect(["keydown:Alt.ctrl", "keyup:Alt.ctrl"]).toVerifySteps();
+        expect(["keydown:Alt.alt", "keyup:Alt.alt"]).toVerifySteps();
 
         press("ctrl");
 
-        expect(["keydown:Control.meta", "keyup:Control.meta"]).toVerifySteps();
+        expect(["keydown:Control.ctrl", "keyup:Control.ctrl"]).toVerifySteps();
 
         press("meta");
 

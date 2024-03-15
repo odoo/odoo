@@ -477,7 +477,7 @@ const isValidCommand = (command) => {
     if (action < 0 || action > 6) {
         return false;
     }
-    if (command.length > 1 && !Number.isInteger(id)) {
+    if (command.length > 1 && !(id === false || Number.isInteger(id))) {
         return false;
     }
     if (command.length > 2 && typeof data !== "object") {

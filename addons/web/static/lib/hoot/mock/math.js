@@ -6,7 +6,11 @@ import { createMock, isNil, stringToNumber } from "../hoot_utils";
 // Global
 //-----------------------------------------------------------------------------
 
-const { Math, Number, Object } = globalThis;
+const {
+    Math: { floor: $floor, random: $random },
+    Number: { isNaN: $isNaN, parseFloat: $parseFloat },
+    Object: { defineProperties: $defineProperties },
+} = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -39,7 +43,7 @@ const makeSeededRandom = (seed) => {
 
     let state = seed;
 
-    Object.defineProperties(random, {
+    $defineProperties(random, {
         seed: {
             get() {
                 return seed;
@@ -61,8 +65,8 @@ const toValidSeed = (seed) => {
     if (isNil(seed)) {
         return generateSeed();
     }
-    const nSeed = Number(seed);
-    return Number.isNaN(nSeed) ? stringToNumber(nSeed) : nSeed;
+    const nSeed = $parseFloat(seed);
+    return $isNaN(nSeed) ? stringToNumber(nSeed) : nSeed;
 };
 
 const DEFAULT_SEED = 1e16;
@@ -76,7 +80,7 @@ const DEFAULT_SEED = 1e16;
  * This function uses the native (unpatched) {@link Math.random} method.
  */
 export function generateSeed() {
-    return Math.floor(Math.random() * 1e16);
+    return $floor($random() * 1e16);
 }
 
 /**
@@ -86,7 +90,7 @@ export function setRandomSeed(seed) {
     MockMath.random.seed = toValidSeed(seed);
 }
 
-export const MockMath = createMock(Math, {
+export const MockMath = createMock(globalThis.Math, {
     random: { value: makeSeededRandom(DEFAULT_SEED) },
 });
 

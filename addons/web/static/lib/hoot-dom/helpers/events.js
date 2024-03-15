@@ -68,7 +68,16 @@ import {
 // Global
 //-----------------------------------------------------------------------------
 
-const { console, DataTransfer, document, Math, Object, String, Touch, TypeError } = globalThis;
+const {
+    console: { dir: $dir, groupCollapsed: $groupCollapsed, groupEnd: $groupEnd, log: $log },
+    DataTransfer,
+    document,
+    Math: { ceil },
+    Object: { assign: $assign, values: $values },
+    String,
+    Touch,
+    TypeError,
+} = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -299,7 +308,7 @@ const getPosition = (element, options) => {
         if (positions.includes("left")) {
             clientX -= 1;
         } else if (positions.includes("right")) {
-            clientX += Math.ceil(width) + 1;
+            clientX += ceil(width) + 1;
         } else {
             clientX += width / 2;
         }
@@ -308,7 +317,7 @@ const getPosition = (element, options) => {
         if (positions.includes("top")) {
             clientY -= 1;
         } else if (positions.includes("bottom")) {
-            clientY += Math.ceil(height) + 1;
+            clientY += ceil(height) + 1;
         } else {
             clientY += height / 2;
         }
@@ -378,7 +387,7 @@ const logEvents = (actionName) => {
         return events;
     }
     const groupName = [`${actionName}: dispatched`, events.length, `events`];
-    console.groupCollapsed(...groupName);
+    $groupCollapsed(...groupName);
     for (const event of events) {
         /** @type {(keyof typeof LOG_COLORS)[]} */
         const colors = ["blue"];
@@ -402,7 +411,7 @@ const logEvents = (actionName) => {
             if (targetParts.class) {
                 colors.push("lightBlue");
             }
-            const targetString = Object.values(targetParts)
+            const targetString = $values(targetParts)
                 .map((part) => `%c${part}%c`)
                 .join("");
             message += ` @${targetString}`;
@@ -412,12 +421,12 @@ const logEvents = (actionName) => {
             `color: ${LOG_COLORS.reset}`,
         ]);
 
-        console.groupCollapsed(message, ...messageColors);
-        console.dir(event);
-        console.log(event.target);
-        console.groupEnd();
+        $groupCollapsed(message, ...messageColors);
+        $dir(event);
+        $log(event.target);
+        $groupEnd();
     }
-    console.groupEnd();
+    $groupEnd();
     return events;
 };
 
@@ -1983,10 +1992,10 @@ export function setupEventActions(fixture) {
     fixture.addEventListener("click", registerFileInput, { capture: true });
 
     // Runtime global variables
-    Object.assign(runTime, getDefaultRunTimeValue());
+    $assign(runTime, getDefaultRunTimeValue());
 
     // Special keys
-    Object.assign(specialKeys, getDefaultSpecialKeysValue());
+    $assign(specialKeys, getDefaultSpecialKeysValue());
 }
 
 /**

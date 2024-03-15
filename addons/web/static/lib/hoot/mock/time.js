@@ -21,7 +21,7 @@ import { isNil } from "../hoot_utils";
 const {
     Date,
     Error,
-    Math,
+    Math: { ceil: $ceil, max: $max },
     Promise,
     cancelAnimationFrame,
     clearInterval,
@@ -143,7 +143,7 @@ let timeOffset = 0;
  * @param {number} [frameCount]
  */
 export async function advanceFrame(frameCount) {
-    return advanceTime(frameDelay * Math.max(1, frameCount));
+    return advanceTime(frameDelay * $max(1, frameCount));
 }
 
 /**
@@ -173,7 +173,7 @@ export async function advanceTime(ms) {
             // => advances time
             const diff = timeout - currentTs;
             timeOffset += diff;
-            ms = Math.max(ms - diff, 0);
+            ms = $max(ms - diff, 0);
             handler();
         }
     }
@@ -383,8 +383,8 @@ export async function runAllTimers(preventTimers = false) {
         allowTimers = false;
     }
 
-    const endts = Math.max(...[...timers.values()].map(([, init, delay]) => init + delay));
-    const ms = await advanceTime(Math.ceil(endts - now()));
+    const endts = $max(...[...timers.values()].map(([, init, delay]) => init + delay));
+    const ms = await advanceTime($ceil(endts - now()));
 
     if (preventTimers) {
         allowTimers = true;
