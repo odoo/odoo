@@ -1602,7 +1602,6 @@ test("many2one field and operator =/!= (edit)", async () => {
 
     await editValue("xph", { confirm: false });
     await runAllTimers();
-    await animationFrame();
     expect(".dropdown-menu").toHaveCount(1);
     expect(queryAllTexts(".dropdown-menu li")).toEqual(["xphone"]);
     expect(getCurrentOperator()).toBe("=");
@@ -1626,6 +1625,7 @@ test("many2one field and operator =/!= (edit)", async () => {
     expect([`[("product_id", "!=", False)]`]).toVerifySteps();
 
     await editValue("xpa", { confirm: false });
+    await runAllTimers();
     await contains(".dropdown-menu li").click();
     expect(getCurrentOperator()).toBe("!=");
     expect(getCurrentValue()).toBe("xpad");
@@ -1661,7 +1661,6 @@ test("many2one field and operator in/not in (edit)", async () => {
     expect(".dropdown-menu").toHaveCount(0);
     await contains(SELECTORS.valueEditor + " input").fill("x", { confirm: false });
     await runAllTimers();
-    await animationFrame();
     expect(".dropdown-menu").toHaveCount(1);
     expect(queryAllTexts(".dropdown-menu li")).toEqual(["xpad"]);
 
@@ -1837,7 +1836,6 @@ test("many2many field: operator =/!=/in/not in (edit)", async () => {
 
     await contains(SELECTORS.valueEditor + " input").fill("x", { confirm: false });
     await runAllTimers();
-    await animationFrame();
     expect(".dropdown-menu").toHaveCount(1);
     expect(queryAllTexts(".dropdown-menu li")).toEqual(["xpad"]);
 

@@ -61,6 +61,7 @@ import { HootDomError, getTag, isFirefox, isIterable, parseRegExp } from "../hoo
 
 const {
     Boolean,
+    cancelAnimationFrame,
     clearTimeout,
     console,
     document,
@@ -73,6 +74,7 @@ const {
     Promise,
     Reflect,
     RegExp,
+    requestAnimationFrame,
     Set,
     setTimeout,
 } = globalThis;
@@ -1771,25 +1773,44 @@ export async function waitUntil(predicate, options) {
         return result;
     }
 
-    let disconnect = () => {};
+    let disconnect;
+    let handle;
+    let timeoutId;
     return new Promise((resolve, reject) => {
-        const timeout = Math.floor(options?.timeout ?? 200);
-        let message = options?.message || `'waitUntil' timed out after %timeout% milliseconds`;
-        if (typeof message === "function") {
-            message = message();
-        }
-        const timeoutId = setTimeout(
-            () => reject(new HootDomError(message.replace("%timeout%", String(timeout)))),
-            timeout
-        );
-        disconnect = observe(getDefaultRoot(), () => {
+        const runCheck = () => {
+            if (handle) {
+                cancelAnimationFrame(handle);
+            }
             const result = predicate();
             if (result) {
                 resolve(result);
-                clearTimeout(timeoutId);
+            } else {
+                handle = requestAnimationFrame(runCheck);
             }
-        });
-    }).finally(disconnect);
+        };
+
+        const timeout = Math.floor(options?.timeout ?? 200);
+        timeoutId = setTimeout(() => {
+            let message = options?.message || `'waitUntil' timed out after %timeout% milliseconds`;
+            if (typeof message === "function") {
+                message = message();
+            }
+            reject(new HootDomError(message.replace("%timeout%", String(timeout))));
+        }, timeout);
+
+        disconnect = observe(getDefaultRoot(), runCheck);
+        runCheck();
+    }).finally(() => {
+        if (disconnect) {
+            disconnect();
+        }
+        if (handle) {
+            cancelAnimationFrame(handle);
+        }
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+    });
 }
 
 /**

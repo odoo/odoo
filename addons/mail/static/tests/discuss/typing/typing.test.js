@@ -6,6 +6,10 @@ let rpc;
 import { Store } from "@mail/core/common/store_service";
 import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/common/composer_patch";
 import { OTHER_LONG_TYPING } from "@mail/discuss/typing/common/typing_service";
+import { rpcWithEnv } from "@mail/utils/common/misc";
+import { advanceTime } from "@odoo/hoot-mock";
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 import {
     assertSteps,
     click,
@@ -18,10 +22,6 @@ import {
     startServer,
     step,
 } from "../../mail_test_helpers";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { rpcWithEnv } from "@mail/utils/common/misc";
-import { advanceTime } from "@odoo/hoot-mock";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -112,7 +112,7 @@ test('assume other member typing status becomes "no longer is typing" after long
         })
     );
     await contains(".o-discuss-Typing", { text: "Demo is typing..." });
-    advanceTime(OTHER_LONG_TYPING);
+    await advanceTime(OTHER_LONG_TYPING);
     await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
 });
 
@@ -151,7 +151,7 @@ test('other member typing status "is typing" refreshes of assuming no longer typ
     );
     await advanceTime(LONG_TYPING);
     await contains(".o-discuss-Typing", { text: "Demo is typing..." });
-    advanceTime(OTHER_LONG_TYPING - LONG_TYPING);
+    await advanceTime(OTHER_LONG_TYPING - LONG_TYPING);
     await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
 });
 
@@ -247,11 +247,9 @@ test("current partner notify is typing again to other members for long continuou
     await insertText(".o-mail-Composer-input", "a");
     await assertSteps(["notify_typing:true"]);
     // simulate current partner typing a character for a long time.
-    let totalTimeElapsed = 0;
     const elapseTickTime = SHORT_TYPING / 2;
-    while (totalTimeElapsed < LONG_TYPING + SHORT_TYPING) {
+    for (let i = 0; i <= LONG_TYPING / elapseTickTime; i++) {
         await insertText(".o-mail-Composer-input", "a");
-        totalTimeElapsed += elapseTickTime;
         await advanceTime(elapseTickTime);
     }
     await assertSteps(["notify_typing:true"]);
