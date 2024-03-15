@@ -54,7 +54,7 @@ class Action(Controller):
     @route('/web/action/load_breadcrumbs', type='json', auth='user', readonly=True)
     def load_breadcrumbs(self, actions):
         display_names = []
-        for action in actions:
+        for idx, action in enumerate(actions):
             record_id = action.get('resId')
             try:
                 if action.get('action'):
@@ -65,12 +65,22 @@ class Action(Controller):
                         else:
                             display_names.append({'error': 'A server action must have a path to be restored'})
                             continue
+                    # client actions don't have multi-record views, so we can't go further to the next controller
+                    if act['type'] == 'ir.actions.client' and idx + 1 < len(actions) and action.get('action') == actions[idx + 1].get('action'):
+                        continue
                     if record_id:
-                        display_names.append(request.env[act['res_model']].browse(record_id).display_name)
+                        # some actions may not have a res_model (e.g. a client action)
+                        if act['res_model']:
+                            display_names.append(request.env[act['res_model']].browse(record_id).display_name)
+                        else:
+                            display_names.append(act['display_name'])
                     else:
-                        request.env[act['res_model']].check_access_rights('read')
-                        # action shouldn't be available on its own if it doesn't have multi-record views
-                        name = act['display_name'] if any(view[1] != 'form' and view[1] != 'search' for view in act['views']) else None
+                        if act['res_model'] and act['type'] != 'ir.actions.client':
+                            request.env[act['res_model']].check_access_rights('read')
+                            # action shouldn't be available on its own if it doesn't have multi-record views
+                            name = act['display_name'] if any(view[1] != 'form' and view[1] != 'search' for view in act['views']) else None
+                        else:
+                            name = act['display_name']
                         display_names.append(name)
                 elif action.get('model'):
                     Model = request.env[action.get('model')]

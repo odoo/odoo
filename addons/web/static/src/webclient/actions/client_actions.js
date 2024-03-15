@@ -5,6 +5,7 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { escape, sprintf } from "@web/core/utils/strings";
+import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
 import { Component, markup, onMounted, xml } from "@odoo/owl";
 
@@ -28,11 +29,7 @@ registry.category("actions").add("display_notification", displayNotificationActi
 
 class InvalidAction extends Component {
     static template = xml`<div class="o_invalid_action"></div>`;
-    static props = {
-        action: Object,
-        actionId: { type: Number, optional: true },
-        className: { type: String, optional: true },
-    };
+    static props = { ...standardActionServiceProps };
     setup() {
         this.notification = useService("notification");
         onMounted(this.onMounted);

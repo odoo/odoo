@@ -7,6 +7,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
+import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
 function processLine(line) {
     return { ...line, lines: [], isFolded: true };
@@ -33,12 +34,7 @@ function extractPrintData(lines) {
 export class TraceabilityReport extends Component {
     static template = "stock.TraceabilityReport";
     static components = { Layout };
-    static props = {
-        action: Object,
-        actionId: { type: Number, optional: true },
-        className: { type: String, optional: true },
-        state: {type: Object, optional: true},
-    };
+    static props = { ...standardActionServiceProps };
 
     setup() {
         this.actionService = useService("action");

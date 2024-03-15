@@ -22,6 +22,7 @@ import {
     onWillStart,
     useExternalListener,
 } from "@odoo/owl";
+import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
 const ROUTES = {
     descriptionScreen: 2,
@@ -618,11 +619,8 @@ export class Configurator extends Component {
         ThemeSelectionScreen,
     };
     static template = 'website.Configurator.Configurator';
-    static props = {
-        action: Object,
-        actionId: { type: Number, optional: true },
-        className: { type: String, optional: true },
-    };
+    static props = { ...standardActionServiceProps };
+
     setup() {
         this.orm = useService('orm');
         this.action = useService('action');
