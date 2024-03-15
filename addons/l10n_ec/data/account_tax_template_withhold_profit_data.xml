@@ -609,6 +609,7 @@
         </record>
         <record id="tax_withhold_profit_319" model="account.tax.template">
             <field name="name">319 1.75% Cuotas de Arrendamiento Mercantil (Prestado por Sociedades), Inclusive la de Opción de Compra</field>
+            <field name="active">False</field>
             <field name="type_tax_use">none</field>
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
@@ -637,6 +638,39 @@
                 (0,0, {
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ret_ir_1_75x100'),
+                    'minus_report_expression_ids': [ref('tax_report_line_103_369_tag')],
+                })]"/>
+        </record>
+        <record id="tax_withhold_profit_319_2" model="account.tax.template">
+            <field name="name">319 2% Cuotas de Arrendamiento Mercantil (Prestado por Sociedades), Inclusive la de Opción de Compra</field>
+            <field name="type_tax_use">none</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">70</field>
+            <field name="amount">-2</field>
+            <field name="description">319</field>
+            <field name="l10n_ec_code_applied">369</field>
+            <field name="l10n_ec_code_base">319</field>
+            <field name="l10n_ec_code_ats">319</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_103_319_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_2x100'),
+                    'plus_report_expression_ids': [ref('tax_report_line_103_369_tag')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_103_319_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_2x100'),
                     'minus_report_expression_ids': [ref('tax_report_line_103_369_tag')],
                 })]"/>
         </record>
