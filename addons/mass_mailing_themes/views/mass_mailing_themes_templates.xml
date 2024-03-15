@@ -49,6 +49,7 @@
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
+        <t t-set="website_url_or_none" t-value="(company_id.website) or '#'"/>
         <div class="s_header_social o_mail_block_header_social o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_header_social" style="background-color: rgb(26, 36, 54) !important;" data-name="Header Social">
             <div class="container">
                 <div class="row">
@@ -100,7 +101,7 @@
                                     </div>
                                 </div>
                                 <p>Learn through workshops, product demos, and inspiring talks from Odoo Experts and Partners.</p>
-                                <a class="btn btn-primary" href="http://">See what we've got planned</a>
+                                <a class="btn btn-primary" t-att-href="website_url_or_none">See what we've got planned</a>
                             </div>
                         </div>
                     </div>
@@ -116,7 +117,7 @@
                                     </div>
                                 </div>
                                 <p>Create your very own chat room or join an existing one that sparks your interest.</p>
-                                <a class="btn btn-primary" href="http://">Go to the chatrooms</a>
+                                <a class="btn btn-primary" t-att-href="website_url_or_none">Go to the chatrooms</a>
                             </div>
                         </div>
                     </div>
@@ -132,7 +133,7 @@
                                     </div>
                                 </div>
                                 <p>Experience everything from a virtual exhibitor's hall to multiple interactive presentations and demos.</p>
-                                <a class="btn btn-primary" href="http://">Find out more</a>
+                                <a class="btn btn-primary" t-att-href="website_url_or_none">Find out more</a>
                             </div>
                         </div>
                     </div>
@@ -147,7 +148,7 @@
                         <p style="text-align: center;"><font style="color: rgb(255, 255, 255);">Zero, zilch, nada! Odoo Experience is free for everyone!</font></p>
                     </div>
                     <div class="col-lg-12" style="text-align: center;">
-                        <a class="btn btn-primary btn-lg" href="http://">Register now!</a>
+                        <a class="btn btn-primary btn-lg" t-att-href="website_url_or_none">Register now!</a>
                     </div>
                 </div>
             </div>
@@ -203,11 +204,12 @@
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
+        <t t-set="website_url_or_none" t-value="(company_id.website) or '#'"/>
         <div class="s_header_social o_mail_block_header_social o_mail_snippet_general pt40 pb32" data-snippet="s_mail_block_header_social" data-name="Header Social">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4">
-                        <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;" target="_blank">
+                        <a t-att-href="website_url_or_none" style="text-decoration:none;float:none;" target="_blank">
                             <img border="0" width="189" style="height:auto; max-width:100%; width: 189px;" src="/mass_mailing_themes/static/src/img/theme_blogging/tech_logo.png" class="img-fluid"/>
                         </a>
                     </div>
@@ -268,7 +270,7 @@
                             <div class="col-lg-8 s_media_list_body">
                                 <h3>The future of smartphone video production</h3>
                                 <p>Modern smartphones have all the built-in tech equal to a majority of the current professional cameras.</p>
-                                <a class="btn btn-primary" href="http://"><span class="fa fa-play" />&amp;nbsp;&amp;nbsp;WATCH VIDEO</a>
+                                <a class="btn btn-primary" t-att-href="website_url_or_none"><span class="fa fa-play" />&amp;nbsp;&amp;nbsp;WATCH VIDEO</a>
                                 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
                                 <a class="btn btn-link" href="#">READ MORE</a>
                             </div>
@@ -291,7 +293,7 @@
                             <div class="col-lg-8 s_media_list_body pt16 pb16">
                                 <h3>5 Ways Drones Can Better Your Live Events</h3>
                                 <p>One clever use of drones is for delivering gifts — but another that's becoming popular for event safety purposes.</p>
-                                <a class="btn btn-primary" href="http://">READ MORE</a>
+                                <a class="btn btn-primary" t-att-href="website_url_or_none">READ MORE</a>
                             </div>
                         </div>
                     </div>
@@ -312,7 +314,7 @@
                             <div class="col-lg-8 s_media_list_body">
                                 <h3>How to Code a Website Without Experience</h3>
                                 <p>Anyone with an ounce of business acumen knows that any business that wants to succeed needs a website.</p>
-                                <a class="btn btn-primary" href="http://">READ MORE</a>
+                                <a class="btn btn-primary" t-att-href="website_url_or_none">READ MORE</a>
                             </div>
                         </div>
                     </div>
@@ -377,6 +379,7 @@
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
         <t t-set="future_date" t-value="(datetime.date.today() + datetime.timedelta(days=30))"/>
+        <t t-set="website_url_or_none" t-value="(company_id.website) or '#'"/>
         <div class="s_header_logo o_mail_block_header_logo o_mail_snippet_general" data-snippet="s_mail_block_header_logo" data-name="Centered Logo" style="background-color: rgb(36, 37, 48) !important;">
             <div class="container">
                 <div class="row">
@@ -385,7 +388,7 @@
                         <br/><span style="font-weight: bolder"><font style="color: rgb(255, 255, 255);">SHIPPING</font></span></p>
                     </div>
                     <div class="col-lg-4 pt16 pb16" style="text-align: center;">
-                        <a style="text-decoration:none; text-align:center;" t-att-href="(company_id.website) or '#'" target="_blank">
+                        <a style="text-decoration:none; text-align:center;" t-att-href="website_url_or_none" target="_blank">
                             <img border="0" src="/mass_mailing_themes/static/src/img/theme_coupon/vip_logo.png" style="height: auto; max-width: 100%; width: 105px;" width="105" class="img-fluid"/>
                         </a>
                     </div>
@@ -426,7 +429,7 @@
                 <font style="color: rgb(113, 114, 127);">*But hurry! Offer ends on <t t-out="future_date.strftime('%m/%d/%Y')"/></font><br/>
             </p>
             <p style="text-align:center;">
-                <a class="btn btn-primary btn-lg" href="http://">Redeem it now</a>
+                <a class="btn btn-primary btn-lg" t-att-href="website_url_or_none">Redeem it now</a>
             </p>
         </div>
         <div class="s_call_to_action o_mail_snippet_general o_cc o_cc3 pt24 pb24" data-snippet="s_call_to_action" data-name="Call to Action" style="background-color: rgb(36, 37, 48) !important;">
@@ -436,7 +439,7 @@
                         <h3 style="text-align: center;">Thank you for being one of our most loyal customers.</h3>
                         <p style="text-align: center;">Join the community to see our latest news, events, discounts and much more!</p>
                         <p style="text-align: center;">
-                            <a class="btn btn-primary" href="http://">Join us</a>
+                            <a class="btn btn-primary" t-att-href="website_url_or_none">Join us</a>
                         </p>
                     </div>
                 </div>
@@ -799,12 +802,13 @@
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
+        <t t-set="website_url_or_none" t-value="(company_id.website) or '#'"/>
         <div class="s_header_text_social o_mail_block_header_text_social o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_header_text_social" data-name="Left Text">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4 pt16 pb16">
                         <h1>
-                            <a t-att-href="(company_id.website) or '#'" target="_blank">
+                            <a t-att-href="website_url_or_none" target="_blank">
                                 <span style="color: rgb(255, 187, 0) !important; font-size: 32px" class="fa fa-1x fa-sun-o" />
                             </a><span style="font-size: 32px;"><font style="font-weight: bolder; color: rgb(255, 255, 255); background-color: rgb(255, 187, 0);">SOLAR</font></span>
                         </h1>
@@ -839,7 +843,7 @@
             </table>
             <br/>
             <p style="text-align:center;">
-                <a role="button" class="btn btn-primary btn-lg" href="http://">Visit the website</a>
+                <a role="button" class="btn btn-primary btn-lg" t-att-href="website_url_or_none">Visit the website</a>
             </p>
         </div>
         <div class="s_hr pt16 pb16" data-snippet="s_hr" data-name="Separator">
@@ -939,7 +943,7 @@
                 border-color: #543427;
             }
             hr {
-                background-color: rgba(0,0,0,0); 
+                background-color: rgba(0,0,0,0);
             }
         </style>
         <div class="s_header_social o_mail_block_header_social o_mail_snippet_general" style="background-color: rgb(238, 233, 226) !important;" data-snippet="s_mail_block_header_social" data-name="Left Logo">
@@ -1493,7 +1497,7 @@
             </div>
         </div>
     </template>
-    
+
     <!-- Training -->
     <template id="theme_training_template">
         <style id="design-element">
@@ -1581,7 +1585,7 @@
                     </div>
                 </div>
             </div>
-        </div>    
+        </div>
         <div class="container s_allow_columns">
             <div class="row">
                 <div class="offset-lg-1 col-lg-10">
