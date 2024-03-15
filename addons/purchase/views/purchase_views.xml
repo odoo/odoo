@@ -184,8 +184,6 @@
                             <label for="date_approve" invisible="state not in ('purchase', 'done')"/>
                             <div name="date_approve" invisible="state not in ('purchase', 'done')" class="o_row">
                                 <field name="date_approve"/>
-                                <field name="mail_reception_confirmed" invisible="1"/>
-                                <span class="text-muted" invisible="not mail_reception_confirmed">(confirmed by vendor)</span>
                             </div>
                             <label for="date_planned"/>
                             <div name="date_planned_div" class="o_row">
@@ -434,6 +432,7 @@
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
                     <filter name="draft" string="RFQs" domain="[('state', 'in', ('draft', 'sent', 'to approve'))]"/>
+                    <filter name="unconfirmed" string="Not Acknowledged" domain="[('mail_reception_confirmed', '=', False), ('mail_reception_declined', '=', False), ('state', 'in', ('draft', 'sent'))]"/>
                     <separator/>
                     <filter name="approved" string="Purchase Orders" domain="[('state', 'in', ('purchase', 'done'))]"/>
                     <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]"/>
@@ -475,7 +474,6 @@
                     <filter name="my_Orders" string="My Orders" domain="[('user_id', '=', uid)]"/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
-                    <filter name="unconfirmed" string="Not Acknowledged" domain="[('mail_reception_confirmed', '=', False), ('state', '=', 'purchase')]"/>
                     <filter name="not_invoiced" string="Waiting Bills" domain="[('invoice_status', '=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
                     <filter name="invoiced" string="Bills Received" domain="[('invoice_status', '=', 'invoiced')]" help="Purchase orders that have been invoiced."/>
                     <separator/>
