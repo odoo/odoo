@@ -10,6 +10,18 @@ import { Test } from "../core/test";
  * }} HootButtonsProps
  */
 
+//-----------------------------------------------------------------------------
+// Global
+//-----------------------------------------------------------------------------
+
+const {
+    Object: { keys: $keys },
+} = globalThis;
+
+//-----------------------------------------------------------------------------
+// Internal
+//-----------------------------------------------------------------------------
+
 /** @extends {Component<HootButtonsProps, import("../hoot").Environment>} */
 export class HootButtons extends Component {
     static components = { HootLink };
@@ -58,7 +70,7 @@ export class HootButtons extends Component {
             }
         });
 
-        subscribeToURLParams(...Object.keys(runner.config));
+        subscribeToURLParams(...$keys(runner.config));
     }
 
     onRunClick() {

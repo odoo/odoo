@@ -15,7 +15,11 @@ import { Markup, toExplicitString } from "../hoot_utils";
 // Global
 //-----------------------------------------------------------------------------
 
-const { Object, Set, console } = globalThis;
+const {
+    Object: { keys: $keys },
+    Set,
+    console: { log: $log },
+} = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -169,7 +173,7 @@ export class HootTechnicalValue extends Component {
 
     getConstructor() {
         const { name } = this.value.constructor;
-        return `${name}(${Object.keys(this.value).length})`;
+        return `${name}(${$keys(this.value).length})`;
     }
 
     displayComma(value) {
@@ -181,6 +185,6 @@ export class HootTechnicalValue extends Component {
             return;
         }
         this.logged = true;
-        console.log(this.value);
+        $log(this.value);
     }
 }
