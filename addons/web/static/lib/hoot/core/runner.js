@@ -814,7 +814,7 @@ export class TestRunner {
             }
         }
 
-        const { debugTest, fps, watchkeys } = this.config;
+        const { fps, watchkeys } = this.config;
 
         // Register default hooks
         const [addTestDone, flushTestDone] = batch((test) => this.state.done.push(test), 10);
@@ -824,9 +824,9 @@ export class TestRunner {
             on(window, "error", (ev) => this.#onError(ev)),
             on(window, "unhandledrejection", (ev) => this.#onError(ev)),
             // Warn user events
-            !debugTest && on(window, "pointermove", warnUserEvent),
-            !debugTest && on(window, "pointerdown", warnUserEvent),
-            !debugTest && on(window, "keydown", warnUserEvent),
+            !this.debug && on(window, "pointermove", warnUserEvent),
+            !this.debug && on(window, "pointerdown", warnUserEvent),
+            !this.debug && on(window, "keydown", warnUserEvent),
             watchListeners(window, document, document.documentElement, document.head, document.body)
         );
         this.__beforeEach(this.fixture.setup);
