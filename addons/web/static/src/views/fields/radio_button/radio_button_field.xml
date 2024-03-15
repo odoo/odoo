@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.RadioButtonField" t-inherit="web.RadioField" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('form-check')]" position="attributes">
+            <attribute name="class">o_radio_item</attribute>
+        </xpath>
+
+        <xpath expr="//input[hasclass('form-check-input')]" position="attributes">
+            <attribute name="class">btn-check</attribute>
+        </xpath>
+
+        <xpath expr="//label[hasclass('form-check-label')]" position="attributes">
+            <attribute name="class">btn btn-primary</attribute>
+        </xpath>
+    </t>
+
+</templates>

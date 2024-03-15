@@ -29,6 +29,7 @@ class OnboardingStep(models.Model):
             'res_model': 'base.document.layout',
             'target': 'new',
             'views': [(view_id, 'form')],
+            'context': {"dialog_size": "extra-large"},
         }
 
     @api.model

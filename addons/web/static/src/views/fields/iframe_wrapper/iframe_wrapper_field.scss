@@ -1,25 +1,24 @@
-$preview_height: 1123 + 32;
-$preview_width: 794;
+$preview_height: 1464;
+$preview_width: 1040;
 $preview_scale: 0.50;
 
 @mixin o_preview_iframe_styling($scale) {
 
   .o_preview_iframe_wrapper {
-    padding: 0;
     overflow: hidden;
     width: ($preview_width * $scale) + 0px;
     height: ($preview_height * $scale) + 0px;
     position: relative;
+    margin: 8px;
   }
 
   .o_preview_iframe {
     width: $preview_width + 0px;
     height: $preview_height + 0px;
     border: 2px solid lightgrey;
-    overflow: hidden;
 
-    padding-top: 16px;
-    padding-bottom: 16px;
+    padding-top: 30px;
+    padding-bottom: 30px;
 
     -ms-zoom: 0.5;
     -moz-transform: scale($scale);
@@ -33,9 +32,12 @@ $preview_scale: 0.50;
 
 
 @include o_preview_iframe_styling($preview_scale)
+@media (max-width: 1488px), (max-height: 950px) {
+  @include o_preview_iframe_styling($preview_scale * 0.95)
+}
 
-@media (max-width: 1488px) {
-  @include o_preview_iframe_styling($preview_scale * 0.80)
+@media (max-width: 1488px), (max-height: 900px) {
+  @include o_preview_iframe_styling($preview_scale * 0.90)
 }
 
 @media (max-width: 600px) {

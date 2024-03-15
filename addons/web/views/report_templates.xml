@@ -65,7 +65,7 @@
                         bottom: 0;
                         left:50px;
                         right:50px;
-                        font-size: 0.8rem
+                        font-size: larger;
                     }
                     /** Avoid image overflowing and creating a scrollbar **/
                     .o_background_header {
@@ -82,6 +82,9 @@
                         max-width: 100% !important;
                     }
 
+                    .container {
+                        font-size: larger;
+                    }
                 </style>
             </head>
             <body t-att-class="'container' if not full_width else 'container-fluid'" style="overflow:hidden" t-att-dir="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'">
