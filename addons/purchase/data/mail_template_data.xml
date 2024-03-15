@@ -23,6 +23,16 @@
         <br/><br/>
         If you have any questions, please do not hesitate to contact us.
         <br/><br/>
+            <a t-att-href="object.get_confirm_url(confirm_type='reception')"
+                target="_blank"
+                style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+                Accept</a>
+
+            <a t-att-href="object.get_confirm_url(confirm_type='decline')"
+                target="_blank"
+                style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+                Decline</a>
+        <br/><br/>
         Best regards,
         <t t-if="not is_html_empty(object.user_id.signature)">
             <br/><br/>
