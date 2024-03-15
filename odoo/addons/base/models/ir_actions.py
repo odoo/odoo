@@ -79,8 +79,8 @@ class IrActions(models.Model):
                     raise ValidationError(_('The path should contain only lowercase alphanumeric characters, underscore, and dash, and it should start with a letter.'))
                 if action.path.startswith("m-"):
                     raise ValidationError(_("'m-' is a reserved prefix."))
-                if action.path.startswith("act-"):
-                    raise ValidationError(_("'act-' is a reserved prefix."))
+                if action.path.startswith("action-"):
+                    raise ValidationError(_("'action-' is a reserved prefix."))
                 if action.path == "new":
                     raise ValidationError(_("'new' is reserved, and can not be used as path."))
 
