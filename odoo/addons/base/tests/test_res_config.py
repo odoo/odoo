@@ -137,15 +137,14 @@ class TestResConfig(TransactionCase):
                 </xpath>
             """,
         })
-        with self.debug_mode():
-            arch = self.env['res.config.settings'].get_view(view.id)['arch']
-            tree = etree.fromstring(arch)
-            # The <t> must be removed from the structure
-            self.assertFalse(tree.xpath('//t'), 'The `<t groups="...">` block must not remain in the view')
-            self.assertTrue(tree.xpath("""
-                //form
-                /app[@name="foo"]
-            """), 'The `app` block must be a direct child of the `form` block')
+        arch = self.env['res.config.settings'].get_view(view.id)['arch']
+        tree = etree.fromstring(arch)
+        # The <t> must be removed from the structure
+        self.assertFalse(tree.xpath('//t'), 'The `<t groups="...">` block must not remain in the view')
+        self.assertTrue(tree.xpath("""
+            //form
+            /app[@name="foo"]
+        """), 'The `app` block must be a direct child of the `form` block')
 
 
 @tagged('post_install', '-at_install')
