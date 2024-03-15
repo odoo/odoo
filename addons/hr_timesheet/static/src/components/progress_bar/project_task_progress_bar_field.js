@@ -4,6 +4,10 @@ import { registry } from "@web/core/registry";
 import { progressBarField, ProgressBarField } from "@web/views/fields/progress_bar/progress_bar_field";
 
 export class ProjectTaskProgressBarField extends ProgressBarField {
+    get currentValue() {
+        return super.currentValue * 100;
+    }
+
     get progressBarColorClass() {
         if (this.currentValue > this.maxValue) {
             return super.progressBarColorClass;
