@@ -15,6 +15,7 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import wUtils from '@website/js/utils';
 import { renderToElement } from "@web/core/utils/render";
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import {
     Component,
     onWillStart,
@@ -40,11 +41,7 @@ export class WebsitePreview extends Component {
         ResourceEditor,
         ResizablePanel,
     };
-    static props = {
-        action: Object,
-        actionId: { type: Number, optional: true },
-        className: { type: String, optional: true },
-    };
+    static props = { ...standardActionServiceProps };
     setup() {
         this.websiteService = useService('website');
         this.dialogService = useService('dialog');

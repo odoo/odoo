@@ -83,6 +83,8 @@ export const standardActionServiceProps = {
     className: { type: String, optional: true }, // prop added by the ActionContainer
     globalState: { type: Object, optional: true }, // prop added by _updateUI
     state: { type: Object, optional: true }, // prop added by _updateUI
+    resId: { type: [Number, Boolean], optional: true },
+    updateResId: { type: Function, optional: true },
 };
 
 function parseActiveIds(ids) {
@@ -164,33 +166,53 @@ export function makeActionManager(env, router = _router) {
             return [];
         }
         // The last controller will be created by doAction and won't be virtual
-        const controllers = state.actionStack.slice(0, -1).map((actionState, index) => {
-            const controller = {
-                jsId: `controller_${++id}`,
-                displayName: actionState.displayName,
-                virtual: true,
-                action: {},
-                props: {},
-                state: { ...actionState, actionStack: state.actionStack.slice(0, index + 1) },
-            };
-            if (actionState.action) {
-                controller.action.id = actionState.action;
-                if (actionState.active_id) {
-                    controller.action.context = { active_id: actionState.active_id };
+        const controllers = state.actionStack
+            .slice(0, -1)
+            .map((actionState, index) => {
+                const controller = {
+                    jsId: `controller_${++id}`,
+                    displayName: actionState.displayName,
+                    virtual: true,
+                    action: {},
+                    props: {},
+                    state: { ...actionState, actionStack: state.actionStack.slice(0, index + 1) },
+                };
+                if (actionState.action) {
+                    controller.action.id = actionState.action;
+
+                    const [actionRequestKey, clientAction] = actionRegistry.contains(
+                        actionState.action
+                    )
+                        ? [actionState.action, actionRegistry.get(actionState.action)]
+                        : actionRegistry
+                              .getEntries()
+                              .find((a) => a[1].path === actionState.action) ?? [];
+                    if (actionRequestKey && clientAction) {
+                        if (state.actionStack[index + 1]?.action === actionState.action) {
+                            // client actions don't have multi-record views, so we can't go further to the next controller
+                            return;
+                        }
+                        controller.action.tag = actionRequestKey;
+                        controller.action.type = "ir.actions.client";
+                        controller.displayName = clientAction.displayName?.toString();
+                    }
+                    if (actionState.active_id) {
+                        controller.action.context = { active_id: actionState.active_id };
+                    }
                 }
-            }
-            if (actionState.model) {
-                controller.action.type = "ir.actions.act_window";
-                controller.props.resModel = actionState.model;
-            }
-            if (actionState.resId) {
-                controller.action.type = "ir.actions.act_window";
-                controller.props.resId = actionState.resId;
-                controller.resId = () => actionState.resId;
-                controller.props.type = "form";
-            }
-            return controller;
-        });
+                if (actionState.model) {
+                    controller.action.type = "ir.actions.act_window";
+                    controller.props.resModel = actionState.model;
+                }
+                if (actionState.resId) {
+                    controller.action.type ||= "ir.actions.act_window";
+                    controller.props.resId = actionState.resId;
+                    controller.resId = () => actionState.resId;
+                    controller.props.type = "form";
+                }
+                return controller;
+            })
+            .filter(Boolean);
 
         if (state.action && state.resId && controllers.at(-1)?.action?.id === state.action) {
             // When loading the state on a form view, we will need to load the action for it,
@@ -206,14 +228,20 @@ export function makeActionManager(env, router = _router) {
                 ),
             ]);
 
-            // If the current action doesn't have a multi-record view, we don't need to add the
-            // last controller to the breadcrumb controllers
-            if (action.views?.every((view) => view[1] === "form" || view[1] === "search")) {
-                return bcControllers;
+            // If the current action is a Window action and has a multi-record view, we add the last
+            // controller to the breadcrumb controllers.
+            if (
+                action.type === "ir.actions.act_window" &&
+                action.views.some((view) => view[1] !== "form" && view[1] !== "search")
+            ) {
+                controllers.at(-1).displayName = action.display_name || action.name || "";
+                controllers.at(-1).action = action;
+                return [...bcControllers, controllers.at(-1)];
             }
-            controllers.at(-1).displayName = action.display_name || action.name || "";
-            controllers.at(-1).action = action;
-            return [...bcControllers, controllers.at(-1)];
+
+            // If the current action doesn't have a multi-record view, or is not a Window action,
+            // we don't need to add the last controller to the breadcrumb controllers
+            return bcControllers;
         }
         return _loadBreadcrumbs(controllers);
     }
@@ -233,7 +261,7 @@ export function makeActionManager(env, router = _router) {
         const toFetch = [];
         const keys = [];
         for (const { action, state, displayName } of controllers) {
-            if (action.id === "menu" || actionRegistry.contains(action.id)) {
+            if (action.id === "menu" || (action.type === "ir.actions.client" && !displayName)) {
                 continue;
             }
             const actionInfo = pick(state, "action", "model", "resId");
@@ -457,13 +485,19 @@ export function makeActionManager(env, router = _router) {
                 context.active_ids = [state.active_id];
             }
             // ClientAction
-            if (actionRegistry.contains(state.action)) {
+            const [actionRequestKey, clientAction] = actionRegistry.contains(state.action)
+                ? [state.action, actionRegistry.get(state.action)]
+                : actionRegistry.getEntries().find((a) => a[1].path === state.action) ?? [];
+            if (actionRequestKey && clientAction) {
                 actionRequest = {
                     context,
                     params: state,
-                    tag: state.action,
+                    tag: actionRequestKey,
                     type: "ir.actions.client",
                 };
+                if (clientAction.path) {
+                    actionRequest.path = clientAction.path;
+                }
             } else {
                 // The action to load isn't the current one => executes it
                 actionRequest = state.action;
@@ -472,9 +506,9 @@ export function makeActionManager(env, router = _router) {
                     additionalContext: context,
                     viewType: state.resId ? "form" : state.view_type,
                 });
-                if (state.resId && state.resId !== "new") {
-                    options.props = { resId: state.resId };
-                }
+            }
+            if (state.resId && state.resId !== "new") {
+                options.props = { resId: state.resId };
             }
         } else if (state.model) {
             if (state.resId || state.view_type === "form") {
@@ -531,8 +565,20 @@ export function makeActionManager(env, router = _router) {
      * @returns {{ props: ActionProps, config: Config }}
      */
     function _getActionInfo(action, props) {
+        const actionProps = Object.assign({}, props, { action, actionId: action.id });
+        actionProps.updateResId = (newId) => {
+            const changed = resId !== newId;
+            resId = newId;
+            if (changed && action.target !== "new") {
+                // It's possible that the ControllerComponent is not mounted yet, so we
+                // need to wait for the next microtask to push the state.
+                Promise.resolve().then(() => pushState());
+            }
+        };
+        let resId = actionProps.resId || false;
         return {
-            props: Object.assign({}, props, { action, actionId: action.id }),
+            props: actionProps,
+            resId: () => resId,
             config: {
                 actionId: action.id,
                 actionType: "ir.actions.client",
@@ -1079,6 +1125,7 @@ export function makeActionManager(env, router = _router) {
      */
     async function _executeClientAction(action, options) {
         const clientAction = actionRegistry.get(action.tag);
+        action.path ||= clientAction.path;
         if (clientAction.prototype instanceof Component) {
             if (action.target !== "new") {
                 const canProceed = await clearUncommittedChanges(env);
@@ -1095,6 +1142,8 @@ export function makeActionManager(env, router = _router) {
                 action,
                 ..._getActionInfo(action, options.props),
             };
+            controller.displayName ||=
+                clientAction.displayName?.toString() || clientAction.name || "";
             const updateUIOptions = {
                 index: options.index,
                 clearBreadcrumbs: options.clearBreadcrumbs,
@@ -1501,6 +1550,10 @@ export function makeActionManager(env, router = _router) {
                     actionState.resId = controller.resId() || "new";
                 }
             }
+            if (action.type === "ir.actions.client" && controller.resId?.()) {
+                actionState.resId = controller.resId();
+            }
+
             if (action.context) {
                 const activeId = action.context.active_id;
                 if (activeId) {

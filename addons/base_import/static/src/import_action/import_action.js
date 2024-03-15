@@ -11,6 +11,7 @@ import { ImportDataProgress } from "../import_data_progress/import_data_progress
 import { ImportDataSidepanel } from "../import_data_sidepanel/import_data_sidepanel";
 import { Layout } from "@web/search/layout";
 import { router } from "@web/core/browser/router";
+import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
 export class ImportAction extends Component {
     static template = "ImportAction";
@@ -21,11 +22,7 @@ export class ImportAction extends Component {
         ImportDataSidepanel,
         Layout,
     };
-    static props = {
-        action: Object,
-        actionId: { type: Number, optional: true },
-        className: { type: String, optional: true },
-    };
+    static props = { ...standardActionServiceProps };
 
     setup() {
         this.notification = useService("notification");
