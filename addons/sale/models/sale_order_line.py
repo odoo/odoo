@@ -3,13 +3,14 @@
 
 from collections import defaultdict
 from datetime import timedelta
+
 from markupsafe import Markup
 
-from odoo import api, fields, models, _
+from odoo import _, _lt, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.osv import expression
-from odoo.tools import float_is_zero, float_compare, float_round, format_date, groupby
+from odoo.tools import float_compare, float_is_zero, format_date, groupby
 
 
 class SaleOrderLine(models.Model):
@@ -320,30 +321,19 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id')
     def _compute_name(self):
         for line in self:
-            if not line.product_id:
+            if not line.product_id and not line.is_downpayment:
                 continue
+
             lang = line.order_id._get_lang()
             if lang != self.env.lang:
                 line = line.with_context(lang=lang)
-            name = line._get_sale_order_line_multiline_description_sale()
-            if line.is_downpayment and not line.display_type:
-                context = {'lang': lang}
-                dp_state = line._get_downpayment_state()
-                if dp_state == 'draft':
-                    name = _("%(line_description)s (Draft)", line_description=name)
-                elif dp_state == 'cancel':
-                    name = _("%(line_description)s (Cancelled)", line_description=name)
-                else:
-                    invoice = line._get_invoice_lines().move_id
-                    if len(invoice) == 1 and invoice.payment_reference and invoice.invoice_date:
-                        name = _(
-                            "%(line_description)s (ref: %(reference)s on %(date)s)",
-                            line_description=name,
-                            reference=invoice.payment_reference,
-                            date=format_date(line.env, invoice.invoice_date),
-                        )
-                del context
-            line.name = name
+
+            if line.product_id:
+                line.name = line._get_sale_order_line_multiline_description_sale()
+                continue
+
+            if line.is_downpayment:
+                line.name = line._get_downpayment_description()
 
     def _get_sale_order_line_multiline_description_sale(self):
         """ Compute a default multiline description for this sales order line.
@@ -393,6 +383,31 @@ class SaleOrderLine(models.Model):
         for patv in sorted_custom_ptav:
             pacv = self.product_custom_attribute_value_ids.filtered(lambda pcav: pcav.custom_product_template_attribute_value_id == patv)
             name += "\n" + pacv.display_name
+
+        return name
+
+    def _get_downpayment_description(self):
+        self.ensure_one()
+        if self.display_type:
+            return _("Down Payments")
+
+        dp_state = self._get_downpayment_state()
+        name = _lt("Down Payment")
+        if dp_state == 'draft':
+            name = _(
+                "Down Payment: %(date)s (Draft)",
+                date=format_date(self.env, self.create_date.date()),
+            )
+        elif dp_state == 'cancel':
+            name = _("Down Payment (Cancelled)")
+        else:
+            invoice = self._get_invoice_lines().move_id
+            if len(invoice) == 1 and invoice.payment_reference and invoice.invoice_date:
+                name = _(
+                    "Down Payment (ref: %(reference)s on %(date)s)",
+                    reference=invoice.payment_reference,
+                    date=format_date(self.env, invoice.invoice_date),
+                )
 
         return name
 
