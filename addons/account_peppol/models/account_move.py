@@ -46,7 +46,7 @@ class AccountMove(models.Model):
         if partner.ubl_cii_format in {False, 'facturx', 'oioubl_201'} or self.company_id.account_peppol_proxy_state != 'active':
             return res
         if not partner.peppol_eas or not partner.peppol_endpoint:
-            return False
+            return res
         if partner.account_peppol_verification_label == 'not_verified':
             partner.button_account_peppol_check_partner_endpoint()
         return res and partner.account_peppol_is_endpoint_valid
