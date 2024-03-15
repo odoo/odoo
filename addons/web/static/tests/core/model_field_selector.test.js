@@ -3,6 +3,15 @@ import { queryAll, queryAllTexts, queryFirst, queryLast, queryOne } from "@odoo/
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import {
+    clickPrev,
+    followRelation,
+    getDisplayedFieldNames,
+    getFocusedFieldName,
+    getModelFieldSelectorValues,
+    getTitle,
+    openModelFieldSelectorPopover,
+} from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
+import {
     contains,
     defineModels,
     fields,
@@ -10,15 +19,6 @@ import {
     mountWithCleanup,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-import {
-    getModelFieldSelectorValues,
-    openModelFieldSelectorPopover,
-    getDisplayedFieldNames,
-    getTitle,
-    clickPrev,
-    followRelation,
-    getFocusedFieldName,
-} from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 

@@ -19,6 +19,7 @@ import {
     waitFor,
 } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
+import { getTag } from "@web/core/utils/xml";
 
 /**
  * @typedef {import("@odoo/hoot-dom").DragHelpers} DragHelpers
@@ -64,6 +65,11 @@ const dragEffectDelay = async () => {
 };
 
 /**
+ * @param {Node} node
+ */
+const getConfirmAction = (node) => (getTag(node, true) === "input" ? "enter" : "blur");
+
+/**
  * These params are used to move the pointer from an arbitrary distance in the
  * element to trigger a drag sequence (the distance required to trigger a drag
  * is defined by the `tolerance` option in the draggable hook builder).
@@ -95,6 +101,7 @@ export function contains(target, options) {
         if (node !== getActiveElement()) {
             pointerDown(node);
         }
+        return node;
     };
 
     const nodePromise = waitFor(target, { visible: true, ...options });
@@ -110,8 +117,8 @@ export function contains(target, options) {
          * @param {FillOptions} [options]
          */
         clear: async (options) => {
-            await focusCurrent();
-            clear({ confirm: true, ...options });
+            const node = await focusCurrent();
+            clear({ confirm: getConfirmAction(node), ...options });
             await animationFrame();
         },
         /**
@@ -201,8 +208,8 @@ export function contains(target, options) {
          * @param {FillOptions} [options]
          */
         edit: async (value, options) => {
-            await focusCurrent();
-            edit(value, { confirm: true, ...options });
+            const node = await focusCurrent();
+            edit(value, { confirm: getConfirmAction(node), ...options });
             await animationFrame();
         },
         /**
@@ -210,8 +217,8 @@ export function contains(target, options) {
          * @param {FillOptions} [options]
          */
         fill: async (value, options) => {
-            await focusCurrent();
-            fill(value, { confirm: true, ...options });
+            const node = await focusCurrent();
+            fill(value, { confirm: getConfirmAction(node), ...options });
             await animationFrame();
         },
         focus: async () => {
