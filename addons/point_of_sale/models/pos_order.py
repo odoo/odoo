@@ -206,6 +206,9 @@ class PosOrder(models.Model):
 
         order._clean_payment_lines()
         for payments in pos_order['statement_ids']:
+            paid_amount = payments[2]['amount']
+            if (paid_amount != 0):
+                order.add_payment(self._payment_fields(order, payments[2]))
             order.add_payment(self._payment_fields(order, payments[2]))
 
         order.amount_paid = sum(order.payment_ids.mapped('amount'))
