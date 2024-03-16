@@ -6,7 +6,6 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
-import { RPCError } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 
 export class ActivityMenu extends Component {
@@ -44,23 +43,12 @@ export class ActivityMenu extends Component {
             force_search_count: 1,
         };
         if (group.model === "mail.activity") {
-            this.action
-                .doAction("mail.mail_activity_without_access_action", {
-                    additionalContext: {
-                        active_ids: group.activity_ids,
-                        active_model: 'mail.activity',
-                    },
-                })
-                .catch((error) => {
-                    if (error instanceof RPCError) {
-                        this.action.doAction("mail.mail_activity_action", {
-                            additionalContext: {
-                                active_ids: group.activity_ids,
-                                active_model: 'mail.activity',
-                            },
-                        });
-                    }
-                });
+            this.action.doAction("mail.mail_activity_without_access_action", {
+                additionalContext: {
+                    active_ids: group.activity_ids,
+                    active_model: 'mail.activity',
+                },
+            });
             return;
         }
         let domain = [["activity_user_id", "=", this.userId]];
