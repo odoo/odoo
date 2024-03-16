@@ -4,14 +4,14 @@
     <t t-name="web.BooleanFavoriteField">
         <div class="o_favorite" t-on-click.prevent.stop="update">
             <a href="#">
-                <i
-                    class="fa"
-                    role="img"
-                    t-att-class="props.record.data[props.name] ? 'fa-star' : 'fa-star-o'"
-                    t-att-title="props.record.data[props.name] ? 'Remove from Favorites' : 'Add to Favorites'"
-                    t-att-aria-label="props.record.data[props.name] ? 'Remove from Favorites' : 'Add to Favorites'"
-                />
-                <t t-if="!props.noLabel"> <t t-esc="props.record.data[props.name] ? 'Remove from Favorites' : 'Add to Favorites'" /></t>
+                <t t-if="props.record.data[props.name]">
+                    <i class="fa fa-star me-1" role="img" title="Remove from Favorites" aria-label="Remove from Favorites"/>
+                    <t t-if="!props.noLabel">Remove from Favorites</t>
+                </t>
+                <t t-else="">
+                    <i class="fa fa-star-o me-1" role="img" title="Add to Favorites" aria-label="Add to Favorites"/>
+                    <t t-if="!props.noLabel">Add to Favorites</t>
+                </t>
             </a>
         </div>
     </t>
