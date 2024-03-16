@@ -1247,6 +1247,62 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertGoogleAPINotCalled()
 
     @patch_api
+    def test_event_with_local_videocall(self):
+        """This makes sure local video call is not discarded if google's meeting url is False"""
+        google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
+        event = self.env['calendar.event'].create({
+            'name': 'coucou',
+            'start': date(2020, 1, 6),
+            'stop': date(2020, 1, 6),
+            'google_id': google_id,
+            'user_id': self.env.user.id,
+            'need_sync': False,
+            'partner_ids': [(6, 0, self.env.user.partner_id.ids)],
+            'videocall_location': 'https://meet.google.com/odoo_local_videocall',
+        })
+        values = {
+            'id': google_id,
+            'status': 'confirmed',
+            'description': 'Event without meeting url',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Event without meeting url',
+            'visibility': 'public',
+            'attendees': [{
+                'displayName': 'Mitchell Admin',
+                'email': self.public_partner.email,
+                'responseStatus': 'needsAction'
+            },],
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2020-01-13T16:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': '2020-01-13T19:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'conferenceData': {
+                'entryPoints': [{
+                    'entryPointType': 'video',
+                    'uri': False,
+                    'label': 'no label'
+                }]
+            },
+            'updated': self.now,
+        }
+        # make sure local video call is not discarded
+        gevent = GoogleEvent([values])
+        self.env['calendar.event']._sync_google2odoo(gevent)
+        self.assertEqual(event.videocall_location, 'https://meet.google.com/odoo_local_videocall')
+
+        # now google has meet URL and make sure local video call is updated accordingly
+        values['conferenceData']['entryPoints'][0]['uri'] = 'https://meet.google.com/odoo-random-test'
+        gevent = GoogleEvent([values])
+        self.env['calendar.event']._sync_google2odoo(gevent)
+        self.assertEqual(event.videocall_location, 'https://meet.google.com/odoo-random-test')
+        self.assertGoogleAPINotCalled()
+
+    @patch_api
     def test_event_with_availability(self):
         values = {
             'id': 'oj44nep1ldf8a3ll02uip0c9aa',
