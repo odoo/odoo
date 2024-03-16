@@ -125,6 +125,9 @@ class Meeting(models.Model):
             'videocall_location': google_event.get_meeting_url(),
             'show_as': 'free' if google_event.is_available() else 'busy'
         }
+        # Remove 'videocall_location' when not sent by Google, otherwise the local videocall will be discarded.
+        if not values.get('videocall_location'):
+            values.pop('videocall_location', False)
         if partner_commands:
             # Add partner_commands only if set from Google. The write method on calendar_events will
             # override attendee commands if the partner_ids command is set but empty.
