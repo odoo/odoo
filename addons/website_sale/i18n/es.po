@@ -546,8 +546,8 @@ msgid ""
 "Customer Invoice/Credit Note"
 msgstr ""
 "Una descripción del producto que quiera comunicar a sus clientes. Esta "
-"descripción se copiará a cada pedido de venta, albarán de salida y factura "
-"de cliente."
+"descripción se copiará a cada orden de venta/entrega y factura/factura "
+"rectificativa del cliente."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1029,17 +1029,8 @@ msgstr "Puede publicar"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
-msgid "Can not resequence a video at first position."
-msgstr "No se puede resecuenciar un vídeo en primera posición."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence embedded image/video with a non compatible image."
+msgid "You can't use a video as the product's main image."
 msgstr ""
-"No se puede resecuenciar la imagen/vídeo incrustado con una imagen no "
-"compatible."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2813,7 +2804,7 @@ msgstr "Pedidos para facturar"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.out_of_stock_ribbon
 msgid "Out of stock"
-msgstr "Sin existencias"
+msgstr "Fuera de stock"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
@@ -4484,7 +4475,7 @@ msgstr "Título meta del sitio web"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_og_img
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_og_img
 msgid "Website opengraph image"
-msgstr "Imagen del Open Graph del sitio"
+msgstr "Imagen Open Graph del sitio web"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_account_bank_statement_line__website_id

@@ -4857,6 +4857,11 @@ msgid "Lot Label Format to auto-print"
 msgstr "Format Label Lot untuk dicetak otomatis"
 
 #. module: stock
+#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
+msgid "Lot Label Report"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
 msgid "Lot Properties"
 msgstr "Properti Lot"
@@ -7749,7 +7754,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Rule %s belongs to %s while the route belongs to %s."
-msgstr ""
+msgstr "Peraturan %s dimiliki %s sementara rute dimiliki %s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -10779,6 +10784,15 @@ msgid ""
 msgstr ""
 "Anda tidak dapat memindahkan konten paket yang sama lebih dari satu kali di "
 "transfer yang sama atau memisahkan paket yang sama ke dua lokasi."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
 
 #. module: stock
 #. odoo-python

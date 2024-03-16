@@ -27,12 +27,12 @@
 # Johanna Valkonen <miujohanna@gmail.com>, 2023
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2023
 # Jussi Lehto <jussi@gulfeo.com>, 2023
-# Mikko Salmela <salmemik@gmail.com>, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
-# Martin Trigaux, 2023
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
+# Mikko Salmela <salmemik@gmail.com>, 2024
+# Martin Trigaux, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # 
@@ -79,6 +79,13 @@ msgstr " HYVITYS"
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__iot
 msgid " Use a printer connected to the IoT Box"
 msgstr " Käytä IoT Boxiin liitettyä tulostinta"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
+#, python-format
+msgid "% Disc"
+msgstr "Ale%"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1074,6 +1081,13 @@ msgid "Bank Statement Line"
 msgstr "Pankkitiliotteen rivi"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+#, python-format
+msgid "Barcode"
+msgstr "Viivakoodi"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Barcode Nomenclature"
 msgstr "Viivakoodi nimistö"
@@ -1495,6 +1509,13 @@ msgid ""
 msgstr ""
 "Valitse verokanta tilauksen yhteydessä asiakastyypin mukaan (verovapaa, "
 "paikan päällä tai take away jne.)."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+#, python-format
+msgid "City"
+msgstr "Kaupunki"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2537,6 +2558,13 @@ msgstr "Muokkaa"
 #, python-format
 msgid "Electronic Scale"
 msgstr "Elektroninen vaaka"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+#, python-format
+msgid "Email"
+msgstr "Sähköposti"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3685,6 +3713,13 @@ msgid "Misc"
 msgstr "Sekalaiset"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+#, python-format
+msgid "Mobile"
+msgstr "Matkapuhelin"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_hr
 msgid "Module Pos Hr"
@@ -4726,6 +4761,13 @@ msgstr ""
 "työntekijä."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+#, python-format
+msgid "Phone"
+msgstr "Puhelin"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pick which product categories are available"
 msgstr "Valitse käytettävissä olevat tuoteryhmät"
@@ -5267,6 +5309,7 @@ msgstr "Edellinen tilausluettelo"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Price"
 msgstr "Hinta"
@@ -5627,6 +5670,13 @@ msgstr "Proxyn IP-osoite"
 #, python-format
 msgid "Proxy Warning"
 msgstr "Välityspalvelimen varoitus"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
+#, python-format
+msgid "Qty"
+msgstr "Määrä"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6681,6 +6731,13 @@ msgstr "Varastolähtö %s"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
 msgstr "Varastot tulee päivittää sulkemisen yhteydessä"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+#, python-format
+msgid "Street"
+msgstr "Katuosoite"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8546,3 +8603,10 @@ msgstr "käyttäen"
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "olivat olemassa olevien tilausten kaksoiskappaleita"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+#, python-format
+msgid "Zip"
+msgstr "Postinumero"

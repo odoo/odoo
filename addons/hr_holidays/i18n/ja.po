@@ -6,8 +6,8 @@
 # Martin Trigaux, 2023
 # Noma Yuki, 2023
 # Wil Odoo, 2024
-# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Junko Augias, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-30 14:15+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -166,7 +166,7 @@ msgstr "%s ( %sから無期限)"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "%s allocation request (%s %s)"
-msgstr "%s割当リクエスト  (%s %s)"
+msgstr "%s割当申請  (%s %s)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1051,7 +1051,7 @@ msgstr "以下での割当"
 #, python-format
 msgid ""
 "Allocation request must be confirmed or validated in order to refuse it."
-msgstr "割り当て要求を否認するには、割り当て要求を確認または検証する必要があります。"
+msgstr "割当申請を否認するには、割当申請を確認または検証する必要があります。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -1299,7 +1299,7 @@ msgstr "以下での収支"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__is_based_on_worked_time
 msgid "Based on worked time"
-msgstr "労働時間に基づく"
+msgstr "勤務日数に基づく"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_employee_base
@@ -1628,7 +1628,7 @@ msgstr "新しい休暇の割当を作成する"
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
 msgid "Create a new time off allocation request"
-msgstr "新しい休暇割り当て申請を作成します"
+msgstr "新しい休暇割当申請を作成します"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__create_uid
@@ -3713,7 +3713,7 @@ msgid ""
 "The status is 'Refused', when an allocation request is refused by manager.\n"
 "The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
-"割り当て要求が作成されると、ステータスは'送信予定'に設定されます。ユーザーが割り当て要求を確認すると、ステータスは'承認中'になります。割り当て要求がマネージャーによって否認された場合、ステータスは'否認'です。割り当て要求がマネージャーによって承認されると、ステータスは'承認済み'になります。"
+"割当申請が作成されると、ステータスは'送信予定'に設定されます。ユーザが割当申請を確認すると、ステータスは'承認中'になります。割当申請がマネージャーによって否認された場合、ステータスは'否認'です。割当申請がマネージャーによって承認されると、ステータスは'承認済'になります。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3897,7 +3897,7 @@ msgid ""
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
 "休暇担当者は、従業員に休暇日を割り当てます(例:有給休暇)。<br>\n"
-"従業員は、休暇担当者へ割り当てを要求します(例:休養日)。"
+"従業員は、休暇担当者へ割当を申請します(例:休養日)。"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4333,7 +4333,7 @@ msgstr "承認待ち"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Waiting For Me"
-msgstr "自分の署名待ち"
+msgstr "自分の承認待ち"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__validate1
@@ -4504,7 +4504,7 @@ msgstr "検証済の休暇のある割当申請を削除することはできま
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "You cannot delete an allocation request which is in %s state."
-msgstr "%s状態の割り当て要求は削除できません。"
+msgstr "%s状態の割当申請は削除できません。"
 
 #. module: hr_holidays
 #. odoo-python

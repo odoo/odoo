@@ -7,13 +7,13 @@
 # Stefan Mølgaard, 2023
 # Morten Schou <ms@msteknik.dk>, 2023
 # Jesper Carstensen <info@danodoo.dk>, 2023
-# Ejner Sønniksen <ejner@vkdata.dk>, 2023
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2023
 # Mads Søndergaard, 2023
 # Mads Søndergaard, 2023
 # Kjeld Borch Egevang <kjeld@mail4us.dk>, 2024
 # lhmflexerp <lhm@flexerp.dk>, 2024
 # Martin Trigaux, 2024
+# Ejner Sønniksen <ejner@vkdata.dk>, 2024
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
 # 
 msgid ""
@@ -582,7 +582,7 @@ msgstr ""
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Her er din\n"
+"        Hermed\n"
 "        <t t-if=\"object.name\">\n"
 "            kreditnota <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
 "        </t>\n"
@@ -595,7 +595,7 @@ msgstr ""
 "        på i alt <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">143.750,00 USD</span>\n"
 "        fra <t t-out=\"object.company_id.name or ''\">DinVirksomhed</t>.\n"
 "        <br><br>\n"
-"        Tøv ikke med at kontakte os, hvis ud har spørgsmål.\n"
+"        Du er meget velkommen til at kontakte os, hvis du har spørgsmål.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
 "            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
@@ -663,7 +663,7 @@ msgstr ""
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Her er din\n"
+"        Hermed\n"
 "        <t t-if=\"object.name\">\n"
 "            faktura <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
 "        </t>\n"
@@ -673,16 +673,16 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (med reference: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        beløber sig til <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\"> 143,750.00 USD</span>\n"
+"        på <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\"> 143,750.00 USD</span>\n"
 "        fra <t t-out=\"object.company_id.name or ''\">DinVirksomhed</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Denne faktura er allerede betalt.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            Indgiv venligst betalingen hurtigst muligt.\n"
+"            Indbetalt venligst beløbet i henhold til gældende betalingsbetingelser.\n"
 "            <t t-if=\"object.payment_reference\">\n"
 "                <br><br>\n"
-"                Brug venligst følgende kommunikation til din betaling: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
+"                Anvend venligst følgende reference ved ind indbetaling: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
 "            </t>\n"
 "        </t>\n"
 "        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
@@ -690,7 +690,7 @@ msgstr ""
 "            PS: du kan gennemgå dine timesedler <a t-att-href=\"'my/timesheets?search_in=invoice&amp;search=%s' % object.name\">fra portalen.</a>\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Tøv ikke med at kontakte os, hvis du har spørgsmål.\n"
+"        Kontakte os venligst, hvis du har spørgsmål.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
 "            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
@@ -723,12 +723,12 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Kære <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
 "        Tak for din betaling.\n"
-"        Her er din kvittering <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> på\n"
+"        Hermed kvittering <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> på\n"
 "        i alt <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> fra <t t-out=\"object.company_id.name or ''\">DinVirksomhed</t>.\n"
 "        <br><br>\n"
-"        Tøv ikke med at kontakte os, hvis du har nogle spørgsmål.\n"
+"        Du er meget velkomment til at kontakte os, hvis du har spørgsmål.\n"
 "        <br><br>\n"
-"        Venlig Hilsen,\n"
+"        Venlig hilsen,\n"
 "        <t t-if=\"not is_html_empty(user.signature)\">\n"
 "            <br><br>\n"
 "            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
@@ -853,7 +853,7 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"d-flex gap-2 w-100\">\n"
-"                            <span invisible=\"allow_out_payment\" class=\"text-muted\">Ubetroet</span>\n"
+"                            <span invisible=\"allow_out_payment\" class=\"text-muted\">Ikke betroet</span>\n"
 "                            <span invisible=\"not allow_out_payment\" class=\"text-success\">Betroet</span>\n"
 "                        </span>"
 
@@ -956,7 +956,7 @@ msgstr "<span class=\"o_stat_text\">Journalbilag</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
-msgstr "<span class=\"o_stat_text\">Journal indgang</span>"
+msgstr "<span class=\"o_stat_text\">Journalbilag</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1252,8 +1252,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
-msgstr ""
-"<span>Dette er en forhåndsvisning af dine Vilkår & Betingelser.</span>"
+msgstr "<span>Dette er en forhåndsvisning af dine handelsbetingelser.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1521,12 +1520,12 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A second payment has been created:"
-msgstr ""
+msgstr "Der er oprettet en anden betaling:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "A section title"
-msgstr "En afsnitstitel"
+msgstr " Overskrift på sektion"
 
 #. module: account
 #. odoo-python
@@ -1574,7 +1573,7 @@ msgstr "Adgangsadvarsel"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__normal
 msgid "According to each type of account"
-msgstr ""
+msgstr "I henhold til hver type konto"
 
 #. module: account
 #. odoo-python
@@ -1698,13 +1697,13 @@ msgstr "Tilbageførsel af postering"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send
 msgid "Account Move Send"
-msgstr ""
+msgstr "Send kontobevægelse"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Account Name"
-msgstr "Konto Navn"
+msgstr "Kontonavn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_acc_number
@@ -1736,7 +1735,7 @@ msgstr "Debitorkonto"
 #. module: account
 #: model:account.account,name:account.1_pos_receivable
 msgid "Account Receivable (PoS)"
-msgstr ""
+msgstr "Tilgodehavende (PoS)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
@@ -1746,7 +1745,7 @@ msgstr "Kontoafstemning"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
 msgid "Account Root"
-msgstr "Konto Rod"
+msgstr "Konto rod"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_bank_statement_graph
@@ -1935,7 +1934,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Account with Entries"
-msgstr "Konto med Poster"
+msgstr "Konto med poster"
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_auto_post_draft_entry_ir_actions_server
@@ -2144,7 +2143,7 @@ msgstr "Aktiv"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Active Account"
-msgstr "Aktiv Konto"
+msgstr "Aktiv konto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_ids
@@ -2194,7 +2193,7 @@ msgstr "Aktivitetstype ikon"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sale_activity_user_id
 msgid "Activity User"
-msgstr "Aktivitet Bruger"
+msgstr "Aktiv bruger"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sale_activity_type_id
@@ -2308,7 +2307,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Adjusting Amount"
-msgstr "Juster Mændge"
+msgstr "Juster mændge"
 
 #. module: account
 #. odoo-python
@@ -2322,7 +2321,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Adjusting Entry"
-msgstr "Justerende Postering"
+msgstr "Justerende postering"
 
 #. module: account
 #. odoo-python
@@ -2402,7 +2401,7 @@ msgstr "Alle"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__fiscalyear_lock_date
 msgid "All Users Lock Date"
-msgstr "All Brugere Låsedato"
+msgstr "Alle brugere låse dato"
 
 #. module: account
 #. odoo-python
@@ -2456,7 +2455,7 @@ msgstr "Gør det muligt at konfigurere moms ud fra kontant basis"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__allowed_journal_ids
 msgid "Allowed Journals"
-msgstr "Tilladte Journaler"
+msgstr "Tilladte journaler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__account_control_ids
@@ -2488,7 +2487,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__always_tax_exigible
 #: model:ir.model.fields,field_description:account.field_account_payment__always_tax_exigible
 msgid "Always Tax Exigible"
-msgstr "Altid Momsfritaget"
+msgstr "Altid momsfritaget"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__amount
@@ -2534,12 +2533,12 @@ msgstr "Beløb"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_company_currency_signed
 msgid "Amount Company Currency Signed"
-msgstr "Beløb Virksomhed Valuta Signeret"
+msgstr "Virksomhedens beløbsvaluta underskrevet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount
 msgid "Amount Condition"
-msgstr "Beløb Betingelse"
+msgstr "Beløb betingelse"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__amount_residual
@@ -2807,7 +2806,7 @@ msgstr "Anvend"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Apply VAT of the EU country to which goods and services are delivered."
-msgstr "Andvend Moms for EU landet som vare og ydelser er leveret til."
+msgstr "Anvend moms for EU landet som varer og ydelser er leveret til."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_group_id
@@ -2817,7 +2816,7 @@ msgstr "Anvend kun hvis leverings landet stemmer overens med gruppen."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_id
 msgid "Apply only if delivery country matches."
-msgstr "Anvend kun hvis leverings landet stemmer overens."
+msgstr "Anvend kun hvis leveringslandet stemmer overens."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
@@ -2953,7 +2952,7 @@ msgstr "Automatisk udfyldelse fra sidste regning"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_ids
 msgid "Auto-generated Payments"
-msgstr "Auto-genererede Betalinger"
+msgstr "Auto-genererede betalinger"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post
@@ -10823,12 +10822,12 @@ msgstr "Betalings Beløb:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Payment Communication:"
-msgstr ""
+msgstr "Venligst anvend følgende oplysninger ved betaling: "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payment Communications"
-msgstr "Betaling Kommunikationer"
+msgstr "Betalingsinformationer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
@@ -11168,6 +11167,15 @@ msgstr "Vær venlig at definere en betalingsmetode linje på din betaling"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
@@ -11209,7 +11217,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "Please use the following communication for your payment:"
-msgstr ""
+msgstr "Anvend venligst følgende oplysninger ved betaling: "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_url

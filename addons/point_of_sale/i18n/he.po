@@ -16,10 +16,8 @@
 # Ofir Blum <ofir.blum@gmail.com>, 2023
 # Netta Waizer, 2023
 # NoaFarkash, 2023
-# Roy Sayag, 2023
 # Moshe Flam <pashute@gmail.com>, 2023
 # MichaelHadar, 2023
-# Yihya Hugirat <hugirat@gmail.com>, 2023
 # Ha Ketem <haketem@gmail.com>, 2023
 # yacov mosbacher <ymosba@gmail.com>, 2023
 # שהאב חוסיין <shhab89@gmail.com>, 2023
@@ -27,9 +25,11 @@
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
 # hed shefer <hed@laylinetech.com>, 2023
 # yael terner, 2023
-# דודי מלכה <Dudimalka6@gmail.com>, 2024
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
 # Martin Trigaux, 2024
+# דודי מלכה <Dudimalka6@gmail.com>, 2024
+# Roy Sayag, 2024
+# Yihya Hugirat <hugirat@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-28 07:10+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,6 +74,13 @@ msgstr "החזר כספי"
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__iot
 msgid " Use a printer connected to the IoT Box"
 msgstr "השתמש במדפסת המחוברת לקופסת IoT"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
+#, python-format
+msgid "% Disc"
+msgstr "%הנחה"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1044,6 +1051,13 @@ msgid "Bank Statement Line"
 msgstr "שורת דף בנק"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+#, python-format
+msgid "Barcode"
+msgstr "ברקוד"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Barcode Nomenclature"
 msgstr "מונחי ברקוד"
@@ -1456,6 +1470,13 @@ msgid ""
 msgstr ""
 "בחר במעמד פיסקלי מסוים בהזמנה בהתאם לסוג הלקוח (פטור ממס, במקום לעומת טייק "
 "אווי, וכו')."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+#, python-format
+msgid "City"
+msgstr "עיר"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2493,6 +2514,13 @@ msgstr "ערוך"
 #, python-format
 msgid "Electronic Scale"
 msgstr "משקל אלקטרוני"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+#, python-format
+msgid "Email"
+msgstr "דוא\"ל"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3623,6 +3651,13 @@ msgid "Misc"
 msgstr "שונות"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+#, python-format
+msgid "Mobile"
+msgstr "נייד"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_hr
 msgid "Module Pos Hr"
@@ -4649,6 +4684,13 @@ msgid ""
 msgstr "האדם המשתמש בקופה.יכול להיות מחליף, עובד זמני או מתלמד."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+#, python-format
+msgid "Phone"
+msgstr "טלפון"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pick which product categories are available"
 msgstr "בחירת קטגוריות מוצרים זמינות"
@@ -5186,6 +5228,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Price"
 msgstr "מחיר"
@@ -5542,6 +5585,13 @@ msgstr "כתובת IP פרוקסי"
 #, python-format
 msgid "Proxy Warning"
 msgstr "אזהרת פרוקסי"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
+#, python-format
+msgid "Qty"
+msgstr "כמות"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6594,6 +6644,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
 msgstr "יש לעדכן מלאי בסגירה"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+#, python-format
+msgid "Street"
+msgstr "רחוב"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8397,3 +8454,10 @@ msgstr "באמצעות"
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "היו כפילויות של הזמנות קיימות"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+#, python-format
+msgid "Zip"
+msgstr "מיקוד"

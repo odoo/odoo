@@ -7779,7 +7779,7 @@ msgstr "Inkomende betaalmethodes"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
 msgid "Include in Analytic Cost"
-msgstr "Toevoegen aan analytische kostprijs"
+msgstr "Toevoegen aan analytische kosten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include
@@ -9637,7 +9637,7 @@ msgstr "Maandelijks"
 #: model:ir.model.fields,field_description:account.field_account_move_send__move_ids
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__move_ids
 msgid "Move"
-msgstr "Verplaatsingen"
+msgstr "Factuur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__move_data
@@ -9719,9 +9719,7 @@ msgstr "Naam doorzoekbaar"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Navigate easily through reports and see what is behind the numbers"
-msgstr ""
-"Navigeer gemakkelijk doorheen rapportages en zie wat er achter de cijfers "
-"zit"
+msgstr "Navigeer eenvoudig door rapporten en zie wat er achter de cijfers zit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
@@ -11300,6 +11298,17 @@ msgstr "Maak nieuwe rekeningen aan vanuit het grootboekrekeningen-menu."
 #, python-format
 msgid "Please define a payment method line on your payment."
 msgstr "Definieer een betaalmethoderegel op je betaling."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"De geselecteerde betaalmethode is niet beschikbaar voor deze betaling. "
+"Selecteer de betaalmethode opnieuw."
 
 #. module: account
 #. odoo-python
@@ -16974,7 +16983,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot create recursive groups."
-msgstr ""
+msgstr "Je kunt geen recursieve groepen maken."
 
 #. module: account
 #. odoo-python

@@ -6,8 +6,8 @@
 # Martin Trigaux, 2023
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Wil Odoo, 2024
-# Junko Augias, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3303,7 +3303,7 @@ msgstr "請求対象オーダ"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
-msgstr "注文数量 %(old_qty)s -> %(new_qty)s"
+msgstr "オーダ済数量 %(old_qty)s -> %(new_qty)s"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__invoice_policy
@@ -3311,12 +3311,12 @@ msgstr "注文数量 %(old_qty)s -> %(new_qty)s"
 msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
-msgstr "注文数量:顧客が注文した請求書の数量。納品数量:顧客に納品された請求書の数量。"
+msgstr "オーダ済数量:顧客のオーダ済数量を請求。配送済数量:顧客へ配送済数量を請求。"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
 msgid "Ordered quantities"
-msgstr "オーダ数量"
+msgstr "オーダ済数量"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_order
@@ -3894,7 +3894,7 @@ msgstr "オーダを確定するために、顧客にオンライン支払を要
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_signature
 msgid "Request a online signature from the customer to confirm the order."
-msgstr "オーダを確定するために、顧客にオンライン署名を要求します。"
+msgstr "オーダを確定するために、顧客にオンライン署名を依頼します。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3906,7 +3906,7 @@ msgstr "オーダを確定するために、顧客にオンライン前払を要
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online signature to confirm orders"
-msgstr "オーダの確認にオンライン署名を要求"
+msgstr "オーダの確認にオンライン署名を依頼"
 
 #. module: sale
 #. odoo-python

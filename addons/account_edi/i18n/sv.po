@@ -4,14 +4,13 @@
 # 
 # Translators:
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
 # Robin Calvin, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
+# Simon S, 2023
 # Martin Trigaux, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
-# Simon S, 2023
-# Lasse L, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +64,7 @@ msgstr "En EDI annullerings begäran har avbrutits."
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move_send
 msgid "Account Move Send"
-msgstr "Skicka Bokföringsföring"
+msgstr "Skicka Bokföringstransaktion"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -100,7 +99,7 @@ msgstr "Avbryt EDI annulleringen"
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__cancelled
 msgid "Cancelled"
-msgstr "Annullerad"
+msgstr "Avbruten"
 
 #. module: account_edi
 #. odoo-python
@@ -121,7 +120,7 @@ msgstr "Kod"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_journal__compatible_edi_ids
 msgid "Compatible Edi"
-msgstr "Kompatibel Edi"
+msgstr "Edi-kompatibel"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_uid
@@ -159,12 +158,12 @@ msgstr "EDI-format"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
 msgid "EDI format that support moves in this journal"
-msgstr "EDI-format som stöder flyttar i denna journal"
+msgstr "EDI-format som stöder transaktioner i denna journal"
 
 #. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
 msgid "EDI: Perform web services operations"
-msgstr ""
+msgstr "EDI: Utföra webbtjänstoperationer"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_blocking_level
@@ -190,14 +189,14 @@ msgstr "Edi-dokument"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_count
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_count
 msgid "Edi Error Count"
-msgstr "Edi Fel Antal"
+msgstr "Edi fel antal"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_message
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_message
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_message
 msgid "Edi Error Message"
-msgstr "Edi Fel Meddelande"
+msgstr "Edi felmeddelande"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
@@ -216,7 +215,7 @@ msgstr "Edi visa lämna Avbryt-knapp"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_cancel_button
 msgid "Edi Show Cancel Button"
-msgstr "Edi Visa annuleringsknapp"
+msgstr "Edi Visa avbrytsknapp"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
@@ -228,7 +227,7 @@ msgstr "Edi Web Services till process"
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_document
 msgid "Electronic Document for an account.move"
-msgstr "Elektroniskt dokument för ett konto.move"
+msgstr "Elektroniskt dokument för ett account.move"
 
 #. module: account_edi
 #: model:ir.actions.act_window,name:account_edi.action_open_edi_documents
@@ -266,7 +265,7 @@ msgstr "Formatnamn"
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_error_count
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_error_count
 msgid "How many EDIs are in error for this move?"
-msgstr ""
+msgstr "Hur många EDI är felaktiga för denna flytt?"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
@@ -301,7 +300,7 @@ msgstr "Journal"
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move
 msgid "Journal Entry"
-msgstr "Journalverifikat"
+msgstr "Verifikat"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__write_uid
@@ -329,7 +328,7 @@ msgstr "Namn"
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_document_unique_edi_document_by_move_by_format
 msgid "Only one edi document by move by format"
-msgstr "Endast en edi document by move by format"
+msgstr "Endast en edi document med transaktionsformat"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -339,12 +338,12 @@ msgstr "Process nu"
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
-msgstr "Rapportåtgärd"
+msgstr "Rapportaktivitet"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Request EDI Cancellation"
-msgstr "Begär EDI annullering"
+msgstr "Begär avbruten EDI"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -365,7 +364,7 @@ msgstr "Skickat"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__state
 msgid "State"
-msgstr "Etapp"
+msgstr "Läge"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_state
@@ -387,7 +386,7 @@ msgstr ""
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "The invoice will soon be sent to"
-msgstr ""
+msgstr "Fakturan kommer snart att skickas till"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
@@ -413,7 +412,7 @@ msgstr "Detta dokument skickas redan genom en annan process. "
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_cancel
 msgid "To Cancel"
-msgstr "Att annullera"
+msgstr "Att avbryta"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_send
@@ -436,7 +435,7 @@ msgid ""
 " has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
 msgstr ""
-"Du kan inte redigera följande journalpost %s eftersom ett elektroniskt "
+"Du kan inte redigera följande verifikat %s eftersom ett elektroniskt "
 "dokument redan har skickats. Använd istället knappen \"Begär EDI-"
 "annullering\"."
 

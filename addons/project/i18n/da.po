@@ -150,7 +150,7 @@ msgstr ""
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(name)s's Updates"
-msgstr ""
+msgstr "%(name)ss opdateringer"
 
 #. module: project
 #. odoo-python
@@ -741,7 +741,7 @@ msgstr "Alle interne brugere"
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__allocated_hours
 msgid "Allocated Time"
-msgstr ""
+msgstr "Tildelt tid"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
@@ -773,6 +773,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
+"Analytisk konto, som dette projekt, dets opgaver og dets timesedler er knyttet til.\n"
+"Spor omkostningerne og indtægterne for dit projekt ved at indstille denne analytiske konto på dine relaterede dokumenter (f.eks. salgsordrer, fakturaer, indkøbsordrer, leverandørregninger, udgifter osv.).\n"
+"Denne analytiske konto kan ændres på hver opgave individuelt, hvis det er nødvendigt.\n"
+"En analytisk konto er påkrævet for at bruge timesedler."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__analytic_account_id
@@ -3594,7 +3598,7 @@ msgstr ""
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
 msgid "Project status - {{ object.name }}"
-msgstr ""
+msgstr "Projektstatus - {{ object.name }}"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -4163,7 +4167,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Share Read-only"
-msgstr ""
+msgstr "Del som skrivebeskyttet"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -4292,7 +4296,7 @@ msgstr "Start dato"
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__state
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__state
 msgid "State"
-msgstr "Stat"
+msgstr "Status"
 
 #. module: project
 #. odoo-python
@@ -4311,7 +4315,7 @@ msgstr "Status"
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "Status Update - "
-msgstr ""
+msgstr "Status opdatering -"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_state
@@ -5185,6 +5189,14 @@ msgid ""
 "\n"
 "        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Brug disse nøgleord i titlen til at indstille nye opgaver:\n"
+"\n"
+"30 timer Afsat 30 timer til opgaven\n"
+"#tags Indstil tags på opgaven\n"
+"@user Tildel opgaven til en bruger\n"
+"! Sæt opgaven høj prioritet\n"
+"\n"
+"Sørg for at bruge det rigtige format og bestile f.eks. Forbedre konfigurationsskærmen 5h #feature #v16 @Mitchell!"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id

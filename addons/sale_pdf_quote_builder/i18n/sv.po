@@ -5,9 +5,9 @@
 # Translators:
 # Simon S, 2023
 # Martin Trigaux, 2023
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2023\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +33,12 @@ msgstr ""
 "'Order - %s' % (object.name)"
 
 #. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "<i class=\"fa fa-arrow-right\"/> Download examples"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on
 msgid ""
 "Allows you to share the document with your customers within a sale.\n"
@@ -43,6 +49,13 @@ msgid ""
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
 "Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
 msgstr ""
+"Gör att du kan dela dokumentet med dina kunder inom en försäljning.\n"
+"Lämna den tom om du inte vill dela detta dokument med försäljningskunden.\n"
+"Offert: dokumentet kommer att skickas till och vara tillgängligt för kunderna när som helst.\n"
+"Detta alternativ kan t.ex. vara användbart för att dela produktbeskrivningsfiler.\n"
+"Bekräftad order: dokumentet kommer att skickas till och vara tillgängligt för kunderna.\n"
+"Detta alternativ kan t.ex. vara användbart för att dela användarmanualer eller digitalt innehåll som köpts via e-handel.\n"
+"Inom citat: Dokumentet kommer att inkluderas i pdf:en av offerten mellan sidhuvudet och offert tabellen. "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_company
@@ -74,11 +87,18 @@ msgid "Inside quote"
 msgstr ""
 
 #. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "Learn more from the documentation."
+msgstr ""
+
+#. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
 "footer pages to your quote."
 msgstr ""
+"Gör din offert attraktiv genom att lägga till sidhuvud, produktbeskrivningar"
+" och sidfötter till din offert."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -95,12 +115,12 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 msgid "PDF Quote builder"
-msgstr ""
+msgstr "PDF offertverktyg"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_product_document
 msgid "Product Document"
-msgstr ""
+msgstr "Produktdokument"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -118,7 +138,8 @@ msgid ""
 "Provide header pages and footer pages to compose an attractive quotation\n"
 "                            with more information about your company, your products and your services.\n"
 "                            The pdf of your quotes will be built by putting together header pages,\n"
-"                            product descriptions, details of the quote and then the footer pages."
+"                            product descriptions, details of the quote and then the footer pages.\n"
+"                            If empty, it will use those define in the company settings.<br/>"
 msgstr ""
 
 #. module: sale_pdf_quote_builder
@@ -166,4 +187,4 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
 msgid "Visible at"
-msgstr ""
+msgstr "Synlig vid"

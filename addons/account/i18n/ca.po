@@ -22,7 +22,6 @@
 # Ivan Espinola, 2023
 # martioodo hola, 2023
 # Harcogourmet, 2023
-# Pere Martínez, 2023
 # eriiikgt, 2023
 # ericrolo, 2023
 # Josep Anton Belchi, 2023
@@ -36,6 +35,7 @@
 # marcescu, 2024
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
 # Iván Infantes Castarnado, 2024
+# Pere Martínez, 2024
 # 
 msgid ""
 msgstr ""
@@ -43,7 +43,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Iván Infantes Castarnado, 2024\n"
+"Last-Translator: Pere Martínez, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1360,7 +1360,7 @@ msgstr "<strong>Adreça d'enviament:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Source:</strong><br/>"
-msgstr "<strong>Font:</strong><br/>"
+msgstr "<strong>Origen:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -10976,12 +10976,12 @@ msgstr "Quantitat a pagar:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Payment Communication:"
-msgstr ""
+msgstr "Referència de pagament:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payment Communications"
-msgstr "Pagament de les comunicacions"
+msgstr "Referència de pagament"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
@@ -11327,6 +11327,15 @@ msgstr "Si us plau, definiu una línia de pagament al vostre pagament."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
@@ -11368,7 +11377,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "Please use the following communication for your payment:"
-msgstr ""
+msgstr "Sisplau, feu servir aquesta referència de pagament:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_url

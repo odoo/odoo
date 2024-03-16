@@ -4,11 +4,11 @@
 # 
 # Translators:
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2024
-# Chloe Wang, 2024
 # Yazi Tian, 2024
-# 湘子 南 <1360857908@qq.com>, 2024
 # Wil Odoo, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
+# Chloe Wang, 2024
+# 湘子 南 <1360857908@qq.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
+"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,9 +36,10 @@ msgid ""
 "You might want to specify a default account on journal \"%s\" to automatically balance each move."
 msgstr ""
 "\n"
-"凭证（%s）不平衡。\n"
+"\n"
+"凭证 (%s) 不平衡。\n"
 "借记总额为%s，贷记总额为%s。\n"
-"您可以在日记账“%s”中预设默认账户，以便系统自动平衡各分录项。"
+"您可以在日记账“%s”中预设默认账户，以便系统自动平衡各分录项."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -9037,9 +9038,9 @@ msgid ""
 "Check: Pay bills by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 msgstr ""
-"手动：以Odoo以外的任何方式支付。\n"
-"支票：用支票支付账单，并从Odoo打印出来。\n"
-"SEPA 贷方转账：通过向您的银行提交SEPA贷记转账文件，在SEPA区付款。模块account_sepa是必需的。\n"
+"手动：以 ERP 以外的任何方法支付。\n"
+"支票：用支票支付账单，并从 ERP 打印出来。\n"
+"SEPA 贷方转账：通过向您的银行提交 SEPA 贷方转账文件，在SEPA 区付款。模块 account_sepa 是必需的.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__payment_method_line_id
@@ -10041,7 +10042,7 @@ msgid ""
 "Only users with the 'Adviser' role can edit accounts prior to and inclusive "
 "of this date. Use it for period locking inside an open fiscal year, for "
 "example."
-msgstr "仅具有“顾问”身份的用户可以编辑该日期（含）之前的科目。例如，用于在开放会计年度中锁定期间。"
+msgstr "仅具有“顾问”身份的用户可以编辑该日期含之前的科目。例如，用于在开放会计年度中锁定期间."
 
 #. module: account
 #. odoo-python
@@ -10953,6 +10954,15 @@ msgstr "请从会计科目表菜单创建新科目。"
 #, python-format
 msgid "Please define a payment method line on your payment."
 msgstr "请在付款中定义付款方式行。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -14811,7 +14821,7 @@ msgstr "该经常性分录源自%s"
 #: model:ir.model.fields,help:account.field_account_move__auto_post_until
 #: model:ir.model.fields,help:account.field_account_payment__auto_post_until
 msgid "This recurring move will be posted up to and including this date."
-msgstr "该经常性分录将在该日期（含）前过账。"
+msgstr "该循环性分录将在该含日期前过账."
 
 #. module: account
 #. odoo-python
@@ -16269,7 +16279,7 @@ msgstr "不能创建处于已过账状态的分录。请创建分录草稿，并
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot create recursive groups."
-msgstr ""
+msgstr "不能创建递归组。"
 
 #. module: account
 #. odoo-python

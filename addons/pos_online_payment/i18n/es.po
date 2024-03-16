@@ -84,8 +84,8 @@ msgid ""
 "set, of the POS config."
 msgstr ""
 "Todos los proveedores de pago que configure para un método de pago en línea "
-"deben tener la misma moneda que el diario de ventas, la moneda de la empresa"
-" o, si eso no está configurado, la de la configuración del PdV."
+"deben tener la misma moneda que el diario de ventas, la moneda de la "
+"compañía o, si eso no está configurado, la de la configuración del TPV."
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
@@ -363,7 +363,7 @@ msgstr "Error de servidor"
 #, python-format
 msgid "The POS online payment (tx.id=%d) could not be saved correctly"
 msgstr ""
-"El pago en línea del TPV (tx.id=%d) no se pudo guardar de la forma adecuada"
+"El pago en línea del TPV (tx.id=%d) no se ha podido guardar correctamente"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -373,7 +373,7 @@ msgid ""
 "The POS online payment (tx.id=%d) could not be saved correctly because the "
 "online payment method could not be found"
 msgstr ""
-"El pago en línea del TPV (tx.id=%d) no se pudo guardar de manera correcta ya"
+"El pago en línea del TPV (tx.id=%d) no se ha podido guardar correctamente ya"
 " que no fue posible encontrar el método de pago en línea"
 
 #. module: pos_online_payment
@@ -456,8 +456,7 @@ msgstr "El proveedor de pago no es válido."
 #, python-format
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
-msgstr ""
-"El mensaje debe ser directo y con redirección o debe ser creado por un token"
+msgstr "El pago debe ser directo, con redirección o lo debe crear un token."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -569,7 +568,7 @@ msgstr "No hay nada que pagar."
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "To Pay"
-msgstr "Por pagar"
+msgstr "A pagar"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -579,9 +578,9 @@ msgid ""
 "To use an online payment method in a POS config, it must have at least one "
 "published payment provider supporting the currency of that POS config."
 msgstr ""
-"Para usar un método de pago en línea en la configuración de un TPV, debe "
-"tener al menos un proveedor de pago publicado que además sea compatible con "
-"la moneda en la configuración del TPV."
+"Para usar un método de pago en línea en la configuración de TPV, debe tener "
+"al menos un proveedor de pago publicado que además sea compatible con la "
+"moneda en la configuración del TPV."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -619,7 +618,7 @@ msgid ""
 "with online payment providers)"
 msgstr ""
 "Use este método de pago para pagos en línea (pagos realizados en una página "
-"de internet con proveedores de pagos en línea)."
+"de internet con proveedores de pago en línea)."
 
 #. module: pos_online_payment
 #. odoo-javascript

@@ -3,19 +3,19 @@
 # 	* website_forum
 # 
 # Translators:
-# Sanne Kristensen <sanne@vkdata.dk>, 2023
 # lhmflexerp <lhm@flexerp.dk>, 2023
 # Mads Søndergaard, 2023
 # Mads Søndergaard, 2023
 # Martin Trigaux, 2023
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-01-29 10:46+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -283,6 +283,8 @@ msgid ""
 "<b>Answers should not add or expand questions</b>. Instead, either edit the "
 "question or add a comment."
 msgstr ""
+"<b>Et svar bør ikke tilføje eller udvide spørgsmål</b>. I stedet skal du "
+"enten redigere spørgsmålet eller tilføje en kommentar."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -643,6 +645,11 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "<small>View all</small>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
+msgid "<span class=\"badge bg-dark me-1\">Last post:</span>"
 msgstr ""
 
 #. module: website_forum
@@ -1529,7 +1536,7 @@ msgstr "Afvis"
 #. module: website_forum
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
 msgid "Dismiss message"
-msgstr ""
+msgstr "Afvis besked"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__display_name
@@ -1778,6 +1785,12 @@ msgid ""
 "accumulated for a question or answer per day. The table given at the end "
 "explains reputation point requirements for each type of moderation task."
 msgstr ""
+"For eksempel, hvis du stiller et interessant spørgsmål eller giver et "
+"nyttigt svar, vil dit input blive stemt op. Hvis svaret på den anden side er"
+" vildledende - vil det blive nedstemt. Hver stemme for giver 10 point, hver "
+"stemme imod vil trække 2 point fra. Der er en grænse på 200 point, der kan "
+"akkumuleres for et spørgsmål eller svar om dagen. Tabellen til sidst "
+"forklarer krav til omdømmepunkt for hver type moderationsopgave."
 
 #. module: website_forum
 #. odoo-python
@@ -1817,7 +1830,7 @@ msgstr "Navn på forum"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
 msgid "Forum Page"
-msgstr ""
+msgstr "Forum side"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post
@@ -3027,6 +3040,8 @@ msgid ""
 "Share and discuss the best content and new marketing ideas, build your "
 "professional profile and become a better marketer together."
 msgstr ""
+"Del og diskuter det bedste indhold og nye markedsføringsideer, opbyg din "
+"professionelle profil og bliv en bedre marketingmedarbejder sammen."
 
 #. module: website_forum
 #. odoo-javascript
@@ -3705,19 +3720,19 @@ msgstr "Velkommen!"
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "What kind of questions can I ask here?"
-msgstr ""
+msgstr "Hvilken slags spørgsmål kan jeg stille her?"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "What should I avoid in my answers?"
-msgstr ""
+msgstr "Hvad skal jeg undgå i mine svar?"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "What should I avoid in my questions?"
-msgstr ""
+msgstr "Hvad skal jeg undgå i mine spørgsmål?"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3738,7 +3753,7 @@ msgstr ""
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "Why can other people edit my questions/answers?"
-msgstr ""
+msgstr "Hvorfor kan andre redigere mine spørgsmål/svar?"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question

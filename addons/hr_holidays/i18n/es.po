@@ -667,10 +667,10 @@ msgstr ""
 "                        ¡El empleado tiene una zona horaria diferente a la suya! Aquí se muestran las fechas y horas en la zona horaria del empleado\n"
 "                    </span>\n"
 "                    <span invisible=\"holiday_type != 'department'\">\n"
-"                        ¡El departamento de la empresa tiene una zona horaria diferente a la suya! Aquí se muestran las fechas y horas en la zona horaria de la empresa\n"
+"                        ¡El departamento de la compañía tiene una zona horaria diferente a la suya! Aquí se muestran las fechas y horas en la zona horaria de la compañía\n"
 "                    </span>\n"
 "                    <span invisible=\"holiday_type != 'company'\">\n"
-"                        ¡La empresa tiene una zona horaria diferente a la suya! Aquí se muestran las fechas y horas en la zona horaria de la empresa\n"
+"                        ¡La compañía tiene una zona horaria diferente a la suya! Aquí se muestran las fechas y horas en la zona horaria de la compañía\n"
 "                    </span>\n"
 "                    ("
 
@@ -916,7 +916,7 @@ msgstr "Agregue una descripción para que las personas la validen"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__added_value_type
 msgid "Added Value Type"
-msgstr "Agregar tipo de valor"
+msgstr "Tipo de valor agregado"
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_manager
@@ -1007,7 +1007,7 @@ msgstr "Modo de asignación"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_notif_subtype_id
 msgid "Allocation Notification Subtype"
-msgstr "Subtipo de Notificación de Asignación"
+msgstr "Subtipo de notificación de asignación"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_remaining_display
@@ -1065,7 +1065,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
 msgid "Allocation to Approve"
-msgstr "Asignación por aprobar"
+msgstr "Asignación a aprobar"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_approve_department
@@ -1097,9 +1097,9 @@ msgid ""
 msgstr ""
 "Permite crear solicitudes en lote:\n"
 "- Por empleado: para un empleado en especifico\n"
-"- Por empresa: todos los empleados de la empresa especificada\n"
+"- Por compañía: todos los empleados de la compañía especificada\n"
 "- Por departamento: todos los empleados del departamento especificado\n"
-"- Por etiqueta de empleado: todos los empleados de las etiquetas/categorías  de empleado especificadas"
+"- Por etiqueta de empleado: todos los empleados de las etiquetas/categorías de empleado especificadas"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__already_accrued
@@ -1536,7 +1536,8 @@ msgstr ""
 #, python-format
 msgid "Click on any date or on this button to request a time-off"
 msgstr ""
-"Haga clic en cualquier fecha o en este botón para solicitar una ausencia"
+"Haga clic en cualquier fecha o en este botón para solicitar un tiempo "
+"personal"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__color
@@ -1570,7 +1571,7 @@ msgstr "Compañía"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__mode_company_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__mode_company_id
 msgid "Company Mode"
-msgstr "Modo de empresa"
+msgstr "Modo de compañía"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_comp
@@ -1605,7 +1606,7 @@ msgstr "Confirmado"
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 #, python-format
 msgid "Congrats, we can see that your request has been validated."
-msgstr "Felicidades, se validó su solicitud."
+msgstr "Enhorabuena, vemos que su solicitud ha sido validada."
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_partner
@@ -1977,7 +1978,7 @@ msgstr "Empleado activo"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__employee_company_id
 msgid "Employee Company"
-msgstr "Empresa del empleado"
+msgstr "Compañía del empleado"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__employee_requests
@@ -2194,7 +2195,7 @@ msgstr "Autorización por RR.HH."
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__report_note
 msgid "HR Comments"
-msgstr "Comentarios de RR.HH."
+msgstr "Comentarios de RR. HH."
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
@@ -2494,7 +2495,7 @@ msgstr "El tipo de día personal incrementa la duración"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__holiday_status__left
 msgid "Left"
-msgstr "Izquierda"
+msgstr "Restante"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2515,7 +2516,7 @@ msgstr "Vamos a aprobarlo"
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 #, python-format
 msgid "Let's discover the Time Off application"
-msgstr "Descubramos la aplicación de ausencias"
+msgstr "Descubramos la aplicación Tiempo personal"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2530,7 +2531,7 @@ msgstr "Vamos a validarlo"
 #, python-format
 msgid "Let's try to create a Sick Time Off, select it in the list"
 msgstr ""
-"Probemos a crear una ausencia por enfermedad, selecciónelo en la lista"
+"Probemos crear un tiempo personal por enfermedad, selecciónelo en la lista"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__level_count
@@ -2562,7 +2563,7 @@ msgstr "Administración"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__manager_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__manager_id
 msgid "Manager"
-msgstr "Responsable"
+msgstr "Gerente"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_manager_approval
@@ -2800,7 +2801,7 @@ msgstr "Nueva asignación"
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
 #, python-format
 msgid "New Allocation Request"
-msgstr "Nueva Solicitud de asignación"
+msgstr "Nueva solicitud de asignación"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2823,7 +2824,7 @@ msgstr "Nuevo hito"
 #: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
 #, python-format
 msgid "New Time Off"
-msgstr "Nueva ausencia"
+msgstr "Nuevo tiempo personal"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_calendar_event_id
@@ -3167,7 +3168,7 @@ msgstr "Planificado"
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #, python-format
 msgid "Planned:"
-msgstr "Planeado:"
+msgstr "Planificado:"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__hr_icon_display__presence_holiday_present
@@ -3452,7 +3453,7 @@ msgstr "Segunda solicitud de aprobación de %(leave_type)s"
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 #, python-format
 msgid "Select Time Off"
-msgstr "Seleccionar tiempo libre"
+msgstr "Seleccione Tiempo personal"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__holiday_type
@@ -3627,7 +3628,7 @@ msgstr "Tachado"
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 #, python-format
 msgid "Submit your request"
-msgstr "Enviar su solicitud"
+msgstr "Envíe su solicitud"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -3729,9 +3730,9 @@ msgid ""
 "The employee, department, company or employee category of this request is "
 "missing. Please make sure that your user login is linked to an employee."
 msgstr ""
-"Falta el empleado, el departamento, la empresa o la categoría de empleado de"
-" esta solicitud. Por favor, asegúrate de que el nombre de usuario esté "
-"vinculado a un empleado."
+"Falta el empleado, el departamento, la compañía o la categoría de empleado "
+"de esta solicitud. Asegúrese de que el nombre de usuario esté vinculado a un"
+" empleado."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4585,8 +4586,8 @@ msgstr "No puede iniciar una acumulación en el pasado."
 msgid ""
 "You can select the period you need to take off, from start date to end date"
 msgstr ""
-"Puede seleccionar el periodo que necesita tomar de ausencia, desde la fecha "
-"de inicio hasta la fecha de finalización."
+"Puede seleccionar el periodo que necesita tomar de tiempo personal, desde la"
+" fecha de inicio hasta la fecha de finalización."
 
 #. module: hr_holidays
 #. odoo-python

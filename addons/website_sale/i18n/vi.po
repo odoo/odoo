@@ -3,8 +3,8 @@
 # 	* website_sale
 # 
 # Translators:
-# Thi Huong Nguyen, 2023
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -270,7 +270,7 @@ msgid ""
 "contact us directly for this operation.</small>"
 msgstr ""
 "<small class=\"form-text text-muted\">Không được phép đổi tên công ty hoặc "
-"mã số thuế GTGT khi (các) tài liệu đã được xuất cho tài khoản của bạn. Vui "
+"mã số thuế GTGT khi (các) chứng từ đã được xuất cho tài khoản của bạn. Vui "
 "lòng liên hệ trực tiếp với chúng tôi để thực hiện thao tác này.</small>"
 
 #. module: website_sale
@@ -1025,17 +1025,8 @@ msgstr "Có thể đăng"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
-msgid "Can not resequence a video at first position."
-msgstr "Không thể sắp xếp lại video ở vị trí đầu tiên."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence embedded image/video with a non compatible image."
+msgid "You can't use a video as the product's main image."
 msgstr ""
-"Không thể sắp xếp lại hình ảnh/video được nhúng với hình ảnh không tương "
-"thích."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4671,6 +4662,11 @@ msgstr "Bán hàng thương mại điện tử"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Shop"
 msgstr "Cửa hàng eCommerce"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
+msgid "eCommerce cart"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server

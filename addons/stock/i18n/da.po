@@ -4727,6 +4727,11 @@ msgid "Lot Label Format to auto-print"
 msgstr ""
 
 #. module: stock
+#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
+msgid "Lot Label Report"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
 msgid "Lot Properties"
 msgstr ""
@@ -10539,6 +10544,15 @@ msgid ""
 msgstr ""
 "Du kan ikke flytte det samme pakke indhold mere end én gang i samme "
 "overførsel, eller dele den samme pakke ud til to lokationer."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
 
 #. module: stock
 #. odoo-python
