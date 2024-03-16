@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import UserError
@@ -942,3 +943,36 @@ class TestUnbuild(TestMrpCommon):
             {'product_id': self.bom_1.bom_line_ids[0].product_id.id, 'quantity': 0.6},
             {'product_id': self.bom_1.bom_line_ids[1].product_id.id, 'quantity': 1.2},
         ])
+
+    def test_unbuild_less_quantity_consumed(self):
+        """
+        Tests that you don't unbuild more than you consumed during production.
+        BoM uses component x20, but only 15 are consumed during the production order.
+        Unbuilding the MO should only put 15 components back in stock.
+        """
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.product_2.id,
+            'product_tmpl_id': self.product_2.product_tmpl_id.id,
+            'consumption': 'flexible',
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({'product_id': self.product_3.id, 'product_qty': 20}),
+            ]
+        })
+
+        with Form(self.env['mrp.production']) as mo_form:
+            mo_form.product_id = self.product_2
+            mo_form.bom_id = bom
+            mo_form.product_qty = 1
+            mo = mo_form.save()
+        mo.action_confirm()
+
+        mo.qty_producing = 1.0
+        mo.move_raw_ids.write({'quantity': 15, 'picked': True})
+        mo.button_mark_done()
+
+        unbuild_action = mo.button_unbuild()
+        unbuild_wizard = Form(self.env[unbuild_action['res_model']].with_context(**unbuild_action['context'])).save()
+        unbuild_wizard.action_validate()
+        self.assertEqual(mo.unbuild_ids.produce_line_ids.filtered(lambda m: m.product_id == self.product_3).product_uom_qty, 15)

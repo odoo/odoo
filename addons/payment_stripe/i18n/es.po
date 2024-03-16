@@ -3,8 +3,8 @@
 # 	* payment_stripe
 # 
 # Translators:
-# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +54,7 @@ msgstr "Entrega"
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Enable Apple Pay"
-msgstr "Activar Apple Pay"
+msgstr "Habilitar Apple Pay"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
@@ -106,7 +106,7 @@ msgstr "Proveedor de pago"
 #. module: payment_stripe
 #: model:ir.actions.act_window,name:payment_stripe.action_payment_provider_onboarding
 msgid "Payment Providers"
-msgstr "Proveedores de pagos"
+msgstr "Proveedores de pago"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
@@ -156,7 +156,7 @@ msgstr "Datos recibidos sin estado de intento."
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing merchant reference"
-msgstr "Datos recibidos en los que falta la referencia del vendedor"
+msgstr "Datos recibidos sin referencia del comerciante."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_secret_key
@@ -200,14 +200,14 @@ msgstr "Error del proxy de Stripe: %(error)s"
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Stripe Proxy: An error occurred when communicating with the proxy."
-msgstr "Stripe Proxy: se produjo un error al comunicarse con el proxy."
+msgstr "Proxy de Stripe: ocurrió un error al comunicarse con el proxy."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Stripe Proxy: Could not establish the connection."
-msgstr "Stripe Proxy: no se pudo establecer la conexión."
+msgstr "Proxy de Stripe: no se pudo establecer la conexión."
 
 #. module: payment_stripe
 #. odoo-python
@@ -219,7 +219,7 @@ msgid ""
 "Stripe gave us the following info about the problem:\n"
 "'%s'"
 msgstr ""
-"La comunicación con la API ha fallado.\n"
+"Falló la comunicación con la API.\n"
 "Stripe nos dio la siguiente información sobre el problema:\n"
 "'%s'"
 
@@ -228,7 +228,7 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "The customer left the payment page."
-msgstr "El cliente abandono la página de pago."
+msgstr "El cliente abandonó la página de pago."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_publishable_key
@@ -244,8 +244,8 @@ msgid ""
 "The refund did not go through. Please log into your Stripe Dashboard to get "
 "more information on that matter, and address any accounting discrepancies."
 msgstr ""
-"No se pudo realizar el reembolso. Por favor acceda a su tablero de Stipre, "
-"para obtener más información al respecto, y solucionar cualquier problema."
+"No se pudo realizar el reembolso. Para obtener más información y solucionar "
+"cualquier problema, inicie sesión y vaya a su tablero en Stripe."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__code
@@ -297,7 +297,7 @@ msgid ""
 " is completed."
 msgstr ""
 "No puede establecer el estado del proveedor como Habilitado hasta que "
-"termine su integración con Stripe."
+"termine su incorporación con Stripe."
 
 #. module: payment_stripe
 #. odoo-python
@@ -315,7 +315,7 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Your Stripe Webhook is already set up."
-msgstr "Tu webhook de Stripe ya está configurado."
+msgstr "Su webhook de Stripe ya está configurado."
 
 #. module: payment_stripe
 #. odoo-javascript

@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Fiscal Position">
                     <div groups="account.group_account_manager"
-                         class="alert alert-info mb-0"
+                         class="alert alert-info"
                          role="alert"
                          invisible="not foreign_vat_header_mode">
                         <div invisible="foreign_vat_header_mode not in ('templates_found', 'no_template')">
@@ -61,7 +61,7 @@
                         <page name="tax_mapping" string="Tax Mapping">
                             <field name="tax_ids" widget="one2many" nolabel="1" context="{'append_type_to_tax_name': True}">
                                 <tree name="tax_map_tree" string="Tax Mapping" editable="bottom" no_open="1" decoration-muted="tax_dest_id and not tax_dest_active">
-                                    <field name="tax_dest_active" invisible="1"/>
+                                    <field name="tax_dest_active" column_invisible="1"/>
                                     <field name="tax_src_id"
                                         domain="[
                                             ('type_tax_use', '!=', 'none'),
@@ -187,7 +187,7 @@
                     <field name="fiscal_country_codes" invisible="1"/>
                 </xpath>
                 <xpath expr="//sheet" position="before">
-                    <div groups="account.group_account_invoice,account.group_account_readonly" class="alert alert-warning" role="alert" style="margin-bottom:0px;"
+                    <div groups="account.group_account_invoice,account.group_account_readonly" class="alert alert-warning" role="alert"
                          invisible="duplicated_bank_account_partners_count == 0">
                         One or more Bank Accounts set on this partner are also used by other <bold><button class="alert-link" type="object" name="action_view_partner_with_same_bank" role="button" string="Partners" style="padding: 0;vertical-align: baseline;"/></bold>. Please make sure that this is a wanted behavior.
                     </div>

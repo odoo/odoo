@@ -2141,6 +2141,60 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "basic grouped list rendering 4 cols with aggregates, selector and openFormView",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
+                    <tree open_form_view="True">
+                        <field name="datetime"/>
+                        <field name="int_field" sum="Sum1"/>
+                        <field name="bar"/>
+                        <field name="qux" sum="Sum2" optional="hide"/>
+                    </tree>`,
+                groupBy: ["bar"],
+            });
+
+            assert.strictEqual(
+                target.querySelector(".o_group_header th").getAttribute("colspan"), "2"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_group_header th:last-child").getAttribute("colspan"),
+                "2",
+            );
+        }
+    );
+
+    QUnit.test(
+        "basic grouped list rendering 4 cols with aggregates, selector, optional and openFormView",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
+                    <tree open_form_view="True">
+                        <field name="datetime"/>
+                        <field name="int_field" sum="Sum1"/>
+                        <field name="bar"/>
+                        <field name="qux" sum="Sum2" optional="show"/>
+                    </tree>`,
+                groupBy: ["bar"],
+            });
+
+            assert.strictEqual(
+                target.querySelector(".o_group_header th").getAttribute("colspan"), "2"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_group_header th:last-child").getAttribute("colspan"),
+                "1",
+            );
+        }
+    );
+
     QUnit.test("group a list view with the aggregable field 'value'", async function (assert) {
         serverData.models.foo.fields.value = {
             string: "Value",
@@ -19970,4 +20024,37 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(["switch to form - resId: 5 activeIds: 5,1,2,3,4"]);
         }
     );
+
+    QUnit.test("onchange should only be called once after pressing enter on a field", async function (assert) {
+        serverData.models.foo.onchanges = {
+            foo(record) {
+                if (record.foo) {
+                    record.int_field = 1;
+                }
+            },
+        };
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+            async mockRPC(_, { method }) {
+                if (method === "onchange") {
+                    assert.step(method);
+                }
+            },
+        });
+        await click(target.querySelector(".o_data_cell"));
+        target.querySelector(".o_field_widget[name=foo] input").value = "1";
+        await triggerEvents(target, ".o_field_widget[name=foo] input", [
+            ["keydown", { key: "Enter" }],
+            ["change"],
+        ]);
+        await nextTick();
+        assert.verifySteps(["onchange"], "There should only be one onchange call");
+    });
 });

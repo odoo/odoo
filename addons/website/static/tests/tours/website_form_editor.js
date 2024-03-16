@@ -532,6 +532,29 @@
             trigger: '[data-field-name="email_to"] input',
             run: 'text test@test.test',
         },
+        // Test a field visibility when it's tied to another Date [Time] field
+        // being set.
+        ...addCustomField("char", "text", "field D", false, { visibility: CONDITIONALVISIBILITY }),
+        ...addCustomField("date", "text", "field E", false),
+        ...selectFieldByLabel("field D"),
+        ...selectButtonByData('data-set-visibility-dependency="field E"'),
+        ...selectButtonByData('data-select-data-attribute="set"'),
+        ...wTourUtils.clickOnSave(),
+        {
+            content: "Click to open the date picker popover from field E",
+            trigger: `iframe ${triggerFieldByLabel("field E")} input`,
+            run: "click",
+        },
+        {
+            content: "Select today's date from the date picker",
+            trigger: "iframe .o_datetime_picker .o_date_item_cell.o_today",
+        },
+        {
+            content: "Check that field D is visible",
+            trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field D")}:visible)`,
+            isCheck: true,
+        },
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
         // The next four calls to "addCustomField" are there to ensure such
         // characters do not make the form editor crash.
         ...addCustomField("char", "text", "''", false),

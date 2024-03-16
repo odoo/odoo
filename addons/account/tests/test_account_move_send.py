@@ -1049,3 +1049,12 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         )
         self.assertEqual(json.loads(bus_2.message)['payload']['type'], 'warning')
         self.assertEqual(json.loads(bus_2.message)['payload']['action_button']['res_ids'], invoices_error.ids)
+
+    def test_send_and_print_only(self):
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        option_vals = self.env['account.move.send']._get_wizard_vals_restrict_to({'checkbox_send_mail': True})
+        wizard = self.create_send_and_print(invoice, **option_vals)
+        res = wizard.action_send_and_print()
+
+        self.assertTrue(self._get_mail_message(invoice))  # email was sent
+        self.assertEqual(res['type'], 'ir.actions.act_window_close')  # the download which is a default value didn't happen

@@ -131,7 +131,11 @@ export class Chatter extends Component {
                             return;
                         }
                     }
-                    files.forEach((file) => this.attachmentUploader.uploadFile(file));
+                    Promise.all(files.map((file) => this.attachmentUploader.uploadFile(file))).then(() => {
+                        if (this.props.hasParentReloadOnAttachmentsChanged) {
+                            this.reloadParentView();
+                        }
+                    })
                     this.state.isAttachmentBoxOpened = true;
                 }
             },
@@ -232,9 +236,9 @@ export class Chatter extends Component {
             .slice(0, 5)
             .map(({ partner }) => {
                 const text = partner.email ? partner.emailWithoutDomain : partner.name;
-                return `<span class="text-muted" title="${escape(partner.email)}">${escape(
-                    text
-                )}</span>`;
+                return `<span class="text-muted" title="${escape(
+                    partner.email || _t("no email address")
+                )}">${escape(text)}</span>`;
             });
         const formatter = new Intl.ListFormat(
             this.store.env.services["user"].lang?.replace("_", "-"),

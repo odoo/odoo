@@ -335,6 +335,10 @@ class ResPartner(models.Model):
 
     @api.depends_context('company')
     def _credit_debit_get(self):
+        if not self.ids:
+            self.debit = False
+            self.credit = False
+            return
         tables, where_clause, where_params = self.env['account.move.line']._where_calc([
             ('parent_state', '=', 'posted'),
             ('company_id', 'child_of', self.env.company.root_id.id)
@@ -789,21 +793,21 @@ class ResPartner(models.Model):
         normalized_vat = vat.replace(' ', '')
         country_prefix = re.match('^[a-zA-Z]{2}|^', vat).group()
 
-        partner = self.env['res.partner'].search(extra_domain + [('vat', 'in', (normalized_vat, vat))], limit=1)
+        partner = self.env['res.partner'].search(extra_domain + [('vat', 'in', (normalized_vat, vat))], limit=2)
 
         # Try to remove the country code prefix from the vat.
         if not partner and country_prefix:
             partner = self.env['res.partner'].search(extra_domain + [
                 ('vat', 'in', (normalized_vat[2:], vat[2:])),
                 ('country_id.code', '=', country_prefix.upper()),
-            ], limit=1)
+            ], limit=2)
 
             # The country could be not specified on the partner.
             if not partner:
                 partner = self.env['res.partner'].search(extra_domain + [
                     ('vat', 'in', (normalized_vat[2:], vat[2:])),
                     ('country_id', '=', False),
-                ], limit=1)
+                ], limit=2)
 
         # The vat could be a string of alphanumeric values without country code but with missing zeros at the
         # beginning.
@@ -818,13 +822,13 @@ class ResPartner(models.Model):
                     vat_prefix_regex = f'({country_prefix})?'
                 else:
                     vat_prefix_regex = '([A-z]{2})?'
-                query = self.env['res.partner']._search(extra_domain + [('active', '=', True)], limit=1)
+                query = self.env['res.partner']._search(extra_domain + [('active', '=', True)], limit=2)
                 query.add_where("res_partner.vat ~ %s", ['^%s0*%s$' % (vat_prefix_regex, vat_only_numeric)])
                 query_str, params = query.select()
                 self._cr.execute(query_str, params)
-                partner_row = self._cr.fetchone()
-                if partner_row:
-                    partner = self.env['res.partner'].browse(partner_row[0])
+                partner_rows = self._cr.fetchall() or []
+                if len(partner_rows) == 1:
+                    partner = self.env['res.partner'].browse(partner_rows[0][0])
 
         return partner
 
@@ -843,13 +847,13 @@ class ResPartner(models.Model):
         domain = expression.OR(domains)
         if extra_domain:
             domain = expression.AND([domain, extra_domain])
-        return self.env['res.partner'].search(domain, limit=1)
+        return self.env['res.partner'].search(domain, limit=2)
 
     @api.model
     def _retrieve_partner_with_name(self, name, extra_domain):
         if not name:
             return None
-        return self.env['res.partner'].search([('name', 'ilike', name)] + extra_domain, limit=1)
+        return self.env['res.partner'].search([('name', 'ilike', name)] + extra_domain, limit=2)
 
     def _retrieve_partner(self, name=None, phone=None, mail=None, vat=None, domain=None, company=None):
         '''Search all partners and find one that matches one of the parameters.
@@ -878,9 +882,9 @@ class ResPartner(models.Model):
 
         company = company or self.env.company
         for search_method in (search_with_vat, search_with_domain, search_with_phone_mail, search_with_name):
-            for extra_domain in (self.env['res.partner']._check_company_domain(company), []):
+            for extra_domain in ([*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)], []):
                 partner = search_method(extra_domain)
-                if partner:
+                if partner and len(partner) == 1:
                     return partner
         return self.env['res.partner']
 

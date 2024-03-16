@@ -550,6 +550,34 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
     });
 
     QUnit.test(
+        "list with both a monetary field and the related currency field",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithList({
+                columns: ["pognon", "currency_id"],
+            });
+            setCellContent(model, "A1", '=ODOO.LIST(1, 1, "pognon")');
+            setCellContent(model, "A2", '=ODOO.LIST(1, 1, "currency_id")');
+            await waitForDataSourcesLoaded(model);
+            assert.strictEqual(getEvaluatedCell(model, "A1").formattedValue, "74.40€");
+            assert.strictEqual(getEvaluatedCell(model, "A2").value, "EUR");
+        }
+    );
+
+    QUnit.test(
+        "list with both a monetary field and the related currency field",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithList({
+                columns: ["currency_id", "pognon"],
+            });
+            setCellContent(model, "A1", '=ODOO.LIST(1, 1, "pognon")');
+            setCellContent(model, "A2", '=ODOO.LIST(1, 1, "currency_id")');
+            await waitForDataSourcesLoaded(model);
+            assert.strictEqual(getEvaluatedCell(model, "A1").formattedValue, "74.40€");
+            assert.strictEqual(getEvaluatedCell(model, "A2").value, "EUR");
+        }
+    );
+
+    QUnit.test(
         "List record limit is computed during the import and UPDATE_CELL",
         async function (assert) {
             const spreadsheetData = {

@@ -221,7 +221,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
             invoice = self.env['account.move'].sudo().create(
                 self._prepare_invoice_values(order, down_payment_lines)
-            ).with_user(self.env.uid)  # Unsudo the invoice after creation
+            )
 
             # Ensure the invoice total is exactly the expected fixed amount.
             if self.advance_payment_method == 'fixed':
@@ -255,6 +255,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
                                 remaining -= amt
                                 line_commands.append(Command.update(line.id, {attr: line[attr] + amt * sign}))
                         invoice.line_ids = line_commands
+
+            # Unsudo the invoice after creation if not already sudoed
+            invoice = invoice.sudo(self.env.su)
 
             poster = self.env.user._is_internal() and self.env.user.id or SUPERUSER_ID
             invoice.with_user(poster).message_post_with_source(

@@ -32,7 +32,12 @@ export class GenerateDialog extends Component {
     async _onGenerate() {
         const count = parseInteger(this.nextSerialCount.el?.value || '0');
         const move_line_vals = await this.orm.call("stock.move", "action_generate_lot_line_vals", [
-            {...this.props.move.context, default_product_id: this.props.move.data.product_id[0]},
+            {
+                ...this.props.move.context,
+                default_product_id: this.props.move.data.product_id[0],
+                default_location_dest_id: this.props.move.data.location_dest_id[0],
+                default_location_id: this.props.move.data.location_id[0],
+            },
             this.props.type,
             this.nextSerial.el?.value,
             count,

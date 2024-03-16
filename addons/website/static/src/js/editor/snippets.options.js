@@ -23,7 +23,6 @@ import {
 import { renderToElement, renderToFragment } from "@web/core/utils/render";
 import { browser } from "@web/core/browser/browser";
 import {
-    applyTextHighlight,
     removeTextHighlight,
     drawTextHighlightSVG,
 } from "@website/js/text_processing";
@@ -3751,6 +3750,18 @@ options.registry.TextHighlight = options.Class.extend({
     onBlur() {
         this.leftPanelEl.appendChild(this.el);
     },
+    /**
+    * @override
+    */
+    notify(name, data) {
+        // Apply the highlight effect DOM structure when added for the first time
+        // and display the highlight effects grid immediately.
+        if (name === "new_text_highlight") {
+            this._autoAdaptHighlights();
+            this._requestUserValueWidgets("text_highlight_opt")[0]?.enable();
+        }
+        this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -3790,21 +3801,19 @@ options.registry.TextHighlight = options.Class.extend({
                 svg.remove();
             });
         } else {
-            applyTextHighlight(this.$target[0], highlightID);
+            this._autoAdaptHighlights();
         }
     },
     /**
-     * @override
+     * Used to set the highlight effect DOM structure on the targeted text
+     * content.
+     *
+     * @private
      */
-    async _computeWidgetState(methodName, params) {
-        const value = await this._super(...arguments);
-        if (methodName === "selectStyle" && value === "currentColor") {
-            const style = window.getComputedStyle(this.$target[0]);
-            // The highlight default color is the text's "currentColor".
-            // This value should be handled correctly by the option.
-            return style.color;
-        }
-        return value;
+    _autoAdaptHighlights() {
+        this.trigger_up("snippet_edition_request", { exec: async () =>
+            await this._refreshPublicWidgets($(this.options.wysiwyg.odooEditor.editable))
+        });
     },
 
     //--------------------------------------------------------------------------

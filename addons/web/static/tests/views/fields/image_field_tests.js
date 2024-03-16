@@ -710,7 +710,7 @@ QUnit.module("Fields", (hooks) => {
             fileInput.files = list.files;
             fileInput.dispatchEvent(new Event("change"));
             // It can take some time to encode the data as a base64 url
-            await new Promise((resolve) => setTimeout(resolve, 50));
+            await new Promise((resolve) => setTimeout(resolve, 100));
             // Wait for a render
             await nextTick();
         }

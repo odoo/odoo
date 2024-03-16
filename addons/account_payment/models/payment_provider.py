@@ -14,6 +14,7 @@ class PaymentProvider(models.Model):
         inverse='_inverse_journal_id',
         check_company=True,
         domain='[("type", "=", "bank")]',
+        copy=False,
     )
 
     #=== COMPUTE METHODS ===#

@@ -712,7 +712,7 @@ class ProductProduct(models.Model):
         # price to estimate the anglo saxon price unit.
         missing = qty_to_invoice - qty_valued
         for sml in stock_moves.move_line_ids:
-            if not sml.owner_id or sml.owner_id == sml.company_id.partner_id:
+            if not sml._should_exclude_for_valuation():
                 continue
             missing -= sml.product_uom_id._compute_quantity(sml.quantity, self.uom_id, rounding_method='HALF-UP')
         if float_compare(missing, 0, precision_rounding=self.uom_id.rounding) > 0:
@@ -783,6 +783,52 @@ class ProductCategory(models.Model):
             input_and_output_accounts = category.property_stock_account_input_categ_id | category.property_stock_account_output_categ_id
             if valuation_account and valuation_account in input_and_output_accounts:
                 raise ValidationError(_('The Stock Input and/or Output accounts cannot be the same as the Stock Valuation account.'))
+
+    @api.model
+    def _create_default_stock_accounts_properties(self):
+        IrProperty = self.env['ir.property']
+        company = self.env.ref('base.main_company')
+        output_field = self.env['ir.model.fields'].search([
+            ('model', '=', 'product.category'),
+            ('name', '=', 'property_stock_account_output_categ_id'),
+        ])
+        output_property = IrProperty.search([
+            ('fields_id', '=', output_field.id),
+            ('res_id', '=', False),
+            ('company_id', '=', company.id),
+        ])
+        if not output_property:
+            IrProperty._load_records([{
+                'xml_id': 'stock_account.property_stock_account_output_categ_id',
+                'noupdate': True,
+                'values': {
+                    'name': 'property_stock_account_output_categ_id',
+                    'fields_id': output_field.id,
+                    'value': False,
+                    'company_id': company.id,
+                },
+            }])
+
+        input_field = self.env['ir.model.fields'].search([
+            ('model', '=', 'product.category'),
+            ('name', '=', 'property_stock_account_input_categ_id'),
+        ])
+        input_property = IrProperty.search([
+            ('fields_id', '=', input_field.id),
+            ('res_id', '=', False),
+            ('company_id', '=', company.id),
+        ])
+        if not input_property:
+            IrProperty._load_records([{
+                'xml_id': 'stock_account.property_stock_account_input_categ_id',
+                'noupdate': True,
+                'values': {
+                    'name': 'property_stock_account_input_categ_id',
+                    'fields_id': input_field.id,
+                    'value': False,
+                    'company_id': company.id,
+                },
+            }])
 
     @api.onchange('property_cost_method')
     def onchange_property_cost(self):

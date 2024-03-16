@@ -612,6 +612,10 @@ class Users(models.Model):
             if user.partner_id.company_id:
                 user.partner_id.company_id = user.company_id
             user.partner_id.active = user.active
+            # Generate employee initals as avatar for internal users without image
+            if not user.image_1920 and not user.share and user.name:
+                user.image_1920 = user.partner_id._avatar_generate_svg()
+
         return users
 
     def _apply_groups_to_existing_employees(self):

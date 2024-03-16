@@ -1499,7 +1499,11 @@ class Picking(models.Model):
                 return action
         return package_id
 
-    def _package_move_lines(self):
+    def _package_move_lines(self, batch_pack=False):
+        # in theory, the picking_type should always be the same (i.e. for batch transfers),
+        # but customizations may bypass it and cause unexpected behavior so we avoid allowing those situations
+        if len(self.picking_type_id) > 1:
+            raise UserError(_("You cannot pack products into the same package when they are from different transfers with different operation types."))
         quantity_move_line_ids = self.move_line_ids.filtered(
             lambda ml:
                 float_compare(ml.quantity, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0 and
