@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,7 @@ msgstr ""
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
 msgid "('Repair Order - %s' % (object.name))"
-msgstr ""
+msgstr "('Lệnh sửa chữa - %s' % (object.name))"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -39,6 +39,11 @@ msgid ""
 "* The 'Repaired' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* Trạng thái 'Mới' được sử dụng khi người dùng đang nhập một lệnh sửa chữa mới và chưa xác nhận.\n"
+"* Trạng thái 'Đã xác nhận' được sử dụng khi người dùng xác nhận lệnh sửa chữa.\n"
+"* Trạng thái 'Đang sửa chữa' được sử dụng khi quá trình sửa chữa đang diễn ra.\n"
+"* Trạng thái 'Đã sửa chữa' được sử dụng khi quá trình sửa chữa hoàn tất.\n"
+"* Trạng thái 'Đã hủy' được sử dụng khi người dùng hủy lệnh sửa chữa."
 
 #. module: repair
 #. odoo-python
@@ -85,22 +90,22 @@ msgstr "<span>Lệnh</span>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<span>Repair Order #:</span>"
-msgstr ""
+msgstr "<span>Lệnh sửa chữa #:</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Customer:</strong>"
-msgstr ""
+msgstr "<strong>Khách hàng:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial:</strong>"
-msgstr ""
+msgstr "<strong>Số lô/sê-ri:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Product:</strong>"
-msgstr ""
+msgstr "<strong>Sản phẩm:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -155,7 +160,7 @@ msgstr "Thêm ghi chú nội bộ."
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_dest_id
 msgid "Added Parts Destination Location"
-msgstr ""
+msgstr "Vị trí đích của linh kiện bổ sung"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
@@ -165,7 +170,7 @@ msgstr "Tất cả"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_parts_available
 msgid "All Parts are available"
-msgstr ""
+msgstr "Mọi linh kiện đều có sẵn"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__allowed_picking_type_ids
@@ -185,7 +190,7 @@ msgstr "Được phép huỷ dự trữ sản phẩm"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_parts_late
 msgid "Any Part is late"
-msgstr ""
+msgstr "Bất kỳ linh kiện nào bị chậm trễ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
@@ -279,7 +284,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Quotation"
-msgstr ""
+msgstr "Tạo báo giá"
 
 #. module: repair
 #. odoo-python
@@ -288,13 +293,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:repair.field_product_template__create_repair
 #, python-format
 msgid "Create Repair"
-msgstr ""
+msgstr "Tạo lệnh sửa chữa"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__is_repairable
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__is_repairable
 msgid "Create Repair Orders from Returns"
-msgstr ""
+msgstr "Tạo lệnh sửa chữa từ phiếu trả hàng"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_product_product__create_repair
@@ -302,6 +307,7 @@ msgstr ""
 msgid ""
 "Create a linked Repair Order on Sale Order confirmation of this product."
 msgstr ""
+"Tạo một Lệnh sửa chữa liên kết khi xác nhận Đơn bán hàng của sản phẩm này."
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
@@ -338,12 +344,12 @@ msgstr "Vị trí đích mặc định"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_recycle_location_dest_id
 msgid "Default Recycle Destination Location"
-msgstr ""
+msgstr "Vị trí đích tái chế mặc định"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_remove_location_dest_id
 msgid "Default Remove Destination Location"
-msgstr ""
+msgstr "Vị trí đích loại bỏ mặc định"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -428,6 +434,8 @@ msgid ""
 "For some of the parts, there is a difference between the initial demand and the actual quantity that was used.<br/>\n"
 "                Are you sure you want to confirm ?"
 msgstr ""
+"Một số linh kiện có sự khác biệt giữa nhu cầu ban đầu và số lượng thực tế được sử dụng.<br/>\n"
+"                Bạn có chắc chắn muốn xác nhận không?"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -484,6 +492,8 @@ msgid ""
 "If ticked, the sales price will be set to 0 for all products transferred "
 "from the repair order."
 msgstr ""
+"Nếu chọn, giá bán sẽ được đặt thành 0 cho tất cả các sản phẩm được chuyển từ"
+" lệnh sửa chữa."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking__is_repairable
@@ -491,6 +501,7 @@ msgstr ""
 msgid ""
 "If ticked, you will be able to directly create repair orders from a return."
 msgstr ""
+"Nếu chọn, bạn sẽ có thể trực tiếp tạo lệnh sửa chữa từ một phiếu trả hàng."
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -557,6 +568,8 @@ msgid ""
 "Latest parts availability status for this RO. If green, then the RO's "
 "readiness status is ready."
 msgstr ""
+"Tình trạng còn hàng mới nhất của linh kiện cho LSC này. Nếu có màu xanh "
+"nghĩa là LSC ở trạng thái sẵn sàng. "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__location_id
@@ -625,7 +638,7 @@ msgstr "Loại hoạt động tiếp theo"
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid "No repair order found. Let's create one!"
-msgstr ""
+msgstr "Không tìm thấy lệnh sửa chữa nào. Hãy tạo mới!"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__0
@@ -645,7 +658,7 @@ msgstr "Không có hàng"
 #, python-format
 msgid ""
 "Note that the warehouses of the return and repair locations don't match!"
-msgstr ""
+msgstr "Lưu ý rằng kho hàng trả lại và vị trí sửa chữa không trùng khớp!"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
@@ -665,7 +678,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_ready
 msgid "Number of Repair Orders to Process"
-msgstr ""
+msgstr "Số lượng lệnh sửa chữa cần tiến hành"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
@@ -685,7 +698,7 @@ msgstr "Số tin nhắn bị gửi lỗi"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__nbr_repairs
 msgid "Number of repairs linked to this picking"
-msgstr ""
+msgstr "Số lượng lệnh sửa chữa liên kết với phiếu lấy hàng này"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__picking_type_id
@@ -707,7 +720,7 @@ msgstr "Thành phần"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_availability_state
 msgid "Parts Availability State"
-msgstr ""
+msgstr "Tình trạng còn hàng của linh kiện"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
@@ -806,12 +819,12 @@ msgstr "Sẵn sàng sửa chữa"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__recycle
 msgid "Recycle"
-msgstr ""
+msgstr "Tái chế"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__recycle_location_id
 msgid "Recycled Parts Destination Location"
-msgstr ""
+msgstr "Vị trí đích của linh kiện được tái chế"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__remove
@@ -821,7 +834,7 @@ msgstr "Xóa"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_location_id
 msgid "Removed Parts Destination Location"
-msgstr ""
+msgstr "Vị trí đích của linh kiện bị loại bỏ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_move__repair_id
@@ -836,12 +849,12 @@ msgstr "Sửa chữa"
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Notes"
-msgstr ""
+msgstr "Ghi chú tái chế"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warehouse__repair_type_id
 msgid "Repair Operation Type"
-msgstr ""
+msgstr "Loại hoạt động sửa chữa"
 
 #. module: repair
 #: model:ir.actions.report,name:repair.action_report_repair_order
@@ -856,7 +869,7 @@ msgstr "Lệnh sữa chữa"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_sale_order__repair_count
 msgid "Repair Order(s)"
-msgstr ""
+msgstr "(Các) lệnh sửa chữa"
 
 #. module: repair
 #. odoo-python
@@ -889,12 +902,12 @@ msgstr "Tham chiếu sửa chữa"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repair_request
 msgid "Repair Request"
-msgstr ""
+msgstr "Yêu cầu sửa chữa"
 
 #. module: repair
 #: model:product.template,name:repair.product_service_order_repair_product_template
 msgid "Repair Services"
-msgstr ""
+msgstr "Dịch vụ sửa chữa"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_tags
@@ -921,7 +934,7 @@ msgstr ""
 #: code:addons/repair/models/stock_lot.py:0
 #, python-format
 msgid "Repair orders of %s"
-msgstr ""
+msgstr "Lệnh sửa chữa của %s"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__done
@@ -931,7 +944,7 @@ msgstr "Đã sửa"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_lot__repaired_count
 msgid "Repaired count"
-msgstr ""
+msgstr "Số lượng đã sửa chữa"
 
 #. module: repair
 #. odoo-python
@@ -979,12 +992,12 @@ msgstr "Trả hàng"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__picking_id
 msgid "Return Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "Phiếu trả hàng chứa sản phẩm cần sửa chữa."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__return_type_of_ids
 msgid "Return Type Of"
-msgstr ""
+msgstr "Loại trả hàng của"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_returned
@@ -1011,12 +1024,12 @@ msgstr "Dòng đơn bán hàng"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_line_id
 msgid "Sale Order Line from which the Repair Order comes from."
-msgstr ""
+msgstr "Dòng đơn bán hàng hình thành nên Lệnh sửa chữa này."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
 msgid "Sale Order from which the Repair Order comes from."
-msgstr ""
+msgstr "Đơn bán hàng hình thành nên Lệnh sửa chữa này."
 
 #. module: repair
 #: model:ir.model,name:repair.model_sale_order
@@ -1043,7 +1056,7 @@ msgstr "Tìm Lệnh Sửa chữa"
 #: code:addons/repair/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence repair"
-msgstr ""
+msgstr "Sửa chữa theo thứ tự"
 
 #. module: repair
 #. odoo-python
@@ -1057,7 +1070,7 @@ msgstr ""
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for product to repair : %s"
-msgstr ""
+msgstr "Cần có số sê-ri để sửa chữa sản phẩm: %s"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1176,6 +1189,8 @@ msgid ""
 "This is the default recycle destination location when you create a repair "
 "order with this operation type."
 msgstr ""
+"Đây là vị trí đích tái chế mặc định khi bạn tạo lệnh sửa chữa với loại hoạt "
+"động này."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_remove_location_dest_id
@@ -1183,6 +1198,8 @@ msgid ""
 "This is the default remove destination location when you create a repair "
 "order with this operation type."
 msgstr ""
+"Đây là vị trí đích loại bỏ mặc định khi bạn tạo lệnh sửa chữa với loại hoạt "
+"động này."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
@@ -1193,12 +1210,12 @@ msgstr "Đây là vị trí mà sản phẩm cần sửa chữa được đặt.
 #: model:ir.model.fields,help:repair.field_repair_order__parts_location_id
 #: model:ir.model.fields,help:repair.field_repair_order__recycle_location_id
 msgid "This is the location where the repair parts are located."
-msgstr ""
+msgstr "Đây là vị trí lưu giữ linh kiện sửa chữa."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_dest_id
 msgid "This is the location where the repaired product is located."
-msgstr ""
+msgstr "Đây là vị trí lưu giữ sản phẩm cần sửa chữa."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
@@ -1226,6 +1243,8 @@ msgid ""
 "True if this repair is linked to a Return Order and the order is 'Done'. "
 "False otherwise."
 msgstr ""
+"Đúng nếu lệnh sửa chữa này liên kết với một Phiếu trả hàng và trạng thái là "
+"'Xong'. Sai nếu khác điều kiện đã nêu."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_move__repair_line_type
@@ -1248,7 +1267,7 @@ msgstr "Loại hoạt động ngoại lệ trong tập dữ liệu."
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_warn_uncomplete_move
 #, python-format
 msgid "Uncomplete Move(s)"
-msgstr ""
+msgstr "(Các) dịch chuyển chưa hoàn thành"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__under_repair
@@ -1258,7 +1277,7 @@ msgstr "Đang sửa chữa"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__under_warranty
 msgid "Under Warranty"
-msgstr ""
+msgstr "Đang được bảo hành"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_uom_name
@@ -1301,7 +1320,7 @@ msgstr "Cảnh báo không đủ số lượng sửa chữa"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_warn_uncomplete_move
 msgid "Warn Uncomplete Move(s)"
-msgstr ""
+msgstr "Cảnh báo (các) dịch chuyển chưa hoàn thành"
 
 #. module: repair
 #. odoo-python
@@ -1332,7 +1351,7 @@ msgstr "Bạn không thể nhập số lượng nhỏ hơn 0."
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot cancel a Repair Order that's already been completed"
-msgstr ""
+msgstr "Bạn không thể hủy Lệnh sửa chữa đã hoàn thành"
 
 #. module: repair
 #. odoo-python
@@ -1342,6 +1361,8 @@ msgid ""
 "You cannot create a quotation for a repair order that is already linked to an existing sale order.\n"
 "Concerned repair order(s) :\n"
 msgstr ""
+"Bạn không thể tạo báo giá cho lệnh sửa chữa đã liên kết với một đơn bán hàng hiện có.\n"
+"(Các) lệnh sửa chữa liên quan:\n"
 
 #. module: repair
 #. odoo-python
@@ -1351,6 +1372,8 @@ msgid ""
 "You need to define a customer for a repair order in order to create an associated quotation.\n"
 "Concerned repair order(s) :\n"
 msgstr ""
+"Để tạo báo giá cho một lệnh sửa chữa, bạn cần xác định khách hàng cho lệnh sửa chữa này.\n"
+"(Các) lệnh sửa chữa liên quan:\n"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view

@@ -3,9 +3,8 @@
 # 	* mail
 # 
 # Translators:
-# Wil Odoo, 2023
-# Martin Trigaux, 2024
 # Jolien De Paepe, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Jolien De Paepe, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -124,6 +123,13 @@ msgstr "%(user_name)s vous a invité à suivre un nouveau document."
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+#, python-format
+msgid "%(user_name)s pinned a message to this channel."
+msgstr "%(user_name)s a épinglé un message à ce canal."
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/ir_mail_server.py:0
 #, python-format
 msgid "%s (Email Template)"
@@ -138,14 +144,14 @@ msgstr "%s (copie)"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/out_of_focus_service.js:0
+#: code:addons/mail/static/src/core/web/out_of_focus_service_patch.js:0
 #, python-format
 msgid "%s Message"
 msgstr "%s Message"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/out_of_focus_service.js:0
+#: code:addons/mail/static/src/core/web/out_of_focus_service_patch.js:0
 #, python-format
 msgid "%s Messages"
 msgstr "%s Messages"
@@ -2433,6 +2439,7 @@ msgstr "Délai en unité"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/link_preview_confirm_delete.xml:0
 #: code:addons/mail/static/src/core/common/message.xml:0
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.xml:0
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.xml:0
@@ -2445,6 +2452,13 @@ msgstr "Supprimer"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete
 msgid "Delete Emails"
 msgstr "Supprimer les emails"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/link_preview_confirm_delete.xml:0
+#, python-format
+msgid "Delete all previews"
+msgstr "Supprimer tous les aperçus"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__exception
@@ -2619,13 +2633,6 @@ msgid "Do you really want to delete this preview?"
 msgstr "Voulez-vous réellement supprimer cet aperçu ?"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message.js:0
-#, python-format
-msgid "Don't show Original Email"
-msgstr "Ne pas afficher l'email original"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Document"
@@ -2651,6 +2658,13 @@ msgstr "Nom du document"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "Document: \""
 msgstr "Document: \""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message.js:0
+#, python-format
+msgid "Don't show Original Email"
+msgstr "Ne pas afficher l'email original"
 
 #. module: mail
 #. odoo-javascript
@@ -3170,8 +3184,14 @@ msgstr "Impossible de charger des gifs..."
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Failed to render QWeb template: %(template_src)s)"
-msgstr "Échec de rendu du modèle QWeb : %(template_src)s)"
+msgid ""
+"Failed to render QWeb template: %(template_src)s\n"
+"\n"
+"%(template_traceback)s)"
+msgstr ""
+"Échec du rendu du modèle QWeb : %(template_src)s\n"
+"\n"
+"%(template_traceback)s)"
 
 #. module: mail
 #. odoo-python
@@ -4758,8 +4778,8 @@ msgstr "Étape longue :"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #, python-format
-msgid "Logged in as"
-msgstr "Connecté en tant que"
+msgid "Logged in as %s"
+msgstr "Connecté en tant que %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -5607,6 +5627,13 @@ msgid "No message_id found in context"
 msgstr "Aucun message_id trouvé dans le contexte"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/chatter.js:0
+#, python-format
+msgid "No recipient"
+msgstr "Aucun destinataire"
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 #, python-format
@@ -5904,13 +5931,6 @@ msgstr "Hors ligne"
 #, python-format
 msgid "Offline -"
 msgstr "Hors ligne -"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/link_preview_confirm_delete.xml:0
-#, python-format
-msgid "Ok"
-msgstr "Ok"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_char
@@ -9546,6 +9566,13 @@ msgid "Your name"
 msgstr "Votre nom"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/recipient_list.js:0
+#, python-format
+msgid "[%(name)s] (no email address)"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
@@ -10023,13 +10050,6 @@ msgid "unknown target model %s"
 msgstr "modèle cible inconnu %s"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-#, python-format
-msgid "user_name"
-msgstr "user_name"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/command_palette.js:0
 #, python-format
@@ -10057,17 +10077,3 @@ msgstr "semaines"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "{{ object.partner_id.lang }}"
 msgstr "{{ object.partner_id.lang }}"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/link_preview_confirm_delete.xml:0
-#, python-format
-msgid "Delete all previews"
-msgstr "Supprimer tous les aperçus"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/chatter.js:0
-#, python-format
-msgid "No recipient"
-msgstr "Aucun destinataire"
