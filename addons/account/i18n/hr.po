@@ -22,7 +22,6 @@
 # Ana-Maria Olujić <ana-maria.olujic@slobodni-programi.hr>, 2022
 # Davor Bojkić <davor.bojkic@storm.hr>, 2022
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
-# Vladimir Vrgoč, 2023
 # Goran Kliska <gkliska@gmail.com>, 2023
 # Antonijo Kovacevic, 2023
 # Matija Gudlin, 2023
@@ -32,6 +31,7 @@
 # Martin Trigaux, 2024
 # Bole <bole@dajmi5.com>, 2024
 # Matej Mijoč, 2024
+# Vladimir Vrgoč, 2024
 # 
 msgid ""
 msgstr ""
@@ -39,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Matej Mijoč, 2024\n"
+"Last-Translator: Vladimir Vrgoč, 2024\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4773,7 +4773,7 @@ msgstr "Trenutni saldo"
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__liability_current
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__liability_current
 msgid "Current Liabilities"
-msgstr "Obveze"
+msgstr "Tekuće obveze"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__current_statement_balance
@@ -10811,6 +10811,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Please first define a fiscal country for company %s."
@@ -16038,6 +16047,13 @@ msgstr ""
 msgid ""
 "You cannot create a move already in the posted state. Please create a draft "
 "move and post it after."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
 msgstr ""
 
 #. module: account
