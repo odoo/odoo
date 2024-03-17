@@ -264,7 +264,10 @@ export class SearchBar extends Component {
         let domain = [];
         if (searchItem.domain) {
             try {
-                domain = new Domain(searchItem.domain).toList();
+                domain = new Domain(searchItem.domain).toList({
+                    self: query.trim(),
+                    raw_value: query,
+                });
             } catch {
                 // Pass
             }
