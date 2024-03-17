@@ -43,6 +43,7 @@
 # Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
 # Paweł Wodyński <pw@myodoo.pl>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# MAHAMADASIF ANSARI, 2024
 # 
 msgid ""
 msgstr ""
@@ -50,7 +51,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:28+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Last-Translator: MAHAMADASIF ANSARI, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19753,6 +19754,16 @@ msgstr "Komunikat o błędzie zwracany w przypadku naruszenia ograniczenia."
 
 #. module: base
 #. odoo-python
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -23192,6 +23203,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Nieprawidłowy parametr \"grupuj według\""
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
@@ -23338,6 +23355,15 @@ msgstr "Niepoprawny typ"
 #, python-format
 msgid "Invalid value for %s.%s: %s"
 msgstr "Nieprawidłowa wartość dla %s.%s: %s"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -26005,7 +26031,7 @@ msgstr "Nazwa"
 msgid ""
 "Name or id %(name_or_id)r in %(use)s must be present in view but is missing."
 msgstr ""
-"Nazwa lub identyfikator %((name_or_id)r w %(use)s musi być obecny w widoku, "
+"Nazwa lub identyfikator %(name_or_id)r w %(use)s musi być obecny w widoku, "
 "ale go nie ma."
 
 #. module: base
@@ -37779,6 +37805,14 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid ""
+"You cannot archive the language in which Odoo was setup as it is used by "
+"automated processes."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."

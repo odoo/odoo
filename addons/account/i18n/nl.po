@@ -9,9 +9,9 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2023
 # Dylan Kiss, 2023
 # Martin Trigaux, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Jolien De Paepe, 2024
 # Wil Odoo, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-05 09:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10621,6 +10621,17 @@ msgstr "Installeer de boekhouding voor deze functie"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"De geselecteerde betaalmethode is niet beschikbaar voor deze betaling. "
+"Selecteer de betaalmethode opnieuw."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
@@ -16059,6 +16070,13 @@ msgid ""
 msgstr ""
 "Je kunt geen boeking maken die al in de geboekte staat is. Maak een "
 "conceptboeking en boek deze daarna."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr "Je kunt geen recursieve groepen maken."
 
 #. module: account
 #. odoo-python
