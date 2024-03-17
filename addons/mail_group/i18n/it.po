@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
-# Marianna Ciofani, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2024
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2024\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,14 +89,14 @@ msgstr ""
 msgid ""
 "<div>\n"
 "                <p>Hello <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
-"                <p>Please find below the guidelines of the {{ object.mail_group_id.name }} mailing list.</p>\n"
+"                <p>Please find below the guidelines of the <t t-out=\"object.mail_group_id.name\"></t> mailing list.</p>\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
 "            </div>\n"
 "        "
 msgstr ""
 "<div>\n"
 "                <p>Ciao <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
-"                <p>di seguito trovi le linee guida per la mailing list {{ object.mail_group_id.name }}.</p>\n"
+"                <p>di seguito trovi le linee guida relative alla <t t-out=\"object.mail_group_id.name\"></t>lista di distribuzione.</p>\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
 "            </div>\n"
 "        "

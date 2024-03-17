@@ -3344,6 +3344,8 @@ msgid ""
 "\n"
 "Add Subcontracting information in Cost Analysis Report and The Production Analysis\n"
 msgstr ""
+"\n"
+"Lägg till information om underleverantörer i kostnadsanalysrapporten och produktionsanalysen\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract_reports
@@ -3590,6 +3592,8 @@ msgid ""
 "\n"
 "Adds an action to sign documents attached to tasks.\n"
 msgstr ""
+"\n"
+"Lägger till en åtgärd för att signera dokument som bifogats uppgifter.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_fleet
@@ -3617,6 +3621,8 @@ msgid ""
 "\n"
 "Adds the ability to set workspace templates on products.\n"
 msgstr ""
+"\n"
+"Lägger till möjligheten att ange mallar för arbetsytor på produkter.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip_crm
@@ -5264,6 +5270,14 @@ msgid ""
 "\n"
 "Includes automations to easily predict the withholding tax to be applied to each purchase invoice\n"
 msgstr ""
+"\n"
+"EDI lokalisering till Ecuador\n"
+"===========================\n"
+"Lägger till elektroniska dokument med sin XML, RIDE, med elektronisk signatur och direkt anslutning till skattemyndigheten SRI,\n"
+"\n"
+"De dokument som stöds är fakturor, kreditnotor, debetnotor, inköpslikvider och innehållanden\n"
+"\n"
+"Inkluderar automatiseringar för att enkelt förutsäga den källskatt som ska tillämpas på varje inköpsfaktura\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -6286,6 +6300,8 @@ msgid ""
 "\n"
 "Helpdesk integration with knowledge\n"
 msgstr ""
+"\n"
+"Integration av helpdesk med kunskap\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_holidays
@@ -6293,6 +6309,8 @@ msgid ""
 "\n"
 "Helpdesk integration with time off\n"
 msgstr ""
+"\n"
+"Integration av helpdesk med ledighet\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hk_hr_payroll
@@ -7337,6 +7355,21 @@ msgid ""
 "of recall defined. You can define different policies for different companies.\n"
 "\n"
 msgstr ""
+"\n"
+"Modul för att automatisera brev för obetalda fakturor, med återkallelser på flera nivåer.\n"
+"=========================================================================\n"
+"\n"
+"Du kan definiera dina flera nivåer av återkallelse via menyn:\n"
+"---------------------------------------------------------------\n"
+"    Konfiguration / Uppföljning / Uppföljningsnivåer\n"
+"\n"
+"När det har definierats kan du automatiskt skriva ut återkallelser varje dag genom att helt enkelt klicka på menyn:\n"
+"------------------------------------------------------------------------------------------------------\n"
+"    Betalningsuppföljning / Skicka e-post och brev\n"
+"\n"
+"Det kommer att generera en PDF / skicka e-post / ställa in aktiviteter enligt de olika nivåerna\n"
+"av återkallelse definierade. Du kan definiera olika policyer för olika företag.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_camt
@@ -7538,6 +7571,9 @@ msgid ""
 "Module to import SODA files.\n"
 "======================================\n"
 msgstr ""
+"\n"
+"Modul för import av SODA-filer.\n"
+"======================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip_onsip
@@ -8699,6 +8735,9 @@ msgid ""
 "Take into account the working schedule (sick leaves, part time, ...) of employees when scheduling appointments\n"
 "--------------------------------------------------------------------------------------------------------------\n"
 msgstr ""
+"\n"
+"Ta hänsyn till medarbetarnas arbetsschema (sjukfrånvaro, deltid, ...) vid schemaläggning av möten\n"
+"--------------------------------------------------------------------------------------------------------------\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_tcs_tds
@@ -19271,7 +19310,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl_edi_exports
 msgid "Electronic Exports of Goods for Chile"
-msgstr ""
+msgstr "Elektronisk export av varor för Chile"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_pe_edi
@@ -23260,6 +23299,8 @@ msgid ""
 "Invalid value for %s.%s: %s is out of bounds (integers should be between "
 "-2,147,483,648 and 2,147,483,647)"
 msgstr ""
+"Ogiltigt värde för %s.%s: %s är utanför gränserna (heltal ska vara mellan "
+"-2,147,483,648 och 2,147,483,647)"
 
 #. module: base
 #. odoo-python
@@ -23595,7 +23636,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_hr_payroll_account
 msgid "Kenya - Payroll with Accounting"
-msgstr ""
+msgstr "Kenya - Löner med redovisning"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_tremol
@@ -24292,7 +24333,7 @@ msgstr "Länkmodul mellan pos_hr och pos_restaurant"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_pos_sale
 msgid "Link module between pos_sale and l10n_be"
-msgstr ""
+msgstr "Länkmodul mellan pos_sale och l10n_be"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale_loyalty
@@ -34931,6 +34972,12 @@ msgid ""
 "For example, __import__, resulting in the external id "
 "__import__.%(record_id)s."
 msgstr ""
+"Posten %(xml_id)s har modulprefixet %(module_name)s. Detta är delen före "
+"\".\" i det externa id:t. Eftersom prefixet hänvisar till en befintlig modul"
+" skulle posten tas bort när modulen uppgraderas. Använd antingen inget "
+"prefix och ingen punkt eller ett prefix som inte är en befintlig modul. Till"
+" exempel __import__, vilket resulterar i det externa id:t "
+"__import__.%(record_id)s."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__company_registry
@@ -36618,7 +36665,7 @@ msgstr "Använd IoT-enheter för leveranser"
 #. module: base
 #: model:ir.module.module,summary:base.module_appointment_sms
 msgid "Use SMS reminders for appointment meetings"
-msgstr ""
+msgstr "Använd SMS-påminnelser för avtalade möten"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__barcode
@@ -37230,7 +37277,7 @@ msgstr "WMS bokföring"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_stock_account
 msgid "WMS Accounting Merge"
-msgstr ""
+msgstr "Sammanslagning av WMS-redovisning"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_landed_costs
@@ -37251,7 +37298,7 @@ msgstr "Lagerhantering: bulköverföring"
 #: model:ir.module.module,description:base.module_data_merge_stock_account
 #: model:ir.module.module,summary:base.module_data_merge_stock_account
 msgid "Warn user in case of products merging"
-msgstr ""
+msgstr "Varna användaren vid sammanslagning av produkter"
 
 #. module: base
 #. odoo-python
@@ -37341,12 +37388,12 @@ msgstr "Webb Gantt"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_web_gantt
 msgid "Web Gantt Tests"
-msgstr ""
+msgstr "Webbtester av Gantt"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_web_gantt
 msgid "Web Gantt Tests: Tests specific to the gantt view"
-msgstr ""
+msgstr "Tester för Web Gantt: Tester som är specifika för gantt-vyn"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_web_grid
@@ -37408,7 +37455,7 @@ msgstr "Webbplats - Betalning Paypal"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_appointment_crm
 msgid "Website Appointment Lead Enrichment"
-msgstr ""
+msgstr "Webbplatsutnämning Lead Enrichment"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_appointment
@@ -37505,7 +37552,7 @@ msgstr "Webbplatsens anslagstavla för försäljning"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides_forum
 msgid "Website Slides Forum Helpdesk"
-msgstr ""
+msgstr "Webbplats Slides Forum Helpdesk"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides
@@ -37714,7 +37761,7 @@ msgstr "Arbetsuppgifter"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract_attendance
 msgid "Work Entries - Attendance"
-msgstr ""
+msgstr "Arbetsposter - Närvaro"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract
@@ -37729,7 +37776,7 @@ msgstr "Arbetsuppgifter - Kontraktsföretag"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract_planning
 msgid "Work Entries - Planning"
-msgstr ""
+msgstr "Arbetsposter - Planering"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder
@@ -37958,6 +38005,8 @@ msgid ""
 "You cannot archive the language in which Odoo was setup as it is used by "
 "automated processes."
 msgstr ""
+"Du kan inte arkivera det språk som Odoo installerades på eftersom det "
+"används av automatiserade processer."
 
 #. module: base
 #. odoo-python
@@ -38473,7 +38522,7 @@ msgstr "Leveranser för webbshop"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_renting
 msgid "eCommerce Rental"
-msgstr ""
+msgstr "E-handel med uthyrning"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_renting_comparison
@@ -38483,12 +38532,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_renting_product_configurator
 msgid "eCommerce Rental with Product Configurator"
-msgstr ""
+msgstr "E-handelsuthyrning med produktkonfigurator"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock_renting
 msgid "eCommerce Rental with Stock Management"
-msgstr ""
+msgstr "E-handelsuthyrning med lagerhantering"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_renting_wishlist
@@ -38498,7 +38547,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_subscription
 msgid "eCommerce Subscription"
-msgstr ""
+msgstr "Prenumeration e-handel"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_elearning
@@ -38623,7 +38672,7 @@ msgstr "json"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_pos_sale
 msgid "l10n_be_pos_sale"
-msgstr ""
+msgstr "l10n_be_pos_sale"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_stock_ddt

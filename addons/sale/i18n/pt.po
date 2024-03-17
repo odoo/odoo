@@ -764,6 +764,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"De acordo com a configuração do produto, a quantidade entregue pode ser automaticamente calculada pelo mecanismo:\n"
+"  - Manual: a quantidade é definida manualmente nas linhas,\n"
+"  - Analítica das Despesas: a quantidade é a soma das quantidades das despesas registadas\n"
+"  - Folha de Tempos: a quantidade é a soma de horas registadas nas tarefas vinculadas a esta linha de vendas\n"
+"  - Movimentos de Inventário: a quantidade resulta das operações de recolha confirmadas\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__acc_number
@@ -2380,7 +2385,7 @@ msgstr "Método"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Método para atualizar as qtds. entregues"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
@@ -3286,7 +3291,7 @@ msgstr "Ordem de Venda"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
-msgstr ""
+msgstr "Número de Ordens de Venda"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale

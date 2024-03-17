@@ -3686,7 +3686,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__early_pay_discount_computation
 msgid "Cash Discount Tax Reduction"
-msgstr ""
+msgstr "Rahalise soodustuse maksuvähendus"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_early_pay_discount_gain_account_id
@@ -3853,7 +3853,7 @@ msgstr "Kontoplaan"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__coa
 msgid "Chart of Accounts Matches"
-msgstr ""
+msgstr "Kontoplaan vastab"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_list
@@ -5983,7 +5983,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
 msgid "EU Intra-community Distance Selling"
-msgstr ""
+msgstr "Ühendusesisene müük "
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_EXW
@@ -7181,7 +7181,7 @@ msgstr "Ikoon, mis näitab erandi tegevust"
 msgid ""
 "If a payment is still outstanding more than sixty (60) days after the due "
 "payment date,"
-msgstr ""
+msgstr "Kui makse on hilinenud rohkem kui 60 päeva pärast maksetähtaega, "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_needaction
@@ -7650,7 +7650,7 @@ msgstr "Kasutatud on vahekontot omavaheliste maksete liigutamiseks. "
 #: model:ir.model.fields,help:account.field_res_company__transfer_account_id
 msgid ""
 "Intermediary account used when moving money from a liqity account to another"
-msgstr ""
+msgstr "Kasutatakse vahekontot omavaheliste maksete sooritamiseks"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__internal_group
@@ -8434,7 +8434,7 @@ msgstr "Andmike kanderead, kus vastavuse number on määramata"
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Journal should be the same type as the reversed entry."
-msgstr ""
+msgstr "Kandel peab olema sama tüüp nagu pöördkandel."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
@@ -8842,7 +8842,7 @@ msgstr "Jäta tühjaks et anda arve üle müügiinimesele."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Leave empty to use the default outstanding account"
-msgstr ""
+msgstr "Vaikimisi konto kasutamiseks jätke väli tühjaks"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -10989,6 +10989,15 @@ msgstr "Määra palun maksemeetodi rida enda maksele."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Please first define a fiscal country for company %s."
@@ -12773,6 +12782,8 @@ msgid ""
 "Some payment methods supposed to be unique already exists somewhere else.\n"
 "(%s)"
 msgstr ""
+"Maksemeetodid on juba kasutusel mujal.\n"
+"(%s)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__bank_bic
@@ -13059,7 +13070,7 @@ msgstr "Vahekonto"
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
 msgid "Switch into invoice/credit note"
-msgstr ""
+msgstr "Muuda arveks/kreeditarveks"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__end_month
@@ -14167,6 +14178,7 @@ msgstr ""
 msgid ""
 "The move could not be posted for the following reason: %(error_message)s"
 msgstr ""
+"Valitud tegevust ei saa postitada järgmisel põhjusel: %(error_message)s"
 
 #. module: account
 #. odoo-javascript
@@ -14184,6 +14196,9 @@ msgid ""
 " Please change the journal entry date or the tax lock date set in the "
 "settings (%s) to proceed."
 msgstr ""
+"Valitud tegevus on keelatud, kuna mõjutab juba esitatud maksuaruannet. Palun"
+" muuda kande kuupäeva või maksude sulgemise kuupäeva seadistuses,  (%s) et "
+"jätkata."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id
@@ -14213,6 +14228,7 @@ msgstr ""
 #, python-format
 msgid "The partner cannot be deleted because it is used in Accounting"
 msgstr ""
+"Valitud partner on kasutusel raamatupidamises ja seda ei saa kustutada. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -14734,7 +14750,7 @@ msgstr "Seda kontot kasutatakse kliendiarve kinnitamisel."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This action isn't available for this document."
-msgstr ""
+msgstr "Valitud tegevus ei ole selle dokumendi jaoks saadaval. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14885,7 +14901,7 @@ msgstr "See kanne kinnitatakse kuupäeval: %(date)s"
 #: code:addons/account/static/src/components/account_move_service/account_move_service.js:0
 #, python-format
 msgid "This operation will create a gap in the sequence."
-msgstr ""
+msgstr "Valitud toiming loob järjestuses lünga."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete
@@ -15958,7 +15974,7 @@ msgstr "Kirjuta ettevõtte nimi <b>loo üks</b> või <b>vaata soovitusi</b>."
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Write here <b>your own email address</b> to test the flow."
-msgstr ""
+msgstr "Sisestage siia<b>oma e-maili aadress</b> töövoo testimiseks."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
@@ -16294,6 +16310,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr "Korduvaid gruppe ei saa luua."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -16306,7 +16329,7 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot delete a tax line as it would impact the tax report"
-msgstr ""
+msgstr "Maksu rida ei saa kustutada, kuna see mõjutab maksuaruannet"
 
 #. module: account
 #. odoo-python
@@ -16399,6 +16422,8 @@ msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
 "type. (accounts: %s)"
 msgstr ""
+"Tüübil \"Jooksva aasta kasum\" ei saa olla rohkem kui üks konto. (kontod: "
+"%s)"
 
 #. module: account
 #. odoo-python
@@ -16415,7 +16440,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot merge accounts."
-msgstr ""
+msgstr "Valitud kontosid ei saa ühendada. "
 
 #. module: account
 #. odoo-python
@@ -16444,6 +16469,8 @@ msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
 msgstr ""
+"Postitatud kanderidadel ei ole võimalik muuta makse. Maksude muutmiseks "
+"lähtesta andmiku kanne mustandisse. "
 
 #. module: account
 #. odoo-python
@@ -16452,7 +16479,7 @@ msgstr ""
 msgid ""
 "You cannot overwrite the values ensuring the inalterability of the "
 "accounting."
-msgstr ""
+msgstr "Väärtuseid ei saa üle kirjutada."
 
 #. module: account
 #. odoo-python
@@ -16468,7 +16495,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
-msgstr ""
+msgstr "Arhiveeritud andmikusse ei saa postitada kandeid (%(journal)s)"
 
 #. module: account
 #. odoo-python
@@ -16478,6 +16505,8 @@ msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
 "already been used to make accounting entries."
 msgstr ""
+"Juba raamatupidamises kasutatud valuutakursil ei ole võimalik vähendada "
+"komakohti, "
 
 #. module: account
 #. odoo-python
@@ -16511,14 +16540,14 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft a tax cash basis journal entry."
-msgstr ""
+msgstr "Sa ei saa lähtestada mustandisse kassapõhist kannet."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft an exchange difference journal entry."
-msgstr ""
+msgstr "Valuutakursi erinevuse kannet ei saa lähtestada mustandiks. "
 
 #. module: account
 #. odoo-python
@@ -16528,6 +16557,7 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
+"Kontole ei saa valuutat määrata, kuna mõnel kandel on juba teine valuuta."
 
 #. module: account
 #. odoo-python
@@ -16543,7 +16573,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot switch the type of a posted document."
-msgstr ""
+msgstr "Postitatud dokumendil ei saa tüüpi muuta. "
 
 #. module: account
 #. odoo-python
@@ -16557,7 +16587,7 @@ msgstr "Te ei saa kasutada mittesoovitatavat kontot."
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot use taxes on lines with an Off-Balance account"
-msgstr ""
+msgstr "Bilansivälistel kontodel ei saa makse kasutada"
 
 #. module: account
 #. odoo-python
@@ -16567,6 +16597,8 @@ msgid ""
 "You cannot use this account (%s) in this journal, check the field 'Allowed "
 "Journals' on the related account."
 msgstr ""
+"Valitud kontot (%s) ei saa kasutada selles andmikus, kontrolli välja  "
+"'Lubatud Andmikud' seotud kontol."
 
 #. module: account
 #. odoo-python
