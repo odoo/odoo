@@ -322,6 +322,10 @@ class MailActivity(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         activities = super(MailActivity, self).create(vals_list)
+        # in some cases we generate a lot of activities through various jobs like
+        # calendar sync, appraisal, ... -> skip all side effects that may be noisy
+        if self.env.context.get('mail_activity_quick_generation'):
+            return activities
 
         # find partners related to responsible users, separate readable from unreadable
         if any(user != self.env.user for user in activities.user_id):
