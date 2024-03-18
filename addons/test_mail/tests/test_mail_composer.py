@@ -209,6 +209,37 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.composition_mode, 'mass_mail')
         self.assertEqual(composer_form.model, self.test_records._name)
 
+    @users('employee')
+    def test_mail_composer_template_switching(self):
+        """ Ensure that the current user's identity serves as the sender,
+        particularly when transitioning from a template with a designated sender to one lacking such specifications.
+        Moreover, we verify that switching to a template lacking any subject maintains the existing subject intact. """
+        # Setup: Prepare Templates
+        template_complete = self.template.copy({
+            "email_from": "not_current_user@template_complete.com",
+            "subject": "subject: template_complete",
+        })
+        template_no_sender = template_complete.copy({"email_from": ""})
+        template_no_subject = template_no_sender.copy({"subject": ""})
+        form = Form(self.env["mail.compose.message"])
+
+        for composition_mode in ["comment", "mass_mail"]:
+            with self.subTest(composition_mode=composition_mode):
+                form.composition_mode = form.composition_mode
+
+                # Use Template with Sender and Subject
+                form.template_id = template_complete
+                self.assertEqual(form.email_from, template_complete.email_from, "email_from not set correctly to form this test")
+                self.assertEqual(form.subject, template_complete.subject, "subject not set correctly to form this test")
+
+                # Switch to Template without Sender
+                form.template_id = template_no_sender
+                self.assertEqual(form.email_from, self.env.user.email_formatted, "email_from not updated to current user")
+
+                # Switch to Template without Subject
+                form.template_id = template_no_subject
+                self.assertEqual(form.subject, template_complete.subject, "subject should be kept unchanged")
+
 
 @tagged('mail_composer')
 class TestComposerInternals(TestMailComposer):
