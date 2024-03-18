@@ -89,8 +89,7 @@ class MassMailing(models.Model):
              'Keep it empty if you prefer the first characters of your email content to appear instead.')
     email_from = fields.Char(
         string='Send From',
-        compute='_compute_email_from', readonly=False, required=True, store=True,
-        default=lambda self: self.env.user.email_formatted)
+        compute='_compute_email_from', readonly=False, required=True, store=True, precompute=True)
     favorite = fields.Boolean('Favorite', copy=False, tracking=True)
     favorite_date = fields.Datetime(
         'Favorite Date',
@@ -252,12 +251,12 @@ class MassMailing(models.Model):
         for mailing in self:
             mailing.ab_testing_is_winner_mailing = mailing.campaign_id.ab_testing_winner_mailing_id == mailing
 
-    @api.depends('mail_server_id')
+    @api.depends('mail_server_id', 'create_uid')
     def _compute_email_from(self):
-        user_email = self.env.user.email_formatted
         notification_email = self.env['ir.mail_server']._get_default_from_address()
 
         for mailing in self:
+            user_email = mailing.create_uid.email_formatted or self.env.user.email_formatted
             server = mailing.mail_server_id
             if not server:
                 mailing.email_from = mailing.email_from or user_email
