@@ -702,3 +702,46 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         sale_line = self.env['sale.order.line'].browse(sale_line_id)
         self.assertEqual(sale_line.product_id, product_service, 'The created SOL should use the right product.')
         self.assertTrue(product_service.name in sale_line_name, 'The created SOL should use the full name of the product and not just what was typed.')
+
+    def test_sale_order_items_of_the_project_status(self):
+        """
+        Checks that the sale order items appearing in the project status display every
+        sale.order.line referrencing a product ignores the notes and sections
+        """
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Project X',
+            'plan_id': self.env.ref('analytic.analytic_plan_projects').id,
+        })
+        project = self.env['project.project'].create({
+            'name': 'Project X',
+            'partner_id': self.partner.id,
+            'allow_billable': True,
+            'analytic_account_id': analytic_account.id,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'project_id': project.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_order_service1.id,
+                    'product_uom_qty': 1,
+                }),
+                Command.create({
+                    'name': "Section",
+                    'display_type': "line_section",
+                }),
+                Command.create({
+                    'name': "notes",
+                    'display_type': "line_section",
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+            'analytic_account_id': analytic_account.id,
+        })
+        relevant_sale_order_lines = sale_order.order_line.filtered(lambda sol: sol.product_id)
+        reported_sale_order_lines = self.env['sale.order.line'].search(project.action_view_sols()['domain'])
+        self.assertEqual(project.sale_order_line_count, 2)
+        self.assertEqual(relevant_sale_order_lines, reported_sale_order_lines)
