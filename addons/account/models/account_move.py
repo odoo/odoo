@@ -4273,18 +4273,15 @@ class AccountMove(models.Model):
                 _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
                 continue
 
-            # Retrieve res.partner that executed the Send & Print wizard
-            sp_partner_ids = set(moves.mapped(lambda move: move.send_and_print_values.get('sp_partner_id')))
-            sp_partners = self.env['res.partner'].browse(sp_partner_ids)
-            moves_map = {
-                partner: moves.filtered(lambda m: m.send_and_print_values['sp_partner_id'] == partner.id)
-                for partner in sp_partners
-            }
+            # Collect moves by res.partner that executed the Send & Print wizard, must be done before the _process
+            # that modify send_and_print_values.
+            moves_by_partner = moves.grouped(lambda m: m.send_and_print_values['sp_partner_id'])
 
             self.env['account.move.send']._process_send_and_print(moves)
 
             notifications = []
-            for partner, partner_moves in moves_map.items():
+            for partner_id, partner_moves in moves_by_partner.items():
+                partner = self.env['res.partner'].browse(partner_id)
                 partner_moves_error = partner_moves.filtered(lambda m: m.send_and_print_values and m.send_and_print_values.get('error'))
                 if partner_moves_error:
                     notifications.append(get_account_notification(partner, partner_moves_error, False))
