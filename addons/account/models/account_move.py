@@ -7,8 +7,8 @@ from hashlib import sha256
 from json import dumps
 import logging
 from markupsafe import Markup
-from psycopg2 import OperationalError
 import math
+import psycopg2
 import re
 from textwrap import shorten
 
@@ -4269,11 +4269,9 @@ class AccountMove(models.Model):
                 with self.env.cr.savepoint(flush=False):
                     self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(moves.ids)])
 
-            except OperationalError as e:
-                if e.pgcode == '55P03':
-                    _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
-                else:
-                    raise
+            except psycopg2.errors.LockNotAvailable:
+                _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
+                continue
 
             # Retrieve res.partner that executed the Send & Print wizard
             sp_partner_ids = set(moves.mapped(lambda move: move.send_and_print_values.get('sp_partner_id')))
