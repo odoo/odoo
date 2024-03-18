@@ -29,6 +29,15 @@ class AccountMoveSend(models.TransientModel):
         values['send_peppol'] = self.checkbox_send_peppol
         return values
 
+    @api.model
+    def _get_wizard_vals_restrict_to(self, only_options):
+        # EXTENDS 'account'
+        values = super()._get_wizard_vals_restrict_to(only_options)
+        return {
+            'checkbox_send_peppol': False,
+            **values,
+        }
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
