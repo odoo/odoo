@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from pytz import timezone, UTC
 from datetime import date, datetime, time
 
@@ -112,8 +113,8 @@ class Employee(models.Model):
     def _get_incoming_contracts(self, date_from, date_to):
         return self._get_contracts(date_from, date_to, states=['draft'], kanban_state=['done'])
 
-    def _get_calendar(self, date_from=None):
-        res = super()._get_calendar()
+    def _get_calendars(self, date_from=None):
+        res = super()._get_calendars(date_from=date_from)
         if not date_from:
             return res
         contracts = self.env['hr.contract'].sudo().search([
@@ -122,15 +123,20 @@ class Employee(models.Model):
                 '&',
                     ('state', '=', 'draft'),
                     ('kanban_state', '=', 'done'),
-            ('employee_id', '=', self.id),
+            ('employee_id', 'in', self.ids),
             ('date_start', '<=', date_from),
             '|',
                 ('date_end', '=', False),
                 ('date_end', '>=', date_from)
-        ])
-        if not contracts:
-            return res
-        return contracts[0].resource_calendar_id.sudo(False)
+        ]).sudo(False)
+        contracts_by_employee = defaultdict(lambda: self.env['hr.contract'])
+        for contract in contracts:
+            contracts_by_employee[contract.employee_id] += contract
+        for employee in self:
+            employee_contracts = contracts_by_employee[employee.id]
+            if employee_contracts:
+                res[employee.id] = contracts[0].resource_calendar_id.sudo(False)
+        return res
 
     @api.model
     def _get_all_contracts(self, date_from, date_to, states=['open']):
