@@ -1720,7 +1720,7 @@ export class PosStore extends Reactive {
     }
 
     showSearchButton() {
-        return this.mainScreen.component === ProductScreen;
+        return this.mainScreen.component === ProductScreen && this.mobile_pane === "right";
     }
 
     doNotAllowRefundAndSales() {
