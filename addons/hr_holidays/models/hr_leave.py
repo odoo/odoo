@@ -513,56 +513,72 @@ class HolidaysRequest(models.Model):
 
     @api.depends('leave_type_request_unit', 'number_of_days')
     def _compute_leave_type_increases_duration(self):
-        for holiday in self:
-            days = holiday._get_duration(check_leave_type=False)[0]
-            holiday.leave_type_increases_duration = holiday.leave_type_request_unit == 'day' and days < holiday.number_of_days
+        durations = self._get_durations(check_leave_type=False)
+        for leave in self:
+            days = durations[leave.id][0]
+            leave.leave_type_increases_duration = leave.leave_type_request_unit == 'day' and days < leave.number_of_days
 
-    def _get_duration(self, check_leave_type=True, resource_calendar=None):
+    def _get_durations(self, check_leave_type=True, resource_calendar=None):
         """
         This method is factored out into a separate method from
         _compute_duration so it can be hooked and called without necessarily
         modifying the fields and triggering more computes of fields that
         depend on number_of_hours or number_of_days.
         """
-        self.ensure_one()
-        resource_calendar = resource_calendar or self.resource_calendar_id
-
-        if not self.date_from or not self.date_to or not resource_calendar:
-            return (0, 0)
-        hours, days = (0, 0)
-        if self.employee_id:
-            # We force the company in the domain as we are more than likely in a compute_sudo
-            domain = [('time_type', '=', 'leave'),
-                      ('company_id', 'in', self.env.companies.ids + self.env.context.get('allowed_company_ids', [])),
-                      # When searching for resource leave intervals, we exclude the one that
-                      # is related to the leave we're currently trying to compute for.
-                      '|', ('holiday_id', '=', False), ('holiday_id', '!=', self.id)]
-            if self.leave_type_request_unit == 'day' and check_leave_type:
-                # list of tuples (day, hours)
-                work_time_per_day_list = self.employee_id.list_work_time_per_day(self.date_from, self.date_to, calendar=resource_calendar, domain=domain)
-                days = len(work_time_per_day_list)
-                hours = sum(map(lambda t: t[1], work_time_per_day_list))
+        result = {}
+        employee_leaves = self.filtered('employee_id')
+        employees_by_dates_calendar = defaultdict(lambda: self.env['hr.employee'])
+        for leave in employee_leaves:
+            employees_by_dates_calendar[(leave.date_from, leave.date_to, resource_calendar or leave.resource_calendar_id)] += leave.employee_id
+        # We force the company in the domain as we are more than likely in a compute_sudo
+        domain = [('time_type', '=', 'leave'),
+                  ('company_id', 'in', self.env.companies.ids + self.env.context.get('allowed_company_ids', [])),
+                  # When searching for resource leave intervals, we exclude the one that
+                  # is related to the leave we're currently trying to compute for.
+                  '|', ('holiday_id', '=', False), ('holiday_id', 'not in', employee_leaves.ids)]
+        # Precompute values in batch for performance purposes
+        work_time_per_day_mapped = {
+            (date_from, date_to, calendar): employees._list_work_time_per_day(date_from, date_to, domain=domain, calendar=calendar)
+            for (date_from, date_to, calendar), employees in employees_by_dates_calendar.items()
+        }
+        work_days_data_mapped = {
+            (date_from, date_to, calendar): employees._get_work_days_data_batch(date_from, date_to, domain=domain, calendar=calendar)
+            for (date_from, date_to, calendar), employees in employees_by_dates_calendar.items()
+        }
+        for leave in self:
+            calendar = resource_calendar or leave.resource_calendar_id
+            if not leave.date_from or not leave.date_to or not calendar:
+                result[leave.id] = (0, 0)
+                continue
+            hours, days = (0, 0)
+            if leave.employee_id:
+                if leave.leave_type_request_unit == 'day' and check_leave_type:
+                    # list of tuples (day, hours)
+                    work_time_per_day_list = work_time_per_day_mapped[(leave.date_from, leave.date_to, calendar)][leave.employee_id.id]
+                    days = len(work_time_per_day_list)
+                    hours = sum(map(lambda t: t[1], work_time_per_day_list))
+                else:
+                    work_days_data = work_days_data_mapped[(leave.date_from, leave.date_to, calendar)][leave.employee_id.id]
+                    hours, days = work_days_data['hours'], work_days_data['days']
             else:
-                work_days_data = self.employee_id._get_work_days_data_batch(self.date_from, self.date_to, domain=domain, calendar=resource_calendar)[self.employee_id.id]
-                hours, days = work_days_data['hours'], work_days_data['days']
-        else:
-            today_hours = resource_calendar.get_work_hours_count(
-                datetime.combine(self.date_from.date(), time.min),
-                datetime.combine(self.date_from.date(), time.max),
-                False)
-            hours = resource_calendar.get_work_hours_count(self.date_from, self.date_to)
-            days = hours / (today_hours or HOURS_PER_DAY)
-        if self.leave_type_request_unit == 'day' and check_leave_type:
-            days = ceil(days)
-        return (days, hours)
-
+                today_hours = calendar.get_work_hours_count(
+                    datetime.combine(leave.date_from.date(), time.min),
+                    datetime.combine(leave.date_from.date(), time.max),
+                    False)
+                hours = calendar.get_work_hours_count(leave.date_from, leave.date_to)
+                days = hours / (today_hours or HOURS_PER_DAY)
+            if leave.leave_type_request_unit == 'day' and check_leave_type:
+                days = ceil(days)
+            result[leave.id] = (days, hours)
+        return result
 
     @api.depends('date_from', 'date_to', 'resource_calendar_id', 'holiday_status_id.request_unit')
     def _compute_duration(self):
-        for holiday in self:
-            days, hours = holiday._get_duration()
-            holiday.number_of_hours = hours
-            holiday.number_of_days = days
+        durations = self._get_durations()
+        for leave in self:
+            days, hours = durations[leave.id]
+            leave.number_of_hours = hours
+            leave.number_of_days = days
 
     @api.depends('employee_company_id', 'mode_company_id')
     def _compute_company_id(self):

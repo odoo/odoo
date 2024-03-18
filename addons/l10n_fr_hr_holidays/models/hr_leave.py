@@ -80,7 +80,7 @@ class HrLeave(models.Model):
                 else:
                     leave.l10n_fr_date_to_changed = False
 
-    def _get_duration(self, check_leave_type=True, resource_calendar=None):
+    def _get_durations(self, check_leave_type=True, resource_calendar=None):
         """
         In french time off laws, if an employee has a part time contract, when taking time off
         before one of his off day (compared to the company's calendar) it should also count the time
@@ -90,6 +90,5 @@ class HrLeave(models.Model):
         If the employee were to take a time off ending on wednesday, the legal duration would count until friday.
         """
         if self._l10n_fr_leave_applies():
-            return super()._get_duration(resource_calendar=(resource_calendar or self.company_id.resource_calendar_id))
-        else:
-            return super()._get_duration(resource_calendar)
+            return super()._get_durations(resource_calendar=(resource_calendar or self.company_id.resource_calendar_id))
+        return super()._get_durations(resource_calendar=resource_calendar)
