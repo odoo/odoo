@@ -1355,7 +1355,10 @@ export class OdooEditor extends EventTarget {
                     toremove.remove();
                 }
             } else if (record.type === 'add') {
-                let node = this.idFind(record.oid) || this.unserializeNode(record.node);
+                let node = this.idFind(record.oid) || (record.node && this.unserializeNode(record.node));
+                if (!node) {
+                    continue;
+                }
                 if (this._collabClientId) {
                     const fakeNode = document.createElement('fake-el');
                     fakeNode.appendChild(node);
@@ -1508,6 +1511,9 @@ export class OdooEditor extends EventTarget {
                 case 'remove': {
                     let nodeToRemove = this.idFind(mutation.id);
                     if (!nodeToRemove) {
+                        if (!mutation.node) {
+                            continue;
+                        }
                         nodeToRemove = this.unserializeNode(mutation.node);
                         const fakeNode = document.createElement('fake-el');
                         fakeNode.appendChild(nodeToRemove);
