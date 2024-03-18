@@ -15,7 +15,7 @@
     <record id="account_tax_report_line_chtax_200" model="account.tax.report.line">
         <field name="name">200 - Total des contre-prestations convenues ou reçues, y c. de prestations imposées par option, de transferts par procédure de déclaration, de prestations à l’étranger</field>
         <field name="code">tax_ch_200</field>
-        <field name="formula">tax_ch_302a + tax_ch_303a + tax_ch_312a + tax_ch_313a + tax_ch_342a + tax_ch_343a + tax_ch_382a + tax_ch_383a</field>
+        <field name="formula">tax_ch_302a + tax_ch_303a + tax_ch_312a + tax_ch_313a + tax_ch_342a + tax_ch_343a + tax_ch_205 + tax_ch_289</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_line_chiffre_af"/>
@@ -23,6 +23,7 @@
 
     <record id="account_tax_report_line_chtax_205" model="account.tax.report.line">
         <field name="name">205 - Contre-prestations déclarées sous ch. 200 qui proviennent de prestations exclues du champ de l’impôt (art. 21) pour lesquelles il a été opté en vertu de l’art. 22</field>
+        <field name="code">tax_ch_205</field>
         <field name="tag_name">205</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="2"/>
