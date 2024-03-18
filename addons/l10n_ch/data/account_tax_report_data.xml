@@ -15,7 +15,7 @@
     <record id="account_tax_report_line_chtax_200" model="account.tax.report.line">
         <field name="name">200 - Total amount of agreed or collected consideration incl. from supplies opted for taxation, transfer of supplies acc. to the notification procedure and supplies provided abroad (worldwide turnover)</field>
         <field name="code">tax_ch_200</field>
-        <field name="formula">tax_ch_302a + tax_ch_303a + tax_ch_312a + tax_ch_313a + tax_ch_342a + tax_ch_343a + tax_ch_382a + tax_ch_383a</field>
+        <field name="formula">tax_ch_302a + tax_ch_303a + tax_ch_312a + tax_ch_313a + tax_ch_342a + tax_ch_343a + tax_ch_205 + tax_ch_289</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_line_chiffre_af"/>
@@ -23,6 +23,7 @@
 
     <record id="account_tax_report_line_chtax_205" model="account.tax.report.line">
         <field name="name">205 - Consideration reported in Ref. 200 from supplies exempt from the tax without credit (art. 21) where the option for their taxation according to art. 22 has been exercised</field>
+        <field name="code">tax_ch_205</field>
         <field name="tag_name">205</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="2"/>
