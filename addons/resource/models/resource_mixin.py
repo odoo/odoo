@@ -78,9 +78,8 @@ class ResourceMixin(models.AbstractModel):
             vals['resource_calendar_id'] = resource.calendar_id.id
         return vals_list
 
-    def _get_calendar(self, date_from=None):
-        self.ensure_one()
-        return self.resource_calendar_id or self.company_id.resource_calendar_id
+    def _get_calendars(self, date_from=None):
+        return {resource.id: resource.resource_calendar_id or resource.company_id.resource_calendar_id for resource in self}
 
     def _get_work_days_data_batch(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None):
         """
@@ -101,9 +100,13 @@ class ResourceMixin(models.AbstractModel):
         from_datetime = timezone_datetime(from_datetime)
         to_datetime = timezone_datetime(to_datetime)
 
-        mapped_resources = defaultdict(lambda: self.env['resource.resource'])
-        for record in self:
-            mapped_resources[calendar or record._get_calendar(from_datetime)] |= record.resource_id
+        if calendar:
+            mapped_resources = {calendar: self.resource_id}
+        else:
+            calendar_by_resource = self._get_calendars(from_datetime)
+            mapped_resources = defaultdict(lambda: self.env['resource.resource'])
+            for resource in self:
+                mapped_resources[calendar_by_resource[resource.id]] |= resource.resource_id
 
         for calendar, calendar_resources in mapped_resources.items():
             if not calendar:
