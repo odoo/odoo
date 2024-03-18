@@ -5,6 +5,7 @@ import {
     getActiveElement,
     getDocument,
     getNextFocusableElement,
+    getNodeValue,
     getPreviousFocusableElement,
     getRect,
     getWindow,
@@ -1709,7 +1710,9 @@ export function edit(value, options) {
         throw new HootDomError(`cannot call \`edit()\`: target should be editable`);
     }
 
-    _clear(element);
+    if (getNodeValue(element)) {
+        _clear(element);
+    }
     _fill(element, value, options);
 
     return logEvents("edit");
