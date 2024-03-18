@@ -241,8 +241,10 @@ class TestWebsocketCaryall(WebsocketCase):
         new_test_user(self.env, login='test_user', password='Password!1')
         user_session = self.authenticate('test_user', 'Password!1')
         serve_forever_called_event = Event()
+        original_serve_forever = WebsocketConnectionHandler._serve_forever
 
         def serve_forever(websocket, *args):
+            original_serve_forever(websocket, *args)
             self.assertNotEqual(websocket._session.sid, user_session.sid)
             self.assertNotEqual(websocket._session.uid, user_session.uid)
             serve_forever_called_event.set()
