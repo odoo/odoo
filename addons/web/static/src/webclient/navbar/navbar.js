@@ -1,6 +1,7 @@
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
+import { useFeatures } from "@web/core/features";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
@@ -11,7 +12,6 @@ import {
     onWillDestroy,
     useExternalListener,
     useEffect,
-    useState,
     useRef,
     onWillUnmount,
 } from "@odoo/owl";
@@ -32,7 +32,7 @@ export class NavBar extends Component {
         this.menuService = useService("menu");
         this.root = useRef("root");
         this.appSubMenus = useRef("appSubMenus");
-        this.advanced = useState(useService("advanced"));
+        this.features = useFeatures();
 
         const debouncedAdapt = debounce(this.adapt.bind(this), 250);
         onWillDestroy(() => debouncedAdapt.cancel());

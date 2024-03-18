@@ -550,6 +550,10 @@ export class FormCompiler extends ViewCompiler {
                     invisible
                 )},__comp__.props.record.evalContextWithVirtualIds)`;
             }
+            const advanced = child.getAttribute("advanced");
+            if (advanced) {
+                isVisibleExpr += ` and ${advanced === "1" ? "" : "!"}__comp__.features.advanced`;
+            }
             pageSlot.setAttribute("isVisible", isVisibleExpr);
 
             for (const contents of child.children) {

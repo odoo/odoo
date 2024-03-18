@@ -231,7 +231,7 @@ export function processButton(node) {
             clickParams[name] = withDefault[name] ? withDefault[name](value) : value;
         }
     }
-    return {
+    const buttonInfo = {
         className: node.getAttribute("class") || "",
         disabled: !!node.getAttribute("disabled") || false,
         icon: node.getAttribute("icon") || false,
@@ -240,7 +240,6 @@ export function processButton(node) {
         options: JSON.parse(node.getAttribute("options") || "{}"),
         display: node.getAttribute("display") || "selection",
         clickParams,
-        is_advanced: node.getAttribute("advanced"),
         column_invisible: node.getAttribute("column_invisible"),
         invisible: combineModifiers(
             node.getAttribute("column_invisible"),
@@ -250,6 +249,10 @@ export function processButton(node) {
         readonly: node.getAttribute("readonly"),
         required: node.getAttribute("required"),
     };
+    if (node.hasAttribute("advanced")) {
+        buttonInfo.advanced = archParseBoolean(node.getAttribute("advanced"));
+    }
+    return buttonInfo;
 }
 
 /**

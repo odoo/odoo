@@ -17,7 +17,6 @@ declare module "services" {
     import { uiService } from "@web/core/ui/ui_service";
     import { userService } from "@web/core/user_service";
     import { viewService } from "@web/views/view_service";
-    import { AdvancedService } from "@web/webclient/advanced/advanced_service";
 
     export interface Services {
         action: ReturnType<typeof actionService.start>;
@@ -38,6 +37,5 @@ declare module "services" {
         ui: ReturnType<typeof uiService.start>;
         user: ReturnType<typeof userService.start>;
         view: ReturnType<typeof viewService.start>;
-        'advanced': ReturnType<typeof AdvancedService.start>;
     }
 }

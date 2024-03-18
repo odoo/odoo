@@ -6,6 +6,7 @@ import {
 } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
+import { useFeatures } from "@web/core/features";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { user } from "@web/core/user";
@@ -23,6 +24,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { Field } from "@web/views/fields/field";
 import { useModel } from "@web/model/model";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
+
 import { useViewCompiler } from "@web/views/view_compiler";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
@@ -145,11 +147,12 @@ export class FormController extends Component {
 
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;
-        this.advanced = useState(useService("advanced"));
+        this.features = useFeatures();
         this.dialogService = useService("dialog");
         this.orm = useService("orm");
         this.viewService = useService("view");
         this.ui = useService("ui");
+
         useBus(this.ui.bus, "resize", this.render);
 
         this.archInfo = this.props.archInfo;

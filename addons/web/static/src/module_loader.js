@@ -243,7 +243,7 @@
 
     const odoo = (globalThis.odoo ||= {});
     // add debug mode if explicitely set in url
-    odoo.debug = new URLSearchParams(location.search).get('debug') || '';
+    odoo.debug = new URLSearchParams(location.search).get("debug") || "";
 
     const loader = new ModuleLoader();
     odoo.define = loader.define.bind(loader);

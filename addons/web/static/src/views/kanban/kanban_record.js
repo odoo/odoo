@@ -3,12 +3,14 @@ import { ColorList } from "@web/core/colorlist/colorlist";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useFeatures } from "@web/core/features";
 import { registry } from "@web/core/registry";
 import { useTooltip } from "@web/core/tooltip/tooltip_hook";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { imageUrl } from "@web/core/utils/urls";
 import { useRecordObserver } from "@web/model/relational_model/utils";
+
 import { Field } from "@web/views/fields/field";
 import { fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
 import { ViewButton } from "@web/views/view_button/view_button";
@@ -216,7 +218,7 @@ export class KanbanRecord extends Component {
         this.action = useService("action");
         this.dialog = useService("dialog");
         this.notification = useService("notification");
-        this.advanced = useState(useService("advanced"));
+        this.features = useFeatures();
 
         const { Compiler, templates } = this.props;
         const ViewCompiler = Compiler || this.constructor.Compiler;

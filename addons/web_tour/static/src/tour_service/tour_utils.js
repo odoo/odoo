@@ -354,9 +354,9 @@ export const stepUtils = {
         return step;
     },
 
-    toggleTechnical_chm() {
+    toggleAdvancedMode() {
         return {
-            content: "Display technical features (alt+shift+h)",
+            content: "Display advanced features",
             edition: "community",
             trigger: ".o_web_client",
             position: "absolute",
