@@ -5,7 +5,10 @@ import json
 
 from odoo import api, fields, models, _, _lt
 from odoo.osv import expression
+<<<<<<< HEAD
 from odoo.tools import SQL
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from odoo.tools.misc import OrderedSet
 
 
@@ -20,6 +23,7 @@ class Project(models.Model):
             self.purchase_orders_count = 0
             return
         query = self.env['purchase.order.line']._search([])
+<<<<<<< HEAD
         query.add_where(
             SQL(
                 "%s && %s",
@@ -39,6 +43,18 @@ class Project(models.Model):
 
         self._cr.execute(query_string, query_param)
         data = {res['account_id']: res['count'] for res in self._cr.dictfetchall()}
+=======
+        query.add_where('purchase_order_line.analytic_distribution ?| %s', [[str(account_id) for account_id in self.analytic_account_id.ids]])
+
+        query_string, query_param = query.select(
+            'jsonb_object_keys(purchase_order_line.analytic_distribution) as account_id',
+            'COUNT(DISTINCT(order_id)) as purchase_order_count',
+        )
+        query_string = f"{query_string} GROUP BY jsonb_object_keys(purchase_order_line.analytic_distribution)"
+
+        self._cr.execute(query_string, query_param)
+        data = {int(record.get('account_id')): record.get('purchase_order_count') for record in self._cr.dictfetchall()}
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         for project in self:
             project.purchase_orders_count = data.get(project.analytic_account_id.id, 0)
 
@@ -48,6 +64,7 @@ class Project(models.Model):
 
     def action_open_project_purchase_orders(self):
         query = self.env['purchase.order.line']._search([])
+<<<<<<< HEAD
         query.add_where(
             SQL(
                 "%s && %s",
@@ -55,6 +72,9 @@ class Project(models.Model):
                 self.env['purchase.order.line']._query_analytic_accounts(),
             )
         )
+=======
+        query.add_where('purchase_order_line.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         query_string, query_param = query.select('order_id')
         self._cr.execute(query_string, query_param)
         purchase_order_ids = [pol.get('order_id') for pol in self._cr.dictfetchall()]
@@ -145,6 +165,7 @@ class Project(models.Model):
                 ('qty_invoiced', '>', 0),
                 '|', ('qty_to_invoice', '>', 0), ('product_uom_qty', '>', 0),
             ], order=self.env['purchase.order.line']._order)
+<<<<<<< HEAD
             query.add_where(
                 SQL(
                     "%s && %s",
@@ -152,6 +173,9 @@ class Project(models.Model):
                     self.env['purchase.order.line']._query_analytic_accounts(),
                 )
             )
+=======
+            query.add_where('purchase_order_line.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             query_string, query_param = query.select('"purchase_order_line".id', 'qty_invoiced', 'qty_to_invoice', 'product_uom_qty', 'price_unit', 'purchase_order_line.currency_id', '"purchase_order_line".analytic_distribution')
             self._cr.execute(query_string, query_param)
             purchase_order_line_read = [{

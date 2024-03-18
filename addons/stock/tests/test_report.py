@@ -4,7 +4,10 @@
 from datetime import date, datetime, timedelta
 
 from odoo.tests.common import Form, TransactionCase
+<<<<<<< HEAD
 from odoo import Command
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 
 class TestReportsCommon(TransactionCase):
@@ -32,10 +35,13 @@ class TestReportsCommon(TransactionCase):
         product_form.name = 'Product'
         cls.product = product_form.save()
         cls.product_template = cls.product.product_tmpl_id
+<<<<<<< HEAD
         cls.wh_2 = cls.env['stock.warehouse'].create({
             'name': 'Evil Twin Warehouse',
             'code': 'ETWH',
         })
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
     def get_report_forecast(self, product_template_ids=False, product_variant_ids=False, context=False):
         if product_template_ids:
@@ -669,7 +675,14 @@ class TestReports(TestReportsCommon):
         report display the good moves according to the selected warehouse.
         """
         # Warehouse config.
+<<<<<<< HEAD
         wh_2 = self.wh_2
+=======
+        wh_2 = self.env['stock.warehouse'].create({
+            'name': 'Evil Twin Warehouse',
+            'code': 'ETWH',
+        })
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         picking_type_out_2 = self.env['stock.picking.type'].search([
             ('code', '=', 'outgoing'),
             ('warehouse_id', '=', wh_2.id),
@@ -758,6 +771,7 @@ class TestReports(TestReportsCommon):
         self.assertEqual(lines[0]['document_out']['id'], delivery_2.id)
         self.assertEqual(lines[0]['quantity'], 8)
 
+<<<<<<< HEAD
     def test_report_forecast_5_multi_warehouse_chain(self):
         """ Create a MTO chain inter warehouse, the forecast report should ignore the
         "not current" warehouse"""
@@ -812,6 +826,8 @@ class TestReports(TestReportsCommon):
         self.assertEqual(lines[0]['document_out']['id'], delivery.id)
         self.assertEqual(lines[0]['document_in']['id'], inter_wh_delivery.picking_id.id)
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     def test_report_forecast_6_multi_company(self):
         """ Create transfers for two different companies and check report
         display the right transfers.

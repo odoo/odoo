@@ -380,6 +380,7 @@ class TestAccountAccount(AccountTestInvoicingCommon):
             move_type="out_invoice"
         )
         self.assertFalse(account.id in results_2, "Deprecated account should NOT appear in account suggestions")
+<<<<<<< HEAD
 
     @freeze_time('2017-01-01')
     def test_account_opening_balance(self):
@@ -456,3 +457,5 @@ class TestAccountAccount(AccountTestInvoicingCommon):
             {'account_id': account.id,              'balance': 1000.0,  'amount_currency': 2000.0},
             {'account_id': account.id,              'balance': -1000.0, 'amount_currency': -2000.0},
         ])
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

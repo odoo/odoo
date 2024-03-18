@@ -4,7 +4,10 @@
 from odoo import api, exceptions, fields, models, _
 from odoo.addons.mail.models.mail_alias import dot_atom_text
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 class AliasDomain(models.Model):
     """ Model alias domains, now company-specific. Alias domains are email
     domains used to receive emails through catchall and bounce aliases, as
@@ -175,6 +178,7 @@ class AliasDomain(models.Model):
                 config_values['default_from'], is_email=True
             )
         return config_values
+<<<<<<< HEAD
 
     @api.model
     def _migrate_icp_to_domain(self):
@@ -198,3 +202,5 @@ class AliasDomain(models.Model):
                 'name': alias_domain,
             })
         return self.browse()
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

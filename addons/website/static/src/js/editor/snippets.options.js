@@ -23,6 +23,10 @@ import {
 import { renderToElement, renderToFragment } from "@web/core/utils/render";
 import { browser } from "@web/core/browser/browser";
 import {
+<<<<<<< HEAD
+=======
+    applyTextHighlight,
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     removeTextHighlight,
     drawTextHighlightSVG,
 } from "@website/js/text_processing";
@@ -3750,6 +3754,7 @@ options.registry.TextHighlight = options.Class.extend({
     onBlur() {
         this.leftPanelEl.appendChild(this.el);
     },
+<<<<<<< HEAD
     /**
     * @override
     */
@@ -3762,6 +3767,8 @@ options.registry.TextHighlight = options.Class.extend({
         }
         this._super(...arguments);
     },
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
     //--------------------------------------------------------------------------
     // Options
@@ -3801,6 +3808,7 @@ options.registry.TextHighlight = options.Class.extend({
                 svg.remove();
             });
         } else {
+<<<<<<< HEAD
             this._autoAdaptHighlights();
         }
     },
@@ -3814,6 +3822,23 @@ options.registry.TextHighlight = options.Class.extend({
         this.trigger_up("snippet_edition_request", { exec: async () =>
             await this._refreshPublicWidgets($(this.options.wysiwyg.odooEditor.editable))
         });
+=======
+            applyTextHighlight(this.$target[0], highlightID);
+        }
+    },
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        const value = await this._super(...arguments);
+        if (methodName === "selectStyle" && value === "currentColor") {
+            const style = window.getComputedStyle(this.$target[0]);
+            // The highlight default color is the text's "currentColor".
+            // This value should be handled correctly by the option.
+            return style.color;
+        }
+        return value;
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     },
 
     //--------------------------------------------------------------------------
@@ -4100,6 +4125,7 @@ options.registry.GalleryElement = options.Class.extend({
 });
 
 options.registry.Button = options.Class.extend({
+<<<<<<< HEAD
     /**
      * @override
      */
@@ -4109,6 +4135,10 @@ options.registry.Button = options.Class.extend({
         this.forceDuplicateButton = !isUnremovableButton;
         this.forceNoDeleteButton = isUnremovableButton;
     },
+=======
+    forceDuplicateButton: true,
+
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     /**
      * @override
      */

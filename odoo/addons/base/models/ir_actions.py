@@ -86,12 +86,19 @@ class IrActions(models.Model):
         return res
 
     def unlink(self):
+<<<<<<< HEAD
         """unlink ir.action.todo/ir.filters which are related to actions which will be deleted.
            NOTE: ondelete cascade will not work on ir.actions.actions so we will need to do it manually."""
         todos = self.env['ir.actions.todo'].search([('action_id', 'in', self.ids)])
         todos.unlink()
         filters = self.env['ir.filters'].search([('action_id', 'in', self.ids)])
         filters.unlink()
+=======
+        """unlink ir.action.todo which are related to actions which will be deleted.
+           NOTE: ondelete cascade will not work on ir.actions.actions so we will need to do it manually."""
+        todos = self.env['ir.actions.todo'].search([('action_id', 'in', self.ids)])
+        todos.unlink()
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         res = super(IrActions, self).unlink()
         # self.get_bindings() depends on action records
         self.env.registry.clear_cache()

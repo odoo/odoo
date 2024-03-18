@@ -1,6 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_timesheet
+<<<<<<< HEAD
 # 
 msgid ""
 msgstr ""
@@ -56,6 +57,27 @@ msgid "%(name)s's Timesheets"
 msgstr ""
 
 #. module: hr_timesheet
+=======
+#
+# Translators:
+# Óttar Ingólfsson, 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-16 13:48+0000\n"
+"PO-Revision-Date: 2022-09-22 05:52+0000\n"
+"Last-Translator: Óttar Ingólfsson, 2022\n"
+"Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
+"Language: is\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);\n"
+
+#. module: hr_timesheet
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
@@ -83,6 +105,7 @@ msgid "(incl."
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "1 day"
 msgstr ""
@@ -98,6 +121,8 @@ msgid "2021-09-01"
 msgstr ""
 
 #. module: hr_timesheet
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "<b class=\"tip_title\">Tip: Record your Timesheets faster</b>"
 msgstr ""
@@ -109,7 +134,33 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
+<<<<<<< HEAD
 msgid "<i class=\"fa fa-print\"/> View Details"
+=======
+msgid "<i class=\"fa fa-download\"/> Download"
+msgstr "<i class=\"fa fa-download\"/>Niðurhal"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
+msgid "<i class=\"fa fa-print\"/> Print"
+msgstr "<i class=\"fa fa-print\"/>Prenta"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
+msgid ""
+"<span attrs=\"{'invisible': [('has_timesheet', '=', False)]}\">\n"
+"                        You cannot delete employees who have timesheets.\n"
+"                        <span attrs=\"{'invisible': [('has_active_employee', '=', False)]}\">\n"
+"                            You can either archive these employees or first delete all of their timesheets.\n"
+"                        </span>\n"
+"                        <span attrs=\"{'invisible': [('has_active_employee', '=', True)]}\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            Please first delete all of their timesheets.\n"
+"                        </span>\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('has_timesheet', '=', True)]}\">\n"
+"                        Are you sure you want to delete these employees?\n"
+"                    </span>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
@@ -121,6 +172,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
+<<<<<<< HEAD
 "<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">Hours Spent on Sub-tasks:</span>\n"
 "                                <span class=\"text-nowrap\" invisible=\"not encode_uom_in_days\">Days Spent on Sub-tasks:</span>"
 msgstr ""
@@ -140,6 +192,10 @@ msgid ""
 "                    <span invisible=\"has_timesheet\">\n"
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
+=======
+"<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">Hours Spent on Sub-tasks:</span>\n"
+"                                <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">Days Spent on Sub-tasks:</span>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
@@ -168,8 +224,23 @@ msgid "<span>Employee</span>"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Days recorded on sub-tasks: </strong>"
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+msgid "<span>Project</span>"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+msgid "<span>Task</span>"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+msgid "<strong>Days Spent:</strong>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
@@ -179,7 +250,11 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+<<<<<<< HEAD
 msgid "<strong>Hours recorded on sub-tasks: </strong>"
+=======
+msgid "<strong>Hours Spent:</strong>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
@@ -188,6 +263,7 @@ msgid "<strong>Progress:</strong>"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Remaining Days: </strong>"
 msgstr ""
@@ -203,6 +279,8 @@ msgid "<strong>Total: </strong>"
 msgstr ""
 
 #. module: hr_timesheet
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__analytic_account_active
 msgid "Active Analytic Account"
 msgstr ""
@@ -231,8 +309,12 @@ msgid "Allocated Hours"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__allocated_time
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__allocated_hours
+=======
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__planned_hours
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Allocated Time"
 msgstr ""
 
@@ -256,7 +338,11 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__analytic_account_id
 msgid "Analytic Account"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Kostnaðarreikningur"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_form
@@ -266,7 +352,11 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line
 msgid "Analytic Line"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Analytic Line"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__analytic_account_id
@@ -302,6 +392,7 @@ msgid "Associated Timesheets"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "Audrey Peterson"
 msgstr ""
@@ -312,6 +403,8 @@ msgid "Average of Progress"
 msgstr ""
 
 #. module: hr_timesheet
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_activity_analysis
 msgid "By Employee"
 msgstr ""
@@ -327,11 +420,14 @@ msgid "By Task"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "Call client and discuss project"
 msgstr ""
 
 #. module: hr_timesheet
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
 msgid "Collaborators in project shared"
 msgstr ""
@@ -339,7 +435,11 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_company
 msgid "Companies"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Fyrirtæki"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__company_id
@@ -354,7 +454,11 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
 msgid "Configuration"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Uppsetning"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #. odoo-python
@@ -376,22 +480,34 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__currency_id
 msgid "Currency"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Gjaldmiðill"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__date
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 #, python-format
 msgid "Date"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "Days"
 msgstr ""
+=======
+msgstr "Dags."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__days
@@ -403,19 +519,35 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_tasks_list_inherit
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Days Spent"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+msgid "Days recorded on sub-tasks:"
+msgstr ""
+
+#. module: hr_timesheet
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
 msgid "Default project value for timesheet generated from time off type."
 msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
+<<<<<<< HEAD
 msgid ""
 "Define an 'hourly cost' on the employee to track the cost of their time."
+=======
+msgid "Define an 'hourly cost' on the employee to track the cost of their time."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
@@ -431,9 +563,15 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__department_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__department_id
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Department"
 msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
+msgid "Department"
+msgstr "Department"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_form
@@ -448,7 +586,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 #, python-format
 msgid "Description"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Lýsing"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -463,14 +605,23 @@ msgid "Display Name"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__display_timesheet_stats
 msgid "Display Timesheet Stats"
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
+msgid "Download"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Duration"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Duration"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -482,16 +633,27 @@ msgstr ""
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
+<<<<<<< HEAD
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__employee_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+=======
+#: model:ir.model,name:hr_timesheet.model_hr_employee
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__employee_id
+#: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 #, python-format
 msgid "Employee"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Starfsmaður"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee_delete_wizard
@@ -539,6 +701,7 @@ msgid "Encoding Uom"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
@@ -550,6 +713,16 @@ msgstr ""
 msgid ""
 "Generate timesheets for validated time off requests and public holidays"
 msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Generate timesheets for validated time off requests and public holidays"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
+msgid "Group By"
+msgstr "Hópa eftir"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_ir_http
@@ -570,7 +743,10 @@ msgstr ""
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #, python-format
 msgid "Hours"
 msgstr ""
@@ -588,6 +764,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_tasks_list_inherit
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Hours Spent"
 msgstr ""
@@ -598,12 +778,28 @@ msgid "Hours Spent on Sub-Tasks"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+msgid "Hours recorded on sub-tasks:"
+msgstr ""
+
+#. module: hr_timesheet
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__id
 msgid "ID"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+msgid "Initially Planned Hours"
+msgstr "Initially Planned Hours"
+
+#. module: hr_timesheet
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #. odoo-python
 #: code:addons/hr_timesheet/models/res_company.py:0
 #: model:project.task.type,name:hr_timesheet.internal_project_default_stage
@@ -619,7 +815,10 @@ msgstr ""
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
+<<<<<<< HEAD
 #: code:addons/hr_timesheet/models/project_project.py:0
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #, python-format
 msgid "Invalid operator: %s"
 msgstr ""
@@ -627,7 +826,10 @@ msgstr ""
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
+<<<<<<< HEAD
 #: code:addons/hr_timesheet/models/project_project.py:0
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #, python-format
 msgid "Invalid value: %s"
 msgstr ""
@@ -687,9 +889,15 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__manager_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__manager_id
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Manager"
 msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
+msgid "Manager"
+msgstr "Yfirmaður"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #. odoo-python
@@ -704,11 +912,27 @@ msgid "Menu"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.rating_rating_view_search_project_inherited
+msgid "My Department's Ratings"
+msgstr ""
+
+#. module: hr_timesheet
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
 msgid "My Department's Updates"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.rating_rating_view_search_project_inherited
+msgid "My Team's Ratings"
+msgstr ""
+
+#. module: hr_timesheet
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
 msgid "My Team's Updates"
 msgstr ""
@@ -717,7 +941,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_mine
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_user
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "My Timesheets"
 msgstr ""
 
@@ -767,7 +995,11 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__parent_task_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__parent_task_id
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Parent Task"
 msgstr ""
 
@@ -777,9 +1009,20 @@ msgid "Partner"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
 #: model:ir.model,name:hr_timesheet.model_uom_uom
 msgid "Product Unit of Measure"
 msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
+msgid "Print"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Mælieining vöru"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #. odoo-python
@@ -793,11 +1036,15 @@ msgstr ""
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
+<<<<<<< HEAD
 #: code:addons/hr_timesheet/controllers/portal.py:0
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model,name:hr_timesheet.model_project_project
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__project_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__project_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__project_id
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -805,6 +1052,14 @@ msgstr ""
 #, python-format
 msgid "Project"
 msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+#, python-format
+msgid "Project"
+msgstr "Verkefni"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__project_time_mode_id
@@ -813,11 +1068,14 @@ msgid "Project Time Unit"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
 #: model:ir.model,name:hr_timesheet.model_project_update
 msgid "Project Update"
 msgstr ""
 
 #. module: hr_timesheet
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__is_project_overtime
 msgid "Project in Overtime"
 msgstr ""
@@ -839,9 +1097,13 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
+<<<<<<< HEAD
 msgid ""
 "Record your timesheets in an instant by pressing Shift + the corresponding "
 "hotkey to add 15min to your projects."
+=======
+msgid "Record your timesheets in an instant by pressing Shift + the corresponding hotkey to add 15min to your projects."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
@@ -851,12 +1113,26 @@ msgid "Remaining Days"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+msgid "Remaining Days:"
+msgstr ""
+
+#. module: hr_timesheet
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__remaining_hours
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__remaining_hours
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+<<<<<<< HEAD
 msgid "Remaining Hours"
 msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
+msgid "Remaining Hours"
+msgstr "Remaining Hours"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__remaining_hours_percentage
@@ -865,6 +1141,14 @@ msgid "Remaining Hours Percentage"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+msgid "Remaining Hours:"
+msgstr ""
+
+#. module: hr_timesheet
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__remaining_hours
 msgid "Remaining Invoiced Time"
 msgstr ""
@@ -872,6 +1156,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
 msgid "Reporting"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: hr_timesheet
@@ -888,6 +1173,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_home_timesheet
 msgid "Review all timesheets related to your projects"
 msgstr ""
+=======
+msgstr "Skýrslur"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #. odoo-python
@@ -939,27 +1227,39 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+<<<<<<< HEAD
 msgid ""
 "Send a periodical email reminder to timesheets approvers that still have "
 "timesheets to validate"
+=======
+msgid "Send a periodical email reminder to timesheets approvers that still have timesheets to validate"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+<<<<<<< HEAD
 msgid ""
 "Send a periodical email reminder to timesheets users that still have "
 "timesheets to encode"
+=======
+msgid "Send a periodical email reminder to timesheets users that still have timesheets to encode"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
 msgid "Settings"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Sub-Tasks Total Effective Hours"
 msgstr ""
+=======
+msgstr "Stillingar"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -970,6 +1270,7 @@ msgstr ""
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
+<<<<<<< HEAD
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model,name:hr_timesheet.model_project_task
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__task_id
@@ -980,6 +1281,16 @@ msgstr ""
 #, python-format
 msgid "Task"
 msgstr ""
+=======
+#: model:ir.model,name:hr_timesheet.model_project_task
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__task_id
+#: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__task_id
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#, python-format
+msgid "Task"
+msgstr "Task"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_task
@@ -989,7 +1300,11 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_report_project_task_user
 msgid "Tasks Analysis"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Greining aðgerða"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1007,18 +1322,26 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "These projects have some timesheet entries referencing them. Before removing"
 " these projects, you have to remove these timesheet entries."
+=======
+msgid "These projects have some timesheet entries referencing them. Before removing these projects, you have to remove these timesheet entries."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "These tasks have some timesheet entries referencing them. Before removing "
 "these tasks, you have to remove these timesheet entries."
+=======
+msgid "These tasks have some timesheet entries referencing them. Before removing these tasks, you have to remove these timesheet entries."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
@@ -1046,26 +1369,38 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "This project has some timesheet entries referencing it. Before removing this"
 " project, you have to remove these timesheet entries."
+=======
+msgid "This project has some timesheet entries referencing it. Before removing this project, you have to remove these timesheet entries."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "This task cannot be private because there are some timesheets linked to it."
+=======
+msgid "This task has some timesheet entries referencing it. Before removing this task, you have to remove these timesheet entries."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "This task has some timesheet entries referencing it. Before removing this "
 "task, you have to remove these timesheet entries."
+=======
+msgid "This task must be part of a project because there are some timesheets linked to it."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
@@ -1082,6 +1417,11 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
+<<<<<<< HEAD
+=======
+"This will set the unit of measure used in projects and tasks.\n"
+"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1122,6 +1462,10 @@ msgid "Time unit used to record your timesheets"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph_all
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph_my
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
@@ -1152,33 +1496,47 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_encode_uom_id
+<<<<<<< HEAD
 msgid "Timesheet Encode Uom"
 msgstr ""
 
 #. module: hr_timesheet
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__timesheet_percentage
 msgid "Timesheet Percentage"
 msgstr ""
 
 #. module: hr_timesheet
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_report_search
 msgid "Timesheet Report"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__timesheet_time
 msgid "Timesheet Time"
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
+msgid "Timesheet by Date"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
+<<<<<<< HEAD
 #: code:addons/hr_timesheet/models/project_project.py:0
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: code:addons/hr_timesheet/models/project_task.py:0
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_by_project
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_from_employee
@@ -1212,7 +1570,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #, python-format
 msgid "Timesheets"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Timesheets"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1280,18 +1642,26 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "Timesheets must be created on a project or a task with an active analytic "
 "account."
+=======
+msgid "Timesheets must be created on a project or a task with an active analytic account."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "Timesheets must be created with an active employee in the selected "
 "companies."
+=======
+msgid "Timesheets must be created with an active employee in the selected companies."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
@@ -1319,7 +1689,10 @@ msgid "Total"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Allocated Time"
@@ -1336,25 +1709,35 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Total Hours"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Remaining Hours"
 msgstr ""
 
 #. module: hr_timesheet
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__total_timesheet_time
 msgid "Total Timesheet Time"
 msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__total_timesheet_time
+<<<<<<< HEAD
 msgid ""
 "Total number of time (in the proper UoM) recorded in the project, rounded to"
 " the unit."
+=======
+msgid "Total number of time (in the proper UoM) recorded in the project, rounded to the unit."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
@@ -1366,9 +1749,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
+<<<<<<< HEAD
 msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
+=======
+msgid "Track your working hours by projects every day and invoice this time to your customers."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet
@@ -1379,11 +1766,14 @@ msgid "Training"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__uom_id
 msgid "Unit Of Measure"
 msgstr ""
 
 #. module: hr_timesheet
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__display_name
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
@@ -1400,7 +1790,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__user_id
 msgid "User"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Notandi"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_approver
@@ -1413,11 +1807,14 @@ msgid "User: own timesheets only"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 msgid "View Details"
 msgstr ""
 
 #. module: hr_timesheet
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr_timesheet.field_uom_uom__timesheet_widget
 msgid "Widget"
 msgstr ""
@@ -1438,10 +1835,14 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+<<<<<<< HEAD
 msgid ""
 "You cannot log timesheets on this project since it is linked to an inactive "
 "analytic account. Please change this account, or reactivate the current one "
 "to timesheet on the project."
+=======
+msgid "You cannot log timesheets on this project since it is linked to an inactive analytic account. Please change this account, or reactivate the current one to timesheet on the project."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr_timesheet

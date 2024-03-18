@@ -15,7 +15,10 @@ from unittest.mock import patch
 
 from odoo import release
 from odoo.addons import __path__ as __addons_path__
+<<<<<<< HEAD
 from odoo.exceptions import UserError
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from odoo.tools import mute_logger
 
 
@@ -78,6 +81,7 @@ class TestImportModule(odoo.tests.TransactionCase):
         files = [
             ('foo/__manifest__.py', b"foo")
         ]
+<<<<<<< HEAD
         error_message = "Error while importing module 'foo'"
         with (
             mute_logger("odoo.addons.base_import_module.models.ir_module"),
@@ -111,6 +115,11 @@ class TestImportModule(odoo.tests.TransactionCase):
         ):
             self.import_zipfile(files)
         self.assertFalse(self.env.ref('foo.foo', raise_if_not_found=False))
+=======
+        with mute_logger("odoo.addons.base_import_module.models.ir_module"):
+            result = self.import_zipfile(files)
+        self.assertIn("Error while importing module 'foo'", result[0])
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
     def test_import_zip_data_not_in_manifest(self):
         """Assert a data file not mentioned in the manifest is not imported"""
@@ -146,9 +155,14 @@ class TestImportModule(odoo.tests.TransactionCase):
         ]
         with self.assertLogs('odoo.addons.base_import_module.models.ir_module') as log_catcher:
             self.import_zipfile(files)
+<<<<<<< HEAD
             self.assertEqual(len(log_catcher.output), 2)
             self.assertIn('module foo: skip unsupported file res.partner.xls', log_catcher.output[0])
             self.assertIn("Successfully imported module 'foo'", log_catcher.output[1])
+=======
+            self.assertEqual(len(log_catcher.output), 1)
+            self.assertIn('module foo: skip unsupported file res.partner.xls', log_catcher.output[0])
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             self.assertFalse(self.env.ref('foo.foo', raise_if_not_found=False))
 
     def test_import_zip_extract_only_useful(self):

@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields
+<<<<<<< HEAD
 from odoo.tests import users
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from odoo.tests.common import Form, TransactionCase
 
 from datetime import datetime, time
@@ -14,6 +17,7 @@ class TestProjectRecurrence(TransactionCase):
     def setUpClass(cls):
         super(TestProjectRecurrence, cls).setUpClass()
 
+<<<<<<< HEAD
         user_group_employee = cls.env.ref('base.group_user')
         user_group_project_user = cls.env.ref('project.group_project_user')
         user_group_project_recurring_task = cls.env.ref('project.group_project_recurring_tasks')
@@ -27,6 +31,9 @@ class TestProjectRecurrence(TransactionCase):
             'email': 'armande.projectuser@example.com',
             'groups_id': [(6, 0, [user_group_employee.id, user_group_project_user.id, user_group_project_recurring_task.id])]
         })
+=======
+        cls.env.user.groups_id += cls.env.ref('project.group_project_recurring_tasks')
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
         cls.stage_a = cls.env['project.task.type'].create({'name': 'a'})
         cls.stage_b = cls.env['project.task.type'].create({'name': 'b'})
@@ -159,6 +166,7 @@ class TestProjectRecurrence(TransactionCase):
 
         self.assertFalse(any((task_a + task_b + task_c).mapped('recurring_task')),
                          "All tasks in the recurrence should have their recurrence disabled")
+<<<<<<< HEAD
 
     @users('armandel')
     def test_closed_recurring_task(self):
@@ -177,3 +185,5 @@ class TestProjectRecurrence(TransactionCase):
         self.assertEqual(len(task.recurrence_id.task_ids), 1, "recurrence should have a single task")
         task.state = '1_done'
         self.assertEqual(len(task.recurrence_id.task_ids), 2, "a new occurrence should have been created")
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

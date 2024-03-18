@@ -55,7 +55,12 @@ options.registry.WebsiteEvent = options.Class.extend({
      * @private
      */
     _getEventObjectId() {
+<<<<<<< HEAD
         const objectIds = this.currentWebsiteUrl.match(/\d+(?![-\w])/);
         return parseInt(objectIds[0]) | 0;
+=======
+        const objectIds = this.currentWebsiteUrl.match(/-\d+(?![-\w\d])/);
+        return parseInt(objectIds[0].replace('-', '')) | 0;
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     },
 });

@@ -1,11 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.stock.tests.test_packing import TestPackingCommon
+<<<<<<< HEAD
 from odoo.exceptions import UserError
 from odoo.tests import Form
 from unittest.mock import patch
 
 
+=======
+from odoo.tests import Form
+from unittest.mock import patch
+
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 class TestPacking(TestPackingCommon):
 
     @classmethod
@@ -143,6 +149,7 @@ class TestPacking(TestPackingCommon):
 
         for p in so.picking_ids:
             self.assertEqual(p.carrier_tracking_ref, "666")
+<<<<<<< HEAD
 
     def test_batch_picking_delivery(self):
         """
@@ -196,3 +203,5 @@ class TestPacking(TestPackingCommon):
         package = delivery_1._put_in_pack(move_lines_to_pack)
         self.assertEqual(delivery_1.move_line_ids.result_package_id, package, 'Delivery 1 moves should have been put in package.')
         self.assertEqual(delivery_2.move_line_ids.result_package_id, package, 'Delivery 2 moves should have been put in package.')
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

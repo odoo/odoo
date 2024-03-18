@@ -113,10 +113,13 @@ class TestItEdi(AccountTestInvoicingCommon):
             raise
 
     def _assert_import_invoice(self, filename, expected_values_list, xml_to_apply=None):
+<<<<<<< HEAD
         """ Tests an invoice imported from an XML vendor bill file on the filesystem
             against expected values. XPATHs can be applied with the `xml_to_apply`
             argument to the XML content before it's imported.
         """
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         path = f'{self.module}/tests/import_xmls/{filename}'
         with tools.file_open(path, mode='rb') as fd:
             import_content = fd.read()

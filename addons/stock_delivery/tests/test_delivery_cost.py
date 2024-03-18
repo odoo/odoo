@@ -21,7 +21,10 @@ class TestDeliveryCost(common.TransactionCase):
         delivery_carrier = self.env['delivery.carrier'].create({
             'name': 'Delivery Now Free Over 100',
             'fixed_price': 40,
+<<<<<<< HEAD
             'margin': 50,
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             'delivery_type': 'fixed',
             'invoice_policy': 'real',
             'product_id': product_delivery.id,

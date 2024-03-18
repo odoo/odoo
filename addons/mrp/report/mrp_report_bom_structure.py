@@ -37,7 +37,11 @@ class ReportBomStructure(models.AbstractModel):
     @api.model
     def _compute_production_capacities(self, bom_qty, bom_data):
         date_today = self.env.context.get('from_date', fields.date.today())
+<<<<<<< HEAD
         lead_time = bom_data['manufacture_delay']
+=======
+        lead_time = bom_data['lead_time'] - bom_data['bom'].days_to_prepare_mo
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         same_delay = lead_time == bom_data['availability_delay']
         res = {}
         if bom_data.get('producible_qty', 0):
@@ -317,7 +321,10 @@ class ReportBomStructure(models.AbstractModel):
         availabilities = self._get_availabilities(product, current_quantity, product_info, bom_key, quantities_info, level, ignore_stock, components, report_line=bom_report_line)
         # in case of subcontracting, lead_time will be calculated with components availability delay
         bom_report_line['lead_time'] = route_info.get('lead_time', False)
+<<<<<<< HEAD
         bom_report_line['manufacture_delay'] = route_info.get('manufacture_delay', False)
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         bom_report_line.update(availabilities)
 
         if level == 0:
@@ -372,7 +379,10 @@ class ReportBomStructure(models.AbstractModel):
             'route_name': route_info.get('route_name', ''),
             'route_detail': route_info.get('route_detail', ''),
             'lead_time': route_info.get('lead_time', False),
+<<<<<<< HEAD
             'manufacture_delay': route_info.get('manufacture_delay', False),
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             'stock_avail_state': availabilities['stock_avail_state'],
             'resupply_avail_delay': availabilities['resupply_avail_delay'],
             'availability_display': availabilities['availability_display'],
@@ -513,7 +523,10 @@ class ReportBomStructure(models.AbstractModel):
                 'route_name': bom_line['route_name'],
                 'route_detail': bom_line['route_detail'],
                 'lead_time': bom_line['lead_time'],
+<<<<<<< HEAD
                 'manufacture_delay': bom_line['manufacture_delay'],
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                 'level': bom_line['level'],
                 'code': bom_line['code'],
                 'availability_state': bom_line['availability_state'],

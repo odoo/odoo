@@ -4,7 +4,10 @@
 from psycopg2 import IntegrityError
 
 from odoo import Command
+<<<<<<< HEAD
 from odoo.addons.mail.tests.common import mail_new_test_user
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from odoo.addons.onboarding.tests.common import TestOnboardingCommon
 from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
@@ -216,6 +219,7 @@ class TestOnboarding(TestOnboardingCommon):
         # But it can
         self.step_initially_w_o_onboarding.with_company(self.company_2).action_set_just_done()
         self.assert_onboarding_is_done(self.onboarding_3.with_company(self.company_2))
+<<<<<<< HEAD
 
     def test_remove_company_with_progress(self):
         user = mail_new_test_user(
@@ -233,3 +237,5 @@ class TestOnboarding(TestOnboardingCommon):
         self.company_2.with_user(user).unlink()
         self.onboarding_1._compute_current_progress()
         self.assertEqual(len(self.onboarding_1.progress_ids), 1)
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

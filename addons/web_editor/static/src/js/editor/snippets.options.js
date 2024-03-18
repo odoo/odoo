@@ -4060,11 +4060,14 @@ const SnippetOptionWidget = Widget.extend({
                         }
                     }
                 }
+<<<<<<< HEAD
                 // When the default color is the target's "currentColor", the
                 // value should be handled correctly by the option.
                 if (value === "currentColor") {
                     return styles.color;
                 }
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
                 return value;
             }
@@ -4641,8 +4644,13 @@ registry.sizing = SnippetOptionWidget.extend({
             self.options.wysiwyg.odooEditor.automaticStepUnactive('resizing');
 
             const cursor = $handle.css('cursor') + '-important';
+<<<<<<< HEAD
             const $iframeWindow = $(this.ownerDocument.defaultView);
             $iframeWindow[0].document.body.classList.add(cursor);
+=======
+            const $body = $(this.ownerDocument.body);
+            $body.addClass(cursor);
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             self.$overlay.removeClass('o_handlers_idle');
 
             const bodyMouseMove = function (ev) {
@@ -4688,9 +4696,15 @@ registry.sizing = SnippetOptionWidget.extend({
                 }
             };
             const bodyMouseUp = function () {
+<<<<<<< HEAD
                 $iframeWindow.off("mousemove", bodyMouseMove);
                 $iframeWindow.off("mouseup", bodyMouseUp);
                 $iframeWindow[0].document.body.classList.remove(cursor);
+=======
+                $body.off('mousemove', bodyMouseMove);
+                $body.off('mouseup', bodyMouseUp);
+                $body.removeClass(cursor);
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                 self.$overlay.addClass('o_handlers_idle');
                 $handle.removeClass('o_active');
 
@@ -4729,8 +4743,13 @@ registry.sizing = SnippetOptionWidget.extend({
                     }});
                 }, 0);
             };
+<<<<<<< HEAD
             $iframeWindow.on("mousemove", bodyMouseMove);
             $iframeWindow.on("mouseup", bodyMouseUp);
+=======
+            $body.on('mousemove', bodyMouseMove);
+            $body.on('mouseup', bodyMouseUp);
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         });
 
         for (const [key, value] of Object.entries(resizeValues)) {
@@ -6523,6 +6542,10 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @see this.selectClass for parameters
      */
     async crop() {
+<<<<<<< HEAD
+=======
+        this.trigger_up('hide_overlay');
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         this.trigger_up('disable_loading_effect');
         const img = this._getImg();
         const document = this.$el[0].ownerDocument;

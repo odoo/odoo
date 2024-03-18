@@ -806,16 +806,28 @@ class HolidaysAllocation(models.Model):
     # before every run, as if it was run from date_from, after an optional change in the allocation value
     # the user can simply confirm and validate the allocation. The record is in correct state for the next
     # call of the cron job.
+<<<<<<< HEAD
     @api.onchange('date_from', 'accrual_plan_id', 'date_to')
     def _onchange_date_from(self):
         if self.allocation_type != 'accrual' or self.state == 'validate' or not self.accrual_plan_id\
            or not self.employee_id:
+=======
+    @api.onchange('date_from', 'accrual_plan_id')
+    def _onchange_date_from(self):
+        now = date.today()
+        if self.allocation_type != 'accrual' or self.state == 'validate' or not self.accrual_plan_id\
+           or not self.employee_id or not (not self.date_to or self.date_to > now):
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             return
         self.lastcall = self.date_from
         self.nextcall = False
         self.number_of_days_display = 0.0
+<<<<<<< HEAD
         date_to = min(self.date_to, date.today()) if self.date_to else False
         self._process_accrual_plans(date_to)
+=======
+        self._process_accrual_plans()
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
     # ------------------------------------------------------------
     # Activity methods

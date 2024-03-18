@@ -1414,7 +1414,10 @@ export class Order extends PosModel {
         let partner;
         if (json.state && ["done", "invoiced", "paid"].includes(json.state)) {
             this.sequence_number = json.sequence_number;
+<<<<<<< HEAD
             this.pos_session_id = json.pos_session_id;
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         } else if (json.pos_session_id !== this.pos.pos_session.id) {
             this.sequence_number = this.pos.pos_session.sequence_number++;
         } else {
@@ -1579,7 +1582,11 @@ export class Order extends PosModel {
             date: this.receiptDate,
             pos_qr_code:
                 this.pos.company.point_of_sale_use_ticket_qr_code &&
+<<<<<<< HEAD
                 (this.finalized || ["paid", "done", "invoiced"].includes(this.state)) &&
+=======
+                this.finalized &&
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                 qrCodeSrc(
                     `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}`
                 ),

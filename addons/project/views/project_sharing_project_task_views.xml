@@ -201,7 +201,11 @@
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
                                     <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" decoration-danger="date_deadline &lt; current_date" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+<<<<<<< HEAD
                                     <field name="stage_id" domain="[('user_id', '=', False), ('project_ids', 'in', [project_id])]"/>
+=======
+                                    <field name="stage_id" optional="show"/>
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form', 'search_view_ref': 'project.project_sharing_project_task_view_search'}"
                                             invisible="project_id or project_id != id"/>

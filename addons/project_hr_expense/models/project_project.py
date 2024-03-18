@@ -4,7 +4,10 @@ import json
 
 from odoo import api, fields, models, _, _lt
 from odoo.osv import expression
+<<<<<<< HEAD
 from odoo.tools import SQL
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from collections import defaultdict
 
 class Project(models.Model):
@@ -18,6 +21,7 @@ class Project(models.Model):
             self.expenses_count = 0
             return
         query = self.env['hr.expense']._search([])
+<<<<<<< HEAD
         query.add_where(
             SQL(
                 "%s && %s",
@@ -36,6 +40,17 @@ class Project(models.Model):
         """
         self._cr.execute(query_string, query_param)
         data = {res['account_id']: res['count'] for res in self._cr.dictfetchall()}
+=======
+        query.add_where('hr_expense.analytic_distribution ?| %s', [[str(account_id) for account_id in self.analytic_account_id.ids]])
+
+        query_string, query_param = query.select(
+            'jsonb_object_keys(analytic_distribution) as account_id',
+            'COUNT(DISTINCT(id)) as expense_count',
+        )
+        query_string = f'{query_string} GROUP BY jsonb_object_keys(analytic_distribution)'
+        self._cr.execute(query_string, query_param)
+        data = {int(record.get('account_id')): record.get('expense_count') for record in self._cr.dictfetchall()}
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         for project in self:
             project.expenses_count = data.get(project.analytic_account_id.id, 0)
 
@@ -98,6 +113,7 @@ class Project(models.Model):
             return {}
         can_see_expense = with_action and self.user_has_groups('hr_expense.group_hr_expense_team_approver')
         query = self.env['hr.expense']._search([('state', 'in', ['approved', 'done'])])
+<<<<<<< HEAD
         query.add_where(
             SQL(
                 "%s && %s",
@@ -105,6 +121,9 @@ class Project(models.Model):
                 self.env['hr.expense']._query_analytic_accounts(),
             )
         )
+=======
+        query.add_where('hr_expense.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         query_string, query_param = query.select('currency_id', 'array_agg(id) as ids', 'SUM(untaxed_amount_currency) as untaxed_amount')
         query_string = f"{query_string} GROUP BY currency_id"
         self._cr.execute(query_string, query_param)

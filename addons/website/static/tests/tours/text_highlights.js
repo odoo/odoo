@@ -26,11 +26,14 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
         isCheck: true,
     },
     {
+<<<<<<< HEAD
         content: "Check that the highlights grid was displayed",
         trigger: "we-select[data-name=text_highlight_opt] we-toggler.active",
         isCheck: true,
     },
     {
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         content: "Disable the highlight effect",
         trigger: "div.o_we_text_highlight",
     },
@@ -68,7 +71,11 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
         trigger: "iframe .s_cover span.o_text_highlight:has(.o_text_highlight_item:has(.o_text_highlight_path_underline) + br + .o_text_highlight_item:has(.o_text_highlight_path_underline))",
         isCheck: true,
     },
+<<<<<<< HEAD
     ...wTourUtils.selectElementInWeSelectWidget("text_highlight_opt", "Jagged").slice(1), // The select is already opened
+=======
+    ...wTourUtils.selectElementInWeSelectWidget("text_highlight_opt", "Jagged"),
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     {
         content: "When changing the text highlight, we only replace the highlight SVG with a new drawn one",
         trigger: "iframe .s_cover span.o_text_highlight:has(.o_text_highlight_item:has(.o_text_highlight_path_jagged) + br + .o_text_highlight_item:has(.o_text_highlight_path_jagged))",

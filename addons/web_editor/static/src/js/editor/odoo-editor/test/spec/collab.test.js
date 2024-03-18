@@ -567,6 +567,7 @@ describe('Collaboration', () => {
                 contentAfter: '<div contenteditable="true">[c1}{c1]<br></div>',
             });
         });
+<<<<<<< HEAD
         it("should not sanitize the content of an element recursively when sanitizing an attribute", async () => {
             await testMultiEditor({
                 clientIds: ["c1", "c2"],
@@ -626,6 +627,8 @@ describe('Collaboration', () => {
                 },
             });
         });
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     });
     describe('data-oe-protected', () => {
         it('should not share protected mutations and share unprotected ones', async () => {

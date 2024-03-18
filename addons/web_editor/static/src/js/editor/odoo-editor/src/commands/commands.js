@@ -642,9 +642,13 @@ export const editorCommands = {
                             ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
                             !isWhitespace(node.textContent) &&
                             !node.classList.contains('btn') &&
+<<<<<<< HEAD
                             !node.querySelector('font')) &&
                             node.nodeName !== 'A' &&
                             !(node.nodeName === 'SPAN' && node.style['fontSize'])) {
+=======
+                            !node.querySelector('font'))) {
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                     // Node is a visible text or inline node without font nor a button:
                     // wrap it in a <font>.
                     const previous = node.previousSibling;

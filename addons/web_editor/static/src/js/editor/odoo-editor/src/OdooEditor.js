@@ -3561,6 +3561,7 @@ export class OdooEditor extends EventTarget {
         );
     }
     _safeSetAttribute(node, attributeName, attributeValue) {
+<<<<<<< HEAD
         const clone = document.createElement(node.tagName);
         clone.setAttribute(attributeName, attributeValue);
         DOMPurify.sanitize(clone, { IN_PLACE: true });
@@ -3569,6 +3570,22 @@ export class OdooEditor extends EventTarget {
         } else {
             node.removeAttribute(attributeName);
         }
+=======
+        const parent = node.parentNode;
+        const next = node.nextSibling;
+        this.observerFlush();
+        node.remove();
+        this.observer.takeRecords();
+        node.setAttribute(attributeName, attributeValue);
+        this.observerFlush();
+        DOMPurify.sanitize(node, { IN_PLACE: true });
+        if (next) {
+            next.before(node);
+        } else if (parent) {
+            parent.append(node);
+        }
+        this.observer.takeRecords();
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     }
     _insertLinkZws(side, link) {
         this.observerUnactive('_insertLinkZws');

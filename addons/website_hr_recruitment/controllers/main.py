@@ -3,7 +3,10 @@
 
 import warnings
 from datetime import datetime, timedelta
+<<<<<<< HEAD
 from werkzeug.urls import url_encode
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 from odoo import http, _
 from odoo.addons.http_routing.models.ir_http import slug
@@ -272,6 +275,7 @@ class WebsiteHrRecruitment(http.Controller):
             "This route is deprecated since Odoo 16.3: the jobs list is now available at /jobs or /jobs/page/XXX",
             DeprecationWarning
         )
+<<<<<<< HEAD
         url_params = {
             'country_id': country and country.id,
             'department_id': department and department.id,
@@ -282,6 +286,14 @@ class WebsiteHrRecruitment(http.Controller):
         return request.redirect(
             '/jobs?%s' % url_encode(url_params),
             code=301,
+=======
+        return self.jobs(
+            country_id=country.id if country else None,
+            department_id=department.id if department else None,
+            office_id=office_id,
+            contract_type_id=contract_type_id,
+            **kwargs
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         )
 
     @http.route('/website_hr_recruitment/check_recent_application', type='json', auth="public")

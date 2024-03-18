@@ -315,7 +315,11 @@ class AccountMove(models.Model):
 
         common_domain = [
             ('company_id', '=', self.company_id.id),
+<<<<<<< HEAD
             ('state', 'in', ('purchase', 'done')),
+=======
+            ('state', '=', 'purchase'),
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             ('invoice_status', 'in', ('to invoice', 'no'))
         ]
 

@@ -28,8 +28,13 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
     trigger: '.o_field_many2many_tags input',
     run: 'text Gard',
 }, {
+<<<<<<< HEAD
     content: 'eLearning: select Gardening tag',
     trigger: '.ui-autocomplete a:contains("Gardening")',
+=======
+    content: 'eLearning: select gardener tag',
+    trigger: '.ui-autocomplete a:contains("Gardener")',
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     in_modal: false,
 }, {
     content: 'eLearning: set description',

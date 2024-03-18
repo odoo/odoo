@@ -334,6 +334,7 @@ registry.category("web_tour.tours").add('PosLoyaltyTour10', {
             PosLoyalty.isRewardButtonHighlighted(false),
         ].flat(),
 });
+<<<<<<< HEAD
 
 registry.category("web_tour.tours").add('PosLoyaltyTour11.1', {
     test: true,
@@ -382,3 +383,5 @@ registry.category("web_tour.tours").add('PosLoyaltyTour11.2', {
             PosLoyalty.finalizeOrder('Cash', '50'),
         ].flat(),
 });
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

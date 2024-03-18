@@ -83,8 +83,13 @@ var addArticleToSection = function (sectionName, pageName, backend) {
     content: 'eLearning: click on tags',
     trigger: (backend ? 'iframe ' : '' ) + 'ul.select2-choices:first',
 }, {
+<<<<<<< HEAD
     content: 'eLearning: select Practice tag',
     trigger: (backend ? 'iframe ' : '' ) + 'div.select2-result-label:contains("Practice")',
+=======
+    content: 'eLearning: select Theory tag',
+    trigger: (backend ? 'iframe ' : '' ) + 'div.select2-result-label:contains("Theory")',
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     in_modal: false,
 }, {
 	content: 'eLearning: fill article completion time',

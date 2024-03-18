@@ -102,6 +102,7 @@ class TestWebsiteResUsers(TransactionCase):
 
         self._create_and_check_portal_user(False, company_1, company_2, website_1, website_2)
         self._create_and_check_portal_user(True, company_1, company_2, website_1, website_2)
+<<<<<<< HEAD
 
     def test_archive_company_linked_to_website(self):
         company = self.env['res.company'].create({'name': 'Company'})
@@ -110,3 +111,5 @@ class TestWebsiteResUsers(TransactionCase):
         # The company cannot be archived because it has a website linked to it
         with self.assertRaises(ValidationError):
             company.action_archive()
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

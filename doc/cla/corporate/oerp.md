@@ -15,4 +15,7 @@ List of contributors:
 Daniel Dico ddico@oerp.ca https://github.com/ddico
 Yash Pathak yp@oerp.ca https://github.com/yp-oerp
 Lucas Jagel lj@oerp.ca https://github.com/lj-oerp
+<<<<<<< HEAD
 Daryl Chen dc@oerp.ca https://github.com/dc-oerp
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

@@ -3,7 +3,11 @@
 
 from collections import namedtuple
 
+<<<<<<< HEAD
 from odoo import Command, fields
+=======
+from odoo import Command
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from odoo.tests import tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
@@ -71,7 +75,11 @@ class TestItEdiReverseCharge(TestItEdi):
         # Purchase tax 4% with Reverse Charge
         cls.purchase_tax_4p = cls.env['account.tax'].with_company(cls.company).create(tax_data)
 
+<<<<<<< HEAD
         # Purchase tax 4% with External Reverse Charge, targeting the tax grid for import of goods
+=======
+        # Purchase tax 4% with Reverse Charge, targeting the tax grid for import of goods
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         # already in Italy in a VAT deposit
         cls.purchase_tax_4p_already_in_italy = cls.env['account.tax'].with_company(cls.company).create({
             **tax_data,
@@ -86,6 +94,7 @@ class TestItEdiReverseCharge(TestItEdi):
                 RepartitionLine(-100, 'tax', False)),
         })
 
+<<<<<<< HEAD
         # Purchase tax 22% with Reverse Charge, targeting the tax grid for Construction Subcontractors
         # already in Italy in a VAT deposit
         cls.purchase_tax_vj12 = cls.env['account.tax'].with_company(cls.company).create({
@@ -102,6 +111,8 @@ class TestItEdiReverseCharge(TestItEdi):
                 RepartitionLine(-100, 'tax', False)),
         })
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         # Purchase tax 22% with Reverse Charge
         cls.purchase_tax_22p = cls.env['account.tax'].with_company(cls.company).create({
             **tax_data,
@@ -113,12 +124,17 @@ class TestItEdiReverseCharge(TestItEdi):
         cls.sale_tax_0v = cls.env['account.tax'].with_company(cls.company).create({
             **tax_data,
             'type_tax_use': 'sale',
+<<<<<<< HEAD
             'amount': 0.0,
+=======
+            'amount': 0,
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             'amount_type': 'percent',
             'l10n_it_exempt_reason': 'N1',
             'l10n_it_law_reference': 'test',
         })
 
+<<<<<<< HEAD
         # Export tax 0% Internal Reverse Charge
         cls.sale_tax_n63 = cls.env['account.tax'].with_company(cls.company).create({
             **tax_data,
@@ -131,6 +147,9 @@ class TestItEdiReverseCharge(TestItEdi):
         })
 
     def test_invoice_external_reverse_charge(self):
+=======
+    def test_invoice_reverse_charge(self):
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         invoice = self.env['account.move'].with_company(self.company).create({
             'move_type': 'out_invoice',
             'invoice_date': '2022-03-24',
@@ -153,6 +172,7 @@ class TestItEdiReverseCharge(TestItEdi):
             ],
         })
         invoice.action_post()
+<<<<<<< HEAD
         self._assert_export_invoice(invoice, 'invoice_external_reverse_charge.xml')
 
     def test_invoice_internal_reverse_charge(self):
@@ -173,6 +193,9 @@ class TestItEdiReverseCharge(TestItEdi):
         })
         invoice.action_post()
         self._assert_export_invoice(invoice, 'invoice_internal_reverse_charge.xml')
+=======
+        self._assert_export_invoice(invoice, 'invoice_reverse_charge.xml')
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
     def test_bill_reverse_charge_and_refund(self):
         bill = self.env['account.move'].with_company(self.company).create({
@@ -252,6 +275,7 @@ class TestItEdiReverseCharge(TestItEdi):
         })
         bill.action_post()
         self._assert_export_invoice(bill, 'bill_reverse_charge_san_marino.xml')
+<<<<<<< HEAD
 
     def test_receive_bill_reverse_charge_internal(self):
         """ Imported Internal Reverse Charge bill about Construction Subcontractors
@@ -281,3 +305,5 @@ class TestItEdiReverseCharge(TestItEdi):
             rc_tax = line.tax_ids[0]
             self.assertEqual(rc_tax.amount, 22.0)
             self.assertTrue('+vj12' in rc_tax.invoice_repartition_line_ids[0].tag_ids.mapped("name"))
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

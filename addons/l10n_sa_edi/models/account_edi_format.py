@@ -2,7 +2,11 @@ import json
 from hashlib import sha256
 from base64 import b64decode, b64encode
 from lxml import etree
+<<<<<<< HEAD
 from datetime import datetime
+=======
+from datetime import date, datetime
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from odoo import models, fields, _, api
 from odoo.exceptions import UserError
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
@@ -435,7 +439,11 @@ class AccountEdiFormat(models.Model):
             errors.append(_set_missing_partner_fields(supplier_missing_info, _("Supplier")))
         if customer_missing_info:
             errors.append(_set_missing_partner_fields(customer_missing_info, _("Customer")))
+<<<<<<< HEAD
         if invoice.invoice_date > fields.Date.context_today(self.with_context(tz='Asia/Riyadh')):
+=======
+        if invoice.invoice_date > date.today():
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             errors.append(_("- Please, make sure the invoice date is set to either the same as or before Today."))
         if invoice.move_type in ('in_refund', 'out_refund') and not invoice._l10n_sa_check_refund_reason():
             errors.append(

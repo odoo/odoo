@@ -66,7 +66,11 @@ class PaymentTransaction(models.Model):
         }
         # Extra payload values that must not be included if empty.
         if self.partner_email:
+<<<<<<< HEAD
             payload['customer']['email'] = self.partner_email
+=======
+            payload['customer']['email'] = self.partner_id.email
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         if phone := self.partner_id.mobile or self.partner_id.phone:
             payload['customer']['mobile_number'] = phone
         address_details = {}

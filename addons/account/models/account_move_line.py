@@ -451,7 +451,11 @@ class AccountMoveLine(models.Model):
     @api.model
     def get_views(self, views, options=None):
         res = super().get_views(views, options)
+<<<<<<< HEAD
         if res['views'].get('list') and self.env['ir.ui.view'].sudo().browse(res['views']['list']['id']).name == "account.move.line.payment.tree":
+=======
+        if res['views'].get('list') and self.env['ir.ui.view'].browse(res['views']['list']['id']).name == "account.move.line.payment.tree":
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             if toolbar := res['views']['list'].get('toolbar'):
                 # We dont want any additionnal action in the "account.move.line.payment.tree" view toolbar
                 toolbar['action'] = []
@@ -640,6 +644,7 @@ class AccountMoveLine(models.Model):
                 line.balance = False
             elif not line.move_id.is_invoice(include_receipts=True):
                 # Only act as a default value when none of balance/debit/credit is specified
+<<<<<<< HEAD
                 # balance is always the written field because of `_sanitize_vals`.
                 # Virtual record holds just the differences coming from the onchange
                 # so we need to recover balance of stored lines to calculate correctly the
@@ -649,6 +654,10 @@ class AccountMoveLine(models.Model):
                 outdated_lines = line.move_id.line_ids._origin
                 new_lines = line.move_id.line_ids - line
                 line.balance = -sum((existing_lines - outdated_lines + new_lines).mapped('balance'))
+=======
+                # balance is always the written field because of `_sanitize_vals`
+                line.balance = -sum((line.move_id.line_ids - line).mapped('balance'))
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             else:
                 line.balance = 0
 

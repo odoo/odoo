@@ -78,6 +78,7 @@ class StockMoveLine(models.Model):
             stock_valuation_layers |= move._create_dropshipped_returned_svl(forced_quantity=abs(diff))
 
         stock_valuation_layers._validate_accounting_entries()
+<<<<<<< HEAD
 
     @api.model
     def _should_exclude_for_valuation(self):
@@ -88,3 +89,5 @@ class StockMoveLine(models.Model):
         """
         self.ensure_one()
         return self.owner_id and self.owner_id != self.company_id.partner_id
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

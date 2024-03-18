@@ -1418,6 +1418,7 @@ class PosOrderLine(models.Model):
         self.ensure_one()
         # Use the delivery date if there is else use date_order and lead time
         if self.order_id.shipping_date:
+<<<<<<< HEAD
             # get timezone from user
             # and convert to UTC to avoid any timezone issue
             # because shipping_date is date and date_planned is datetime
@@ -1425,6 +1426,9 @@ class PosOrderLine(models.Model):
             shipping_date = fields.Datetime.to_datetime(self.order_id.shipping_date)
             shipping_date = from_zone.localize(shipping_date)
             date_deadline = shipping_date.astimezone(pytz.UTC).replace(tzinfo=None)
+=======
+            date_deadline = self.order_id.shipping_date
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         else:
             date_deadline = self.order_id.date_order
 

@@ -407,8 +407,22 @@ export class PaymentScreen extends Component {
             return "/point_of_sale/static/src/img/card-bank.png";
         }
     }
+<<<<<<< HEAD
 
     async _askForCustomerIfRequired() {
+=======
+    async _isOrderValid(isForceValidate) {
+        if (this.currentOrder.get_orderlines().length === 0 && this.currentOrder.is_to_invoice()) {
+            this.popup.add(ErrorPopup, {
+                title: _t("Empty Order"),
+                body: _t(
+                    "There must be at least one product in your order before it can be validated and invoiced."
+                ),
+            });
+            return false;
+        }
+
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         const splitPayments = this.paymentLines.filter(
             (payment) => payment.payment_method.split_transactions
         );
@@ -423,6 +437,7 @@ export class PaymentScreen extends Component {
             }
             return false;
         }
+<<<<<<< HEAD
     }
 
     async _isOrderValid(isForceValidate) {
@@ -439,6 +454,8 @@ export class PaymentScreen extends Component {
         if (await this._askForCustomerIfRequired() === false) {
             return false;
         }
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
         if (
             (this.currentOrder.is_to_invoice() || this.currentOrder.getShippingDate()) &&

@@ -690,7 +690,11 @@ class AccountPayment(models.Model):
 
     def new(self, values=None, origin=None, ref=None):
         payment = super().new(values, origin, ref)
+<<<<<<< HEAD
         if not any(values.values()) and not payment.journal_id and not payment.default_get(['journal_id']):  # might not be computed because declared by inheritance
+=======
+        if not payment.journal_id and not payment.default_get(['journal_id']):  # might not be computed because declared by inheritance
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             payment.move_id.payment_id = payment
             payment.move_id._compute_journal_id()
         return payment

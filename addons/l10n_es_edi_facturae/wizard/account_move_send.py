@@ -16,6 +16,7 @@ class AccountMoveSend(models.TransientModel):
         values['l10n_es_edi_facturae_xml'] = self.l10n_es_edi_facturae_checkbox_xml
         return values
 
+<<<<<<< HEAD
     @api.model
     def _get_wizard_vals_restrict_to(self, only_options):
         # EXTENDS 'account'
@@ -26,6 +27,8 @@ class AccountMoveSend(models.TransientModel):
             **only_options,
         }
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------

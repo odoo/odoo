@@ -34,4 +34,7 @@ Régis Pirard regis.pirard@acsone.eu https://github.com/regispirard
 Xavier Bouquiaux xavier.bouquiaux@acsone.eu https://github.com/xavier-bouquiaux
 Maxime Franco maxime.franco@acsone.eu https://github.com/FrancoMaxime
 Marie Lejeune marie.lejeune@acsone.eu https://github.com/marielejeune
+<<<<<<< HEAD
 Justine Doutreloux justine.doutreloux@acsone.eu https://github.com/jdoutreloux
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

@@ -10,7 +10,11 @@ class SaleReport(models.Model):
     @api.model
     def _get_done_states(self):
         done_states = super()._get_done_states()
+<<<<<<< HEAD
         done_states.extend(['paid', 'invoiced', 'done'])
+=======
+        done_states.extend(['paid', 'invoiced'])
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         return done_states
 
     state = fields.Selection(

@@ -2,7 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+<<<<<<< HEAD
 from odoo.tools import SQL
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from odoo.exceptions import UserError
 
 
@@ -29,6 +32,7 @@ class AccountAnalyticAccount(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_account_in_analytic_distribution(self):
+<<<<<<< HEAD
         self.env.cr.execute(
             SQL(
                 r"""
@@ -40,6 +44,13 @@ class AccountAnalyticAccount(models.Model):
                 self.env['hr.expense']._query_analytic_accounts(),
             )
         )
+=======
+        self.env.cr.execute("""
+            SELECT id FROM hr_expense
+                WHERE analytic_distribution::jsonb ?| array[%s]
+            LIMIT 1
+        """, ([str(id) for id in self.ids],))
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         expense_ids = self.env.cr.fetchall()
         if expense_ids:
             raise UserError(_("You cannot delete an analytic account that is used in an expense."))

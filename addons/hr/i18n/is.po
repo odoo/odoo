@@ -1,6 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr
+<<<<<<< HEAD
 # 
 # Translators:
 # Heiðar Sigurðsson, 2024
@@ -18,6 +19,24 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: is\n"
+=======
+#
+# Translators:
+# Heiðar Sigurðsson, 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-16 13:48+0000\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: Heiðar Sigurðsson, 2022\n"
+"Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
+"Language: is\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 "Plural-Forms: nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);\n"
 
 #. module: hr
@@ -28,17 +47,35 @@ msgstr ""
 
 #. module: hr
 #. odoo-python
+<<<<<<< HEAD
 #: code:addons/hr/models/hr_job.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr ""
 "%s (afrit)\n"
 " "
+=======
+#: code:addons/hr/wizard/hr_plan_wizard.py:0
+#, python-format
+msgid "%(activity)s, assigned to %(name)s, due on the %(deadline)s"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_job.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (afrita)"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "&amp;nbsp;"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "&amp;nbsp;"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
@@ -79,11 +116,14 @@ msgid "12 days / year, including <br>6 of your choice."
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "12345678901"
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:hr.job,job_details:hr.job_ceo
 #: model_terms:hr.job,job_details:hr.job_consultant
 #: model_terms:hr.job,job_details:hr.job_cto
@@ -109,9 +149,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
+=======
+msgid "<b>Congratulations!</b> May I recommend you to setup an <a href=\"%s\">onboarding plan?</a>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -120,6 +164,7 @@ msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"Email\"/>"
@@ -129,6 +174,25 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Phone\"/>"
+=======
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<small role=\"img\" class=\"fa fa-fw fa-circle text-success o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_present')]}\" aria-label=\"Present\" title=\"Present\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<small role=\"img\" class=\"fa fa-fw fa-circle text-warning o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_to_define')]}\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<small role=\"img\" class=\"fa fa-fw fa-circle-o text-muted o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_absent')]}\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<small role=\"img\" class=\"fa fa-fw fa-circle-o text-success o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_absent_active')]}\" aria-label=\"Present but not active\" title=\"Present but not active\" name=\"presence_absent_active\"/>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -143,16 +207,57 @@ msgid "<small><b>READ</b></small>"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid ""
 "<span class=\"flex-shrink-0 ml8 me-2\">IP Addresses (comma-separated)</span>"
+=======
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Present\" name=\"presence_present\">\n"
+"                                                    </span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\">\n"
+"                                                    </span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\">\n"
+"                                                    </span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Present but not active\" title=\"Present but not active\" name=\"presence_absent_active\">\n"
+"                                                    </span>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+<<<<<<< HEAD
 msgid ""
 "<span class=\"flex-shrink-0 ml8 me-2\">Minimum number of emails to "
 "send</span>"
+=======
+msgid "<span class=\"flex-shrink-0 ml8 me-2\">IP Addresses (comma-separated)</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "<span class=\"flex-shrink-0 ml8 me-2\">Minimum number of emails to send</span>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -162,16 +267,24 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+<<<<<<< HEAD
 msgid ""
 "<span class=\"o_form_label o_hr_form_label cursor-default\">Close "
 "Activities</span>"
+=======
+msgid "<span class=\"o_form_label o_hr_form_label cursor-default\">Close Activities</span>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+<<<<<<< HEAD
 msgid ""
 "<span class=\"o_form_label o_hr_form_label cursor-default\">Detailed "
 "Reason</span>"
+=======
+msgid "<span class=\"o_form_label o_hr_form_label cursor-default\">Detailed Reason</span>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -193,6 +306,14 @@ msgid "<span class=\"o_stat_text\">Connected Since</span>"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton
+msgid "<span class=\"o_stat_text\">Contacts</span>"
+msgstr ""
+
+#. module: hr
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
 msgid "<span class=\"o_stat_text\">Employee</span>"
 msgstr ""
@@ -281,8 +402,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction
+<<<<<<< HEAD
 msgid "Action Needed"
 msgstr ""
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_needaction
+msgid "Action Needed"
+msgstr "Þarfnast aðgerðar"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
@@ -290,6 +417,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__active
 #: model:ir.model.fields,field_description:hr.field_hr_job__active
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__active
 msgid "Active"
 msgstr ""
@@ -297,30 +425,74 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_ids
 msgid "Activities"
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan__active
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__active
+msgid "Active"
+msgstr "Virkur"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_ids
+#: model:ir.model.fields,field_description:hr.field_hr_plan__plan_activity_type_ids
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_ids
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_tree
+msgid "Activities"
+msgstr "Aðgerðir"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+msgid "Activities To Generate"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_form
+msgid "Activity"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_decoration
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_exception_decoration
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Activity Exception Decoration"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model,name:hr.model_mail_activity_plan
 msgid "Activity Plan"
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.ui.menu,name:hr.menu_config_plan
 msgid "Activity Planning"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_state
+<<<<<<< HEAD
 msgid "Activity State"
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_state
+msgid "Activity State"
+msgstr "Staða aðgerðar"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__activity_type_id
+msgid "Activity Type"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_icon
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_type_icon
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Activity Type Icon"
 msgstr ""
 
@@ -330,6 +502,7 @@ msgid "Activity by"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model,name:hr.model_mail_activity_plan_template
 msgid "Activity plan template"
 msgstr ""
@@ -340,6 +513,8 @@ msgid "Activity schedule plan Wizard"
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
@@ -347,17 +522,30 @@ msgid "Add a new employee"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model_terms:ir.actions.act_window,help:hr.mail_activity_plan_action
+=======
+#: model_terms:ir.actions.act_window,help:hr.hr_plan_action
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Add a new plan"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
+=======
+#: model_terms:ir.actions.act_window,help:hr.hr_plan_activity_type_action
+msgid "Add a new plan activity"
+msgstr ""
+
+#. module: hr
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_description
 msgid "Additional Information"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
@@ -367,6 +555,8 @@ msgid ""
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
 #: model:ir.model.fields,field_description:hr.field_res_users__additional_note
 msgid "Additional Note"
@@ -384,8 +574,14 @@ msgid "Additional languages"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:hr.department,name:hr.dep_administration
 msgid "Administration"
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_employee__address_home_id
+#: model:ir.model.fields,field_description:hr.field_res_users__address_home_id
+msgid "Address"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -416,8 +612,18 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_maintenance_equipment_category__alias_contact
 msgid "Alias Contact Security"
+=======
+msgid "Alias Contact Security"
+msgstr "Alias Contact Security"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__lang
+#: model:ir.model.fields,help:hr.field_res_users__private_lang
+msgid "All the emails and documents sent to this contact will be translated in this language."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -448,8 +654,20 @@ msgid "Approvers"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__archive_private_address
+msgid "Archive Private Address"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_search
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -457,7 +675,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Archived"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Geymt"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -478,6 +700,7 @@ msgid ""
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
 msgid "Assignment"
 msgstr ""
@@ -486,6 +709,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_attachment_count
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Attachment Count"
 msgstr ""
 
@@ -590,7 +819,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account Number"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Bank Account Number"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -635,6 +868,10 @@ msgid "Can Edit"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:hr.plan_wizard
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form
 msgid "Cancel"
 msgstr ""
@@ -670,7 +907,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
 msgid "Child Departments"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Child Departments"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -680,7 +921,10 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "City"
 msgstr ""
 
@@ -689,6 +933,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__coach_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__coach_id
 #: model:ir.model.fields,field_description:hr.field_res_users__coach_id
+<<<<<<< HEAD
 #: model:ir.model.fields.selection,name:hr.selection__mail_activity_plan_template__responsible_type__coach
 msgid "Coach"
 msgstr ""
@@ -696,11 +941,21 @@ msgstr ""
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
+=======
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__coach
+msgid "Coach"
+msgstr "Coach"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #, python-format
 msgid "Coach of employee %s is not set."
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__code
 msgid "Code"
 msgstr ""
@@ -712,19 +967,29 @@ msgid "Color"
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr.field_hr_department__color
 #: model:ir.model.fields,field_description:hr.field_hr_employee__color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__color
 msgid "Color Index"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Color Index"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_company
 #: model_terms:ir.ui.view,arch_db:hr.view_department_tree
 msgid "Companies"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Fyrirtæki"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__company_id
@@ -732,11 +997,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__company_id
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__company_id
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__company_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Fyrirtæki"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
@@ -761,7 +1037,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__complete_name
 msgid "Complete Name"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Fullt nafn"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_config_settings
@@ -772,7 +1052,11 @@ msgstr ""
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Configuration"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Uppsetning"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:hr.job,name:hr.job_consultant
@@ -782,12 +1066,20 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner
 msgid "Contact"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Tengiliður"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "Contact Information"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Tengiiðaupplýsingar"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_contact
@@ -817,9 +1109,13 @@ msgid "Contractor"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__country_id
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+=======
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Country"
 msgstr ""
 
@@ -835,11 +1131,14 @@ msgid "Country of Birth"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__location_type
 msgid "Cover Image"
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_date
 msgid "Create Date"
 msgstr ""
@@ -864,6 +1163,7 @@ msgid "Create a new department"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
 msgid "Create a new employment type"
 msgstr ""
@@ -874,6 +1174,8 @@ msgid "Create a new work location"
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -898,9 +1200,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job__create_uid
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__create_uid
 msgid "Created by"
 msgstr ""
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__create_uid
+msgid "Created by"
+msgstr "Búið til af"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__create_date
@@ -910,9 +1222,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_job__create_date
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__create_date
 msgid "Created on"
 msgstr ""
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__create_date
+msgid "Created on"
+msgstr "Stofnað þann"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__currency_id
@@ -922,7 +1244,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_employee
 msgid "Current Number of Employees"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Current Number of Employees"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -939,7 +1265,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
 #: model:ir.model.fields,field_description:hr.field_res_users__birthday
 msgid "Date of Birth"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Date of Birth"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #. odoo-python
@@ -968,20 +1298,34 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__department_id
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan__department_id
 #: model:ir.model.fields,field_description:hr.field_mail_activity_schedule__department_id
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__department_id
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr.field_res_users__department_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Department"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Department"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__name
 msgid "Department Name"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Department Name"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #. odoo-javascript
@@ -997,7 +1341,11 @@ msgstr ""
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 msgid "Departments"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Departments"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1074,6 +1422,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job__display_name
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__display_name
 msgid "Display Name"
 msgstr ""
@@ -1084,11 +1433,24 @@ msgid ""
 "Display remote work settings for each employee and dedicated reports. "
 "Presence icons will be updated with remote work location."
 msgstr ""
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__display_name
+msgid "Display Name"
+msgstr "Nafn"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__divorced
 msgid "Divorced"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Divorced"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
@@ -1142,7 +1504,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias
 msgid "Email Aliases"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Email Aliases"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1156,23 +1522,41 @@ msgstr ""
 #: model:ir.model,name:hr.model_hr_employee
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_id
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_resource_resource__employee_id
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__employee
 #: model:ir.model.fields.selection,name:hr.selection__mail_activity_plan_template__responsible_type__employee
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__employee_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__employee_ids
+#: model:ir.model.fields,field_description:hr.field_resource_resource__employee_id
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__employee
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__employee
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.ui.menu,name:hr.menu_config_employee
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form_inherit_hr
 #, python-format
 msgid "Employee"
 msgstr ""
+=======
+#, python-format
+msgid "Employee"
+msgstr "Starfsmaður"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_category
 msgid "Employee Category"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Employee Category"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_count
@@ -1201,16 +1585,23 @@ msgid "Employee Name"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_res_company__employee_properties_definition
 msgid "Employee Properties"
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.model.fields,field_description:hr.field_res_users__category_ids
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_form
 msgid "Employee Tags"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Employee Tags"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #. odoo-javascript
@@ -1247,12 +1638,19 @@ msgid "Employee's Country"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee's Name"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Employee's Name"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_resource_calendar_id
@@ -1280,7 +1678,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Employees"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Starfsfólk"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_partner__employees_count
@@ -1291,12 +1693,20 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 msgid "Employees Structure"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Employees Structure"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_list
 msgid "Employees Tags"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Employees Tags"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
@@ -1316,6 +1726,15 @@ msgid "Enrich employee profiles with skills and resumes"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,help:hr.field_hr_employee__address_home_id
+#: model:ir.model.fields,help:hr.field_res_users__address_home_id
+msgid "Enter here the private address of the employee, not the one linked to your company."
+msgstr ""
+
+#. module: hr
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -1328,9 +1747,14 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__expected_employees
+<<<<<<< HEAD
 msgid ""
 "Expected number of employees for this job position after new recruitment."
 msgstr ""
+=======
+msgid "Expected number of employees for this job position after new recruitment."
+msgstr "Expected number of employees for this job position after new recruitment."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1356,7 +1780,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__female
 msgid "Female"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Female"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_field
@@ -1373,18 +1801,34 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_follower_ids
+<<<<<<< HEAD
 msgid "Followers"
 msgstr ""
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_follower_ids
+msgid "Followers"
+msgstr "Fylgjendur"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_partner_ids
+<<<<<<< HEAD
 msgid "Followers (Partners)"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_type_icon
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Fylgjendur (viðskiptafélagar)"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__activity_type_icon
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_type_icon
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr ""
 
@@ -1392,9 +1836,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/discuss_channel.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the department "
 "auto-subscription."
+=======
+msgid "For %(channels)s, channel_type should be 'channel' to have the department auto-subscription."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -1414,11 +1862,14 @@ msgid "Fruit, coffee and <br>snacks provided."
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:hr.contract.type,name:hr.contract_type_full_time
 msgid "Full-Time"
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Future Activities"
 msgstr ""
@@ -1427,7 +1878,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__gender
 #: model:ir.model.fields,field_description:hr.field_res_users__gender
 msgid "Gender"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Gender"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1471,7 +1926,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Group By"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Hópa eftir"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_discuss_channel__subscription_department_ids
@@ -1484,6 +1943,7 @@ msgid "HR Employee: check work permit validity"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
 #, python-format
@@ -1495,11 +1955,21 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
 msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "HR Settings"
+msgstr "HR Settings"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__has_message
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_message
 #: model:ir.model.fields,field_description:hr.field_hr_job__has_message
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__has_message
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Has Message"
 msgstr ""
 
@@ -1517,12 +1987,16 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_hired_employee
 msgid "Hired Employees"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__home
 msgid "Home"
 msgstr ""
+=======
+msgstr "Hired Employees"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
@@ -1531,6 +2005,14 @@ msgid "Home-Work Distance"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_homeworking
+msgid "Homeworking"
+msgstr ""
+
+#. module: hr
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_icon_display
@@ -1548,7 +2030,11 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Human Resources"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
@@ -1564,9 +2050,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr.field_hr_job__id
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__id
 msgid "ID"
 msgstr ""
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan__id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__id
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__id
+msgid "ID"
+msgstr "Auðkenni"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__id_card
@@ -1581,11 +2077,19 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_icon
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_exception_icon
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Icon"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_icon
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_exception_icon
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Icon to indicate an exception activity."
 msgstr ""
 
@@ -1593,28 +2097,47 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
 #: model:ir.model.fields,field_description:hr.field_res_users__identification_id
 msgid "Identification No"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Identification No"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction
+<<<<<<< HEAD
 msgid "If checked, new messages require your attention."
 msgstr ""
+=======
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "If checked, new messages require your attention."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_has_error
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
+<<<<<<< HEAD
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
+=======
+msgid "If the active field is set to False, it will allow you to hide the resource record without removing it."
+msgstr "If the active field is set to False, it will allow you to hide the resource record without removing it."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__private_car_plate
@@ -1636,6 +2159,10 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_128
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_128
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__image_128
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Image 128"
 msgstr ""
 
@@ -1667,6 +2194,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_is_follower
+<<<<<<< HEAD
 msgid "Is Follower"
 msgstr ""
 
@@ -1674,6 +2202,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_manager
 msgid "Is Manager"
 msgstr ""
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_is_follower
+msgid "Is Follower"
+msgstr "Is Follower"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__is_system
@@ -1685,12 +2218,20 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
 msgid "Job"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Job"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__description
 msgid "Job Description"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Job Description"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_job
@@ -1702,13 +2243,21 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Job Position"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Starfsheiti"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_view_hr_job
 msgid "Job Positions"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Job Positions"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1722,13 +2271,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_res_users__job_title
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 msgid "Job Title"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Job Title"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__jobs_ids
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Jobs"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Jobs"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__lang
@@ -1766,9 +2323,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_uid
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__write_uid
 msgid "Last Updated by"
 msgstr ""
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__write_uid
+msgid "Last Updated by"
+msgstr "Síðast uppfært af"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__write_date
@@ -1779,9 +2346,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_date
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__write_date
 msgid "Last Updated on"
 msgstr ""
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__write_date
+msgid "Last Updated on"
+msgstr "Síðast uppfært þann"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1790,12 +2367,26 @@ msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.plan_wizard_action
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:hr.plan_wizard
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Launch Plan"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
+=======
+#. odoo-python
+#: code:addons/hr/wizard/hr_plan_wizard.py:0
+#, python-format
+msgid "Launch Plans"
+msgstr ""
+
+#. module: hr
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -1829,6 +2420,7 @@ msgid "Location Number"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:hr.department,name:hr.dep_rd_ltp
 msgid "Long Term Projects"
 msgstr ""
@@ -1844,6 +2436,10 @@ msgid ""
 "was popularised in the 1960s with the release of Letraset sheets containing "
 "Lorem Ipsum passages, and more recently with desktop publishing software "
 "like Aldus PageMaker including versions of Lorem Ipsum."
+=======
+#: model_terms:hr.job,description:hr.job_hrm
+msgid "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -1854,12 +2450,16 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__male
 msgid "Male"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: hr
 #: model:hr.department,name:hr.dep_management
 msgid "Management"
 msgstr ""
+=======
+msgstr "Male"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__manager_id
@@ -1867,6 +2467,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__parent_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__parent_id
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_parent_id
+<<<<<<< HEAD
 #: model:ir.model.fields.selection,name:hr.selection__mail_activity_plan_template__responsible_type__manager
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1876,21 +2477,39 @@ msgstr ""
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
+=======
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__manager
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Manager"
+msgstr "Yfirmaður"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #, python-format
 msgid "Manager of employee %s is not set."
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Marc Demo"
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 #: model:ir.model.fields,field_description:hr.field_res_users__marital
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "Marital Status"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Marital Status"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:hr.job,name:hr.job_marketing
@@ -1900,7 +2519,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__married
 msgid "Married"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Married"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__master
@@ -1933,7 +2556,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__member_ids
 msgid "Members"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Members"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model,name:hr.model_ir_ui_menu
@@ -1944,6 +2571,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_has_error
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Message Delivery error"
 msgstr ""
 
@@ -1951,8 +2582,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_ids
+<<<<<<< HEAD
 msgid "Messages"
 msgstr ""
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_ids
+msgid "Messages"
+msgstr "Skilaboð"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1967,6 +2604,10 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__my_activity_date_deadline
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__my_activity_date_deadline
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "My Activity Deadline"
 msgstr ""
 
@@ -1993,13 +2634,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__name
+<<<<<<< HEAD
 msgid "Name"
 msgstr ""
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan__name
+msgid "Name"
+msgstr "Nafn"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_id
 msgid "Nationality (Country)"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Nationality (Country)"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2013,6 +2664,7 @@ msgid "Negotiate and contract"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_graph
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_pivot
 msgid "New Employees Over Time"
@@ -2029,25 +2681,51 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_calendar_event_id
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_calendar_event_id
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_date_deadline
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Next Activity Deadline"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
+<<<<<<< HEAD
 msgid "Next Activity Summary"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_summary
+msgid "Next Activity Summary"
+msgstr "Samantekt næstu virkni"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_type_id
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Next Activity Type"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_employee_activity_kanban
+msgid "Next Activity:"
+msgstr ""
+
+#. module: hr
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2059,11 +2737,14 @@ msgid "Nice to have"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
 msgid "No Tags found ! Let's create one"
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2075,6 +2756,16 @@ msgid "No dumb managers, no stupid tools to use, no rigid working hours"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
+=======
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "No specific user given on activity %s."
+msgstr ""
+
+#. module: hr
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2082,8 +2773,12 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
+<<<<<<< HEAD
 msgid ""
 "No waste of time in enterprise processes, real responsibilities and autonomy"
+=======
+msgid "No waste of time in enterprise processes, real responsibilities and autonomy"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -2093,20 +2788,36 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
+<<<<<<< HEAD
 msgid "Note"
 msgstr ""
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__note
+msgid "Note"
+msgstr "Athugasemd"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__notes
 msgid "Notes"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Athugasemdir"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction_counter
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction_counter
+<<<<<<< HEAD
 msgid "Number of Actions"
 msgstr ""
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Fjöldi aðgerða"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__children
@@ -2117,38 +2828,71 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_employee
 msgid "Number of employees currently occupying this job position."
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Number of employees currently occupying this job position."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_has_error_counter
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Number of errors"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_hired_employee
+<<<<<<< HEAD
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
 msgstr ""
+=======
+msgid "Number of hired employees for this job position during recruitment phase."
+msgstr "Number of hired employees for this job position during recruitment phase."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction_counter
+<<<<<<< HEAD
 msgid "Number of messages requiring action"
 msgstr ""
+=======
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Fjöldi skilaboð sem bíða afgreiðslu"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error_counter
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_has_error_counter
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
 msgid "Number of new employees you expect to recruit."
+<<<<<<< HEAD
+=======
+msgstr "Number of new employees you expect to recruit."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__related_contacts_count
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__related_contacts_count
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contacts_count
+msgid "Number of related contacts"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -2168,22 +2912,29 @@ msgid ""
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__office
 msgid "Office"
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer: Manage all employees"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.actions.act_window,name:hr.mail_activity_plan_action
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.ui.menu,name:hr.menu_config_plan_plan
 msgid "On/Offboarding Plans"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/hr/static/src/core/web/thread_actions.js:0
 #, python-format
@@ -2191,6 +2942,8 @@ msgid "Open Profile"
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #. odoo-python
 #: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
@@ -2200,11 +2953,23 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__other
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__other
+<<<<<<< HEAD
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__other
+=======
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__other
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Other"
 msgstr "Annað"
 
 #. module: hr
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible_id
+msgid "Other Responsible"
+msgstr ""
+
+#. module: hr
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2229,16 +2994,24 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__pin
 #: model:ir.model.fields,help:hr.field_res_users__pin
+<<<<<<< HEAD
 msgid ""
 "PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if"
 " enabled in Configuration) and to change the cashier in the Point of Sale "
 "application."
+=======
+msgid "PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if enabled in Configuration) and to change the cashier in the Point of Sale application."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
 msgid "Parent Department"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Parent Department"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_path
@@ -2246,11 +3019,14 @@ msgid "Parent Path"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:hr.contract.type,name:hr.contract_type_part_time
 msgid "Part-Time"
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,help:hr.field_hr_employee__user_partner_id
 #: model:ir.model.fields,help:hr.field_hr_employee_public__user_partner_id
 msgid "Partner-related data of the user"
@@ -2271,7 +3047,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
 #: model:ir.model.fields,field_description:hr.field_res_users__passport_id
 msgid "Passport No"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Passport No"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2336,11 +3116,20 @@ msgid "Place of Birth"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_department__plan_ids
+=======
+#: model:ir.model,name:hr.model_hr_plan_employee_activity
+#: model:ir.model.fields,field_description:hr.field_hr_department__plan_ids
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__plan_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__plan_id
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_search
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Plan"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan.py:0
 #, python-format
@@ -2359,6 +3148,35 @@ msgid ""
 msgstr ""
 
 #. module: hr
+=======
+#: model:ir.actions.act_window,name:hr.hr_plan_activity_type_action
+msgid "Plan Activities"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+msgid "Plan Name"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_plan_wizard
+msgid "Plan Wizard"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_plan_activity_type
+msgid "Plan activity type"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_tree
+msgid "Planning"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_plan_action
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 msgid "Plans"
 msgstr ""
@@ -2381,13 +3199,23 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+<<<<<<< HEAD
 #: model:ir.model.fields,help:hr.field_maintenance_equipment_category__alias_contact
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+<<<<<<< HEAD
+=======
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2429,7 +3257,10 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Private Address"
 msgstr ""
 
@@ -2439,7 +3270,10 @@ msgid "Private Car Plate"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_city
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr.field_res_users__private_city
 msgid "Private City"
 msgstr ""
@@ -2450,7 +3284,10 @@ msgid "Private Contact"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_country_id
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr.field_res_users__private_country_id
 msgid "Private Country"
 msgstr ""
@@ -2468,36 +3305,54 @@ msgid "Private Information"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_phone
 #: model:ir.model.fields,field_description:hr.field_res_users__private_phone
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_employee__phone
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_phone
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Private Phone"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_state_id
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr.field_res_users__private_state_id
 msgid "Private State"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_street
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street
 msgid "Private Street"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_street2
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street2
 msgid "Private Street2"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_zip
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr.field_res_users__private_zip
 msgid "Private Zip"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:hr.department,name:hr.dep_ps
 msgid "Professional Services"
 msgstr ""
@@ -2508,6 +3363,8 @@ msgid "Properties"
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model,name:hr.model_hr_employee_public
 msgid "Public Employee"
 msgstr ""
@@ -2524,6 +3381,7 @@ msgid "Qualify the customer needs"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:hr.department,name:hr.dep_rd_be
 msgid "R&D USA"
 msgstr ""
@@ -2536,6 +3394,8 @@ msgid "Ratings"
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Ready to recruit more efficiently?"
 msgstr ""
@@ -2557,6 +3417,7 @@ msgid "Reason"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__reason_code
 msgid "Reason Code"
 msgstr ""
@@ -2566,6 +3427,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Recruitment"
 msgstr ""
+=======
+#: model:ir.ui.menu,name:hr.menu_config_recruitment
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Recruitment"
+msgstr "Recruitment"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #. odoo-python
@@ -2576,6 +3443,23 @@ msgid "Register Departure"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_employee__related_contact_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__related_contact_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contact_ids
+msgid "Related Contact"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Related Contacts"
+msgstr ""
+
+#. module: hr
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0 code:addons/hr/models/res_users.py:0
 #, python-format
@@ -2585,7 +3469,11 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Related User"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Related User"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_ids
@@ -2599,6 +3487,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
+<<<<<<< HEAD
 #: model:ir.model.fields,help:hr.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
 msgstr ""
@@ -2607,22 +3496,36 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_homeworking
 msgid "Remote Work"
 msgstr ""
+=======
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__user_id
+#: model:ir.model.fields,help:hr.field_resource_resource__user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "Related user name for the resource to manage its access."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.hr_menu_hr_reports
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
 msgid "Reporting"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Skýrslur"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__requirements
 msgid "Requirements"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: hr
 #: model:hr.department,name:hr.dep_rd
 msgid "Research & Development"
 msgstr ""
+=======
+msgstr "Kröfur"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_resigned
@@ -2634,7 +3537,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__resource_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__resource_id
 msgid "Resource"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Auðlind"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__resource_calendar_id
@@ -2656,10 +3563,22 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Responsibilities"
+<<<<<<< HEAD
+=======
+msgstr "Responsibilities"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible
+msgid "Responsible"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_user_id
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Responsible User"
 msgstr ""
 
@@ -2671,6 +3590,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sinid
 msgid "SIN No"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: hr
@@ -2683,6 +3603,14 @@ msgstr ""
 #: model:hr.department,name:hr.dep_sales
 msgid "Sales"
 msgstr ""
+=======
+msgstr "SIN No"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
+msgid "SSN No"
+msgstr "SSN No"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form
@@ -2690,6 +3618,10 @@ msgid "Save"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Schedule"
 msgstr ""
@@ -2701,11 +3633,14 @@ msgid "School"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:hr.contract.type,name:hr.contract_type_seasonal
 msgid "Seasonal"
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,help:hr.field_hr_employee__coach_id
 #: model:ir.model.fields,help:hr.field_hr_employee_base__coach_id
 #: model:ir.model.fields,help:hr.field_hr_employee_public__coach_id
@@ -2731,7 +3666,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
 #: model:ir.ui.menu,name:hr.hr_menu_configuration
 msgid "Settings"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Stillingar"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__show_hr_icon_display
@@ -2750,7 +3689,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__single
 msgid "Single"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Single"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
@@ -2760,6 +3703,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__sinid
 msgid "Social Insurance Number"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: hr
@@ -2771,6 +3715,18 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Software Developer"
+=======
+msgstr "Social Insurance Number"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__ssnid
+msgid "Social Security Number"
+msgstr "Social Security Number"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_plan_activity_type__responsible_id
+msgid "Specific responsible of activity if not linked to the employee."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -2797,6 +3753,7 @@ msgid "Spouse Complete Name"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Start Date"
 msgstr ""
@@ -2804,6 +3761,9 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+=======
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "State"
 msgstr ""
 
@@ -2811,10 +3771,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Status"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_state
+=======
+msgstr "Staða"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__activity_state
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_state
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -2823,14 +3791,26 @@ msgid ""
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan__steps_count
+msgid "Steps Count"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Street 2..."
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Street..."
 msgstr ""
 
@@ -2851,6 +3831,15 @@ msgid "Student"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__summary
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__summary
+msgid "Summary"
+msgstr ""
+
+#. module: hr
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
 msgid "Tag Name"
 msgstr ""
@@ -2866,7 +3855,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Tags"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Flokkar"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
@@ -2901,9 +3894,13 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
+<<<<<<< HEAD
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
+=======
+msgid "The Badge ID must be unique, this one is already assigned to another employee."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -2914,6 +3911,7 @@ msgid ""
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model_terms:hr.job,description:hr.job_marketing
 msgid ""
 "The Marketing Manager defines the mid- to long-term marketing strategy for his covered market segments in the World.\n"
@@ -2923,6 +3921,8 @@ msgid ""
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
@@ -2931,12 +3931,17 @@ msgstr ""
 
 #. module: hr
 #. odoo-python
+<<<<<<< HEAD
 #: code:addons/hr/models/mail_activity_plan_template.py:0
+=======
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #, python-format
 msgid "The employee %s should be linked to a user."
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.model.fields,help:hr.field_hr_employee__employee_type
 #: model:ir.model.fields,help:hr.field_res_users__employee_type
 msgid ""
@@ -2944,6 +3949,24 @@ msgid ""
 "employees, this field has also an impact in the Contract History. Only "
 "Employee type is supposed to be under contract and will have a Contract "
 "History."
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
+#: model:ir.model.fields,field_description:hr.field_res_users__is_address_home_a_company
+msgid "The employee address has a company linked"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__employee_type
+#: model:ir.model.fields,help:hr.field_res_users__employee_type
+msgid "The employee type. Although the primary purpose may seem to categorize employees, this field has also an impact in the Contract History. Only Employee type is supposed to be under contract and will have a Contract History."
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_plan_wizard.py:0
+#, python-format
+msgid "The employees should belong to the same company."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -2955,9 +3978,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "The fields %r you try to read is not available on the public employee "
 "profile."
+=======
+msgid "The fields \"%s\" you try to read is not available on the public employee profile."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -2969,7 +3996,11 @@ msgstr ""
 
 #. module: hr
 #. odoo-python
+<<<<<<< HEAD
 #: code:addons/hr/models/mail_activity_plan_template.py:0
+=======
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #, python-format
 msgid "The manager of %s should be linked to a user."
 msgstr ""
@@ -2977,11 +4008,32 @@ msgstr ""
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_name_company_uniq
 msgid "The name of the job position must be unique per department in company!"
+<<<<<<< HEAD
+=======
+msgstr "The name of the job position must be unique per department in company!"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_plan_wizard.py:0
+#, python-format
+msgid "The plan %s cannot be launched: <br><ul>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
 #. odoo-python
+<<<<<<< HEAD
 #: code:addons/hr/models/mail_activity_plan_template.py:0
+=======
+#: code:addons/hr/wizard/hr_plan_wizard.py:0
+#, python-format
+msgid "The plan %s has been started"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #, python-format
 msgid "The user of %s's coach is not set."
 msgstr ""
@@ -2993,9 +4045,13 @@ msgstr ""
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_manager
+<<<<<<< HEAD
 msgid ""
 "The user will have access to the human resources configuration as well as "
 "statistic reports."
+=======
+msgid "The user will have access to the human resources configuration as well as statistic reports."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -3016,6 +4072,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
 #: model:ir.model.fields,help:hr.field_hr_employee_base__tz
 #: model:ir.model.fields,help:hr.field_hr_employee_public__tz
+<<<<<<< HEAD
 msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
@@ -3026,6 +4083,9 @@ msgstr ""
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "Those responsible types are limited to Employee plans."
+=======
+msgid "This field is used in order to define in which timezone the resources will work."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -3033,7 +4093,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__tz
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__tz
 msgid "Timezone"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Timezone"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__to_define
@@ -3046,10 +4110,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "To avoid multi company issues (losing the access to your previous contracts,"
 " leaves, ...), you should create another employee in the new company "
 "instead."
+=======
+msgid "To avoid multi company issues (losing the access to your previous contracts, leaves, ...), you should create another employee in the new company instead."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -3072,7 +4140,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
 msgid "Total Forecasted Employees"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Total Forecasted Employees"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
@@ -3093,6 +4165,10 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_decoration
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_exception_decoration
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Type of the exception activity on record."
 msgstr ""
 
@@ -3108,21 +4184,32 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
 msgid "Use tags to categorize your Employees."
 msgstr ""
+=======
+msgstr "Ólesin skilaboð"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__user_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_id
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_resource_resource__user_id
 msgid "User"
 msgstr ""
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__user_id
+#: model:ir.model.fields,field_description:hr.field_resource_resource__user_id
+msgid "User"
+msgstr "Notandi"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
@@ -3153,6 +4240,7 @@ msgid "Valid work permit for Belgium"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #, python-format
@@ -3163,6 +4251,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expiration Date"
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
+#: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
+msgid "Visa Expire Date"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -3174,11 +4267,16 @@ msgstr ""
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__warning
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #, python-format
 msgid "Warning"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model_terms:hr.job,description:hr.job_consultant
 msgid ""
 "We are currently looking for someone like that to join our Consultant team."
@@ -3192,6 +4290,8 @@ msgid ""
 msgstr ""
 
 #. module: hr
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -3217,15 +4317,23 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee__member_of_department
 #: model:ir.model.fields,help:hr.field_hr_employee_base__member_of_department
 #: model:ir.model.fields,help:hr.field_hr_employee_public__member_of_department
+<<<<<<< HEAD
 msgid ""
 "Whether the employee is a member of the active user's department or one of "
 "it's child department."
+=======
+msgid "Whether the employee is a member of the active user's department or one of it's child department."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__widower
 msgid "Widower"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Widower"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
@@ -3243,6 +4351,12 @@ msgid ""
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
+<<<<<<< HEAD
+=======
+"With just a quick glance on the Odoo employee screen, you\n"
+"                can easily find all the information you need for each person;\n"
+"                contact data, job position, availability, etc."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
@@ -3257,7 +4371,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_contact_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_contact_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_contact_id
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:hr.field_res_users__work_contact_id
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Work Contact"
 msgstr ""
 
@@ -3267,7 +4384,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_email
 #: model:ir.model.fields,field_description:hr.field_res_users__work_email
 msgid "Work Email"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Work Email"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -3286,7 +4407,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_work_location_form_view
 #: model_terms:ir.ui.view,arch_db:hr.hr_work_location_tree_view
 msgid "Work Location"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Work Location"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_work_location_action
@@ -3300,7 +4425,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone
 #: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 msgid "Work Mobile"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Work Mobile"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -3336,7 +4465,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_phone
 #: model:ir.model.fields,field_description:hr.field_res_users__work_phone
 msgid "Work Phone"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Work Phone"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_calendar_id
@@ -3344,6 +4477,7 @@ msgid "Working Hours"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model:ir.ui.menu,name:hr.menu_resource_calendar_view
 msgid "Working Schedules"
 msgstr ""
@@ -3355,6 +4489,12 @@ msgstr ""
 msgid ""
 "You are only allowed to update your preferences. Please contact a HR officer"
 " to update other information."
+=======
+#. odoo-python
+#: code:addons/hr/models/res_users.py:0
+#, python-format
+msgid "You are only allowed to update your preferences. Please contact a HR officer to update other information."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -3412,7 +4552,10 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "ZIP"
 msgstr ""
 
@@ -3426,7 +4569,11 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "department"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -3434,8 +4581,23 @@ msgid "e.g. John Doe"
 msgstr ""
 
 #. module: hr
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
+=======
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+msgid "e.g. Onboarding"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "e.g. Sales Manager"
+msgstr "e.g. Sales Manager"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_plan
+msgid "plan"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: hr
@@ -3444,8 +4606,11 @@ msgstr ""
 #, python-format
 msgid "restricted to employees"
 msgstr ""
+<<<<<<< HEAD
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr ""
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

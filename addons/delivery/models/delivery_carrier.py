@@ -191,12 +191,15 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
         return self.delivery_type
 
+<<<<<<< HEAD
     def _apply_margins(self, price):
         self.ensure_one()
         if self.delivery_type == 'fixed':
             return float(price)
         return float(price) * (1.0 + self.margin) + self.fixed_margin
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     # -------------------------- #
     # API for external providers #
     # -------------------------- #
@@ -226,7 +229,11 @@ class DeliveryCarrier(models.Model):
                 product_currency=company.currency_id
             )
             # apply margin on computed price
+<<<<<<< HEAD
             res['price'] = self._apply_margins(res['price'])
+=======
+            res['price'] = float(res['price']) * (1.0 + self.margin) + self.fixed_margin
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             # save the real price in case a free_over rule overide it to 0
             res['carrier_price'] = res['price']
             # free when order is large enough

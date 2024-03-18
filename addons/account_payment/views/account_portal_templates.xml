@@ -15,16 +15,28 @@
             <t t-set="tx_sudo" t-value="invoice.get_portal_last_transaction()"/>
         </xpath>
         <xpath expr="//span[@name='invoice_status_waiting_for_payment']" position="before">
+<<<<<<< HEAD
             <span t-elif="invoice.payment_state in ('not_paid', 'partial') and tx_sudo.state == 'authorized'"
+=======
+            <span t-elif="tx_sudo.state == 'authorized'"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                     class="badge rounded-pill text-bg-primary">
                 <i class="fa fa-fw fa-check"/>
                 <span class="d-none d-md-inline"> Authorized</span>
             </span>
+<<<<<<< HEAD
             <span t-elif="invoice.payment_state in ('not_paid', 'partial') and tx_sudo.state == 'pending' and tx_sudo.provider_code not in ('none', 'custom')"
                     class="badge rounded-pill text-bg-warning">
                 <span class="d-none d-md-inline"> Pending</span>
             </span>
             <span t-elif="invoice.payment_state in ('paid', 'in_payment') and tx_sudo.state == 'done'" class="badge rounded-pill text-bg-success">
+=======
+            <span t-elif="tx_sudo.state == 'pending' and tx_sudo.provider_code not in ('none', 'custom')"
+                    class="badge rounded-pill text-bg-warning">
+                <span class="d-none d-md-inline"> Pending</span>
+            </span>
+            <span t-elif="tx_sudo.state == 'done'" class="badge rounded-pill text-bg-success">
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                 <i class="fa fa-fw fa-check"></i>
                 <span class="d-none d-md-inline"> Paid</span>
             </span>
@@ -81,11 +93,18 @@
             </a>
         </xpath>
         <xpath expr="//div[@id='invoice_content']//div[hasclass('o_portal_html_view')]" position="before">
+<<<<<<< HEAD
             <t t-set="tx" t-value="invoice.get_portal_last_transaction()"/>
             <div t-if="invoice.get_portal_last_transaction() and invoice.amount_total and not success and not error and (invoice.payment_state != 'not_paid' or tx.state in ('pending', 'authorized'))"
                  class="o_account_payment_tx_status"
                  t-att-data-invoice-id="invoice.id">
                 <t t-call="payment.transaction_status"/>
+=======
+            <div t-if="invoice.get_portal_last_transaction() and invoice.amount_total and not success and not error" class="o_account_payment_tx_status" t-att-data-invoice-id="invoice.id">
+                <t t-call="payment.transaction_status">
+                    <t t-set="tx" t-value="invoice.get_portal_last_transaction()"/>
+                </t>
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             </div>
             <div t-if="invoice._has_to_be_paid()" id="portal_pay">
                 <t t-call="account_payment.portal_invoice_payment"/>

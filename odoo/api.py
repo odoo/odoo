@@ -508,7 +508,10 @@ class Environment(Mapping):
                 return env
 
         # otherwise create environment, and add it in the set
+<<<<<<< HEAD
         assert isinstance(cr, BaseCursor)
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         self = object.__new__(cls)
         self.cr, self.uid, self.context, self.su = self.args = (cr, uid, frozendict(context), su)
         self.uid_origin = uid_origin
@@ -1362,4 +1365,7 @@ class Starred:
 # keep those imports here in order to handle cyclic dependencies correctly
 from odoo import SUPERUSER_ID
 from odoo.modules.registry import Registry
+<<<<<<< HEAD
 from .sql_db import BaseCursor
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

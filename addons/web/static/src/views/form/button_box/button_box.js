@@ -4,6 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
+<<<<<<< HEAD
 import { Component, onWillRender } from "@odoo/owl";
 export class ButtonBox extends Component {
     setup() {
@@ -28,6 +29,29 @@ export class ButtonBox extends Component {
 
     isSlotVisible(slot) {
         return !("isVisible" in slot) || slot.isVisible;
+=======
+import { Component } from "@odoo/owl";
+export class ButtonBox extends Component {
+    setup() {
+        const ui = useService("ui");
+        this.getMaxButtons = () => [2, 3, 4, 6, 3, 4, 7][ui.size] || 7;
+    }
+
+    getButtons() {
+        const maxVisibleButtons = this.getMaxButtons();
+        const visible = [];
+        const additional = [];
+        for (const [slotName, slot] of Object.entries(this.props.slots)) {
+            if (!("isVisible" in slot) || slot.isVisible) {
+                if (visible.length >= maxVisibleButtons) {
+                    additional.push(slotName);
+                } else {
+                    visible.push(slotName);
+                }
+            }
+        }
+        return { visible, additional };
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     }
 }
 ButtonBox.template = "web.Form.ButtonBox";

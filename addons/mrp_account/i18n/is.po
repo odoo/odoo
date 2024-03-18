@@ -1,6 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp_account
+<<<<<<< HEAD
 # 
 msgid ""
 msgstr ""
@@ -31,6 +32,23 @@ msgid "2023-08-15"
 msgstr ""
 
 #. module: mrp_account
+=======
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
+"Language: is\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);\n"
+
+#. module: mrp_account
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
 msgid "<span class=\"o_stat_text\">Analytic Account</span>"
 msgstr ""
@@ -41,6 +59,7 @@ msgid "<span class=\"o_stat_text\">Valuation</span>"
 msgstr ""
 
 #. module: mrp_account
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "<span style=\"margin-right: 15px;\">Total</span>"
 msgstr ""
@@ -111,6 +130,16 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_distribution_text
 msgid "Analytic Distribution Text"
+=======
+#. odoo-python
+#: code:addons/mrp_account/models/mrp_production.py:0
+#: model:ir.model,name:mrp_account.model_account_analytic_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_account_id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__analytic_account_id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_id
+#, python-format
+msgid "Analytic Account"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: mrp_account
@@ -119,6 +148,7 @@ msgid "Analytic Line"
 msgstr ""
 
 #. module: mrp_account
+<<<<<<< HEAD
 #: model:ir.model,name:mrp_account.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
 msgstr ""
@@ -128,6 +158,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__analytic_precision
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__analytic_precision
 msgid "Analytic Precision"
+=======
+#: model:ir.model.fields,help:mrp_account.field_mrp_production__analytic_account_id
+msgid "Analytic account in which cost and revenue entries will take        place for financial management of the manufacturing order."
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_mrp_bom__analytic_account_id
+msgid "Analytic account in which cost and revenue entries will take place for financial management of the manufacturing order."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: mrp_account
@@ -138,6 +177,10 @@ msgstr ""
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/analytic_account.py:0
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
 #, python-format
 msgid "Bills of Materials"
@@ -149,11 +192,14 @@ msgid "BoM Count"
 msgstr ""
 
 #. module: mrp_account
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
 msgid "Bom"
 msgstr ""
 
 #. module: mrp_account
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__category
 msgid "Category"
 msgstr ""
@@ -171,6 +217,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
+<<<<<<< HEAD
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
@@ -184,6 +231,9 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__business_domain
 msgid "Domain"
+=======
+msgid "Compute the price of the product using products and operations of related bill of materials, for manufactured products only."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: mrp_account
@@ -197,6 +247,7 @@ msgid "Journal Item"
 msgstr ""
 
 #. module: mrp_account
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "Laptop"
 msgstr ""
@@ -208,6 +259,8 @@ msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_applicability__business_domain__manufacturing_order
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_line__category__manufacturing_order
 msgid "Manufacturing Order"
 msgstr ""
@@ -215,6 +268,10 @@ msgstr ""
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/analytic_account.py:0
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
 #, python-format
 msgid "Manufacturing Orders"
@@ -226,14 +283,29 @@ msgid "Manufacturing Orders Count"
 msgstr ""
 
 #. module: mrp_account
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_ids
+=======
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_id
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Mo Analytic Account Line"
+msgstr ""
+
+#. module: mrp_account
+<<<<<<< HEAD
+#: model:ir.model,name:mrp_account.model_product_template
+msgid "Product"
+msgstr ""
+=======
+#: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
+msgid "Posts analytical accounting entries in real time for both component and operational costs."
 msgstr ""
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "Vara"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_category
@@ -246,11 +318,14 @@ msgid "Product Variant"
 msgstr ""
 
 #. module: mrp_account
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
 msgid "Production"
 msgstr ""
 
 #. module: mrp_account
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:mrp_account.field_product_category__property_stock_account_production_cost_id
 msgid "Production Account"
 msgstr ""
@@ -261,11 +336,14 @@ msgid "Production Order"
 msgstr ""
 
 #. module: mrp_account
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "REF123"
 msgstr ""
 
 #. module: mrp_account
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
 msgid "Show Valuation"
 msgstr ""
@@ -288,6 +366,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp_account
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "Units"
 msgstr ""
@@ -304,6 +383,9 @@ msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_ids
+=======
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_id
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Wc Analytic Account Line"
 msgstr ""
 
@@ -336,7 +418,18 @@ msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workcenter_ids
+<<<<<<< HEAD
 msgid "Workcenter"
+=======
+msgid "Workcenters"
+msgstr ""
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/stock_move.py:0
+#, python-format
+msgid "[Raw] %s"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: mrp_account

@@ -9,8 +9,13 @@ from . import test_client_action
 from . import test_configurator
 from . import test_controllers
 from . import test_converter
+<<<<<<< HEAD
 from . import test_crawl
 from . import test_custom_snippets
+=======
+from . import test_custom_snippets
+from . import test_crawl
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from . import test_disable_unused_snippets_assets
 from . import test_fuzzy
 from . import test_get_current_website

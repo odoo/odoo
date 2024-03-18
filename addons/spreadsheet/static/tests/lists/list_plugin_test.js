@@ -550,6 +550,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
     });
 
     QUnit.test(
+<<<<<<< HEAD
         "list with both a monetary field and the related currency field",
         async function (assert) {
             const { model } = await createSpreadsheetWithList({
@@ -578,6 +579,8 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
     );
 
     QUnit.test(
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         "List record limit is computed during the import and UPDATE_CELL",
         async function (assert) {
             const spreadsheetData = {

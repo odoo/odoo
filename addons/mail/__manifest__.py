@@ -123,7 +123,10 @@ For more specific needs, you may also assign custom-defined actions
     ],
     'installable': True,
     'application': True,
+<<<<<<< HEAD
     'post_init_hook': '_mail_post_init',
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     'assets': {
         'web._assets_primary_variables': [
             'mail/static/src/**/primary_variables.scss',

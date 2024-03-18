@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< HEAD
 from odoo.tests.common import HttpCase, tagged, ChromeBrowser
 from odoo.tools import config, logging
+=======
+from odoo.tests.common import HttpCase, tagged
+from odoo.tools import mute_logger, logging
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from unittest.mock import patch
 
 @tagged('-at_install', 'post_install')
@@ -47,6 +52,7 @@ class TestHttpCase(HttpCase):
                 if text == 'test successful':
                     continue
                 self.assertEqual(text, "Object(custom=Object, value=1, description='dummy')")
+<<<<<<< HEAD
                 console_log_count += 1
         self.assertEqual(console_log_count, 1)
 
@@ -67,3 +73,7 @@ class TestChromeBrowser(HttpCase):
         code = "setTimeout(() => console.log('test successful'), 2000); setInterval(() => document.body.innerText = (new Date()).getTime(), 100);"
         self.browser._wait_code_ok(code, 10)
         self.browser._save_screencast()
+=======
+                console_log_count +=1
+        self.assertEqual(console_log_count, 1)
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

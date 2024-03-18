@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
 
+<<<<<<< HEAD
 from collections import defaultdict
 from datetime import timedelta, datetime, date
 import calendar
 
 from odoo import fields, models, api, _, Command
+=======
+from datetime import timedelta, datetime, date
+import calendar
+
+from odoo import fields, models, api, _
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
@@ -413,6 +420,7 @@ class ResCompany(models.Model):
         }
 
     @api.model
+<<<<<<< HEAD
     def _get_default_opening_move_values(self):
         """ Get the default values to create the opening move.
 
@@ -437,15 +445,38 @@ class ResCompany(models.Model):
             'date': self.account_opening_date - timedelta(days=1),
         }
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     def create_op_move_if_non_existant(self):
         """ Creates an empty opening move in 'draft' state for the current company
         if there wasn't already one defined. For this, the function needs at least
         one journal of type 'general' to exist (required by account.move).
         """
+<<<<<<< HEAD
         # TO BE REMOVED IN MASTER
         self.ensure_one()
         if not self.account_opening_move_id:
             self.account_opening_move_id = self.env['account.move'].create(self._get_default_opening_move_values())
+=======
+        self.ensure_one()
+        if not self.account_opening_move_id:
+            default_journal = self.env['account.journal'].search([
+                *self.env['account.journal']._check_company_domain(self),
+                ('type', '=', 'general')
+            ], limit=1)
+
+            if not default_journal:
+                raise UserError(_("Please install a chart of accounts or create a miscellaneous journal before proceeding."))
+
+            opening_date = self.account_opening_date - timedelta(days=1)
+
+            self.account_opening_move_id = self.env['account.move'].create({
+                'ref': _('Opening Journal Entry'),
+                'company_id': self.id,
+                'journal_id': default_journal.id,
+                'date': opening_date,
+            })
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
     def opening_move_posted(self):
         """ Returns true if this company has an opening account move and this move is posted."""
@@ -478,7 +509,10 @@ class ResCompany(models.Model):
             })
 
     def get_opening_move_differences(self, opening_move_lines):
+<<<<<<< HEAD
         # TO BE REMOVED IN MASTER
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         currency = self.currency_id
         balancing_move_line = opening_move_lines.filtered(lambda x: x.account_id == self.get_unaffected_earnings_account())
 
@@ -499,7 +533,10 @@ class ResCompany(models.Model):
         and is unbalanced, balances it with a automatic account.move.line in the
         current year earnings account.
         """
+<<<<<<< HEAD
         # TO BE REMOVED IN MASTER
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         if self.account_opening_move_id and self.account_opening_move_id.state == 'draft':
             balancing_account = self.get_unaffected_earnings_account()
             currency = self.currency_id
@@ -530,6 +567,7 @@ class ResCompany(models.Model):
                         'credit': debit_diff,
                     })
 
+<<<<<<< HEAD
     def _update_opening_move(self, to_update):
         """ Create or update the opening move for the accounts passed as parameter.
 
@@ -617,6 +655,8 @@ class ResCompany(models.Model):
         else:
             self.account_opening_move_id = self.env['account.move'].create(move_values)
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     def action_save_onboarding_sale_tax(self):
         """ Set the onboarding step as done """
         self.env['onboarding.onboarding.step'].action_validate_step('account.onboarding_onboarding_step_sales_tax')

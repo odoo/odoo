@@ -2,7 +2,11 @@
 import { _t } from "@web/core/l10n/translation";
 import {patch} from "@web/core/utils/patch";
 import {ErrorPopup} from "@point_of_sale/app/errors/popups/error_popup";
+<<<<<<< HEAD
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
+=======
+import {PaymentScreen} from "@point_of_sale/app/screens/payment_screen/payment_screen";
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 patch(PaymentScreen.prototype, {
     async validateOrder(isForceValidate) {
@@ -18,10 +22,14 @@ patch(PaymentScreen.prototype, {
             }
             if (order.is_l10n_es_simplified_invoice) {
                 order.to_invoice = Boolean(this.pos.config.l10n_es_simplified_invoice_journal_id)
+<<<<<<< HEAD
                 if (await this._askForCustomerIfRequired() === false) {
                     return false;
                 }
                 order.partner = order.partner || this.pos.db.partner_by_id[this.pos.config.simplified_partner_id[0]];
+=======
+                order.partner = this.pos.db.partner_by_id[this.pos.config.simplified_partner_id[0]];
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             }
         }
         return await super.validateOrder(...arguments);

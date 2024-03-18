@@ -123,14 +123,23 @@ export class PaymentStripe extends PaymentInterface {
 
         const intentCharge = charges.data[0];
         const processPaymentDetails = intentCharge.payment_method_details;
+<<<<<<< HEAD
+=======
+        const cardPresentBrand = processPaymentDetails.card_present.brand;
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
         if (processPaymentDetails.type === "interac_present") {
             // Canadian interac payments should not be captured:
             // https://stripe.com/docs/terminal/payments/regional?integration-country=CA#create-a-paymentintent
+<<<<<<< HEAD
             return ['interac', intentCharge.id];
         }
         const cardPresentBrand = this.getCardBrandFromPaymentMethodDetails(processPaymentDetails);
         if (cardPresentBrand.includes("eftpos")) {
+=======
+            return ["interac", intentCharge.id];
+        } else if (cardPresentBrand.includes("eftpos")) {
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             // Australian eftpos should not be captured:
             // https://stripe.com/docs/terminal/payments/regional?integration-country=AU
             return [cardPresentBrand, intentCharge.id];
@@ -194,6 +203,7 @@ export class PaymentStripe extends PaymentInterface {
         }
     }
 
+<<<<<<< HEAD
     getCardBrandFromPaymentMethodDetails(paymentMethodDetails) {
         // Both `card_present` and `interac_present` are "nullable" so we need to check for their existence, see:
         // https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-card_present
@@ -208,6 +218,13 @@ export class PaymentStripe extends PaymentInterface {
             line.card_type = this.getCardBrandFromPaymentMethodDetails(
                 capturePayment.charges.data[0].payment_method_details
             );
+=======
+    async captureAfterPayment(processPayment, line) {
+        const capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
+        if (capturePayment.charges) {
+            line.card_type =
+                capturePayment.charges.data[0].payment_method_details.card_present.brand;
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         }
         line.transaction_id = capturePayment.id;
     }

@@ -4,7 +4,10 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
+<<<<<<< HEAD
 from itertools import chain, repeat
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from unittest.mock import patch
 
 from odoo import exceptions, fields, _
@@ -404,6 +407,7 @@ class TestComputeRankCommon(common.TransactionCase):
         with self.assertRaises(Exception):
             self.users[0:50]._recompute_rank()
 
+<<<<<<< HEAD
     def test_get_next_rank(self):
         """ Test the computation of the next user rank.
 
@@ -420,3 +424,5 @@ class TestComputeRankCommon(common.TransactionCase):
         ):
             user.next_rank_id = False  # Force the computation of the next rank
             self.assertEqual(user._get_next_rank(), expected_next_rank)
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

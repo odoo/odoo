@@ -150,6 +150,7 @@ class TestMailTools(MailCommon):
         self.user_employee.sudo().write({'email': '"Alfred Astaire" <%s>' % self.env.user.partner_id.email_normalized})
         found = self.env['res.partner']._mail_find_partner_from_emails([self.env.user.partner_id.email_formatted])
         self.assertEqual(found, [self.env.user.partner_id])
+<<<<<<< HEAD
 
 
 @tagged('mail_tools', 'mail_init')
@@ -176,3 +177,5 @@ class TestMailUtils(MailCommon):
 
         existing = self.env["mail.alias.domain"].search([('name', '=', 'test.migration.com')])
         self.assertEqual(len(existing), 1, 'Should not migrate twice')
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

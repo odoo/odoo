@@ -232,11 +232,14 @@ class StockPicking(models.Model):
 
         return domain
 
+<<<<<<< HEAD
     def _package_move_lines(self, batch_pack=False):
         if batch_pack:
             return super(StockPicking, self.batch_id.picking_ids if self.batch_id else self)._package_move_lines(batch_pack)
         return super()._package_move_lines(batch_pack)
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     def assign_batch_user(self, user_id):
         if not user_id:
             return
@@ -246,6 +249,12 @@ class StockPicking(models.Model):
             log_message = _('Assigned to %s Responsible', pick.batch_id._get_html_link())
             pick.message_post(body=log_message)
 
+<<<<<<< HEAD
+=======
+    def _package_move_lines(self):
+        return super(StockPicking, self.batch_id.picking_ids if self.batch_id else self)._package_move_lines()
+
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     def action_view_batch(self):
         self.ensure_one()
         return {

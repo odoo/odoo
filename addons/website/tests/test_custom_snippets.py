@@ -2,7 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
+<<<<<<< HEAD
 from odoo.tests import HttpCase, TransactionCase, tagged
+=======
+from odoo.tests import TransactionCase, tagged
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 
 @tagged('post_install', '-at_install')
@@ -159,6 +163,7 @@ class TestCustomSnippet(TransactionCase):
         self.assertIn(
             'Texte Francais',
             custom_snippet_view.with_context(lang=parseltongue.code).arch)
+<<<<<<< HEAD
 
 
 @tagged('post_install', '-at_install')
@@ -188,3 +193,5 @@ class TestHttpCustomSnippet(HttpCase):
         })
 
         self.start_tour(f'{custom_page.url}', 'editable_root_as_custom_snippet', login='admin')
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

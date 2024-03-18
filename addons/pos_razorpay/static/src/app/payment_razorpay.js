@@ -10,7 +10,10 @@ export class PaymentRazorpay extends PaymentInterface {
     setup() {
         super.setup(...arguments);
         this.pollingTimeout = null;
+<<<<<<< HEAD
         this.inactivityTimeout = null;
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         this.queued = false;
         this.payment_stopped = false;
     }
@@ -62,6 +65,10 @@ export class PaymentRazorpay extends PaymentInterface {
         if (response.error) {
             line.set_payment_status('force_done');
             this.payment_stopped ? this._showError(_t("Transaction failed due to inactivity")) : this._showError(response.error);
+<<<<<<< HEAD
+=======
+            this.pollingTimeout ? clearTimeout(this.pollingTimeout) : '';
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             this._removePaymentHandler(['p2pRequestId', 'referenceId']);
             return Promise.resolve(false);
         }
@@ -171,16 +178,24 @@ export class PaymentRazorpay extends PaymentInterface {
     }
 
     _stop_pending_payment() {
+<<<<<<< HEAD
         return new Promise(resolve => this.inactivityTimeout = setTimeout(resolve, 90000));
+=======
+        return new Promise(resolve => setTimeout(resolve, 90000));
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     }
 
     _removePaymentHandler(payment_data) {
         payment_data.forEach((data) => {
             localStorage.removeItem(data);
         })
+<<<<<<< HEAD
         clearTimeout(this.pollingTimeout);
         clearTimeout(this.inactivityTimeout);
         this.queued = this.payment_stopped = false;
+=======
+        this.queued = false;
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     }
 
     _showError(error_msg, title) {

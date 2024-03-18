@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< HEAD
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+=======
+from odoo import api, fields, models
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 
 class Company(models.Model):
@@ -20,6 +24,7 @@ class Company(models.Model):
         action['target'] = 'new'
         return action
 
+<<<<<<< HEAD
     @api.constrains('active')
     def _check_active(self):
         super()._check_active()
@@ -32,6 +37,8 @@ class Company(models.Model):
                     website_name=company.website_id.name
                 ))
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     def google_map_img(self, zoom=8, width=298, height=298):
         partner = self.sudo().partner_id
         return partner and partner.google_map_img(zoom, width, height) or None

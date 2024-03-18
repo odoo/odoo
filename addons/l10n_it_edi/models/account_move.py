@@ -125,6 +125,7 @@ class AccountMove(models.Model):
             We recognize these cases based on the taxes that target the VJ tax grids, which imply
             the use of VAT External Reverse Charge.
         """
+<<<<<<< HEAD
         purchases = self.filtered(lambda m: m.is_purchase_document())
         others = self - purchases
         for move in others:
@@ -153,6 +154,20 @@ class AccountMove(models.Model):
             "N6.7": "VJ16",
             "N6.8": "VJ17",
         }
+=======
+        it_tax_report_vj_lines = self.env['account.report.line'].search([
+            ('report_id.country_id.code', '=', 'IT'),
+            ('code', '=like', 'VJ%'),
+        ])
+        vj_lines_tags = it_tax_report_vj_lines.expression_ids._get_matching_tags()
+        for move in self:
+            if not move.is_purchase_document():
+                move.l10n_it_edi_is_self_invoice = False
+                continue
+            invoice_lines_tags = move.line_ids.tax_tag_ids
+            ids_intersection = set(invoice_lines_tags.ids) & set(vj_lines_tags.ids)
+            move.l10n_it_edi_is_self_invoice = bool(ids_intersection)
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
     # -------------------------------------------------------------------------
     # Overrides
@@ -343,7 +358,11 @@ class AccountMove(models.Model):
         document_type = self._l10n_it_edi_get_document_type()
 
         # Represent if the document is a reverse charge refund in a single variable
+<<<<<<< HEAD
         reverse_charge = document_type in ['TD16', 'TD17', 'TD18', 'TD19']
+=======
+        reverse_charge = document_type in ['TD17', 'TD18', 'TD19']
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         is_downpayment = document_type in ['TD02']
         reverse_charge_refund = self.move_type == 'in_refund' and reverse_charge
         convert_to_euros = self.currency_id.name != 'EUR'
@@ -495,7 +514,10 @@ class AccountMove(models.Model):
             'partner_country_code': partner_values.get('country_code', False),
             'simplified': self._l10n_it_edi_is_simplified(),
             'self_invoice': self.l10n_it_edi_is_self_invoice,
+<<<<<<< HEAD
             'tax_tags': {tag for tag in self.line_ids.tax_tag_ids.mapped(lambda x: (x.name or '').upper().replace("+", "").replace("-", "")) if tag},
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             'downpayment': self._is_downpayment(),
             'services_or_goods': services_or_goods,
             'goods_in_italy': services_or_goods == 'consu' and self._l10n_it_edi_goods_in_italy(),
@@ -535,30 +557,42 @@ class AccountMove(models.Model):
                      'simplified': False,
                      'self_invoice': True,
                      'partner_country_code': "SM"},
+<<<<<<< HEAD
             'TD16': {'move_types': ['in_invoice', 'in_refund'],
                      'import_type': 'in_invoice',
                      'simplified': False,
                      'self_invoice': True,
                      'tax_tags': {'VJ6', 'VJ7', 'VJ8', 'VJ12', 'VJ13', 'VJ14', 'VJ15', 'VJ16', 'VJ17'}},
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             'TD17': {'move_types': ['in_invoice', 'in_refund'],
                      'import_type': 'in_invoice',
                      'simplified': False,
                      'self_invoice': True,
+<<<<<<< HEAD
                      'services_or_goods': "service",
                      'tax_tags': {'VJ3'}},
+=======
+                     'services_or_goods': "service"},
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             'TD18': {'move_types': ['in_invoice', 'in_refund'],
                      'import_type': 'in_invoice',
                      'simplified': False,
                      'self_invoice': True,
                      'services_or_goods': "consu",
                      'goods_in_italy': False,
+<<<<<<< HEAD
                      'partner_in_eu': True,
                      'tax_tags': {'VJ9'}},
+=======
+                     'partner_in_eu': True},
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             'TD19': {'move_types': ['in_invoice', 'in_refund'],
                      'import_type': 'in_invoice',
                      'simplified': False,
                      'self_invoice': True,
                      'services_or_goods': "consu",
+<<<<<<< HEAD
                      'goods_in_italy': True,
                      'tax_tags': {'VJ3'}},
         }
@@ -583,6 +617,27 @@ class AccountMove(models.Model):
             # By using a generator instead of a list, we can avoid some comparisons
             if all(compare(invoice_values, document_type_features[k]) for k, invoice_values in invoice_features.items() if k in document_type_features):
                 return document_type_code
+=======
+                     'goods_in_italy': True},
+        }
+
+    def _l10n_it_edi_get_document_type(self):
+        """ Compare the features of the invoice to the requirements of each TDxx FatturaPA
+            document type until you find a valid one. """
+        invoice_features = self._l10n_it_edi_features_for_document_type_selection()
+        for code, document_type_features in self._l10n_it_edi_document_type_mapping().items():
+            comparisons = []
+            for key, invoice_feature in invoice_features.items():
+                if key not in document_type_features:
+                    continue
+                document_type_feature = document_type_features.get(key)
+                if isinstance(document_type_feature, list):
+                    comparisons.append(invoice_feature in document_type_feature)
+                else:
+                    comparisons.append(invoice_feature == document_type_feature)
+            if all(comparisons):
+                return code
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         return False
 
     def _l10n_it_edi_is_simplified_document_type(self, document_type):
@@ -661,7 +716,11 @@ class AccountMove(models.Model):
             # then try and fill it with the content imported from the attachment.
             # Should the import fail, thanks to try..except and savepoint,
             # we will anyway end up with an empty `in_invoice` with the attachment posted on it.
+<<<<<<< HEAD
             if move := self.with_company(proxy_user.company_id)._l10n_it_edi_create_move_with_attachment(
+=======
+            if move := self.with_company(self.company_id)._l10n_it_edi_create_move_with_attachment(
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                 invoice_data['filename'],
                 invoice_data['file'],
                 invoice_data['key'],
@@ -730,16 +789,26 @@ class AccountMove(models.Model):
                 return partner
         return self.env['res.partner']
 
+<<<<<<< HEAD
     def _l10n_it_edi_search_tax_for_import(self, company, percentage, extra_domain=None, l10n_it_exempt_reason=None):
         """ Returns the VAT, Withholding or Pension Fund tax that suits the conditions given
             and matches the percentage found in the XML for the company. """
 
         domain = [
             *self.env['account.tax']._check_company_domain(company),
+=======
+    def _l10n_it_edi_search_tax_for_import(self, company, percentage, extra_domain=None):
+        """ Returns the VAT, Withholding or Pension Fund tax that suits the conditions given
+            and matches the percentage found in the XML for the company. """
+        domain = [
+            *self.env['account.tax']._check_company_domain(company),
+            ('amount', '=', percentage),
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             ('amount_type', '=', 'percent'),
             ('type_tax_use', '=', 'purchase'),
         ] + (extra_domain or [])
 
+<<<<<<< HEAD
         # We suppose we're importing a file that comes in as a customer invoice where the sale tax will be 0%.
         # To retrieve the correct purchase tax, we examine the sale tax's l10n_it_exempt_reason.
         # We determine whether the l10n_it_exempt_reason is specific to reverse charge.
@@ -754,6 +823,13 @@ class AccountMove(models.Model):
             domain += [('invoice_repartition_line_ids.tag_ids.name', '=', f'+{reversed_tax_tag.lower()}')]
             taxes = self.env['account.tax'].search(domain, order="amount desc").filtered(
                 lambda tax: any(rep_line.factor_percent < 0 for rep_line in tax.invoice_repartition_line_ids))
+=======
+        # As we're importing vendor bills, we're excluding Reverse Charge Taxes
+        # which have a [100.0, 100.0, -100.0] repartition lines factor_percent distribution.
+        # We only allow for taxes that have all positive repartition lines factor_percent distribution.
+        taxes = self.env['account.tax'].search(domain).filtered(
+            lambda tax: all(rep_line.factor_percent >= 0 for rep_line in tax.invoice_repartition_line_ids))
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
         return taxes[0] if taxes else taxes
 
@@ -782,11 +858,14 @@ class AccountMove(models.Model):
 
         self.move_type = move_type
 
+<<<<<<< HEAD
         if self.name and self.name != '/':
             # the journal might've changed, so we need to recompute the name in case it was set (first entry in journal)
             self.name = False
             self._compute_name()
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         # Collect extra info from the XML that may be used by submodules to further put information on the invoice lines
         extra_info, message_to_log = self._l10n_it_edi_get_extra_info(company, document_type, tree)
 
@@ -1021,8 +1100,14 @@ class AccountMove(models.Model):
 
         move_line.tax_ids = []
         if percentage is not None:
+<<<<<<< HEAD
             l10n_it_exempt_reason = get_text(element, './/Natura').upper() or False
             if tax := self._l10n_it_edi_search_tax_for_import(company, percentage, None, l10n_it_exempt_reason=l10n_it_exempt_reason):
+=======
+            l10n_it_exempt_reason = get_text(element, './/Natura') or False
+            conditions = [('l10n_it_exempt_reason', '=', l10n_it_exempt_reason)]
+            if tax := self._l10n_it_edi_search_tax_for_import(company, percentage, conditions):
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                 move_line.tax_ids += tax
             else:
                 message = Markup("<br/>").join((

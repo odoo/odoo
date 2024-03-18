@@ -6,7 +6,11 @@
         <field name="arch" type="xml">
             <form string="Send an SMS">
                 <!-- Single mode information (invalid number) -->
+<<<<<<< HEAD
                 <div class="alert alert-danger text-center" role="alert"
+=======
+                <div colspan="2" class="alert alert-danger text-center mb-0" role="alert"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                     invisible="not res_model_description or not comment_single_recipient or recipient_single_valid">
                     <p class="my-0">
                         <strong>Invalid number:</strong>
@@ -17,7 +21,11 @@
                 </div>
 
                 <!-- Mass mode information (res_ids versus active domain) -->
+<<<<<<< HEAD
                 <div class="alert alert-info text-center" role="alert"
+=======
+                <div colspan="2" class="alert alert-info text-center mb-0" role="alert"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                         invisible="comment_single_recipient or recipient_invalid_count == 0">
                     <p class="my-0">
                         <field class="oe_inline fw-bold" name="recipient_invalid_count"/> out of
@@ -37,7 +45,10 @@
                         <field name="number_field_name" invisible="1"/>
                         <field name="numbers" invisible="1"/>
                         <field name="sanitized_numbers" invisible="1"/>
+<<<<<<< HEAD
                         <field name="template_id" invisible="1"/>
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
                         <label for="recipient_single_description" string="Recipient"
                             class="fw-bold"

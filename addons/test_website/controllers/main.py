@@ -139,6 +139,7 @@ class WebsiteTest(Home):
     def test_model_converter_seoname(self, rec, **kw):
         return request.make_response('ok')
 
+<<<<<<< HEAD
     @http.route(['/test_website/model_item/<int:record_id>'], type='http', methods=['GET'], auth="public", website=True, sitemap=False)
     def test_model_item(self, record_id):
         values = {
@@ -146,6 +147,8 @@ class WebsiteTest(Home):
         }
         return request.render("test_website.model_item", values)
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     @http.route(['/test_website/test_redirect_view_qs'], type='http', auth="public", website=True, sitemap=False)
     def test_redirect_view_qs(self, **kw):
         return request.render('test_website.test_redirect_view_qs')

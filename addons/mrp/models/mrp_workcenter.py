@@ -189,7 +189,11 @@ class MrpWorkcenter(models.Model):
             raise exceptions.UserError(_("It has already been unblocked."))
         times = self.env['mrp.workcenter.productivity'].search([('workcenter_id', '=', self.id), ('date_end', '=', False)])
         times.write({'date_end': datetime.now()})
+<<<<<<< HEAD
         return True
+=======
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
     @api.model_create_multi
     def create(self, vals_list):

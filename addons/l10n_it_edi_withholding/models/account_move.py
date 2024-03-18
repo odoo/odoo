@@ -117,13 +117,22 @@ class AccountMove(models.Model):
     # Import
     # -------------------------------------------------------------------------
 
+<<<<<<< HEAD
     def _l10n_it_edi_search_tax_for_import(self, company, percentage, extra_domain=None, vat_only=True, l10n_it_exempt_reason=False):
+=======
+    def _l10n_it_edi_search_tax_for_import(self, company, percentage, extra_domain=None, vat_only=True):
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         """ In case no withholding_type or pension_fund is specified, exclude taxes that have it.
             It means that we're searching for VAT taxes, especially in the base l10n_it_edi module
         """
         if vat_only:
+<<<<<<< HEAD
             extra_domain = (extra_domain or []) + [('l10n_it_withholding_type', '=', False), ('l10n_it_pension_fund_type', '=', False)]
         return super()._l10n_it_edi_search_tax_for_import(company, percentage, extra_domain=extra_domain, l10n_it_exempt_reason=l10n_it_exempt_reason)
+=======
+            extra_domain += [('l10n_it_withholding_type', '=', False), ('l10n_it_pension_fund_type', '=', False)]
+        return super()._l10n_it_edi_search_tax_for_import(company, percentage, extra_domain)
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
     def _l10n_it_edi_get_extra_info(self, company, document_type, body_tree):
         extra_info, message_to_log = super()._l10n_it_edi_get_extra_info(company, document_type, body_tree)

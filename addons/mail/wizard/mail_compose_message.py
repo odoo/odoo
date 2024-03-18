@@ -95,17 +95,29 @@ class MailComposer(models.TransientModel):
     email_layout_xmlid = fields.Char(
         'Email Notification Layout',
         compute='_compute_email_layout_xmlid', readonly=False, store=True,
+<<<<<<< HEAD
         copy=False, compute_sudo=False)
+=======
+        copy=False)
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     email_add_signature = fields.Boolean(
         'Add signature',
         compute='_compute_email_add_signature', readonly=False, store=True)
     # origin
     email_from = fields.Char(
+<<<<<<< HEAD
         'From', compute='_compute_authorship', readonly=False, store=True, compute_sudo=False,
         help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
     author_id = fields.Many2one(
         'res.partner', string='Author',
         compute='_compute_authorship', readonly=False, store=True, compute_sudo=False,
+=======
+        'From', compute='_compute_authorship', readonly=False, store=True,
+        help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
+    author_id = fields.Many2one(
+        'res.partner', string='Author',
+        compute='_compute_authorship', readonly=False, store=True,
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
     # composition
     composition_mode = fields.Selection(
@@ -145,7 +157,11 @@ class MailComposer(models.TransientModel):
     mail_activity_type_id = fields.Many2one('mail.activity.type', 'Mail Activity Type', ondelete='set null')
     # destination
     reply_to = fields.Char(
+<<<<<<< HEAD
         'Reply To', compute='_compute_reply_to', readonly=False, store=True, compute_sudo=False,
+=======
+        'Reply To', compute='_compute_reply_to', readonly=False, store=True,
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
     reply_to_force_new = fields.Boolean(
         string='Considers answers as new thread',
@@ -164,7 +180,11 @@ class MailComposer(models.TransientModel):
     # sending
     auto_delete = fields.Boolean(
         'Delete Emails',
+<<<<<<< HEAD
         compute="_compute_auto_delete", readonly=False, store=True, compute_sudo=False,
+=======
+        compute="_compute_auto_delete", readonly=False, store=True,
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         help='This option permanently removes any track of email after it\'s been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.')
     auto_delete_keep_log = fields.Boolean(
         'Keep Message Copy',
@@ -175,10 +195,17 @@ class MailComposer(models.TransientModel):
         compute='_compute_force_send', readonly=False, store=True)
     mail_server_id = fields.Many2one(
         'ir.mail_server', string='Outgoing mail server',
+<<<<<<< HEAD
         compute='_compute_mail_server_id', readonly=False, store=True, compute_sudo=False)
     scheduled_date = fields.Char(
         'Scheduled Date',
         compute='_compute_scheduled_date', readonly=False, store=True, compute_sudo=False,
+=======
+        compute='_compute_mail_server_id', readonly=False, store=True)
+    scheduled_date = fields.Char(
+        'Scheduled Date',
+        compute='_compute_scheduled_date', readonly=False, store=True,
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         help="In comment mode: if set, postpone notifications sending. "
              "In mass mail mode: if sent, send emails after that date. "
              "This date is considered as being in UTC timezone.")

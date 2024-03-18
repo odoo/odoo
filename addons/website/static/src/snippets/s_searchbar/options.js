@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+<<<<<<< HEAD
 import { _t } from "@web/core/l10n/translation";
 import options from '@web_editor/js/editor/snippets.options';
 
@@ -25,6 +26,11 @@ options.registry.SearchBar = options.Class.extend({
         }
     },
 
+=======
+import options from '@web_editor/js/editor/snippets.options';
+
+options.registry.SearchBar = options.Class.extend({
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
@@ -63,6 +69,7 @@ options.registry.SearchBar = options.Class.extend({
         const form = this.$target.parents('form');
         form.find(".o_search_order_by").attr("value", widgetValue);
     },
+<<<<<<< HEAD
     /**
      * Sets the style of the searchbar.
      *
@@ -122,6 +129,8 @@ options.registry.SearchBar = options.Class.extend({
         this.searchButtonEl.classList.toggle("btn-light", light);
         this.searchButtonEl.classList.toggle("btn-primary", !light);
     },
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 });
 
 export default {

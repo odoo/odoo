@@ -173,7 +173,11 @@
                 },
                 "A45": {
                     "style": 1,
+<<<<<<< HEAD
                     "content": "[Late Receipts](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":\"['&',['picking_type_code','=','incoming'],'&',['state','in',['assigned','waiting','confirmed']],'|','|',['has_deadline_issue','=',true],['date_deadline','<',context_today().strftime('%Y-%m-%d')],['scheduled_date','<',context_today().strftime('%Y-%m-%d')]]\",\"context\":{\"group_by\":[]},\"modelName\":\"stock.picking\",\"views\":[[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"calendar\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Late Receipts\"})",
+=======
+                    "content": "[Late Receipts](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":[\"&\",[\"picking_type_code\",\"=\",\"incoming\"],\"&\",[\"state\",\"in\",[\"assigned\",\"waiting\",\"confirmed\"]],\"|\",\"|\",[\"has_deadline_issue\",\"=\",true],[\"date_deadline\",\"<\",\"2022-09-15\"],[\"scheduled_date\",\"<\",\"2022-09-15\"]],\"context\":{\"group_by\":[]},\"modelName\":\"stock.picking\",\"views\":[[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"calendar\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Late Receipts\"})",
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                     "border": 1
                 },
                 "A46": {
@@ -2166,7 +2170,45 @@
                 "activity_exception_decoration",
                 "json_popover"
             ],
+<<<<<<< HEAD
             "domain": "[\"&\", (\"picking_type_code\", \"=\", \"incoming\"), \"&\", (\"state\", \"in\", [\"assigned\", \"waiting\", \"confirmed\"]), \"|\", \"|\", (\"has_deadline_issue\", \"=\", True), (\"date_deadline\", \"<\", context_today().strftime(\"%Y-%m-%d\")), (\"scheduled_date\", \"<\", context_today().strftime(\"%Y-%m-%d\"))]",
+=======
+            "domain": [
+                "&",
+                [
+                    "picking_type_code",
+                    "=",
+                    "incoming"
+                ],
+                "&",
+                [
+                    "state",
+                    "in",
+                    [
+                        "assigned",
+                        "waiting",
+                        "confirmed"
+                    ]
+                ],
+                "|",
+                "|",
+                [
+                    "has_deadline_issue",
+                    "=",
+                    true
+                ],
+                [
+                    "date_deadline",
+                    "<",
+                    "2022-09-15"
+                ],
+                [
+                    "scheduled_date",
+                    "<",
+                    "2022-09-15"
+                ]
+            ],
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             "model": "stock.picking",
             "context": {
                 "params": {

@@ -8,7 +8,10 @@ from datetime import datetime, time, timedelta
 from textwrap import dedent
 
 from odoo import api, fields, models, _
+<<<<<<< HEAD
 from odoo.exceptions import UserError
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from odoo.osv import expression
 from odoo.tools import float_round
 
@@ -247,7 +250,11 @@ class LunchSupplier(models.Model):
             return
 
         if self.send_by != 'mail':
+<<<<<<< HEAD
             raise UserError(_("Cannot send an email to this supplier!"))
+=======
+            raise ValueError("Cannot send an email to this supplier")
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
         orders = self._get_current_orders()
         if not orders:

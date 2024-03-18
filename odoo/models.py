@@ -6268,6 +6268,7 @@ class BaseModel(metaclass=MetaModel):
             records.sorted(key=lambda r: r.name)
         """
         if key is None:
+<<<<<<< HEAD
             if any(self._ids):
                 ids = self.search([('id', 'in', self.ids)])._ids
             else:  # Don't support new ids because search() doesn't work on new records
@@ -6278,6 +6279,13 @@ class BaseModel(metaclass=MetaModel):
                 key = itemgetter(key)
             ids = tuple(item.id for item in sorted(self, key=key, reverse=reverse))
         return self.__class__(self.env, ids, self._prefetch_ids)
+=======
+            recs = self.search([('id', 'in', self.ids)])
+            return self.browse(reversed(recs._ids)) if reverse else recs
+        if isinstance(key, str):
+            key = itemgetter(key)
+        return self.browse(item.id for item in sorted(self, key=key, reverse=reverse))
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
     def update(self, values):
         """ Update the records in ``self`` with ``values``. """

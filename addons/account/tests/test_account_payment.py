@@ -1031,6 +1031,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         invoice.button_draft()
         self.assertTrue(invoice.payment_state == 'not_paid', "Invoice should'nt be paid anymore")
         self.assertTrue(invoice.state == 'draft', "Invoice should be draft")
+<<<<<<< HEAD
 
     def test_journal_onchange(self):
         """Ensure that the payment method line is recomputed when switching journal in form view."""
@@ -1050,3 +1051,5 @@ class TestAccountPayment(AccountTestInvoicingCommon):
 
             payment.journal_id = default_journal
             self.assertEqual(payment.payment_method_line_id.journal_id.id, default_journal.id)
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

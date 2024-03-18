@@ -6709,6 +6709,7 @@ X[]
                 contentAfter: '<p>a<font style="color: rgb(255, 0, 0);">[b<span class="a">c</span>d]</font>e</p>',
             });
         });
+<<<<<<< HEAD
         it('should apply background color to a list of 3 items with font size', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<ul>' +
@@ -6799,6 +6800,8 @@ X[]
                                 '</ul>',
             });
         });
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         it('should distribute color to texts and to button separately', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a[b<a class="btn">c</a>d]e</p>',

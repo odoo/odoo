@@ -1511,6 +1511,7 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(quantB.quantity, 4, "All 4 units of product B should be in location B")
         self.assertEqual(quantB.package_id.id, pack.id, "Product B should still be in the initial package.")
 
+<<<<<<< HEAD
     def test_expected_package_move_lines(self):
         """ Test direct calling of `_package_move_lines` since it doesn't handle all multi-record cases
         It's unlikely this situations will occur, but in case it is for customizations/future features,
@@ -1574,6 +1575,8 @@ class TestPacking(TestPackingCommon):
         move_lines_to_pack = (internal_picking_1 | internal_picking_2)._package_move_lines()
         self.assertEqual(len(move_lines_to_pack), 2, "all move lines in pickings should have been selected to pack")
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     def test_package_selection(self):
         """
         Test that the package selection is correct when using the least_package_strategy:

@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< HEAD
 from datetime import datetime, timedelta
 from freezegun import freeze_time
 
 from odoo.addons.mail.tests.common import MockEmail
 from odoo.addons.sms.tests.common import MockSMS
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from odoo.addons.test_event_full.tests.common import TestWEventCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
@@ -48,6 +51,7 @@ class TestTemplateRefModel(TestWEventCommon):
                         self.assertEqual(str(cm.exception), 'The template which is referenced should be coming from mail.template model.')
                     else:
                         self.assertEqual(str(cm.exception), 'The template which is referenced should be coming from sms.template model.')
+<<<<<<< HEAD
 
 class TestEventSmsMailSchedule(TestWEventCommon, MockEmail, MockSMS):
 
@@ -125,3 +129,5 @@ class TestEventSmsMailSchedule(TestWEventCommon, MockEmail, MockSMS):
             'Wrong Emails Sent Count! Probably emails sent to unconfirmed attendees were not included into the Sent Count')
         self.assertEqual(mail_scheduler.filtered(lambda r: r.notification_type == 'sms').mail_count_done, 2,
             'Wrong SMS Sent Count! Probably SMS sent to unconfirmed attendees were not included into the Sent Count')
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

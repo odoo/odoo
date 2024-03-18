@@ -2141,6 +2141,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+<<<<<<< HEAD
     QUnit.test(
         "basic grouped list rendering 4 cols with aggregates, selector and openFormView",
         async function (assert) {
@@ -2195,6 +2196,8 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     QUnit.test("group a list view with the aggregable field 'value'", async function (assert) {
         serverData.models.foo.fields.value = {
             string: "Value",
@@ -20024,6 +20027,7 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(["switch to form - resId: 5 activeIds: 5,1,2,3,4"]);
         }
     );
+<<<<<<< HEAD
 
     QUnit.test("onchange should only be called once after pressing enter on a field", async function (assert) {
         serverData.models.foo.onchanges = {
@@ -20057,4 +20061,6 @@ QUnit.module("Views", (hooks) => {
         await nextTick();
         assert.verifySteps(["onchange"], "There should only be one onchange call");
     });
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 });

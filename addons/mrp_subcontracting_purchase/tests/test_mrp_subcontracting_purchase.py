@@ -3,8 +3,11 @@
 
 import logging
 
+<<<<<<< HEAD
 from freezegun import freeze_time
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.fields import Date
@@ -537,6 +540,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         bom_data = self.env['report.mrp.report_bom_structure']._get_bom_data(self.bom, self.warehouse, self.finished)
         self.assertEqual(bom_data['lead_time'], 15 + 5 + 5 + 0,
             "Lead time = Purchase lead time(finished) + Days to Purchase + Purchase security lead time + DTPMO on BOM")
+<<<<<<< HEAD
         # Resupply delay = 0 (received from MRP, where route type != "manufacture")
         # Vendor lead time = 15 (finished product supplier delay)
         # Manufacture lead time = 10 (BoM.produce_delay)
@@ -545,11 +549,16 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             'Resupply avail delay = Resupply delay + Max(Vendor lead time, Manufacture lead time)'
             ' + Max purchase component delay + Purchase security lead time + Days to Purchase'
         )
+=======
+        self.assertEqual(bom_data['resupply_avail_delay'], 10 + 5 + 5 + 20,
+            "Component avail delay = Purchase lead time(comp1) + Days to Purchase + Purchase security lead time + Calculated DTPMO")
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
         # Case 2: Vendor lead time < Manufacturing lead time + DTPMO on BOM
         self.bom.action_compute_bom_days()
         self.assertEqual(self.bom.days_to_prepare_mo, 10 + 5 + 5,
             "DTPMO = Purchase lead time(comp1) + Days to Purchase + Purchase security lead time")
+<<<<<<< HEAD
 
         self.bom.days_to_prepare_mo = 10
         # Temp increase BoM.produce_delay, to check if it is now used in the final calculation
@@ -572,6 +581,18 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         # Update stock for components, calculate DTPMO should be 0
         self.env['stock.quant']._update_available_quantity(self.comp1, self.env.company.subcontracting_location_id, 100)
         self.env['stock.quant']._update_available_quantity(self.comp2, self.env.company.subcontracting_location_id, 100)
+=======
+        self.bom.days_to_prepare_mo = 10
+        bom_data = self.env['report.mrp.report_bom_structure']._get_bom_data(self.bom, self.warehouse, self.finished)
+        self.assertEqual(bom_data['lead_time'], 10 + 5 + 5 + 10,
+            "Lead time = Manufacturing lead time + Days to Purchase + Purchase security lead time + DTPMO on BOM")
+        self.assertEqual(bom_data['resupply_avail_delay'], 10 + 5 + 5 + 20,
+            "Component avail delay = Manufacturing lead time + Days to Purchase + Purchase security lead time + Calculated DTPMO")
+
+        # Update stock for components, calculate DTPMO should be 0
+        self.env['stock.quant']._update_available_quantity(self.comp1, self.warehouse.lot_stock_id, 100)
+        self.env['stock.quant']._update_available_quantity(self.comp2, self.warehouse.lot_stock_id, 100)
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         self.env.invalidate_all()   # invalidate cache to get updated qty_available
         # Case 1: Vendor lead time >= Manufacturing lead time + DTPMO on BOM
         self.bom.days_to_prepare_mo = 2
@@ -754,6 +775,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=search_qty_more_than_total, searchVariant=False)
         self.assertEqual(report_values['lines']['components'][0]['stock_avail_state'], 'unavailable')
+<<<<<<< HEAD
 
     @freeze_time('2024-01-01')
     def test_bom_overview_availability_po_lead(self):
@@ -810,3 +832,5 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertEqual(bom_data['lines']['leftover_capacity'], 1)
         # 01/16 + 2 x 2 days (for components and for final product) = 01/20
         self.assertEqual(bom_data['lines']['leftover_date'], '01/20/2024')
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

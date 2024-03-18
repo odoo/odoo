@@ -85,6 +85,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     content: "Click on move to next",
     trigger: ".snippet-option-GalleryElement we-button[data-position='next']",
 }, {
+<<<<<<< HEAD
     content: "Check that the image has been moved",
     trigger: "iframe .s_image_gallery .carousel-item.active img[data-index='1']",
     isCheck: true,
@@ -101,6 +102,12 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
 }, {
     content: "Check that the image still has the correct filter",
     trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
+=======
+    content: "Check that the moved image still has the correct filter",
+    // FIXME somehow checking what the editor panel shows here is not reliable
+    // unless you add a big delay before checking.
+    trigger: "iframe .s_image_gallery .carousel-item.active img[data-index='1'][data-gl-filter='blur']",
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     isCheck: true,
 }]);
 

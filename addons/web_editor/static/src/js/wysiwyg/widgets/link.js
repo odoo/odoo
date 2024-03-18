@@ -48,9 +48,12 @@ export class Link extends Component {
     ];
     setup() {
         this.state = useState({});
+<<<<<<< HEAD
         // We need to wait for the `onMounted` changes to be done before
         // accessing `this.$el`.
         this.mountedPromise = new Promise(resolve => this.mountedResolve = resolve);
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
         onWillStart(() => this._updateState(this.props));
         let started = false;
@@ -85,10 +88,15 @@ export class Link extends Component {
             this.$el.find('[name="url"]').on('change', this._onURLInputChange.bind(this));
 
             await this.start();
+<<<<<<< HEAD
             this.mountedResolve();
         });
         onWillUpdateProps(async (newProps) => {
             await this.mountedPromise;
+=======
+        });
+        onWillUpdateProps((newProps) => {
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             this._updateState(newProps);
             this.state.url = newProps.link.getAttribute('href') || '';
             this._setUrl({ shouldFocus: newProps.shouldFocusUrl });
@@ -187,7 +195,11 @@ export class Link extends Component {
      * Focuses the url input.
      */
     focusUrl() {
+<<<<<<< HEAD
         const urlInput = this.$el[0].querySelector('input[name="url"]');
+=======
+        const urlInput = this.linkComponentWrapperRef.el.querySelector('input[name="url"]');
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         urlInput.focus();
         urlInput.select();
     }

@@ -146,6 +146,7 @@ class AccountMoveSend(models.TransientModel):
             'send_mail': self.checkbox_send_mail,
         }
 
+<<<<<<< HEAD
     @api.model
     def _get_wizard_vals_restrict_to(self, only_options):
         return {
@@ -154,6 +155,8 @@ class AccountMoveSend(models.TransientModel):
             **only_options,
         }
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     def _get_mail_move_values(self, move, wizard=None):
         mail_template_id = move.send_and_print_values and move.send_and_print_values.get('mail_template_id')
         mail_template = wizard and wizard.mail_template_id or self.env['mail.template'].browse(mail_template_id)

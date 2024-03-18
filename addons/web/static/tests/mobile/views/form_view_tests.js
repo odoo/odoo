@@ -28,7 +28,10 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                     fields: {
                         display_name: { type: "char", string: "Display Name" },
                         trululu: { type: "many2one", string: "Trululu", relation: "partner" },
+<<<<<<< HEAD
                         boolean: { type: "boolean", string: "Bool" },
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                     },
                     records: [
                         { id: 1, display_name: "first record", trululu: 4 },
@@ -480,6 +483,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
         await nextTick();
         assert.verifySteps(["post"]);
     });
+<<<<<<< HEAD
 
     QUnit.test("button box with 3/4 buttons (close to threshold)", async (assert) => {
         await makeView({
@@ -514,4 +518,6 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
         await click(fixture.querySelector(".o_button_more"));
         assert.containsN(fixture, ".o_dropdown_more .oe_stat_button", 2);
     });
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 });

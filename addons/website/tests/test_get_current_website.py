@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+<<<<<<< HEAD
 import json
 
 from odoo.tests import tagged
@@ -8,6 +9,15 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 @tagged('post_install', '-at_install')
 class TestGetCurrentWebsite(HttpCaseWithUserDemo):
+=======
+
+from odoo.tests import tagged
+from odoo.tests.common import TransactionCase
+
+
+@tagged('post_install', '-at_install')
+class TestGetCurrentWebsite(TransactionCase):
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
     @classmethod
     def setUpClass(cls):
@@ -78,6 +88,7 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
 
         user = self.env['res.users'].create({'website_id': website.id, 'login': 'sad@mail.com', 'name': 'Hope Fully'})
         self.assertTrue(user.website_id == user.partner_id.website_id == website)
+<<<<<<< HEAD
 
     def test_03_rpc_signin_user_website_id(self):
         def rpc_login_user_demo():
@@ -108,3 +119,5 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
         # It should not login since the website set on the user has no domain.
         self.user_demo.website_id = website2
         self.assertFalse(rpc_login_user_demo())
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

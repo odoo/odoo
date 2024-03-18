@@ -52,6 +52,7 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
         ...ProductScreen.addOrderline("Desk Pad", "1"),
         ...pay(),
         ...checkSimplifiedInvoiceNumber("0003"),
+<<<<<<< HEAD
 
         ...ReceiptScreen.clickNextOrder(),
         ...ProductScreen.addOrderline("Desk Pad", "1"),
@@ -63,5 +64,7 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
             trigger: `div.popup.popup-confirm .modal-header:contains('Customer Required')`,
         },
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     ],
 });

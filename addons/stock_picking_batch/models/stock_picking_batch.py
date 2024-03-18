@@ -236,7 +236,11 @@ class StockPickingBatch(models.Model):
         """
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
+<<<<<<< HEAD
             move_line_ids = self.picking_ids[0]._package_move_lines(batch_pack=True)
+=======
+            move_line_ids = self.picking_ids[0]._package_move_lines()
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             if move_line_ids:
                 res = move_line_ids.picking_id[0]._pre_put_in_pack_hook(move_line_ids)
                 if res:

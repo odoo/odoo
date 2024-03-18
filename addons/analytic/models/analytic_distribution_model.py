@@ -2,7 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+<<<<<<< HEAD
 from odoo.tools import SQL
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from odoo.exceptions import UserError
 
 
@@ -39,6 +42,7 @@ class AccountAnalyticDistributionModel(models.Model):
 
     @api.constrains('company_id')
     def _check_company_accounts(self):
+<<<<<<< HEAD
         """Ensure accounts specific to a company isn't used in any distribution model that wouldn't be specific to the company"""
         query = SQL(
             """
@@ -53,6 +57,17 @@ class AccountAnalyticDistributionModel(models.Model):
             self._query_analytic_accounts('model'),
             self.ids,
         )
+=======
+        query = """
+            SELECT model.id
+              FROM account_analytic_distribution_model model
+              JOIN account_analytic_account account
+                ON model.analytic_distribution ? CAST(account.id AS VARCHAR)
+             WHERE account.company_id IS NOT NULL 
+               AND (model.company_id IS NULL 
+                OR model.company_id != account.company_id)
+        """
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         self.flush_model(['company_id', 'analytic_distribution'])
         self.env.cr.execute(query)
         if self.env.cr.dictfetchone():

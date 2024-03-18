@@ -107,7 +107,10 @@ class StockValuationLayerRevaluation(models.TransientModel):
             remaining_value -= taken_remaining_value
             remaining_qty -= svl.remaining_qty
 
+<<<<<<< HEAD
         previous_value_svl = self.current_value_svl
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         revaluation_svl = self.env['stock.valuation.layer'].create(revaluation_svl_vals)
 
         # Update the stardard price in case of AVCO/FIFO
@@ -137,8 +140,13 @@ class StockValuationLayerRevaluation(models.TransientModel):
             'line_ids': [(0, 0, {
                 'name': _('%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s',
                     user=self.env.user.name,
+<<<<<<< HEAD
                     previous=previous_value_svl,
                     new_value=previous_value_svl + self.added_value,
+=======
+                    previous=self.current_value_svl,
+                    new_value=self.current_value_svl + self.added_value,
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                     product=product_id.display_name,
                 ),
                 'account_id': debit_account_id,
@@ -148,8 +156,13 @@ class StockValuationLayerRevaluation(models.TransientModel):
             }), (0, 0, {
                 'name': _('%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s',
                     user=self.env.user.name,
+<<<<<<< HEAD
                     previous=previous_value_svl,
                     new_value=previous_value_svl + self.added_value,
+=======
+                    previous=self.current_value_svl,
+                    new_value=self.current_value_svl + self.added_value,
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                     product=product_id.display_name,
                 ),
                 'account_id': credit_account_id,

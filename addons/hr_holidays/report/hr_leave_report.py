@@ -52,7 +52,11 @@ class LeaveReport(models.Model):
                 leaves.holiday_type as holiday_type, leaves.date_from as date_from,
                 leaves.date_to as date_to, leaves.company_id
                 from (select
+<<<<<<< HEAD
                     allocation.id as leave_id,
+=======
+                    null as leave_id,
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                     allocation.employee_id as employee_id,
                     allocation.private_name as name,
                     allocation.number_of_days as number_of_days,
@@ -97,5 +101,9 @@ class LeaveReport(models.Model):
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_id': self.leave_id.id,
+<<<<<<< HEAD
             'res_model': 'hr.leave' if self.leave_type == 'request' else 'hr.leave.allocation',
+=======
+            'res_model': 'hr.leave',
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         }

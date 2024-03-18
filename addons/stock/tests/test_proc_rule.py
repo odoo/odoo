@@ -528,6 +528,7 @@ class TestProcRule(TransactionCase):
         orderpoint.action_replenish(force_to_max=True)
         self.assertEqual(orderpoint.qty_forecast, 200.0)
 
+<<<<<<< HEAD
     def test_orderpoint_location_archive(self):
         warehouse = self.env['stock.warehouse'].create({
             'name': 'Test Warehouse',
@@ -553,6 +554,8 @@ class TestProcRule(TransactionCase):
         # opening the replenishment should not raise a KeyError even if the location is archived
         self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):

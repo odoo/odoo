@@ -25,4 +25,7 @@ Ignacio Cainelli ica@adhoc.com.ar https://github.com/ica-adhoc
 Martin Diego Quinteros maq@adhoc.com.ar https://github.com/maq-adhoc
 Maximiliano Mezzavilla mem@adhoc.com.ar https://github.com/mem-adhoc
 Alexis Lopez loa@adhoc.com.ar https://github.com/ALopez-Adhoc
+<<<<<<< HEAD
 Rocio Marina Vega rov@adhoc.com.ar https://github.com/rov-adhoc
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

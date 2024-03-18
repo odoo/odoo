@@ -31,7 +31,11 @@ class MailComposerMixin(models.AbstractModel):
     )
     template_id = fields.Many2one('mail.template', 'Mail Template', domain="[('model', '=', render_model)]")
     # Language: override mail.render.mixin field, copy template value
+<<<<<<< HEAD
     lang = fields.Char(compute='_compute_lang', precompute=True, readonly=False, store=True, compute_sudo=False)
+=======
+    lang = fields.Char(compute='_compute_lang', precompute=True, readonly=False, store=True)
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     # Access
     is_mail_template_editor = fields.Boolean('Is Editor', compute='_compute_is_mail_template_editor')
     can_edit_body = fields.Boolean('Can Edit Body', compute='_compute_can_edit_body')

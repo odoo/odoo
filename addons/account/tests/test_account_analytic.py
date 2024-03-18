@@ -29,6 +29,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
             'company_id': False,
         })
 
+<<<<<<< HEAD
         cls.cross_plan = cls.env['account.analytic.plan'].create({'name': 'Cross'})
         cls.analytic_account_c = cls.env['account.analytic.account'].create({
             'name': 'analytic_account_c',
@@ -36,6 +37,8 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
             'company_id': False,
         })
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     def create_invoice(self, partner, product):
         return self.env['account.move'].create([{
             'move_type': 'out_invoice',
@@ -217,6 +220,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
         invoice.invoice_line_ids.analytic_distribution = {self.analytic_account_b.id: 0.9}
         invoice.action_post()
         self.assertEqual(invoice.state, 'posted')
+<<<<<<< HEAD
 
     def test_cross_analytics_computing(self):
 
@@ -264,3 +268,5 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
         self.assertEqual(self.analytic_account_a.invoice_count, 1)
         self.analytic_account_a._compute_vendor_bill_count()
         self.assertEqual(self.analytic_account_a.vendor_bill_count, 1)
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

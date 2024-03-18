@@ -82,7 +82,11 @@ class StockMove(models.Model):
         for move_line in self.move_line_ids:
             if not move_line.picked:
                 continue
+<<<<<<< HEAD
             if move_line._should_exclude_for_valuation():
+=======
+            if move_line.owner_id and move_line.owner_id != move_line.company_id.partner_id:
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                 continue
             if not move_line.location_id._should_be_valued() and move_line.location_dest_id._should_be_valued():
                 res.add(move_line.id)
@@ -112,7 +116,11 @@ class StockMove(models.Model):
         for move_line in self.move_line_ids:
             if not move_line.picked:
                 continue
+<<<<<<< HEAD
             if move_line._should_exclude_for_valuation():
+=======
+            if move_line.owner_id and move_line.owner_id != move_line.company_id.partner_id:
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                 continue
             if move_line.location_id._should_be_valued() and not move_line.location_dest_id._should_be_valued():
                 res |= move_line

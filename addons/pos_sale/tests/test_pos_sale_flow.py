@@ -389,6 +389,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         pos_order = self.env['pos.order'].search([], order='id desc', limit=1)
         self.assertTrue(pos_order.account_move.line_ids[0].analytic_distribution, "Analytic distribution should be set on the invoice line")
         self.assertEqual(pos_order.account_move.line_ids[0].analytic_distribution.get(str(self.analytic_account_partner_a_1.id)), 100)
+<<<<<<< HEAD
 
     def test_order_sales_count(self):
         self.main_pos_config.open_ui()
@@ -425,3 +426,5 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         current_session.close_session_from_ui()
         self.env.flush_all()
         self.assertEqual(self.desk_pad.sales_count, 1)
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

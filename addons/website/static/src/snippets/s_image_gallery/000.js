@@ -67,11 +67,17 @@ const GalleryWidget = publicWidget.Widget.extend({
             interval: milliseconds || 0,
             id: uniqueId("slideshow_"),
         }));
+<<<<<<< HEAD
         this.__onModalKeydown = this._onModalKeydown.bind(this);
         this.$modal.on('hidden.bs.modal', function () {
             $(this).hide();
             $(this).siblings().filter('.modal-backdrop').remove(); // bootstrap leaves a modal-backdrop
             this.removeEventListener("keydown", self.__onModalKeydown);
+=======
+        this.$modal.on('hidden.bs.modal', function () {
+            $(this).hide();
+            $(this).siblings().filter('.modal-backdrop').remove(); // bootstrap leaves a modal-backdrop
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             $(this).remove();
             self.$modal = undefined;
         });
@@ -80,12 +86,16 @@ const GalleryWidget = publicWidget.Widget.extend({
                 editableMode: false,
                 $target: self.$modal.find('.modal-body.o_slideshow'),
             });
+<<<<<<< HEAD
             this.addEventListener("keydown", self.__onModalKeydown);
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         });
         this.$modal.appendTo(document.body);
         const modalBS = new Modal(this.$modal[0], {keyboard: true, backdrop: true});
         modalBS.show();
     },
+<<<<<<< HEAD
     _onModalKeydown(ev) {
         if (ev.key === "ArrowLeft" || ev.key === "ArrowRight") {
             const side = ev.key === "ArrowLeft" ? "prev" : "next";
@@ -97,6 +107,8 @@ const GalleryWidget = publicWidget.Widget.extend({
             ev.stopPropagation();
         }
     },
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 });
 
 const GallerySliderWidget = publicWidget.Widget.extend({

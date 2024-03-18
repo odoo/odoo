@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 
+<<<<<<< HEAD
 from odoo import api, fields, models
+=======
+from odoo import fields, models
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     module_l10n_mx_edi = fields.Boolean('Mexican Electronic Invoicing')
+<<<<<<< HEAD
 
     @api.model
     def get_views(self, views, options=None):
@@ -17,3 +22,5 @@ class ResConfigSettings(models.TransientModel):
         if mx_view.active:
             mx_view.active = False
         return super().get_views(views, options)
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

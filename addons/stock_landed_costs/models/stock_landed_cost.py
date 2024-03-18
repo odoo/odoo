@@ -196,6 +196,7 @@ class StockLandedCost(models.Model):
 
         for move in self._get_targeted_move_ids():
             # it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
+<<<<<<< HEAD
             if move.product_id.cost_method not in ('fifo', 'average') or move.state == 'cancel' or not move.quantity:
                 continue
             qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
@@ -206,6 +207,17 @@ class StockLandedCost(models.Model):
                 'former_cost': sum(move.stock_valuation_layer_ids.mapped('value')),
                 'weight': move.product_id.weight * qty,
                 'volume': move.product_id.volume * qty
+=======
+            if move.product_id.cost_method not in ('fifo', 'average') or move.state == 'cancel' or not move.product_qty:
+                continue
+            vals = {
+                'product_id': move.product_id.id,
+                'move_id': move.id,
+                'quantity': move.product_qty,
+                'former_cost': sum(move.stock_valuation_layer_ids.mapped('value')),
+                'weight': move.product_id.weight * move.product_qty,
+                'volume': move.product_id.volume * move.product_qty
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             }
             lines.append(vals)
 

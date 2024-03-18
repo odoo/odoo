@@ -177,6 +177,7 @@ $-seen-urls: ();
     @include print-variable('custom-colors', $custom-colors);
 }
 
+<<<<<<< HEAD
 @mixin body-image-bg-style() {
     background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
     background-position: center;
@@ -193,6 +194,20 @@ $-seen-urls: ();
 #wrapwrap {
     @if o-website-value('body-image') {
         @include body-image-bg-style();
+=======
+#wrapwrap {
+    @if o-website-value('body-image') {
+        background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
+        background-position: center;
+        background-attachment: fixed;
+        @if o-website-value('body-image-type') == 'pattern' {
+            background-size: auto;
+            background-repeat: repeat;
+        } @else {
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     }
 
     @if o-website-value('layout') != 'full' {
@@ -1403,11 +1418,15 @@ header {
                     // Ensure a transparent snippet at the end of the content
                     // still appears with the same background when hovering the
                     // footer during the scroll effect.
+<<<<<<< HEAD
                     @if o-website-value('body-image') {
                         @include body-image-bg-style();
                     } @else {
                         background-color: $body-bg;
                     }
+=======
+                    background-color: $body-bg;
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                 }
                 @if o-website-value('footer-effect') == 'slideout_shadow' {
                     box-shadow: $box-shadow;
@@ -2438,7 +2457,11 @@ input[value*="data-oe-translation-initial-sha"] {
         display: inline-block;
         line-height: normal;
         white-space: pre-wrap;
+<<<<<<< HEAD
         isolation: isolate;
+=======
+        z-index: 1;
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
         > * {
             text-decoration: none;

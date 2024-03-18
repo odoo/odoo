@@ -150,7 +150,11 @@
                                     Default sales tax for products
                                 </div>
                                 <div class="content-group mt16">
+<<<<<<< HEAD
                                     <field name="sale_tax_id" colspan="4" nolabel="1" domain="[('type_tax_use', 'in', ('sale', 'all'))]"/>
+=======
+                                    <field name="sale_tax_id" colspan="4" nolabel="1" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                                 </div>
                                 <div class="mt8">
                                     <button name="%(account.action_tax_form)d" icon="oi-arrow-right" type="action" string="Taxes" class="btn-link"/>
@@ -162,18 +166,30 @@
                                 <div class="text-muted">
                                     Intermediary account used for unidentified customers.
                                 </div>
+<<<<<<< HEAD
                                 <field name="account_default_pos_receivable_account_id" colspan="4" nolabel="1" domain="[('reconcile', '=', True), ('account_type', '=', 'asset_receivable')]"/>
+=======
+                                <field name="account_default_pos_receivable_account_id" colspan="4" nolabel="1" domain="[('reconcile', '=', True), ('account_type', '=', 'asset_receivable'), ('company_id', '=', company_id)]"/>
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                             </setting>
                             <setting id="flexible_taxes" title="Choose a specific fiscal position at the order depending on the kind of customer (tax exempt, onsite vs. takeaway, etc.)." string="Flexible Taxes" help="Use fiscal positions to get different taxes by order">
                                 <field name="pos_tax_regime_selection"/>
                                 <div class="content-group mt16" invisible="not pos_tax_regime_selection">
                                     <div class="row">
                                         <label string="Default" for="pos_default_fiscal_position_id" class="col-lg-3 o_light_label"/>
+<<<<<<< HEAD
                                         <field name="pos_default_fiscal_position_id"/>
                                     </div>
                                     <div class="row">
                                         <label string="Allowed" for="pos_fiscal_position_ids" class="col-lg-3 o_light_label"/>
                                         <field name="pos_fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}"/>
+=======
+                                        <field name="pos_default_fiscal_position_id" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
+                                    </div>
+                                    <div class="row">
+                                        <label string="Allowed" for="pos_fiscal_position_ids" class="col-lg-3 o_light_label"/>
+                                        <field name="pos_fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                                     </div>
                                     <div>
                                         <button name="%(account.action_account_fiscal_position_form)d" icon="oi-arrow-right" type="action" string="Fiscal Positions" class="btn-link"/>

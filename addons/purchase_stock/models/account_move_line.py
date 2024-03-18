@@ -246,6 +246,13 @@ class AccountMoveLine(models.Model):
                 'currency_id': self.currency_id.id,
                 'product_id': self.product_id.id,
                 'product_uom_id': self.product_uom_id.id,
+<<<<<<< HEAD
+=======
+                'quantity': qty,
+                'price_unit': price,
+                'price_subtotal': qty * price,
+                'amount_currency': qty * price * sign,
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                 'balance': self.company_id.currency_id.round((qty * price * sign) / self.currency_rate),
                 'account_id': account.id,
                 'analytic_distribution': self.analytic_distribution,

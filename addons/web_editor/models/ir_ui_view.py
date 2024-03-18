@@ -9,6 +9,7 @@ from lxml import etree, html
 from odoo import api, models, _
 from odoo.osv import expression
 from odoo.exceptions import ValidationError
+<<<<<<< HEAD
 from odoo.addons.base.models.ir_ui_view import MOVABLE_BRANDING
 
 _logger = logging.getLogger(__name__)
@@ -19,11 +20,18 @@ EDITING_ATTRIBUTES = MOVABLE_BRANDING + [
     'data-oe-translation-id',
     'data-note-id'
 ]
+=======
+
+_logger = logging.getLogger(__name__)
+
+EDITING_ATTRIBUTES = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath', 'data-note-id']
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 
 class IrUiView(models.Model):
     _inherit = 'ir.ui.view'
 
+<<<<<<< HEAD
     def _get_cleaned_non_editing_attributes(self, attributes):
         """
         Returns a new mapping of attributes -> value without the parts that are
@@ -43,6 +51,8 @@ class IrUiView(models.Model):
             del attributes['contenteditable']
         return attributes
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     #------------------------------------------------------
     # Save from html
     #------------------------------------------------------
@@ -93,7 +103,11 @@ class IrUiView(models.Model):
         arch = etree.Element('data')
         xpath = etree.Element('xpath', expr="//*[hasclass('oe_structure')][@id='{}']".format(el.get('id')), position="replace")
         arch.append(xpath)
+<<<<<<< HEAD
         attributes = self._get_cleaned_non_editing_attributes(el.attrib.items())
+=======
+        attributes = {k: v for k, v in el.attrib.items() if k not in EDITING_ATTRIBUTES}
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         structure = etree.Element(el.tag, attrib=attributes)
         structure.text = el.text
         xpath.append(structure)
@@ -438,6 +452,7 @@ class IrUiView(models.Model):
         name = self._find_available_name(name, used_names)
 
         # html to xml to add '/' at the end of self closing tags like br, ...
+<<<<<<< HEAD
         arch_tree = html.fromstring(arch)
         attributes = self._get_cleaned_non_editing_attributes(arch_tree.attrib.items())
         for attr in arch_tree.attrib:
@@ -446,6 +461,9 @@ class IrUiView(models.Model):
             else:
                 del arch_tree.attrib[attr]
         xml_arch = etree.tostring(arch_tree, encoding='utf-8')
+=======
+        xml_arch = etree.tostring(html.fromstring(arch), encoding='utf-8')
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         new_snippet_view_values = {
             'name': name,
             'key': full_snippet_key,

@@ -1056,7 +1056,10 @@ class AccountTax(models.Model):
             'tax_tag_ids': [Command.set(tax_vals['tag_ids'])],
             'tax_id': tax_vals['group'].id if tax_vals['group'] else tax_vals['id'],
             'analytic_distribution': line_vals['analytic_distribution'] if tax_vals['analytic'] else {},
+<<<<<<< HEAD
             '_extra_grouping_key_': line_vals.get('extra_context', {}).get('_extra_grouping_key_'),
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         }
 
     @api.model
@@ -1078,7 +1081,10 @@ class AccountTax(models.Model):
             'tax_tag_ids': [Command.set(line_vals['tax_tags'].ids)],
             'tax_id': (line_vals['group_tax'] or tax).id,
             'analytic_distribution': line_vals['analytic_distribution'] if tax.analytic else {},
+<<<<<<< HEAD
             '_extra_grouping_key_': line_vals.get('extra_context', {}).get('_extra_grouping_key_'),
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         }
 
     @api.model

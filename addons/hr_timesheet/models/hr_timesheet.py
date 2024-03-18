@@ -11,6 +11,7 @@ from odoo.osv import expression
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
+<<<<<<< HEAD
     def _get_favorite_project_id_domain(self, employee_id=False):
         employee_id = employee_id or self.env.user.employee_id.id
         return [
@@ -21,6 +22,15 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def _get_favorite_project_id(self, employee_id=False):
         last_timesheet_ids = self.search(self._get_favorite_project_id_domain(employee_id), limit=5)
+=======
+    @api.model
+    def _get_favorite_project_id(self, employee_id=False):
+        employee_id = employee_id or self.env.user.employee_id.id
+        last_timesheet_ids = self.search([
+            ('employee_id', '=', employee_id),
+            ('project_id', '!=', False),
+        ], limit=5)
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         if len(last_timesheet_ids.project_id) == 1:
             return last_timesheet_ids.project_id.id
         return False

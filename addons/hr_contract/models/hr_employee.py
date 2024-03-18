@@ -6,8 +6,11 @@ from datetime import date, datetime, time
 
 from odoo import api, fields, models
 from odoo.osv import expression
+<<<<<<< HEAD
 from odoo.addons.resource.models.utils import Intervals
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 class EmployeePublic(models.Model):
     _inherit = 'hr.employee.public'
@@ -162,6 +165,7 @@ class Employee(models.Model):
             ))
         return unusual_days
 
+<<<<<<< HEAD
     def _get_expected_attendances(self, date_from, date_to):
         self.ensure_one()
         valid_contracts = self.sudo()._get_contracts(date_from, date_to, states=['open', 'close'])
@@ -182,6 +186,8 @@ class Employee(models.Model):
             duration_data = duration_data.__or__(contract_intervals)
         return self.env['resource.calendar']._get_attendance_intervals_days_data(duration_data)
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     def _get_calendar_attendances(self, date_from, date_to):
         self.ensure_one()
         valid_contracts = self.sudo()._get_contracts(date_from, date_to, states=['open', 'close'])

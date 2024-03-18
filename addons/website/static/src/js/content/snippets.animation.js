@@ -19,8 +19,13 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 import {
     applyTextHighlight,
+<<<<<<< HEAD
     removeTextHighlight,
     switchTextHighlight,
+=======
+    switchTextHighlight,
+    getCurrentTextHighlight,
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 } from "@website/js/text_processing";
 import { touching } from "@web/core/utils/ui";
 
@@ -1047,6 +1052,22 @@ registry.anchorSlide = publicWidget.Widget.extend({
             return;
         }
         var hash = this.el.hash;
+<<<<<<< HEAD
+=======
+        if (hash === '#top' || hash === '#bottom') {
+            // If the anchor targets #top or #bottom, directly call the
+            // "scrollTo" function. The reason is that the header or the footer
+            // could have been removed from the DOM. By receiving a string as
+            // parameter, the "scrollTo" function handles the scroll to the top
+            // or to the bottom of the document even if the header or the
+            // footer is removed from the DOM.
+            dom.scrollTo(hash, {
+                duration: 500,
+                extraOffset: this._computeExtraOffset(),
+            });
+            return;
+        }
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         if (!hash.length) {
             return;
         }
@@ -1067,6 +1088,7 @@ registry.anchorSlide = publicWidget.Widget.extend({
             // own smooth scrolling.
             ev.preventDefault();
             Offcanvas.getInstance(offcanvasEl).hide();
+<<<<<<< HEAD
             offcanvasEl.addEventListener('hidden.bs.offcanvas',
                 () => {
                     this._manageScroll(hash, $anchor, scrollValue);
@@ -1099,6 +1121,13 @@ registry.anchorSlide = publicWidget.Widget.extend({
                 extraOffset: this._computeExtraOffset(),
             });
         } else {
+=======
+            offcanvasEl.addEventListener('hidden.bs.offcanvas', () => {
+                this._scrollTo($anchor, scrollValue);
+            });
+        } else {
+            ev.preventDefault();
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             this._scrollTo($anchor, scrollValue);
         }
     },
@@ -1896,6 +1925,7 @@ registry.TextHighlight = publicWidget.Widget.extend({
      * @override
      */
     async start() {
+<<<<<<< HEAD
         // We need to adapt the text highlights on resize (E.g. custom fonts
         // loading, layout option changes, window resized...), mainly to take in
         // consideration the rendered line breaks in text nodes... But after
@@ -1936,24 +1966,54 @@ registry.TextHighlight = publicWidget.Widget.extend({
 
         this.el.addEventListener("text_highlight_added", this._onTextHighlightAdded.bind(this));
         this.el.addEventListener("text_highlight_remove", this._onTextHighlightRemove.bind(this));
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         // Text highlights are saved with a single wrapper that contains all
         // information to build the effects, So we need to make the adaptation
         // here to show the SVGs.
         for (const textEl of this.el.querySelectorAll(".o_text_highlight")) {
+<<<<<<< HEAD
             applyTextHighlight(textEl);
         }
+=======
+            applyTextHighlight(textEl, getCurrentTextHighlight(textEl));
+        }
+        // We need to adapt the text highlights on resize, mainly to take in
+        // consideration the rendered line breaks in text nodes...
+        this._adaptOnResize = throttleForAnimation(() => {
+            this.options.wysiwyg?.odooEditor.observerUnactive("textHighlightResize");
+            for (const textEl of this.el.querySelectorAll(".o_text_highlight")) {
+                // Remove old effect, normalize content, redraw SVGs...
+                switchTextHighlight(textEl, getCurrentTextHighlight(textEl));
+            }
+            this.options.wysiwyg?.odooEditor.observerActive("textHighlightResize");
+        });
+        if (!this.editableMode) {
+            this._adaptOnFontsLoading();
+        }
+        window.addEventListener("resize", this._adaptOnResize);
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         return this._super(...arguments);
     },
     /**
      * @override
      */
     destroy() {
+<<<<<<< HEAD
         // We only save the highlight information on the main text wrapper,
         // the full structure will be restored on page load.
         for (const textHighlightEl of this.el.querySelectorAll(".o_text_highlight")) {
             removeTextHighlight(textHighlightEl);
         }
         this._super(...arguments);
+=======
+        this._super(...arguments);
+        window.removeEventListener("resize", this._adaptOnResize);
+        if (!this.editableMode) {
+            this.resizeObserver.disconnect();
+            this.observerLocked.clear();
+        }
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     },
 
     //--------------------------------------------------------------------------
@@ -1968,8 +2028,11 @@ registry.TextHighlight = publicWidget.Widget.extend({
      * here by adjusting the highlights if the text width changes using a
      * `ResizeObserver`.
      *
+<<<<<<< HEAD
      * TODO: Remove in master (left in stable for compatibility)
      *
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
      * @private
      */
     _adaptOnFontsLoading() {
@@ -2009,7 +2072,11 @@ registry.TextHighlight = publicWidget.Widget.extend({
                         this.observerLocked.delete(unit);
                     });
                     // Adapt the highlight, lock new items and observe them.
+<<<<<<< HEAD
                     switchTextHighlight(topTextEl);
+=======
+                    switchTextHighlight(topTextEl, getCurrentTextHighlight(topTextEl));
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                     this._lockHighlightObserver(topTextEl);
                     this._observeHighlightResize(topTextEl);
                 });
@@ -2019,6 +2086,7 @@ registry.TextHighlight = publicWidget.Widget.extend({
         this._lockHighlightObserver();
     },
     /**
+<<<<<<< HEAD
      * The `resizeObserver` ignores an element if it has an inline display.
      * We need to target the closest non-inline parent.
      *
@@ -2069,12 +2137,23 @@ registry.TextHighlight = publicWidget.Widget.extend({
         for (const highlightItemEl of this._getObservedEls(topTextEl)) {
             this.resizeObserver.observe(highlightItemEl);
         }
+=======
+     * @private
+     * @param {HTMLElement} [container=this.el] the element where the "resize"
+     * should be observed.
+     */
+    _observeHighlightResize(container = this.el) {
+        [...container.querySelectorAll(".o_text_highlight_item")].forEach(unit => {
+            this.resizeObserver.observe(unit);
+        });
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     },
     /**
      * Used to prevent the first callback triggered by `ResizeObserver` on new
      * observed items.
      *
      * @private
+<<<<<<< HEAD
      * @param {HTMLElement} topTextEl the container of observed items.
      */
     _lockHighlightObserver(topTextEl) {
@@ -2103,6 +2182,14 @@ registry.TextHighlight = publicWidget.Widget.extend({
         for (const highlightItemEl of this._getHighlightItems(target)) {
             this.observerLock.delete(highlightItemEl);
         }
+=======
+     * @param {HTMLElement} [container=this.el] the container of observed items.
+     */
+    _lockHighlightObserver(container = this.el) {
+        [...container.querySelectorAll(".o_text_highlight_item")].forEach(unit => {
+            this.observerLocked.set(unit, true);
+        });
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     },
 });
 

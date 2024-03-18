@@ -1364,7 +1364,11 @@ patch(Order.prototype, {
         }
         let freeQty;
         if (reward.program_id.trigger == "auto") {
+<<<<<<< HEAD
             if (this._isRewardProductPartOfRules(reward, product) && reward.program_id.applies_on !== 'future') {
+=======
+            if (this._isRewardProductPartOfRules(reward, product)) {
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                 // OPTIMIZATION: Pre-calculate the factors for each reward-product combination during the loading.
                 // For points not based on quantity, need to normalize the points to compute free quantity.
                 const appliedRulesIds = this.couponPointChanges[coupon_id].appliedRules;
@@ -1421,7 +1425,11 @@ patch(Order.prototype, {
     },
     _computePotentialFreeProductQty(reward, product, remainingPoints) {
         if (reward.program_id.trigger == "auto") {
+<<<<<<< HEAD
             if (this._isRewardProductPartOfRules(reward, product) && reward.program_id.applies_on !== 'future') {
+=======
+            if (this._isRewardProductPartOfRules(reward, product)) {
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                 const line = this.get_orderlines().find(
                     (line) => line.reward_product_id === product.id
                 );

@@ -192,17 +192,29 @@ msgstr ""
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
+<<<<<<< HEAD
 "        Aquí se adjunta la orden de compra <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            con referencia: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
 "        por valor de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 €</span>\n"
+=======
+"        Aquí se adjunta el pedido de compra <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            con referencia: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"        </t>\n"
+"        por valor de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 "        de <t t-out=\"object.company_id.name or ''\">SuEmpresa</t>. \n"
 "        <br><br>\n"
 "        <t t-if=\"object.date_planned\">\n"
 "            La recepción se espera para <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "            <br><br>\n"
+<<<<<<< HEAD
 "            ¿Podría por favor confirmar la recepción de esta orden?\n"
+=======
+"            ¿Podría por favor confirmar la recepción de este pedido?\n"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 "        </t>\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
@@ -240,12 +252,20 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+<<<<<<< HEAD
 "        Estimado/a <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+=======
+"        Apreciable <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
+<<<<<<< HEAD
 "        Aquí se adjunta una solicitud de presupuesto <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+=======
+"        Adjuntamos una solicitud de presupuesto <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 "        <t t-if=\"object.partner_ref\">\n"
 "            con referencia: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
@@ -497,7 +517,11 @@ msgstr "<strong>La cantidad recibida se ha actualizado.</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>This purchase has been canceled.</strong>"
+<<<<<<< HEAD
 msgstr "<strong>Esta compra ha sido cancelada.</strong>"
+=======
+msgstr "<strong>Esta compra se canceló.</strong>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -507,14 +531,22 @@ msgstr "<strong>Precio unitario</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Your Order Reference:</strong>"
+<<<<<<< HEAD
 msgstr "<strong>La referencia de su orden:</strong>"
+=======
+msgstr "<strong>Su referencia de pedido:</strong>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 #, python-format
 msgid "A sample email has been sent to %s."
+<<<<<<< HEAD
 msgstr "Se ha enviado un correo electrónico de muestra a %s."
+=======
+msgstr "Se envió un correo electrónico de muestra a %s."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
@@ -523,8 +555,13 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+<<<<<<< HEAD
 "Un producto almacenable es un producto para el que se gestiona el stock. La aplicación de inventario debe estar instalada.\n"
 "Un producto consumible es un producto para el que no se gestiona el stock.\n"
+=======
+"Un producto almacenable es un producto para el que gestiona stock. La aplicación de inventario debe estar instalada.\n"
+"Un producto consumible es un producto para el que no se gestionan las existencias.\n"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 "Un servicio es un producto no material."
 
 #. module: purchase
@@ -763,7 +800,11 @@ msgstr "Autocomplete de una orden de compra anterior."
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically lock confirmed orders to prevent editing"
 msgstr ""
+<<<<<<< HEAD
 "Bloquee automáticamente las órdenes confirmadas para evitar la edición"
+=======
+"Bloquear automáticamente los pedidos confirmados para evitar la edición"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2207,7 +2248,11 @@ msgstr "Órdenes de compra que incluyen líneas no facturadas."
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase products by multiple of unit # per package"
+<<<<<<< HEAD
 msgstr "Compre productos por múltiplo de # de unidades por paquete"
+=======
+msgstr "Comprar productos por múltiplo de nº de unidades por empaquetado"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
@@ -2602,7 +2647,11 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Sell and purchase products in different units of measure"
+<<<<<<< HEAD
 msgstr "Venda y compre productos en diferentes unidades de medida"
+=======
+msgstr "Vender y comprar productos en diferentes unidades de medida"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2742,7 +2791,11 @@ msgstr "Suma de la cant. ordenada"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
 msgid "Sum of Qty Received"
+<<<<<<< HEAD
 msgstr "Suma de la cantidad recibida"
+=======
+msgstr "Suma de la cant. recibida"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
@@ -3034,7 +3087,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Type a message..."
+<<<<<<< HEAD
 msgstr "Escriba un mensaje..."
+=======
+msgstr "Escribir un mensaje..."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
@@ -3086,7 +3143,11 @@ msgstr "Unidades de medida"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Units of Measure Categories"
+<<<<<<< HEAD
 msgstr "Categorías de unidades de medida"
+=======
+msgstr "Categorías de las unidades de medida"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_unit_of_measure_in_config_purchase
@@ -3244,7 +3305,11 @@ msgstr "SdP en espera"
 #: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__warning
 #, python-format
 msgid "Warning"
+<<<<<<< HEAD
 msgstr "Advertencia"
+=======
+msgstr "Alerta"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: purchase
 #. odoo-python
@@ -3252,7 +3317,11 @@ msgstr "Advertencia"
 #: code:addons/purchase/models/purchase_order_line.py:0
 #, python-format
 msgid "Warning for %s"
+<<<<<<< HEAD
 msgstr "Advertencia para %s"
+=======
+msgstr "Aviso para %s"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons

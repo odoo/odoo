@@ -1012,11 +1012,18 @@ export class ListRenderer extends Component {
         if (this.hasSelectors) {
             colspan++;
         }
+<<<<<<< HEAD
+=======
+        if (this.props.onOpenFormView) {
+            colspan++;
+        }
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         return colspan;
     }
 
     getGroupPagerCellColspan(group) {
         const lastAggregateIndex = this.getLastAggregateIndex(group);
+<<<<<<< HEAD
         let colspan;
         if (lastAggregateIndex > -1) {
             colspan = this.state.columns.length - lastAggregateIndex - 1;
@@ -1030,6 +1037,17 @@ export class ListRenderer extends Component {
             colspan++;
         }
         return colspan
+=======
+        if (lastAggregateIndex > -1) {
+            let colspan = this.state.columns.length - lastAggregateIndex - 1;
+            if (this.displayOptionalFields) {
+                colspan++;
+            }
+            return colspan;
+        } else {
+            return this.state.columns.length > 1 ? DEFAULT_GROUP_PAGER_COLSPAN : 0;
+        }
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     }
 
     getGroupPagerProps(group) {

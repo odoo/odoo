@@ -687,7 +687,10 @@ class Applicant(models.Model):
             'work_email': self.department_id.company_id.email or self.email_from, # To have a valid email address by default
             'work_phone': self.department_id.company_id.phone,
             'applicant_id': self.ids,
+<<<<<<< HEAD
             'private_phone': self.partner_phone or self.partner_mobile
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         }
 
     def _update_employee_from_applicant(self):

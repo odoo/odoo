@@ -324,6 +324,7 @@ class TestDeliveryCost(common.TransactionCase):
         })
         shipping_weight = sale_order._get_estimated_weight()
         self.assertEqual(shipping_weight, self.product_4.weight, "Only positive quantity products' weights should be included in estimated weight")
+<<<<<<< HEAD
 
     def test_fixed_price_margins(self):
         """
@@ -353,3 +354,5 @@ class TestDeliveryCost(common.TransactionCase):
             ('is_delivery', '=', True)
         ])
         self.assertEqual(line.price_unit, self.normal_delivery.fixed_price)
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

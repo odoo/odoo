@@ -643,7 +643,11 @@ Please change the quantity done or the rounding precision of your unit of measur
         if 'date_deadline' in vals:
             self._set_date_deadline(vals.get('date_deadline'))
         if 'move_orig_ids' in vals:
+<<<<<<< HEAD
             move_to_recompute_state |= self.filtered(lambda m: m.state not in ['draft', 'cancel', 'done'])
+=======
+            move_to_recompute_state |= self.filtered(lambda m: m.state not in ['draft', 'cance', 'done'])
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         if 'location_dest_id' in vals:
             move_to_check_dest_location = self.filtered(lambda m: m.location_dest_id.id != vals.get('location_dest_id'))
         res = super(StockMove, self).write(vals)

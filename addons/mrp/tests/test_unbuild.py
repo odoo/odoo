@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< HEAD
 from odoo import Command
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import UserError
@@ -943,6 +946,7 @@ class TestUnbuild(TestMrpCommon):
             {'product_id': self.bom_1.bom_line_ids[0].product_id.id, 'quantity': 0.6},
             {'product_id': self.bom_1.bom_line_ids[1].product_id.id, 'quantity': 1.2},
         ])
+<<<<<<< HEAD
 
     def test_unbuild_less_quantity_consumed(self):
         """
@@ -976,3 +980,5 @@ class TestUnbuild(TestMrpCommon):
         unbuild_wizard = Form(self.env[unbuild_action['res_model']].with_context(**unbuild_action['context'])).save()
         unbuild_wizard.action_validate()
         self.assertEqual(mo.unbuild_ids.produce_line_ids.filtered(lambda m: m.product_id == self.product_3).product_uom_qty, 15)
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

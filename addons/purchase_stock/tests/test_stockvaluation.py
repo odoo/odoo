@@ -2978,6 +2978,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         bill.invoice_date = bill_date
         bill.action_post()
 
+<<<<<<< HEAD
         product_accounts = self.product1.product_tmpl_id.get_product_accounts()
         payable_id = self.company_data['default_account_payable'].id
         stock_in_id = product_accounts['stock_input'].id
@@ -2997,6 +2998,16 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'debit': 15,   'credit': 0,    'account_id': stock_in_id,  'reconciled': True, 'amount_currency': 0},
             {'debit': 0,    'credit': 45,   'account_id': stock_in_id,  'reconciled': True, 'amount_currency': -90},
         ])
+=======
+        # Check that we have price difference amls
+        self.assertEqual(len(bill.line_ids), 4)
+
+        # Check that all the amls use the bill date exchange rate
+        self.assertEqual(
+            [self.eur_currency._convert(line.amount_currency, company.currency_id, company, bill_date) for line in bill.line_ids],
+            [line.balance for line in bill.line_ids]
+        )
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
     def test_analytic_distribution_propagation_with_exchange_difference(self):
         # Create 2 rates in order to generate an exchange difference later.
@@ -3085,6 +3096,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         for line in exchange_account_move.line_ids:
             self.assertTrue(line.analytic_distribution)
             self.assertEqual(line.analytic_distribution[str(analytic_account.id)], 100)
+<<<<<<< HEAD
 
     def test_curr_rates_and_out_qty(self):
         """
@@ -3173,3 +3185,5 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'debit': 4348,     'credit': 0,        'reconciled': True},
             {'debit': 0,        'credit': 12.9,     'reconciled': True},
         ])
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

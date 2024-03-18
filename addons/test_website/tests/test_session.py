@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from lxml import html
@@ -37,3 +38,14 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         self.opener.cookies['session_id'] = demo_session.sid
         result = self.url_open(f'/test_website/model_item/{record.id}')
         self.assertTrue(has_branding(result.text), "Should have branding for user demo")
+=======
+import odoo.tests
+from odoo.tools import mute_logger
+
+
+@odoo.tests.common.tagged('post_install', '-at_install')
+class TestWebsiteSession(odoo.tests.HttpCase):
+
+    def test_01_run_test(self):
+        self.start_tour('/', 'test_json_auth')
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

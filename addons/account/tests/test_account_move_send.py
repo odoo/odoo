@@ -1049,6 +1049,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         )
         self.assertEqual(json.loads(bus_2.message)['payload']['type'], 'warning')
         self.assertEqual(json.loads(bus_2.message)['payload']['action_button']['res_ids'], invoices_error.ids)
+<<<<<<< HEAD
 
     def test_send_and_print_only(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
@@ -1058,3 +1059,5 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         self.assertTrue(self._get_mail_message(invoice))  # email was sent
         self.assertEqual(res['type'], 'ir.actions.act_window_close')  # the download which is a default value didn't happen
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

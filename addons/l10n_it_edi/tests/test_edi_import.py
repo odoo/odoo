@@ -2,7 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import uuid
+<<<<<<< HEAD
 from freezegun import freeze_time
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from unittest.mock import patch
 
 from odoo import fields, sql_db, tools
@@ -72,6 +75,7 @@ class TestItEdiImport(TestItEdi):
             }],
         }])
 
+<<<<<<< HEAD
     def test_receive_bill_sequence(self):
         """ Ensure that the received bill gets assigned the right sequence. """
         def mock_commit(self):
@@ -96,6 +100,8 @@ class TestItEdiImport(TestItEdi):
         invoices = self.env['account.move'].with_company(self.company).search([('name', '=', 'BILL/2019/01/0001')])
         self.assertEqual(len(invoices), 1)
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     def test_receive_same_vendor_bill_twice(self):
         """ Test that the second time we are receiving an SdiCoop invoice, the second is discarded """
 

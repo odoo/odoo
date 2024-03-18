@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< HEAD
 from freezegun import freeze_time
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 from odoo import Command
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import Form
@@ -946,6 +949,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             {'qty_producing': 10.0, 'product_qty': 10.0, 'state': 'to_close'},
         ])
 
+<<<<<<< HEAD
     @freeze_time('2024-01-01')
     def test_bom_overview_availability(self):
         # Create routes for components and the main product
@@ -1000,6 +1004,8 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(bom_data['lines']['leftover_capacity'], 1)
         self.assertEqual(bom_data['lines']['leftover_date'], '01/16/2024')
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):

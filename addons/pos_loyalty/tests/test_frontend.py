@@ -1514,6 +1514,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyTour10",
             login="pos_user",
         )
+<<<<<<< HEAD
 
     def test_loyalty_program_with_next_order_coupon_free_product(self):
         self.env['loyalty.program'].search([]).write({'active': False})
@@ -1576,3 +1577,5 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="pos_user",
         )
         self.assertEqual(coupon.points, 0, "Coupon not used")
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

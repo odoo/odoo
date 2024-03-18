@@ -18,7 +18,11 @@ patch(OrderWidget.prototype, {
             return super.buttonToShow;
         }
 
+<<<<<<< HEAD
         if (order.amount_total === 0 && !isNoLine && mode !== "each") {
+=======
+        if (order.amount_total === 0 && !isNoLine) {
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             return { label: _t("Order"), disabled: false };
         }
 

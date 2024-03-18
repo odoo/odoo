@@ -4048,6 +4048,7 @@ class TestStockValuation(TestStockValuationBase):
 
         with self.assertRaises(UserError):
             revaluation.action_validate_revaluation()
+<<<<<<< HEAD
 
     def test_manual_revaluation_statement(self):
         self.product1.categ_id.property_cost_method = 'fifo'
@@ -4067,3 +4068,5 @@ class TestStockValuation(TestStockValuationBase):
         account_move = self.env['account.move'].search([('journal_id', '=', revaluation.account_journal_id.id)])
 
         self.assertEqual(account_move.line_ids[0].name, 'OdooBot changed stock valuation from  15.0 to 25.0 - [prda] Product A')
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

@@ -670,6 +670,7 @@ class TestAPI(SavepointCaseWithUserDemo):
         by_name_ids = [p.id for p in sorted(ps, key=lambda p: p.name, reverse=True)]
         self.assertEqual(ps.sorted('name', reverse=True).ids, by_name_ids)
 
+<<<<<<< HEAD
         # sorted doesn't filter out new records but don't sort them either (limitation)
         new_p = self.env['res.partner'].new({
             'child_ids': [
@@ -702,6 +703,8 @@ class TestAPI(SavepointCaseWithUserDemo):
             for partner in partners_with_children:
                 partner.child_ids.sorted('id').mapped('name')
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     def test_group_on(self):
         p0, p1, p2 = self.env['res.partner'].create([
             {'name': "bob", 'function': "guest"},

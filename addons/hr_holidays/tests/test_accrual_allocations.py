@@ -1542,6 +1542,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             accrual_allocation._update_accrual()
             self.assertEqual(accrual_allocation.number_of_days, 31.0,
                 "the amount shouldn't have changed after running the cron")
+<<<<<<< HEAD
 
     def test_accrual_creation_for_history(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
@@ -1621,3 +1622,5 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             accrual_allocation.write({'date_to': '2022-12-31'})
             accrual_allocation._onchange_date_from()
             self.assertAlmostEqual(accrual_allocation.number_of_days, 12, places=0)
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181

@@ -289,6 +289,7 @@ export function drawTextHighlightSVG(textEl, highlightID) {
  * @param {String} highlightID
  */
 export function applyTextHighlight(topTextEl, highlightID) {
+<<<<<<< HEAD
     // Don't reapply the effects to a highlighted text.
     if (topTextEl.querySelector(".o_text_highlight_item")) {
         return;
@@ -298,6 +299,8 @@ export function applyTextHighlight(topTextEl, highlightID) {
         // The default value for `--text-highlight-width` is 0.1em.
         topTextEl.style.setProperty("--text-highlight-width", `${Math.round(parseFloat(style.fontSize) * 0.1)}px`);
     }
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     const lines = [];
     let lineIndex = 0;
     const nodeIsBR = node => node.nodeName === "BR";
@@ -357,9 +360,14 @@ export function applyTextHighlight(topTextEl, highlightID) {
     }));
     // Build and set highlight SVGs.
     [...topTextEl.querySelectorAll(".o_text_highlight_item")].forEach(container => {
+<<<<<<< HEAD
         container.append(drawTextHighlightSVG(container, highlightID || getCurrentTextHighlight(topTextEl)));
     });
     topTextEl.dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
+=======
+        container.append(drawTextHighlightSVG(container, highlightID));
+    });
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 }
 
 /**
@@ -368,7 +376,10 @@ export function applyTextHighlight(topTextEl, highlightID) {
  * @param {HTMLElement} topTextEl
  */
 export function removeTextHighlight(topTextEl) {
+<<<<<<< HEAD
     topTextEl.dispatchEvent(new Event("text_highlight_remove", { bubbles: true }));
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     // Simply replace every `<span class="o_text_highlight_item">
     // textNode1 [textNode2,...]<svg .../></span>` by `textNode1
     // [textNode2,...]`.
@@ -400,7 +411,10 @@ export function removeTextHighlight(topTextEl) {
  * if we just want to adapt the effect).
  */
 export function switchTextHighlight(textEl, highlightID) {
+<<<<<<< HEAD
     highlightID = highlightID || getCurrentTextHighlight(textEl);
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     const ownerDocument = textEl.ownerDocument;
     const sel = ownerDocument.getSelection();
     const restoreSelection = sel.rangeCount === 1 && textEl.contains(sel.anchorNode);
@@ -440,6 +454,10 @@ export function switchTextHighlight(textEl, highlightID) {
                 ...getOffsetNode(textEl, cursorEndPosition)
             );
         }
+<<<<<<< HEAD
+=======
+        ownerDocument.dispatchEvent(new Event("selectionchange"));
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     }
 }
 

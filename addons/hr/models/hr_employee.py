@@ -514,6 +514,7 @@ class HrEmployeePrivate(models.Model):
         # Returns a dict {employee_id: tz}
         return {emp.id: emp._get_tz() for emp in self}
 
+<<<<<<< HEAD
     def _get_expected_attendances(self, date_from, date_to):
         self.ensure_one()
         employee_timezone = timezone(self.tz) if self.tz else None
@@ -526,6 +527,8 @@ class HrEmployeePrivate(models.Model):
                                 domain=[('company_id', 'in', [False, self.company_id.id])])[self.resource_id.id]
         return calendar._get_attendance_intervals_days_data(calendar_intervals)
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     def _get_calendar_attendances(self, date_from, date_to):
         self.ensure_one()
         employee_timezone = timezone(self.tz) if self.tz else None

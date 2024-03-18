@@ -751,7 +751,11 @@ class AccountMove(models.Model):
 
     @api.depends('posted_before', 'state', 'journal_id', 'date', 'move_type', 'payment_id')
     def _compute_name(self):
+<<<<<<< HEAD
         self = self.sorted(lambda m: (m.date, m.ref or '', m._origin.id))
+=======
+        self = self.sorted(lambda m: (m.date, m.ref or '', m.id))
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
         for move in self:
             move_has_name = move.name and move.name != '/'
@@ -1288,7 +1292,10 @@ class AccountMove(models.Model):
                             price_subtotal=values['price_subtotal'],
                             is_refund=move.move_type in ('out_refund', 'in_refund'),
                             handle_price_include=False,
+<<<<<<< HEAD
                             extra_context={'_extra_grouping_key_': 'epd'},
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                         ))
                 kwargs['is_company_currency_requested'] = move.currency_id != move.company_id.currency_id
                 move.tax_totals = self.env['account.tax']._prepare_tax_totals(**kwargs)
@@ -3170,9 +3177,17 @@ class AccountMove(models.Model):
                 except RedirectWarning:
                     raise
                 except Exception:
+<<<<<<< HEAD
                     message = _("Error importing attachment '%s' as invoice (decoder=%s)", file_data['filename'], decoder.__name__)
                     invoice.sudo().message_post(body=message)
                     _logger.exception(message)
+=======
+                    _logger.exception(
+                        "Error importing attachment '%s' as invoice (decoder=%s)",
+                        file_data['filename'],
+                        decoder.__name__
+                    )
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
             passed_file_data_list.append(file_data)
             close_file(file_data)

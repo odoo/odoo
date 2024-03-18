@@ -19,6 +19,7 @@ class StockQuant(models.Model):
              " If empty, the inventory date will be used.")
     cost_method = fields.Selection(related="product_categ_id.property_cost_method")
 
+<<<<<<< HEAD
     @api.model
     def _should_exclude_for_valuation(self):
         """
@@ -28,6 +29,8 @@ class StockQuant(models.Model):
         self.ensure_one()
         return self.owner_id and self.owner_id != self.company_id.partner_id
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     @api.depends('company_id', 'location_id', 'owner_id', 'product_id', 'quantity')
     def _compute_value(self):
         """ (Product.value_svl / Product.quantity_svl) * quant.quantity, i.e. average unit cost * on hand qty
@@ -36,7 +39,11 @@ class StockQuant(models.Model):
             quant.currency_id = quant.company_id.currency_id
             if not quant.location_id or not quant.product_id or\
                     not quant.location_id._should_be_valued() or\
+<<<<<<< HEAD
                     quant._should_exclude_for_valuation() or\
+=======
+                    (quant.owner_id and quant.owner_id != quant.company_id.partner_id) or\
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                     float_is_zero(quant.quantity, precision_rounding=quant.product_id.uom_id.rounding):
                 quant.value = 0
                 continue

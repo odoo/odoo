@@ -444,12 +444,15 @@ class TestChartTemplate(TransactionCase):
         self.assertEqual(len(children_taxes), 2, "Two children should have been created.")
         self.assertEqual(parent_tax.children_tax_ids.ids, children_taxes.ids, "The parent and its children taxes should be linked together.")
 
+<<<<<<< HEAD
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
             # We don't change anything
             self.env['account.chart.template'].try_loading('test', company=self.company_1, install_demo=False)
 
         self.assertEqual(parent_tax.name, 'Tax with children', "The parent tax created before should not have changed")
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     def test_update_taxes_children_tax_ids_inactive(self):
         """ Ensure tax templates are correctly generated when updating taxes with children taxes,
         even if templates are inactive.

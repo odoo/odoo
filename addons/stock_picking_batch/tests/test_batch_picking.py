@@ -319,7 +319,10 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(self.picking_client_1.state, 'done', 'Picking 1 should be done')
         self.assertEqual(self.picking_client_1.move_ids.product_uom_qty, 5, 'initial demand should be 5 after picking split')
         self.assertFalse(self.picking_client_2.batch_id)
+<<<<<<< HEAD
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     def test_put_in_pack(self):
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
@@ -358,6 +361,7 @@ class TestBatchPicking(TransactionCase):
         # final package location should be correctly set based on wizard
         self.assertEqual(package.location_id.id, self.customer_location.id)
 
+<<<<<<< HEAD
     def test_put_in_pack_within_single_picking(self):
         """ Test that when `action_put_in_pack` is called on a picking that is also in a batch,
         only that picking's moves are put in the pack """
@@ -372,6 +376,8 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(self.picking_client_1.move_line_ids.result_package_id, package)
         self.assertFalse(self.picking_client_2.move_line_ids.result_package_id, "Other picking in batch shouldn't have been put in a package")
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     def test_auto_batch(self):
         """ Test a simple auto-batch scenario with new picking type to avoid conflicts with existing picking types.
         The pickings look like this:

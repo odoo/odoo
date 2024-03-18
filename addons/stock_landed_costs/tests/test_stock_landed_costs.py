@@ -45,7 +45,11 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             'picking_type_id': self.warehouse.out_type_id.id,
             'move_ids': [(0, 0, {
                 'product_id': product_landed_cost_1.id,
+<<<<<<< HEAD
                 'product_uom_qty': 15,
+=======
+                'product_uom_qty': 5,
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                 'product_uom': self.ref('uom.product_uom_unit'),
                 'location_id': self.warehouse.lot_stock_id.id,
                 'location_dest_id': self.ref('stock.stock_location_customers'),
@@ -59,7 +63,10 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
         picking_landed_cost_1 = self.env['stock.picking'].create(vals)
 
         # Confirm and assign picking
+<<<<<<< HEAD
         picking_landed_cost_1.picking_type_id.create_backorder = 'never'
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         self.env.company.anglo_saxon_accounting = True
         picking_landed_cost_1.action_confirm()
         picking_landed_cost_1.action_assign()

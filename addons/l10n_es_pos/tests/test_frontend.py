@@ -13,12 +13,15 @@ class TestUi(TestPointOfSaleHttpCommon):
         return cls.company_data["company"]
 
     def test_spanish_pos(self):
+<<<<<<< HEAD
         split_payment_method = self.env['pos.payment.method'].create({
             'name': 'Customer Account',
             'split_transactions': True,
         })
         self.main_pos_config.payment_method_ids = [(4, split_payment_method.id)]
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         simp = self.env['account.journal'].create({
             'name': 'Simplified Invoice Journal',
             'type': 'sale',

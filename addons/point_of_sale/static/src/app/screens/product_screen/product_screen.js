@@ -76,6 +76,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             { value: "1" },
             { value: "2" },
             { value: "3" },
+<<<<<<< HEAD
             { value: "quantity", text: _t("Qty") },
             { value: "4" },
             { value: "5" },
@@ -85,6 +86,17 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             { value: "8" },
             { value: "9" },
             { value: "price", text: _t("Price"), disabled: !this.pos.cashierHasPriceControlRights() },
+=======
+            { value: "quantity", text: "Qty" },
+            { value: "4" },
+            { value: "5" },
+            { value: "6" },
+            { value: "discount", text: "% Disc", disabled: !this.pos.config.manual_discount },
+            { value: "7" },
+            { value: "8" },
+            { value: "9" },
+            { value: "price", text: "Price", disabled: !this.pos.cashierHasPriceControlRights() },
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             { value: "-", text: "+/-" },
             { value: "0" },
             { value: this.env.services.localization.decimalPoint },

@@ -149,6 +149,7 @@ export function getImageSrcFromRecordInfo(record, model, field, idOrIds, placeho
         return placeholder;
     } else {
         // Else: fetches the image related to the given id.
+<<<<<<< HEAD
         const params = {
             model,
             field,
@@ -158,6 +159,14 @@ export function getImageSrcFromRecordInfo(record, model, field, idOrIds, placeho
             params.unique = imageCacheKey(record.data.write_date);
         }
         return url("/web/image", params);
+=======
+        return url("/web/image", {
+            model,
+            field,
+            id,
+            unique: imageCacheKey(record.data.write_date),
+        });
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     }
 }
 

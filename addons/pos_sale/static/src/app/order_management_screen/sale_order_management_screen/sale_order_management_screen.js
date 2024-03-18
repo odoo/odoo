@@ -130,6 +130,14 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                 }
             }
 
+<<<<<<< HEAD
+=======
+            try {
+                await this.pos.load_new_partners();
+            } catch {
+                // FIXME Universal catch seems ill advised
+            }
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             const order_partner = this.pos.db.get_partner_by_id(sale_order.partner_id[0]);
             if (order_partner) {
                 currentPOSOrder.set_partner(order_partner);

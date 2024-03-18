@@ -31,6 +31,7 @@ export class PartnerDetailsEdit extends Component {
             vat: partner.vat || "",
             property_product_pricelist: this.setDefaultPricelist(partner),
         });
+<<<<<<< HEAD
         // Provides translated terms used in the view
         this.partnerDetailsFields = {
             'Street': _t('Street'),
@@ -41,6 +42,8 @@ export class PartnerDetailsEdit extends Component {
             'Mobile': _t('Mobile'),
             'Barcode': _t('Barcode')
         };
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
         Object.assign(this.props.imperativeHandle, {
             save: () => this.saveChanges(),
         });

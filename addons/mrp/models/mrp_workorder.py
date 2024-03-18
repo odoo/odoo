@@ -592,6 +592,14 @@ class MrpWorkorder(models.Model):
             if wo.state in ('done', 'cancel'):
                 continue
 
+<<<<<<< HEAD
+=======
+            if wo.production_id.state != 'progress':
+                wo.production_id.write({
+                    'date_start': fields.Datetime.now()
+                })
+
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             if wo.product_tracking == 'serial' and wo.qty_producing == 0:
                 wo.qty_producing = 1.0
             elif wo.qty_producing == 0:
@@ -602,11 +610,14 @@ class MrpWorkorder(models.Model):
                     wo._prepare_timeline_vals(wo.duration, fields.Datetime.now())
                 )
 
+<<<<<<< HEAD
             if wo.production_id.state != 'progress':
                 wo.production_id.write({
                     'date_start': fields.Datetime.now()
                 })
 
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
             if wo.state == 'progress':
                 continue
             date_start = fields.Datetime.now()

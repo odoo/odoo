@@ -241,7 +241,11 @@ Display a sidebar beside the post content.
             <t t-if="blog_post.tag_ids">
                 <div class="h5">
                     <t t-foreach="blog_post.tag_ids" t-as="one_tag">
+<<<<<<< HEAD
                         <a class="badge border post_link text-decoration-none text-primary" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-esc="one_tag.name"/>
+=======
+                        <a class="badge border post_link text-decoration-none text-primary" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
                     </t>
                 </div>
             </t>

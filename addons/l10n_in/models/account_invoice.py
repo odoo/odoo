@@ -35,7 +35,11 @@ class AccountMove(models.Model):
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller")
     l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
 
+<<<<<<< HEAD
     @api.depends('partner_id', 'partner_id.l10n_in_gst_treatment', 'state')
+=======
+    @api.depends('partner_id', 'partner_id.l10n_in_gst_treatment')
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     def _compute_l10n_in_gst_treatment(self):
         indian_invoice = self.filtered(lambda m: m.country_code == 'IN')
         for record in indian_invoice:

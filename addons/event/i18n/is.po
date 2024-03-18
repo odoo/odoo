@@ -1,6 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event
+<<<<<<< HEAD
 # 
 # Translators:
 # jonasyngvi, 2024
@@ -17,6 +18,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: is\n"
+=======
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
+"Language: is\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 "Plural-Forms: nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);\n"
 
 #. module: event
@@ -77,6 +92,7 @@ msgstr ""
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%s (copy)"
+<<<<<<< HEAD
 msgstr ""
 "%s (afrit)\n"
 " "
@@ -101,13 +117,29 @@ msgstr ""
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_badge
 msgid "'Badge - %s' % (object.name or 'Event').replace('/','')"
+=======
+msgstr "%s (afrita)"
+
+#. module: event
+#: model:ir.actions.report,print_report_name:event.action_report_event_registration_foldable_badge
+msgid "'Foldable Badge - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), (object.name or '').replace('/',''))"
+msgstr ""
+
+#. module: event
+#: model:ir.actions.report,print_report_name:event.action_report_event_event_foldable_badge
+msgid "'Foldable Badge - %s' % (object.name or 'Event').replace('/','')"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
+<<<<<<< HEAD
 msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
+=======
+msgid "'Full Page Ticket - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), (object.name or '').replace('/',''))"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -116,11 +148,14 @@ msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "+123456789"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
@@ -131,9 +166,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "- the ticket \"%(ticket_name)s\" (%(event_name)s): Missing %(nb_too_many)i "
 "seats."
+=======
+msgid "- the ticket \"%(ticket_name)s\" (%(event_name)s): Missing %(nb_too_many)i seats."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -142,11 +181,14 @@ msgid "10-14"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
 msgid "1000 Brussels"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:event.tag,name:event.event_tag_category_1_tag_3
 msgid "15-18"
 msgstr ""
@@ -157,52 +199,75 @@ msgid "18+"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__four_per_sheet
 msgid "4 per sheet"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:event.tag,name:event.event_tag_category_1_tag_1
 msgid "5-10"
 msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
+<<<<<<< HEAD
 msgid ""
 "<b>Business Room</b> - To discuss implementation methodologies, best sales "
 "practices, etc."
+=======
+msgid "<b>Business Room</b> - To discuss implementation methodologies, best sales practices, etc."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
+<<<<<<< HEAD
 msgid ""
 "<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for "
 "new developers."
+=======
+msgid "<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for new developers."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
+<<<<<<< HEAD
 msgid ""
 "<b>The Design Fair is preceded by 2 days of Training Sessions for "
 "experts!</b><br> We propose 3 different training sessions, 2 days each."
+=======
+msgid "<b>The Design Fair is preceded by 2 days of Training Sessions for experts!</b><br> We propose 3 different training sessions, 2 days each."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
+<<<<<<< HEAD
 msgid ""
 "<b>The plenary sessions in the morning will be shorter</b> and we will give "
 "more time for thematical meetings, conferences, workshops and tutorial "
 "sessions in the afternoon."
+=======
+msgid "<b>The plenary sessions in the morning will be shorter</b> and we will give more time for thematical meetings, conferences, workshops and tutorial sessions in the afternoon."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
+<<<<<<< HEAD
 msgid ""
 "<b>The whole event is open to all public!</b> <br>We ask a participation fee"
 " of 49.50€ for the costs for the 3 days (coffee breaks, catering, drinks and"
 " a surprising concert and beer party).<br> For those who don't want to "
 "contribute, there is a free ticket, therefore, catering and access to "
 "evening events aren't included."
+=======
+msgid "<b>The whole event is open to all public!</b> <br>We ask a participation fee of 49.50€ for the costs for the 3 days (coffee breaks, catering, drinks and a surprising concert and beer party).<br> For those who don't want to contribute, there is a free ticket, therefore, catering and access to evening events aren't included."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -225,6 +290,7 @@ msgid ""
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:event.event,description:event.event_0
 msgid ""
 "<em>If you wish to make a presentation, please send your topic proposal as "
@@ -270,10 +336,27 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-group mt-1 me-2 text-center\" title=\"Attendees\"/>"
+=======
+#: model:mail.template,body_html:event.event_registration_mail_template_badge
+msgid ""
+"<div>\n"
+"    Dear <t t-out=\"object.name or 'Guest'\"></t>,<br>\n"
+"    Thank you for your inquiry.<br>\n"
+"    Here is your badge for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.<br>\n"
+"    If you have any questions, please let us know.\n"
+"    <br><br>\n"
+"    Thank you,\n"
+"    <t t-if=\"object.event_id.user_id.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
+<<<<<<< HEAD
 msgid ""
 "<i class=\"fa fa-info-circle me-2\"></i>This event and all the conferences "
 "are in <b>English</b>!"
@@ -284,20 +367,52 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
+=======
+msgid "<em>If you wish to make a presentation, please send your topic proposal as soon as possible for approval to Mr. Famke Jenssens at ngh (a) yourcompany (dot) com. The presentations should be, for example, a presentation of a community module, a case study, methodology feedback, technical, etc. Each presentation must be in English.</em>"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" title=\"Confirm Registration\"/>"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" title=\"Confirm Registration\"/>"
+msgstr ""
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "<i class=\"fa fa-info-circle me-2\"></i>This event and all the conferences are in <b>English</b>!"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
+<<<<<<< HEAD
 msgid "<i class=\"fa fa-map-marker mt-1 me-2 text-center ps-1\" title=\"Location\"/>"
+=======
+msgid "<i class=\"fa fa-level-up fa-rotate-90\" title=\"Confirmed\"/>"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_kanban
+msgid "<i class=\"fa fa-map-marker mt-1 me-1\" title=\"Location\"/>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+<<<<<<< HEAD
 msgid "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
+=======
+msgid "<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended button\" title=\"Confirm Attendance\"/>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+<<<<<<< HEAD
 msgid ""
 "<i class=\"fa fa-undo fa-3x\" role=\"img\" aria-label=\"Previous state "
 "button\" title=\"Previous state\"/>"
@@ -308,6 +423,9 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Previous state button\" "
 "title=\"Previous state\"/>"
+=======
+msgid "<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" title=\"Confirm Attendance\"/>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -317,6 +435,7 @@ msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
+<<<<<<< HEAD
 msgid ""
 "<span class=\"badge text-bg-secondary o_wevent_badge float-"
 "end\">SPEAKER</span>"
@@ -325,22 +444,32 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
 msgid "<span class=\"o_event_badge_font_faded\">My Placeholder Company</span>"
+=======
+msgid "<span class=\"badge text-bg-secondary o_wevent_badge float-end\">SPEAKER</span>"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid ""
 "<span class=\"o_stat_text\">\n"
+<<<<<<< HEAD
 "                                    Registration\n"
+=======
+"                                    Registration statistics\n"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 "                                </span>"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "<span class=\"o_stat_text\">Registration Desk</span>"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<span class=\"text-bg-danger\">Archived</span>"
 msgstr ""
@@ -348,12 +477,21 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
+<<<<<<< HEAD
 "<span class=\"text-muted\" invisible=\"state != 'done'\">Attended</span>\n"
 "                                    <span class=\"text-muted\" invisible=\"state != 'cancel'\">Canceled</span>"
 msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
+=======
+"<span class=\"text-muted\" states=\"done\">Attended</span>\n"
+"                                    <span class=\"text-muted\" states=\"cancel\">Canceled</span>"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "<span>John Doe</span>"
 msgstr ""
@@ -570,7 +708,11 @@ msgid ""
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
+=======
+#: model:mail.template,body_html:event.event_subscription
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
 "<t t-set=\"date_begin\" t-value=\"format_datetime(object.event_id.date_begin, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"></t>\n"
@@ -590,10 +732,19 @@ msgid ""
 "                        <t t-out=\"object.name or 'Guest'\"></t>\n"
 "                    </span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
+<<<<<<< HEAD
 "                    <a t-attf-href=\"/event/{{ object.event_id.id }}/my_tickets?badge_mode=1&amp;registration_ids={{ object.ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(object.ids) }}\" target=\"_blank\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
 "                        Download Badge\n"
 "                    </a>\n"
 "                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
+=======
+"                    <t t-if=\"is_online\">\n"
+"                        <a t-att-href=\"object.event_id.website_url\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"                            View Event\n"
+"                        </a>\n"
+"                    </t>\n"
+"                    <t t-elif=\"not object.company_id.uses_default_logo\">\n"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 "                        <img t-att-src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\">\n"
 "                    </t>\n"
 "                </td></tr>\n"
@@ -610,13 +761,23 @@ msgid ""
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <div>\n"
 "                        Hello <t t-out=\"object.name or 'Guest'\"></t>,<br>\n"
+<<<<<<< HEAD
 "                        Please find attached your badge for\n"
+=======
+"                        We are happy to confirm your registration to the event\n"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 "                        <t t-if=\"is_online\">\n"
 "                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</a>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
+<<<<<<< HEAD
 "                            <strong t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</strong>.\n"
 "                        </t>\n"
+=======
+"                            <strong t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</strong>\n"
+"                        </t>\n"
+"                        for attendee <t t-out=\"object.name or 'Guest'\"></t>.\n"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 "                    </div>\n"
 "                    <div>\n"
 "                        <br>\n"
@@ -658,7 +819,10 @@ msgid ""
 "                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\">\n"
 "                            </td>\n"
 "                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+<<<<<<< HEAD
 "                                <div><t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t></div>\n"
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 "                                <div><strong>From</strong> <t t-out=\"object.event_id.date_begin_located or ''\">May 4, 2021, 7:00:00 AM</t></div>\n"
 "                                <div><strong>To</strong> <t t-out=\"object.event_id.date_end_located or ''\">May 6, 2021, 5:00:00 PM</t></div>\n"
 "                                <div style=\"font-size:12px;color:#9e9e9e\"><i>(<t t-out=\"object.event_id.date_tz or ''\">Europe/Brussels</t>)</i></div>\n"
@@ -672,6 +836,7 @@ msgid ""
 "                                <t t-if=\"event_address\">\n"
 "                                    <t t-set=\"location\" t-value=\"''\"></t>\n"
 "                                    <t t-if=\"object.event_id.address_id.name\">\n"
+<<<<<<< HEAD
 "                                        <div t-out=\"object.event_id.address_id.name\">Teksa SpA</div>\n"
 "                                    </t>\n"
 "                                    <t t-if=\"object.event_id.address_id.street\">\n"
@@ -939,6 +1104,35 @@ msgid ""
 "                                    <t t-if=\"object.event_id.address_id.country_id.name\">\n"
 "                                        <div t-out=\"object.event_id.address_id.country_id.name\">Argentina</div>\n"
 "                                        <t t-set=\"location\" t-valuef=\"{{location}}, {{object.event_id.address_id.country_id.name}}\"></t>\n"
+=======
+"                                        <div t-out=\"object.event_id.address_id.name or ''\">Teksa SpA</div>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street or ''\">Puerto Madero 9710</div>\n"
+"                                        <t t-set=\"location\" t-value=\"object.event_id.address_id.street\"></t>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street2\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street2 or ''\">Of A15, Santiago (RM)</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.street2)\"></t>\n"
+"                                    </t>\n"
+"                                    <div>\n"
+"                                    <t t-if=\"object.event_id.address_id.city\">\n"
+"                                        <t t-out=\"object.event_id.address_id.city or ''\">Pudahuel</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.city)\"></t>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.state_id.name\">\n"
+"                                        <t t-out=\"object.event_id.address_id.state_id.name or ''\">C1</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.state_id.name)\"></t>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.zip\">\n"
+"                                        <t t-out=\"object.event_id.address_id.zip or ''\">98450</t>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.zip)\"></t>\n"
+"                                    </t>\n"
+"                                    </div>\n"
+"                                    <t t-if=\"object.event_id.address_id.country_id.name\">\n"
+"                                        <div t-out=\"object.event_id.address_id.country_id.name or ''\">Argentina</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.country_id.name)\"></t>\n"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 "                                    </t>\n"
 "                                </t>\n"
 "                            </td>\n"
@@ -963,7 +1157,11 @@ msgid ""
 "                                    <li>Mail: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
+<<<<<<< HEAD
 "                                    <li>Phone: <t t-out=\"event_organizer.phone\">+1 650-123-4567</t></li>\n"
+=======
+"                                    <li>Phone: <t t-out=\"event_organizer.phone or ''\">+1 650-123-4567</t></li>\n"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 "                                </t>\n"
 "                            </ul>\n"
 "                        </div>\n"
@@ -1033,6 +1231,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__description
 #: model:ir.model.fields,help:event.field_event_type_ticket__description
+<<<<<<< HEAD
 msgid ""
 "A description of the ticket that you want to communicate to your customers."
 msgstr ""
@@ -1045,19 +1244,30 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a6
 msgid "A6"
+=======
+msgid "A description of the ticket that you want to communicate to your customers."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction
 #: model:ir.model.fields,field_description:event.field_event_registration__message_needaction
 msgid "Action Needed"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Þarfnast aðgerðar"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__active
 #: model:ir.model.fields,field_description:event.field_event_registration__active
 msgid "Active"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Virkur"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_ids
@@ -1095,9 +1305,13 @@ msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+<<<<<<< HEAD
 msgid ""
 "Add a navigation menu to your event web pages with schedule, tracks, a track"
 " proposal form, etc."
+=======
+msgid "Add a navigation menu to your event web pages with schedule, tracks, a track proposal form, etc."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -1139,6 +1353,7 @@ msgid "Age"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields,help:event.field_event_event__lang
 msgid ""
 "All the communication emails sent to attendees will be translated in this "
@@ -1146,6 +1361,8 @@ msgid ""
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:event.event,name:event.event_6
 msgid "An unpublished event"
 msgstr ""
@@ -1164,6 +1381,7 @@ msgstr ""
 
 #. module: event
 #. odoo-javascript
+<<<<<<< HEAD
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "Answers"
@@ -1171,6 +1389,8 @@ msgstr ""
 
 #. module: event
 #. odoo-javascript
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Apply change."
@@ -1180,7 +1400,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Archived"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Geymt"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_launched
@@ -1189,9 +1413,13 @@ msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
+<<<<<<< HEAD
 msgid ""
 "Around one hundred ballons will simultaneously take flight and turn the sky "
 "into a beautiful canvas of colours."
+=======
+msgid "Around one hundred ballons will simultaneously take flight and turn the sky into a beautiful canvas of colours."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -1204,11 +1432,15 @@ msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
+<<<<<<< HEAD
 msgid ""
 "At just 13 years old, John DOE was already starting to develop his first "
 "business applications for customers. After mastering civil engineering, he "
 "founded TinyERP. This was the first phase of OpenERP which would later "
 "became Odoo, the most installed open-source business software worldwide."
+=======
+msgid "At just 13 years old, John DOE was already starting to develop his first business applications for customers. After mastering civil engineering, he founded TinyERP. This was the first phase of OpenERP which would later became Odoo, the most installed open-source business software worldwide."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -1220,7 +1452,11 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Attendance"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Attendance"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__done
@@ -1239,6 +1475,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__registration_id
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Attendee"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: event
@@ -1246,6 +1483,9 @@ msgstr ""
 #: model:ir.actions.report,name:event.action_report_event_registration_attendee_list
 msgid "Attendee List"
 msgstr ""
+=======
+msgstr "Þátttakandi"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__name
@@ -1253,11 +1493,14 @@ msgid "Attendee Name"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Attendee list"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
 #: model:ir.actions.act_window,name:event.action_registration
 #: model:ir.actions.act_window,name:event.event_registration_action
@@ -1265,18 +1508,41 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__registration_ids
 #: model:ir.ui.menu,name:event.menu_action_registration
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Attendees"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,help:event.field_event_event__auto_confirm
+msgid "Autoconfirm Registrations. Registrations will automatically be confirmed upon creation."
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__auto_confirm
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
+msgid "Autoconfirmation"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_type__auto_confirm
+msgid "Automatically Confirm Registrations"
+msgstr ""
+
+#. module: event
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_available
 msgid "Available Seats"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.actions.report,name:event.action_report_event_registration_badge
 msgid "Badge"
 msgstr ""
@@ -1330,6 +1596,16 @@ msgstr ""
 #: model:ir.model.constraint,message:event.constraint_event_registration_barcode_event_uniq
 msgid "Barcode should be unique"
 msgstr ""
+=======
+#: model_terms:event.event,description:event.event_3
+msgid "Bands like Bar Fighters, Led Slippers and Link Floyd will offer you the show of the century during our three day event."
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_barcode
+msgid "Barcode"
+msgstr "Strikamerki"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
@@ -1352,9 +1628,13 @@ msgstr ""
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_1
+<<<<<<< HEAD
 msgid ""
 "Bloem brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
+=======
+msgid "Bloem brings honesty and seriousness to wood industry while helping customers deal with trees, flowers and fungi."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -1363,6 +1643,14 @@ msgid "Booked"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
+msgid "Booked By"
+msgstr ""
+
+#. module: event
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:event.field_event_registration__partner_id
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Booked by"
@@ -1376,9 +1664,13 @@ msgstr ""
 
 #. module: event
 #: model:event.event,subtitle:event.event_5
+<<<<<<< HEAD
 msgid ""
 "Bring your outdoor field hockey season to the next level by taking the field"
 " at this 9th annual Field Hockey tournament."
+=======
+msgid "Bring your outdoor field hockey season to the next level by taking the field at this 9th annual Field Hockey tournament."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -1395,7 +1687,11 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Cancel"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Hætta við"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1403,6 +1699,7 @@ msgid "Cancel Registration"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
@@ -1414,11 +1711,21 @@ msgstr ""
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__cancel
 msgid "Cancelled"
 msgstr ""
+=======
+#: model:event.stage,name:event.event_stage_cancelled
+#: model:ir.model.fields.selection,name:event.selection__event_registration__state__cancel
+msgid "Cancelled"
+msgstr "Afpöntuð"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__category_id
 msgid "Category"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Flokkur"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__category_sequence
@@ -1427,6 +1734,7 @@ msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
+<<<<<<< HEAD
 msgid ""
 "Chamber Works reserves the right to cancel, re-name or re-locate the event "
 "or change the dates on which it is held."
@@ -1442,6 +1750,9 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
 msgid "Color"
+=======
+msgid "Chamber Works reserves the right to cancel, re-name or re-locate the event or change the dates on which it is held."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -1461,7 +1772,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Communication"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Communication"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
@@ -1474,12 +1789,16 @@ msgid "Community Chat Rooms"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:event.field_event_event__company_id
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__company_id
 #: model:ir.model.fields,field_description:event.field_event_registration__company_id
 #: model_terms:event.event,description:event.event_2
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 #, python-format
 msgid "Company"
@@ -1491,6 +1810,10 @@ msgstr ""
 #, python-format
 msgid "Company Logo"
 msgstr ""
+=======
+msgid "Company"
+msgstr "Fyrirtæki"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__company_name
@@ -1502,7 +1825,11 @@ msgstr ""
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "Compose Email"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Compose Email"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_3_tag_2
@@ -1528,6 +1855,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
 msgid "Configuration"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: event
@@ -1536,6 +1864,15 @@ msgstr ""
 #, python-format
 msgid "Confirm"
 msgstr ""
+=======
+msgstr "Uppsetning"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
+msgid "Confirm"
+msgstr "Staðfesta"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -1548,21 +1885,43 @@ msgid "Confirm Registration"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "Confirm attendance for"
+=======
+#: model:ir.model.fields.selection,name:event.selection__event_registration__state__open
+#: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
+#: model_terms:ir.ui.view,arch_db:event.view_event_kanban
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
+msgid "Confirmed"
+msgstr "Samþykkt"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
+msgid "Confirmed Attendees"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
 msgid "Contact"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Tengiliður"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__country_id
 msgid "Country"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Land"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1602,7 +1961,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type_mail__create_uid
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__create_uid
 msgid "Created by"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Búið til af"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__create_date
@@ -1617,7 +1980,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type_mail__create_date
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__create_date
 msgid "Created on"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Stofnað þann"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_1
@@ -1629,14 +1996,22 @@ msgstr ""
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "Customer"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Viðskiptavinur"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "Customer Email"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Netfang viðskiptavinar"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
@@ -1653,10 +2028,14 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__seats_max
 #: model:ir.model.fields,help:event.field_event_type_ticket__seats_max
+<<<<<<< HEAD
 msgid ""
 "Define the number of available tickets. If you have too many registrations "
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
+=======
+msgid "Define the number of available tickets. If you have too many registrations you will not be able to sell tickets anymore. Set 0 to ignore this rule set as unlimited."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -1664,7 +2043,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__description
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__description
 msgid "Description"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Lýsing"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:event.event,name:event.event_0
@@ -1702,7 +2085,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type_mail__display_name
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__display_name
 msgid "Display Name"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Nafn"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1717,6 +2104,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__kanban_state__done
 msgid "Done"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: event
@@ -1724,12 +2112,23 @@ msgstr ""
 msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
+=======
+msgstr "Lokið"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "During this conference, our team will give a detailed overview of our business applications. You’ll know all the benefits of using it."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__email
 msgid "Email"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Tölvupóstur"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model,name:event.model_mail_template
@@ -1737,6 +2136,7 @@ msgid "Email Templates"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Enable barcode scanning"
 msgstr ""
@@ -1750,6 +2150,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__date_end
 msgid "End Date"
 msgstr ""
+=======
+#: model:ir.model.fields,field_description:event.field_event_event__date_end
+msgid "End Date"
+msgstr "End Date"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end_located
@@ -1772,19 +2177,29 @@ msgid "Enhance your architectural business and improve professional skills."
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model,name:event.model_event_event
 #: model:ir.model.fields,field_description:event.field_event_event__name
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__event_id
 #: model:ir.model.fields,field_description:event.field_event_mail__event_id
 #: model:ir.model.fields,field_description:event.field_event_registration__event_id
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_activity
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 #, python-format
 msgid "Event"
 msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
+msgid "Event"
+msgstr "Event"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail
@@ -1831,7 +2246,10 @@ msgid "Event Mail Schedulers"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_activity
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Event Name"
 msgstr ""
@@ -1954,6 +2372,14 @@ msgid "Event Ticket"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
+msgid "Event Ticket For"
+msgstr ""
+
+#. module: event
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:event.field_event_type_mail__event_type_id
 msgid "Event Type"
 msgstr ""
@@ -1965,9 +2391,13 @@ msgstr ""
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_stage_action
+<<<<<<< HEAD
 msgid ""
 "Event stages are used to track the progress of an Event from its origin "
 "until its conclusion."
+=======
+msgid "Event stages are used to track the progress of an Event from its origin until its conclusion."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -1996,8 +2426,11 @@ msgid "Event: Reminder"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.js:0
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_event_event
@@ -2006,9 +2439,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
+<<<<<<< HEAD
 #, python-format
 msgid "Events"
 msgstr ""
+=======
+msgid "Events"
+msgstr "Events"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
@@ -2022,10 +2460,20 @@ msgid "Events Stage"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields,help:event.field_event_stage__pipe_end
 msgid ""
 "Events will automatically be moved into this stage when they are finished. "
 "The event moved into this stage will automatically be set as green."
+=======
+#: model:ir.model.fields,help:event.field_event_type__auto_confirm
+msgid "Events and registrations will automatically be confirmed upon creation, easing the flow for simple events."
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_stage__pipe_end
+msgid "Events will automatically be moved into this stage when they are finished. The event moved into this stage will automatically be set as green."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -2039,11 +2487,15 @@ msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
+<<<<<<< HEAD
 msgid ""
 "Every year we invite our community, partners and end-users to come and meet "
 "us! It's the ideal event to get together and present new features, roadmap "
 "of future versions, achievements of the software, workshops, training "
 "sessions, etc...."
+=======
+msgid "Every year we invite our community, partners and end-users to come and meet us! It's the ideal event to get together and present new features, roadmap of future versions, achievements of the software, workshops, training sessions, etc...."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -2052,11 +2504,42 @@ msgid "Exhibition"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
+msgid "Expected"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_tree
+msgid "Expected Attendees"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_kanban
+msgid "Expected attendees"
+msgstr ""
+
+#. module: event
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:event.event,subtitle:event.event_3
 msgid "Experience live music, local food and beverages."
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
+=======
+#: model:ir.actions.report,name:event.action_report_event_registration_foldable_badge
+msgid "Foldable Badge"
+msgstr ""
+
+#. module: event
+#: model:ir.actions.report,name:event.action_report_event_event_foldable_badge
+msgid "Foldable Badge Example"
+msgstr ""
+
+#. module: event
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
 msgid "Folded in Kanban"
 msgstr ""
@@ -2065,13 +2548,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__message_follower_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__message_follower_ids
 msgid "Followers"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Fylgjendur"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_partner_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__message_partner_ids
 msgid "Followers (Partners)"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Fylgjendur (viðskiptafélagar)"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__activity_type_icon
@@ -2091,9 +2582,13 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
+<<<<<<< HEAD
 msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
+=======
+msgid "For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -2103,8 +2598,12 @@ msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+<<<<<<< HEAD
 msgid ""
 "Foster interactions between attendees by creating virtual conference rooms"
+=======
+msgid "Foster interactions between attendees by creating virtual conference rooms"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -2125,9 +2624,13 @@ msgstr ""
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_registration
 #: model_terms:ir.actions.act_window,help:event.event_registration_action_stats_from_event
+<<<<<<< HEAD
 msgid ""
 "From this dashboard you can report, analyze and detect trends regarding your"
 " event registrations."
+=======
+msgid "From this dashboard you can report, analyze and detect trends regarding your event registrations."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -2217,7 +2720,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Group By"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Hópa eftir"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -2255,6 +2762,29 @@ msgid "Hours"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
+msgid "How to Fold (1)"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
+msgid "How to Fold (2)"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
+msgid "How to Fold (3)"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
+msgid "How to Fold (4)"
+msgstr ""
+
+#. module: event
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:event.field_event_event__id
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__id
 #: model:ir.model.fields,field_description:event.field_event_mail__id
@@ -2267,7 +2797,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type_mail__id
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__id
 msgid "ID"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Auðkenni"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_exception_icon
@@ -2292,7 +2826,11 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_event__message_needaction
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction
 msgid "If checked, new messages require your attention."
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "If checked, new messages require your attention."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_has_error
@@ -2304,8 +2842,12 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__start_sale_datetime
+<<<<<<< HEAD
 msgid ""
 "If ticketing is used, contains the earliest starting sale date of tickets."
+=======
+msgid "If ticketing is used, contains the earliest starting sale date of tickets."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -2368,6 +2910,7 @@ msgid "Invalid event / ticket choice"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.js:0
 #, python-format
@@ -2375,6 +2918,8 @@ msgid "Invalid ticket"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
 msgid "Is Available"
 msgstr ""
@@ -2393,7 +2938,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__message_is_follower
 #: model:ir.model.fields,field_description:event.field_event_registration__message_is_follower
 msgid "Is Follower"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Is Follower"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
@@ -2463,11 +3012,14 @@ msgid "Key"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:event.field_event_event__lang
 msgid "Language"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Last 30 days"
 msgstr ""
@@ -2485,7 +3037,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type_mail__write_uid
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__write_uid
 msgid "Last Updated by"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Síðast uppfært af"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_date
@@ -2500,7 +3056,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type_mail__write_date
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__write_date
 msgid "Last Updated on"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Síðast uppfært þann"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -2591,11 +3151,14 @@ msgid "Manage & publish a schedule with tracks"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "Marc Demo"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Mark as Attending"
 msgstr ""
@@ -2643,6 +3206,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__message_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__message_ids
 msgid "Messages"
+<<<<<<< HEAD
+=======
+msgstr "Skilaboð"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_registration__mobile
+msgid "Mobile"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -2668,14 +3239,20 @@ msgid "My Events"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__name
 #: model:ir.model.fields,field_description:event.field_event_tag__name
 #: model:ir.model.fields,field_description:event.field_event_tag_category__name
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__name
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 #, python-format
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Name"
 msgstr ""
 
@@ -2722,11 +3299,14 @@ msgid "No Attendees yet!"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:event.field_res_config_settings__barcode_nomenclature_id
 msgid "Nomenclature"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
@@ -2763,7 +3343,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,field_description:event.field_event_registration__message_needaction_counter
 msgid "Number of Actions"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Fjöldi aðgerða"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_used
@@ -2771,6 +3355,7 @@ msgid "Number of Attendees"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:event.field_event_event__seats_reserved
 msgid "Number of Registrations"
 msgstr ""
@@ -2778,6 +3363,15 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_taken
 msgid "Number of Taken Seats"
+=======
+#: model:ir.model.fields,field_description:event.field_event_event__seats_expected
+msgid "Number of Expected Attendees"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__seats_reserved
+msgid "Number of Registrations"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -2789,8 +3383,13 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction_counter
+<<<<<<< HEAD
 msgid "Number of messages requiring action"
 msgstr ""
+=======
+msgid "Number of messages which requires an action"
+msgstr "Fjöldi skilaboð sem bíða afgreiðslu"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_has_error_counter
@@ -2804,11 +3403,14 @@ msgid "Objectives"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "Odoo Community Days"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:event.event,description:event.event_3
 msgid "Once again we assembled the most legendary bands in Rock history."
 msgstr ""
@@ -2842,9 +3444,13 @@ msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
+<<<<<<< HEAD
 msgid ""
 "OpenElec Applications reserves the right to cancel, re-name or re-locate the"
 " event or change the dates on which it is held."
+=======
+msgid "OpenElec Applications reserves the right to cancel, re-name or re-locate the event or change the dates on which it is held."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -2854,9 +3460,13 @@ msgstr ""
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_2
+<<<<<<< HEAD
 msgid ""
 "OpenWood brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
+=======
+msgid "OpenWood brings honesty and seriousness to wood industry while helping customers deal with trees, flowers and fungi."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -2874,33 +3484,49 @@ msgstr ""
 
 #. module: event
 #: model:event.event,subtitle:event.event_7
+<<<<<<< HEAD
 msgid ""
 "Our newest collection will be revealed online! Interact with us on our live "
 "streams!"
+=======
+msgid "Our newest collection will be revealed online! Interact with us on our live streams!"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_blocked
 #: model:ir.model.fields,help:event.field_event_stage__legend_blocked
+<<<<<<< HEAD
 msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection."
+=======
+msgid "Override the default value displayed for the blocked state for kanban selection."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_done
 #: model:ir.model.fields,help:event.field_event_stage__legend_done
+<<<<<<< HEAD
 msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection."
+=======
+msgid "Override the default value displayed for the done state for kanban selection."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_normal
 #: model:ir.model.fields,help:event.field_event_stage__legend_normal
+<<<<<<< HEAD
 msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection."
+=======
+msgid "Override the default value displayed for the normal state for kanban selection."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -2911,6 +3537,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Partner"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: event
@@ -2919,10 +3546,14 @@ msgstr ""
 #, python-format
 msgid "Payment"
 msgstr ""
+=======
+msgstr "Viðskipta aðili"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__phone
 msgid "Phone"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: event
@@ -2934,6 +3565,13 @@ msgstr ""
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid ""
 "Please come <b>at least</b> 30 minutes before the beginning of the event."
+=======
+msgstr "Sími"
+
+#. module: event
+#: model_terms:event.event,ticket_instructions:event.event_0
+msgid "Please come <b>at least</b> 30 minutes before the beginning of the event."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -2949,6 +3587,7 @@ msgid "Point of Sale (POS), Introduction to report customization."
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Previous state"
 msgstr ""
@@ -2961,6 +3600,8 @@ msgid "Print"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:event.event,description:event.event_0
 #: model_terms:event.event,description:event.event_2
 msgid "Program"
@@ -2972,16 +3613,20 @@ msgid "Project management, Human resources, Contract management."
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_properties
 msgid "Properties"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:event.event,description:event.event_2
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
@@ -2990,6 +3635,8 @@ msgid "QR Code"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
 msgid "Quiz on Tracks"
 msgstr ""
@@ -3015,7 +3662,10 @@ msgstr ""
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
+<<<<<<< HEAD
 #: code:addons/event/static/src/js/tours/event_tour.js:0
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #, python-format
 msgid "Ready to <b>organize events</b> in a few minutes? Let's get started!"
 msgstr ""
@@ -3026,6 +3676,7 @@ msgid "Red Kanban Label"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__open
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
@@ -3039,6 +3690,10 @@ msgstr ""
 #: code:addons/event/models/event_ticket.py:0
 #: code:addons/event/models/event_ticket.py:0
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+=======
+#. odoo-python
+#: code:addons/event/models/event_ticket.py:0
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_graph
@@ -3046,7 +3701,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 #, python-format
 msgid "Registration"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Registration"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -3056,12 +3715,16 @@ msgid "Registration Date"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-python
 #: code:addons/event/controllers/main.py:0
 #: model:ir.ui.menu,name:event.menu_event_registration_desk
 #: model:res.groups,name:event.group_event_registration_desk
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #, python-format
+=======
+#: model:res.groups,name:event.group_event_registration_desk
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Registration Desk"
 msgstr ""
 
@@ -3086,16 +3749,20 @@ msgid "Registration Mails"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:event.field_event_event__registration_properties_definition
 msgid "Registration Properties"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
 msgid "Registration Start"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
 #, python-format
@@ -3103,6 +3770,8 @@ msgid "Registration confirmed"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
@@ -3146,7 +3815,11 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
 msgid "Reporting"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Skýrslur"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_reserved
@@ -3158,7 +3831,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Responsible"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Ábyrgðaraðili"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_user_id
@@ -3167,6 +3844,7 @@ msgid "Responsible User"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.actions.report,name:event.action_report_event_registration_responsive_html_ticket
 msgid "Responsive Html Full Page Ticket"
 msgstr ""
@@ -3177,6 +3855,8 @@ msgid "Rue de la Paix 123"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__running
 msgid "Running"
 msgstr ""
@@ -3188,10 +3868,15 @@ msgid "SMS Delivery error"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 #, python-format
 msgid "Scan a badge"
+=======
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Scan badges to confirm attendances"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -3206,9 +3891,13 @@ msgstr ""
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
+<<<<<<< HEAD
 msgid ""
 "Schedule and organize your events: handle registrations, send automated "
 "confirmation emails, sell tickets, etc."
+=======
+msgid "Schedule and organize your events: handle registrations, send automated confirmation emails, sell tickets, etc."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -3232,6 +3921,7 @@ msgid "Secret"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 #, python-format
@@ -3239,6 +3929,8 @@ msgid "Select Attendee"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets on your website"
 msgstr ""
@@ -3257,19 +3949,31 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Send by Email"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Senda með tölvupósti"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_done
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__sent
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Sent"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: event
 #: model:mail.template,description:event.event_reminder
 msgid ""
 "Sent automatically to attendees if there is a reminder defined on the event"
+=======
+msgstr "Sent"
+
+#. module: event
+#: model:mail.template,description:event.event_reminder
+msgid "Sent automatically to attendees if there is a reminder defined on the event"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -3293,6 +3997,7 @@ msgid "Sequence"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.actions.act_window,name:event.action_event_configuration
 #: model:ir.ui.menu,name:event.menu_event_global_settings
 msgid "Settings"
@@ -3303,6 +4008,21 @@ msgstr ""
 msgid ""
 "Shangai Pterocarpus Furniture brings honesty and seriousness to wood "
 "industry while helping customers deal with trees, flowers and fungi."
+=======
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
+msgid "Set To Unconfirmed"
+msgstr ""
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_configuration
+#: model:ir.ui.menu,name:event.menu_event_global_settings
+msgid "Settings"
+msgstr "Stillingar"
+
+#. module: event
+#: model:res.partner,website_short_description:event.res_partner_event_4
+msgid "Shangai Pterocarpus Furniture brings honesty and seriousness to wood industry while helping customers deal with trees, flowers and fungi."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -3362,7 +4082,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Start Date"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Upphafsdagur"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin_located
@@ -3390,7 +4114,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_registration__state
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Status"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Staða"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__activity_state
@@ -3404,9 +4132,13 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_tag__color
+<<<<<<< HEAD
 msgid ""
 "Tag color. No color means no display in kanban or front-end, to distinguish "
 "internal tags from public categorization tags."
+=======
+msgid "Tag color. No color means no display in kanban or front-end, to distinguish internal tags from public categorization tags."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -3418,6 +4150,7 @@ msgid "Tags"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Taken"
@@ -3429,6 +4162,8 @@ msgid "Taken Seats"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "Task in progress. Click to block or set as done."
 msgstr ""
@@ -3455,23 +4190,35 @@ msgstr ""
 
 #. module: event
 #: model:event.event,subtitle:event.event_1
+<<<<<<< HEAD
 msgid ""
 "The Great Reno Balloon Race is the world's largest free hot-air ballooning "
 "event."
+=======
+msgid "The Great Reno Balloon Race is the world's largest free hot-air ballooning event."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
+<<<<<<< HEAD
 msgid ""
 "The best Hockey teams of the country will compete for the national Hockey "
 "trophy."
+=======
+msgid "The best Hockey teams of the country will compete for the national Hockey trophy."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
+<<<<<<< HEAD
 msgid ""
 "The best aeronauts of the world will gather on this event to offer you the "
 "most spectacular show."
+=======
+msgid "The best aeronauts of the world will gather on this event to offer you the most spectacular show."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -3493,16 +4240,24 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_sold_out
+<<<<<<< HEAD
 msgid ""
 "The event is sold out if no more seats are available on event. If ticketing "
 "is used and all tickets are sold out, the event will be sold out."
+=======
+msgid "The event is sold out if no more seats are available on event. If ticketing is used and all tickets are sold out, the event will be sold out."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
+<<<<<<< HEAD
 msgid ""
 "The finest OpenWood furnitures are coming to your house in a brand new "
 "collection"
+=======
+msgid "The finest OpenWood furnitures are coming to your house in a brand new collection"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -3520,6 +4275,7 @@ msgid "The place has been reserved"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
@@ -3527,6 +4283,8 @@ msgid "The registration must be paid"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:event.event,description:event.event_1
 msgid "The safety of our attendees and our aeronauts comes first!"
 msgstr ""
@@ -3535,6 +4293,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "The stop date cannot be earlier than the start date. Please check ticket "
 "%(ticket_name)s"
@@ -3546,6 +4305,9 @@ msgstr ""
 #, python-format
 msgid ""
 "The template which is referenced should be coming from %(model_name)s model."
+=======
+msgid "The stop date cannot be earlier than the start date. Please check ticket %(ticket_name)s"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -3558,10 +4320,14 @@ msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
+<<<<<<< HEAD
 msgid ""
 "This event is also an opportunity to showcase our partners' case studies, "
 "methodology or developments. Be there and see directly from the source the "
 "features of the version 12!"
+=======
+msgid "This event is also an opportunity to showcase our partners' case studies, methodology or developments. Be there and see directly from the source the features of the version 12!"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -3586,22 +4352,33 @@ msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
+<<<<<<< HEAD
 msgid ""
 "This is the perfect place for spending a nice day with your family, we "
 "guarantee you will be leaving with beautiful everlasting memories!"
+=======
+msgid "This is the perfect place for spending a nice day with your family, we guarantee you will be leaving with beautiful everlasting memories!"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
+<<<<<<< HEAD
 msgid ""
 "This is the perfect place for spending a nice time with your friends while "
 "listening to some of the most iconic rock songs of all times!"
+=======
+msgid "This is the perfect place for spending a nice time with your friends while listening to some of the most iconic rock songs of all times!"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
+<<<<<<< HEAD
 #: code:addons/event/models/event_event.py:0
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #, python-format
 msgid "This operator is not supported"
 msgstr ""
@@ -3612,6 +4389,7 @@ msgid "This step is done. Click to block or set in progress."
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
@@ -3633,6 +4411,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 #, python-format
+=======
+#: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Ticket"
 msgstr ""
 
@@ -3651,6 +4432,7 @@ msgid "Ticket Type"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Ticket type"
 msgstr ""
@@ -3667,12 +4449,24 @@ msgstr ""
 #. module: event
 #. odoo-python
 #: code:addons/event/controllers/main.py:0
+=======
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a new one."
+msgstr ""
+
+#. module: event
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:ir.model.fields,field_description:event.field_event_type__event_type_ticket_ids
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_sale
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
+<<<<<<< HEAD
 #, python-format
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgid "Tickets"
 msgstr ""
 
@@ -3685,7 +4479,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Timezone"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -3700,11 +4498,14 @@ msgid "Total"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Total Attendees"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Total Registrations for this Event"
 msgstr ""
@@ -3721,9 +4522,13 @@ msgstr ""
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_3
+<<<<<<< HEAD
 msgid ""
 "Tree Dealers brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
+=======
+msgid "Tree Dealers brings honesty and seriousness to wood industry while helping customers deal with trees, flowers and fungi."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -3749,24 +4554,43 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__draft
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unconfirmed"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields,help:event.field_event_registration__state
 msgid ""
 "Unconfirmed: registrations in a pending state waiting for an action (specific case, notably with sale status)\n"
 "Registered: registrations considered taken by a client\n"
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
+=======
+#: model:ir.model.fields,field_description:event.field_event_event__seats_unconfirmed
+msgid "Unconfirmed Registrations"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_unconfirmed
+#: model_terms:ir.ui.view,arch_db:event.view_event_tree
+msgid "Unconfirmed Seats"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
+<<<<<<< HEAD
 msgid ""
 "Under this technical menu you will find all scheduled communication related "
 "to your events."
+=======
+msgid "Under this technical menu you will find all scheduled communication related to your events."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -3791,6 +4615,7 @@ msgid "Upcoming/Running"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
 msgid "Use Barcode"
 msgstr ""
@@ -3801,6 +4626,8 @@ msgid "Use Event Barcode"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Use Event Tag Categories to classify and organize your event tags."
 msgstr ""
@@ -3820,7 +4647,11 @@ msgstr ""
 #. module: event
 #: model:res.groups,name:event.group_event_user
 msgid "User"
+<<<<<<< HEAD
 msgstr ""
+=======
+msgstr "Notandi"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 
 #. module: event
 #: model:event.event.ticket,name:event.event_0_ticket_2
@@ -3833,7 +4664,10 @@ msgstr ""
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
+<<<<<<< HEAD
 #: code:addons/event/models/event_event.py:0
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #, python-format
 msgid "Value should be True or False (not %s)"
 msgstr ""
@@ -3849,6 +4683,7 @@ msgid "Venue (formatted for one line uses)"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
@@ -3856,6 +4691,8 @@ msgid "View"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 #, python-format
@@ -3866,9 +4703,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
 #: model_terms:ir.actions.act_window,help:event.event_registration_action_kanban
+<<<<<<< HEAD
 msgid ""
 "Wait until Attendees register to your Event or create their registrations "
 "manually."
+=======
+msgid "Wait until Attendees register to your Event or create their registrations manually."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -3877,6 +4718,7 @@ msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.js:0
 #, python-format
@@ -3890,6 +4732,12 @@ msgstr ""
 msgid ""
 "We reserve the right to cancel, re-name or re-locate the event or change the"
 " dates on which it is held in case the weather fails us."
+=======
+#: model_terms:event.event,description:event.event_1
+#: model_terms:event.event,description:event.event_3
+#: model_terms:event.event,description:event.event_5
+msgid "We reserve the right to cancel, re-name or re-locate the event or change the dates on which it is held in case the weather fails us."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -3911,6 +4759,7 @@ msgid "Weeks"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 #, python-format
@@ -3918,6 +4767,8 @@ msgid "Welcome to"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model_terms:event.event,description:event.event_0
 msgid "What's new?"
 msgstr ""
@@ -3944,9 +4795,13 @@ msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
+<<<<<<< HEAD
 msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
+=======
+msgid "You can also add a description to help your coworkers understand the meaning and purpose of the stage."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -4027,11 +4882,14 @@ msgid "events@yourcompany.com"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "https://www.example.com"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
@@ -4039,6 +4897,7 @@ msgid "in %d days"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
@@ -4053,6 +4912,8 @@ msgid "is successfully registered"
 msgstr ""
 
 #. module: event
+=======
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
@@ -4074,6 +4935,7 @@ msgid "on %(date)s"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 #, python-format
@@ -4090,11 +4952,19 @@ msgstr ""
 msgid ""
 "registrations have started if the current datetime is after the earliest "
 "starting date of tickets."
+=======
+#: model:ir.model.fields,help:event.field_event_event__event_registrations_started
+msgid "registrations have started if the current datetime is after the earliest starting date of tickets."
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
+<<<<<<< HEAD
 msgid "reserved"
+=======
+msgid "reserved +"
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 msgstr ""
 
 #. module: event
@@ -4118,6 +4988,14 @@ msgid "tomorrow"
 msgstr ""
 
 #. module: event
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
+msgid "unconfirmed"
+msgstr ""
+
+#. module: event
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.get_date_range_str() }}"
 msgstr ""

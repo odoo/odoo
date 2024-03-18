@@ -24,7 +24,14 @@ patch(PaymentPage.prototype, {
     },
     get selectedPaymentIsOnline() {
         const paymentMethods = this.selectedPaymentMethod;
+<<<<<<< HEAD
         return paymentMethods && paymentMethods.is_online_payment;
+=======
+        return (
+            paymentMethods &&
+            paymentMethods.is_online_payment
+        );
+>>>>>>> 66076f9a3d6c9e60ba2b45e8c02467ddac830181
     },
     generateQrcodeImg(url) {
         const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
