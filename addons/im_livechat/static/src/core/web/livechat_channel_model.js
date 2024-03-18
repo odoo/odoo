@@ -16,7 +16,6 @@ export class LivechatChannel extends Record {
                 id: `im_livechat.category_${this.id}`,
                 livechatChannel: this,
                 name: this.name,
-                open: true,
                 sequence: 22,
             };
         },

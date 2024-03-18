@@ -1,4 +1,5 @@
 import { reactive } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -18,10 +19,23 @@ export class DiscussCoreWeb {
         this.messagingService = services["mail.messaging"];
         this.store = services["mail.store"];
         this.threadService = services["mail.thread"];
+        try {
+            this.sidebarCategoriesBroadcast = new browser.BroadcastChannel(
+                "discuss_core_web.sidebar_categories"
+            );
+        } catch {
+            // BroadcastChannel API is not supported (e.g. Safari < 15.4), so disabling it.
+        }
     }
 
     setup() {
         this.messagingService.isReady.then(() => this.busService.start());
+        this.sidebarCategoriesBroadcast?.addEventListener("message", ({ data: { id, open } }) => {
+            const category = this.store.DiscussAppCategory.get(id);
+            if (category) {
+                category.open = open;
+            }
+        });
         this.env.bus.addEventListener(
             "discuss.channel/new_message",
             ({ detail: { channel, message } }) => {
@@ -78,6 +92,15 @@ export class DiscussCoreWeb {
                 this.store.channels.fetch();
             }
         });
+    }
+
+    /**
+     * Send the state of a category to the other tabs.
+     *
+     * @param {import("models").DiscussAppCategory} category
+     */
+    broadcastCategoryState(category) {
+        this.sidebarCategoriesBroadcast?.postMessage({ id: category.id, open: category.open });
     }
 }
 

@@ -1,5 +1,6 @@
 import { compareDatetime } from "@mail/utils/common/misc";
 import { Record } from "./record";
+import { browser } from "@web/core/browser/browser";
 
 export class DiscussAppCategory extends Record {
     static id = "id";
@@ -46,9 +47,24 @@ export class DiscussAppCategory extends Record {
             return this._store.discuss;
         },
     });
+    _openLocally = false;
+    localStateKey = Record.attr(null, {
+        compute() {
+            if (this.serverStateKey) {
+                return null;
+            }
+            return `discuss_sidebar_category_${this.id}_open`;
+        },
+        onUpdate() {
+            if (this.localStateKey) {
+                this._openLocally = JSON.parse(
+                    browser.localStorage.getItem(this.localStateKey) ?? "true"
+                );
+            }
+        },
+    });
     /** @type {number} */
     sequence;
-    _openLocally = false;
 
     get open() {
         return this.serverStateKey ? this._store.settings[this.serverStateKey] : this._openLocally;
@@ -69,6 +85,7 @@ export class DiscussAppCategory extends Record {
             );
         } else {
             this._openLocally = value;
+            browser.localStorage.setItem(this.localStateKey, value);
         }
     }
 

@@ -13,7 +13,7 @@
     <t t-name="mail.DiscussSidebarCategory">
         <t t-set="hover_class" t-value="'btn p-0 text-start opacity-100-hover opacity-75'"/>
         <div class="o-mail-DiscussSidebarCategory d-flex align-items-center my-1" t-att-class="category.extraClass">
-            <div t-attf-class="d-flex align-items-baseline mx-1 {{ hover_class }}" t-on-click="() => (category.open = !category.open)">
+            <div t-attf-class="d-flex align-items-baseline mx-1 {{ hover_class }}" t-on-click="() => this.toggleCategory(category)">
                 <i class="o-mail-DiscussSidebarCategory-icon small me-1" t-att-class="category.open ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
                 <span class="btn-sm p-0 text-uppercase text-break fw-bolder"><t t-esc="category.name"/></span>
             </div>

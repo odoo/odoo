@@ -14,7 +14,6 @@ patch(DiscussApp.prototype, {
                     hideWhenEmpty: true,
                     id: `im_livechat.category_default`,
                     name: _t("Livechat"),
-                    open: true,
                     sequence: 21,
                 };
             },
