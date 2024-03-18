@@ -1,0 +1,26 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="iherited_base_config_setting_hr_form_attendance">
+            <field name="name">iherited.base.config.setting.hr.form.attendance</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="hr_attendance.res_config_settings_view_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block">
+                        <h2>Direction</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div>
+                                    <field name="entry_strategy" widget="radio"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

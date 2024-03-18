@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Defined all menus here -->
+    <menuitem id="biometric_device_details_menu"
+              name="Biometric Device"
+              parent="hr_attendance.menu_hr_attendance_root"
+              sequence="21"/>
+    <menuitem id="biometric_device_details_sub_menu"
+              action="biometric_device_details_action"
+              parent="biometric_device_details_menu"
+              sequence="21"/>
+    <menuitem id="daily_attendance_menu"
+              action="daily_attendance_action"
+              parent="biometric_device_details_menu"
+              groups="hr_attendance.group_hr_attendance_officer"/>
+</odoo>

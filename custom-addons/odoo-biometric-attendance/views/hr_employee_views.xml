@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_employee_tree_inherit_odoo_biometric_attendance" model="ir.ui.view">
+            <field name="name">hr.employee.tree.inherit.odoo_biometric_attendance</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="replace">
+                    <field name="service_tag_ids" widget="many2many_tags"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_employee_form_inherit_odoo_biometric_attendance" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherit.odoo_biometric_attendance</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Biometric User">
+                        <group>
+                            <field name="biometric_user_id"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

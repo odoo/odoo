@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_device_service_tag_tree" model="ir.ui.view">
+        <field name="name">device.service.tag.tree</field>
+        <field name="model">device.service.tag</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="service_tag_id"/>
+                <field name="authentication_token"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="device_service_tag_view_form" model="ir.ui.view">
+        <field name="name">device.service.tag.view.form</field>
+        <field name="model">device.service.tag</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="service_tag_id"/>
+                        <field name="authentication_token"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_device_service_tag" model="ir.actions.act_window">
+        <field name="name">Device Manager</field>
+        <field name="res_model">device.service.tag</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>Add a device service tag and an authentication token.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_device_service_tag" name="Device Manager"
+              parent="hr_attendance.menu_hr_attendance_root" sequence="20"
+              groups="hr_attendance.group_hr_attendance_officer" action="action_device_service_tag"/>
+</odoo>

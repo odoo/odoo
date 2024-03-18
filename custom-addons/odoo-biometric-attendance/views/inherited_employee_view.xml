@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="inherited_hr_employee_list">
+            <field name="name">iherited.hr.employee</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="replace">
+                    <field name="service_tag_ids" widget="many2many_tags"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="inherited_hr_employee_form">
+            <field name="name">iherited.hr.employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Biometric User">
+                        <group>
+                            <field name="employee_ref"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,58 @@
+<odoo>
+    <data>
+        <record id="inherited_attendance_form_view" model="ir.ui.view">
+            <field name="name">inherited.attendance.form.view</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='employee_id']" position="before">
+                    <field name="machine_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="device_manager_list">
+            <field name="name">device_manager list</field>
+            <field name="model">device.service.tag</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="service_tag_id"/>
+                    <field name="auth_token"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="device_manager_form">
+            <field name="name">device_manager form</field>
+            <field name="model">device.service.tag</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="service_tag_id"/>
+                                <field name="auth_token"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="hr_attendance_action_service_tag" model="ir.actions.act_window">
+            <field name="name">Device Manager</field>
+            <field name="res_model">device.service.tag</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p>Add a device service tag and auth token.</p>
+            </field>
+        </record>
+
+        <menuitem id="menu_hr_attendance_service_tag" name="Device Manager"
+                  parent="hr_attendance.menu_hr_attendance_root" sequence="20"
+                  groups="hr_attendance.group_hr_attendance_user" action="hr_attendance_action_service_tag"/>
+
+
+    </data>
+</odoo>
