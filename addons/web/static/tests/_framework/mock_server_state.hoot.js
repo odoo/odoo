@@ -13,8 +13,7 @@ const notifySubscribers = () => {
 };
 
 const SERVER_STATE_VALUES = {
-    companyId: 1,
-    companyName: "Hermit",
+    companies: [{ id: 1, name: "Hermit" }],
     debug: false,
     groupId: 11,
     lang: "en",
@@ -26,12 +25,13 @@ const SERVER_STATE_VALUES = {
     publicPartnerName: "Public user",
     publicUserId: 8,
     timezone: "taht",
+    userContext: {},
     userId: 7,
 };
 
 const getServerStateValues = createJobScopedGetter(
     (previousValues) => ({
-        ...SERVER_STATE_VALUES,
+        ...JSON.parse(JSON.stringify(SERVER_STATE_VALUES)),
         ...previousValues,
     }),
     notifySubscribers
