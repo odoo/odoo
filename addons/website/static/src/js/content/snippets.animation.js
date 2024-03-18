@@ -1476,9 +1476,13 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
             // Cookies bar might be opened and considered as a modal but it is
             // not really one (eg 'discrete' layout), and should not be used as
             // scrollTop value.
-            const scrollTop = document.body.classList.contains("modal-open") ?
-                this.$target.find('.modal:visible').scrollTop() :
-                this.$scrollingElement.scrollTop();
+            // Only consider the `scrollTop` of modals opened inside `this.$target`.
+            const $openedModal = document.body.classList.contains("modal-open")
+                && this.$target.find(".modal:visible");
+            const scrollTop = $openedModal.length
+                ? $openedModal.scrollTop()
+                : this.$scrollingElement.scrollTop();
+
             const elTop = this._getElementOffsetTop($el[0]) - scrollTop;
 
             const visible = this.windowsHeight > (elTop + elOffset) && 0 < (elTop + elHeight - elOffset);

@@ -6,8 +6,8 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Martin Trigaux, 2022
 # Benson <Benson.Dr@Gmail.com>, 2023
-# Wil Odoo, 2023
 # Tony Ng, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2951,6 +2951,12 @@ msgid "Gives the sequence of this line when displaying the warehouses."
 msgstr "顯示倉庫時給出此行的順序。"
 
 #. module: stock
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr "全局可見天數"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -4546,6 +4552,12 @@ msgid "No Message"
 msgstr "沒消息"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "No Stock On Hand"
+msgstr "無在庫庫存"
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__none
 msgid "No Tracking"
 msgstr "無追蹤資訊"
@@ -4614,12 +4626,6 @@ msgstr "庫存規則:%s沒有定義來源位置!"
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
 msgid "No stock move found"
 msgstr "未發現庫存移動"
-
-#. module: stock
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
-msgid "No Stock On Hand"
-msgstr "無在庫庫存"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -5815,14 +5821,6 @@ msgstr "數量"
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
-msgid ""
-"Quants are auto-deleted when appropriate. If you must manually delete them, "
-"please ask a stock manager to do it."
-msgstr "配額會適時自動刪除。如果必須手動刪除，請要求庫存經理來做。"
-
-#. module: stock
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
 msgstr "Quant 的建立受到限制，您無法進行此操作。"
 
@@ -5979,6 +5977,14 @@ msgstr "列印數量"
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Quants"
 msgstr "數量"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
+msgstr "配額會適時自動刪除。如果必須手動刪除，請要求庫存經理來做。"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7571,15 +7577,15 @@ msgid "The forecasted stock on the"
 msgstr "預估存量"
 
 #. module: stock
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid "The inter-warehouse transfers have been generated"
+msgstr "已產生倉庫間轉移"
+
+#. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
 msgid "The inventory frequency (days) for a location must be non-negative"
 msgstr "位置的庫存頻率（天）必須為非負數"
-
-#. module: stock
-#: code:addons/stock/models/stock_production_lot.py:0
-#, python-format
-msgid "The lot name must contain at least one digit."
-msgstr "批次名稱必須至少包含一位數字。"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_name_uniq
@@ -8240,6 +8246,11 @@ msgid "Unit of Measure"
 msgstr "單位"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
+msgid "Unit of measure"
+msgstr "量度單位"
+
+#. module: stock
 #: model:product.product,uom_name:stock.product_cable_management_box
 #: model:product.template,uom_name:stock.product_cable_management_box_product_template
 msgid "Units"
@@ -8259,11 +8270,6 @@ msgstr "計量單位"
 #: model:ir.ui.menu,name:stock.product_uom_menu
 msgid "Units of Measures"
 msgstr "計量單位"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
-msgid "Unit of measure"
-msgstr "量度單位"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8627,6 +8633,11 @@ msgid "Website communication history"
 msgstr "網站溝通記錄"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
+msgid "Weight unit"
+msgstr "重量單位"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
 msgid "Weight unit of measure label"
 msgstr "重量單位計量標籤"
@@ -8886,6 +8897,12 @@ msgid ""
 msgstr "您無法取消已設置為“完成”的庫存移動。請透過建立一個退回單據來執行反向作業。"
 
 #. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr "不可更改已取消的庫存移動。請改為建立新一行。"
+
+#. module: stock
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
@@ -8944,6 +8961,22 @@ msgid ""
 msgstr "您不能在同一調撥中多次移動同一包裝內容，或將同一包裝拆分到兩個位置。"
 
 #. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from both "
+"immediate and planned transfers."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -8976,12 +9009,6 @@ msgstr "您不能從“視圖”類型 (%s) 的位置取貨或交付產品。"
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr "您無法取消狀態已標記為「完成」的庫存移動。"
-
-#. module: stock
-#: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You cannot change a cancelled stock move, create a new line instead."
-msgstr "不可更改已取消的庫存移動。請改為建立新一行。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -9308,10 +9335,3 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} 交貨單（號碼 {{ object.name or 'n/a' }}）"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_rule.py:0
-#, python-format
-msgid "Global Visibility Days"
-msgstr "全局可見天數"

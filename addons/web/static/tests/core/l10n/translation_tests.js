@@ -100,6 +100,36 @@ QUnit.test("luxon is configured in the correct lang", async (assert) => {
     assert.strictEqual(DateTime.utc(2021, 12, 10).toFormat("MMMM"), "décembre");
 });
 
+QUnit.test("lang is given by an attribute on the DOM root node", async (assert) => {
+    assert.expect(1);
+    patchWithCleanup(session.user_context, { lang: null });
+    document.documentElement.setAttribute("lang", "fr-FR");
+    registerCleanup(() => {
+        document.documentElement.removeAttribute("lang");
+    });
+    patchWithCleanup(session, {
+        cache_hashes: { translations: 1 },
+    })
+    serviceRegistry.add("localization", localizationService);
+    await makeTestEnv({
+        mockRPC(route, params) {
+            assert.strictEqual(route, "/web/webclient/translations/1?lang=fr_FR");
+            return {
+                modules: {},
+                lang_parameters: {
+                    direction: "ltr",
+                    date_format: "%d/%m/%Y",
+                    time_format: "%H:%M:%S",
+                    grouping: "[3,0]",
+                    decimal_point: ",",
+                    thousands_sep: ".",
+                    week_start: 1,
+                },
+            };
+        },
+    });
+});
+
 QUnit.module("Numbering system");
 
 QUnit.test("arabic has the correct numbering system (generic)", async (assert) => {

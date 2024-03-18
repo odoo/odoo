@@ -11,6 +11,7 @@
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2023
+# Wil Odoo, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
@@ -3065,6 +3066,12 @@ msgid "Gives the sequence of this line when displaying the warehouses."
 msgstr "Gibt die Sequenz dieser Zeile bei der Anzeige der Lagerhäuser an."
 
 #. module: stock
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr "Globale Sichtbarkeitstage"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -4745,6 +4752,12 @@ msgid "No Message"
 msgstr "Keine Nachricht"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "No Stock On Hand"
+msgstr "Kein Bestand vorrätig"
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__none
 msgid "No Tracking"
 msgstr "Keine Nachverfolgung"
@@ -4815,12 +4828,6 @@ msgstr "Kein Quellort in Bestandsregel definiert: %s!"
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
 msgid "No stock move found"
 msgstr "Keine Lagerbuchung gefunden"
-
-#. module: stock
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
-msgid "No Stock On Hand"
-msgstr "Kein Bestand vorrätig"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -6036,16 +6043,6 @@ msgstr "Quant"
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
-msgid ""
-"Quants are auto-deleted when appropriate. If you must manually delete them, "
-"please ask a stock manager to do it."
-msgstr ""
-"Quanten werden bei Bedarf automatisch gelöscht. Wenn Sie sie manuell löschen"
-" müssen, bitten Sie bitte einen Lagerverwalter, dies zu tun."
-
-#. module: stock
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
 msgstr ""
 "Quant-Erstellung ist eingeschränkt, Sie können diesen Vorgang nicht "
@@ -6208,6 +6205,16 @@ msgstr "Zu druckende Menge"
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Quants"
 msgstr "Quanten"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
+msgstr ""
+"Quanten werden bei Bedarf automatisch gelöscht. Wenn Sie sie manuell löschen"
+" müssen, bitten Sie bitte einen Lagerverwalter, dies zu tun."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7878,16 +7885,16 @@ msgid "The forecasted stock on the"
 msgstr "Der prognostizierte Bestand am"
 
 #. module: stock
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid "The inter-warehouse transfers have been generated"
+msgstr "Die lagerübergreifenden Transfers wurden erzeugt"
+
+#. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
 msgid "The inventory frequency (days) for a location must be non-negative"
 msgstr ""
 "Die Inventurhäufigkeit (Tage) für einen Lagerort muss nicht negativ sein."
-
-#. module: stock
-#: code:addons/stock/models/stock_production_lot.py:0
-#, python-format
-msgid "The lot name must contain at least one digit."
-msgstr "Die Losnummer muss mindestens eine Zahl enthalten."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_name_uniq
@@ -8633,6 +8640,11 @@ msgid "Unit of Measure"
 msgstr "Maßeinheit"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
+msgid "Unit of measure"
+msgstr "Maßeinheit"
+
+#. module: stock
 #: model:product.product,uom_name:stock.product_cable_management_box
 #: model:product.template,uom_name:stock.product_cable_management_box_product_template
 msgid "Units"
@@ -8652,11 +8664,6 @@ msgstr "Maßeinheiten"
 #: model:ir.ui.menu,name:stock.product_uom_menu
 msgid "Units of Measures"
 msgstr "Maßeinheiten"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
-msgid "Unit of measure"
-msgstr "Maßeinheit"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -9020,6 +9027,11 @@ msgid "Website communication history"
 msgstr "Website-Kommunikationshistorie"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
+msgid "Weight unit"
+msgstr "Gewichtseinheit"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
 msgid "Weight unit of measure label"
 msgstr "Bezeichnung der Gewichtsmaßeinheit"
@@ -9337,6 +9349,14 @@ msgstr ""
 " machen."
 
 #. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+"Sie können eine stornierte Lagerbuchung nicht ändern, erstellen Sie "
+"stattessen eine neue Zeile."
+
+#. module: stock
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
@@ -9409,6 +9429,26 @@ msgstr ""
 "Bewegung zu verschieben oder dasselbe Paket auf zwei Orte aufzuteilen."
 
 #. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from both "
+"immediate and planned transfers."
+msgstr ""
+"Sie können keine Produkte in ein und dasselbe Paket packen, wenn sie sowohl "
+"aus sofortigen als auch aus geplanten Transfers stammen."
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+"Sie können keine Produkte in ein und dasselbe Paket packen, wenn sie aus "
+"verschiedenen Transfers mit unterschiedlichen Vorgangsarten stammen."
+
+#. module: stock
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -9450,14 +9490,6 @@ msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
 "Sie können die Reservierung einer auf „Erledigt“ gesetzte Lagerbuchung nicht"
 " aufteilen."
-
-#. module: stock
-#: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You cannot change a cancelled stock move, create a new line instead."
-msgstr ""
-"Sie können eine stornierte Lagerbuchung nicht ändern, erstellen Sie "
-"stattessen eine neue Zeile."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -9811,10 +9843,3 @@ msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Lieferauftrag (Ref {{ object.name or 'n/a' }})"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_rule.py:0
-#, python-format
-msgid "Global Visibility Days"
-msgstr "Globale Sichtbarkeitstage"

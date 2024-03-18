@@ -277,7 +277,7 @@ QUnit.module('web_editor', {}, function () {
         });
 
         QUnit.test('colorpicker', async function (assert) {
-            assert.expect(7);
+            assert.expect(10);
 
             var form = await testUtils.createView({
                 View: FormView,
@@ -312,6 +312,19 @@ QUnit.module('web_editor', {}, function () {
                 return openingProm;
             }
 
+            await new Promise(resolve => setTimeout(resolve, 50));
+
+            await openColorpicker('#toolbar .note-back-color-preview');
+            assert.ok($('.note-back-color-preview').hasClass('show'),
+                "should display the color picker");
+
+            // Test that toolbar and colorpicker are hidden after bluring the toolbar.
+            Wysiwyg.setRange(pText, 1, pText, 1);
+            await new Promise(resolve => setTimeout(resolve, 50));
+            assert.ok(document.querySelector('#toolbar').style.visibility === 'hidden', "toolbar should be hidden");
+            assert.containsNone($, ".dropdown-menu.show", "all dropdowns should be closed");
+
+            Wysiwyg.setRange(pText, 1, pText, 10);
             await new Promise(resolve => setTimeout(resolve, 50));
 
             await openColorpicker('#toolbar .note-back-color-preview');

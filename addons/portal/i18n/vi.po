@@ -85,7 +85,7 @@ msgstr "<option value=\"\">Quốc gia...</option>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "<option value=\"\">select...</option>"
-msgstr ""
+msgstr "<option value=\"\">chọn...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -424,7 +424,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
 msgid "Customer API Keys"
-msgstr ""
+msgstr "Khoá API của khách hàng"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -553,6 +553,8 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
+"Đây là mã khóa API mới của bạn, hãy sử dụng mã khóa này để truy cập RPC thay cho mật khẩu.\n"
+"                 Thông tin đăng nhập của bạn vẫn cần cho mục đích tương tác."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -571,7 +573,7 @@ msgstr "ID"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Important:"
-msgstr ""
+msgstr "Quan trọng:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -612,12 +614,12 @@ msgstr "Thư mời"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
 msgid "Is Internal"
-msgstr ""
+msgstr "Nội bộ"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_portal
 msgid "Is Portal"
-msgstr ""
+msgstr "Cổng thông tin"
 
 #. module: portal
 #. openerp-web
@@ -627,6 +629,8 @@ msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
 msgstr ""
+"Điều vô cùng quan trọng là phần mô tả này phải rõ ràng\n"
+"                 và đầy đủ,"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -652,7 +656,7 @@ msgstr "Cập nhật lần cuối vào"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__login_date
 msgid "Latest Authentication"
-msgstr ""
+msgstr "Lần xác thực gần nhất"
 
 #. module: portal
 #. openerp-web
@@ -745,6 +749,7 @@ msgstr "Logo hệ thống"
 #, python-format
 msgid "Only internal and portal users can create API keys"
 msgstr ""
+"Chỉ người dùng nội bộ và người dùng cổng thông tin mới có thể tạo khóa API"
 
 #. module: portal
 #. openerp-web
@@ -810,7 +815,7 @@ msgstr "Cấu hình Người dùng Portal"
 #. module: portal
 #: model:mail.template,name:portal.mail_template_data_portal_welcome
 msgid "Portal: User Invite"
-msgstr ""
+msgstr "Cổng thông tin: Mời người dùng"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -840,7 +845,7 @@ msgstr "Xuất bản ngày %s"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Re-Invite"
-msgstr ""
+msgstr "Mời lại"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -865,7 +870,7 @@ msgstr "Model tài liệu liên quan"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr ""
+msgstr "Thu hồi quyền truy cập"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -999,7 +1004,7 @@ msgstr ""
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" does not have a valid email."
-msgstr ""
+msgstr "Liên hệ \"%s\" không có email hợp lệ."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -1020,7 +1025,7 @@ msgstr ""
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "The key cannot be retrieved later and provides"
-msgstr ""
+msgstr "Mã khóa không thể được lấy lại sau này và cung cấp"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -1039,7 +1044,7 @@ msgstr "Mật khẩu cũ không hợp lệ, mật khẩu của bạn vẫn chưa
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" already has the portal access."
-msgstr ""
+msgstr "Đối tác \"%s\" đã có quyền truy cập cổng thông tin."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -1054,6 +1059,8 @@ msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
 msgstr ""
+"Không tìm thấy mẫu \"Cổng thông tin: người dùng mới\" để gửi email đến người"
+" dùng cổng thông tin."
 
 #. module: portal
 #. openerp-web
@@ -1079,12 +1086,16 @@ msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
 msgstr ""
+"Đối tác này liên kết với một Người dùng nội bộ và đã có quyền truy cập vào "
+"Cổng thông tin."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "This text is included at the end of the email sent to new portal users."
 msgstr ""
+"Nội dung này nằm trong phần cuối email gửi tới người dùng cổng thông tin "
+"mới."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
@@ -1254,7 +1265,7 @@ msgstr "Bạn phải"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr ""
+msgstr "Trước tiên bạn cần cấp quyền truy cập cổng thông tin cho đối tác \"%s\"."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
@@ -1297,7 +1308,7 @@ msgstr "bình luận"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "full access"
-msgstr ""
+msgstr "toàn quyền truy cập"
 
 #. module: portal
 #. openerp-web
@@ -1307,6 +1318,8 @@ msgid ""
 "it will be the only way to\n"
 "                identify the key once created"
 msgstr ""
+"đó sẽ là cách duy nhất để\n"
+"               xác định mã khóa sau khi được tạo"
 
 #. module: portal
 #. openerp-web
@@ -1343,3 +1356,5 @@ msgstr "đăng một bình luận."
 #, python-format
 msgid "to your user account, it is very important to store it securely."
 msgstr ""
+"cho tài khoản người dùng của bạn, nên việc lưu trữ nó một cách an toàn là "
+"điều vô cùng quan trọng."

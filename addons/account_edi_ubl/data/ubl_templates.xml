@@ -14,7 +14,7 @@
                     t-if="partner.website"
                     t-esc="partner.website"/>
                 <cac:PartyName>
-                    <cbc:Name t-esc="partner.name"/>
+                    <cbc:Name t-esc="partner.display_name"/>
                 </cac:PartyName>
                 <cac:Language t-if="partner.lang">
                     <cbc:LocaleCode t-esc="partner.lang"/>
@@ -44,9 +44,9 @@
                         <cbc:Name t-esc="partner.country_id.name"/>
                     </cac:Country>
                 </cac:PostalAddress>
-                <cac:PartyTaxScheme t-if="partner.vat">
-                    <cbc:RegistrationName t-esc="partner.name"/>
-                    <cbc:CompanyID t-esc="partner.vat"/>
+                <cac:PartyTaxScheme t-if="partner.commercial_partner_id.vat">
+                    <cbc:RegistrationName t-esc="partner.commercial_partner_id.name"/>
+                    <cbc:CompanyID t-esc="partner.commercial_partner_id.vat"/>
                     <cac:TaxScheme>
                         <cbc:ID
                             schemeID="UN/ECE 5153"

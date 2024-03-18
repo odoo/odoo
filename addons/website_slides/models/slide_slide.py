@@ -820,7 +820,7 @@ class Slide(models.Model):
         """ If we receive a duration (YT video), we use it to determine the slide duration.
         The received duration is under a special format (e.g: PT1M21S15, meaning 1h 21m 15s). """
 
-        key = self.env['website'].get_current_website().website_slide_google_app_key
+        key = self.env['website'].get_current_website().sudo().website_slide_google_app_key
         fetch_res = self._fetch_data('https://www.googleapis.com/youtube/v3/videos', {'id': document_id, 'key': key, 'part': 'snippet,contentDetails', 'fields': 'items(id,snippet,contentDetails)'}, 'json')
         if fetch_res.get('error'):
             return {'error': self._extract_google_error_message(fetch_res.get('error'))}
@@ -897,7 +897,7 @@ class Slide(models.Model):
             if access_token:
                 params['access_token'] = access_token
         if not params.get('access_token'):
-            params['key'] = self.env['website'].get_current_website().website_slide_google_app_key
+            params['key'] = self.env['website'].get_current_website().sudo().website_slide_google_app_key
 
         fetch_res = self._fetch_data('https://www.googleapis.com/drive/v2/files/%s' % document_id, params, "json")
         if fetch_res.get('error'):
