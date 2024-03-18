@@ -1209,31 +1209,94 @@ class AccountMove(models.Model):
                             handle_price_include=False,
                             extra_context={'_extra_grouping_key_': 'epd'},
                         ))
-                move.tax_totals = self.env['account.tax']._prepare_tax_totals(**kwargs)
-                if move.invoice_cash_rounding_id:
-                    rounding_amount = move.invoice_cash_rounding_id.compute_difference(move.currency_id, move.tax_totals['amount_total'])
-                    totals = move.tax_totals
-                    totals['display_rounding'] = True
-                    if rounding_amount:
-                        if move.invoice_cash_rounding_id.strategy == 'add_invoice_line':
-                            totals['rounding_amount'] = rounding_amount
-                            totals['formatted_rounding_amount'] = formatLang(self.env, totals['rounding_amount'], currency_obj=move.currency_id)
-                            totals['amount_total_rounded'] = totals['amount_total'] + rounding_amount
-                            totals['formatted_amount_total_rounded'] = formatLang(self.env, totals['amount_total_rounded'], currency_obj=move.currency_id)
-                        elif move.invoice_cash_rounding_id.strategy == 'biggest_tax':
-                            if totals['subtotals_order']:
-                                max_tax_group = max((
-                                    tax_group
-                                    for tax_groups in totals['groups_by_subtotal'].values()
-                                    for tax_group in tax_groups
-                                ), key=lambda tax_group: tax_group['tax_group_amount'])
-                                max_tax_group['tax_group_amount'] += rounding_amount
-                                max_tax_group['formatted_tax_group_amount'] = formatLang(self.env, max_tax_group['tax_group_amount'], currency_obj=move.currency_id)
-                                totals['amount_total'] += rounding_amount
-                                totals['formatted_amount_total'] = formatLang(self.env, totals['amount_total'], currency_obj=move.currency_id)
+                if move.state in ('posted', 'cancel'):
+                    # If the invoice is posted or cancelled, tax_totals should only be computed from
+                    # the existing line_ids. We cannot rely on the actual configuration of the taxes
+                    # as they may have been changed after the invoice has been posted/cancelled
+                    move.tax_totals = move._get_tax_totals_from_base_and_tax_lines(
+                        base_lines=kwargs['base_lines'],
+                        tax_lines=kwargs.get('tax_lines', []),
+                        currency=kwargs['currency'],
+                    )
+                else:
+                    move.tax_totals = self.env['account.tax']._prepare_tax_totals(**kwargs)
+                    if move.invoice_cash_rounding_id:
+                        rounding_amount = move.invoice_cash_rounding_id.compute_difference(move.currency_id, move.tax_totals['amount_total'])
+                        totals = move.tax_totals
+                        totals['display_rounding'] = True
+                        if rounding_amount:
+                            if move.invoice_cash_rounding_id.strategy == 'add_invoice_line':
+                                totals['rounding_amount'] = rounding_amount
+                                totals['formatted_rounding_amount'] = formatLang(self.env, totals['rounding_amount'], currency_obj=move.currency_id)
+                                totals['amount_total_rounded'] = totals['amount_total'] + rounding_amount
+                                totals['formatted_amount_total_rounded'] = formatLang(self.env, totals['amount_total_rounded'], currency_obj=move.currency_id)
+                            elif move.invoice_cash_rounding_id.strategy == 'biggest_tax':
+                                if totals['subtotals_order']:
+                                    max_tax_group = max((
+                                        tax_group
+                                        for tax_groups in totals['groups_by_subtotal'].values()
+                                        for tax_group in tax_groups
+                                    ), key=lambda tax_group: tax_group['tax_group_amount'])
+                                    max_tax_group['tax_group_amount'] += rounding_amount
+                                    max_tax_group['formatted_tax_group_amount'] = formatLang(self.env, max_tax_group['tax_group_amount'], currency_obj=move.currency_id)
+                                    totals['amount_total'] += rounding_amount
+                                    totals['formatted_amount_total'] = formatLang(self.env, totals['amount_total'], currency_obj=move.currency_id)
             else:
                 # Non-invoice moves don't support that field (because of multicurrency: all lines of the invoice share the same currency)
                 move.tax_totals = None
+
+    def _get_tax_totals_from_base_and_tax_lines(self, base_lines, tax_lines, currency):
+        amount_untaxed = sum(base_line['price_subtotal'] for base_line in base_lines)
+        amount_tax = 0.0
+        amounts_by_group = defaultdict(lambda: defaultdict(float))
+        subtotal_order = {}
+        groups_by_subtotal = defaultdict(list)
+
+        for tax_line in sorted(tax_lines,
+                key=lambda l: (l['tax_repartition_line'].tax_id.tax_group_id.sequence, l['tax_repartition_line'].tax_id.tax_group_id.id)):
+            tax_group = tax_line['tax_repartition_line'].tax_id.tax_group_id
+            amounts_by_group[tax_group]['tax_amount'] += tax_line['tax_amount']
+        for base_line in base_lines:
+            for tax in base_line['taxes']:
+                amounts_by_group[tax.tax_group_id]['base_amount'] += base_line['price_subtotal']
+
+        for tax_group, amounts in amounts_by_group.items():
+
+            subtotal_title = tax_group.preceding_subtotal or _("Untaxed Amount")
+            sequence = tax_group.sequence
+
+            subtotal_order[subtotal_title] = min(subtotal_order.get(subtotal_title, float('inf')), sequence)
+            groups_by_subtotal[subtotal_title].append({
+                'group_key': tax_group.id,
+                'tax_group_id': tax_group.id,
+                'tax_group_name': tax_group.name,
+                'tax_group_amount': amounts['tax_amount'],
+                'tax_group_base_amount': amounts['base_amount'],
+                'formatted_tax_group_amount': formatLang(self.env, amounts['tax_amount'], currency_obj=currency),
+                'formatted_tax_group_base_amount': formatLang(self.env, amounts['base_amount'], currency_obj=currency),
+            })
+        subtotals = []
+        for subtotal_title in sorted(subtotal_order.keys(), key=lambda k: subtotal_order[k]):
+            amount_total = amount_untaxed + amount_tax
+            subtotals.append({
+                'name': subtotal_title,
+                'amount': amount_total,
+                'formatted_amount': formatLang(self.env, amount_total, currency_obj=currency),
+            })
+            amount_tax += sum(x['tax_group_amount'] for x in groups_by_subtotal[subtotal_title])
+
+        amount_total = amount_untaxed + amount_tax
+
+        return {
+            'amount_untaxed': currency.round(amount_untaxed) if currency else amount_untaxed,
+            'amount_total': currency.round(amount_total) if currency else amount_total,
+            'formatted_amount_total': formatLang(self.env, amount_total, currency_obj=currency),
+            'formatted_amount_untaxed': formatLang(self.env, amount_untaxed, currency_obj=currency),
+            'groups_by_subtotal': groups_by_subtotal,
+            'subtotals': subtotals,
+            'subtotals_order': sorted(subtotal_order.keys(), key=lambda k: subtotal_order[k]),
+            'display_tax_base': len(amounts_by_group) > 1,
+        }
 
     @api.depends('show_payment_term_details')
     def _compute_payment_term_details(self):

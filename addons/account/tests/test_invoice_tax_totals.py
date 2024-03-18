@@ -880,3 +880,43 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             })
             move.invoice_cash_rounding_id = cash_rounding
             self.assertEqual(move.tax_totals['amount_total'], 120)
+
+    def test_posted_out_invoice_tax_totals_after_tax_edition(self):
+        '''
+        Test that the computed tax totals of a posted invoice do not change when a tax
+        used in it is edited.
+        '''
+        tax = self.env['account.tax'].create({
+            'name': '10% incl',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': True,
+            'include_base_amount': True,
+            'tax_group_id': self.tax_group1.id,
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'Test line',
+                    'quantity': 3.0,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(tax.ids)],
+                })
+            ],
+        })
+        tax_totals = invoice.tax_totals
+        self.assertEqual(tax_totals['amount_untaxed'], 272.73)
+        self.assertEqual(tax_totals['amount_total'], 300.0)
+        self.assertEqual(tax_totals['groups_by_subtotal']['Untaxed Amount'][0]['tax_group_id'], self.tax_group1.id)
+        self.assertEqual(tax_totals['groups_by_subtotal']['Untaxed Amount'][0]['tax_group_amount'], 27.27)
+        invoice.action_post()
+        # edit the tax
+        tax.write({'amount': 20, 'price_include': False})
+        tax_totals = invoice.tax_totals
+        self.assertEqual(tax_totals['amount_untaxed'], 272.73)
+        self.assertEqual(tax_totals['amount_total'], 300.0)
+        self.assertEqual(tax_totals['groups_by_subtotal']['Untaxed Amount'][0]['tax_group_id'], self.tax_group1.id)
+        self.assertEqual(tax_totals['groups_by_subtotal']['Untaxed Amount'][0]['tax_group_amount'], 27.27)
