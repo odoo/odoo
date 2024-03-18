@@ -1,6 +1,8 @@
 import { useVisible } from "@mail/utils/common/hooks";
 import { Component, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
+import { sprintf } from "@web/core/utils/strings";
 
 /**
  * @typedef {Object} Props
@@ -19,5 +21,12 @@ export class RecipientList extends Component {
                 this.threadService.loadMoreRecipients(this.props.thread);
             }
         });
+    }
+
+    getRecipientText(recipient) {
+        return (
+            recipient.partner.email ||
+            sprintf(_t("[%(name)s] (no email address)"), { name: recipient.partner.name })
+        );
     }
 }

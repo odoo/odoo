@@ -233,9 +233,9 @@ export class Chatter extends Component {
             .slice(0, 5)
             .map(({ partner }) => {
                 const text = partner.email ? partner.emailWithoutDomain : partner.name;
-                return `<span class="text-muted" title="${escape(partner.email)}">${escape(
-                    text
-                )}</span>`;
+                return `<span class="text-muted" title="${escape(
+                    partner.email || _t("no email address")
+                )}">${escape(text)}</span>`;
             });
         if (this.state.thread && this.state.thread.recipients.length > 5) {
             recipients.push(
