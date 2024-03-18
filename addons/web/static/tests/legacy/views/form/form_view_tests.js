@@ -43,6 +43,7 @@ import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { errorService } from "@web/core/errors/error_service";
+import { features } from "@web/core/features";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
@@ -14775,5 +14776,131 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o_field_widget[name=json_field]"),
             "o_field_invalid"
         );
+    });
+
+    QUnit.test("form with attribute advanced='1' on various nodes", async function (assert) {
+        class MyComponent extends Component {
+            static props = ["*"];
+            static template = xml`<div class="my_widget">Hello</div>`;
+        }
+        const myComponent = {
+            component: MyComponent,
+        };
+        widgetRegistry.add("test_widget", myComponent);
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <div name="button_box" class="oe_button_box">
+                            <button class="oe_stat_button" type="action" name="someaction">
+                                <field name="int_field"/>
+                            </button>
+                            <button class="oe_stat_button" name="some_action" type="action" advanced="1">
+                                <field name="trululu"/>
+                            </button>
+                        </div>
+                        <div class="custom_div" advanced="1">some div</div>
+                        <group>
+                            <group>
+                                <field name="foo"/>
+                                <field name="bar" advanced="1"/>
+                                <widget name="test_widget" advanced="1"/>
+                            </group>
+                            <group advanced="1">
+                                <div class="custom_div">div inside group</div>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page>Page 1</page>
+                            <page advanced="1">Page 2</page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.deepEqual(features.advanced, false); // sanity check
+
+        assert.containsNone(target, "div.custom_div");
+        assert.containsOnce(target, ".o_control_panel .oe_stat_button");
+        assert.containsNone(target, ".o_field_widget[name=bar]");
+        assert.containsNone(target, ".my_widget");
+        assert.containsOnce(target, ".o_notebook_headers .nav-item");
+        
+        features.advanced = true;
+        await nextTick();
+        
+        assert.containsN(target, "div.custom_div", 2);
+        assert.containsN(target, ".o_control_panel .oe_stat_button", 2);
+        assert.containsOnce(target, ".o_field_widget[name=bar]");
+        assert.containsOnce(target, ".my_widget");
+        assert.containsN(target, ".o_notebook_headers .nav-item", 2);
+    });
+
+    QUnit.test("form with attribute advanced='0' on various nodes", async function (assert) {
+        class MyComponent extends Component {
+            static props = ["*"];
+            static template = xml`<div class="my_widget">Hello</div>`;
+        }
+        const myComponent = {
+            component: MyComponent,
+        };
+        widgetRegistry.add("test_widget", myComponent);
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <div name="button_box" class="oe_button_box">
+                            <button class="oe_stat_button" type="action" name="someaction">
+                                <field name="int_field"/>
+                            </button>
+                            <button class="oe_stat_button" name="some_action" type="action" advanced="0">
+                                <field name="trululu"/>
+                            </button>
+                        </div>
+                        <div class="custom_div" advanced="0">some div</div>
+                        <group>
+                            <group>
+                                <field name="foo"/>
+                                <field name="bar" advanced="0"/>
+                                <widget name="test_widget" advanced="0"/>
+                            </group>
+                            <group advanced="0">
+                                <div class="custom_div">div inside group</div>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page>Page 1</page>
+                            <page advanced="0">Page 2</page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.deepEqual(features.advanced, false); // sanity check
+
+        assert.containsN(target, "div.custom_div", 2);
+        assert.containsN(target, ".o_control_panel .oe_stat_button", 2);
+        assert.containsOnce(target, ".o_field_widget[name=bar]");
+        assert.containsOnce(target, ".my_widget");
+        assert.containsN(target, ".o_notebook_headers .nav-item", 2);
+        
+        features.advanced = true;
+        await nextTick();
+
+        assert.containsNone(target, "div.custom_div");
+        assert.containsOnce(target, ".o_control_panel .oe_stat_button");
+        assert.containsNone(target, ".o_field_widget[name=bar]");
+        assert.containsNone(target, ".my_widget");
+        assert.containsOnce(target, ".o_notebook_headers .nav-item");
     });
 });

@@ -1,3 +1,4 @@
+import { useFeatures } from "@web/core/features";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Notebook } from "@web/core/notebook/notebook";
 import { Setting } from "./setting/setting";
@@ -6,6 +7,7 @@ import { browser } from "@web/core/browser/browser";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
+
 import { ButtonBox } from "@web/views/form/button_box/button_box";
 import { InnerGroup, OuterGroup } from "@web/views/form/form_group/form_group";
 import { ViewButton } from "@web/views/view_button/view_button";
@@ -69,7 +71,7 @@ export class FormRenderer extends Component {
             return !record.isInEdition && !!target.closest(".oe_title, .o_inner_group");
         });
         this.uiService = useService("ui");
-        this.advanced = useState(useService("advanced"));
+        this.features = useFeatures();
         this.onResize = useDebounced(this.render, 200);
         onMounted(() => browser.addEventListener("resize", this.onResize));
         onWillUnmount(() => browser.removeEventListener("resize", this.onResize));

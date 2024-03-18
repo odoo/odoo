@@ -5,6 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { Domain } from "@web/core/domain";
 import { currencies } from "@web/core/currency";
 import { errorService } from "@web/core/errors/error_service";
+import { features } from "@web/core/features";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
@@ -6937,7 +6938,6 @@ QUnit.module("Views", (hooks) => {
                     </t></templates>
                 </kanban>`,
             };
-            registry.category("command_categories").add("view_switcher", {});
 
             const wc = await createWebClient({ serverData });
             await doAction(wc, {
@@ -6959,18 +6959,16 @@ QUnit.module("Views", (hooks) => {
 
             triggerHotkey("control+k");
             await nextTick();
-            assert.containsOnce(target.querySelector(".o_command_category"), ".o_command");
-            let command = target.querySelector(".o_command_category .o_command");
-            assert.strictEqual(command.textContent, "Show Kanban view");
+            assert.containsOnce(target, ".o_command_category .o_command:contains(Show Kanban view)");
+            let command = $(target).find(".o_command_category .o_command:contains(Show Kanban view)")[0];
 
             await click(command);
             assert.containsOnce(target, ".o_kanban_view");
 
             triggerHotkey("control+k");
             await nextTick();
-            assert.containsOnce(target.querySelector(".o_command_category"), ".o_command");
-            command = target.querySelector(".o_command_category .o_command");
-            assert.strictEqual(command.textContent, "Show List view");
+            assert.containsOnce(target, ".o_command_category .o_command:contains(Show List view)");
+            command = $(target).find(".o_command_category .o_command:contains(Show List view)")[0];
             await click(command);
             assert.containsOnce(target, ".o_list_view");
         }
@@ -20085,5 +20083,131 @@ QUnit.module("Views", (hooks) => {
         ]);
         await nextTick();
         assert.verifySteps(["onchange"], "There should only be one onchange call");
+    });
+
+    QUnit.test("list with attribute advanced='1' on various nodes", async function (assert) {
+        class MyComponent extends Component {
+            static props = ["*"];
+            static template = xml`<div class="my_widget">Hello</div>`;
+        }
+        const myComponent = {
+            component: MyComponent,
+        };
+        registry.category("view_widgets").add("test_widget", myComponent);
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <header>
+                        <button class="my_custom_btn1" type="object" name="some_method" string="Do it 1" advanced="1"/>
+                        <button class="my_custom_btn2" type="object" name="some_method" string="Do it 2" advanced="1" display="always"/>
+                    </header>
+                    <field name="foo"/>
+                    <field name="int_field" advanced="1"/>
+                    <field name="qux" optional="hide" advanced="1"/>
+                    <widget name="test_widget" advanced="1"/>
+                    <button name="test" type="object" string="Do it" advanced="1"/>
+                </tree>`,
+        });
+
+        assert.containsNone(target, ".o_list_selection_box");
+        
+        await click(target.querySelector(".o_list_record_selector input"));
+        assert.containsOnce(target, ".o_list_selection_box");
+        assert.containsNone(target, ".o_control_panel .my_custom_btn1:visible");
+        assert.containsNone(target, ".o_control_panel .my_custom_btn2:visible");
+        assert.containsN(target, ".o_list_table thead th", 2); // selector + foo
+        assert.containsNone(target, ".o_optional_columns_dropdown");
+
+        features.advanced = true;
+        await nextTick();
+        
+        assert.containsOnce(target, ".o_control_panel .my_custom_btn1:visible");
+        assert.containsOnce(target, ".o_control_panel .my_custom_btn2:visible");
+        assert.containsN(target, ".o_list_table thead th", 6);
+        assert.containsOnce(target, ".o_optional_columns_dropdown");
+
+        await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
+        const optionalColumnLabels = [
+            ...target.querySelectorAll(".o-dropdown--menu .dropdown-item"),
+        ].map((item) => item.textContent.trim());
+        assert.deepEqual(optionalColumnLabels, ["my float"]);
+
+        await click(target.querySelector(".o-dropdown--menu .dropdown-item input"));
+        assert.containsN(target, ".o_list_table thead th", 7);
+
+        features.advanced = false;
+        await nextTick();
+
+        assert.containsOnce(target, ".o_list_selection_box");
+        assert.containsNone(target, ".o_control_panel .my_custom_btn1:visible");
+        assert.containsNone(target, ".o_control_panel .my_custom_btn2:visible");
+        assert.containsN(target, ".o_list_table thead th", 2); // selector + foo
+    });
+
+    QUnit.test("list with attribute advanced='0' on various nodes", async function (assert) {
+        class MyComponent extends Component {
+            static props = ["*"];
+            static template = xml`<div class="my_widget">Hello</div>`;
+        }
+        const myComponent = {
+            component: MyComponent,
+        };
+        registry.category("view_widgets").add("test_widget", myComponent);
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <header>
+                        <button class="my_custom_btn1" type="object" name="some_method" string="Do it 1" advanced="0"/>
+                        <button class="my_custom_btn2" type="object" name="some_method" string="Do it 2" advanced="0" display="always"/>
+                    </header>
+                    <field name="foo"/>
+                    <field name="int_field" advanced="0"/>
+                    <field name="qux" optional="hide" advanced="0"/>
+                    <widget name="test_widget" advanced="0"/>
+                    <button name="test" type="object" string="Do it" advanced="0"/>
+                </tree>`,
+        });
+
+        assert.containsNone(target, ".o_list_selection_box");
+        
+        await click(target.querySelector(".o_list_record_selector input"));
+        assert.containsOnce(target, ".o_list_selection_box");
+        assert.containsOnce(target, ".o_control_panel .my_custom_btn1:visible");
+        assert.containsOnce(target, ".o_control_panel .my_custom_btn2:visible");
+        assert.containsN(target, ".o_list_table thead th", 6);
+        assert.containsOnce(target, ".o_optional_columns_dropdown");
+        
+        await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
+        const optionalColumnLabels = [
+            ...target.querySelectorAll(".o-dropdown--menu .dropdown-item"),
+        ].map((item) => item.textContent.trim());
+        assert.deepEqual(optionalColumnLabels, ["my float"]);
+
+        await click(target.querySelector(".o-dropdown--menu .dropdown-item input"));
+        assert.containsN(target, ".o_list_table thead th", 7);
+        
+        features.advanced = true;
+        await nextTick();
+        
+        assert.containsOnce(target, ".o_list_selection_box");
+        assert.containsNone(target, ".o_control_panel .my_custom_btn1:visible");
+        assert.containsNone(target, ".o_control_panel .my_custom_btn2:visible");
+        assert.containsN(target, ".o_list_table thead th", 2); // selector + foo
+        assert.containsNone(target, ".o_optional_columns_dropdown");
+        
+        features.advanced = false;
+        await nextTick();
+        
+        assert.containsOnce(target, ".o_control_panel .my_custom_btn1:visible");
+        assert.containsOnce(target, ".o_control_panel .my_custom_btn2:visible");
+        assert.containsN(target, ".o_list_table thead th", 7);
     });
 });

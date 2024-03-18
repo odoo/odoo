@@ -51,7 +51,7 @@
             t-foreach="apps"
             t-as="app"
             t-key="app.id"
-            t-if="!app.advanced || app.advanced == this.advanced.active"
+            t-if="!app.advanced || this.features.advanced"
             class="{ 'o_app': true, focus: menuService.getCurrentApp() === app }"
             onSelected="() => this.onNavBarDropdownItemSelection(app)"
             t-esc="app.name"
@@ -80,6 +80,7 @@
 
           <t t-if="!section.childrenTree.length">
             <DropdownItem
+              t-if="!section.advanced || this.features.advanced"
               class="'o_nav_entry'"
               onSelected="() => this.onNavBarDropdownItemSelection(section)"
               t-esc="section.name"
@@ -87,7 +88,7 @@
             />
           </t>
           <t t-else="">
-            <Dropdown>
+            <Dropdown t-if="!section.advanced || this.features.advanced">
               <button t-att-data-hotkey="hotkey" t-att-data-menu-xmlid="section.xmlid">
                 <span t-esc="section.name" t-att-data-section="section.id" />
               </button>
@@ -119,7 +120,7 @@
 
   <t t-name="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
     <t t-set="style" t-value="`padding-left: ${decalage}px;`" />
-    <t t-foreach="items" t-as="item" t-key="item.id" t-if="!item.advanced || item.advanced == this.advanced.active">
+    <t t-foreach="items" t-as="item" t-key="item.id" t-if="!item.advanced || this.features.advanced">
       <DropdownItem
         t-if="!item.childrenTree.length"
         class="{
@@ -150,7 +151,7 @@
 
         <t t-set-slot="content">
           <t t-foreach="sections" t-as="section" t-key="section.id">
-            <t t-if="!section.childrenTree.length &amp;&amp; (!section.advanced || section.advanced == this.advanced.active)">
+            <t t-if="!section.childrenTree.length &amp;&amp; (!section.advanced || this.features.advanced)">
               <DropdownItem
                 class="'o_more_dropdown_section'"
                 onSelected="() => this.onNavBarDropdownItemSelection(section)"

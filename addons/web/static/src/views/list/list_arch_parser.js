@@ -86,6 +86,14 @@ export class ListArchParser {
                         node.getAttribute("column_invisible"),
                         "AND"
                     );
+                    if (node.hasAttribute("advanced") && "advanced" in buttonGroup) {
+                        const advanced = archParseBoolean(node.getAttribute("advanced"));
+                        if (advanced !== buttonGroup.advanced) {
+                            delete buttonGroup.advanced;
+                        }
+                    } else {
+                        delete buttonGroup.advanced;
+                    }
                 } else {
                     buttonGroup = {
                         id: `column_${nextId++}`,
@@ -94,6 +102,9 @@ export class ListArchParser {
                         hasLabel: false,
                         column_invisible: node.getAttribute("column_invisible"),
                     };
+                    if (node.hasAttribute("advanced")) {
+                        buttonGroup.advanced = archParseBoolean(node.getAttribute("advanced"));
+                    }
                     columns.push(buttonGroup);
                 }
             } else if (node.tagName === "field") {
@@ -217,8 +228,8 @@ export class ListArchParser {
                 const type = xmlDoc.getAttribute("type");
                 treeAttr.openAction = action && type ? { action, type } : null;
             }
-            if (parsedNode && node.getAttribute("advanced")) {
-                parsedNode.is_advanced = node.getAttribute("advanced") === "1";
+            if (parsedNode && node.hasAttribute("advanced")) {
+                parsedNode.advanced = archParseBoolean(node.getAttribute("advanced"));
             }
             return visitChildren;
         });

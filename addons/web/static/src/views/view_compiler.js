@@ -5,7 +5,7 @@ import {
     createTextNode,
     getTag,
 } from "@web/core/utils/xml";
-import { toStringExpression, BUTTON_CLICK_PARAMS } from "./utils";
+import { archParseBoolean, toStringExpression, BUTTON_CLICK_PARAMS } from "./utils";
 
 /**
  * @typedef Compiler
@@ -291,12 +291,9 @@ export class ViewCompiler {
             compiledNode = this.applyInvisible(invisible, compiledNode, params);
         }
 
-        const advanced = getModifier(node, "advanced");
-        if (advanced) {
-            compiledNode.setAttribute(
-                "t-if",
-                (advanced === "1" ? "" : "!") + "__comp__.advanced.active"
-            );
+        if (node.hasAttribute("advanced")) {
+            const advanced = archParseBoolean(node.getAttribute("advanced"));
+            compiledNode.setAttribute("t-if", (advanced ? "" : "!") + "__comp__.features.advanced");
         }
 
         return compiledNode;
@@ -401,13 +398,7 @@ export class ViewCompiler {
      */
     compileGenericNode(el, params) {
         const compiled = createElement(el.nodeName.toLowerCase());
-        const metaAttrs = [
-            "column_invisible",
-            "invisible",
-            "readonly",
-            "required",
-            "advanced",
-        ];
+        const metaAttrs = ["column_invisible", "invisible", "readonly", "required", "advanced"];
         for (const attr of el.attributes) {
             if (metaAttrs.includes(attr.name)) {
                 continue;
