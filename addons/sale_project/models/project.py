@@ -338,7 +338,11 @@ class Project(models.Model):
         )
 
         SaleOrderLine = self.env['sale.order.line']
-        sale_order_line_domain = [('order_id', 'any', [('analytic_account_id', 'in', self.analytic_account_id.ids)])]
+        sale_order_line_domain = [
+            '&',
+            ('order_id', 'any', [('analytic_account_id', 'in', self.analytic_account_id.ids)]),
+            ('display_type', '=', False),
+        ]
         sale_order_line_query = SaleOrderLine._where_calc(sale_order_line_domain)
         sale_order_line_sql = sale_order_line_query.select(
             f'{SaleOrderLine._table}.project_id AS id',
