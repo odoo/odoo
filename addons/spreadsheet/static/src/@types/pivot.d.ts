@@ -61,6 +61,8 @@ declare module "@spreadsheet" {
         string: string;
         relation?: string;
         searchable?: boolean;
+        aggregator?: string;
+        store?: boolean;
     }
 
     export type Fields = Record<string, Field | undefined>;
