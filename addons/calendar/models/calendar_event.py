@@ -103,7 +103,7 @@ class CalendarEvent(models.Model):
         partners = self.env.user.partner_id
         active_id = self._context.get('active_id')
         if self._context.get('active_model') == 'res.partner' and active_id and active_id not in partners.ids:
-                partners |= self.env['res.partner'].browse(active_id)
+            partners |= self.env['res.partner'].browse(active_id)
         return partners
 
     @api.model
@@ -536,46 +536,63 @@ class CalendarEvent(models.Model):
     def create(self, vals_list):
         # Prevent sending update notification when _inverse_dates is called
         self = self.with_context(is_calendar_event_new=True)
-        defaults = self.env['calendar.event'].default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'res_model', 'partner_ids'])
+        defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'partner_ids'])
 
         vals_list = [  # Else bug with quick_create when we are filter on an other user
-            dict(vals, user_id=defaults.get('user_id', self.env.user.id)) if not 'user_id' in vals else vals
-            for vals in vals_list
+            {
+                **vals,
+                'activity_ids': vals.get('activity_ids', defaults.get('activity_ids')),
+                'res_id': vals.get('res_id', defaults.get('res_id')),
+                'res_model': vals.get('res_model', defaults.get('res_model')),
+                'res_model_id': vals.get('res_model_id', defaults.get('res_model_id')),
+                'user_id': vals.get('user_id', defaults.get('user_id', self.env.user.id)),
+             } for vals in vals_list
         ]
-        meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
+        meeting_activity_types = self.env['mail.activity.type'].search([('category', '=', 'meeting')])
         # get list of models ids and filter out None values directly
-        model_ids = list(filter(None, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
-        model_name = defaults.get('res_model')
-        valid_activity_model_ids = model_name and model_name not in self._get_activity_excluded_models() and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
+        model_ids = list(filter(None, {values['res_model_id'] for values in vals_list}))
+        all_models = self.env['ir.model'].sudo().browse(model_ids)
+        valid_models = all_models.filtered(lambda m: m.is_mail_activity)
+        # TDE FIXME: clean that method, be more values-based
+        excluded_models = self._get_activity_excluded_models()
 
         # if user is creating an event for an activity that already has one, create a second activity
-        existing_event = False
+        existing_event, existing_type = self.browse(), self.env['mail.activity.type']
         orig_activity_ids = self.env['mail.activity'].browse(self._context.get('orig_activity_ids', []))
         if len(orig_activity_ids) == 1:
             existing_event = orig_activity_ids.calendar_event_id
             if existing_event and orig_activity_ids.activity_type_id.category == 'meeting':
-                meeting_activity_type = orig_activity_ids.activity_type_id
+                existing_type = orig_activity_ids.activity_type_id
 
-        if meeting_activity_type and (not defaults.get('activity_ids') or existing_event):
+        if meeting_activity_types:
             for values in vals_list:
                 # created from calendar: try to create an activity on the related record
-                if values.get('activity_ids'):
+                if values['activity_ids'] and not existing_event:
                     continue
-                res_model_id = values.get('res_model_id', defaults.get('res_model_id'))
-                res_id = values.get('res_id', defaults.get('res_id'))
-                user_id = values.get('user_id', defaults.get('user_id'))
-                if not res_model_id or not res_id:
+                res_model = all_models.filtered(lambda m: m.id == values['res_model_id'])
+                res_id = values['res_id']
+                if not res_model or res_model in excluded_models or not res_id or res_model not in valid_models:
                     continue
-                if res_model_id not in valid_activity_model_ids:
+
+                meeting_activity_type = self.env['mail.activity.type']
+                if existing_type and existing_type.res_model in {False, res_model.model}:
+                    meeting_activity_type = existing_type
+                if not meeting_activity_type:
+                    meeting_activity_type = meeting_activity_types.filtered(
+                        lambda act: act.res_model in {False, res_model.model}
+                    )
+                if not meeting_activity_type:
                     continue
+
                 activity_vals = {
-                    'res_model_id': res_model_id,
+                    'res_model_id': values['res_model_id'],
                     'res_id': res_id,
-                    'activity_type_id': meeting_activity_type.id,
+                    'activity_type_id': meeting_activity_type[0].id,
                 }
-                if user_id:
-                    activity_vals['user_id'] = user_id
+                if values['user_id']:
+                    activity_vals['user_id'] = values['user_id']
                 values['activity_ids'] = [(0, 0, activity_vals)]
+
         self._set_videocall_location(vals_list)
 
         # Add commands to create attendees from partners (if present) if no attendee command
