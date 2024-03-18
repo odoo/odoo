@@ -366,7 +366,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
             (cls.test_lead_records[1], "Summary Tomorrow'", cls.dt_reference + timedelta(days=1)),
         ):
             record.with_user(cls.user_employee).activity_schedule(
-                "test_mail.mail_act_test_todo",
+                "test_mail.mail_act_test_todo_generic",
                 date_deadline=dt.date(),
                 summary=summary,
                 user_id=cls.user_employee.id,
