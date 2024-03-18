@@ -1415,8 +1415,10 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         // for events that otherwise don’t support it. (e.g. useful when
         // scrolling a modal)
         this.__onScrollWebsiteAnimate = throttleForAnimation(this._onScrollWebsiteAnimate.bind(this));
-        this.$scrollingElement[0].addEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
-
+        // check if exist the element here, make the code more stable ?
+        if (this.$scrollingElement[0]){
+            this.$scrollingElement[0].addEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
+        }
         $(window).on('resize.o_animate, shown.bs.modal.o_animate, slid.bs.carousel.o_animate, shown.bs.tab.o_animate, shown.bs.collapse.o_animate', () => {
             this.windowsHeight = $(window).height();
             this._scrollWebsiteAnimate(this.$scrollingElement[0]);
