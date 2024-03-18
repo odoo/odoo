@@ -38,7 +38,7 @@ class PaymentTransaction(models.Model):
         cancel_url = urls.url_join(base_url, PaypalController._cancel_url)
         cancel_url_params = {
             'tx_ref': self.reference,
-            'access_token': payment_utils.generate_access_token(self.reference),
+            'return_access_tkn': payment_utils.generate_access_token(self.reference),
         }
         partner_first_name, partner_last_name = payment_utils.split_partner_name(self.partner_name)
         return {
