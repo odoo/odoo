@@ -253,7 +253,7 @@
         <div t-att-class="'o_portal_index_card ' +  ('' if config_card else 'd-none ') + ('col-12 order-0' if show_count else 'col-md-6 order-2')">
             <a t-att-href="url" t-att-title="title" t-attf-class="d-flex justify-content-start gap-2 gap-md-3 align-items-center py-3 pe-2 px-md-3 h-100 rounded text-decoration-none text-reset #{bg_color if bg_color else 'text-bg-light'}">
                 <div t-if="icon" class="o_portal_icon align-self-start">
-                    <img t-attf-src="#{icon}"/>
+                    <img t-attf-src="#{icon}" width="64" height="64" />
                 </div>
                 <div>
                     <h5 t-attf-class="mt-0 mb-1 #{'d-flex gap-2' if placeholder_count or count else ''}">
