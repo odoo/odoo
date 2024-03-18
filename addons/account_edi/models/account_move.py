@@ -283,7 +283,7 @@ class AccountMove(models.Model):
 
         to_remove.unlink()
         self.env['account.edi.document'].create(edi_document_vals_list)
-        self.edi_document_ids._process_documents_no_web_services()
+        payments.edi_document_ids._process_documents_no_web_services()
 
     def _is_ready_to_be_sent(self):
         # OVERRIDE

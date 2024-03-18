@@ -586,7 +586,7 @@
             <section t-if="sale_order.payment_term_id" class="mt-5">
                 <h3 class="">Payment terms</h3>
                 <hr class="mt-0 mb-1"/>
-                <span t-field="sale_order.payment_term_id"/>
+                <span t-field="sale_order.payment_term_id.note"/>
             </section>
         </div>
     </template>
