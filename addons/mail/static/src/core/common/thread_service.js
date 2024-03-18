@@ -1,7 +1,6 @@
 import { prettifyMessageContent } from "@mail/utils/common/format";
 import { rpcWithEnv } from "@mail/utils/common/misc";
 
-import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { _t } from "@web/core/l10n/translation";
 /** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
@@ -612,10 +611,6 @@ export class ThreadService {
                     mentionedPartners,
                 })
             );
-            const recentEmojis = JSON.parse(
-                browser.localStorage.getItem("web.emoji.frequent") || "{}"
-            );
-            browser.localStorage.setItem("web.emoji.frequent", JSON.stringify(recentEmojis));
             tmpMsg = this.store.Message.insert(
                 {
                     ...tmpData,
