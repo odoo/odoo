@@ -385,10 +385,12 @@
             <field name="is_deadline_exceeded" position="after">
                 <field name="quantity_percentage"/>
             </field>
-            <xpath expr="//div[hasclass('o_kanban_record_title')]" position="after">
-                <div t-if="record.sale_line_display_name.raw_value and record.quantity_percentage.raw_value">
-                    <field name="sale_line_display_name"/>
-                    (<field name="quantity_percentage" widget="percentage"/>)
+            <xpath expr="//div[hasclass('o_kanban_record_top')]" position="after">
+                <div class="o_kanban_record_body o_task_kanban_card_body">
+                    <div t-if="record.sale_line_display_name.raw_value and record.quantity_percentage.raw_value">
+                        <field name="sale_line_display_name"/>
+                        (<field name="quantity_percentage" widget="percentage"/>)
+                    </div>
                 </div>
             </xpath>
         </field>

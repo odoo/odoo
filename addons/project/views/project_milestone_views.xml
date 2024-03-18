@@ -77,16 +77,20 @@
                         <div class="oe_kanban_global_click">
                             <div class="o_kanban_record_top">
                                 <div class="o_kanban_record_headings">
-                                    <div class="o_kanban_record_title">
-                                        <em>
+                                    <div class="d-flex justify-content-start">
+                                        <div>
                                             <field name="is_reached" widget="task_done_checkmark"/>
-                                            <field name="name"/>
-                                            <t t-set="badge" t-value="'text-success'" t-if="record.can_be_marked_as_done.raw_value"/>
-                                            <t t-set="badge" t-value="'text-danger'" t-if="record.is_deadline_exceeded.raw_value"/>
-                                            <t t-if="record.deadline.raw_value">
-                                                - <span t-attf-class="{{ badge }}"><field name="deadline"/></span>
-                                            </t>
-                                        </em>
+                                        </div>
+                                        <div >
+                                            <strong class="o_kanban_record_title align-middle">
+                                                <field name="name"/>
+                                                <t t-set="badge" t-value="'text-success'" t-if="record.can_be_marked_as_done.raw_value"/>
+                                                <t t-set="badge" t-value="'text-danger'" t-if="record.is_deadline_exceeded.raw_value"/>
+                                                <t t-if="record.deadline.raw_value">
+                                                    - <span t-attf-class="{{ badge }}"><field name="deadline"/></span>
+                                                </t>
+                                            </strong>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
