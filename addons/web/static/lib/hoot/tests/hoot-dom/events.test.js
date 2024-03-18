@@ -1,11 +1,12 @@
 /** @odoo-module */
 
-import { Component, xml } from "@odoo/owl";
+import { Component, mount, xml } from "@odoo/owl";
 import {
     clear,
     click,
     dblclick,
     drag,
+    edit,
     fill,
     hover,
     keyDown,
@@ -597,6 +598,59 @@ describe(parseUrl(import.meta.url), () => {
         fill("john@doe.com");
 
         expect("input").toHaveValue("john@doe.com");
+    });
+
+    test("edit on empty value", async () => {
+        await mountOnFixture(/* xml */ `<input type="text" />`);
+
+        click("input");
+
+        monitorEvents("input", formatKeyBoardEvent);
+
+        expect("input").not.toHaveValue();
+
+        edit("test value");
+
+        expect("input").toHaveValue("test value");
+        expect([
+            ...[..."test value"].flatMap((char) => [
+                `keydown:${char}`,
+                `beforeinput`,
+                `input`,
+                `keyup:${char}`,
+            ]),
+        ]).toVerifySteps();
+    });
+
+    test("edit on existing value", async () => {
+        await mountOnFixture(/* xml */ `<input type="text" value="Test" />`);
+
+        click("input");
+
+        monitorEvents("input", formatKeyBoardEvent);
+
+        expect("input").toHaveValue("Test");
+
+        edit(" value");
+
+        expect("input").toHaveValue(" value");
+        expect([
+            // Clear
+            "keydown:a.ctrl",
+            "select",
+            "keyup:a.ctrl",
+            "keydown:Backspace",
+            "beforeinput",
+            "input",
+            "keyup:Backspace",
+            // Fill
+            ...[..." value"].flatMap((char) => [
+                `keydown:${char}`,
+                `beforeinput`,
+                `input`,
+                `keyup:${char}`,
+            ]),
+        ]).toVerifySteps();
     });
 
     test("setInputFiles: single file", async () => {
