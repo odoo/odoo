@@ -527,6 +527,21 @@
         </field>
     </record>
 
+    <record id='fleet_vehicle_state_view_form' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.state.form</field>
+        <field name="model">fleet.vehicle.state</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="sequence"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record id='fleet_vehicle_state_action' model='ir.actions.act_window'>
         <field name="name">Status</field>
         <field name="res_model">fleet.vehicle.state</field>
