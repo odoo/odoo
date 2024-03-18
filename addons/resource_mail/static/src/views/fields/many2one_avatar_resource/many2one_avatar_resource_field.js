@@ -7,7 +7,7 @@ import {
     many2OneAvatarUserField,
 } from "@mail/views/web/fields/many2one_avatar_user_field/many2one_avatar_user_field";
 import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card_resource/avatar_card_resource_popover";
-
+import { AvatarResourceMany2XAutocomplete } from "@resource_mail/views/fields/many2many_avatar_resource/many2many_avatar_resource_field";
 
 const ExtendMany2OneAvatarToResource = (T) => class extends T {
     // We choose to extend Many2One_avatar_user instead of patching it as field dependencies need to be added on the widget to manage resources
@@ -24,6 +24,10 @@ const ExtendMany2OneAvatarToResource = (T) => class extends T {
 
 export class Many2OneAvatarResourceField extends ExtendMany2OneAvatarToResource(Many2OneAvatarUserField) {
     static template = "resource_mail.Many2OneAvatarResourceField";
+    static components = {
+        ...super.components,
+        Many2XAutocomplete: AvatarResourceMany2XAutocomplete,
+    };
 }
 
 export const many2OneAvatarResourceField = {
