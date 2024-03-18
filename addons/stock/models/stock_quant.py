@@ -337,12 +337,12 @@ class StockQuant(models.Model):
     @api.model
     def _get_forbidden_fields_write(self):
         """ Returns a list of fields user can't edit when he want to edit a quant in `inventory_mode`."""
-        return ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id']
+        return ['product_id', 'location_id', 'package_id', 'owner_id']
 
     def write(self, vals):
         """ Override to handle the "inventory mode" and create the inventory move. """
         forbidden_fields = self._get_forbidden_fields_write()
-        if self._is_inventory_mode() and any(field for field in forbidden_fields if field in vals.keys()):
+        if self._is_inventory_mode() and (any(field for field in forbidden_fields if field in vals.keys()) or self.lot_id and 'lot_id' in  vals.keys()):
             if any(quant.location_id.usage == 'inventory' for quant in self):
                 # Do nothing when user tries to modify manually a inventory loss
                 return
