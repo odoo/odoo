@@ -26,6 +26,15 @@ class AccountMoveSend(models.TransientModel):
         values['ubl_cii_xml'] = self.checkbox_ubl_cii_xml
         return values
 
+    @api.model
+    def _get_wizard_vals_restrict_to(self, only_options):
+        # EXTENDS 'account'
+        values = super()._get_wizard_vals_restrict_to(only_options)
+        return {
+            'checkbox_ubl_cii_xml': False,
+            **values,
+        }
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------

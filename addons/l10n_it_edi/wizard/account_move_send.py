@@ -38,10 +38,9 @@ class AccountMoveSend(models.TransientModel):
         # EXTENDS 'account'
         values = super()._get_wizard_vals_restrict_to(only_options)
         return {
-            **values,
             'l10n_it_edi_checkbox_xml_export': False,
             'l10n_it_edi_checkbox_send': False,
-            **only_options,
+            **values,
         }
 
     # -------------------------------------------------------------------------

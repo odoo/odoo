@@ -23,6 +23,15 @@ class AccountMoveSend(models.TransientModel):
         values['send_by_post'] = self.checkbox_send_by_post
         return values
 
+    @api.model
+    def _get_wizard_vals_restrict_to(self, only_options):
+        # EXTENDS 'account'
+        values = super()._get_wizard_vals_restrict_to(only_options)
+        return {
+            'checkbox_send_by_post': False,
+            **values,
+        }
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
