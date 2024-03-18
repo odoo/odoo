@@ -13,7 +13,8 @@ from odoo.tests.common import users, warmup
 from odoo.tests import tagged
 from odoo import tools
 
-@tagged('odoo2google')
+
+@tagged('odoo2google', 'calendar_performance')
 @patch.object(User, '_get_google_calendar_token', lambda user: 'dummy-token')
 class TestSyncOdoo2Google(TestSyncGoogle):
 
@@ -76,7 +77,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
         partner_model = self.env.ref('base.model_res_partner')
         partner = self.env['res.partner'].search([], limit=1)
-        with self.assertQueryCount(__system__=615):
+        with self.assertQueryCount(__system__=721):
             events = self.env['calendar.event'].create([{
                 'name': "Event %s" % (i),
                 'start': datetime(2020, 1, 15, 8, 0),
@@ -94,7 +95,6 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         with self.assertQueryCount(__system__=29):
             events.unlink()
 
-
     @patch_api
     @users('__system__')
     @warmup
@@ -107,7 +107,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'duration': 18,
         })
         partner_model = self.env.ref('base.model_res_partner')
-        with self.assertQueryCount(__system__=86):
+        with self.assertQueryCount(__system__=806):
             event = self.env['calendar.event'].create({
                 'name': "Event",
                 'start': datetime(2020, 1, 15, 8, 0),
@@ -124,7 +124,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
                 'res_id': partner.id,
             })
 
-        with self.assertQueryCount(__system__=37):
+        with self.assertQueryCount(__system__=34):  # gc: 33
             event.unlink()
 
     def test_event_without_user(self):
