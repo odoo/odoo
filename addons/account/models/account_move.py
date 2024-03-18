@@ -2210,10 +2210,10 @@ class AccountMove(models.Model):
 
     def _is_readonly(self):
         """
-            Check if the move has been canceled or if the move has multiple invoice line
+            Check if the move has been canceled
         """
         self.ensure_one()
-        return self.state == 'cancel' or len(self.invoice_line_ids) > 1
+        return self.state == 'cancel'
 
     # -------------------------------------------------------------------------
     # EARLY PAYMENT DISCOUNT
