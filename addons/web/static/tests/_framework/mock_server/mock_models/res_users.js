@@ -8,8 +8,8 @@ export class ResUsers extends ServerModel {
         {
             id: serverState.userId,
             active: true,
-            company_id: serverState.companyId,
-            company_ids: [serverState.companyId],
+            company_id: serverState.companies[0]?.id,
+            company_ids: serverState.companies.map((company) => company.id),
             login: "admin",
             partner_id: serverState.partnerId,
             password: "admin",
