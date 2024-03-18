@@ -28,6 +28,7 @@ export class DiscussSidebarCategories extends Component {
 
     setup() {
         this.store = useState(useService("mail.store"));
+        this.discussCoreWebService = useState(useService("discuss.core.web"));
         this.threadService = useState(useService("mail.thread"));
         this.state = useState({
             editing: false,
@@ -138,6 +139,15 @@ export class DiscussSidebarCategories extends Component {
 
     stopEditing() {
         this.state.editing = false;
+    }
+
+    /**
+     *
+     * @param {import("models").DiscussAppCategory} category
+     */
+    toggleCategory(category) {
+        category.open = !category.open;
+        this.discussCoreWebService.broadcastCategoryState(category);
     }
 }
 
