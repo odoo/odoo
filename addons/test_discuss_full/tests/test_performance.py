@@ -21,7 +21,7 @@ class TestDiscussFullPerformance(HttpCase):
     #     4: settings
     #     1: has_access_livechat
     _query_count_init_store = 17
-    _query_count = 48 + 1  # +1 is necessary to fix nondeterministic issue on runbot
+    _query_count = 46 + 1  # +1 is necessary to fix nondeterministic issue on runbot
     _query_count_discuss_channels = 68
 
     def setUp(self):
