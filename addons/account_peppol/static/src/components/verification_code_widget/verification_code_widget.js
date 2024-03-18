@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component, onMounted, useRef } from "@odoo/owl";
+import { Component, useRef } from "@odoo/owl";
 
 class VerificationCodeWidget extends Component {
     static props = {
@@ -17,17 +17,6 @@ class VerificationCodeWidget extends Component {
         for (let i = 0; i < 6; i++) {
             this.inputs.push(useRef(`input_${i}`));
         }
-
-        /*
-        if the verification code was previously filled in and the user saved the page,
-        pre-fill the input fields with the stored value.
-        */
-        onMounted(async () => {
-            const verificationCode = this.props.record.data.account_peppol_verification_code;
-            for (let i = 0; i < this.inputs.length; i++) {
-                this.inputs[i].el.value = verificationCode[i] || null;
-            }
-        });
     }
 
     /*
@@ -62,7 +51,7 @@ class VerificationCodeWidget extends Component {
     _save() {
         let verificationCode = [...this.inputs.map((i) => i.el.value)].join('');
         if (verificationCode.length === 6) {
-            this.props.record.update({ account_peppol_verification_code: verificationCode });
+            this.props.record.update({ verification_code: verificationCode });
         }
     }
 }

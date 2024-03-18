@@ -28,7 +28,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.be').id,
             'peppol_eas': '0208',
             'peppol_endpoint': '0477472701',
-            'account_peppol_proxy_state': 'active',
+            'account_peppol_proxy_state': 'receiver',
         })
 
         edi_identification = cls.env['account_edi_proxy_client.user']._get_proxy_identification(cls.env.company, 'peppol')
