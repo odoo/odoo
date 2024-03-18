@@ -160,10 +160,10 @@
                             <div class="card-body">
                                 <h5 class="card-title m-0" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}" t-field="partner.display_name"/>
                                 <small id="o_wcrm_partners_address"/>
-                                <small class="o_wcrm_short_description text-muted overflow-hidden" t-field="partner.website_short_description"/>
                                 <small t-if="not partner.website_short_description" class="css_editable_mode_hidden text-muted fst-italic" groups="website.group_website_restricted_editor">
                                     Edit to add a short description
                                 </small>
+                                <small class="o_wcrm_short_description text-muted overflow-hidden" t-field="partner.website_short_description"/>
                             </div>
                         </a>
                     </div>
