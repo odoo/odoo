@@ -146,7 +146,7 @@ class MockServerBaseEnvironment {
     cookie = new Map();
 
     get companies() {
-        return this.server.env["res.company"].read(serverState.companyId);
+        return this.server.env["res.company"].read(serverState.companies.map((c) => c.id));
     }
 
     get company() {

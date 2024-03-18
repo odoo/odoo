@@ -1,14 +1,15 @@
-import { expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { serverState } from "@web/../tests/web_test_helpers";
 
 import { user } from "@web/core/user";
 import { session } from "@web/session";
 
+describe.current.tags("headless");
+
 test("default state", () => {
     expect(odoo.debug).toBe(false);
     expect(serverState).toEqual({
-        companyId: 1,
-        companyName: "Hermit",
+        companies: [{ id: 1, name: "Hermit" }],
         debug: false,
         groupId: 11,
         lang: "en",
@@ -20,6 +21,7 @@ test("default state", () => {
         publicPartnerName: "Public user",
         publicUserId: 8,
         timezone: "taht",
+        userContext: {},
         userId: 7,
     });
 });

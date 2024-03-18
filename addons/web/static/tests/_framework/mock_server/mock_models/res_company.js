@@ -8,12 +8,10 @@ export class ResCompany extends ServerModel {
     description = fields.Text();
     is_company = fields.Boolean({ default: false });
 
-    _records = [
-        {
-            id: serverState.companyId,
-            active: true,
-            name: serverState.companyName,
-            partner_id: serverState.companyId,
-        },
-    ];
+    _records = serverState.companies.map((company) => ({
+        id: company.id,
+        active: true,
+        name: company.name,
+        partner_id: company.id,
+    }));
 }

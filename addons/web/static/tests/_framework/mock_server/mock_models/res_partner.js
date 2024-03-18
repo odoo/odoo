@@ -6,9 +6,9 @@ export class ResPartner extends ServerModel {
 
     _records = [
         {
-            id: serverState.companyId,
+            id: serverState.companies[0]?.id,
             active: true,
-            name: serverState.companyName,
+            name: serverState.companies[0]?.name,
         },
         {
             id: serverState.partnerId,

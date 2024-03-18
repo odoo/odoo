@@ -24,12 +24,12 @@ export function mockSessionFactory() {
  * @param {typeof serverState} serverState
  */
 export function _makeSession({
-    companyId,
-    companyName,
+    companies,
     lang,
     partnerId,
     partnerName,
     timezone,
+    userContext,
     userId,
 }) {
     return {
@@ -62,15 +62,13 @@ export function _makeSession({
         // Commit: 3e847fc8f499c96b8f2d072ab19f35e105fd7749
         // to see what user_companies is
         user_companies: {
-            allowed_companies: {
-                [companyId]: {
-                    id: companyId,
-                    name: companyName,
-                },
-            },
-            current_company: companyId,
+            allowed_companies: Object.fromEntries(
+                companies.map((company) => [company.id, company])
+            ),
+            current_company: companies[0]?.id,
         },
         user_context: {
+            ...userContext,
             lang,
             tz: timezone,
             uid: userId,
