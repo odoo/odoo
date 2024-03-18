@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -42,23 +41,21 @@ class ResCompany(models.Model):
     )
     account_peppol_migration_key = fields.Char(string="Migration Key")
     account_peppol_phone_number = fields.Char(
-        string='Phone number (for validation)',
+        string='Phone number',
         compute='_compute_account_peppol_phone_number', store=True, readonly=False,
         help='You will receive a verification code to this phone number',
     )
     account_peppol_proxy_state = fields.Selection(
         selection=[
             ('not_registered', 'Not registered'),
-            ('not_verified', 'Not verified'),
-            ('sent_verification', 'Verification code sent'),
-            ('pending', 'Pending'),
-            ('active', 'Active'),
+            ('in_verification', 'In verification'),
+            ('sender', 'Can send but not receive'),
+            ('smp_registration', 'Can send, pending registration to receive'),
+            ('receiver', 'Can send and receive'),
             ('rejected', 'Rejected'),
-            ('canceled', 'Cancelled'),
         ],
         string='PEPPOL status', required=True, default='not_registered',
     )
-    is_account_peppol_participant = fields.Boolean(string='PEPPOL Participant')
     peppol_eas = fields.Selection(related='partner_id.peppol_eas', readonly=False)
     peppol_endpoint = fields.Char(related='partner_id.peppol_endpoint', readonly=False)
     peppol_purchase_journal_id = fields.Many2one(

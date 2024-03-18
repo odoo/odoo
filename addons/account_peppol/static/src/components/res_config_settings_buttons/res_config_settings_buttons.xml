@@ -6,59 +6,59 @@
             <div class="d-flex" colspan="3">
                 <div class="mt-3">
                     <button type="button"
-                            class="btn btn-primary"
-                            t-on-click="createUser"
-                            t-if="proxyState === 'not_registered'">
-                            <t t-out="createUserButtonLabel"/>
+                            class="btn btn-primary me-1"
+                            t-on-click="createReceiver"
+                            t-if="proxyState === 'sender' and (smpRegistration or this.state.isSettingsView)">
+                            Register as a receiver
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <button type="button"
+                            class="btn btn-secondary me-1"
+                            t-on-click="updateDetails"
+                            t-if="['sender', 'smp_registration', 'receiver'].includes(proxyState) and this.state.isSettingsView">
+                            Update contact details
                     </button>
                 </div>
                 <div class="mt-3">
                     <button type="button"
                             class="btn btn-secondary me-1"
                             t-on-click="migrate"
-                            t-if="proxyState === 'active' and migrationPrepared === false and ediMode!='demo'">
+                            t-if="proxyState === 'receiver' and migrationPrepared === false and ediMode != 'demo'">
                             Migrate registration to another service
                     </button>
                 </div>
                 <div class="mt-3">
                     <button type="button"
-                            class="btn btn-secondary me-1"
-                            t-on-click="deregister"
-                            t-if="proxyState === 'active' and migrationPrepared === false">
-                            <t t-out="deregisterUserButtonLabel"/>
-                    </button>
-                </div>
-                <div class="mt-3">
-                    <button type="button"
-                            class="btn btn-primary"
-                            t-on-click="updateDetails"
-                            t-if="['pending', 'manually_approved', 'active'].includes(proxyState)">
-                            Update contact details
-                    </button>
-                </div>
-                <div class="mt-3">
-                    <button type="button"
-                            class="btn btn-primary"
+                            class="btn btn-primary me-1"
                             t-on-click="checkCode"
-                            t-if="proxyState === 'sent_verification'">
-                            Confirm
+                            t-if="['not_registered', 'in_verification'].includes(proxyState)">
+                            <t t-out="createButtonLabel"/>
                     </button>
                 </div>
                 <div class="mt-3">
                     <button type="button"
-                            class="btn btn-primary"
-                            t-on-click="sendCode"
-                            t-if="proxyState === 'not_verified'">
-                            Verify phone number
-                    </button>
-                </div>
-                <div class="mt-3">
-                    <button type="button"
-                            class="btn btn-secondary ms-1"
+                            class="btn btn-secondary me-1"
                             t-on-click="sendCode"
                             t-att-disabled="this.state.isSmsButtonDisabled"
-                            t-if="proxyState === 'sent_verification'">
+                            t-if="proxyState === 'in_verification'">
                             Send again
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <!--
+                    we will show Deregister/Discard in two situations:
+                    1. The user is currently in the registration wizard, they are not registered/in verification
+                       (e.g. we've sent them the SMS code). They will see it as a "Discard" button
+                    2. The user is *not* seeing the wizard, but the regular Settings view. We'll show
+                       this as a Deregister button, as they are already registered as either a sender
+                       or a receiver.
+                    -->
+                    <button type="button"
+                            class="btn btn-secondary me-1"
+                            t-on-click="deregister"
+                            t-if="migrationPrepared === false">
+                            <t t-out="deregisterUserButtonLabel"/>
                     </button>
                 </div>
             </div>

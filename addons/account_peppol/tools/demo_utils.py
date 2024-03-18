@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from base64 import b64encode
 from decorator import decorator
 import uuid
 
-from odoo import _, fields, modules, tools
+from odoo import _, fields, modules
 from odoo.tools.misc import file_open
 
 DEMO_BILL_PATH = 'account_peppol/tools/demo_bill'
@@ -27,6 +26,16 @@ def get_demo_vendor_bill(user):
         'enc_key': file_open(DEMO_ENC_KEY, mode='rb').read(),
         'document': file_open(DEMO_BILL_PATH, mode='rb').read(),
     }
+
+
+def _get_notification_message(proxy_state):
+    if proxy_state == 'receiver':
+        title = _("Registered to receive documents via Peppol (demo).")
+        message = _("You can now receive demo vendor bills.")
+    else:
+        title = _("Registered as a sender (demo).")
+        message = _("You can now send invoices in demo mode.")
+    return title, message
 
 # -------------------------------------------------------------------------
 # MOCKED FUNCTIONS
@@ -67,7 +76,7 @@ def _mock_make_request(func, self, *args, **kwargs):
         'activate_participant': lambda _user, _args, _kwargs: {},
         'get_all_documents': _mock_get_all_documents,
         'get_document': _mock_get_document,
-        'participant_status': lambda _user, _args, _kwargs: {'peppol_state': 'active'},
+        'participant_status': lambda _user, _args, _kwargs: {'peppol_state': 'receiver'},
         'send_document': _mock_send_document,
     }[endpoint](self, args, kwargs)
 
@@ -78,12 +87,30 @@ def _mock_button_verify_partner_endpoint(func, self, *args, **kwargs):
 
 def _mock_user_creation(func, self, *args, **kwargs):
     func(self, *args, **kwargs)
-    self.write({
-        'account_peppol_proxy_state': 'active',
-    })
-    self.account_peppol_edi_user.write({
+    self.account_peppol_proxy_state = 'receiver' if self.smp_registration else 'sender'
+    self.edi_user_id.write({
         'private_key': b64encode(file_open(DEMO_PRIVATE_KEY, 'rb').read()),
     })
+    return self._action_send_notification(
+        *_get_notification_message(self.account_peppol_proxy_state)
+    )
+
+
+def _mock_receiver_registration(func, self, *args, **kwargs):
+    self.account_peppol_proxy_state = 'receiver'
+    return self._action_send_notification(
+        *_get_notification_message(self.account_peppol_proxy_state)
+    )
+
+
+def _mock_check_verification_code(func, self, *args, **kwargs):
+    self.account_peppol_proxy_state = 'sender'
+    self.verification_code = False
+    if self.smp_registration:
+        return self.button_peppol_smp_registration()
+    return self._action_send_notification(
+        *_get_notification_message(self.account_peppol_proxy_state)
+    )
 
 def _mock_deregister_participant(func, self, *args, **kwargs):
     # Set documents sent in demo to a state where they can be re-sent
@@ -107,10 +134,13 @@ def _mock_deregister_participant(func, self, *args, **kwargs):
     ]).unlink()
 
     mode_constraint = self.env['ir.config_parameter'].get_param('account_peppol.mode_constraint')
-    self.account_peppol_edi_user.unlink()
+    if 'account_peppol_edi_user' in self._fields:
+        self.account_peppol_edi_user.unlink()
+    else:
+        self.edi_user_id.unlink()
     self.account_peppol_proxy_state = 'not_registered'
-    self.account_peppol_edi_mode = mode_constraint
-
+    if 'account_peppol_edi_mode' in self._fields:
+        self.account_peppol_edi_mode = mode_constraint
 
 def _mock_update_user_data(func, self, *args, **kwargs):
     pass
@@ -121,10 +151,12 @@ def _mock_migrate_participant(func, self, *args, **kwargs):
 _demo_behaviour = {
     '_make_request': _mock_make_request,
     'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
-    'button_create_peppol_proxy_user': _mock_user_creation,
+    'button_peppol_sender_registration': _mock_user_creation,
     'button_deregister_peppol_participant': _mock_deregister_participant,
     'button_migrate_peppol_registration': _mock_migrate_participant,
     'button_update_peppol_user_data': _mock_update_user_data,
+    'button_peppol_smp_registration': _mock_receiver_registration,
+    'button_check_peppol_verification_code': _mock_check_verification_code,
 }
 
 # -------------------------------------------------------------------------
@@ -152,7 +184,12 @@ def handle_demo(func, self, *args, **kwargs):
     def get_demo_mode_res_config_settings(self, args, kwargs):
         if self.account_peppol_edi_user:
             return self.account_peppol_edi_user.edi_mode == 'demo'
-        return self.account_peppol_edi_mode == 'demo'
+        return self.env['ir.config_parameter'].get_param('account_peppol.edi.mode') == 'demo'
+
+    def get_demo_mode_peppol_registration(self, args, kwargs):
+        if self.edi_user_id:
+            return self.edi_user_id.edi_mode == 'demo'
+        return self.env['ir.config_parameter'].get_param('account_peppol.edi.mode') == 'demo'
 
     def get_demo_mode_res_partner(self, args, kwargs):
         peppol_user = self.env.company.account_edi_proxy_client_ids.filtered(lambda user: user.proxy_type == 'peppol')
@@ -164,6 +201,7 @@ def handle_demo(func, self, *args, **kwargs):
         'account_edi_proxy_client.user': get_demo_mode_account_edi_proxy_client_user,
         'res.config.settings': get_demo_mode_res_config_settings,
         'res.partner': get_demo_mode_res_partner,
+        'peppol.registration': get_demo_mode_peppol_registration,
     }
     demo_mode = get_demo_mode.get(self._name) and get_demo_mode[self._name](self, args, kwargs) or False
 

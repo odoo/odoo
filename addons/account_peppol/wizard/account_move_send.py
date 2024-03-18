@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from base64 import b64encode
@@ -13,12 +12,11 @@ class AccountMoveSend(models.TransientModel):
     checkbox_send_peppol = fields.Boolean(
         string='Send via PEPPOL',
         compute='_compute_checkbox_send_peppol', store=True, readonly=False,
-        help='Send the invoice via PEPPOL',
     )
     enable_peppol = fields.Boolean(compute='_compute_enable_peppol')
     # technical field needed for computing a warning text about the peppol configuration
-    peppol_warning = fields.Char(
-        string="Warning",
+    peppol_warning = fields.Json(
+        string="Peppol warning",
         compute="_compute_peppol_warning",
     )
     account_peppol_edi_mode_info = fields.Char(compute='_compute_account_peppol_edi_mode_info')
@@ -74,10 +72,15 @@ class AccountMoveSend(models.TransientModel):
             if not invalid_partners:
                 wizard.peppol_warning = False
             else:
-                names = ', '.join(invalid_partners[:5].mapped('display_name'))
-                wizard.peppol_warning = _("The following partners are not correctly configured to receive Peppol documents. "
-                                        "Please check and verify their Peppol endpoint and the Electronic Invoicing format: "
-                                        "%s", names)
+                wizard.peppol_warning = {
+                    'partner_peppol_warning': {
+                        'message': _("The following partners are not correctly configured to receive Peppol documents. "
+                                    "Please check their Peppol endpoint and the Electronic Invoicing format"),
+                        'action_text': _("View Partner(s)"),
+                        'action': invalid_partners._get_records_action(name=_("Check Partner(s)")),
+                        'level': 'info',
+                    }
+                }
 
     @api.depends('enable_ubl_cii_xml')
     def _compute_enable_peppol(self):
@@ -88,7 +91,7 @@ class AccountMoveSend(models.TransientModel):
                 lambda partner: not partner.is_peppol_edi_format
             )
             wizard.enable_peppol = (
-                wizard.company_id.account_peppol_proxy_state == 'active'
+                wizard.company_id.account_peppol_proxy_state != 'rejected'
                 and (
                     wizard.enable_ubl_cii_xml
                     or any(m.ubl_cii_xml_id and m.peppol_move_state not in ('processing', 'done') for m in wizard.move_ids)
@@ -124,6 +127,11 @@ class AccountMoveSend(models.TransientModel):
         # Extends 'account' to force ubl xml checkbox if sending via peppol
         self.ensure_one()
 
+        can_send = self.env['account_edi_proxy_client.user']._get_can_send_domain()
+        if self.checkbox_send_peppol and self.company_id.account_peppol_proxy_state not in can_send:
+            registration_wizard = self.env['peppol.registration'].create({'company_id': self.company_id.id})
+            return registration_wizard._action_open_peppol_form(reopen=False)
+
         if all([self.checkbox_send_peppol, self.enable_peppol, self.enable_ubl_cii_xml, not self.checkbox_ubl_cii_xml]):
             self.checkbox_ubl_cii_xml = True
         if self.checkbox_send_peppol and self.enable_peppol:
@@ -145,7 +153,7 @@ class AccountMoveSend(models.TransientModel):
                 if invoice_data.get('ubl_cii_xml_attachment_values'):
                     xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
                     filename = invoice_data['ubl_cii_xml_attachment_values']['name']
-                elif invoice.ubl_cii_xml_id and invoice.peppol_move_state not in ('processing', 'canceled', 'done'):
+                elif invoice.ubl_cii_xml_id and invoice.peppol_move_state not in ('processing', 'done'):
                     xml_file = invoice.ubl_cii_xml_id.raw
                     filename = invoice.ubl_cii_xml_id.name
                 else:

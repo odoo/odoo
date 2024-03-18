@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import contextlib
@@ -40,32 +39,8 @@ class ResPartner(models.Model):
     )  # field to compute the label to show for partner endpoint
     is_peppol_edi_format = fields.Boolean(compute='_compute_is_peppol_edi_format')
 
-    @api.model
-    def fields_get(self, allfields=None, attributes=None):
-        # TODO: remove in master
-        res = super().fields_get(allfields, attributes)
-
-        # the orm_cache does not contain the new selections added in stable: clear the cache once
-        existing_selection = res.get('account_peppol_verification_label', {}).get('selection')
-        if existing_selection is None:
-            return res
-
-        not_valid_format_label = next(x for x in self._fields['account_peppol_verification_label'].selection if x[0] == 'not_valid_format')
-        need_update = not_valid_format_label not in existing_selection
-
-        if need_update:
-            self.env['ir.model.fields'].invalidate_model(['selection_ids'])
-            self.env['ir.model.fields.selection']._update_selection(
-                'res.partner',
-                'account_peppol_verification_label',
-                self._fields['account_peppol_verification_label'].selection,
-            )
-            self.env.registry.clear_cache()
-            return super().fields_get(allfields, attributes)
-        return res
-
     # -------------------------------------------------------------------------
-    # HELPER METHODS
+    # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
     @api.model
