@@ -70,8 +70,8 @@ test("Only necessary requests are made when creating a new chat", async () => {
     });
     await contains(".o-livechat-LivechatButton");
     await assertSteps([
-        `/im_livechat/init - {"channel_id":${livechatChannelId}}`,
         '/web/webclient/load_menus - {"hash":"161803"}', // called because menu_service is loaded in qunit bundle
+        `/im_livechat/init - {"channel_id":${livechatChannelId}}`,
     ]);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
