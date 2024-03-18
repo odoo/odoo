@@ -367,6 +367,7 @@
                             readonly="state == 'cancel' or locked">
                             <form>
                                 <field name="display_type" invisible="1"/>
+                                <field name="is_downpayment" invisible="1"/>
                                 <!--
                                     We need the sequence field to be here for new lines to be added at the correct position.
                                     TODO: at some point we want to fix this in the framework so that an invisible field is not required.
@@ -380,7 +381,7 @@
                                             domain="[('sale_ok', '=', True)]"
                                             context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
                                             readonly="not product_updatable"
-                                            required="not display_type"
+                                            required="not display_type and not is_downpayment"
                                             force_save="1"
                                             widget="many2one_barcode"/>
                                         <field name="product_type" invisible="1"/>
@@ -403,7 +404,7 @@
                                                 groups="uom.group_uom"
                                                 class="oe_no_button"
                                                 readonly="product_uom_readonly"
-                                                required="not display_type"/>
+                                                required="not display_type and not is_downpayment"/>
                                         </div>
                                         <label for="qty_delivered" string="Delivered" invisible="parent.state != 'sale'"/>
                                         <div name="delivered_qty" invisible="parent.state != 'sale'">
@@ -475,7 +476,7 @@
                                 <field
                                     name="product_id"
                                     readonly="not product_updatable"
-                                    required="not display_type"
+                                    required="not display_type and not is_downpayment"
                                     force_save="1"
                                     context="{
                                         'partner_id': parent.partner_id,
@@ -495,7 +496,7 @@
                                     string="Product"
                                     column_invisible="True"
                                     readonly="not product_updatable"
-                                    required="not display_type"
+                                    required="not display_type and not is_downpayment"
                                     context="{
                                         'partner_id': parent.partner_id,
                                         'quantity': product_uom_qty,
@@ -549,7 +550,7 @@
                                     force_save="1"
                                     string="UoM"
                                     readonly="product_uom_readonly"
-                                    required="not display_type"
+                                    required="not display_type and not is_downpayment"
                                     context="{'company_id': parent.company_id}"
                                     groups="uom.group_uom"
                                     options='{"no_open": True}'
