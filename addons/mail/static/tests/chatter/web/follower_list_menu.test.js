@@ -262,6 +262,34 @@ test("Load 100 recipients at once", async () => {
     await contains(".o-mail-RecipientList span", { count: 0, text: "Load more" });
 });
 
+test("Load recipient without email", async () => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "Luigi" },
+        { name: "Mario" },
+    ]);
+    pyEnv["mail.followers"].create([
+        {
+            is_active: true,
+            partner_id: serverState.partnerId,
+            res_id: partnerId_1,
+            res_model: "res.partner",
+        },
+        {
+            is_active: true,
+            partner_id: partnerId_2,
+            res_id: partnerId_1,
+            res_model: "res.partner",
+        },
+    ]);
+    await start();
+    await openFormView("res.partner", partnerId_1);
+    await click("button", { text: "Send message" });
+    await contains("span[title='no email address']", { text: "Mario" });
+    await click("button[title='Show all recipients']");
+    await contains(".o-mail-RecipientList li", { text: "[Mario] (no email address)" });
+});
+
 test('Show "Add follower" and subtypes edition/removal buttons on all followers if user has write access', async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
