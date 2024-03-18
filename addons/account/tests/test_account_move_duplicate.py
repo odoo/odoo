@@ -87,8 +87,12 @@ class TestAccountMoveDuplicate(AccountTestInvoicingCommon):
         invoices.ref = invoice_1.ref
 
         # test constrains: batch without any previous posted invoice
-        with self.assertRaises(RedirectWarning):
+        with self.assertRaises(RedirectWarning) as cm:
             (invoice_1 + invoice_2 + invoice_3).action_post()
+        # We want to check that the RedirectWarning leads us to the right duplicate moves
+        redirection_domain = cm.exception.args[1]["domain"]
+        self.assertEqual(redirection_domain[0][:2], ("id", "in"))
+        self.assertEqual(set(redirection_domain[0][2]), set(invoices.ids))
 
         # test constrains: batch with one previous posted invoice
         invoice_1.action_post()
