@@ -85,7 +85,9 @@ test("Do not show channel when visitor is typing", async () => {
     rpc = rpcWithEnv(env);
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
-    await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
+    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
+        count: 0,
+    });
     // simulate livechat visitor typing
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     await withGuest(guestId, () =>
@@ -96,7 +98,9 @@ test("Do not show channel when visitor is typing", async () => {
     );
     // weak test, no guaranteed that we waited long enough for the livechat to potentially appear
     await tick();
-    await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
+    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
+        count: 0,
+    });
 });
 
 test("Smiley face avatar for livechat item linked to a guest", async () => {
