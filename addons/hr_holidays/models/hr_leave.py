@@ -350,30 +350,15 @@ class HolidaysRequest(models.Model):
 
     @api.depends('holiday_type', 'employee_id', 'department_id', 'mode_company_id')
     def _compute_resource_calendar_id(self):
+        employees_by_dates = defaultdict(lambda: self.env['hr.employee'])
+        for leave in self:
+            if leave.employee_id and leave.request_date_from:
+                employees_by_dates[leave.request_date_from] += leave.employee_id
+        calendar_by_dates = {date_from: employees._get_calendars(date_from) for date_from, employees in employees_by_dates.items()}
         for leave in self:
             calendar = False
-            if leave.holiday_type == 'employee':
-                calendar = leave.employee_id.resource_calendar_id
-                # YTI: Crappy hack: Move this to a new dedicated hr_holidays_contract module
-                # We use the request dates to find the contracts, because date_from
-                # and date_to are not set yet at this point. Since these dates are
-                # used to get the contracts for which these leaves apply and
-                # contract start- and end-dates are just dates (and not datetimes)
-                # these dates are comparable.
-                if 'hr.contract' in self.env and leave.employee_id:
-                    contracts = self.env['hr.contract'].search([
-                        '|', ('state', 'in', ['open', 'close']),
-                             '&', ('state', '=', 'draft'),
-                                  ('kanban_state', '=', 'done'),
-                        ('employee_id', '=', leave.employee_id.id),
-                        ('date_start', '<=', leave.request_date_to),
-                        '|', ('date_end', '=', False),
-                             ('date_end', '>=', leave.request_date_from),
-                    ])
-                    if contracts:
-                        # If there are more than one contract they should all have the
-                        # same calendar, otherwise a constraint is violated.
-                        calendar = contracts[:1].resource_calendar_id
+            if leave.holiday_type == 'employee' and leave.employee_id and leave.request_date_from:
+                calendar = calendar_by_dates[leave.request_date_from][leave.employee_id.id]
             elif leave.holiday_type == 'department':
                 calendar = leave.department_id.company_id.resource_calendar_id
             elif leave.holiday_type == 'company':

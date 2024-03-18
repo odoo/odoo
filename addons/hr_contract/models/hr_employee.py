@@ -128,7 +128,7 @@ class Employee(models.Model):
             '|',
                 ('date_end', '=', False),
                 ('date_end', '>=', date_from)
-        ]).sudo(False)
+        ])
         contracts_by_employee = defaultdict(lambda: self.env['hr.contract'])
         for contract in contracts:
             contracts_by_employee[contract.employee_id] += contract
