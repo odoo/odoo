@@ -362,10 +362,10 @@ class Survey(models.Model):
             elif not survey.scoring_type:
                 survey.scoring_type = 'no_scoring'
 
-    @api.depends('survey_type')
+    @api.depends('survey_type', 'certification')
     def _compute_session_available(self):
         for survey in self:
-            survey.session_available = survey.survey_type in {'live_session', 'custom'}
+            survey.session_available = survey.survey_type in {'live_session', 'custom'} and not survey.certification
 
     @api.depends_context('uid')
     def _compute_allowed_survey_types(self):

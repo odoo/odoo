@@ -15,7 +15,7 @@
                     <button name="action_result_survey" string="See results" type="object" class="oe_highlight"
                       invisible="answer_done_count &lt;= 0"/>
                     <button name="action_start_session" string="Create Live Session" type="object" class="d-none d-sm-block"
-                        invisible="session_state or not active or certification or not session_available"/>
+                        invisible="session_state or not active or not session_available"/>
                     <button name="action_open_session_manager" string="Open Session Manager" type="object" class="d-none d-sm-block"
                         invisible="not session_state" />
                     <button name="action_end_session" string="Close Live Session" type="object" class="d-none d-sm-block"
@@ -321,7 +321,7 @@
                                 <button name="action_start_session"
                                         string="Start Live Session" type="object"
                                         class="btn btn-secondary"
-                                        invisible="session_state or certification or not active or not session_available">
+                                        invisible="session_state or not active or not session_available">
                                     Start Live Session
                                 </button>
                                 <button name="action_end_session"
