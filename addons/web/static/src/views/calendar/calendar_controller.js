@@ -18,7 +18,7 @@ import { ViewScaleSelector } from "@web/views/view_components/view_scale_selecto
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { browser } from "@web/core/browser/browser";
 import { standardViewProps } from "@web/views/standard_view_props";
-import { getWeekNumber } from "@web/views/calendar/utils";
+import { getLocalWeekNumber } from "@web/core/l10n/dates";
 
 import { Component, useState } from "@odoo/owl";
 
@@ -159,7 +159,7 @@ export class CalendarController extends Component {
     }
 
     get currentWeek() {
-        return getWeekNumber(this.model.rangeStart);
+        return getLocalWeekNumber(this.model.rangeStart);
     }
 
     get rendererProps() {

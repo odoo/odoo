@@ -1,12 +1,11 @@
 import { _t } from "@web/core/l10n/translation";
-import { is24HourFormat } from "@web/core/l10n/dates";
+import { getLocalWeekNumber, is24HourFormat } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { renderToString } from "@web/core/utils/render";
 import { getColor } from "../colors";
 import { useCalendarPopover, useClickHandler, useFullCalendar } from "../hooks";
 import { CalendarCommonPopover } from "./calendar_common_popover";
 import { makeWeekColumn } from "./calendar_common_week_column";
-import { getWeekNumber } from "@web/views/calendar/utils";
 
 import { Component } from "@odoo/owl";
 
@@ -111,7 +110,7 @@ export class CalendarCommonRenderer extends Component {
                 week: this.props.model.scale === "month" || this.env.isSmall ? "numeric" : "long",
             },
             weekends: this.props.isWeekendVisible,
-            weekNumberCalculation: (date) => getWeekNumber(date, this.props.model.firstDayOfWeek),
+            weekNumberCalculation: (date) => getLocalWeekNumber(date),
             weekNumbers: true,
             dayHeaderContent: this.getHeaderHtml,
             eventDisplay: "block", // Restore old render in daygrid view for single-day timed events
