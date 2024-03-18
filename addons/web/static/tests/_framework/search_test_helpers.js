@@ -185,7 +185,7 @@ export async function removeFacet(label) {
  */
 export async function editSearch(value) {
     await ensureSearchView();
-    await contains(`.o_searchview input`).fill(value, { confirm: false });
+    await contains(`.o_searchview input`).edit(value, { confirm: false });
 }
 
 export async function validateSearch() {
