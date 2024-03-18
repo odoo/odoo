@@ -3290,7 +3290,7 @@ class AccountMoveLine(models.Model):
                         )
                     )
                 ),
-                'readOnly': self.move_id._is_readonly(),
+                'readOnly': self.move_id._is_readonly() or len(self) > 1,
             }
         return {
             'quantity': 0,
