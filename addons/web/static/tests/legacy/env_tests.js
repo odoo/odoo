@@ -7,7 +7,7 @@ import {
     clearServicesMetadataWithCleanup,
     makeTestEnv,
 } from "./helpers/mock_env";
-import { getFixture, makeDeferred, nextTick, patchWithCleanup } from "./helpers/utils";
+import { getFixture, makeDeferred, nextTick } from "./helpers/utils";
 import { Component, xml } from "@odoo/owl";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 
@@ -25,44 +25,26 @@ QUnit.test("can start a service", async (assert) => {
     assert.strictEqual(env.services.test, 17);
 });
 
-QUnit.test("properly handle crash in service start", async (assert) => {
-    patchWithCleanup(console, {
-        error: () => assert.step("log"),
-    });
-    serviceRegistry.add("test", {
-        start() {
-            return 17;
-        },
-    });
+QUnit.test("crashing service start causes startService to crash", async (assert) => {
     serviceRegistry.add("ouch", {
         start() {
             throw new Error("boom");
         },
     });
-    const env = await makeTestEnv();
-    assert.strictEqual(env.services.test, 17);
-    assert.ok(env.services.ouch instanceof Error);
-    assert.verifySteps(["log"]);
+    await assert.rejects(makeTestEnv(), function (e) {
+        return e.message === "boom";
+    });
 });
 
-QUnit.test("properly handle crash in async service start", async (assert) => {
-    patchWithCleanup(console, {
-        error: () => assert.step("log"),
-    });
-    serviceRegistry.add("test", {
-        start() {
-            return 17;
-        },
-    });
+QUnit.test("crashing async service start causes startService to crash", async (assert) => {
     serviceRegistry.add("ouch", {
         async start() {
             throw new Error("boom");
         },
     });
-    const env = await makeTestEnv();
-    assert.strictEqual(env.services.test, 17);
-    assert.ok(env.services.ouch instanceof Error);
-    assert.verifySteps(["log"]);
+    await assert.rejects(makeTestEnv(), function (e) {
+        return e.message === "boom";
+    });
 });
 
 QUnit.test("can start an asynchronous service", async (assert) => {
