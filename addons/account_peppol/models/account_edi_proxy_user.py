@@ -262,7 +262,7 @@ class AccountEdiProxyClientUser(models.Model):
         for edi_user in self:
             try:
                 proxy_user = edi_user._make_request(
-                    f"{edi_user._get_server_url()}/api/peppol/1/participant_status")
+                    f"{edi_user._get_server_url()}/api/peppol/2/participant_status")
             except AccountEdiProxyError as e:
                 _logger.error('Error while updating Peppol participant status: %s', e)
                 continue
@@ -292,6 +292,7 @@ class AccountEdiProxyClientUser(models.Model):
             endpoint='/api/peppol/2/register_participant',
             params={
                 'migration_key': company.account_peppol_migration_key,
+                'supported_identifiers': list(company._peppol_supported_document_types())
             },
         )
         # once we sent the migration key over, we don't need it
@@ -316,3 +317,65 @@ class AccountEdiProxyClientUser(models.Model):
         self.company_id.account_peppol_proxy_state = 'not_registered'
         self.company_id.account_peppol_migration_key = False
         self.unlink()
+
+    @api.model
+    def _peppol_auto_register_services(self, module):
+        """Register new document types for all recipient users.
+
+        This function should be run in the post init hook of any module that extends the supported
+        document types.
+
+        :param module: Module from which this function is being called, allows us to determine which
+            document types are now supported.
+        """
+        receivers = self.search([
+            ('proxy_type', '=', 'peppol'),
+            ('company_id.account_peppol_proxy_state', '=', 'receiver')
+        ])
+        supported_identifiers = list(self.env['res.company']._peppol_modules_document_types().get(module, {}))
+        for receiver in receivers:
+            try:
+                receiver._call_peppol_proxy(
+                    "/api/peppol/2/add_services", {
+                        'document_identifiers': supported_identifiers,
+                    },
+                )
+            # Broad exception case, so as not to block execution of the rest of the _post_init hook.
+            except (AccountEdiProxyError, UserError) as exception:
+                _logger.error(
+                    'Auto registration of peppol services for module: %s failed on the user: %s, with exception: %s',
+                    module, receiver.edi_identification, exception,
+                )
+
+    @api.model
+    def _peppol_auto_deregister_services(self, module):
+        """Unregister a set of document types for all recipient users.
+
+        This function should be run in the uninstall hook of any module that extends the supported
+        document types.
+
+        :param module: Module from which this function is being called, allows us to determine which
+            document types are no longer supported.
+        """
+        receivers = self.search([
+            ('proxy_type', '=', 'peppol'),
+            ('company_id.account_peppol_proxy_state', '=', 'receiver')
+        ])
+        unsupported_identifiers = list(self.env['res.company']._peppol_modules_document_types().get(module, {}))
+        for receiver in receivers:
+            try:
+                receiver._call_peppol_proxy(
+                    "/api/peppol/2/remove_services", {
+                        'document_identifiers': unsupported_identifiers,
+                    },
+                )
+            except (AccountEdiProxyError, UserError) as exception:
+                _logger.error(
+                    'Auto deregistration of peppol services for module: %s failed on the user: %s, with exception: %s',
+                    module, receiver.edi_identification, exception,
+                )
+
+    def _peppol_get_services(self):
+        """Get information from the IAP regarding the Peppol services."""
+        self.ensure_one()
+        return self._call_peppol_proxy("/api/peppol/2/get_services")
