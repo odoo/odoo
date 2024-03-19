@@ -102,7 +102,7 @@
                         <field name="company_type" options="{'horizontal': true}" widget="radio" groups="base.group_no_one"/>
                         <h1>
                             <field id="company" name="name" default_focus="1" placeholder="e.g. Lumber Inc" invisible="not is_company" required="type == 'contact' and is_company"/>
-                            <field id="individual" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" invisible="is_company" required="type == 'contact' and not is_company"/>
+                            <field id="individual" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="type == 'contact' and not is_company"/>
                         </h1>
                         <field name="parent_id"
                             widget="res_partner_many2one"
@@ -186,7 +186,7 @@
                         <field name="company_type" widget="radio" options="{'horizontal': true}"/>
                         <h1>
                             <field id="company" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Lumber Inc" invisible="not is_company" required="type == 'contact'"/>
-                            <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" invisible="is_company" required="type == 'contact'"/>
+                            <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="type == 'contact'"/>
                         </h1>
                         <div class="o_row">
                             <field name="parent_id"
@@ -272,12 +272,12 @@
                                     <templates>
                                         <t t-name="kanban-box">
                                             <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
-                                            <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
-                                                <div class="o_kanban_image">
+                                            <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban'">
+                                                <div class="o_kanban_image_fill_left">
                                                     <img alt="Contact image" t-att-src="kanban_image('res.partner', 'avatar_128', record.id.raw_value)"/>
                                                 </div>
                                                 <div class="oe_kanban_details">
-                                                    <field name="name"/>
+                                                    <field name="name" class="fw-bold"/>
                                                     <div t-if="record.function.raw_value"><field name="function"/></div>
                                                     <div t-if="record.email.raw_value"><field name="email" widget="email"/></div>
                                                     <div t-if="record.type.raw_value != 'contact'">
