@@ -1,11 +1,12 @@
 /** @odoo-module */
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
+import { parseDimension } from "@spreadsheet/pivot/pivot_helpers";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
 const { load, tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
 const { corePluginRegistry } = spreadsheet.registries;
 
-export const ODOO_VERSION = 10;
+export const ODOO_VERSION = 11;
 
 const MAP_V1 = {
     PIVOT: "ODOO.PIVOT",
@@ -56,6 +57,9 @@ export function migrate(data) {
     }
     if (version < 10) {
         _data = migrate9to10(_data);
+    }
+    if (version < 11) {
+        _data = migrate10to11(_data);
     }
     return _data;
 }
@@ -304,6 +308,21 @@ function migrate8to9(data) {
 
 function migrate9to10(data) {
     return renameFunctions(data, MAP_FN_NAMES_V10);
+}
+
+function migrate10to11(data) {
+    if (data.pivots) {
+        for (const pivot of Object.values(data.pivots)) {
+            pivot.measures = pivot.measures.map((measure) => ({
+                name: measure,
+            }));
+            pivot.columns = pivot.colGroupBys.map(parseDimension);
+            delete pivot.colGroupBys;
+            pivot.rows = pivot.rowGroupBys.map(parseDimension);
+            delete pivot.rowGroupBys;
+        }
+    }
+    return data;
 }
 
 export class OdooVersion extends OdooCorePlugin {

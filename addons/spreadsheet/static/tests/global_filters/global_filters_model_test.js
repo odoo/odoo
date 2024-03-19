@@ -1189,11 +1189,11 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 pivots: {
                     1: {
                         type: "ODOO",
-                        colGroupBys: ["foo"],
+                        columns: [{ name: "foo" }],
                         domain: [],
-                        measures: ["probability"],
+                        measures: [{ name: "probability", aggregator: "sum" }],
                         model: "partner",
-                        rowGroupBys: ["bar"],
+                        rows: [{ name: "bar" }],
                         context: {},
                     },
                 },
@@ -1241,11 +1241,11 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 pivots: {
                     1: {
                         type: "ODOO",
-                        colGroupBys: ["foo"],
+                        columns: [{ name: "foo" }],
                         domain: [],
-                        measures: ["probability"],
+                        measures: [{ name: "probability", aggregator: "sum" }],
                         model: "partner",
-                        rowGroupBys: ["bar"],
+                        rows: [{ name: "bar" }],
                         context: {},
                         fieldMatching: { filterId: { chain: "date", type: "date" } },
                     },
@@ -1287,11 +1287,11 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    colGroupBys: ["foo"],
+                    columns: [{ name: "foo" }],
                     domain: [],
-                    measures: ["probability"],
+                    measures: [{ name: "probability", aggregator: "sum" }],
                     model: "partner",
-                    rowGroupBys: ["bar"],
+                    rows: [{ name: "bar" }],
                     context: {},
                 },
             },
@@ -1330,11 +1330,11 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 pivots: {
                     1: {
                         type: "ODOO",
-                        colGroupBys: ["foo"],
+                        columns: [{ name: "foo" }],
                         domain: [],
-                        measures: ["probability"],
+                        measures: [{ name: "probability", aggregator: "sum" }],
                         model: "partner",
-                        rowGroupBys: ["bar"],
+                        rows: [{ name: "bar" }],
                         context: {},
                         fieldMatching: {},
                     },
@@ -1377,11 +1377,11 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 pivots: {
                     1: {
                         type: "ODOO",
-                        colGroupBys: ["foo"],
+                        columns: [{ name: "foo" }],
                         domain: [],
-                        measures: ["probability"],
+                        measures: [{ name: "probability", aggregator: "sum" }],
                         model: "partner",
-                        rowGroupBys: ["bar"],
+                        rows: [{ name: "bar" }],
                         context: {},
                         fieldMatching: { filterId: { chain: "date", type: "date" } },
                     },
