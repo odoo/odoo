@@ -421,12 +421,25 @@
                             >
                                 <i t-attf-class="fa fa-comment #{ 'karma_required' if not post_id.can_comment else ''}" title="Comment" data-bs-toggle="tooltip" data-bs-placement="top" />
                             </a>
-                            <a href="javascript:void(0)" class="oe_social_share btn opacity-50 opacity-100-hover"
-                               t-attf-data-urlshare="#{request.httprequest.url}#{'#' + '' if post_id == answer else ''}"
-                               t-attf-data-hashtags="##{post_type}"
-                            >
-                                <i class="fa fa-share-alt" data-bs-toggle="tooltip" data-bs-placement="top" title="Share"/>
-                            </a>
+                            <div class="dropdown">
+                                <a type="button" class="btn opacity-50 opacity-100-hover" data-bs-toggle="dropdown">
+                                    <i class="fa fa-share-alt" data-bs-toggle="tooltip" data-bs-placement="top" title="Share"/>
+                                </a>
+                                <div class="dropdown-menu css_editable_mode_hidden">
+                                    <div class="s_share o_no_link_popover text-center">
+                                        <a href="https://www.facebook.com/sharer/sharer.php?u={url}" class="s_share_facebook" target="_blank" aria-label="Facebook">
+                                            <i class="fa fa-facebook fa-stack"/>
+                                        </a>
+                                        <t t-set="_hashtags" t-value="(' %23' + post_type) if post_type else ''"></t>
+                                        <a t-attf-href="https://twitter.com/intent/tweet?text={title}#{_hashtags}&amp;url={url}" class="s_share_twitter" target="_blank" aria-label="Twitter">
+                                            <i class="fa fa-twitter fa-stack"/>
+                                        </a>
+                                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={url}" class="s_share_linkedin" target="_blank" aria-label="LinkedIn">
+                                            <i class="fa fa-linkedin fa-stack"/>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </t>
                         <t t-if="can_interact_with_post" t-call="website_forum.post_dropdown"/>
                     </div>

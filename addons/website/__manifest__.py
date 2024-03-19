@@ -151,7 +151,6 @@
             'website/static/src/js/http_cookie.js',
             'website/static/src/xml/website.xml',
             'website/static/src/xml/website.background.video.xml',
-            'website/static/src/xml/website.share.xml',
             'website/static/src/js/text_processing.js',
         ],
         'web.assets_frontend_minimal': [
