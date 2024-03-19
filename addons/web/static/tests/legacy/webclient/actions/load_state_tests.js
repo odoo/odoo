@@ -26,6 +26,7 @@ import { router, startRouter } from "@web/core/browser/router";
 import { Component, onMounted, xml } from "@odoo/owl";
 import { redirect } from "@web/core/utils/urls";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { _t } from "@web/core/l10n/translation";
 
 function getBreadCrumbTexts(target) {
     return getNodesTextContent(target.querySelectorAll(".breadcrumb-item, .o_breadcrumb .active"));
@@ -379,6 +380,102 @@ QUnit.module("ActionManager", (hooks) => {
             "the url did change (the resId was added)"
         );
     });
+
+    QUnit.test("properly load client actions with resId and path (1)", async function (assert) {
+        class ClientAction extends Component {
+            static template = xml`<ControlPanel/><div class="o_client_action_test">Hello World</div>`;
+            static props = ["*"];
+            static displayName = "Client Action DisplayName";
+            static components = { ControlPanel };
+            static path = "my_client";
+
+            setup() {
+                assert.step("resId:" + this.props.resId);
+            }
+        }
+        actionRegistry.add("HelloWorldTest", ClientAction);
+        const mockRPC = async function (route, { method }) {
+            assert.step(method || route);
+        };
+        redirect("/odoo/HelloWorldTest/12");
+        logHistoryInteractions(assert);
+        await createWebClient({ serverData, mockRPC });
+        assert.strictEqual(
+            $(target).find(".o_client_action_test").text(),
+            "Hello World",
+            "should have correctly rendered the client action"
+        );
+        assert.verifySteps([
+            "/web/webclient/load_menus",
+            "resId:12",
+            "pushState http://example.com/odoo/my_client/12", // initial pushState to update the url with the correct path
+        ]);
+        // Breadcrumb should have only one item, the client action don't have a LazyController (a multi-record view)
+        assert.deepEqual(getBreadCrumbTexts(target), ["Client Action DisplayName"]);
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/my_client/12");
+        assert.verifySteps([], "pushState was not called"); // no pushState should be called after the initial one
+    });
+
+    QUnit.test("properly load client actions with resId and path (2)", async function (assert) {
+        class ClientAction extends Component {
+            static template = xml`<ControlPanel/><div class="o_client_action_test">Hello World</div>`;
+            static props = ["*"];
+            static displayName = "Client Action DisplayName";
+            static components = { ControlPanel };
+            static path = "my_client";
+
+            setup() {
+                assert.step("resId:" + this.props.resId);
+            }
+        }
+        actionRegistry.add("HelloWorldTest", ClientAction);
+        const mockRPC = async function (route, { method }) {
+            assert.step(method || route);
+        };
+        redirect("/odoo/my_client/12");
+        logHistoryInteractions(assert);
+        await createWebClient({ serverData, mockRPC });
+        assert.strictEqual(
+            $(target).find(".o_client_action_test").text(),
+            "Hello World",
+            "should have correctly rendered the client action"
+        );
+        assert.verifySteps(["/web/webclient/load_menus", "resId:12"]);
+        // Breadcrumb should have only one item, the client action don't have a LazyController (a multi-record view)
+        assert.deepEqual(getBreadCrumbTexts(target), ["Client Action DisplayName"]);
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/my_client/12");
+        assert.verifySteps([], "pushState was not called");
+    });
+
+    QUnit.test(
+        "properly load client actions with LazyTranslatedString displayName",
+        async function (assert) {
+            class ClientAction extends Component {
+                static template = xml`<ControlPanel/><div class="o_client_action_test">Hello World</div>`;
+                static props = ["*"];
+                static displayName = _t("translatable displayname");
+                static components = { ControlPanel };
+                static path = "my_client";
+            }
+            actionRegistry.add("HelloWorldTest", ClientAction);
+            const mockRPC = async function (route, { method }) {
+                assert.step(method || route);
+            };
+            redirect("/odoo/my_client");
+            logHistoryInteractions(assert);
+            await createWebClient({ serverData, mockRPC });
+            assert.strictEqual(
+                $(target).find(".o_client_action_test").text(),
+                "Hello World",
+                "should have correctly rendered the client action"
+            );
+            assert.verifySteps(["/web/webclient/load_menus"]);
+            // Breadcrumb should have only one item, the client action don't have a LazyController (a multi-record view)
+            assert.deepEqual(getBreadCrumbTexts(target), ["translatable displayname"]);
+            assert.strictEqual(browser.location.href, "http://example.com/odoo/my_client");
+            assert.verifySteps([], "pushState was not called");
+        }
+    );
 
     QUnit.test("properly load act window actions", async function (assert) {
         const mockRPC = async function (route, { method }) {
