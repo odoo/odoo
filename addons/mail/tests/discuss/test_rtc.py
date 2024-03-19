@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
+from unittest.mock import patch
 
 from odoo import fields
 from odoo.addons.mail.tests.common import MailCommon
@@ -95,58 +96,60 @@ class TestChannelRTC(MailCommon):
         channel_member._rtc_leave_call()
 
         self.env['bus.bus'].sudo().search([]).unlink()
-        with self.assertBus(
-            [
-                (self.cr.dbname, 'discuss.channel', channel.id),  # update new session
-                (self.cr.dbname, 'discuss.channel', channel.id),  # channel_seen after posting join message
-                (self.cr.dbname, 'discuss.channel', channel.id),  # message_post "started a live conference" (not asserted below)
-                (self.cr.dbname, 'discuss.channel', channel.id, "members"),  # update of pin state (not asserted below)
-                (self.cr.dbname, 'discuss.channel', channel.id),  # update of last interest (not asserted below)
-                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # incoming invitation
-                (self.cr.dbname, 'discuss.channel', channel.id),  # update list of invitations
-            ],
-            [
-                {
-                    'type': 'discuss.channel/rtc_sessions_update',
-                    'payload': {
-                        'id': channel.id,
-                        'rtcSessions': [('ADD', [{
-                            'id': last_rtc_session_id + 1,
-                            'channelMember': {
-                                "id": channel_member.id,
-                                "thread": {"id": channel_member.channel_id.id, "model": "discuss.channel"},
-                                "persona": {
-                                    "id": channel_member.partner_id.id,
-                                    "name": channel_member.partner_id.name,
-                                    "im_status": channel_member.partner_id.im_status,
-                                    "type": "partner",
-                                },
-                            },
-                        }])],
-                    },
-                },
-                {
-                    'type': 'mail.record/insert',
-                    'payload': {
-                        'Thread': {
+        now = fields.Datetime.now()
+        with patch.object(fields.Datetime, 'now', lambda: now + relativedelta(seconds=5)):
+            with self.assertBus(
+                [
+                    (self.cr.dbname, 'discuss.channel', channel.id),  # update new session
+                    (self.cr.dbname, 'discuss.channel', channel.id),  # channel_seen after posting join message
+                    (self.cr.dbname, 'discuss.channel', channel.id),  # message_post "started a live conference" (not asserted below)
+                    (self.cr.dbname, 'discuss.channel', channel.id, "members"),  # update of pin state (not asserted below)
+                    (self.cr.dbname, 'discuss.channel', channel.id),  # update of last interest (not asserted below)
+                    (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # incoming invitation
+                    (self.cr.dbname, 'discuss.channel', channel.id),  # update list of invitations
+                ],
+                [
+                    {
+                        'type': 'discuss.channel/rtc_sessions_update',
+                        'payload': {
                             'id': channel.id,
-                            'model': 'discuss.channel',
-                            'invitedMembers': [('ADD', [{
-                                'id': channel_member_test_user.id,
-                                'thread': {'id': channel_member_test_user.channel_id.id, 'model': "discuss.channel"},
-                                'persona': {
-                                    'id': channel_member_test_user.partner_id.id,
-                                    'name': channel_member_test_user.partner_id.name,
-                                    'im_status': channel_member_test_user.partner_id.im_status,
-                                    'type': "partner",
+                            'rtcSessions': [('ADD', [{
+                                'id': last_rtc_session_id + 1,
+                                'channelMember': {
+                                    "id": channel_member.id,
+                                    "thread": {"id": channel_member.channel_id.id, "model": "discuss.channel"},
+                                    "persona": {
+                                        "id": channel_member.partner_id.id,
+                                        "name": channel_member.partner_id.name,
+                                        "im_status": channel_member.partner_id.im_status,
+                                        "type": "partner",
+                                    },
                                 },
                             }])],
-                        }
+                        },
                     },
-                },
-            ]
-        ):
-            res = channel_member._rtc_join_call()
+                    {
+                        'type': 'mail.record/insert',
+                        'payload': {
+                            'Thread': {
+                                'id': channel.id,
+                                'model': 'discuss.channel',
+                                'invitedMembers': [('ADD', [{
+                                    'id': channel_member_test_user.id,
+                                    'thread': {'id': channel_member_test_user.channel_id.id, 'model': "discuss.channel"},
+                                    'persona': {
+                                        'id': channel_member_test_user.partner_id.id,
+                                        'name': channel_member_test_user.partner_id.name,
+                                        'im_status': channel_member_test_user.partner_id.im_status,
+                                        'type': "partner",
+                                    },
+                                }])],
+                            }
+                        },
+                    },
+                ]
+            ):
+                res = channel_member._rtc_join_call()
         self.assertIn('invitedMembers', res)
         self.assertEqual(res['invitedMembers'], [('ADD', [{
             'id': channel_member_test_user.id,
@@ -174,90 +177,92 @@ class TestChannelRTC(MailCommon):
         channel_member._rtc_leave_call()
 
         self.env['bus.bus'].sudo().search([]).unlink()
-        with self.assertBus(
-            [
-                (self.cr.dbname, 'discuss.channel', channel.id),  # update new session
-                (self.cr.dbname, 'discuss.channel', channel.id),  # channel_seen after posting join message
-                (self.cr.dbname, 'discuss.channel', channel.id),  # message_post "started a live conference" (not asserted below)
-                (self.cr.dbname, 'discuss.channel', channel.id, "members"),  # update of pin state (not asserted below)
-                (self.cr.dbname, 'discuss.channel', channel.id),  # update of last interest (not asserted below)
-                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # incoming invitation
-                (self.cr.dbname, 'mail.guest', test_guest.id),  # incoming invitation
-                (self.cr.dbname, 'discuss.channel', channel.id),  # update list of invitations
-            ],
-            [
-                {
-                    'type': 'discuss.channel/rtc_sessions_update',
-                    'payload': {
-                        'id': channel.id,
-                        'rtcSessions': [('ADD', [{
-                            'id': last_rtc_session_id + 1,
-                            'channelMember': {
-                                "id": channel_member.id,
-                                "thread": {"id": channel_member.channel_id.id, "model": "discuss.channel"},
-                                "persona": {
-                                    "id": channel_member.partner_id.id,
-                                    "name": channel_member.partner_id.name,
-                                    "im_status": channel_member.partner_id.im_status,
-                                    "type": "partner",
-                                },
-                            },
-                        }])],
-                    },
-                },
-                {
-                    'type': 'discuss.channel/rtc_sessions_update',
-                    'payload': {
-                        'id': channel.id,
-                        'rtcSessions': [('ADD', [{
-                            'id': last_rtc_session_id + 1,
-                            'channelMember': {
-                                "id": channel_member.id,
-                                "thread": {"id": channel_member.channel_id.id, "model": "discuss.channel"},
-                                "persona": {
-                                    "id": channel_member.partner_id.id,
-                                    "name": channel_member.partner_id.name,
-                                    "im_status": channel_member.partner_id.im_status,
-                                    "type": "partner",
-                                },
-                            },
-                        }])],
-                    },
-                },
-                {
-                    'type': 'mail.record/insert',
-                    'payload': {
-                        'Thread': {
+        now = fields.Datetime.now()
+        with patch.object(fields.Datetime, 'now', lambda: now + relativedelta(seconds=5)):
+            with self.assertBus(
+                [
+                    (self.cr.dbname, 'discuss.channel', channel.id),  # update new session
+                    (self.cr.dbname, 'discuss.channel', channel.id),  # channel_seen after posting join message
+                    (self.cr.dbname, 'discuss.channel', channel.id),  # message_post "started a live conference" (not asserted below)
+                    (self.cr.dbname, 'discuss.channel', channel.id, "members"),  # update of pin state (not asserted below)
+                    (self.cr.dbname, 'discuss.channel', channel.id),  # update of last interest (not asserted below)
+                    (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # incoming invitation
+                    (self.cr.dbname, 'mail.guest', test_guest.id),  # incoming invitation
+                    (self.cr.dbname, 'discuss.channel', channel.id),  # update list of invitations
+                ],
+                [
+                    {
+                        'type': 'discuss.channel/rtc_sessions_update',
+                        'payload': {
                             'id': channel.id,
-                            'model': 'discuss.channel',
-                            'invitedMembers': [('ADD', [
-                                {
-                                    'id': channel_member_test_user.id,
-                                    'thread': {'id': channel_member_test_user.channel_id.id, 'model': "discuss.channel"},
-                                    'persona': {
-                                        'id': channel_member_test_user.partner_id.id,
-                                        'name': channel_member_test_user.partner_id.name,
-                                        'im_status': channel_member_test_user.partner_id.im_status,
-                                        'type': "partner",
+                            'rtcSessions': [('ADD', [{
+                                'id': last_rtc_session_id + 1,
+                                'channelMember': {
+                                    "id": channel_member.id,
+                                    "thread": {"id": channel_member.channel_id.id, "model": "discuss.channel"},
+                                    "persona": {
+                                        "id": channel_member.partner_id.id,
+                                        "name": channel_member.partner_id.name,
+                                        "im_status": channel_member.partner_id.im_status,
+                                        "type": "partner",
                                     },
                                 },
-                                {
-                                    'id': channel_member_test_guest.id,
-                                    'thread': {'id': channel_member_test_guest.channel_id.id, 'model': "discuss.channel"},
-                                    'persona': {
-                                        'id': channel_member_test_guest.guest_id.id,
-                                        'name': channel_member_test_guest.guest_id.name,
-                                        'im_status': channel_member_test_guest.guest_id.im_status,
-                                        'type': "guest",
-                                    },
-                                },
-                            ])],
-                        }
+                            }])],
+                        },
                     },
-                },
-            ]
-        ):
-            res = channel_member._rtc_join_call()
+                    {
+                        'type': 'discuss.channel/rtc_sessions_update',
+                        'payload': {
+                            'id': channel.id,
+                            'rtcSessions': [('ADD', [{
+                                'id': last_rtc_session_id + 1,
+                                'channelMember': {
+                                    "id": channel_member.id,
+                                    "thread": {"id": channel_member.channel_id.id, "model": "discuss.channel"},
+                                    "persona": {
+                                        "id": channel_member.partner_id.id,
+                                        "name": channel_member.partner_id.name,
+                                        "im_status": channel_member.partner_id.im_status,
+                                        "type": "partner",
+                                    },
+                                },
+                            }])],
+                        },
+                    },
+                    {
+                        'type': 'mail.record/insert',
+                        'payload': {
+                            'Thread': {
+                                'id': channel.id,
+                                'model': 'discuss.channel',
+                                'invitedMembers': [('ADD', [
+                                    {
+                                        'id': channel_member_test_user.id,
+                                        'thread': {'id': channel_member_test_user.channel_id.id, 'model': "discuss.channel"},
+                                        'persona': {
+                                            'id': channel_member_test_user.partner_id.id,
+                                            'name': channel_member_test_user.partner_id.name,
+                                            'im_status': channel_member_test_user.partner_id.im_status,
+                                            'type': "partner",
+                                        },
+                                    },
+                                    {
+                                        'id': channel_member_test_guest.id,
+                                        'thread': {'id': channel_member_test_guest.channel_id.id, 'model': "discuss.channel"},
+                                        'persona': {
+                                            'id': channel_member_test_guest.guest_id.id,
+                                            'name': channel_member_test_guest.guest_id.name,
+                                            'im_status': channel_member_test_guest.guest_id.im_status,
+                                            'type': "guest",
+                                        },
+                                    },
+                                ])],
+                            }
+                        },
+                    },
+                ]
+            ):
+                res = channel_member._rtc_join_call()
         self.assertIn('invitedMembers', res)
         self.assertEqual(res['invitedMembers'], [('ADD', [
             {
@@ -719,28 +724,30 @@ class TestChannelRTC(MailCommon):
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
         self.env['bus.bus'].sudo().search([]).unlink()
-        with self.assertBus(
-            [
-                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # end session
-                (self.cr.dbname, 'discuss.channel', channel.id),  # update list of sessions
-            ],
-            [
-                {
-                    'type': 'discuss.channel.rtc.session/ended',
-                    'payload': {
-                        'sessionId': channel_member.rtc_session_ids.id,
+        now = fields.Datetime.now()
+        with patch.object(fields.Datetime, 'now', lambda: now + relativedelta(seconds=5)):
+            with self.assertBus(
+                [
+                    (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # end session
+                    (self.cr.dbname, 'discuss.channel', channel.id),  # update list of sessions
+                ],
+                [
+                    {
+                        'type': 'discuss.channel.rtc.session/ended',
+                        'payload': {
+                            'sessionId': channel_member.rtc_session_ids.id,
+                        },
                     },
-                },
-                {
-                    'type': 'discuss.channel/rtc_sessions_update',
-                    'payload': {
-                        'id': channel.id,
-                        'rtcSessions': [('DELETE', [{'id': channel_member.rtc_session_ids.id}])],
+                    {
+                        'type': 'discuss.channel/rtc_sessions_update',
+                        'payload': {
+                            'id': channel.id,
+                            'rtcSessions': [('DELETE', [{'id': channel_member.rtc_session_ids.id}])],
+                        },
                     },
-                },
-            ],
-        ):
-            channel_member._rtc_leave_call()
+                ],
+            ):
+                channel_member._rtc_leave_call()
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
