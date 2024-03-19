@@ -148,7 +148,7 @@ class AccountMoveReversal(models.TransientModel):
             if is_modify:
                 moves_vals_list = []
                 for move in moves.with_context(include_business_fields=True):
-                    data = move.copy_data({'date': self.date})[0]
+                    data = move.copy_data(self._modify_default_reverse_values(move))[0]
                     data['line_ids'] = [line for line in data['line_ids'] if line[2]['display_type'] in ('product', 'line_section', 'line_note')]
                     moves_vals_list.append(data)
                 new_moves = self.env['account.move'].create(moves_vals_list)
@@ -183,3 +183,8 @@ class AccountMoveReversal(models.TransientModel):
 
     def modify_moves(self):
         return self.reverse_moves(is_modify=True)
+
+    def _modify_default_reverse_values(self, origin_move):
+        return {
+            'date': self.date
+        }
