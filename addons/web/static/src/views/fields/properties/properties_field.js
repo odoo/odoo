@@ -580,7 +580,7 @@ export class PropertiesField extends Component {
     }
 
     async onPropertyCreate() {
-        if (!(await this.checkDefinitionWriteAccess())) {
+        if (!this.state.canChangeDefinition || !(await this.checkDefinitionWriteAccess())) {
             this.notification.add(
                 _t("You need edit access on the parent document to update these property fields"),
                 { type: "warning" }
