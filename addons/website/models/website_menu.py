@@ -4,7 +4,8 @@
 import werkzeug.exceptions
 import werkzeug.urls
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools.translate import html_translate
 
@@ -112,6 +113,12 @@ class Menu(models.Model):
                                                                 ('website_id', '!=', False),
                                                                 ('id', '!=', menu.id)])
         return super(Menu, menus_to_remove).unlink()
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_master_tags(self):
+        main_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
+        if main_menu and main_menu in self:
+            raise UserError(_("You cannot delete this website menu as this serves as the default parent menu for new websites (e.g., /shop, /event, ...)."))
 
     def _compute_visible(self):
         for menu in self:
