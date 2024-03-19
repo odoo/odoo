@@ -4,8 +4,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import "@website/js/content/snippets.animation";
 import { renderToElement } from "@web/core/utils/render";
 
-// FIXME There is no reason to inherit from socialShare here
-var ForumShare = publicWidget.registry.socialShare.extend({
+const ForumShare = publicWidget.Widget.extend({
     selector: '',
     events: {},
 
@@ -24,31 +23,22 @@ var ForumShare = publicWidget.registry.socialShare.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        this._onMouseEnter();
-        return def;
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _render: function () {
         var $question = this.$('article.question');
         if (!this.targetType) {
             this._super.apply(this, arguments);
-        } else if (this.targetType === 'social-alert') {
-            $question.before(renderToElement('website.social_alert', {medias: this.socialList}));
         } else {
-            $('body').append(renderToElement('website.social_modal', {
-                medias: this.socialList,
+            const el = renderToElement('website.social_modal', {
                 target_type: this.targetType,
                 state: $question.data('state'),
-            }));
+            });
+            $('body').append(el);
+            this.trigger_up('widgets_start_request', {
+                editableMode: false,
+                $target: $(el.querySelector(".s_share")),
+            });
             $('#oe_social_share_modal').modal('show');
         }
+        return def;
     },
 });
 
