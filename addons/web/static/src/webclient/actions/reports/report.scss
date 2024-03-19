@@ -23,18 +23,6 @@ span.o_force_ltr {
     direction: ltr;
 }
 
-.border-black td, .border-black th {
-    border-top: 1px solid black !important;
-}
-
-.table-sm {
-    > thead > tr > th {
-        border-bottom: none !important;
-    }
-    > tbody > tr {
-        border-top: none !important;
-    }
-}
 .zero_min_height {
     min-height: 0px !important;
 }
@@ -46,21 +34,6 @@ span.o_force_ltr {
 /*Total table*/
 div#total {
     page-break-inside: avoid;
-    table {
-        tr {
-            &.o_subtotal,
-            &.o_total {
-                td {
-                    border-top: 1px solid black !important;
-                }
-                &.o_border_bottom {
-                    td {
-                        border-bottom: 1px solid black !important;
-                    }
-                }
-            }
-        }
-    }
 }
 
 table {

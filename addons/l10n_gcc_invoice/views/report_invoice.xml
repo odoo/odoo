@@ -319,7 +319,7 @@
                     <div id="total" class="row mt-n3">
                         <div class="col-6">
                             <table class="table table-borderless" style="page-break-inside: avoid;">
-                                <tr class="border-black o_subtotal">
+                                <tr class="o_subtotal">
                                     <td class="text-end">
                                         <span t-field="o.amount_untaxed"/>
                                     </td>
@@ -358,7 +358,7 @@
                                     </t>
 
                                 </t>
-                                <tr class="border-black o_total">
+                                <tr class="o_total">
                                     <td class="text-end">
                                         <span class="text-nowrap" t-field="o.amount_total"/>
                                     </td>
@@ -375,7 +375,7 @@
                                     <t t-if="o.payment_state != 'invoicing_legacy'">
                                         <t t-set="payments_vals" t-value="o.sudo().invoice_payments_widget and o.sudo().invoice_payments_widget['content'] or []"/>
                                         <t t-foreach="payments_vals" t-as="payment_vals">
-                                            <tr class="border-black o_total">
+                                            <tr class="o_total">
                                                 <td>
                                                     <i class="row">
                                                         <div class="col-7 oe_form_field oe_payment_label">
@@ -393,7 +393,7 @@
                                             </tr>
                                         </t>
                                         <t t-if="len(payments_vals) > 0">
-                                            <tr class="border-black">
+                                            <tr class="border-top">
                                                 <td>
                                                     <strong>
                                                         Amount Due
