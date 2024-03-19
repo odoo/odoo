@@ -319,8 +319,8 @@ QUnit.test("edit pivot groups", async function (assert) {
         pivotId,
         pivot: {
             ...model.getters.getPivotDefinition(pivotId),
-            colGroupBys: [],
-            rowGroupBys: [],
+            columns: [],
+            rows: [],
         },
     });
     await nextTick();

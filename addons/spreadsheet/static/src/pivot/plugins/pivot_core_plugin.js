@@ -21,7 +21,6 @@ const { isDefined, deepEquals } = helpers;
 
 export class PivotCorePlugin extends OdooCorePlugin {
     static getters = /** @type {const} */ ([
-        "areDomainArgsFieldsValid",
         "getPivotDefinition",
         "getPivotDisplayName",
         "getPivotId",
@@ -199,41 +198,6 @@ export class PivotCorePlugin extends OdooCorePlugin {
      */
     isExistingPivot(pivotId) {
         return pivotId in this.pivots;
-    }
-
-    /**
-     * Check if the fields in the domain part of
-     * a pivot function are valid according to the pivot definition.
-     * e.g. =PIVOT.VALUE(1,"revenue","country_id",...,"create_date:month",...,"source_id",...)
-     * @param {string} pivotId
-     * @param {string[]} domainArgs
-     * @returns {boolean}
-     */
-    areDomainArgsFieldsValid(pivotId, domainArgs) {
-        const dimensions = domainArgs
-            .filter((arg, index) => index % 2 === 0)
-            .map((name) => (name.startsWith("#") ? name.slice(1) : name));
-        let argIndex = 0;
-        let definitionIndex = 0;
-        const definition = this.getPivotDefinition(pivotId);
-        const cols = definition.colGroupBys;
-        const rows = definition.rowGroupBys;
-        while (
-            dimensions[argIndex] !== undefined &&
-            dimensions[argIndex] === rows[definitionIndex]
-        ) {
-            argIndex++;
-            definitionIndex++;
-        }
-        definitionIndex = 0;
-        while (
-            dimensions[argIndex] !== undefined &&
-            dimensions[argIndex] === cols[definitionIndex]
-        ) {
-            argIndex++;
-            definitionIndex++;
-        }
-        return dimensions.length === argIndex;
     }
 
     // -------------------------------------------------------------------------

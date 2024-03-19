@@ -44,7 +44,7 @@ function getPivotId(pivotFormulaId, getters) {
  */
 function assertMeasureExist(pivotId, measure, getters) {
     const { measures } = getters.getPivotDefinition(pivotId);
-    if (!measures.includes(measure)) {
+    if (!measures.find((m) => m.name === measure)) {
         const validMeasures = `(${measures.map((m) => m.name).join(", ")})`;
         throw new EvaluationError(
             sprintf(
@@ -115,7 +115,7 @@ const ODOO_PIVOT = /** @satisfies {CustomFunctionDescription} */ ({
         if (measure === "__count") {
             return { value, format: "0" };
         }
-        const format = pivot.getPivotFieldFormat(measure);
+        const format = pivot.getPivotMeasureFormat(measure);
         return { value, format };
     },
     returns: ["NUMBER", "STRING"],
