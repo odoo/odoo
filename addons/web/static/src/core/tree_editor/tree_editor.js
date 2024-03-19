@@ -1,11 +1,10 @@
 import {
-    leafToString,
-    useLoadDisplayNames,
-    extractIdsFromTree,
-    getPathsInTree,
     getResModel,
+    useMakeGetFieldDef,
+    useMakeGetConditionDescription,
 } from "@web/core/tree_editor/utils";
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import {
@@ -14,6 +13,7 @@ import {
     formatValue,
     removeVirtualOperators,
     connector,
+    isTree,
 } from "@web/core/tree_editor/condition_tree";
 import {
     getDefaultValue,
@@ -24,8 +24,6 @@ import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
 import { deepEqual, shallowEqual } from "@web/core/utils/objects";
 
 const TRUE_TREE = condition(1, "=", 1);
-
-const DEFAULT_CONDITION = condition("id", "=", 1);
 
 function collectDifferences(tree, otherTree) {
     // some differences shadow the other differences "below":
@@ -93,11 +91,13 @@ export class TreeEditor extends Component {
         Dropdown,
         DropdownItem,
         ModelFieldSelector,
+        TreeEditor,
     };
     static props = {
         tree: Object,
         resModel: String,
         update: Function,
+        getDefaultCondition: Function,
         getPathEditorInfo: Function,
         getOperatorEditorInfo: Function,
         getDefaultOperator: Function,
@@ -105,17 +105,24 @@ export class TreeEditor extends Component {
         slots: { type: Object, optional: true },
         isDebugMode: { type: Boolean, optional: true },
         defaultConnector: { type: [{ value: "&" }, { value: "|" }], optional: true },
-        defaultCondition: { type: Object, optional: true },
+        isSubTree: { type: Boolean, optional: true },
     };
     static defaultProps = {
         defaultConnector: "&",
-        defaultCondition: DEFAULT_CONDITION,
         readonly: false,
+        isSubTree: false,
     };
 
     setup() {
-        this.loadFieldInfo = useLoadFieldInfo();
-        this.loadDisplayNames = useLoadDisplayNames();
+        this.isTree = isTree;
+        this.fieldService = useService("field");
+        this.nameService = useService("name");
+        this.loadFieldInfo = useLoadFieldInfo(this.fieldService);
+        this.makeGetFieldDef = useMakeGetFieldDef(this.fieldService);
+        this.makeGetConditionDescription = useMakeGetConditionDescription(
+            this.fieldService,
+            this.nameService
+        );
         onWillStart(() => this.onPropsUpdated(this.props));
         onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
     }
@@ -134,12 +141,19 @@ export class TreeEditor extends Component {
             this.previousTree = null;
         }
 
-        const paths = getPathsInTree(this.tree);
-        await this.loadFieldDefs(props.resModel, paths);
+        const [fieldDefs, getFieldDef] = await Promise.all([
+            this.fieldService.loadFields(props.resModel),
+            this.makeGetFieldDef(props.resModel, this.tree),
+        ]);
+        this.getFieldDef = getFieldDef;
+        this.defaultCondition = props.getDefaultCondition(fieldDefs);
 
         if (props.readonly) {
-            const idsByModel = extractIdsFromTree(this.tree, this.getFieldDef.bind(this));
-            this.displayNames = await this.loadDisplayNames(idsByModel);
+            this.getConditionDescription = await this.makeGetConditionDescription(
+                props.resModel,
+                this.tree,
+                this.getFieldDef
+            );
         }
     }
 
@@ -149,29 +163,6 @@ export class TreeEditor extends Component {
 
     get isDebugMode() {
         return this.props.isDebugMode !== undefined ? this.props.isDebugMode : !!this.env.debug;
-    }
-
-    getFieldDef(path) {
-        if (typeof path === "string") {
-            return this.fieldDefs[path];
-        }
-        return null;
-    }
-
-    async loadFieldDefs(resModel, paths) {
-        const promises = [];
-        const fieldDefs = {};
-        for (const path of paths) {
-            if (typeof path === "string") {
-                promises.push(
-                    this.loadFieldInfo(resModel, path).then(({ fieldDef }) => {
-                        fieldDefs[path] = fieldDef;
-                    })
-                );
-            }
-        }
-        await Promise.all(promises);
-        this.fieldDefs = fieldDefs;
     }
 
     notifyChanges() {
@@ -191,7 +182,7 @@ export class TreeEditor extends Component {
     }
 
     createNewLeaf() {
-        return cloneTree(this.props.defaultCondition);
+        return cloneTree(this.defaultCondition);
     }
 
     createNewBranch(value) {
@@ -224,9 +215,19 @@ export class TreeEditor extends Component {
         this.notifyChanges();
     }
 
-    getDescription(node) {
+    getResModel(node) {
         const fieldDef = this.getFieldDef(node.path);
-        return leafToString(node, fieldDef, this.displayNames[getResModel(fieldDef)]);
+        const resModel = getResModel(fieldDef);
+        return resModel;
+    }
+
+    getPathEditorInfo() {
+        return this.props.getPathEditorInfo(this.props.resModel, this.defaultCondition);
+    }
+
+    getOperatorEditorInfo(node) {
+        const fieldDef = this.getFieldDef(node.path);
+        return this.props.getOperatorEditorInfo(fieldDef);
     }
 
     getValueEditorInfo(node) {

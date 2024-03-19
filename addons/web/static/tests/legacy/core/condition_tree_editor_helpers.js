@@ -281,8 +281,8 @@ export async function clearNotSupported(target, index = 0) {
     await click(get(target, SELECTORS.clearNotSupported, index));
 }
 
-export async function addNewRule(target) {
-    await click(target, SELECTORS.addNewRule);
+export async function addNewRule(target, index = 0) {
+    await click(get(target, SELECTORS.addNewRule, index));
 }
 
 export async function toggleArchive(target) {

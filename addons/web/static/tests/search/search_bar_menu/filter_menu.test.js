@@ -793,7 +793,7 @@ test("display names in facets (with a property)", async () => {
     );
     await contains(".modal footer button").click();
 
-    expect(getFacetTexts()).toEqual(["Properties 🠒 M2O = John"]);
+    expect(getFacetTexts()).toEqual(["Properties \u2794 M2O = John"]);
     expect(searchBar.env.searchModel.domain).toEqual([["properties.m2o", "=", 1]]);
 });
 
