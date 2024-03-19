@@ -2766,7 +2766,9 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     // `domain` is the static part of the domain used in searches, not
     // depending on already selected ids and other filters.
     configAttributes: [
-        'model', 'fields', 'limit', 'domain', 'callWith', 'createMethod', 'filterInModel', 'filterInField', 'nullText'
+        "model", "fields", "limit", "domain",
+        "callWith", "createMethod", "filterInModel", "filterInField", "nullText",
+        "defaultMessage",
     ],
 
     /**
@@ -2862,7 +2864,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
                 // FIXME: value may not be an id if callWith is specified!
                 this.menuTogglerEl.textContent = await this._getDisplayName(parseInt(value));
             } else {
-                this.menuTogglerEl.textContent = _t("Choose a record...");
+                this.menuTogglerEl.textContent = this.options.defaultMessage || _t("Choose a record...");
             }
         }
     },
