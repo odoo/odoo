@@ -1112,3 +1112,19 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         })
         holiday_status = self.holidays_type_4.with_user(self.user_employee_id)
         self._check_holidays_status(holiday_status, employee, 20.0, 0.0, 20.0, 16.0)
+
+    def test_default_request_date_timezone(self):
+        """
+            The purpose is to test whether the timezone is
+            taken into account when requesting a leave.
+        """
+        self.user_employee.tz = 'Hongkong'  # UTC +08:00
+        context = {
+            # `date_from/to` in UTC to simulate client values
+            'default_date_from': '2024-03-27 23:00:00',
+            'default_date_to': '2024-03-28 08:00:00',
+        }
+        leave_form = Form(self.env['hr.leave'].with_user(self.user_employee).with_context(context))
+        leave_form.holiday_status_id = self.holidays_type_2
+        leave = leave_form.save()
+        self.assertEqual(leave.number_of_days, 1.0)
