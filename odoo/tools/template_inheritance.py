@@ -244,6 +244,9 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                 # spec before the sentinel, then remove the sentinel element
                 sentinel = E.sentinel()
                 node.addnext(sentinel)
+                if node.tail is not None:  # for lxml >= 5.1
+                    sentinel.tail = node.tail
+                    node.tail = None
                 add_stripped_items_before(sentinel, spec, extract)
                 remove_element(sentinel)
             elif pos == 'before':
