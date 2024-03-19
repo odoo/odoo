@@ -224,6 +224,40 @@ class TestWarehouseMrp(common.TestMrpCommon):
         self.assertEqual(location_dest.id, self.depot_location.id)
         self.assertNotEqual(location_dest.id, self.stock_location.id)
 
+    def test_backorder_unpacking(self):
+        """ Test that movement of pack in backorder is correctly handled. """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.write({'manufacture_steps': 'pbm'})
+
+        self.product_1.type = 'product'
+        self.env['stock.quant']._update_available_quantity(self.product_1, self.stock_location, 100)
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_4
+        mo_form.product_qty = 100
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        package = self.env['stock.quant.package'].create({})
+
+        picking = mo.picking_ids
+        picking.move_line_ids.write({
+            'quantity': 20,
+            'result_package_id': package.id,
+        })
+
+        res_dict = picking.button_validate()
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+
+        backorder = picking.backorder_ids
+        backorder.move_line_ids.quantity = 80
+        backorder.button_validate()
+
+        self.assertEqual(picking.state, 'done')
+        self.assertEqual(backorder.state, 'done')
+        self.assertEqual(mo.move_raw_ids.move_line_ids.mapped('quantity_product_uom'), [20, 80])
+
 class TestKitPicking(common.TestMrpCommon):
     @classmethod
     def setUpClass(cls):
