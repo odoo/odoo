@@ -12,12 +12,18 @@
                         <t t-if="target_type == 'answer'" t-call="website_forum.social_message_answer"/>
                         <t t-if="target_type == 'default'" t-call="website_forum.social_message_default"/>
                         <div t-if="state != 'pending'" class="share-icons text-center text-primary">
-                            <t t-foreach="medias" t-as="media" t-key="media_index">
-                                <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share #{media}" t-attf-aria-label="Share on #{media}" t-attf-title="Share on #{media}">
-                                    <span class="fa fa-square fa-stack-2x"></span>
-                                    <span t-attf-class="oe_social_#{media} fa fa-#{media} fa-stack-1x fa-inverse"></span>
+                            <div class="s_share o_no_link_popover">
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={url}" class="s_share_facebook" target="_blank" aria-label="Facebook">
+                                    <i class="fa fa-facebook rounded shadow-sm"/>
                                 </a>
-                            </t>
+                                <t t-set="_hashtags" t-value="target_type ? (' %23' + target_type) : ''"></t>
+                                <a t-attf-href="https://twitter.com/intent/tweet?text={title}#{_hashtags}&amp;url={url}" class="s_share_twitter" target="_blank" aria-label="Twitter">
+                                    <i class="fa fa-twitter rounded shadow-sm"/>
+                                </a>
+                                <a href="https://www.linkedin.com/sharing/share-offsite/?url={url}" class="s_share_linkedin" target="_blank" aria-label="LinkedIn">
+                                    <i class="fa fa-linkedin rounded shadow-sm"/>
+                                </a>
+                            </div>
                         </div>
                     </main>
                 </div>
@@ -52,20 +58,5 @@
     </t>
     <t t-name="website_forum.social_message_default">
         <p>Share this content to increase your chances to be featured on the front page and attract more visitors.</p>
-    </t>
-
-    <t t-name="website.social_alert">
-        <div class="alert alert-info alert-dismissable" role="status">
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            <p>Share this post on social networks.</p><br/>
-            <div>
-                <t t-foreach="medias" t-as="media" t-key="media_index">
-                    <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share #{media}" t-attf-aria-label="Share on #{media}" t-attf-title="Share on #{media}">
-                        <span class="fa fa-square fa-stack-2x"></span>
-                        <span t-attf-class="oe_social_#{media} fa fa-#{media} fa-stack-1x fa-inverse"></span>
-                    </a>
-                </t>
-            </div>
-        </div>
     </t>
 </templates>
