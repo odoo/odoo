@@ -146,14 +146,14 @@ class HrEmployeeBase(models.AbstractModel):
         """
         # Check on login
         check_login = literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr.hr_presence_control_login', 'False'))
-        employee_to_check_working = self.filtered(lambda e: e.user_id.im_status == 'offline')
+        employee_to_check_working = self.filtered(lambda e: 'offline' in str(e.user_id.im_status))
         working_now_list = employee_to_check_working._get_employee_working_now()
         for employee in self:
             state = 'to_define'
             if check_login:
-                if employee.user_id.im_status in ['online', 'leave_online']:
+                if 'online' in str(employee.user_id.im_status):
                     state = 'present'
-                elif employee.user_id.im_status in ['offline', 'leave_offline'] and employee.id not in working_now_list:
+                elif 'offline' in str(employee.user_id.im_status) and employee.id not in working_now_list:
                     state = 'absent'
             employee.hr_presence_state = state
 
