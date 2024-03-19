@@ -705,8 +705,8 @@ class SurveyQuestionAnswer(models.Model):
     MAX_ANSWER_NAME_LENGTH = 90  # empirically tested in client dropdown
 
     # question and question related fields
-    question_id = fields.Many2one('survey.question', string='Question', ondelete='cascade')
-    matrix_question_id = fields.Many2one('survey.question', string='Question (as matrix row)', ondelete='cascade')
+    question_id = fields.Many2one('survey.question', string='Question', ondelete='cascade', index='btree_not_null')
+    matrix_question_id = fields.Many2one('survey.question', string='Question (as matrix row)', ondelete='cascade', index='btree_not_null')
     question_type = fields.Selection(related='question_id.question_type')
     sequence = fields.Integer('Label Sequence order', default=10)
     scoring_type = fields.Selection(related='question_id.scoring_type')
