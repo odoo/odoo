@@ -10,6 +10,10 @@ import {
 import {
     Partner,
     Product,
+    Country,
+    Stage,
+    Team,
+    Player,
     addNewRule,
     clearNotSupported,
     clickOnButtonAddBranch,
@@ -83,7 +87,7 @@ async function makeDomainSelector(params = {}) {
     return mountWithCleanup(Parent, { props });
 }
 
-defineModels([Partner, Product]);
+defineModels([Partner, Product, Country, Stage, Team, Player]);
 
 test("creating a domain from scratch", async () => {
     await makeDomainSelector({
@@ -1105,27 +1109,31 @@ test("support properties (mode readonly)", async () => {
             date_format: "%d|%m|%Y",
         },
     });
+    onRpc(() => {});
     const toTest = [
         {
             domain: `[("properties.xphone_prop_1", "=", False)]`,
-            result: "PropertiesBoolean is not set",
+            result: "Properties ➔ Boolean is not set",
         },
         {
             domain: `[("properties.xphone_prop_2", "=", "abc")]`,
-            result: "PropertiesSelection = ABC",
+            result: "Properties ➔ Selection = ABC",
         },
-        { domain: `[("properties.xphone_prop_3", "=", "def")]`, result: "PropertiesChar = def" },
-        { domain: `[("properties.xphone_prop_4", "=", 1)]`, result: "PropertiesInteger = 1" },
+        { domain: `[("properties.xphone_prop_3", "=", "def")]`, result: "Properties ➔ Char = def" },
+        { domain: `[("properties.xphone_prop_4", "=", 1)]`, result: "Properties ➔ Integer = 1" },
         {
             domain: `[("properties.xphone_prop_5", "=", "2023-10-05")]`,
-            result: "PropertiesDate = 05|10|2023",
+            result: "Properties ➔ Date = 05|10|2023",
         },
-        { domain: `[("properties.xphone_prop_6", "in", "g")]`, result: "PropertiesTags is in g" },
+        {
+            domain: `[("properties.xphone_prop_6", "in", "g")]`,
+            result: "Properties ➔ Tags is in g",
+        },
         {
             domain: `[("properties.xphone_prop_7", "in", [37])]`,
-            result: "PropertiesM2M is in ( xphone )",
+            result: "Properties ➔ M2M is in ( xphone )",
         },
-        { domain: `[("properties.xpad_prop_1", "=", 41)]`, result: "PropertiesM2O = xpad" },
+        { domain: `[("properties.xpad_prop_1", "=", 41)]`, result: "Properties ➔ M2O = xpad" },
     ];
 
     class Parent extends Component {
@@ -1445,23 +1453,23 @@ test("selection property (readonly)", async () => {
     const toTest = [
         {
             domain: `[("properties.selection_prop", "=", false)]`,
-            text: `PropertiesSelection is not set`,
+            text: `Properties ➔ Selection is not set`,
         },
         {
             domain: `[("properties.selection_prop", "!=", false)]`,
-            text: `PropertiesSelection is set`,
+            text: `Properties ➔ Selection is set`,
         },
         {
             domain: `[("properties.selection_prop", "=", "abc")]`,
-            text: `PropertiesSelection = ABC`,
+            text: `Properties ➔ Selection = ABC`,
         },
         {
             domain: `[("properties.selection_prop", "=", expr)]`,
-            text: `PropertiesSelection = expr`,
+            text: `Properties ➔ Selection = expr`,
         },
         {
             domain: `[("properties.selection_prop", "!=", "abc")]`,
-            text: `PropertiesSelection != ABC`,
+            text: `Properties ➔ Selection != ABC`,
         },
     ];
     for (const { domain, text } of toTest) {
@@ -1541,6 +1549,8 @@ test("many2one field operators (edit)", async () => {
         "does not contain",
         "is set",
         "is not set",
+        "matches",
+        "matches none of",
     ]);
 });
 
@@ -1762,6 +1772,8 @@ test("x2many field operators (edit)", async () => {
         "does not contain",
         "is set",
         "is not set",
+        "match",
+        "match none of",
     ]);
 });
 
@@ -2039,4 +2051,146 @@ test("date domain in readonly mode (check localization)", async () => {
         readonly: true,
     });
     expect(".o_tree_editor_condition").toHaveText("Date\nis between\n03|11|2023\nand\n13|11|2023");
+});
+
+test(`any/not any operator in editable mode`, async () => {
+    await makeDomainSelector({
+        readonly: false,
+        isDebugMode: true,
+        domain: `[("product_id", "any", ["|", ("team_id", "any", [("name", "=", "Mancester City")]), ("team_id.name", "not in", ["Leicester", "Liverpool"])])]`,
+    });
+    expect(".o_tree_editor").toHaveCount(3);
+    expect(".o_tree_editor_row").toHaveCount(10);
+    expect(getCurrentPath(1)).toBe("Product Team");
+    expect(getCurrentPath(3)).toBe("Product Team > Team Name");
+    expect(getCurrentValue(1)).toBe("Leicester Liverpool");
+    expect(getCurrentOperator(1)).toBe("matches");
+    expect(getCurrentOperator(3)).toBe("is not in");
+    await selectOperator("in", 3);
+    expect(getCurrentOperator(3)).toBe("is in");
+    expect(SELECTORS.debugArea).toHaveValue(
+        `[("product_id", "any", ["|", ("team_id", "any", [("name", "=", "Mancester City")]), ("team_id.name", "in", ["Leicester", "Liverpool"])])]`
+    );
+});
+
+test(`any/not any operator (readonly) with custom domain as value`, async () => {
+    const toTest = [
+        {
+            domain: `[("product_id", "any", [("machin", "in", ["chose", "truc"] )] )]`,
+            text: `Match\nall\nof the following rules:\nProduct\nmatches\nall\nof:\nmachin\nis in\n(\nchose\n,\ntruc\n)`,
+        },
+    ];
+    const parent = await makeDomainSelector({ readonly: true });
+    for (const { domain, text } of toTest) {
+        await parent.set(domain);
+        expect(".o_domain_selector").toHaveText(text);
+    }
+});
+
+test(`any/not any operator (readonly) with invalid domain as value`, async () => {
+    const toTest = [
+        {
+            domain: `[("product_id", "any", A )]`,
+            text: `Match\nall\nof the following rules:\nProduct\nmatches\n(\nA\n)`,
+        },
+        {
+            domain: `[("product_id", "any", "bete et méchant" )]`,
+            text: `Match\nall\nof the following rules:\nProduct\nmatches\n(\nbete et méchant\n)`,
+        },
+        {
+            domain: `[("product_id", "any", [("team_id", "any", "bête et méchant")])]`,
+            text: `Match\nall\nof the following rules:\nProduct\nmatches\nall\nof:\nProduct Team\nmatches\n(\nbête et méchant\n)`,
+        },
+        {
+            domain: `[("product_id", "any", ["&"])]`,
+            text: `Match\nall\nof the following rules:\nProduct\nmatches\n(\n&\n)`,
+        },
+    ];
+    const parent = await makeDomainSelector({ readonly: true });
+    for (const { domain, text } of toTest) {
+        await parent.set(domain);
+        expect(".o_domain_selector").toHaveText(text);
+    }
+});
+
+test(`any operator (edit) with invalid domain as value`, async () => {
+    await makeDomainSelector({ domain: `[("product_id", "any", ["&"])]` });
+    expect(SELECTORS.valueEditor).toHaveCount(1);
+    expect(SELECTORS.clearNotSupported).toHaveCount(1);
+    await contains(SELECTORS.clearNotSupported).click();
+    const rows = queryAll(SELECTORS.connector);
+    expect(rows[1].textContent).toBe("all records");
+});
+
+test(`any operator (edit) test getDefaultPath`, async () => {
+    Partner._fields.country_id = fields.Many2one({
+        string: "Country",
+        relation: "country",
+        searchable: true,
+    });
+    await makeDomainSelector({
+        resModel: "partner",
+        domain: `[("country_id", "any", [])]`,
+    });
+    await addNewRule();
+    expect(getCurrentPath(0)).toBe("Country");
+    expect(getCurrentPath(1)).toBe("Stage");
+});
+
+test(`any operator (edit) test defaultValue => defaultCondition`, async () => {
+    Product._fields.country_id = fields.Many2one({
+        string: "Country",
+        relation: "country",
+        searchable: true,
+    });
+    await makeDomainSelector({
+        domain: `[("product_id", "any", [(A, "=", 1)])]`,
+        isDebugMode: true,
+    });
+    await clearNotSupported();
+    expect(getCurrentPath(1)).toBe("Country");
+});
+
+test(`any/not any operator (readonly)`, async () => {
+    const toTest = [
+        {
+            domain: `[("product_id", "any", [("name", "in", [37,41] )] )]`,
+            text: `Match\nall\nof the following rules:\nProduct\nmatches\nall\nof:\nProduct Name\nis in\n(\n37\n,\n41\n)`,
+        },
+        {
+            domain: `[("product_id", "not any", [("name", "in", [37,41] )] )]`,
+            text: `Match\nall\nof the following rules:\nProduct\nmatches none of\nall\nof:\nProduct Name\nis in\n(\n37\n,\n41\n)`,
+        },
+        {
+            domain: `[("product_id", "not any", ["|", ("team_id", "any", [("name", "ilike", "mancity")] ), ("name", "in", [37,41] )] )]`,
+            text: `Match\nall\nof the following rules:\nProduct\nmatches none of\nany\nof:\nProduct Team\nmatches\nall\nof:\nTeam Name\ncontains\nmancity\nProduct Name\nis in\n(\n37\n,\n41\n)`,
+        },
+        {
+            domain: `[("product_id", "any", ["|", ("name", "in", [37,41] ), ("bar", "=", True)] )]`,
+            text: `Match\nall\nof the following rules:\nProduct\nmatches\nany\nof:\nProduct Name\nis in\n(\n37\n,\n41\n)\nProduct Bar\nis\nset`,
+        },
+        {
+            domain: `[("product_id", "any", ["&", ("name", "in", ["JD7", "KDB"]), ("team_id", "not any", ["&", ("id", "=", 17), ("name", "ilike", "mancity")])])]`,
+            text: `Match\nall\nof the following rules:\nProduct\nmatches\nall\nof:\nProduct Name\nis in\n(\nJD7\n,\nKDB\n)\nProduct Team\nmatches none of\nall\nof:\nId\n=\n17\nTeam Name\ncontains\nmancity`,
+        },
+        {
+            domain: `[("product_id", "any", ["|", ("name", "in", ["JD7", "KDB"]), ("team_id", "not any", ["|", ("id", "=", 17), ("name", "ilike", "mancity")])])]`,
+            text: `Match\nall\nof the following rules:\nProduct\nmatches\nany\nof:\nProduct Name\nis in\n(\nJD7\n,\nKDB\n)\nProduct Team\nmatches none of\nany\nof:\nId\n=\n17\nTeam Name\ncontains\nmancity`,
+        },
+    ];
+    const parent = await makeDomainSelector({ readonly: true });
+    for (const { domain, text } of toTest) {
+        await parent.set(domain);
+        expect(".o_domain_selector").toHaveText(text);
+    }
+});
+
+test(`any/not any operator (readonly) for one2many`, async () => {
+    await makeDomainSelector({
+        resModel: "team",
+        domain: `[("player_ids", "any", [('name', 'in', ["Kevin De Bruyne", "Jeremy Doku"])])]`,
+        readonly: true,
+    });
+    const text = `Match\nall\nof the following rules:\nPlayers\nmatch\nall\nof:\nPlayer Name\nis in\n(\nKevin De Bruyne\n,\nJeremy Doku\n)`;
+    expect(".o_domain_selector").toHaveText(text);
 });

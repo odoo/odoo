@@ -1,8 +1,13 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { ExpressionEditor } from "@web/core/expression_editor/expression_editor";
 import {
+    Country,
     Partner,
+    Player,
     Product,
+    Stage,
+    Team,
+    addNewRule,
     clearNotSupported,
     clickOnButtonAddBranch,
     clickOnButtonAddNewRule,
@@ -83,7 +88,7 @@ async function makeExpressionEditor(params = {}) {
     return mountWithCleanup(Parent, { props });
 }
 
-defineModels([Partner, Product]);
+defineModels([Partner, Product, Team, Player, Country, Stage]);
 
 beforeEach(() => {
     patchWithCleanup(odoo, { debug: true });
@@ -395,6 +400,28 @@ test("no field of type properties in model field selector", async () => {
 
     await openModelFieldSelectorPopover();
     expect(queryAllTexts(".o_model_field_selector_popover_item_name")).toEqual(["Bar", "Foo"]);
+});
+
+test("no special fields in fields", async () => {
+    patchWithCleanup(odoo, { debug: false });
+    await makeExpressionEditor({
+        expression: `bar`,
+        fieldFilters: ["foo", "bar", "properties"],
+        update(expression) {
+            expect.step(expression);
+        },
+    });
+    expect(getTreeEditorContent()).toEqual([
+        { level: 0, value: "all" },
+        { level: 1, value: ["Bar", "is not", "not set"] },
+    ]);
+    await addNewRule();
+    expect(getTreeEditorContent()).toEqual([
+        { level: 0, value: "all" },
+        { level: 1, value: ["Bar", "is not", "not set"] },
+        { level: 1, value: ["Foo", "=", ""] },
+    ]);
+    expect([`bar and foo == ""`]).toVerifySteps();
 });
 
 test("between operator", async () => {

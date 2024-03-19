@@ -19,7 +19,7 @@ import { FACET_ICONS, FACET_COLORS } from "./utils/misc";
 import { EventBus, toRaw } from "@odoo/owl";
 import { domainFromTree, treeFromDomain } from "@web/core/tree_editor/condition_tree";
 import { _t } from "@web/core/l10n/translation";
-import { useGetDomainTreeDescription } from "@web/core/domain_selector/utils";
+import { useGetTreeDescription } from "@web/core/tree_editor/utils";
 
 const { DateTime } = luxon;
 
@@ -173,7 +173,7 @@ export class SearchModel extends EventBus {
         this.fieldService = fieldService;
         this.viewService = view;
 
-        this.getDomainTreeDescription = useGetDomainTreeDescription(fieldService, nameService);
+        this.getDomainTreeDescription = useGetTreeDescription(fieldService, nameService);
 
         // used to manage search items related to date/datetime fields
         this.referenceMoment = DateTime.local();

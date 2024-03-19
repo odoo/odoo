@@ -9,8 +9,12 @@ import {
     mockService,
 } from "@web/../tests/web_test_helpers";
 import {
+    Country,
     Partner,
+    Player,
     Product,
+    Stage,
+    Team,
     getTreeEditorContent,
 } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 
@@ -45,7 +49,7 @@ async function makeExpressionEditorDialog(params = {}) {
     return mountWithCleanup(Parent, { env, props });
 }
 
-defineModels([Partner, Product]);
+defineModels([Partner, Product, Team, Player, Country, Stage]);
 
 test("expr well sent, onConfirm and onClose", async () => {
     const expression = `foo == 'batestr' and bar == True`;

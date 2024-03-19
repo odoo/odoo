@@ -27,11 +27,45 @@ export class Partner extends models.Model {
 
 export class Product extends models.Model {
     name = fields.Char({ string: "Product Name" });
+    bar = fields.Boolean({ string: "Product Bar" });
+    team_id = fields.Many2one({
+        string: "Product Team",
+        relation: "team",
+        searchable: true,
+    });
 
     _records = [
         { id: 37, name: "xphone" },
         { id: 41, name: "xpad" },
     ];
+}
+
+export class Team extends models.Model {
+    name = fields.Char({ string: "Team Name", searchable: true });
+    player_ids = fields.One2many({ relation: "player", string: "Players" });
+
+    _records = [
+        { id: 1, display_name: "Mancester City" },
+        { id: 2, display_name: "Arsenal" },
+    ];
+}
+
+export class Player extends models.Model {
+    name = fields.Char({ string: "Player Name", searchable: true });
+    country_id = fields.Many2one({ string: "Country", relation: "country" });
+    _records = [
+        { id: 1, name: "Kevin De Bruyne" },
+        { id: 2, name: "Jeremy Doku" },
+    ];
+}
+
+export class Country extends models.Model {
+    foo = fields.Char();
+    stage_id = fields.Many2one({ relation: "stage" });
+}
+
+export class Stage extends models.Model {
+    bar = fields.Boolean();
 }
 
 export const SELECTORS = {

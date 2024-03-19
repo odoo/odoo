@@ -5,8 +5,12 @@ import { Component, xml } from "@odoo/owl";
 
 import { contains, defineModels, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 import {
+    Country,
     Partner,
+    Player,
     Product,
+    Stage,
+    Team,
 } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import { makeDialogMockEnv } from "@web/../tests/_framework/env_test_helpers";
 
@@ -37,7 +41,7 @@ async function makeDomainSelectorDialog(params = {}) {
     return mountWithCleanup(Parent, { env, props });
 }
 
-defineModels([Partner, Product]);
+defineModels([Partner, Product, Team, Player, Country, Stage]);
 
 test("a domain with a user context dynamic part is valid", async () => {
     await makeDomainSelectorDialog({

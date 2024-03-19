@@ -4,8 +4,12 @@ import { Deferred, animationFrame, mockDate } from "@odoo/hoot-mock";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import { SELECTORS } from "@web/../tests/core/domain_selector/domain_selector_helpers";
 import {
+    Country,
     Partner,
+    Player,
     Product,
+    Stage,
+    Team,
     addNewRule,
     clearNotSupported,
     clickOnButtonDeleteNode,
@@ -38,7 +42,7 @@ export class PartnerType extends models.Model {
     ];
 }
 
-defineModels([Partner, Product, PartnerType]);
+defineModels([Partner, Product, Team, Player, Country, Stage, PartnerType]);
 
 test("The domain editor should not crash the view when given a dynamic filter", async function () {
     // dynamic filters (containing variables, such as uid, parent or today)
@@ -206,11 +210,11 @@ test("domain field is correctly reset on every view change", async function () {
 
     // As the value of the "bar" field is "product", the field selector
     // popover should contain the list of "product" fields
-    expect(".o_model_field_selector_popover_item").toHaveCount(5, {
+    expect(".o_model_field_selector_popover_item").toHaveCount(7, {
         message: "field selector popover should contain only one non-default field",
     });
-    expect(queryLast(".o_model_field_selector_popover_item")).toHaveText("Product Name", {
-        message: "field selector popover should contain 'Product Name' field",
+    expect(queryLast(".o_model_field_selector_popover_item")).toHaveText("Product Team", {
+        message: "field selector popover should contain 'Product Team' field",
     });
 
     // Now change the value of the "bar" field to "partnertype"
@@ -991,4 +995,23 @@ test("foldable domain field unfolds and hides caret when domain is invalid", asy
     expect(".o_domain_selector_row").toHaveText("This domain is not supported.\nReset domain");
     await contains(".o_domain_selector_row button").click();
     expect(queryFirst(".o_field_domain span")).toHaveText("Match all records");
+});
+
+test("folded domain field with any operator", async function () {
+    Partner._fields.company_id = fields.Many2one({ relation: "partner" });
+    Partner._records[0].foo = "[('company_id', 'any', [('id', '=', 1)])]";
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="foo" widget="domain" options="{'model': 'partner', 'foldable': true}" />
+                    </group>
+                </sheet>
+            </form>`,
+    });
+    expect(`.o_field_domain .o_facet_values`).toHaveText("Company matches ( Id = 1 )");
 });
