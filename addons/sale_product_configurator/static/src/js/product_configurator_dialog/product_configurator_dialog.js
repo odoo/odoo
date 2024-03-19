@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { _t } from "@web/core/l10n/translation";
 import { Component, onWillStart, useState, useSubEnv } from "@odoo/owl";
 import { Dialog } from '@web/core/dialog/dialog';
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { ProductList } from "../product_list/product_list";
 
