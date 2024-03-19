@@ -14,7 +14,7 @@ import logging
 from ..tools.pos_order_data import PoSOrderData
 
 from odoo import api, fields, models, _, Command
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.osv.expression import AND, OR
 from odoo.service.common import exp_version
 from odoo.tools import float_is_zero, float_compare, convert
@@ -2232,6 +2232,8 @@ class PosSession(models.Model):
         return fps
 
     def _load_onboarding_data(self):
+        if not self.env.user.has_group("point_of_sale.group_pos_user"):
+            raise AccessDenied()
         convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init',
                              kind='data')
 
