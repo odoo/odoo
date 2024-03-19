@@ -638,6 +638,60 @@ class Channel(models.Model):
              ('res_id', '=', self.id)
             ]).id
 
+    def _channel_notify(self, discuss_message):
+        # link message to channel
+        message_format = discuss_message._discuss_message_format()[0]
+        if "temporary_id" in self.env.context:
+            message_format["temporary_id"] = self.env.context["temporary_id"]
+        # Last interest and is_pinned are updated for a channel when posting a message.
+        # So a notification is needed to update UI, and it should come before the
+        # notification of the message itself to ensure the channel automatically opens.
+        payload = {
+            "Thread": {
+                "id": self.id,
+                "last_interest_dt": fields.Datetime.now(),
+                "model": "discuss.channel",
+            },
+        }
+        bus_notifications = [
+            (self, "mail.record/insert", payload),
+            ((self, "members"), "mail.record/insert", {
+                "Thread": {"id": self.id, "is_pinned": True, "model": "discuss.channel"}
+            }),
+            (self, "discuss.channel/new_message", {"id": self.id, "message": message_format}),
+        ]
+        # sudo: bus.bus - sending on safe channel (discuss.channel)
+        self.env["bus.bus"].sudo()._sendmany(bus_notifications)
+
+    def discuss_message_post(self, body, parent_id=False, attachment_ids=False):
+        if (not self.env.user or self.env.user._is_public()) and self.is_member:
+            # sudo: discuss.channel - guests don't have access for creating mail.message
+            self = self.sudo()
+        # sudo: discuss.channel - write to discuss.channel is not accessible for most users
+        self.sudo().last_interest_dt = fields.Datetime.now()
+        message_data = {
+            "channel_id": self.id,
+            "body": body,
+        }
+        # Find the message's author
+        guest = self.env['mail.guest']._get_guest_from_context()
+        if guest:
+            message_data["author_guest_id"] = guest.id
+        else:
+            message_data["author_id"] = self.env.user.partner_id.id
+        if parent_id:
+            message_data["parent_id"] = self.env["discuss.message"].search([["id", "=", parent_id]]).id
+        if attachment_ids:
+            message_data["attachment_ids"] = attachment_ids
+        discuss_message = self.env["discuss.message"].create(message_data)
+        # TODO translations
+        # if "body" in msg_values:
+        #     # sudo: mail.message.translation - discarding translations of message after editing it
+        #     self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
+        #     payload["Message"]["translationValue"] = False
+        self._channel_notify(discuss_message)
+        return discuss_message._discuss_message_format()
+
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
         if (not self.env.user or self.env.user._is_public()) and self.is_member:

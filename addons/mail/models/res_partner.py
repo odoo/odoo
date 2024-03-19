@@ -24,6 +24,7 @@ class Partner(models.Model):
     # we need this to be readable inline as tracking messages use inline HTML nodes
     contact_address_inline = fields.Char(compute='_compute_contact_address_inline', string='Inlined Complete Address', tracking=True)
     starred_message_ids = fields.Many2many('mail.message', 'mail_message_res_partner_starred_rel')
+    starred_discuss_message_ids = fields.Many2many('discuss.message', 'discuss_message_res_partner_starred_rel')
 
     @api.depends('contact_address')
     def _compute_contact_address_inline(self):

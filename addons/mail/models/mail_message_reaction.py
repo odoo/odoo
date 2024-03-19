@@ -10,7 +10,8 @@ class MailMessageReaction(models.Model):
     _order = 'id desc'
     _log_access = False
 
-    message_id = fields.Many2one(string="Message", comodel_name='mail.message', ondelete='cascade', required=True, readonly=True)
+    message_id = fields.Many2one(string="Message", comodel_name='mail.message', ondelete='cascade', readonly=True)
+    discuss_message_id = fields.Many2one(string="Discuss Message", comodel_name='discuss.message', ondelete='cascade', readonly=True)
     content = fields.Char(string="Content", required=True, readonly=True)
     partner_id = fields.Many2one(string="Reacting Partner", comodel_name='res.partner', ondelete='cascade', readonly=True)
     guest_id = fields.Many2one(string="Reacting Guest", comodel_name='mail.guest', ondelete='cascade', readonly=True)

@@ -261,7 +261,11 @@ export class Store extends BaseStore {
         return this.messagePostMutex.exec(async () => {
             let res;
             try {
-                res = await rpc("/mail/message/post", params, { silent: true });
+                let route = "/mail/message/post";
+                if (tmpMessage.model === "discuss.channel") {
+                    route = "/discuss/channel/post";
+                }
+                res = await rpc(route, params, { silent: true });
             } catch (err) {
                 if (!tmpMessage) {
                     throw err;

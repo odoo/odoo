@@ -10,6 +10,8 @@ from odoo.exceptions import UserError
 from odoo.tools import replace_exceptions
 from odoo.addons.mail.controllers.webclient import WebclientController
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
+from markupsafe import Markup
+
 
 class DiscussChannelWebclientController(WebclientController):
     """Override to add discuss channel specific features."""
@@ -48,23 +50,56 @@ class ChannelController(http.Controller):
             return
         return channel._channel_info()[0]
 
+    @http.route("/discuss/channel/post", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
+    def discuss_channel_post(self, thread_id, post_data, context=None):
+        guest = request.env["mail.guest"]._get_guest_from_context()
+        guest.env["ir.attachment"].browse(post_data.get("attachment_ids", []))._check_attachments_access(
+            post_data.get("attachment_tokens")
+        )
+        if context:
+            request.update_context(**context)
+        canned_response_ids = tuple(cid for cid in post_data.pop('canned_response_ids', []) if isinstance(cid, int))
+        if canned_response_ids:
+            # Avoid serialization errors since last used update is not
+            # essential and should not block message post.
+            request.env.cr.execute("""
+                UPDATE mail_canned_response SET last_used=%(last_used)s
+                WHERE id IN (
+                    SELECT id from mail_canned_response WHERE id IN %(ids)s
+                    FOR NO KEY UPDATE SKIP LOCKED
+                )
+            """, {
+                'last_used': datetime.now(),
+                'ids': canned_response_ids,
+            })
+        channel = request.env["discuss.channel"].search([("id", "=", thread_id)])
+        if not channel:
+            raise NotFound()
+        if "body" in post_data:
+            post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
+        message_data = channel.discuss_message_post(
+            body=post_data.get("body"),
+            parent_id=post_data.get("parent_id") or False,
+            attachment_ids=post_data["attachment_ids"] or False,
+        )[0]
+        if "temporary_id" in request.context:
+            message_data["temporary_id"] = request.context["temporary_id"]
+        return message_data
+
     @http.route("/discuss/channel/messages", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
     def discuss_channel_messages(self, channel_id, search_term=None, before=None, after=None, limit=30, around=None):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
-        domain = [
-            ("res_id", "=", channel_id),
-            ("model", "=", "discuss.channel"),
-            ("message_type", "!=", "user_notification"),
-        ]
-        res = request.env["mail.message"]._message_fetch(
+        domain = [("channel_id", "=", channel_id)]
+        res = request.env["discuss.message"].sudo()._message_fetch(
             domain, search_term=search_term, before=before, after=after, around=around, limit=limit
         )
         if not request.env.user._is_public() and not around:
             res["messages"].set_message_done()
-        return {**res, "messages": res["messages"]._message_format(for_current_user=True)}
+        return {**res, "messages": res["messages"]._discuss_message_format()}
 
     @http.route("/discuss/channel/pinned_messages", methods=["POST"], type="json", auth="public")
     @add_guest_to_context

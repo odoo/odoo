@@ -3161,7 +3161,8 @@ class MailThread(models.AbstractModel):
         if inbox_pids:
             notif_create_values = [{
                 'author_id': message.author_id.id,
-                'mail_message_id': message.id,
+                'mail_message_id': message.id if message._name == "mail.message" else None,
+                'discuss_message_id': message.id if message._name == "discuss.message" else None,
                 'notification_status': 'sent',
                 'notification_type': 'inbox',
                 'res_partner_id': pid,
