@@ -288,6 +288,7 @@ export async function start({ asTab = false } = {}) {
     target.style.height = "calc(100% - 30px)";
     target.style.bottom = "0";
     target.style.left = "0";
+    target.style.transform = "unset";
     after(() => {
         target.classList.remove("o_web_client");
         target.style.display = "";
