@@ -11,7 +11,7 @@ test("project.project (form)", async () => {
         resId: 1,
         type: "form",
         arch: `
-            <form js_class="project_form">
+            <form js_class="form_description_expander">
                 <field name="name"/>
             </form>
         `,
