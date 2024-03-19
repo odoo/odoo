@@ -20,7 +20,7 @@ QUnit.module("Project", (hooks) => {
                     },
                 },
             },
-            arch: `<form js_class="project_form"><field name="display_name"/></form>`,
+            arch: `<form js_class="form_description_expander"><field name="display_name"/></form>`,
         };
         target = getFixture();
         setupViewRegistries();
