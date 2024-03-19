@@ -6,7 +6,7 @@ try:
 except ImportError:
     from PyPDF2.utils import PdfStreamError, PdfReadError
 
-from odoo import models, _
+from odoo import api, models, _
 from odoo.exceptions import UserError
 from odoo.tools import pdf
 
@@ -59,3 +59,19 @@ class IrActionsReport(models.Model):
                 raise UserError(_("Only invoices could be printed."))
 
         return super()._render_qweb_pdf(report_ref, res_ids=res_ids, data=data)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_master_tags(self):
+        master_xmlids = [
+            "account_invoices",
+            "action_account_original_vendor_bill"
+            "account_invoices_without_payment",
+            "action_report_journal",
+            "action_report_payment_receipt",
+            "action_report_account_statement",
+            "action_report_account_hash_integrity",
+        ]
+        for master_xmlid in master_xmlids:
+            master_report = self.env.ref(f"account.{master_xmlid}", raise_if_not_found=False)
+            if master_report and master_report in self:
+                raise UserError(_("You cannot delete this report (%s), it is used by the accounting PDF generation engine.", master_report.name))
