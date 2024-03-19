@@ -9,10 +9,8 @@ import { registry } from "@web/core/registry";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { standardFieldProps } from "../standard_field_props";
 import { useBus, useService, useOwnedDialogs } from "@web/core/utils/hooks";
-import {
-    useGetDomainTreeDescription,
-    useGetDefaultLeafDomain,
-} from "@web/core/domain_selector/utils";
+import { useGetTreeDescription } from "@web/core/tree_editor/utils";
+import { useGetDefaultLeafDomain } from "@web/core/domain_selector/utils";
 import { treeFromDomain } from "@web/core/tree_editor/condition_tree";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 
@@ -35,7 +33,7 @@ export class DomainField extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.getDomainTreeDescription = useGetDomainTreeDescription();
+        this.getDomainTreeDescription = useGetTreeDescription();
         this.getDefaultLeafDomain = useGetDefaultLeafDomain();
         this.addDialog = useOwnedDialogs();
 
@@ -143,10 +141,7 @@ export class DomainField extends Component {
         try {
             const tree = treeFromDomain(domain, { distributeNot: !this.env.debug });
             const trees = !tree.negate && tree.value === "&" ? tree.children : [tree];
-            promises = trees.map(async (tree) => {
-                const description = await this.getDomainTreeDescription(resModel, tree);
-                return description;
-            });
+            promises = trees.map((tree) => this.getDomainTreeDescription(resModel, tree));
         } catch (error) {
             if (error.data?.name === "builtins.KeyError" && error.data.message === resModel) {
                 // we don't want to support invalid models

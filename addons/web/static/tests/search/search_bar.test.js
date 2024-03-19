@@ -1382,3 +1382,132 @@ test("clicking on the searchview icon trigger the search", async () => {
     await contains(`.o_searchview button`).click();
     expect(`.o_searchview_input_container .o_facet_values`).toHaveText("a");
 });
+
+test("facets display with any / not any operator", async function () {
+    onRpc((route, { method }) => {
+        expect.step(method || route);
+    });
+    onRpc("/web/domain/validate", () => {
+        expect.step("/web/domain/validate");
+        return true;
+    });
+
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <filter name="filter" string="Filter" domain="[('company', 'any', [('bar', 'any', [('company', 'in', ['JD7', 'KDB'])])])]"/>
+            </search>
+        `,
+        context: {
+            search_default_filter: true,
+        },
+    });
+    expect(getFacetTexts()).toEqual(["Filter"]);
+    expect([`get_views`]).toVerifySteps();
+
+    await contains(".o_facet_with_domain .o_searchview_facet_label").click();
+    expect([`fields_get`]).toVerifySteps();
+
+    await contains(".modal footer button").click();
+    expect(getFacetTexts()).toEqual([
+        "Company matches ( Bar matches ( Company is in ( JD7 , KDB ) ) )",
+    ]);
+    expect([`/web/domain/validate`]).toVerifySteps();
+});
+
+test("facets display with any / not any operator (with a complex path)", async function () {
+    onRpc((route, { method }) => {
+        expect.step(method || route);
+    });
+    onRpc("/web/domain/validate", () => {
+        expect.step("/web/domain/validate");
+        return true;
+    });
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <filter name="filter" string="Filter" domain="['|', ('company.company', 'any', [('id', '=', 1)]), ('Bar', '=', false)]"/>
+            </search>
+        `,
+        context: {
+            search_default_filter: true,
+        },
+    });
+    expect(getFacetTexts()).toEqual(["Filter"]);
+    expect([`get_views`]).toVerifySteps();
+
+    await contains(".o_facet_with_domain .o_searchview_facet_label").click();
+    expect([`fields_get`]).toVerifySteps();
+
+    await contains(".modal footer button").click();
+    expect(getFacetTexts()).toEqual(["Company ➔ Company matches ( Id = 1 ) or Bar = false"]);
+    expect([`/web/domain/validate`]).toVerifySteps();
+});
+
+test("facets display with any / not any operator (with a or)", async function () {
+    onRpc((route, { method }) => {
+        expect.step(method || route);
+    });
+    onRpc("/web/domain/validate", () => {
+        expect.step("/web/domain/validate");
+        return true;
+    });
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <filter name="filter" string="Filter" domain="['|', ('company', 'any', [('id', '=', 1)]), ('bar', '=', false)]"/>
+            </search>
+        `,
+        context: {
+            search_default_filter: true,
+        },
+    });
+    expect(getFacetTexts()).toEqual(["Filter"]);
+    expect([`get_views`]).toVerifySteps();
+
+    await contains(".o_facet_with_domain .o_searchview_facet_label").click();
+    expect([`fields_get`]).toVerifySteps();
+
+    await contains(".modal footer button").click();
+    expect(getFacetTexts()).toEqual(["Company matches ( Id = 1 ) or Bar = false"]);
+    expect([`/web/domain/validate`]).toVerifySteps();
+});
+
+test("facets display with any / not any operator (check brackets)", async function () {
+    onRpc((route, { method }) => {
+        expect.step(method || route);
+    });
+    onRpc("/web/domain/validate", () => {
+        expect.step("/web/domain/validate");
+        return true;
+    });
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <filter isDebugMode="true" name="filter" string="Filter" domain="['|', ('company', 'any', [('bar', 'any', [('bool', 'is', False)]), ('bar', 'any', [('bool', 'is', True)])]), ('bar', '=', false)]"/>
+            </search>
+        `,
+        context: {
+            search_default_filter: true,
+        },
+    });
+    expect(getFacetTexts()).toEqual(["Filter"]);
+    expect([`get_views`]).toVerifySteps();
+
+    await contains(".o_facet_with_domain .o_searchview_facet_label").click();
+    expect([`fields_get`]).toVerifySteps();
+
+    await contains(".modal footer button").click();
+    expect(getFacetTexts()).toEqual([
+        "Company matches ( Bar matches ( Bool is not set ) and Bar matches ( Bool is set ) ) or Bar = false",
+    ]);
+    expect([`/web/domain/validate`]).toVerifySteps();
+});

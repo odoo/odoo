@@ -1,4 +1,3 @@
-import { extractPathsFromDomain, useGetDefaultCondition } from "@web/core/domain_selector/utils";
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { TreeEditor } from "@web/core/tree_editor/tree_editor";
@@ -15,6 +14,9 @@ import { getDomainDisplayedOperators } from "@web/core/domain_selector/domain_se
 import { getOperatorEditorInfo } from "@web/core/tree_editor/tree_editor_operator_editor";
 import { _t } from "@web/core/l10n/translation";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
+import { useService } from "@web/core/utils/hooks";
+import { useMakeGetFieldDef } from "@web/core/tree_editor/utils";
+import { getDefaultCondition } from "./utils";
 
 const ARCHIVED_CONDITION = condition("active", "in", [true, false]);
 const ARCHIVED_DOMAIN = `[("active", "in", [True, False])]`;
@@ -39,12 +41,11 @@ export class DomainSelector extends Component {
     };
 
     setup() {
-        this.loadFieldInfo = useLoadFieldInfo();
-        this.getDefaultCondition = useGetDefaultCondition();
+        this.fieldService = useService("field");
+        this.loadFieldInfo = useLoadFieldInfo(this.fieldService);
+        this.makeGetFieldDef = useMakeGetFieldDef(this.fieldService);
 
         this.tree = null;
-        this.defaultCondition = null;
-        this.fieldDefs = {};
         this.showArchivedCheckbox = false;
         this.includeArchived = false;
 
@@ -62,28 +63,21 @@ export class DomainSelector extends Component {
         }
         if (!isSupported) {
             this.tree = null;
-            this.defaultCondition = null;
-            this.fieldDefs = {};
             this.showArchivedCheckbox = false;
             this.includeArchived = false;
             return;
         }
 
-        const paths = new Set([...extractPathsFromDomain(domain), "active"]);
-        await this.loadFieldDefs(p.resModel, paths);
+        const tree = treeFromDomain(domain);
 
-        const [defaultCondition] = await Promise.all([
-            this.getDefaultCondition(p.resModel),
-            this.loadFieldDefs(p.resModel, paths),
-        ]);
+        const getFieldDef = await this.makeGetFieldDef(p.resModel, tree, ["active"]);
 
         this.tree = treeFromDomain(domain, {
-            getFieldDef: this.getFieldDef.bind(this),
+            getFieldDef,
             distributeNot: !p.isDebugMode,
         });
-        this.defaultCondition = defaultCondition;
 
-        this.showArchivedCheckbox = Boolean(this.fieldDefs.active);
+        this.showArchivedCheckbox = this.getShowArchivedCheckBox(Boolean(getFieldDef("active")), p);
         this.includeArchived = false;
         if (this.showArchivedCheckbox) {
             if (this.tree.value === "&") {
@@ -104,25 +98,25 @@ export class DomainSelector extends Component {
         }
     }
 
-    getFieldDef(path) {
-        if (typeof path === "string") {
-            return this.fieldDefs[path];
-        }
-        return null;
+    getShowArchivedCheckBox(hasActiveField, props) {
+        return hasActiveField;
+    }
+
+    getDefaultCondition(fieldDefs) {
+        return getDefaultCondition(fieldDefs);
     }
 
     getDefaultOperator(fieldDef) {
         return getDomainDisplayedOperators(fieldDef)[0];
     }
 
-    getOperatorEditorInfo(node) {
-        const fieldDef = this.getFieldDef(node.path);
+    getOperatorEditorInfo(fieldDef) {
         const operators = getDomainDisplayedOperators(fieldDef);
-        return getOperatorEditorInfo(operators);
+        return getOperatorEditorInfo(operators, fieldDef);
     }
 
-    getPathEditorInfo() {
-        const { resModel, isDebugMode } = this.props;
+    getPathEditorInfo(resModel, defaultCondition) {
+        const { isDebugMode } = this.props;
         return {
             component: ModelFieldSelector,
             extractProps: ({ update, value: path }) => {
@@ -135,26 +129,10 @@ export class DomainSelector extends Component {
                 };
             },
             isSupported: (path) => [0, 1].includes(path) || typeof path === "string",
-            defaultValue: () => this.defaultCondition.path,
+            defaultValue: () => defaultCondition.path,
             stringify: (path) => formatValue(path),
             message: _t("Invalid field chain"),
         };
-    }
-
-    async loadFieldDefs(resModel, paths) {
-        const promises = [];
-        const fieldDefs = {};
-        for (const path of paths) {
-            if (typeof path === "string") {
-                promises.push(
-                    this.loadFieldInfo(resModel, path).then(({ fieldDef }) => {
-                        fieldDefs[path] = fieldDef;
-                    })
-                );
-            }
-        }
-        await Promise.all(promises);
-        this.fieldDefs = fieldDefs;
     }
 
     toggleIncludeArchived() {

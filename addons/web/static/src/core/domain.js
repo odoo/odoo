@@ -389,6 +389,9 @@ function matchCondition(record, condition) {
                 return false;
             }
             return new RegExp(value.replace(/%/g, ".*"), "i").test(fieldValue);
+        case "any":
+        case "not_any":
+            return true;
     }
     throw new InvalidDomainError("could not match domain");
 }

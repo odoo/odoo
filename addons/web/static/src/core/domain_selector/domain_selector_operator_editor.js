@@ -46,7 +46,18 @@ export function getDomainDisplayedOperators(fieldDef) {
         case "many2one":
         case "many2many":
         case "one2many":
-            return ["in", "not in", "=", "!=", "ilike", "not ilike", "set", "not_set"];
+            return [
+                "in",
+                "not in",
+                "=",
+                "!=",
+                "ilike",
+                "not ilike",
+                "set",
+                "not_set",
+                "any",
+                "not any",
+            ];
         case "json":
             return ["=", "!=", "ilike", "not ilike", "set", "not_set"];
         case "properties":

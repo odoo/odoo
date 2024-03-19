@@ -192,11 +192,25 @@ export function toValue(ast, isWithinArray = false) {
     }
 }
 
+export function isTree(value) {
+    return (
+        typeof value === "object" &&
+        !(value instanceof Domain) &&
+        !(value instanceof Expression) &&
+        !Array.isArray(value) &&
+        value !== null
+    );
+}
+
 /**
  * @param {Value} value
  * @returns  {import("@web/core/py_js/py_parser").AST}
  */
 function toAST(value) {
+    if (isTree(value)) {
+        const domain = new Domain(domainFromTree(value));
+        return domain.ast;
+    }
     if (value instanceof Expression) {
         return value.toAST();
     }
@@ -264,6 +278,13 @@ function _construcTree(ASTs, distributeNot, negate = false) {
         tree.negate = negate;
         tree.operator = toValue(operatorAST);
         tree.value = toValue(valueAST);
+        if (["any", "not any"].includes(tree.operator)) {
+            try {
+                tree.value = treeFromDomain(formatAST(valueAST));
+            } catch {
+                tree.value = Array.isArray(tree.value) ? tree.value : [tree.value];
+            }
+        }
         normalizeCondition(tree);
     }
     let remaimingASTs = tailASTs;

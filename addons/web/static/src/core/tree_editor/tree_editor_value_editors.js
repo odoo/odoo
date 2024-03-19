@@ -13,7 +13,7 @@ import {
 } from "@web/core/tree_editor/tree_editor_autocomplete";
 import { unique } from "@web/core/utils/arrays";
 import { Input, Select, List, Range } from "@web/core/tree_editor/tree_editor_components";
-import { formatValue } from "@web/core/tree_editor/condition_tree";
+import { connector, formatValue, isTree } from "@web/core/tree_editor/condition_tree";
 import { getResModel, disambiguate, isId } from "@web/core/tree_editor/utils";
 
 const { DateTime } = luxon;
@@ -157,6 +157,21 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                         },
                         isSupported: (value) => Array.isArray(value),
                         defaultValue: () => [],
+                    };
+                }
+            }
+        }
+        case "any":
+        case "not any": {
+            switch (fieldDef.type) {
+                case "many2one":
+                case "many2many":
+                case "one2many": {
+                    return {
+                        component: null,
+                        extractProps: null,
+                        isSupported: isTree,
+                        defaultValue: () => connector("&"),
                     };
                 }
             }
