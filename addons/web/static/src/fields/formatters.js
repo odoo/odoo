@@ -6,6 +6,8 @@ import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { intersperse } from "@web/core/utils/strings";
 import { session } from "@web/session";
+import { roundDecimals } from "@web/core/utils/numbers";
+
 
 // -----------------------------------------------------------------------------
 // Helpers
@@ -128,7 +130,7 @@ export function formatFloat(value, options = {}) {
     } else {
         precision = 2;
     }
-    const formatted = (value || 0).toFixed(precision || 2).split(".");
+    const formatted = roundDecimals(value, precision).toFixed(precision || 2).split(".");
     formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
     if (options.noTrailingZeros) {
         formatted[1] = formatted[1].replace(/0+$/, "");
