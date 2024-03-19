@@ -1,5 +1,6 @@
 /** @odoo-module **/
 import {WebsiteSale} from "@website_sale/js/website_sale";
+import { rpc } from "@web/core/network/rpc";
 
 WebsiteSale.include({
     events: Object.assign({}, WebsiteSale.prototype.events, {
@@ -20,7 +21,7 @@ WebsiteSale.include({
         if (!selectCheck) {
             return;
         }
-        return this.rpc(rpcRoute, {
+        return rpc(rpcRoute, {
         }).then((data) => {
             if (this.isPeruvianCompany) {
                 if (data[place]?.length) {
