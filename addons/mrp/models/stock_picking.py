@@ -109,7 +109,9 @@ class StockPicking(models.Model):
     @api.depends('group_id')
     def _compute_mrp_production_ids(self):
         for picking in self:
-            picking.production_ids = picking.group_id.mrp_production_ids | picking.move_ids.move_dest_ids.raw_material_production_id
+            production_ids = picking.group_id.mrp_production_ids | picking.move_ids.move_dest_ids.raw_material_production_id
+            # Filter out unwanted MO types
+            picking.production_ids = production_ids.filtered(lambda p: p.picking_type_id.active)
             picking.production_count = len(picking.production_ids)
 
     def action_detailed_operations(self):
