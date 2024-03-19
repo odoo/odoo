@@ -58,10 +58,9 @@ paymentForm.include({
      * @return {object}
      */
     _prepareRazorpayOptions(processingValues) {
-        return Object.assign({}, processingValues, {
+        const vals = Object.assign({}, processingValues, {
             'key': processingValues['razorpay_key_id'],
             'order_id': processingValues['razorpay_order_id'],
-            'customer_id': processingValues['razorpay_customer_id'],
             'description': processingValues['reference'],
             'recurring': processingValues['is_tokenize_request'] ? '1': '0',
             'handler': response => {
@@ -79,6 +78,10 @@ paymentForm.include({
                 }
             },
         });
+        if (processingValues['razorpay_customer_id']) {
+            vals['customer_id'] = processingValues['razorpay_customer_id'];
+        }
+        return vals;
     },
 
 });
