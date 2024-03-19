@@ -3,27 +3,6 @@
 import options from '@web_editor/js/editor/snippets.options';
 import { _t } from "@web/core/l10n/translation";
 
-const Many2oneUserValueWidget = options.userValueWidgetsRegistry['we-many2one'];
-
-const Many2oneDefaultMessageWidget = Many2oneUserValueWidget.extend({
-
-    // defaultMessage: default message to display when no records are selected
-    configAttributes: [...Many2oneUserValueWidget.prototype.configAttributes, 'defaultMessage'],
-
-    /**
-     * @override
-     */
-    async setValue(value, methodName) {
-        await this._super(...arguments);
-
-        if (value === '') {
-            this.menuTogglerEl.textContent = this.options.defaultMessage;
-        }
-    },
-});
-
-options.userValueWidgetsRegistry['we-many2one-default-message'] = Many2oneDefaultMessageWidget;
-
 options.registry.AddToCart = options.Class.extend({
     events: Object.assign({}, options.Class.prototype.events || {}, {
         'click .reset-variant-picker': '_onClickResetVariantPicker',
@@ -203,7 +182,7 @@ options.registry.AddToCart = options.Class.extend({
     async _renderCustomXML(uiFragment) {
         if (this.$target[0].dataset.productTemplate) {
             // That means that a template was selected and we want to update the content of the variant picker based on the template id
-            const productVariantPickerEl = uiFragment.querySelector('we-many2one-default-message[data-name="product_variant_picker_opt"]');
+            const productVariantPickerEl = uiFragment.querySelector('we-many2one[data-name="product_variant_picker_opt"]');
             productVariantPickerEl.dataset.domain = `[["product_tmpl_id", "=", ${this.$target[0].dataset.productTemplate}]]`;
         }
     },
