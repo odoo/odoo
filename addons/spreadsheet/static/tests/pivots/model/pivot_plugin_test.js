@@ -645,6 +645,25 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.strictEqual(F10.format, "0");
     });
 
+    QUnit.test("invalid pivot measure", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+                <pivot>
+                    <field name="product_id" type="col"/>
+                    <field name="foo" type="row"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+        });
+        const formula = '=PIVOT.VALUE(1, "count")';
+        setCellContent(model, "F10", formula);
+        assert.equal(getCellValue(model, "F10"), "#ERROR", formula);
+        assert.equal(
+            getEvaluatedCell(model, "F10").message,
+            "The argument count is not a valid measure. Here are the measures: (probability)",
+            formula
+        );
+    });
+
     QUnit.test("can import/export sorted pivot", async (assert) => {
         const spreadsheetData = {
             pivots: {
