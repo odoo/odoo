@@ -8,7 +8,8 @@
                     <Input tModel="[state, 'openingCash']"
                         isValid.bind="env.utils.isValidFloat"
                         callback.bind="handleInputChange"
-                        autofocus="true" />
+                        autofocus="true"
+                        placeholder="inputPlaceholder"/>
                     <div class="button icon btn btn-secondary" t-on-click="openDetailsPopup">
                         <i class="fa fa-money fa-2x" role="img" title="Open the money details popup"/>
                     </div>
@@ -22,7 +23,7 @@
                 <button class="button btn btn-lg btn-primary"
                     t-on-click="confirm"
                     t-att-disabled="!env.utils.isValidFloat(state.openingCash)">
-                    Open session 
+                    Open session
                 </button>
             </t>
         </Dialog>
