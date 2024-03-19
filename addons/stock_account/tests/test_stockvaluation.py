@@ -4075,6 +4075,9 @@ class TestStockValuation(TransactionCase):
         revaluation = revaluation_form.save()
         revaluation.action_validate_revaluation()
 
-        account_move = self.env['account.move'].search([('journal_id', '=', revaluation.account_journal_id.id)])
+        account_move = self.env['stock.valuation.layer'].search([
+            ('product_id', '=', self.product1.id),
+            ('stock_move_id', '=', False),
+        ]).account_move_id
 
         self.assertEqual(account_move.line_ids[0].name, 'OdooBot changed stock valuation from  15.0 to 25.0 - [prda] Product A')
