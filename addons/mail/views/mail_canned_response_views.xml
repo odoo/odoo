@@ -9,8 +9,8 @@
                 <search string="Canned Responses Search">
                     <field name="source"/>
                     <field name="substitution"/>
-                    <filter string="My canned response" name="my_canned_response" domain="[('create_uid', '=', uid)]"/>
-                    <filter string="Shared canned response" name="shared_canned_response" domain="[('is_shared', '=', True)]"/>
+                    <filter string="My canned responses" name="filter_create_uid" domain="[('create_uid', '=', uid)]"/>
+                    <filter string="Shared canned responses" name="filter_is_shared" domain="[('is_shared', '=', True)]"/>
                 </search>
             </field>
         </record>
@@ -57,8 +57,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="mail_canned_response_view_search"/>
             <field name="context">{
-                'search_default_my_canned_response': 1,
-                'search_default_shared_canned_response': 1,
+                'search_default_filter_create_uid': 1,
             }</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
