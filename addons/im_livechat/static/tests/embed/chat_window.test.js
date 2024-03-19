@@ -1,28 +1,34 @@
-const test = QUnit.test; // QUnit.test()
-
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
-import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
+import { describe, test } from "@odoo/hoot";
+import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    assertSteps,
+    click,
+    contains,
+    insertText,
+    onRpcBefore,
+    start,
+    startServer,
+    step,
+    triggerHotkey,
+} from "@mail/../tests/mail_test_helpers";
+import { defineLivechatModels, loadDefaultEmbedConfig } from "../livechat_test_helpers";
+import { tick } from "@odoo/hoot-mock";
 
-import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
-import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
-
-QUnit.module("chat window");
+describe.current.tags("desktop");
+defineLivechatModels();
 
 test("do not save fold state of temporary live chats", async () => {
     patchWithCleanup(LivechatButton, {
         DEBOUNCE_DELAY: 0,
     });
     await startServer();
-    await loadDefaultConfig();
-    await start({
-        mockRPC(route, args) {
-            if (route === "/discuss/channel/fold") {
-                step(`fold - ${args.state}`);
-            }
-        },
+    await loadDefaultEmbedConfig();
+    onRpcBefore("/discuss/channel/fold", (args) => {
+        step(`fold - ${args.state}`);
     });
+    await start({ authenticateAs: false, env: { odooEmbedLivechat: true } });
+    await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
     await assertSteps([]);
@@ -32,6 +38,7 @@ test("do not save fold state of temporary live chats", async () => {
     await click(".o-mail-ChatWindow-header");
     await contains(".o-mail-Message", { text: "Hello", count: 0 });
     await assertSteps(["fold - folded"]);
+    await tick(); // FIXME: race-condition otherwise (chat window folded)
     await click("[title='Close Chat Window']");
     await click("button", { text: "Close conversation" });
     await click(".o-livechat-LivechatButton");

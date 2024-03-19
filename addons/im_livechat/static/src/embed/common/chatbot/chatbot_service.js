@@ -6,6 +6,7 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
+import { isEmbedLivechatEnabled } from "../misc";
 
 const STEP_DELAY = 500;
 export class ChatBotService {
@@ -163,6 +164,9 @@ export class ChatBotService {
 export const chatBotService = {
     dependencies: ["im_livechat.livechat", "mail.message", "mail.messaging", "mail.store"],
     start(env, services) {
+        if (!isEmbedLivechatEnabled(env)) {
+            return;
+        }
         return new ChatBotService(env, services);
     },
 };

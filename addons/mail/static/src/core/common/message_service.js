@@ -41,7 +41,7 @@ export class MessageService {
             attachment_tokens: attachments
                 .concat(message.attachments)
                 .map((attachment) => attachment.accessToken),
-            body: await prettifyMessageContent(body, validMentions),
+            body: await prettifyMessageContent(this.env, body, validMentions),
             message_id: message.id,
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
         });

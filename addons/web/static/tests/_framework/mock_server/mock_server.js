@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { isIterable } from "@web/core/utils/arrays";
 import { deepCopy, isObject } from "@web/core/utils/objects";
 import { serverState } from "../mock_server_state.hoot";
-import { fetchModelDefinitions } from "../module_set.hoot";
+import { clearServerModelCache, fetchModelDefinitions, lastSuite } from "../module_set.hoot";
 import { DEFAULT_FIELD_VALUES, FIELD_SYMBOL } from "./mock_fields";
 import {
     FIELD_NOT_FOUND,
@@ -98,7 +98,7 @@ const authenticateUser = (user) => {
  */
 const ensureError = (error) => (error instanceof Error ? error : new Error(error));
 
-const getCurrentParams = createJobScopedGetter(
+export const getCurrentParams = createJobScopedGetter(
     /**
      * @param {ServerParams} previous
      */
@@ -164,6 +164,9 @@ class MockServerBaseEnvironment {
 
     set uid(newUid) {
         serverState.userId = newUid;
+        if (this.user) {
+            serverState.partnerId = this.user.partner_id;
+        }
     }
 
     get user() {
@@ -555,6 +558,11 @@ export class MockServer {
         const models = this.modelSpecs;
         this.modelSpecs = [];
         if (this.modelNamesToFetch.size) {
+            const suite = getCurrentParams().suite;
+            if (lastSuite.value !== suite) {
+                clearServerModelCache();
+            }
+            lastSuite.value = suite;
             const modelEntries = await fetchModelDefinitions(this.modelNamesToFetch);
             this.modelNamesToFetch.clear();
 
@@ -971,7 +979,7 @@ export function logout() {
         env.cookie.delete("authenticated_user_sid");
     }
     env.cookie.delete("sid");
-    const [publicUser] = env["res.users"]._filter([["id", "=", serverState.PUBLIC_USER_ID]], {
+    const [publicUser] = env["res.users"]._filter([["id", "=", serverState.publicUserId]], {
         active_test: false,
     });
     authenticate(publicUser.login, publicUser.password);

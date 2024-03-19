@@ -1,20 +1,26 @@
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import {
+    click,
+    contains,
+    insertText,
+    start,
+    startServer,
+    triggerHotkey,
+} from "@mail/../tests/mail_test_helpers";
+import { defineLivechatModels, loadDefaultEmbedConfig } from "../livechat_test_helpers";
+import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
-
-import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
-
-QUnit.module("message actions");
+describe.current.tags("desktop");
+defineLivechatModels();
 
 test("Only two quick actions are shown", async () => {
     // This is desired because 2 actions share a same icon
     // "Add a reaction" and "View reactions".
     await startServer();
-    await loadDefaultConfig();
-    await start();
+    await loadDefaultEmbedConfig();
+    await start({ authenticateAs: false, env: { odooEmbedLivechat: true } });
+    await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow");
     await insertText(".o-mail-Composer-input", "Hello World!");

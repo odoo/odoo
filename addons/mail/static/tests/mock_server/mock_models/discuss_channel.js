@@ -397,16 +397,18 @@ export class DiscussChannel extends models.ServerModel {
                 ["model", "=", "discuss.channel"],
                 ["res_id", "=", channel.id],
             ]);
-            const message_needaction_counter = MailNotification._filter([
-                ["res_partner_id", "=", this.env.user.partner_id],
-                ["is_read", "=", false],
-                ["mail_message_id", "in", messages.map((message) => message.id)],
-            ]).length;
             const res = this.channel_basic_info([channel.id]);
-            Object.assign(res, {
-                fetchChannelInfoState: "fetched",
-                message_needaction_counter,
-            });
+            if (this.env.user) {
+                const message_needaction_counter = MailNotification._filter([
+                    ["res_partner_id", "=", this.env.user.partner_id],
+                    ["is_read", "=", false],
+                    ["mail_message_id", "in", messages.map((message) => message.id)],
+                ]).length;
+                Object.assign(res, {
+                    fetchChannelInfoState: "fetched",
+                    message_needaction_counter,
+                });
+            }
             const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
             if (memberOfCurrentUser) {
                 Object.assign(res, {
@@ -1062,12 +1064,12 @@ export class DiscussChannel extends models.ServerModel {
         /** @type {import("mock_models").MailGuest} */
         const MailGuest = this.env["mail.guest"];
 
-        if (DiscussChannel._find_or_create_member_for_self(id)) {
+        if (this._find_or_create_member_for_self(id)) {
             return;
         }
         const guestId =
             MailGuest._get_guest_from_context()?.id ?? MailGuest.create({ name: guest_name });
-        DiscussChannel.write([id], {
+        this.write([id], {
             channel_member_ids: [Command.create({ guest_id: guestId })],
         });
         MailGuest._set_auth_cookie(guestId);

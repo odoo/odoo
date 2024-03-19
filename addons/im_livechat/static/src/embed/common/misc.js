@@ -4,3 +4,7 @@ export function isValidEmail(val) {
         /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
     return re.test(val);
 }
+
+export function isEmbedLivechatEnabled(env) {
+    return env && (!env.odooHoot || env.odooEmbedLivechat);
+}

@@ -8,6 +8,7 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
+import { isEmbedLivechatEnabled } from "./misc";
 
 /**
  * @typedef LivechatRule
@@ -48,7 +49,7 @@ export class LivechatService {
     rule;
     initializedDeferred = new Deferred();
     initialized = false;
-    available = session.livechatData?.isAvailable;
+    available = session?.livechatData?.isAvailable;
     _onStateChangeCallbacks = {
         [SESSION_STATE.CREATED]: [],
         [SESSION_STATE.PERSISTED]: [],
@@ -210,7 +211,7 @@ export class LivechatService {
                 chatbot_script_id: this.savedState
                     ? this.savedState.threadData.chatbot?.script.id
                     : this.rule.chatbotScript?.id,
-                previous_operator_id: cookie.get(OPERATOR_COOKIE),
+                previous_operator_id: parseInt(cookie.get(OPERATOR_COOKIE)),
                 temporary_id: this.thread?.id,
                 persisted: persist,
             },
@@ -256,6 +257,9 @@ export class LivechatService {
 export const livechatService = {
     dependencies: ["bus_service", "mail.chat_window", "mail.store", "notification"],
     start(env, services) {
+        if (!isEmbedLivechatEnabled(env)) {
+            return;
+        }
         const livechat = reactive(new LivechatService(env, services));
         (async () => {
             // Live chat state should be deleted for one of those reasons:

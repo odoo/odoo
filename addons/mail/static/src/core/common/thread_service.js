@@ -607,6 +607,7 @@ export class ThreadService {
                 tmpData.parentMessage = this.store.Message.get(parentId);
             }
             const prettyContent = await prettifyMessageContent(
+                this.env,
                 body,
                 this.messageService.getMentionsFromText(body, {
                     mentionedChannels,
@@ -689,7 +690,7 @@ export class ThreadService {
                 mail_post_autofollow: !isNote && thread.hasWriteAccess,
             },
             post_data: {
-                body: await prettifyMessageContent(body, validMentions),
+                body: await prettifyMessageContent(this.env, body, validMentions),
                 attachment_ids: attachments.map(({ id }) => id),
                 attachment_tokens: attachments.map((attachment) => attachment.accessToken),
                 canned_response_ids: cannedResponseIds,

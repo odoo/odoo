@@ -34,7 +34,6 @@ Help your customers with this chat, and analyse their feedback.
         "views/im_livechat_chatbot_templates.xml",
         "views/res_users_views.xml",
         "views/digest_views.xml",
-        "views/webclient_templates.xml",
         "report/im_livechat_report_channel_views.xml",
         "report/im_livechat_report_operator_views.xml"
     ],
@@ -78,11 +77,7 @@ Help your customers with this chat, and analyse their feedback.
         'web.assets_unit_tests': [
             'im_livechat/static/tests/**/*',
             ('remove', 'im_livechat/static/tests/legacy/**/*'),
-            ('remove', 'im_livechat/static/tests/embed/**/*'),
             ('remove', 'im_livechat/static/tests/tours/**/*'),
-        ],
-        'im_livechat.qunit_embed_suite': [
-            'im_livechat/static/tests/embed/**/*',
         ],
         'web.tests_assets': [
             'im_livechat/static/tests/legacy/helpers/**/*',
@@ -93,6 +88,10 @@ Help your customers with this chat, and analyse their feedback.
         ],
         'web.assets_tests': [
             'im_livechat/static/tests/tours/**/*',
+        ],
+        'web.assets_unit_tests_setup': [
+            'im_livechat/static/src/embed/**/*',
+            ('remove', 'im_livechat/static/src/embed/**/boot.js'),
         ],
         'im_livechat.assets_embed_core': [
             'web/static/lib/odoo_ui_icons/style.css',
@@ -135,13 +134,6 @@ Help your customers with this chat, and analyse their feedback.
         'im_livechat.assets_embed_cors': [
             ('include', 'im_livechat.assets_embed_external'),
             'im_livechat/static/src/embed/cors/**/*',
-        ],
-        'im_livechat.embed_test_assets': [
-            ('include', 'web.tests_assets'),
-            ('remove', 'web/static/tests/legacy/mock_server_tests.js'),
-            ('remove', 'im_livechat/static/**'),
-            'im_livechat/static/tests/legacy/helpers/**',
-            ('include', 'im_livechat.assets_embed_core'),
         ],
     },
     'license': 'LGPL-3',

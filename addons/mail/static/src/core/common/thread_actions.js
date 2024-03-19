@@ -179,10 +179,19 @@ function transformAction(component, id, action) {
     };
 }
 
+export const allowedThreadActions = {
+    /** @param {import("@web/env").OdooEnv} env */
+    fn(env) {
+        return threadActionsRegistry.getEntries().map(([id]) => id);
+    },
+};
+
 export function useThreadActions() {
     const component = useComponent();
+    const allowedActionIds = allowedThreadActions.fn(component.env);
     const transformedActions = threadActionsRegistry
         .getEntries()
+        .filter(([id]) => allowedActionIds.includes(id))
         .map(([id, action]) => transformAction(component, id, action));
     for (const action of transformedActions) {
         if (action.setup) {

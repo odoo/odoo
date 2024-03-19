@@ -7,10 +7,11 @@ import { useComponent } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
+import { isEmbedLivechatEnabled } from "./misc";
 
 threadActionsRegistry.add("restart", {
     condition(component) {
-        return component.chatbotService.canRestart;
+        return isEmbedLivechatEnabled(component.env) && component.chatbotService?.canRestart;
     },
     icon: "fa fa-fw fa-refresh",
     name: _t("Restart Conversation"),
@@ -24,6 +25,9 @@ threadActionsRegistry.add("restart", {
 const callSettingsAction = threadActionsRegistry.get("settings");
 patch(callSettingsAction, {
     condition(component) {
+        if (!isEmbedLivechatEnabled(component.env)) {
+            return super.condition(...arguments);
+        }
         if (component.thread?.channel_type !== "livechat") {
             return super.condition(...arguments);
         }
@@ -35,7 +39,9 @@ patch(callSettingsAction, {
     setup() {
         super.setup(...arguments);
         const component = useComponent();
-        component.livechatService = useService("im_livechat.livechat");
-        component.rtcService = useService("discuss.rtc");
+        if (isEmbedLivechatEnabled(component.env)) {
+            component.livechatService = useService("im_livechat.livechat");
+            component.rtcService = useService("discuss.rtc");
+        }
     },
 });

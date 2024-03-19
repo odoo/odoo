@@ -2,6 +2,7 @@ import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
+import { isEmbedLivechatEnabled } from "./misc";
 
 patch(Thread.prototype, {
     setup() {
@@ -31,6 +32,9 @@ patch(Thread.prototype, {
     },
 
     get isLastMessageFromCustomer() {
+        if (!isEmbedLivechatEnabled(this._store.env)) {
+            return super.isLastMessageFromCustomer;
+        }
         if (this.channel_type !== "livechat") {
             return super.isLastMessageFromCustomer;
         }
@@ -38,6 +42,9 @@ patch(Thread.prototype, {
     },
 
     get avatarUrl() {
+        if (!isEmbedLivechatEnabled(this._store.env)) {
+            return super.avatarUrl;
+        }
         if (this.channel_type === "livechat") {
             return this.operator.avatarUrl;
         }
@@ -45,6 +52,9 @@ patch(Thread.prototype, {
     },
 
     get hasWelcomeMessage() {
+        if (!isEmbedLivechatEnabled(this._store.env)) {
+            return super.hasWelcomeMessage;
+        }
         return this.channel_type === "livechat" && !this.chatbot && !this.requested_by_operator;
     },
 });

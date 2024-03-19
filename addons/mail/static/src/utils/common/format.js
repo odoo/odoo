@@ -26,11 +26,12 @@ const _escapeEntities = (function () {
 })();
 
 /**
+ * @param {import("@web/env").OdooEnv} env
  * @param rawBody {string}
  * @param validRecords {Object}
  * @param validRecords.partners {Partner}
  */
-export async function prettifyMessageContent(rawBody, validRecords = []) {
+export async function prettifyMessageContent(env, rawBody, validRecords = []) {
     // Suggested URL Javascript regex of http://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
     // Adapted to make http(s):// not required if (and only if) www. is given. So `should.notmatch` does not match.
     // And further extended to include Latin-1 Supplement, Latin Extended-A, Latin Extended-B and Latin Extended Additional.
@@ -44,7 +45,7 @@ export async function prettifyMessageContent(rawBody, validRecords = []) {
     // the current design makes this quite hard to do.
     body = generateMentionsLinks(body, validRecords);
     body = parseAndTransform(body, addLink);
-    body = await _generateEmojisOnHtml(body);
+    body = await _generateEmojisOnHtml(env, body);
     return body;
 }
 
@@ -204,11 +205,12 @@ function generateMentionsLinks(body, { partners = [], threads = [] }) {
 
 /**
  * @private
+ * @param {import("@web/env").OdooEnv} env
  * @param {string} htmlString
  * @returns {string}
  */
-async function _generateEmojisOnHtml(htmlString) {
-    const { emojis } = await loadEmoji();
+async function _generateEmojisOnHtml(env, htmlString) {
+    const { emojis } = await loadEmoji(env);
     for (const emoji of emojis) {
         for (const source of [...emoji.shortcodes, ...emoji.emoticons]) {
             const escapedSource = String(source).replace(/([.*+?=^!:${}()|[\]/\\])/g, "\\$1");

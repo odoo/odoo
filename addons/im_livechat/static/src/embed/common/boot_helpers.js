@@ -50,13 +50,16 @@ export function makeRoot(target) {
  * Initialize the livechat container by loading the styles and
  * the fonts.
  *
+ * @param {import("@web/env").OdooEnv}
  * @param {HTMLElement} root
  * @returns {ShadowRoot}
  */
-export async function makeShadow(root) {
+export async function makeShadow(env, root) {
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = url("/im_livechat/assets_embed.css");
+    if (!env.odooHoot) {
+        link.href = url("/im_livechat/assets_embed.css");
+    }
     const stylesLoadedPromise = new Promise((res, rej) => {
         link.addEventListener("load", res);
         link.addEventListener("error", rej);

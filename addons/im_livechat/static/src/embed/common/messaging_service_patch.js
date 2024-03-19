@@ -4,11 +4,15 @@ import { Messaging, messagingService } from "@mail/core/common/messaging_service
 
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
+import { isEmbedLivechatEnabled } from "./misc";
 
 messagingService.dependencies.push("im_livechat.livechat");
 
 patch(Messaging.prototype, {
     async initialize() {
+        if (!isEmbedLivechatEnabled(this.env)) {
+            return super.initialize();
+        }
         const livechatService = this.env.services["im_livechat.livechat"];
         await livechatService.initializedDeferred;
         if (livechatService.state === SESSION_STATE.PERSISTED) {
@@ -34,6 +38,9 @@ patch(Messaging.prototype, {
         this.isReady.resolve();
     },
     get initMessagingParams() {
+        if (!isEmbedLivechatEnabled(this.env)) {
+            return super.initMessagingParams;
+        }
         const params = super.initMessagingParams;
         params.init_messaging.channel_types = ["livechat"];
         return params;

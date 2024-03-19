@@ -1,51 +1,60 @@
-const test = QUnit.test; // QUnit.test()
-
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-
-import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
-
-import { Command } from "@mail/../tests/helpers/command";
-
-import { cookie } from "@web/core/browser/cookie";
-import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
+import { describe, test } from "@odoo/hoot";
+import {
+    assertSteps,
+    click,
+    contains,
+    insertText,
+    onRpcBefore,
+    start,
+    startServer,
+    step,
+    triggerHotkey,
+} from "@mail/../tests/mail_test_helpers";
+import { Command, mountWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
+import { cookie } from "@web/core/browser/cookie";
+import { defineLivechatModels, loadDefaultEmbedConfig } from "../livechat_test_helpers";
+import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 
-QUnit.module("livechat service");
+describe.current.tags("desktop");
+defineLivechatModels();
 
 test("persisted session history", async () => {
     const pyEnv = await startServer();
-    const livechatChannelId = await loadDefaultConfig();
+    const livechatChannelId = await loadDefaultEmbedConfig();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
-    pyEnv.cookie.set("dgid", guestId);
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.adminPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId, fold_state: "open" }),
         ],
         livechat_active: true,
         channel_type: "livechat",
         livechat_channel_id: livechatChannelId,
-        livechat_operator_id: pyEnv.adminPartnerId,
+        livechat_operator_id: serverState.partnerId,
     });
     browser.localStorage.setItem(
         "im_livechat.saved_state",
         JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
     );
     pyEnv["mail.message"].create({
-        author_id: pyEnv.adminPartnerId,
+        author_id: serverState.partnerId,
         body: "Old message in history",
         res_id: channelId,
         model: "discuss.channel",
         message_type: "comment",
     });
-    start();
+    await start({
+        authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
+        env: { odooEmbedLivechat: true },
+    });
+    await mountWithCleanup(LivechatButton);
     await contains(".o-mail-Message-content", { text: "Old message in history" });
 });
 
 test("previous operator prioritized", async () => {
     const pyEnv = await startServer();
-    const livechatChannelId = await loadDefaultConfig();
+    const livechatChannelId = await loadDefaultEmbedConfig();
     const userId = pyEnv["res.users"].create({ name: "John Doe", im_status: "online" });
     const previousOperatorId = pyEnv["res.partner"].create({
         name: "John Doe",
@@ -53,32 +62,31 @@ test("previous operator prioritized", async () => {
     });
     pyEnv["im_livechat.channel"].write([livechatChannelId], { user_ids: [Command.link(userId)] });
     cookie.set("im_livechat_previous_operator", JSON.stringify(previousOperatorId));
-    start();
-    click(".o-livechat-LivechatButton");
+    await start({ authenticateAs: false, env: { odooEmbedLivechat: true } });
+    await mountWithCleanup(LivechatButton);
+    await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message-author", { text: "John Doe" });
 });
 
 test("Only necessary requests are made when creating a new chat", async () => {
     const pyEnv = await startServer();
-    const livechatChannelId = await loadDefaultConfig();
-    await start({
-        mockRPC(route, args) {
-            if (!route.includes("assets")) {
-                step(`${route} - ${JSON.stringify(args)}`);
-            }
-        },
+    const livechatChannelId = await loadDefaultEmbedConfig();
+    onRpcBefore((route, args) => {
+        if (!route.includes("assets")) {
+            step(`${route} - ${JSON.stringify(args)}`);
+        }
     });
+    await start({ authenticateAs: false, env: { odooEmbedLivechat: true } });
+    await mountWithCleanup(LivechatButton);
     await contains(".o-livechat-LivechatButton");
-    await assertSteps([
-        `/im_livechat/init - {"channel_id":${livechatChannelId}}`,
-        '/web/webclient/load_menus - {"hash":"161803"}', // called because menu_service is loaded in qunit bundle
-    ]);
+    await assertSteps([`/im_livechat/init - {"channel_id":${livechatChannelId}}`]);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
     await assertSteps([
         `/im_livechat/get_session - ${JSON.stringify({
             channel_id: livechatChannelId,
             anonymous_name: "Visitor",
+            previous_operator_id: null,
             persisted: false,
         })}`,
     ]);
@@ -91,7 +99,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
         `/im_livechat/get_session - ${JSON.stringify({
             channel_id: livechatChannelId,
             anonymous_name: "Visitor",
-            previous_operator_id: `${pyEnv.adminPartnerId}`,
+            previous_operator_id: serverState.partnerId,
             temporary_id: -1,
             persisted: true,
         })}`,
@@ -99,12 +107,18 @@ test("Only necessary requests are made when creating a new chat", async () => {
             init_messaging: {
                 channel_types: ["livechat"],
             },
-            failures: true, // called because mail/core/web is loaded in qunit bundle
-            systray_get_activities: true, // called because mail/core/web is loaded in qunit bundle
-            context: { lang: "en", tz: "taht", uid: serverState.userId },
+            failures: true, // called because mail/core/web is loaded in test bundle
+            systray_get_activities: true, // called because mail/core/web is loaded in test bundle
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
         `/mail/message/post - ${JSON.stringify({
-            context: { lang: "en", tz: "taht", uid: serverState.userId, temporary_id: 0.81 },
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: serverState.userId,
+                allowed_company_ids: [1],
+                temporary_id: 0.81,
+            },
             post_data: {
                 body: "Hello!",
                 attachment_ids: [],
@@ -119,5 +133,6 @@ test("Only necessary requests are made when creating a new chat", async () => {
             thread_id: threadId,
             thread_model: "discuss.channel",
         })}`,
+        `/discuss/channel/info - ${JSON.stringify({ channel_id: 1 })}`, // called because mail/core/web is loaded in test bundle
     ]);
 });

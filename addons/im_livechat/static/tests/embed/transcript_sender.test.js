@@ -1,24 +1,30 @@
-const test = QUnit.test; // QUnit.test()
+import { describe, test } from "@odoo/hoot";
+import {
+    assertSteps,
+    click,
+    contains,
+    insertText,
+    onRpcBefore,
+    start,
+    startServer,
+    step,
+    triggerHotkey,
+} from "@mail/../tests/mail_test_helpers";
+import { defineLivechatModels, loadDefaultEmbedConfig } from "../livechat_test_helpers";
+import { mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
+import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+describe.current.tags("desktop");
+defineLivechatModels();
 
-import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
-
-import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
-
-QUnit.module("transcript sender");
-
-test("send", async (assert) => {
+test("send", async () => {
     await startServer();
-    await loadDefaultConfig();
-    start({
-        mockRPC(route, args) {
-            if (route === "/im_livechat/email_livechat_transcript") {
-                step(`send_transcript - ${args.email}`);
-            }
-        },
-    });
+    await loadDefaultEmbedConfig();
+    onRpcBefore("/im_livechat/email_livechat_transcript", (args) =>
+        step(`send_transcript - ${args.email}`)
+    );
+    await start({ authenticateAs: false, env: { odooEmbedLivechat: true } });
+    await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
@@ -34,14 +40,12 @@ test("send", async (assert) => {
 
 test("send failed", async () => {
     await startServer();
-    await loadDefaultConfig();
-    start({
-        mockRPC(route) {
-            if (route === "/im_livechat/email_livechat_transcript") {
-                throw new Error();
-            }
-        },
+    await loadDefaultEmbedConfig();
+    onRpc("/im_livechat/email_livechat_transcript", () => {
+        throw new Error();
     });
+    await start({ authenticateAs: false, env: { odooEmbedLivechat: true } });
+    await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");

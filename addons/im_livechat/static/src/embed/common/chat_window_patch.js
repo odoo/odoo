@@ -7,20 +7,27 @@ import { useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
+import { isEmbedLivechatEnabled } from "./misc";
 
 Object.assign(ChatWindow.components, { FeedbackPanel });
 
 patch(ChatWindow.prototype, {
     setup() {
         super.setup(...arguments);
-        this.livechatService = useService("im_livechat.livechat");
-        this.chatbotService = useState(useService("im_livechat.chatbot"));
-        this.livechatState = useState({
-            hasFeedbackPanel: false,
-        });
+        this.isEmbedLivechatEnabled = isEmbedLivechatEnabled;
+        if (isEmbedLivechatEnabled(this.env)) {
+            this.livechatService = useService("im_livechat.livechat");
+            this.chatbotService = useState(useService("im_livechat.chatbot"));
+            this.livechatState = useState({
+                hasFeedbackPanel: false,
+            });
+        }
     },
 
     async close() {
+        if (!isEmbedLivechatEnabled(this.env)) {
+            return super.close(...arguments);
+        }
         if (this.thread?.channel_type !== "livechat") {
             return super.close();
         }

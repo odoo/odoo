@@ -1,13 +1,11 @@
 import { makeRoot, makeShadow } from "@im_livechat/embed/common/boot_helpers";
 import { LivechatRoot } from "@im_livechat/embed/frontend/livechat_root";
-import { isAvailable } from "@im_livechat/embed/common/livechat_data";
 import { _t } from "@web/core/l10n/translation";
 import { App } from "@odoo/owl";
 
 import { getTemplate } from "@web/core/templates";
 import { registry } from "@web/core/registry";
-
-registry.category("main_components").remove("mail.ChatWindowContainer");
+import { session } from "@web/session";
 
 export const livechatBootService = {
     dependencies: ["mail.messaging"],
@@ -20,12 +18,12 @@ export const livechatBootService = {
     },
 
     start(env) {
-        if (!isAvailable) {
+        if (!session.livechatData?.isAvailable) {
             return;
         }
         const target = this.getTarget();
         const root = makeRoot(target);
-        makeShadow(root).then((shadow) => {
+        makeShadow(env, root).then((shadow) => {
             new App(LivechatRoot, {
                 env,
                 getTemplate,

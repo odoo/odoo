@@ -1,47 +1,59 @@
-const test = QUnit.test; // QUnit.test()
-
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferred";
-
-import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
-
-import { Command } from "@mail/../tests/helpers/command";
-
+import { describe, test } from "@odoo/hoot";
+import {
+    assertSteps,
+    click,
+    contains,
+    focus,
+    insertText,
+    onRpcBefore,
+    start,
+    startServer,
+    step,
+    triggerHotkey,
+} from "@mail/../tests/mail_test_helpers";
 import { browser } from "@web/core/browser/browser";
-import { rpc } from "@web/core/network/rpc";
-import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { assertSteps, click, contains, focus, insertText, step } from "@web/../tests/utils";
+import { Command, mountWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+import { defineLivechatModels, loadDefaultEmbedConfig } from "../livechat_test_helpers";
+import { rpcWithEnv } from "@mail/utils/common/misc";
+import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 
-QUnit.module("thread service");
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
+
+describe.current.tags("desktop");
+defineLivechatModels();
 
 test("new message from operator displays unread counter", async () => {
     const pyEnv = await startServer();
-    const livechatChannelId = await loadDefaultConfig();
+    const livechatChannelId = await loadDefaultEmbedConfig();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
-    pyEnv.cookie.set("dgid", guestId);
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.adminPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
         livechat_active: true,
         livechat_channel_id: livechatChannelId,
-        livechat_operator_id: pyEnv.adminPartnerId,
+        livechat_operator_id: serverState.partnerId,
     });
     browser.localStorage.setItem(
         "im_livechat.saved_state",
         JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
     );
-    await start({
-        async mockRPC(route, args, originalRpc) {
-            if (route === "/mail/action" && args.init_messaging) {
-                const res = await originalRpc(...arguments);
-                step(`/mail/action - ${JSON.stringify(args)}`);
-                return res;
-            }
-        },
+    onRpcBefore("/mail/action", (args) => {
+        if (args.init_messaging) {
+            step(`/mail/action - ${JSON.stringify(args)}`);
+        }
     });
+    const userId = serverState.userId;
+    const env = await start({
+        authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
+        env: { odooEmbedLivechat: true },
+    });
+    rpc = rpcWithEnv(env);
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {
@@ -49,11 +61,11 @@ test("new message from operator displays unread counter", async () => {
             },
             failures: true, // called because mail/core/web is loaded in qunit bundle
             systray_get_activities: true, // called because mail/core/web is loaded in qunit bundle
-            context: { lang: "en", tz: "taht", uid: serverState.userId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
-    pyEnv.withUser(pyEnv.adminUserId, () =>
+    withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "Are you there?", message_type: "comment" },
             thread_id: channelId,
@@ -65,16 +77,16 @@ test("new message from operator displays unread counter", async () => {
 
 test("focus on unread livechat marks it as read", async () => {
     const pyEnv = await startServer();
-    await loadDefaultConfig();
-    await start({
-        async mockRPC(route, args, originalRpc) {
-            if (route === "/mail/action" && args.init_messaging) {
-                const res = await originalRpc(...arguments);
-                step(`/mail/action - ${JSON.stringify(args)}`);
-                return res;
-            }
-        },
+    await loadDefaultEmbedConfig();
+    onRpcBefore("/mail/action", (args) => {
+        if (args.init_messaging) {
+            step(`/mail/action - ${JSON.stringify(args)}`);
+        }
     });
+    const userId = serverState.userId;
+    const env = await start({ authenticateAs: false, env: { odooEmbedLivechat: true } });
+    rpc = rpcWithEnv(env);
+    await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
     await triggerHotkey("Enter");
@@ -89,7 +101,7 @@ test("focus on unread livechat marks it as read", async () => {
             },
             failures: true, // called because mail/core/web is loaded in qunit bundle
             systray_get_activities: true, // called because mail/core/web is loaded in qunit bundle
-            context: { lang: "en", tz: "taht", uid: serverState.userId },
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
     $(".o-mail-Composer-input").blur();
@@ -98,11 +110,11 @@ test("focus on unread livechat marks it as read", async () => {
         [
             "channel_member_ids",
             "in",
-            pyEnv["discuss.channel.member"].search([["guest_id", "=", pyEnv.currentGuest.id]]),
+            pyEnv["discuss.channel.member"].search([["guest_id", "=", pyEnv.cookie.get("dgid")]]),
         ],
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
-    pyEnv.withUser(pyEnv.adminUserId, () =>
+    withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "Are you there?", message_type: "comment" },
             thread_id: channelId,

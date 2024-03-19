@@ -51,13 +51,13 @@ import {
 import { cancelAllTimers } from "@odoo/hoot-mock";
 import { after, before, getFixture } from "@odoo/hoot";
 import { registry } from "@web/core/registry";
-import { authenticate } from "@web/../tests/_framework/mock_server/mock_server";
+import { authenticate, defineParams } from "@web/../tests/_framework/mock_server/mock_server";
 import { session } from "@web/session";
 import { DEFAULT_MAIL_VIEW_ID } from "./mock_server/mock_models/constants";
 import { parseViewProps } from "@web/../tests/_framework/view_test_helpers";
 import { mailGlobal } from "@mail/utils/common/misc";
 import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
-import { DISCUSS_ACTION_ID } from "./mock_server/mail_mock_server";
+import { DISCUSS_ACTION_ID, authenticateGuest } from "./mock_server/mail_mock_server";
 
 before(prepareRegistriesWithCleanup);
 export const registryNamesToCloneWithCleanup = [];
@@ -71,6 +71,7 @@ useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.mocked; // 
 //-----------------------------------------------------------------------------
 
 export function defineMailModels() {
+    defineParams({ suite: "mail" }, "replace");
     return defineModels({ ...webModels, ...busModels, ...mailModels });
 }
 
@@ -243,15 +244,31 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
 
 let NEXT_ENV_ID = 1;
 
-export async function start({ asTab = false } = {}) {
+export async function start({ asTab = false, authenticateAs, env: pEnv } = {}) {
     if (!MockServer.current) {
         await startServer();
     }
     let target = getFixture();
     const pyEnv = MockServer.current.env;
+    if (authenticateAs !== undefined) {
+        if (authenticateAs === false) {
+            // no authentication => new guest
+            const guestId = pyEnv["mail.guest"].create({});
+            authenticateGuest(pyEnv["mail.guest"].read(guestId)[0]);
+        } else if (authenticateAs._name === "mail.guest") {
+            authenticateGuest(authenticateAs);
+        } else {
+            authenticate(authenticateAs.login, authenticateAs.password);
+        }
+    } else if ("res.users" in pyEnv) {
+        if (pyEnv.cookie.get("dgid")) {
+            // already authenticated as guest
+        } else {
+            const adminUser = pyEnv["res.users"].search_read([["id", "=", serverState.userId]])[0];
+            authenticate(adminUser.login, adminUser.password);
+        }
+    }
     if ("res.users" in pyEnv) {
-        const adminUser = pyEnv["res.users"].search_read([["id", "=", serverState.userId]])[0];
-        authenticate(adminUser.login, adminUser.password);
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = pyEnv["res.users"];
         patchWithCleanup(session, {
@@ -268,14 +285,14 @@ export async function start({ asTab = false } = {}) {
         addSwitchTabDropdownItem(rootTarget, target);
         const envId = NEXT_ENV_ID++;
         mailGlobal.elligibleEnvs.add(envId);
-        env = await makeMockEnv({ envId }, { makeNew: true });
+        env = await makeMockEnv({ odooHoot: true, envId, ...pEnv }, { makeNew: true });
     } else {
         const envId = NEXT_ENV_ID++;
         mailGlobal.elligibleEnvs.add(envId);
         try {
-            env = await makeMockEnv({ envId });
+            env = await makeMockEnv({ odooHoot: true, envId, ...pEnv });
         } catch {
-            env = Object.assign(getMockEnv(), { envId });
+            env = Object.assign(getMockEnv(), { odooHoot: true, envId, ...pEnv });
         }
     }
     const wc = await mountWithCleanup(WebClient, { target, env });

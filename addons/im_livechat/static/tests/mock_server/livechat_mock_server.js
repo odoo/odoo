@@ -3,7 +3,6 @@ import {
     parseRequestParams,
     registerRoute,
 } from "@mail/../tests/mock_server/mail_mock_server";
-import { Discuss } from "@mail/core/common/discuss";
 import { patch } from "@web/core/utils/patch";
 
 /**
@@ -41,10 +40,12 @@ async function get_session(request) {
     } else {
         // simulate geoip
         const countryCode = context.mockedCountryCode;
-        const country = ResCountry._filter([["code", "=", countryCode]])[0];
-        if (country) {
-            country_id = country.id;
-            anonymous_name = anonymous_name + " (" + country.name + ")";
+        if (countryCode) {
+            const country = ResCountry._filter([["code", "=", countryCode]])[0];
+            if (country) {
+                country_id = country.id;
+                anonymous_name = anonymous_name + " (" + country.name + ")";
+            }
         }
     }
     const channelVals = LivechatChannel._get_livechat_discuss_channel_vals(
@@ -128,7 +129,7 @@ async function feedback(request) {
     const RatingRating = this.env["rating.rating"];
 
     const { channel_id, rate, reason } = await parseRequestParams(request);
-    let [channel] = Discuss.search_read([["id", "=", channel_id]]);
+    let [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
     if (!channel) {
         return false;
     }

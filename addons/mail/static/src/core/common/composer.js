@@ -484,7 +484,7 @@ export class Composer extends Component {
                 : undefined;
         const context = {
             default_attachment_ids: attachmentIds,
-            default_body: await prettifyMessageContent(body, validMentions),
+            default_body: await prettifyMessageContent(this.env, body, validMentions),
             default_model: this.thread.model,
             default_partner_ids:
                 this.props.type === "note"

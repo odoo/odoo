@@ -223,6 +223,8 @@ const serverModelCache = new Map();
 /** @type {string[]} */
 const sortedModuleNames = [];
 let nextRpcId = 1e9;
+/** @type {{ value: string }} */
+export const lastSuite = { value: undefined };
 
 // Invoke tests after the module loader finished loading.
 queueMicrotask(runTests);
@@ -319,6 +321,10 @@ export async function describeSuite(entryPoints, params) {
             subLoader.startModule(testModuleName);
         });
     }
+}
+
+export function clearServerModelCache() {
+    serverModelCache.clear();
 }
 
 /**

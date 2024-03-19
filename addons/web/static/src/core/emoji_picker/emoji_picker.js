@@ -8,6 +8,7 @@ import {
     onWillPatch,
     onWillStart,
     onWillUnmount,
+    useComponent,
     useEffect,
     useRef,
     useState,
@@ -29,6 +30,7 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
  * @param {function} [props.onClose]
  */
 export function useEmojiPicker(ref, props, options = {}) {
+    const { env } = useComponent();
     const targets = [];
     const popover = usePopover(EmojiPicker, { ...options, animation: false });
     props.storeScroll = {
@@ -51,7 +53,7 @@ export function useEmojiPicker(ref, props, options = {}) {
             return;
         }
         ref.el.addEventListener("click", toggler);
-        ref.el.addEventListener("mouseenter", loadEmoji);
+        ref.el.addEventListener("mouseenter", () => loadEmoji(env));
         if (show) {
             ref.el.click();
         }
@@ -74,7 +76,7 @@ export function useEmojiPicker(ref, props, options = {}) {
                 continue;
             }
             ref.el.addEventListener("click", toggle);
-            ref.el.addEventListener("mouseenter", loadEmoji);
+            ref.el.addEventListener("mouseenter", () => loadEmoji(env));
         }
     });
     onWillPatch(() => {
@@ -83,7 +85,7 @@ export function useEmojiPicker(ref, props, options = {}) {
                 continue;
             }
             ref.el.removeEventListener("click", toggle);
-            ref.el.removeEventListener("mouseenter", loadEmoji);
+            ref.el.removeEventListener("mouseenter", () => loadEmoji(env));
         }
     });
     onPatched(() => {
@@ -92,7 +94,7 @@ export function useEmojiPicker(ref, props, options = {}) {
                 continue;
             }
             ref.el.addEventListener("click", toggle);
-            ref.el.addEventListener("mouseenter", loadEmoji);
+            ref.el.addEventListener("mouseenter", () => loadEmoji(env));
         }
     });
     return {
@@ -104,15 +106,18 @@ export function useEmojiPicker(ref, props, options = {}) {
 }
 
 export const loader = {
-    loadEmoji: () => loadBundle("web.assets_emoji"),
+    loadEmoji(env) {
+        return loadBundle("web.assets_emoji");
+    },
 };
 
 /**
+ * @param {import("@web/env").OdooEnv} env
  * @returns {import("@web/core/emoji_picker/emoji_data")}
  */
-export async function loadEmoji() {
+export async function loadEmoji(env) {
     try {
-        await loader.loadEmoji();
+        await loader.loadEmoji(env);
         return odoo.loader.modules.get("@web/core/emoji_picker/emoji_data");
     } catch {
         // Could be intentional (tour ended successfully while emoji still loading)
@@ -153,7 +158,7 @@ export class EmojiPicker extends Component {
         });
         useAutofocus();
         onWillStart(async () => {
-            const { categories, emojis } = await loadEmoji();
+            const { categories, emojis } = await loadEmoji(this.env);
             this.categories = categories;
             this.emojis = emojis;
             this.emojiByCodepoints = Object.fromEntries(

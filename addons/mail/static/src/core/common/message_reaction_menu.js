@@ -43,7 +43,7 @@ export class MessageReactionMenu extends Component {
             () => [this.props.message.reactions.length]
         );
         onWillStart(async () => {
-            const { emojis } = await loadEmoji();
+            const { emojis } = await loadEmoji(this.env);
             this.emojis = emojis;
         });
     }

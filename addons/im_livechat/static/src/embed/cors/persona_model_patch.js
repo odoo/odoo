@@ -3,9 +3,13 @@ import { assignDefined } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 import { url } from "@web/core/utils/urls";
+import { isEmbedLivechatEnabled } from "../common/misc";
 
 patch(Persona.prototype, {
     get avatarUrl() {
+        if (!isEmbedLivechatEnabled(this._store.env)) {
+            return super.avatarUrl;
+        }
         const params = assignDefined(
             {},
             {

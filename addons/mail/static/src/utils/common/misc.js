@@ -22,6 +22,8 @@ export function assignIn(obj, data, keys = Object.keys(data)) {
 export const mailGlobal = {
     isInTest: false,
     elligibleEnvs: new Set(),
+    /** @type {null|'mail'|'im_livechat'|'website_livechat'} */
+    testSuite: null,
 };
 
 export function rpcWithEnv(env) {
