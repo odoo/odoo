@@ -34,7 +34,8 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'razorpay':
             return res
 
-        customer_id = self._razorpay_create_customer()['id']
+        customer_is_required = self.tokenize or self.operation in ('online_token', 'offline')
+        customer_id = customer_is_required and self._razorpay_create_customer()['id']
         order_id = self._razorpay_create_order(customer_id)['id']
         return {
             'razorpay_key_id': self.provider_id.razorpay_key_id,
@@ -121,7 +122,8 @@ class PaymentTransaction(models.Model):
             'method': pm_code,
         }
         if self.operation in ['online_direct', 'validation']:
-            payload['customer_id'] = customer_id  # Required for only non-subsequent payments.
+            if customer_id:
+                payload['customer_id'] = customer_id  # Required for only non-subsequent payments.
             if self.tokenize:
                 payload['token'] = {
                     'max_amount': payment_utils.to_minor_currency_units(
