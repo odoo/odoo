@@ -847,7 +847,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
     def _check_mandatory_day(self):
         is_leave_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         if not is_leave_user and any(leave.has_mandatory_day for leave in self):
-            raise ValidationError(_('You are not allowed to request a time off on a Mandatory Day.'))
+            raise ValidationError(_('You are not allowed to request time off on a Mandatory Day'))
 
     def _check_double_validation_rules(self, employees, state):
         if self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
