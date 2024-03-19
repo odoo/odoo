@@ -16,6 +16,7 @@ import {
     onRpc,
     patchWithCleanup,
     toggleActionMenu,
+    toggleMenuItem,
 } from "@web/../tests/web_test_helpers";
 import {
     getTimePickers,
@@ -321,7 +322,7 @@ defineModels([Partner, ResCompany, User]);
 test("properties: no access to parent", async () => {
     onRpc("check_access_rights", () => false);
 
-    await mountView({
+    const formView = await mountView({
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -337,6 +338,14 @@ test("properties: no access to parent", async () => {
         actionMenus: {},
     });
 
+    patchWithCleanup(formView.env.services.notification, {
+        add: (message, options) => {
+            expect(message).toBe(
+                "You need edit access on the parent document to update these property fields"
+            );
+        },
+    });
+
     expect(".o_field_properties").toHaveCount(1, { message: "The field must be in the view" });
 
     await toggleActionMenu();
@@ -344,6 +353,7 @@ test("properties: no access to parent", async () => {
     expect(".o-dropdown--menu span:contains(Add Properties)").toHaveCount(1, {
         message: "Show Add Properties btn in cog menu",
     });
+    await toggleMenuItem("Add Properties");
     expect(".o_field_properties:first-child .o_field_property_open_popover").toHaveCount(0, {
         message: "The edit definition button must not be in the view",
     });
