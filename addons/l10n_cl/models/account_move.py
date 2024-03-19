@@ -133,36 +133,15 @@ class AccountMove(models.Model):
     def _l10n_cl_get_invoice_totals_for_report(self):
         self.ensure_one()
         include_sii = self._l10n_cl_include_sii()
-
-        base_lines = self.line_ids.filtered(lambda x: x.display_type == 'product')
-        tax_lines = self.line_ids.filtered(lambda x: x.display_type == 'tax')
-
-        base_line_vals_list = [x._convert_to_tax_base_line_dict() for x in base_lines]
         if include_sii:
-            for vals in base_line_vals_list:
-                vals['taxes'] = vals['taxes'].flatten_taxes_hierarchy().filtered(lambda tax: tax.l10n_cl_sii_code != 14)
+            ids_to_exclude = self.line_ids\
+                .filtered(lambda x: x.display_type == 'product')\
+                .tax_ids.flatten_taxes_hierarchy()\
+                .tax_group_id.filtered(lambda x: x.l10n_cl_sii_code == 14).ids
+            if ids_to_exclude:
+                return self._get_tax_totals_summary(tax_group_ids_to_exclude=ids_to_exclude)
 
-        tax_line_vals_list = [x._convert_to_tax_line_dict() for x in tax_lines]
-        if include_sii:
-            tax_line_vals_list = [x for x in tax_line_vals_list if x['tax_repartition_line'].tax_id.l10n_cl_sii_code != 14]
-
-        tax_totals = self.env['account.tax']._prepare_tax_totals(
-            base_line_vals_list,
-            self.currency_id,
-            self.company_id,
-            tax_lines=tax_line_vals_list,
-        )
-
-        if include_sii:
-            tax_totals['amount_total'] = self.amount_total
-            tax_totals['amount_untaxed'] = self.currency_id.round(
-                tax_totals['amount_total'] - sum([x['tax_amount'] for x in tax_line_vals_list if 'tax_amount' in x]))
-            tax_totals['formatted_amount_total'] = formatLang(self.env, tax_totals['amount_total'], currency_obj=self.currency_id)
-            tax_totals['formatted_amount_untaxed'] = formatLang(self.env, tax_totals['amount_untaxed'], currency_obj=self.currency_id)
-            if tax_totals['subtotals']:
-                tax_totals['subtotals'][0]['formatted_amount'] = tax_totals['formatted_amount_untaxed']
-
-        return tax_totals
+        return self.tax_totals
 
     def _l10n_cl_include_sii(self):
         self.ensure_one()

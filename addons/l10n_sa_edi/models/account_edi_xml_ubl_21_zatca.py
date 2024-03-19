@@ -202,13 +202,28 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
 
     def _l10n_sa_get_prepaid_amount(self, invoice, vals):
         """ Calculate the down-payment amount according to ZATCA rules """
+        AccountTax = self.env['account.tax']
         downpayment_lines = False if invoice._is_downpayment() else invoice.line_ids.filtered(lambda l: l._get_downpayment_lines())
         if downpayment_lines:
-            tax_vals = invoice._prepare_invoice_aggregated_taxes(
-                filter_tax_values_to_apply=lambda l, t: not self.env['account.tax'].browse(t['id']).l10n_sa_is_retention
+            document_values = AccountTax._create_document_from_invoice(invoice)
+            aggregated_tax_amounts = AccountTax._aggregate_document_taxes(
+                document_values,
+                grouping_key_function=lambda line, tax: {
+                    'is_downpayment_line': line['record'] in downpayment_lines,
+                    'l10n_sa_is_retention': tax.l10n_sa_is_retention,
+                },
             )
-            base_amount = abs(sum(tax_vals['tax_details_per_record'][l]['base_amount_currency'] for l in downpayment_lines))
-            tax_amount = abs(sum(tax_vals['tax_details_per_record'][l]['tax_amount_currency'] for l in downpayment_lines))
+            base_amount = sum(
+                x['base_amount_currency']
+                for x in aggregated_tax_amounts['subtotals'].values()
+                if not x['l10n_sa_is_retention'] and x['is_downpayment_line']
+            )
+            tax_amount = sum(
+                x['tax_amount_currency']
+                for x in aggregated_tax_amounts['subtotals'].values()
+                if not x['l10n_sa_is_retention'] and x['is_downpayment_line']
+            )
+
             return {
                 'total_amount': base_amount + tax_amount,
                 'base_amount': base_amount,

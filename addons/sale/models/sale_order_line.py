@@ -665,23 +665,24 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
     def _compute_amount(self):
-        """
-        Compute the amounts of the SO line.
-        """
+        AccountTax = self.env['account.tax']
         for line in self:
-            tax_results = self.env['account.tax']._compute_taxes(
-                [line._convert_to_tax_base_line_dict()],
-                line.company_id,
-            )
-            totals = list(tax_results['totals'].values())[0]
-            amount_untaxed = totals['amount_untaxed']
-            amount_tax = totals['amount_tax']
-
-            line.update({
-                'price_subtotal': amount_untaxed,
-                'price_tax': amount_tax,
-                'price_total': amount_untaxed + amount_tax,
-            })
+            if line.display_type:
+                line.update({
+                    'price_subtotal': 0.0,
+                    'price_tax': 0.0,
+                    'price_total': 0.0,
+                })
+            else:
+                document_values = AccountTax._create_document_from_so(line.order_id, with_lines=False)
+                document_values['lines'].append(AccountTax._prepare_document_line_from_so_line(line))
+                AccountTax._add_line_tax_amounts_to_document(document_values)
+                total_per_tax_summary = AccountTax._get_total_per_tax_summary(document_values)
+                line.update({
+                    'price_subtotal': total_per_tax_summary['base_amount_currency'],
+                    'price_tax': total_per_tax_summary['tax_amount_currency'],
+                    'price_total': total_per_tax_summary['total_amount_currency'],
+                })
 
     @api.depends('price_subtotal', 'product_uom_qty')
     def _compute_price_reduce_taxexcl(self):
