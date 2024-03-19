@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_invoice_form_inherit_l10n_vn_edi" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n_vn_edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button string="Send Payment Status"
+                        name="action_l10n_vn_edi_update_payment_status"
+                        type="object"
+                        groups="account.group_account_invoice"
+                        invisible="not l10n_vn_edi_invoice_number or l10n_vn_edi_invoice_state != 'payment_state_to_update'"/>
+            </xpath>
+            <xpath expr="//page[@id='other_tab_entry']" position="after">
+                <page id="l10n_vn_edi"
+                      string="SInvoice"
+                      invisible="move_type not in ['out_invoice', 'out_refund'] or country_code != 'VN'">
+                    <group>
+                        <field name="l10n_vn_edi_replacement_origin_id" invisible="1"/>
+                        <group>
+                            <field name="l10n_vn_edi_invoice_symbol" readonly="l10n_vn_edi_invoice_number"/>
+                            <field name="l10n_vn_edi_issue_date" invisible="not l10n_vn_edi_invoice_number"/>
+                        </group>
+                        <group>
+                            <field name="l10n_vn_edi_invoice_state"/>
+                            <field name="l10n_vn_edi_invoice_number" invisible="not l10n_vn_edi_invoice_number"/>
+                            <field name="l10n_vn_edi_reservation_code" invisible="not l10n_vn_edi_invoice_number"/>
+                        </group>
+                        <group string="Agreement"
+                               invisible="(not l10n_vn_edi_replacement_origin_id or not l10n_vn_edi_replacement_origin_id.l10n_vn_edi_invoice_number)
+                               and (not reversed_entry_id or not reversed_entry_id.l10n_vn_edi_invoice_number)">
+                            <field name="l10n_vn_edi_adjustment_type" readonly="l10n_vn_edi_invoice_number"/>
+                            <field name="l10n_vn_edi_agreement_document_name" readonly="l10n_vn_edi_invoice_number"/>
+                            <field name="l10n_vn_edi_agreement_document_date" readonly="l10n_vn_edi_invoice_number"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter_inherit_l10n_vn_edi" model="ir.ui.view">
+        <field name="name">account.invoice.select.inherit.l10n_vn_edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <filter name="late" position="after">
+                <separator/>
+                <field name="l10n_vn_edi_invoice_state"/>
+                <filter string="Need payment state update" name="pay_state_to_update" domain="[('l10n_vn_edi_invoice_state', '=', 'payment_state_to_update')]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_invoice_tree_inherit_l10n_vn_edi" model="ir.ui.view">
+        <field name="name">account.invoice.tree.inherit.l10n_vn_edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="l10n_vn_edi_invoice_state"
+                       widget="badge"
+                       decoration-success="l10n_vn_edi_invoice_state == 'sent'"
+                       decoration-warning="l10n_vn_edi_invoice_state == 'ready_to_send'"
+                       decoration-info="l10n_vn_edi_invoice_state == 'payment_state_to_update'"
+                       optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_vn_edi_send_invoice_payment_status" model="ir.actions.server">
+        <field name="name">Send payment status to SInvoice</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records = records.filtered(lambda r: r.l10n_vn_edi_invoice_state == 'payment_state_to_update')
+                action = records.action_l10n_vn_edi_update_payment_status()
+        </field>
+    </record>
+</odoo>
