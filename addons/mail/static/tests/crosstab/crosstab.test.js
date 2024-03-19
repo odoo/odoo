@@ -29,9 +29,9 @@ test("Messages are received cross-tab", async () => {
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await insertText(".o-mail-Composer-input", "Hello World!", { target: env1 });
-    await click("button:enabled", { target: env1, text: "Send" });
-    await contains(".o-mail-Message-content", { target: env1, text: "Hello World!" });
-    await contains(".o-mail-Message-content", { target: env2, text: "Hello World!" });
+    await click("button:enabled:contains(Send)", { target: env1 });
+    await contains(".o-mail-Message-content:contains(Hello World!)", { target: env1 });
+    await contains(".o-mail-Message-content:contains(Hello World!)", { target: env2 });
 });
 
 test("Delete starred message updates counter", async () => {
@@ -47,14 +47,14 @@ test("Delete starred message updates counter", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
-    await contains("button", { target: env2, text: "Starred1" });
+    await contains("button:contains(Starred):contains(1)", { target: env2 });
     rpc = rpcWithEnv(env1);
     rpc("/mail/message/update_content", {
         message_id: messageId,
         body: "",
         attachment_ids: [],
     });
-    await contains("button", { count: 0, target: env2, text: "Starred1" });
+    await contains("button:contains(Starred):contains(1)", { count: 0, target: env2 });
 });
 
 test("Thread rename", async () => {
@@ -73,7 +73,7 @@ test("Thread rename", async () => {
     });
     triggerHotkey("Enter");
     await contains(".o-mail-Discuss-threadName[title='Sales']", { target: env2 });
-    await contains(".o-mail-DiscussSidebarChannel", { target: env2, text: "Sales" });
+    await contains(".o-mail-DiscussSidebarChannel:contains(Sales)", { target: env2 });
 });
 
 test("Thread description update", async () => {
@@ -148,7 +148,7 @@ test("Adding attachments", async () => {
         attachment_ids: [attachmentId],
         message_id: messageId,
     });
-    await contains(".o-mail-AttachmentCard", { target: env2, text: "test.txt" });
+    await contains(".o-mail-AttachmentCard:contains(test.txt)", { target: env2 });
 });
 
 test("Remove attachment from message", async () => {
@@ -169,10 +169,10 @@ test("Remove attachment from message", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
-    await contains(".o-mail-AttachmentCard", { target: env1, text: "test.txt" });
+    await contains(".o-mail-AttachmentCard:contains(test.txt)", { target: env1 });
     await click(".o-mail-AttachmentCard-unlink", { target: env2 });
-    await click(".modal-footer .btn", { text: "Ok", target: env2 });
-    await contains(".o-mail-AttachmentCard", { count: 0, target: env1, text: "test.txt" });
+    await click(".modal-footer .btn:contains(Ok)", { target: env2 });
+    await contains(".o-mail-AttachmentCard:contains(test.txt)", { count: 0, target: env1 });
 });
 
 test("Message delete notification", async () => {
@@ -194,13 +194,13 @@ test("Message delete notification", async () => {
     await openDiscuss();
     await click("[title='Expand']");
     await click("[title='Mark as Todo']");
-    await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
-    await contains("button", { text: "Starred", contains: [".badge", { text: "1" }] });
+    await contains("button:contains(Inbox)", { contains: [".badge:contains(1)"] });
+    await contains("button:contains(Starred)", { contains: [".badge:contains(1)"] });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/delete", {
         message_ids: [messageId],
     });
     await contains(".o-mail-Message", { count: 0 });
-    await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
-    await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
+    await contains("button:contains(Inbox)", { contains: [".badge", { count: 0 }] });
+    await contains("button:contains(Starred)", { contains: [".badge", { count: 0 }] });
 });

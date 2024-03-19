@@ -344,8 +344,7 @@ test("do not show message seen indicator on all the messages of the current user
     pyEnv["discuss.channel.member"].write(memberIds, { seen_message_id: messageId_2 });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message", {
-        text: "Message before last seen",
+    await contains(".o-mail-Message:contains(Message before last seen)", {
         contains: [".o-mail-MessageSeenIndicator", { contains: ["i", { count: 0 }] }],
     });
 });

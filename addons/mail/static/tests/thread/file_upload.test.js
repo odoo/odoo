@@ -28,7 +28,7 @@ test("no conflicts between file uploads", async () => {
     await start();
     // Uploading file in the first thread: res.partner chatter.
     await openFormView("res.partner", partnerId);
-    await click("button", { text: "Send message" });
+    await click("button:contains(Send message)");
     await inputFiles(".o-mail-Chatter .o-mail-Composer input[type=file]", [
         await createFile({
             name: "text1.txt",

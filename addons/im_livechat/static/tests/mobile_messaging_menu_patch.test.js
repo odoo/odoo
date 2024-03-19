@@ -18,7 +18,7 @@ test("Livechat button is not present when there is no livechat thread", async ()
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu");
-    await contains(".o-mail-MessagingMenu-navbar span", { count: 0, text: "Livechat" });
+    await contains(".o-mail-MessagingMenu-navbar span:contains(Livechat)", { count: 0 });
 });
 
 test("Livechat button is present when there is at least one livechat thread", async () => {
@@ -36,5 +36,5 @@ test("Livechat button is present when there is at least one livechat thread", as
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu");
-    await contains(".o-mail-MessagingMenu-navbar", { text: "Livechat" });
+    await contains(".o-mail-MessagingMenu-navbar:contains(Livechat)");
 });

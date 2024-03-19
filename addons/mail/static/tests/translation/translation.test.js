@@ -36,16 +36,14 @@ test("Toggle display of original/translated version of chatter message", async (
     // Click acts as a toogle affecting its appearence and the actual message content displayed.
     await click("span[title='Translate']");
     await click("button[title='Expand']");
-    await contains(".o-mail-Message-body", {
-        text: "To bad weather, good face.(Translated from: Spanish)",
-    });
+    await contains(
+        ".o-mail-Message-body:contains(To bad weather, good face.\n\n(Translated from: Spanish))"
+    );
     await contains("span[title='Translate']", { count: 0 });
     await contains("span[title='Revert']");
     await click("span[title='Revert']");
     await click("button[title='Expand']");
-    await contains(".o-mail-Message", {
-        text: "Al mal tiempo, buena cara.",
-    });
+    await contains(".o-mail-Message:contains(Al mal tiempo, buena cara.)");
     await click("span[title='Translate']");
     // The translation button should not trigger more than one external request for a single message.
     await assertSteps(["Request"]);
@@ -66,23 +64,18 @@ test("translation of email message", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains("span", {
-        text: "Al mal tiempo, buena cara.",
+    await contains("span:contains(Al mal tiempo, buena cara.)", {
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
     });
     await click("button[title='Expand']");
     await click("span[title='Translate']");
-    await contains("span", {
-        text: "To bad weather, good face.",
+    await contains("span:contains(To bad weather, good face.)", {
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
     });
-    await contains(".o-mail-Message-body", {
-        text: "(Translated from: Spanish)",
-    });
+    await contains(".o-mail-Message-body:contains((Translated from: Spanish))");
     await click("button[title='Expand']");
     await click("span[title='Revert']");
-    await contains("span", {
-        text: "Al mal tiempo, buena cara.",
+    await contains("span:contains(Al mal tiempo, buena cara.)", {
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
     });
 });

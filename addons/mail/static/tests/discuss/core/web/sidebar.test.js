@@ -23,16 +23,14 @@ test("sidebar find shows channels matching search term", async () => {
     });
     await start();
     await openDiscuss();
-    await click(
-        ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-add"
-    );
+    await click(".o-mail-DiscussSidebarCategory:eq(0) .o-mail-DiscussSidebarCategory-add");
     await insertText(".o-discuss-ChannelSelector input", "test");
     // When searching for a single existing channel, the results list will have at least 2 lines:
     // One for the existing channel itself
     // One for creating a channel with the search term
     await contains(".o-mail-NavigableList-item", { count: 2 });
-    await contains(".o-mail-NavigableList-item", { text: "test" });
-    await contains(".o-mail-NavigableList-item", { text: "Create: # test" });
+    await contains(".o-mail-NavigableList-item:eq(0):contains(test)");
+    await contains(".o-mail-NavigableList-item:eq(1):contains(Create: # test)");
 });
 
 test("sidebar find shows channels matching search term even when user is member", async () => {
@@ -45,16 +43,14 @@ test("sidebar find shows channels matching search term even when user is member"
     });
     await start();
     await openDiscuss();
-    await click(
-        ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-add"
-    );
+    await click(".o-mail-DiscussSidebarCategory:eq(0) .o-mail-DiscussSidebarCategory-add");
     await insertText(".o-discuss-ChannelSelector input", "test");
     // When searching for a single existing channel, the results list will have at least 2 lines:
     // One for the existing channel itself
     // One for creating a channel with the search term
     await contains(".o-mail-NavigableList-item", { count: 2 });
-    await contains(".o-mail-NavigableList-item", { text: "test" });
-    await contains(".o-mail-NavigableList-item", { text: "Create: # test" });
+    await contains(".o-mail-NavigableList-item:eq(0):contains(test)");
+    await contains(".o-mail-NavigableList-item:eq(1):contains(Create: # test)");
 });
 
 test("unknown channel can be displayed and interacted with", async () => {
@@ -67,20 +63,19 @@ test("unknown channel can be displayed and interacted with", async () => {
     });
     await start();
     await openDiscuss();
-    await contains("button.o-active", { text: "Inbox" });
+    await contains("button.o-active:contains(Inbox)");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await openDiscuss(channelId);
     await contains(
-        ".o-mail-DiscussSidebarCategory-channel + .o-mail-DiscussSidebarChannel.o-active",
-        { text: "Not So Secret" }
+        ".o-mail-DiscussSidebarCategory-channel + .o-mail-DiscussSidebarChannel.o-active:contains(Not So Secret)"
     );
     await insertText(".o-mail-Composer-input", "Hello", { replace: true });
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message", { text: "Hello" });
-    await click("button", { text: "Inbox" });
-    await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Not So Secret" });
+    await contains(".o-mail-Message:contains(Hello)");
+    await click("button:contains(Inbox)");
+    await contains(".o-mail-DiscussSidebarChannel:not(.o-active):contains(Not So Secret)");
     await click("div[title='Leave this channel']", {
-        parent: [".o-mail-DiscussSidebarChannel", { text: "Not So Secret" }],
+        parent: [".o-mail-DiscussSidebarChannel:contains(Not So Secret)"],
     });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
 });

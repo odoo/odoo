@@ -16,7 +16,7 @@ defineMailModels();
 test("base rendering not editable", async () => {
     await start();
     await openFormView("res.partner", serverState.partnerId);
-    await contains(".o-mail-Chatter-follow", { text: "Follow" });
+    await contains(".o-mail-Chatter-follow:contains(Follow)");
 });
 
 test("hover following button", async () => {
@@ -30,17 +30,17 @@ test("hover following button", async () => {
     });
     await start();
     await openFormView("res.partner", threadId);
-    await contains(".o-mail-Chatter-follow", { text: "Following" });
-    await triggerEvents(".o-mail-Chatter-follow", ["mouseenter"], { text: "Following" });
-    await contains(".o-mail-Chatter-follow", { text: "Unfollow" });
+    await contains(".o-mail-Chatter-follow:contains(Following)");
+    await triggerEvents(".o-mail-Chatter-follow:contains(Following)", ["mouseenter"]);
+    await contains(".o-mail-Chatter-follow:contains(Unfollow)");
 });
 
 test('click on "follow" button', async () => {
     await start();
     await openFormView("res.partner", serverState.partnerId);
-    await contains("button", { text: "Follow" });
-    await click("button", { text: "Follow" });
-    await contains("button", { text: "Following" });
+    await contains("button:contains(Follow)");
+    await click("button:contains(Follow)");
+    await contains("button:contains(Following)");
 });
 
 test('Click on "follow" button should save draft record', async () => {
@@ -54,9 +54,9 @@ test('Click on "follow" button should save draft record', async () => {
                 <chatter/>
             </form>`,
     });
-    await contains("button", { text: "Follow" });
+    await contains("button:contains(Follow)");
     await contains("div.o_field_char");
-    await click("button", { text: "Follow" });
+    await click("button:contains(Follow)");
     await contains("div.o_field_invalid");
 });
 
@@ -71,6 +71,6 @@ test('click on "unfollow" button', async () => {
     });
     await start();
     await openFormView("res.partner", threadId);
-    await click(".o-mail-Chatter-follow", { text: "Following" });
-    await contains("button", { text: "Follow" });
+    await click(".o-mail-Chatter-follow:contains(Following)");
+    await contains("button:contains(Follow)");
 });

@@ -66,11 +66,11 @@ test("load more messages from channel (auto-load on scroll)", async () => {
     }
     await start();
     await openDiscuss(channelId);
-    await contains("button", { text: "Load More", before: [".o-mail-Message", { count: 30 }] });
+    await contains("button:contains(Load More)", { before: [".o-mail-Message", { count: 30 }] });
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
     await contains(".o-mail-Message", { count: 60 });
-    await contains(".o-mail-Message", { text: "30", after: [".o-mail-Message", { text: "29" }] });
+    await contains(".o-mail-Message:contains(30)", { after: [".o-mail-Message:contains(29)"] });
 });
 
 test("show message subject when subject is not the same as the thread name", async () => {
@@ -88,7 +88,7 @@ test("show message subject when subject is not the same as the thread name", asy
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message", { text: "Subject: Salutations, voyageurnot empty" });
+    await contains(".o-mail-Message:contains(Subject: Salutations, voyageurnot empty)");
 });
 
 test("do not show message subject when subject is the same as the thread name", async () => {
@@ -106,10 +106,9 @@ test("do not show message subject when subject is the same as the thread name", 
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message", { text: "not empty" });
-    await contains(".o-mail-Message", {
+    await contains(".o-mail-Message:contains(not empty)");
+    await contains(".o-mail-Message:contains(Subject: Salutations, voyageurnot empty)", {
         count: 0,
-        text: "Subject: Salutations, voyageurnot empty",
     });
 });
 
@@ -159,7 +158,7 @@ test("do not display day separator if all messages of the day are empty", async 
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
+    await contains(".o-mail-Thread:contains(There are no messages in this conversation.)");
     await contains(".o-mail-DateSection", { count: 0 });
 });
 
@@ -185,15 +184,15 @@ test("scroll position is kept when navigating from one channel to another", asyn
     const scrollValue1 = $(".o-mail-Thread")[0].scrollHeight / 2;
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", scrollValue1);
-    await click(".o-mail-DiscussSidebarChannel", { text: "channel-2" });
+    await click(".o-mail-DiscussSidebarChannel:contains(channel-2)");
     await contains(".o-mail-Message", { count: 30 });
     const scrollValue2 = $(".o-mail-Thread")[0].scrollHeight / 3;
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", scrollValue2);
-    await click(".o-mail-DiscussSidebarChannel", { text: "channel-1" });
+    await click(".o-mail-DiscussSidebarChannel:contains(channel-1)");
     await contains(".o-mail-Message", { count: 20 });
     await contains(".o-mail-Thread", { scroll: scrollValue1 });
-    await click(".o-mail-DiscussSidebarChannel", { text: "channel-2" });
+    await click(".o-mail-DiscussSidebarChannel:contains(channel-2)");
     await contains(".o-mail-Message", { count: 30 });
     await contains(".o-mail-Thread", { scroll: scrollValue2 });
 });
@@ -230,9 +229,9 @@ test("mention a channel with space in the name", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#General good boy " });
+    await contains(".o-mail-Composer-input:value(#General good boy )");
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message-body .o_channel_redirect", { text: "#General good boy" });
+    await contains(".o-mail-Message-body .o_channel_redirect:contains(#General good boy)");
 });
 
 test('mention a channel with "&" in the name', async () => {
@@ -242,9 +241,9 @@ test('mention a channel with "&" in the name', async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#General & good " });
+    await contains(".o-mail-Composer-input:value(#General & good )");
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message-body .o_channel_redirect", { text: "#General & good" });
+    await contains(".o-mail-Message-body .o_channel_redirect:contains(#General & good)");
 });
 
 test("mark channel as fetched when a new message is loaded and as seen when focusing composer [REQUIRE FOCUS]", async () => {
@@ -299,9 +298,9 @@ test("mark channel as fetched when a new message is loaded and as seen when focu
     );
     await contains(".o-mail-Message");
     await assertSteps(["rpc:channel_fetch"]);
-    await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
+    await contains(".o-mail-Thread-newMessage hr + span:contains(New messages)");
     await focus(".o-mail-Composer-input");
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
+    await contains(".o-mail-Thread-newMessage hr + span:contains(New messages)", { count: 0 });
     await assertSteps(["rpc:set_last_seen_message"]);
 });
 
@@ -421,7 +420,7 @@ test("show empty placeholder when thread contains no message", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
+    await contains(".o-mail-Thread:contains(There are no messages in this conversation.)");
     await contains(".o-mail-Message", { count: 0 });
 });
 
@@ -431,7 +430,7 @@ test("show empty placeholder when thread contains only empty messages", async ()
     pyEnv["mail.message"].create({ model: "discuss.channel", res_id: channelId });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
+    await contains(".o-mail-Thread:contains(There are no messages in this conversation.)");
     await contains(".o-mail-Message", { count: 0 });
 });
 
@@ -456,7 +455,7 @@ test("message list with a full page of empty messages should load more messages 
     await openDiscuss(channelId);
     // initial load: +30 empty ; (auto) load more: +20 empty +10 non-empty
     await contains(".o-mail-Message", { count: 10 });
-    await contains("button", { text: "Load More" }); // still 40 non-empty
+    await contains("button:contains(Load More)"); // still 40 non-empty
 });
 
 test("no new messages separator on posting message (some message history)", async () => {
@@ -481,11 +480,11 @@ test("no new messages separator on posting message (some message history)", asyn
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
+    await contains(".o-mail-Thread-newMessage hr + span:contains(New messages)", { count: 0 });
     await insertText(".o-mail-Composer-input", "hey!");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message", { count: 2 });
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
+    await contains(".o-mail-Thread-newMessage hr + span:contains(New messages)", { count: 0 });
 });
 
 test("new messages separator on receiving new message [REQUIRE FOCUS]", async () => {
@@ -518,7 +517,7 @@ test("new messages separator on receiving new message [REQUIRE FOCUS]", async ()
     rpc = rpcWithEnv(env);
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
+    await contains(".o-mail-Thread-newMessage hr + span:contains(New messages)", { count: 0 });
     $(".o-mail-Composer-input")[0].blur();
     // simulate receiving a message
     withUser(userId, () =>
@@ -529,11 +528,11 @@ test("new messages separator on receiving new message [REQUIRE FOCUS]", async ()
         })
     );
     await contains(".o-mail-Message", { count: 2 });
-    await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
-    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "hu" });
+    await contains(".o-mail-Thread-newMessage hr + span:contains(New messages)");
+    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message:contains(hu)");
     await focus(".o-mail-Composer-input");
     await tick();
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
+    await contains(".o-mail-Thread-newMessage hr + span:contains(New messages)", { count: 0 });
 });
 
 test("no new messages separator on posting message (no message history)", async () => {
@@ -549,11 +548,11 @@ test("no new messages separator on posting message (no message history)", async 
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
     await contains(".o-mail-Message", { count: 0 });
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
+    await contains(".o-mail-Thread-newMessage hr + span:contains(New messages)", { count: 0 });
     await insertText(".o-mail-Composer-input", "hey!");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message");
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
+    await contains(".o-mail-Thread-newMessage hr + span:contains(New messages)", { count: 0 });
 });
 
 test("Mention a partner with special character (e.g. apostrophe ')", async () => {
@@ -574,11 +573,10 @@ test("Mention a partner with special character (e.g. apostrophe ')", async () =>
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "Pyn");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "@Pynya's spokesman " });
+    await contains(".o-mail-Composer-input:value(@Pynya's spokesman )");
     await click(".o-mail-Composer-send:enabled");
     await contains(
-        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]`,
-        { text: "@Pynya's spokesman" }
+        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]:contains("@Pynya's spokesman)`
     );
 });
 
@@ -605,19 +603,17 @@ test("mention 2 different partners that have the same name", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@Te");
-    await click(":nth-child(1 of .o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "@TestPartner " });
+    await click(".o-mail-Composer-suggestion:eq(0)");
+    await contains(".o-mail-Composer-input:value(@TestPartner )");
     await insertText(".o-mail-Composer-input", "@Te");
-    await click(":nth-child(2 of .o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "@TestPartner @TestPartner " });
+    await click(".o-mail-Composer-suggestion:eq(1)");
+    await contains(".o-mail-Composer-input:value(@TestPartner @TestPartner )");
     await click(".o-mail-Composer-send:enabled");
     await contains(
-        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_1}"][data-oe-model="res.partner"]`,
-        { text: "@TestPartner" }
+        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_1}"][data-oe-model="res.partner"]:contains(@TestPartner)`
     );
     await contains(
-        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_2}"][data-oe-model="res.partner"]`,
-        { text: "@TestPartner" }
+        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_2}"][data-oe-model="res.partner"]:contains(@TestPartner)`
     );
 });
 
@@ -628,9 +624,9 @@ test("mention a channel on a second line when the first line contains #", async 
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#blabla\n#");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#blabla\n#General good " });
+    await contains(".o-mail-Composer-input:value(#blabla\n#General good ");
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message-body .o_channel_redirect", { text: "#General good" });
+    await contains(".o-mail-Message-body .o_channel_redirect:contains(#General good)");
 });
 
 test("mention a channel when replacing the space after the mention by another char", async () => {
@@ -640,12 +636,12 @@ test("mention a channel when replacing the space after the mention by another ch
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#General good " });
+    await contains(".o-mail-Composer-input:value(#General good )");
     const text = $(".o-mail-Composer-input").val();
     $(".o-mail-Composer-input").val(text.slice(0, -1));
     await insertText(".o-mail-Composer-input", ", test");
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message-body .o_channel_redirect", { text: "#General good" });
+    await contains(".o-mail-Message-body .o_channel_redirect:contains(#General good)");
 });
 
 test("mention 2 different channels that have the same name", async () => {
@@ -664,19 +660,17 @@ test("mention 2 different channels that have the same name", async () => {
     await start();
     await openDiscuss(channelId_1);
     await insertText(".o-mail-Composer-input", "#m");
-    await click(":nth-child(1 of .o-mail-Composer-suggestion)");
-    await contains(".o-mail-Composer-input", { value: "#my channel " });
+    await click(".o-mail-Composer-suggestion:eq(0)");
+    await contains(".o-mail-Composer-input:value(#my channel )");
     await insertText(".o-mail-Composer-input", "#m");
-    await click(":nth-child(2 of .o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#my channel #my channel " });
+    await click(".o-mail-Composer-suggestion:eq(1)");
+    await contains(".o-mail-Composer-input:value(#my channel #my channel )");
     await click(".o-mail-Composer-send:enabled");
     await contains(
-        `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_1}"][data-oe-model="discuss.channel"]`,
-        { text: "#my channel" }
+        `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_1}"][data-oe-model="discuss.channel"]:contains(#my channel)`
     );
     await contains(
-        `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_2}"][data-oe-model="discuss.channel"]`,
-        { text: "#my channel" }
+        `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_2}"][data-oe-model="discuss.channel"]:contains(#my channel)`
     );
 });
 
@@ -697,11 +691,10 @@ test("Post a message containing an email address followed by a mention on anothe
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "email@odoo.com\n@Te");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "email@odoo.com\n@TestPartner " });
+    await contains(".o-mail-Composer-input:value('email@odoo.com\n@TestPartner')");
     await click(".o-mail-Composer-send:enabled");
     await contains(
-        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]`,
-        { text: "@TestPartner" }
+        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]:contains(@TestPartner)`
     );
 });
 
@@ -728,7 +721,7 @@ test("basic rendering of canceled notification", async () => {
     await click(".o-mail-Message-notification");
     await contains(".o-mail-MessageNotificationPopover");
     await contains(".o-mail-MessageNotificationPopover .fa-trash-o");
-    await contains(".o-mail-MessageNotificationPopover", { text: "Someone" });
+    await contains(".o-mail-MessageNotificationPopover:contains(Someone)");
 });
 
 test("first unseen message should be directly preceded by the new message separator if there is a transient message just before it while composer is not focused [REQUIRE FOCUS]", async () => {
@@ -776,7 +769,7 @@ test("first unseen message should be directly preceded by the new message separa
         })
     );
     await contains(".o-mail-Message", { count: 3 });
-    await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
+    await contains(".o-mail-Thread-newMessage hr + span:contains(New messages)");
     await contains(".o-mail-Message[aria-label='Note'] + .o-mail-Thread-newMessage");
 });
 
@@ -810,7 +803,7 @@ test("chat window header should not have unread counter for non-channel thread",
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await contains(".o-mail-ChatWindow-counter", { count: 0, text: "1" });
+    await contains(".o-mail-ChatWindow-counter:contains(1)", { count: 0 });
 });
 
 test("[technical] opening a non-channel chat window should not call channel_fold", async () => {
@@ -866,12 +859,12 @@ test("Thread messages are only loaded once", async () => {
         },
     ]);
     await openDiscuss();
-    await click(":nth-child(1 of .o-mail-DiscussSidebarChannel");
-    await contains(".o-mail-Message-content", { text: "Message on channel1" });
-    await click(":nth-child(2 of .o-mail-DiscussSidebarChannel)");
-    await contains(".o-mail-Message-content", { text: "Message on channel2" });
-    await click(":nth-child(1 of .o-mail-DiscussSidebarChannel)");
-    await contains(".o-mail-Message-content", { text: "Message on channel1" });
+    await click(".o-mail-DiscussSidebarChannel:eq(0)");
+    await contains(".o-mail-Message-content:contains(Message on channel1)");
+    await click(".o-mail-DiscussSidebarChannel:eq(1)");
+    await contains(".o-mail-Message-content:contains(Message on channel2)");
+    await click(".o-mail-DiscussSidebarChannel:eq(0)");
+    await contains(".o-mail-Message-content:contains(Message on channel1)");
     await assertSteps([`load messages - ${channelIds[0]}`, `load messages - ${channelIds[1]}`]);
 });
 
@@ -892,8 +885,8 @@ test("Opening thread with needaction messages should mark all messages of thread
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
     await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]);
-    await click("button", { text: "Inbox" });
-    await contains("h4", { text: "Your inbox is empty" });
+    await click("button:contains(Inbox)");
+    await contains("h4:contains(Your inbox is empty)");
     const messageId = pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "@Mitchel Admin",
@@ -914,10 +907,10 @@ test("Opening thread with needaction messages should mark all messages of thread
     ]);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", formattedMessage);
-    await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
-    await click("button", { text: "General" });
+    await contains("button:contains(Inbox)", { contains: [".badge:contains(1)"] });
+    await click("button:contains(General)");
     await contains(".o-discuss-badge", { count: 0 });
-    await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
+    await contains("button:contains(Inbox)", { contains: [".badge", { count: 0 }] });
     await assertSteps(["mark-all-messages-as-read"]);
 });
 
@@ -932,7 +925,7 @@ test("[technical] Opening thread without needaction messages should not mark all
     const env = await start();
     rpc = rpcWithEnv(env);
     await openDiscuss(channelId);
-    await click("button", { text: "Inbox" });
+    await click("button:contains(Inbox)");
     await rpc("/mail/message/post", {
         post_data: {
             body: "Hello world!",
@@ -941,7 +934,7 @@ test("[technical] Opening thread without needaction messages should not mark all
         thread_id: channelId,
         thread_model: "discuss.channel",
     });
-    await click("button", { text: "General" });
+    await click("button:contains(General)");
     await tick();
     await assertSteps([]);
 });
@@ -970,8 +963,8 @@ test("can be marked as read while loading", async () => {
     });
     await start();
     await openDiscuss(undefined);
-    await contains(".o-discuss-badge", { text: "1" });
-    await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
+    await contains(".o-discuss-badge:contains(1)");
+    await click(".o-mail-DiscussSidebarChannel:contains(Demo)");
     loadDeferred.resolve();
     await contains(".o-discuss-badge", { count: 0 });
 });
@@ -992,9 +985,9 @@ test("New message separator not appearing after showing composer on thread", asy
     ]);
     await start();
     await openFormView("res.partner", serverState.partnerId);
-    await contains("button", { text: "Log note" });
+    await contains("button:contains(Log note)");
     await contains(".o-mail-Thread-newMessage", { count: 0 });
-    await click("button", { text: "Log note" });
+    await click("button:contains(Log note)");
     await contains(".o-mail-Thread-newMessage", { count: 0 });
 });
 
@@ -1009,6 +1002,6 @@ test("Transient messages are added at the end of the thread", async () => {
     await insertText(".o-mail-Composer-input", "/help");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message", { count: 2 });
-    await contains(":nth-child(1 of .o-mail-Message)", { text: "Mitchell Admin" });
-    await contains(":nth-child(2 of .o-mail-Message)", { text: "OdooBot" });
+    await contains(".o-mail-Message:eq(0):contains(Mitchell Admin)");
+    await contains(".o-mail-Message:eq(1):contains(OdooBot)");
 });

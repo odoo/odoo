@@ -57,7 +57,7 @@ test("Receiving a new message out of discuss app should open a chat window", asy
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-ChatWindow", { text: "Dumbledore" });
+    await contains(".o-mail-ChatWindow:contains(Dumbledore)");
 });
 
 test("Receiving a new message in discuss app should open a chat window after leaving discuss app", async () => {
@@ -98,7 +98,7 @@ test("Receiving a new message in discuss app should open a chat window after lea
     );
     // leaving discuss.
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-ChatWindow", { text: "Dumbledore" });
+    await contains(".o-mail-ChatWindow:contains(Dumbledore)");
 });
 
 test("Posting a message in discuss app should not open a chat window after leaving discuss app", async () => {
@@ -118,5 +118,5 @@ test("Posting a message in discuss app should not open a chat window after leavi
     // leaving discuss.
     await openFormView("res.partner", partnerId);
     // weak test, no guarantee that we waited long enough for the potential chat window to open
-    await contains(".o-mail-ChatWindow", { count: 0, text: "Dumbledore" });
+    await contains(".o-mail-ChatWindow:contains(Dumbledore)", { count: 0 });
 });

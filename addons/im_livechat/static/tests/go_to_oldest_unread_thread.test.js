@@ -76,16 +76,16 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
     ]);
     await start();
     await openDiscuss(channelIds[0]);
-    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 11" });
-    await contains(".o-mail-Composer-footer", { text: "Tab to next livechat" });
+    await contains(".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 11)");
+    await contains(".o-mail-Composer-footer:contains(Tab to next livechat)");
     await focus(".o-mail-Composer-input");
     await contains(".o-active .o-mail-DiscussSidebar-badge", { count: 0 });
     triggerHotkey("Tab");
-    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 13" });
+    await contains(".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 13)");
     await focus(".o-mail-Composer-input");
     await contains(".o-active .o-mail-DiscussSidebar-badge", { count: 0 });
     triggerHotkey("Tab");
-    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 12" });
+    await contains(".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 12)");
 });
 
 test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async () => {
@@ -123,13 +123,12 @@ test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async () => {
         },
     ]);
     await start();
-    await contains(".o-mail-ChatWindow.o-folded", { text: "Visitor 12" });
+    await contains(".o-mail-ChatWindow.o-folded:contains(Visitor 12)");
     await focus(".o-mail-Composer-input", {
-        parent: [".o-mail-ChatWindow", { text: "Visitor 11" }],
+        parent: [".o-mail-ChatWindow:contains(Visitor 11)"],
     });
     triggerHotkey("Tab");
-    await contains(".o-mail-ChatWindow", {
-        text: "Visitor 12",
+    await contains(".o-mail-ChatWindow:contains(Visitor 12)", {
         contains: [".o-mail-Composer-input:focus"],
     });
 });
@@ -176,13 +175,12 @@ test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async () => {
     patchUiSize({ width: 900 }); // enough for 2 chat windows
     await start();
     await contains(".o-mail-ChatWindow", { count: 2 });
-    await contains(".o-mail-ChatWindow", { count: 0, text: "Visitor 12" });
+    await contains(".o-mail-ChatWindow:contains(Visitor 12)", { count: 0 });
     await focus(".o-mail-Composer-input", {
-        parent: [".o-mail-ChatWindow", { text: "Visitor 11" }],
+        parent: [".o-mail-ChatWindow:contains(Visitor 11)"],
     });
     triggerHotkey("Tab");
-    await contains(".o-mail-ChatWindow", {
-        text: "Visitor 12",
+    await contains(".o-mail-ChatWindow:contains(Visitor 12)", {
         contains: [".o-mail-Composer-input:focus"],
     });
 });
@@ -221,7 +219,7 @@ test("tab on composer doesn't switch thread if user is typing", async () => {
     await openDiscuss(channelIds[0]);
     await insertText(".o-mail-Composer-input", "Hello, ");
     triggerHotkey("Tab");
-    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 11" });
+    await contains(".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 11)");
 });
 
 test("tab on composer doesn't switch thread if no unread thread", async () => {
@@ -254,5 +252,5 @@ test("tab on composer doesn't switch thread if no unread thread", async () => {
     await openDiscuss(channelIds[0]);
     await focus(".o-mail-Composer-input");
     triggerHotkey("Tab");
-    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 11" });
+    await contains(".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 11)");
 });

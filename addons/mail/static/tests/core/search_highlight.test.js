@@ -197,5 +197,5 @@ test("Display highligthed with escaped character must ignore them", async () => 
     await insertText(".o_searchview_input", "test hello");
     triggerHotkey("Enter");
     await contains(`.o-mail-Chatter-search .o-mail-Message span.${HIGHLIGHT_CLASS}`, { count: 2 });
-    await contains(`.o-mail-Message-body`, { text: "<strong>test</strong> hello" });
+    await contains(".o-mail-Message-body:contains(<strong>test</strong> hello)");
 });

@@ -42,10 +42,8 @@ test("bus subscription updated when joining locally pinned thread", async () => 
     await start();
     await Promise.all([openDiscuss(channelId), waitForChannels([`discuss.channel_${channelId}`])]);
     await click("[title='Add Users']");
-    await click(".o-discuss-ChannelInvitation-selectable", {
-        text: "Mitchell Admin",
-    });
-    await click("button", { text: "Invite to Channel" });
+    await click(".o-discuss-ChannelInvitation-selectable:contains(Mitchell Admin)");
+    await click("button:contains(Invite to Channel)");
     await waitForChannels([`discuss.channel_${channelId}`], { operation: "delete" });
 });
 
@@ -67,7 +65,7 @@ test.skip("bus subscription kept after receiving a message as non member", async
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-Message", { text: "Hello!" });
+    await contains(".o-mail-Message:contains(Hello!)");
     await tick();
     await withUser(johnUser, () =>
         rpc("/mail/message/post", {
@@ -76,5 +74,5 @@ test.skip("bus subscription kept after receiving a message as non member", async
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-Message", { text: "Goodbye!" });
+    await contains(".o-mail-Message:contains(Goodbye!)");
 });

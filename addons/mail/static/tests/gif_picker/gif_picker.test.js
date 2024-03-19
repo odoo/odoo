@@ -123,7 +123,7 @@ test("Open a GIF category trigger the search for the category", async () => {
     await click("button[aria-label='GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await contains(".o-discuss-Gif", { count: 2 });
-    await contains("input[placeholder='Search for a GIF']", { value: "cry" });
+    await contains("input[placeholder='Search for a GIF']:value(cry)");
 });
 
 test("Reopen GIF category list when going back", async () => {
@@ -148,10 +148,10 @@ test("Add GIF to favorite", async () => {
     await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
-    await click(":nth-child(1 of div) > .o-discuss-Gif .fa-star-o");
+    await click(".o-discuss-Gif:eq(0) .fa-star-o");
     await contains(".o-discuss-Gif .fa-star");
     await click("i[aria-label='back']");
-    await click(".o-discuss-GifPicker div[aria-label='list-item']", { text: "Favorites" });
+    await click(".o-discuss-GifPicker div[aria-label='list-item']:contains(Favorites)");
     await contains(".o-discuss-Gif");
 });
 
@@ -160,7 +160,7 @@ test("Chatter should not have the GIF button", async () => {
     await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
-    await click("button", { text: "Log note" });
+    await click("button:contains(Log note)");
     await contains("button[aria-label='GIFs']", { count: 0 });
 });
 
@@ -170,10 +170,10 @@ test("Composer GIF button should open the GIF picker keyboard for mobile device"
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
-    await click("span", { text: "General" });
+    await click("span:contains(General)");
     await click("button[aria-label='Emojis']");
     await contains(".o-mail-PickerContent-picker .o-mail-PickerContent-emojiPicker");
-    await click("button", { text: "GIFs" });
+    await click("button:contains(GIFs)");
     await contains(".popover .o-discuss-GifPicker", { count: 0 });
     await contains(".o-mail-Composer-footer .o-discuss-GifPicker");
 });
@@ -209,7 +209,7 @@ test("Scrolling at the bottom should trigger the search to load more gif, even a
     await start();
     await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
-    await click(".o-discuss-GifPicker div[aria-label='list-item']", { text: "Favorites" });
+    await click(".o-discuss-GifPicker div[aria-label='list-item']:contains(Favorites)");
     await click("i[aria-label='back']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await contains(".o-discuss-Gif", { count: 4 });

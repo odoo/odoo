@@ -220,7 +220,7 @@ test("should create DM chat when adding self and another user", async () => {
     await click(".o-discuss-ChannelSelector-suggestion");
     await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
     triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Mario" });
+    await contains(".o-mail-DiscussSidebarChannel:contains(Mario)");
 });
 
 test("chat search should display no result when no matches found", async () => {
@@ -228,7 +228,7 @@ test("chat search should display no result when no matches found", async () => {
     await openDiscuss();
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
     await insertText(".o-discuss-ChannelSelector input", "Rainbow Panda");
-    await contains(".o-discuss-ChannelSelector-suggestion", { text: "No results found" });
+    await contains(".o-discuss-ChannelSelector-suggestion:contains(No results found)");
 });
 
 test("chat search should not be visible when clicking outside of the field", async () => {
@@ -270,16 +270,16 @@ test("Chat is added to discuss on other tab that the one that joined", async () 
     await insertText(".o-discuss-ChannelSelector input", "Jer", { target: env1 });
     await click(".o-discuss-ChannelSelector-suggestion", { target: env1 });
     triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel", { target: env1, text: "Jerry Golay" });
-    await contains(".o-mail-DiscussSidebarChannel", { target: env2, text: "Jerry Golay" });
+    await contains(".o-mail-DiscussSidebarChannel:contains(Jerry Golay)", { target: env1 });
+    await contains(".o-mail-DiscussSidebarChannel:contains(Jerry Golay)", { target: env2 });
 });
 
 test("no conversation selected when opening non-existing channel in discuss", async () => {
     await startServer();
     await start();
     await openDiscuss(200); // non-existing id
-    await contains("h4", { text: "No conversation selected." });
+    await contains("h4:contains(No conversation selected.)");
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-down");
-    await click(".o-mail-DiscussSidebar .btn", { text: "Channels" }); // check no crash
+    await click(".o-mail-DiscussSidebar .btn:contains(CHANNELS)"); // check no crash
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
 });

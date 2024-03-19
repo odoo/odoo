@@ -100,17 +100,17 @@ test('click on "add followers" button', async () => {
     await start();
     await openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Followers");
-    await contains(".o-mail-Followers-counter", { text: "1" });
+    await contains(".o-mail-Followers-counter:contains(1)");
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Followers-dropdown");
-    await click("a", { text: "Add Followers" });
+    await click("a:contains(Add Followers)");
     await contains(".o-mail-Followers-dropdown", { count: 0 });
     await assertSteps(["action:open_view"]);
-    await contains(".o-mail-Followers-counter", { text: "2" });
+    await contains(".o-mail-Followers-counter:contains(2)");
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower", { count: 2 });
-    await contains(":nth-child(1 of .o-mail-Follower)", { text: "François Perusse" });
-    await contains(":nth-child(2 of .o-mail-Follower)", { text: "Partner3" });
+    await contains(".o-mail-Follower:eq(0):contains(François Perusse)");
+    await contains(".o-mail-Follower:eq(1):contains(Partner3)");
 });
 
 test("click on remove follower", async () => {
@@ -182,11 +182,11 @@ test('Hide "Add follower" and subtypes edition/removal buttons except own user o
     await start();
     await openFormView("res.partner", partnerId_1);
     await click(".o-mail-Followers-button");
-    await contains("a", { count: 0, text: "Add Followers" });
-    await contains(":nth-child(1 of .o-mail-Follower)", {
+    await contains("a:contains(Add Followers)", { count: 0 });
+    await contains(".o-mail-Follower:eq(0)", {
         contains: [["button[title='Edit subscription']"], ["button[title='Remove this follower']"]],
     });
-    await contains(":nth-child(2 of .o-mail-Follower)", {
+    await contains(".o-mail-Follower:eq(1)", {
         contains: [
             ["button[title='Edit subscription']", { count: 0 }],
             ["button[title='Remove this follower']", { count: 0 }],
@@ -211,17 +211,17 @@ test("Load 100 followers at once", async () => {
     );
     await start();
     await openFormView("res.partner", partnerIds[0]);
-    await contains("button[title='Show Followers']", { text: "210" });
+    await contains("button[title='Show Followers']:contains(210)");
     await click("button[title='Show Followers']");
-    await contains(".o-mail-Follower", { text: "Mitchell Admin" });
+    await contains(".o-mail-Follower:contains(Mitchell Admin)");
     await contains(".o-mail-Follower", { count: 101 }); // 100 more followers + self follower (Mitchell Admin)
-    await contains(".o-mail-Followers-dropdown", { text: "Load more" });
+    await contains(".o-mail-Followers-dropdown:contains(Load more)");
     await scroll(".o-mail-Followers-dropdown", "bottom");
     await contains(".o-mail-Follower", { count: 201 });
     await new Promise(setTimeout); // give enough time for the useVisible hook to register load more as hidden
     await scroll(".o-mail-Followers-dropdown", "bottom");
     await contains(".o-mail-Follower", { count: 210 });
-    await contains(".o-mail-Followers-dropdown span", { count: 0, text: "Load more" });
+    await contains(".o-mail-Followers-dropdown span:contains(Load more)", { count: 0 });
 });
 
 test("Load 100 recipients at once", async () => {
@@ -245,21 +245,21 @@ test("Load 100 recipients at once", async () => {
     );
     await start();
     await openFormView("res.partner", partnerIds[0]);
-    await contains("button[title='Show Followers']", { text: "210" });
-    await click("button", { text: "Send message" });
-    await contains(".o-mail-Chatter", {
-        text: "To: partner1, partner2, partner3, partner4, partner5, and 95 more",
-    });
+    await contains("button[title='Show Followers']:contains(210)");
+    await click("button:contains(Send message)");
+    await contains(
+        ".o-mail-Chatter:contains(To: partner1, partner2, partner3, partner4, partner5, and 95 more)"
+    );
     await contains("button[title='Show all recipients']");
     await click("button[title='Show all recipients']");
     await contains(".o-mail-RecipientList li", { count: 100 });
-    await contains(".o-mail-RecipientList", { text: "Load more" });
+    await contains(".o-mail-RecipientList:contains(Load more)");
     await scroll(".o-mail-RecipientList", "bottom");
     await contains(".o-mail-RecipientList li", { count: 200 });
     await new Promise(setTimeout); // give enough time for the useVisible hook to register load more as hidden
     await scroll(".o-mail-RecipientList", "bottom");
     await contains(".o-mail-RecipientList li", { count: 209 });
-    await contains(".o-mail-RecipientList span", { count: 0, text: "Load more" });
+    await contains(".o-mail-RecipientList span:contains(Load more)", { count: 0 });
 });
 
 test("Load recipient without email", async () => {
@@ -321,11 +321,11 @@ test('Show "Add follower" and subtypes edition/removal buttons on all followers 
     await start();
     await openFormView("res.partner", partnerId_1);
     await click(".o-mail-Followers-button");
-    await contains("a", { text: "Add Followers" });
-    await contains(":nth-child(1 of .o-mail-Follower)", {
+    await contains("a:contains(Add Followers)");
+    await contains(".o-mail-Follower:eq(0)", {
         contains: [["button[title='Edit subscription']"], ["button[title='Remove this follower']"]],
     });
-    await contains(":nth-child(2 of .o-mail-Follower)", {
+    await contains(".o-mail-Follower:eq(1)", {
         contains: [["button[title='Edit subscription']"], ["button[title='Remove this follower']"]],
     });
 });
@@ -344,5 +344,5 @@ test('Show "No Followers" dropdown-item if there are no followers and user does 
     await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Followers-button");
-    await contains("div.disabled", { text: "No Followers" });
+    await contains("div.disabled:contains(No Followers)");
 });

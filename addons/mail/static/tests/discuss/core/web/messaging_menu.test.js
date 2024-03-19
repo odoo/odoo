@@ -28,14 +28,14 @@ test('"Start a conversation" item selection opens chat', async () => {
     pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
     await openDiscuss();
-    await contains("button.active", { text: "Inbox" });
-    await click("button", { text: "Chat" });
-    await click("button", { text: "Start a conversation" });
+    await contains("button.active:contains(Inbox)");
+    await click("button:contains(Chat)");
+    await click("button:contains(Start a conversation)");
     await insertText("input[placeholder='Start a conversation']", "Gandalf");
     await click(".o-discuss-ChannelSelector-suggestion");
     await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
     triggerHotkey("Enter");
-    await contains(".o-mail-ChatWindow", { text: "Gandalf" });
+    await contains(".o-mail-ChatWindow:contains(Gandalf)");
 });
 
 test('"New channel" item selection opens channel (existing)', async () => {
@@ -44,32 +44,32 @@ test('"New channel" item selection opens channel (existing)', async () => {
     pyEnv["discuss.channel"].create({ name: "Gryffindors" });
     await start();
     await openDiscuss();
-    await contains("button.active", { text: "Inbox" });
-    await click("button", { text: "Channel" });
-    await click("button", { text: "New Channel" });
+    await contains("button.active:contains(Inbox)");
+    await click("button:contains(Channel)");
+    await click("button:contains(New Channel)");
     await insertText("input[placeholder='Add or join a channel']", "Gryff");
-    await click(":nth-child(1 of .o-discuss-ChannelSelector-suggestion)");
+    await click(".o-discuss-ChannelSelector-suggestion:eq(0)");
     await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
-    await contains(".o-mail-ChatWindow", { text: "Gryffindors" });
+    await contains(".o-mail-ChatWindow:contains(Gryffindors)");
 });
 
 test('"New channel" item selection opens channel (new)', async () => {
     patchUiSize({ height: 360, width: 640 });
     await start();
     await openDiscuss();
-    await contains("button.active", { text: "Inbox" });
-    await click("button", { text: "Channel" });
-    await click("button", { text: "New Channel" });
+    await contains("button.active:contains(Inbox)");
+    await click("button:contains(Channel)");
+    await click("button:contains(New Channel)");
     await insertText("input[placeholder='Add or join a channel']", "slytherins");
     await click(".o-discuss-ChannelSelector-suggestion");
     await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
-    await contains(".o-mail-ChatWindow", { text: "slytherins" });
+    await contains(".o-mail-ChatWindow:contains(slytherins)");
 });
 
 test("new message [REQUIRE FOCUS]", async () => {
     await start();
     await click(".o_menu_systray .dropdown-toggle i[aria-label='Messages']");
-    await click(".o-mail-MessagingMenu button", { text: "New Message" });
+    await click(".o-mail-MessagingMenu button:contains(New Message)");
     await contains(".o-mail-ChatWindow .o-discuss-ChannelSelector input:focus");
 });
 
@@ -93,9 +93,9 @@ test("channel preview ignores empty message", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message", { text: "before last" });
+    await contains(".o-mail-Message:contains(before last)");
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await contains(".o-mail-NotificationItem-text", { text: "Demo: before last" });
+    await contains(".o-mail-NotificationItem-text:contains(Demo: before last)");
 });
 
 test("channel preview ignores transient message", async () => {
@@ -114,9 +114,9 @@ test("channel preview ignores transient message", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/who");
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o_mail_notification", { text: "You are alone in this channel." });
+    await contains(".o_mail_notification:contains(You are alone in this channel.)");
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await contains(".o-mail-NotificationItem-text", { text: "Demo: test" });
+    await contains(".o-mail-NotificationItem-text:contains(Demo: test)");
 });
 
 test("channel preview ignores messages from the past", async () => {
@@ -153,14 +153,14 @@ test("channel preview ignores messages from the past", async () => {
     rpc = rpcWithEnv(env);
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
-    await contains(".o-mail-Message-content", { text: "last message" });
+    await contains(".o-mail-Message-content:contains(last message)");
     await contains(".o-mail-Thread", { scroll: "bottom" });
-    await click(".o-mail-MessageInReply-content", { text: "first message" });
+    await click(".o-mail-MessageInReply-content:contains(first message)");
     await contains(".o-mail-Message", { count: 16 });
-    await contains(".o-mail-Message-content", { text: "first message" });
-    await contains(".o-mail-Message-content", { text: "last message", count: 0 });
+    await contains(".o-mail-Message-content:contains(first message)");
+    await contains(".o-mail-Message-content:contains(last message)", { count: 0 });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await contains(".o-mail-NotificationItem-text", { text: "You: last message" });
+    await contains(".o-mail-NotificationItem-text:contains(You: last message)");
     withUser(serverState.userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
@@ -168,7 +168,7 @@ test("channel preview ignores messages from the past", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-NotificationItem-text", { text: "You: new message" });
+    await contains(".o-mail-NotificationItem-text:contains(You: new message)");
 });
 
 test("counter is taking into account non-fetched channels", async () => {
@@ -194,7 +194,7 @@ test("counter is taking into account non-fetched channels", async () => {
         res_id: channelId,
     });
     const env = await start();
-    await contains(".o-mail-MessagingMenu-counter", { text: "1" });
+    await contains(".o-mail-MessagingMenu-counter:contains(1)");
     expect(
         env.services["mail.store"].Thread.get({ model: "discuss.channel", id: channelId })
     ).not.toBeTruthy();
@@ -236,5 +236,5 @@ test("counter is updated on receiving message on non-fetched channels", async ()
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-MessagingMenu-counter", { text: "1" });
+    await contains(".o-mail-MessagingMenu-counter:contains(1)");
 });

@@ -46,7 +46,7 @@ test("Start edition on click edit", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    await contains(".o-mail-Message-editable .o-mail-Composer-input", { value: "Hello world" });
+    await contains(".o-mail-Message-editable .o-mail-Composer-input:value(Hello world)");
 });
 
 test("Edit message (mobile)", async () => {
@@ -65,21 +65,21 @@ test("Edit message (mobile)", async () => {
     });
     await start();
     await openDiscuss();
-    await contains("button.active", { text: "Inbox" });
-    await click("button", { text: "Channel" });
-    await click("button", { text: "general" });
+    await contains("button.active:contains(Inbox)");
+    await click("button:contains(Channel)");
+    await click("button:contains(general)");
     await contains(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    await contains(".o-mail-Message-editable .o-mail-Composer-input", { value: "Hello world" });
-    await click("button", { text: "Discard editing" });
+    await contains(".o-mail-Message-editable .o-mail-Composer-input:value(Hello world)");
+    await click("button:contains(Discard editing)");
     await contains(".o-mail-Message-editable .o-mail-Composer", { count: 0 });
-    await contains(".o-mail-Message-content", { text: "Hello world" });
+    await contains(".o-mail-Message-content:contains(Hello world)");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
     await click(".o-mail-Message .fa-paper-plane-o");
-    await contains(".o-mail-Message-content", { text: "edited message" });
+    await contains(".o-mail-Message-content:contains(edited message)");
 });
 
 test("Can edit message comment in chatter", async () => {
@@ -97,8 +97,8 @@ test("Can edit message comment in chatter", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
-    await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message-content", { text: "edited message" });
+    await click(".o-mail-Message a:contains(save)");
+    await contains(".o-mail-Message-content:contains(edited message)");
 });
 
 test("Cursor is at end of composer input on edit", async () => {
@@ -140,7 +140,7 @@ test("Stop edition on click cancel", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    await click(".o-mail-Message a", { text: "cancel" });
+    await click(".o-mail-Message a:contains(cancel)");
     await contains(".o-mail-Message-editable .o-mail-Composer", { count: 0 });
 });
 
@@ -182,7 +182,7 @@ test("Stop edition on click save", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    await click(".o-mail-Message a", { text: "save" });
+    await click(".o-mail-Message a:contains(save)");
     await contains(".o-mail-Message-editable .o-mail-Composer", { count: 0 });
 });
 
@@ -225,7 +225,7 @@ test("Do not stop edition on click away when clicking on emoji", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await click(".o-mail-Composer button[aria-label='Emojis']");
-    await click(".o-EmojiPicker-content :nth-child(1 of .o-Emoji)");
+    await click(".o-EmojiPicker-content .o-Emoji:eq(0)");
     await contains(".o-mail-Message-editable .o-mail-Composer");
 });
 
@@ -247,8 +247,8 @@ test("Edit and click save", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await insertText(".o-mail-Message .o-mail-Composer-input", "Goodbye World", { replace: true });
-    await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message-body", { text: "Goodbye World" });
+    await click(".o-mail-Message a:contains(save)");
+    await contains(".o-mail-Message-body:contains(Goodbye World)");
 });
 
 test("Do not call server on save if no changes", async () => {
@@ -269,7 +269,7 @@ test("Do not call server on save if no changes", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    await click(".o-mail-Message a", { text: "save" });
+    await click(".o-mail-Message a:contains(save)");
     await assertSteps([]);
 });
 
@@ -294,8 +294,8 @@ test("Update the link previews when a message is edited", async () => {
     await insertText(".o-mail-Message .o-mail-Composer-input", "http://odoo.com", {
         replace: true,
     });
-    await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message-body", { text: "http://odoo.com" });
+    await click(".o-mail-Message a:contains(save)");
+    await contains(".o-mail-Message-body:contains(http://odoo.com)");
     await assertSteps(["link_preview"]);
 });
 
@@ -343,10 +343,9 @@ test("mentions are kept when editing message", async () => {
     await insertText(".o-mail-Message .o-mail-Composer-input", "Hi @Mitchell Admin", {
         replace: true,
     });
-    await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message", {
-        text: "Hi @Mitchell Admin",
-        contains: ["a.o_mail_redirect", { text: "@Mitchell Admin" }],
+    await click(".o-mail-Message a:contains(save)");
+    await contains(".o-mail-Message:contains(Hi @Mitchell Admin)", {
+        contains: ["a.o_mail_redirect:contains(@Mitchell Admin)"],
     });
 });
 
@@ -377,12 +376,11 @@ test("can add new mentions when editing message", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await insertText(".o-mail-Message .o-mail-Composer-input", " @");
-    await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
-    await contains(".o-mail-Composer-input", { value: "Hello @TestPartner " });
-    await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message", {
-        text: "Hello @TestPartner",
-        contains: ["a.o_mail_redirect", { text: "@TestPartner" }],
+    await click(".o-mail-Composer-suggestion strong:contains(TestPartner)");
+    await contains(".o-mail-Composer-input:value(Hello @TestPartner )");
+    await click(".o-mail-Message a:contains(save)");
+    await contains(".o-mail-Message:contains(Hello @TestPartner)", {
+        contains: ["a.o_mail_redirect:contains(@TestPartner)"],
     });
 });
 
@@ -400,10 +398,10 @@ test("Other messages are grayed out when replying to another one", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 2 });
     await click(".o-mail-Message [title='Reply']", {
-        parent: [".o-mail-Message", { text: "Hello world" }],
+        parent: [".o-mail-Message:contains(Hello world)"],
     });
-    await contains(".o-mail-Message.opacity-50", { text: "Goodbye world" });
-    await contains(".o-mail-Message:not(.opacity_50)", { text: "Hello world" });
+    await contains(".o-mail-Message.opacity-50:contains(Goodbye world)");
+    await contains(".o-mail-Message:not(.opacity_50):contains(Hello world)");
 });
 
 test("Parent message body is displayed on replies", async () => {
@@ -422,7 +420,7 @@ test("Parent message body is displayed on replies", async () => {
     await click(".o-mail-Message [title='Reply']");
     await insertText(".o-mail-Composer-input", "FooBarFoo");
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-MessageInReply-message", { text: "Hello world" });
+    await contains(".o-mail-MessageInReply-message:contains(Hello world)");
 });
 
 test("Updating the parent message of a reply also updates the visual of the reply", async () => {
@@ -446,13 +444,13 @@ test("Updating the parent message of a reply also updates the visual of the repl
     });
     await start();
     await openDiscuss(channelId);
-    await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
+    await click(".o-mail-Message:eq(0) [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await insertText(".o-mail-Message .o-mail-Composer-input", "Goodbye World", {
         replace: true,
     });
     triggerHotkey("Enter");
-    await contains(".o-mail-MessageInReply-message", { text: "Goodbye World" });
+    await contains(".o-mail-MessageInReply-message:contains(Goodbye World)");
 });
 
 test("Deleting parent message of a reply should adapt reply visual", async () => {
@@ -474,8 +472,8 @@ test("Deleting parent message of a reply should adapt reply visual", async () =>
     triggerHotkey("Enter", false);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Delete']");
-    await click("button", { text: "Confirm" });
-    await contains(".o-mail-MessageInReply", { text: "Original message was deleted" });
+    await click("button:contains(Confirm)");
+    await contains(".o-mail-MessageInReply:contains(Original message was deleted)");
 });
 
 test("Can open emoji picker after edit mode", async () => {
@@ -494,7 +492,7 @@ test("Can open emoji picker after edit mode", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    await click(".o-mail-Message a", { text: "save" });
+    await click(".o-mail-Message a:contains(save)");
     await click("[title='Add a Reaction']");
     await contains(".o-EmojiPicker");
 });
@@ -514,8 +512,8 @@ test("Can add a reaction", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Add a Reaction']");
-    await click(".o-Emoji", { text: "😅" });
-    await contains(".o-mail-MessageReaction", { text: "😅1" });
+    await click(".o-Emoji:contains(😅)");
+    await contains(".o-mail-MessageReaction:contains(😅\n1)");
 });
 
 test("Can remove a reaction", async () => {
@@ -533,7 +531,7 @@ test("Can remove a reaction", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Add a Reaction']");
-    await click(".o-Emoji", { text: "😅" });
+    await click(".o-Emoji:contains(😅)");
     await click(".o-mail-MessageReaction");
     await contains(".o-mail-MessageReaction", { count: 0 });
 });
@@ -565,11 +563,11 @@ test("Two users reacting with the same emoji", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-MessageReaction", { text: "😅2" });
+    await contains(".o-mail-MessageReaction:contains(😅\n2)");
     await click(".o-mail-MessageReaction");
-    await contains(".o-mail-MessageReaction", { text: "😅1" });
+    await contains(".o-mail-MessageReaction:contains(😅\n1)");
     await click(".o-mail-MessageReaction");
-    await contains(".o-mail-MessageReaction", { text: "😅2" });
+    await contains(".o-mail-MessageReaction:contains(😅\n2)");
 });
 
 test("Reaction summary", async () => {
@@ -586,7 +584,7 @@ test("Reaction summary", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message", { text: "Hello world" });
+    await contains(".o-mail-Message:contains(Hello world)");
     const partnerNames = ["Foo", "Bar", "FooBar", "Bob"];
     const expectedSummaries = [
         "Foo has reacted with 😅",
@@ -599,9 +597,8 @@ test("Reaction summary", async () => {
         pyEnv["res.partner"].create({ name, user_ids: [Command.link(userId)] });
         await withUser(userId, async () => {
             await click("[title='Add a Reaction']");
-            await click(".o-Emoji", {
-                after: ["span", { textContent: "Smileys & Emotion" }],
-                text: "😅",
+            await click(".o-Emoji:contains(😅)", {
+                after: [".o-EmojiPicker-categoryName:contains(Smileys & Emotion)"],
             });
             await contains(`.o-mail-MessageReaction[title="${expectedSummaries[idx]}"]`);
         });
@@ -623,10 +620,10 @@ test("Add the same reaction twice from the emoji picker", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Add a Reaction']");
-    await click(".o-Emoji", { text: "😅" });
+    await click(".o-Emoji:contains(😅)");
     await click("[title='Add a Reaction']");
-    await click(".o-Emoji", { text: "😅" });
-    await contains(".o-mail-MessageReaction", { text: "😅1" });
+    await click(".o-Emoji:contains(😅)");
+    await contains(".o-mail-MessageReaction:contains(😅\n1)");
 });
 
 test("basic rendering of message", async () => {
@@ -647,16 +644,16 @@ test("basic rendering of message", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message .o-mail-Message-content", { text: "body" });
+    await contains(".o-mail-Message .o-mail-Message-content:contains(body)");
     const partner = pyEnv["res.partner"].search_read([["id", "=", partnerId]])[0];
     await contains(
         `.o-mail-Message .o-mail-Message-sidebar .o-mail-Message-avatarContainer img.cursor-pointer[data-src='${getOrigin()}/web/image/res.partner/${partnerId}/avatar_128?unique=${
             deserializeDateTime(partner.write_date).ts
         }']`
     );
-    await contains(".o-mail-Message .o-mail-Message-header .o-mail-Message-author.cursor-pointer", {
-        text: "Demo",
-    });
+    await contains(
+        ".o-mail-Message .o-mail-Message-header .o-mail-Message-author.cursor-pointer:contains(Demo)"
+    );
     await contains(
         `.o-mail-Message .o-mail-Message-header .o-mail-Message-date[title='${deserializeDateTime(
             "2019-04-20 10:00:00"
@@ -695,18 +692,16 @@ test.skip("squashed transient message should not have date in the sidebar", asyn
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message.o-squashed");
-    await contains(".o-mail-Message.o-squashed .o-mail-Message-sidebar", {
-        text: "11:00", // FIXME: should be 10:00
-    });
+    await contains(".o-mail-Message.o-squashed .o-mail-Message-sidebar:contains(11:00)"); // FIXME: should be 10:00
     await insertText(".o-mail-Composer-input", "/who");
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message", { text: "You are alone in this channel." });
+    await contains(".o-mail-Message:contains(You are alone in this channel.)");
     await insertText(".o-mail-Composer-input", "/who");
     await click(".o-mail-Composer-send:enabled");
-    await click(":nth-child(2 of .o-mail-Message.o-squashed");
+    await click(".o-mail-Message.o-squashed:eq(1)");
     await tick();
-    await contains(":nth-child(2 of .o-mail-Message.o-squashed) .o-mail-Message-sidebar", {
-        text: "11:00", // FIXME: should be 10:00
+    // FIXME: should be 10:00
+    await contains(".o-mail-Message.o-squashed:eq(1) .o-mail-Message-sidebar:contains(11:00)", {
         count: 0,
     });
 });
@@ -743,23 +738,23 @@ test.skip("message comment of same author within 1min. should be squashed", asyn
     await contains(".o-mail-Message", { count: 2 });
     await contains(".o-mail-Message", {
         contains: [
-            [".o-mail-Message-content", { text: "body1" }],
+            [".o-mail-Message-content:contains(body1)"],
             [".o-mail-Message-header"],
             [".o-mail-Message-sidebar", { contains: [".o-mail-Message-date", { count: 0 }] }],
         ],
     });
     await contains(".o-mail-Message", {
         contains: [
-            [".o-mail-Message-content", { text: "body2" }],
+            [".o-mail-Message-content:contains(body2)"],
             [".o-mail-Message-header", { count: 0 }],
             [".o-mail-Message-sidebar", { contains: [".o-mail-Message-date", { count: 0 }] }],
         ],
     });
-    await click(".o-mail-Message", { text: "body2" });
+    await click(".o-mail-Message:contains(body2)");
     await contains(".o-mail-Message", {
         contains: [
-            [".o-mail-Message-content", { text: "body2" }],
-            [".o-mail-Message-sidebar .o-mail-Message-date", { text: "12:00" }], // FIXME: should be 10:00 (mockTimeZone)
+            [".o-mail-Message-content:contains(body2)"],
+            [".o-mail-Message-sidebar .o-mail-Message-date:contains(12:00)"], // FIXME: should be 10:00 (mockTimeZone)
         ],
     });
 });
@@ -794,13 +789,13 @@ test("open author avatar card", async () => {
     });
     await start();
     await openDiscuss(channelId_1);
-    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "General" });
+    await contains(".o-mail-DiscussSidebarChannel.o-active:contains(General)");
     await contains(".o-mail-Discuss-content .o-mail-Message-avatarContainer img");
     await click(".o-mail-Discuss-content .o-mail-Message-avatarContainer img");
     await contains(".o_avatar_card");
-    await contains(".o_card_user_infos > span", { text: "Demo" });
-    await contains(".o_card_user_infos > a", { text: "demo@example.com" });
-    await contains(".o_card_user_infos > a", { text: "+5646548" });
+    await contains(".o_card_user_infos > span:contains(Demo)");
+    await contains(".o_card_user_infos > a:contains(demo@example.com)");
+    await contains(".o_card_user_infos > a:contains(+5646548)");
 });
 
 test("toggle_star message", async () => {
@@ -822,14 +817,14 @@ test("toggle_star message", async () => {
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo']");
     await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star-o");
-    await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
+    await contains("button:contains(Starred)", { contains: [".badge", { count: 0 }] });
     await click(".o-mail-Message [title='Mark as Todo']");
-    await contains("button", { text: "Starred", contains: [".badge", { text: "1" }] });
+    await contains("button:contains(Starred)", { contains: [".badge:contains(1)"] });
     await assertSteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star");
     await click(".o-mail-Message [title='Mark as Todo']");
-    await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
+    await contains("button:contains(Starred)", { contains: [".badge", { count: 0 }] });
     await assertSteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star-o");
@@ -855,7 +850,7 @@ test("Name of message author is only displayed in chat window for partners other
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await contains(".o-mail-Message-author", { text: "Not the current user" });
+    await contains(".o-mail-Message-author:contains(Not the current user)");
 });
 
 test("Name of message author is not displayed in chat window for channel of type chat", async () => {
@@ -925,7 +920,7 @@ test("Notification Sent", async () => {
     await contains(".o-mail-MessageNotificationPopover");
     await contains(".o-mail-MessageNotificationPopover i");
     expect($(".o-mail-MessageNotificationPopover i")[0]).toHaveClass("fa-check");
-    await contains(".o-mail-MessageNotificationPopover", { text: "Someone" });
+    await contains(".o-mail-MessageNotificationPopover:contains(Someone)");
 });
 
 test("Notification Error", async () => {
@@ -999,7 +994,7 @@ test('Quick edit (edit from Composer with ArrowUp) ignores empty ("deleted") mes
     await contains(".o-mail-Message");
     triggerHotkey("ArrowUp");
     await contains(".o-mail-Message .o-mail-Message-editable");
-    await contains(".o-mail-Message .o-mail-Composer-input", { value: "not empty" });
+    await contains(".o-mail-Message .o-mail-Composer-input:value(not empty)");
 });
 
 test("Editing a message to clear its composer opens message delete dialog.", async () => {
@@ -1021,7 +1016,7 @@ test("Editing a message to clear its composer opens message delete dialog.", asy
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await insertText(".o-mail-Message-editable .o-mail-Composer-input", "", { replace: true });
     triggerHotkey("Enter");
-    await contains(".modal-body p", { text: "Are you sure you want to delete this message?" });
+    await contains(".modal-body p:contains(Are you sure you want to delete this message?)");
 });
 
 test("Clear message body should not open message delete dialog if it has attachments", async () => {
@@ -1046,10 +1041,9 @@ test("Clear message body should not open message delete dialog if it has attachm
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await insertText(".o-mail-Message-editable .o-mail-Composer-input", "", { replace: true });
     triggerHotkey("Enter");
-    await contains(".o-mail-Message-textContent", { text: "" });
+    await contains(".o-mail-Message-textContent:contains()");
     // weak test, no guarantee that we waited long enough for the potential dialog to show
-    await contains(".modal-body p", {
-        text: "Are you sure you want to delete this message?",
+    await contains(".modal-body p:contains(Are you sure you want to delete this message?)", {
         count: 0,
     });
 });
@@ -1118,7 +1112,7 @@ test("allow attachment delete on authored message", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-AttachmentImage div[title='Remove']");
-    await contains(".modal-dialog .modal-body", { text: 'Do you really want to delete "BLAH"?' });
+    await contains('.modal-dialog .modal-body:contains(Do you really want to delete "BLAH"?)');
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentCard", { count: 0 });
 });
@@ -1165,10 +1159,9 @@ test("Toggle star should update starred counter on all tabs", async () => {
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
     await click(".o-mail-Message [title='Mark as Todo']", { target: env1 });
-    await contains("button", {
+    await contains("button:contains(Starred)", {
         target: env2,
-        text: "Starred",
-        contains: [".badge", { text: "1" }],
+        contains: [".badge:contains(1)"],
     });
 });
 
@@ -1215,9 +1208,9 @@ test("Can download all files of a message", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
+    await click(".o-mail-Message:eq(0) [title='Expand']");
     await contains("[title='Download Files']");
-    await click(":nth-child(2 of .o-mail-Message) [title='Expand']");
+    await click(".o-mail-Message:eq(1) [title='Expand']");
     await contains("[title='Download Files']", { count: 0 });
 });
 
@@ -1255,16 +1248,12 @@ test("Can remove files of message individually", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await contains(
-        ":nth-child(1 of .o-mail-Message) :nth-child(1 of .o-mail-AttachmentCard) [title='Remove']"
-    );
-    await contains(
-        ":nth-child(1 of .o-mail-Message) :nth-child(2 of .o-mail-AttachmentCard) [title='Remove']"
-    );
-    await contains(":nth-child(2 of .o-mail-Message) .o-mail-AttachmentCard [title='Remove']", {
+    await contains(".o-mail-Message:eq(0) .o-mail-AttachmentCard:eq(0) [title='Remove']");
+    await contains(".o-mail-Message:eq(0) .o-mail-AttachmentCard:eq(1) [title='Remove']");
+    await contains(".o-mail-Message:eq(1) .o-mail-AttachmentCard [title='Remove']", {
         count: 0,
     });
-    await contains(":nth-child(3 of .o-mail-Message) .o-mail-AttachmentCard [title='Remove']");
+    await contains(".o-mail-Message:eq(2) .o-mail-AttachmentCard [title='Remove']");
 });
 
 test("avatar card from author should be opened after clicking on their avatar", async () => {
@@ -1289,9 +1278,9 @@ test("avatar card from author should be opened after clicking on their avatar", 
     expect($(".o-mail-Message-avatarContainer")[0]).toHaveClass("cursor-pointer");
     await click(".o-mail-Message-avatar");
     await contains(".o_avatar_card");
-    await contains(".o_card_user_infos > span", { text: "Partner_2" });
-    await contains(".o_card_user_infos > a", { text: "partner2@mail.com" });
-    await contains(".o_card_user_infos > a", { text: "+15968415" });
+    await contains(".o_card_user_infos > span:contains(Partner_2)");
+    await contains(".o_card_user_infos > a:contains(partner2@mail.com)");
+    await contains(".o_card_user_infos > a:contains(+15968415)");
 });
 
 test("avatar card from author should be opened after clicking on their name", async () => {
@@ -1313,11 +1302,11 @@ test("avatar card from author should be opened after clicking on their name", as
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Message-author", { text: "Demo" });
+    await click(".o-mail-Message-author:contains(Demo)");
     await contains(".o_avatar_card");
-    await contains(".o_card_user_infos > span", { text: "Demo" });
-    await contains(".o_card_user_infos > a", { text: "demo@example.com" });
-    await contains(".o_card_user_infos > a", { text: "+5646548" });
+    await contains(".o_card_user_infos > span:contains(Demo)");
+    await contains(".o_card_user_infos > a:contains(demo@example.com)");
+    await contains(".o_card_user_infos > a:contains(+5646548)");
 });
 
 test("subtype description should be displayed if it is different than body", async () => {
@@ -1332,7 +1321,7 @@ test("subtype description should be displayed if it is different than body", asy
     });
     await start();
     await openFormView("res.partner", threadId);
-    await contains(".o-mail-Message-body", { text: "HelloBonjour" });
+    await contains(".o-mail-Message-body:contains(Hello\n\nBonjour)");
 });
 
 test("subtype description should not be displayed if it is similar to body", async () => {
@@ -1347,7 +1336,7 @@ test("subtype description should not be displayed if it is similar to body", asy
     });
     await start();
     await openFormView("res.partner", threadId);
-    await contains(".o-mail-Message-body", { text: "Hello" });
+    await contains(".o-mail-Message-body:contains(Hello)");
 });
 
 test("data-oe-id & data-oe-model link redirection on click", async () => {
@@ -1389,14 +1378,14 @@ test("Chat with partner should be opened after clicking on their mention", async
     pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
     await openFormView("res.partner", partnerId);
-    await click("button", { text: "Send message" });
+    await click("button:contains(Send message)");
     await insertText(".o-mail-Composer-input", "@Te");
-    await click(".o-mail-Composer-suggestion strong", { text: "Test Partner" });
-    await contains(".o-mail-Composer-input", { value: "@Test Partner " });
+    await click(".o-mail-Composer-suggestion strong:contains(Test Partner)");
+    await contains(".o-mail-Composer-input:value(@Test Partner )");
     await click(".o-mail-Composer-send:enabled");
     await click(".o_mail_redirect");
     await contains(".o-mail-ChatWindow .o-mail-Thread");
-    await contains(".o-mail-ChatWindow", { text: "Test Partner" });
+    await contains(".o-mail-ChatWindow:contains(Test Partner)");
 });
 
 test("Channel should be opened after clicking on its mention", async () => {
@@ -1405,13 +1394,13 @@ test("Channel should be opened after clicking on its mention", async () => {
     pyEnv["discuss.channel"].create({ name: "my-channel" });
     await start();
     await openFormView("res.partner", partnerId);
-    await click("button", { text: "Send message" });
+    await click("button:contains(Send message)");
     await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-Composer-suggestion strong", { text: "#my-channel" });
+    await click(".o-mail-Composer-suggestion strong:contains(#my-channel)");
     await click(".o-mail-Composer-send:enabled");
     await click(".o_channel_redirect");
     await contains(".o-mail-ChatWindow .o-mail-Thread");
-    await contains(".o-mail-ChatWindow", { text: "my-channel" });
+    await contains(".o-mail-ChatWindow:contains(my-channel)");
 });
 
 test("delete all attachments of message without content should no longer display the message", async () => {
@@ -1432,7 +1421,7 @@ test("delete all attachments of message without content should no longer display
     await contains(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Delete']");
-    await click("button", { text: "Confirm" });
+    await click("button:contains(Confirm)");
     await contains(".o-mail-Message", { count: 0 });
 });
 
@@ -1454,7 +1443,7 @@ test("delete all attachments of a message with some text content should still ke
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await click(".o-mail-AttachmentCard button[title='Remove']");
-    await click(".modal button", { text: "Ok" });
+    await click(".modal button:contains(Ok)");
     await contains(".o-mail-Message");
 });
 
@@ -1469,7 +1458,7 @@ test("message with subtype should be displayed (and not considered as empty)", a
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message-content", { text: "Task created" });
+    await contains(".o-mail-Message-content:contains(Task created)");
 });
 
 test("message considered empty", async () => {
@@ -1518,7 +1507,7 @@ test("message considered empty", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
+    await contains(".o-mail-Thread:contains(There are no messages in this conversation.)");
     await contains(".o-mail-Message", { count: 0 });
 });
 
@@ -1592,7 +1581,7 @@ test("Mark as unread", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
     await contains(".o-mail-Thread-newMessage");
-    await contains(".o-mail-DiscussSidebarChannel .badge", { text: "1" });
+    await contains(".o-mail-DiscussSidebarChannel .badge:contains(1)");
 });
 
 test("Avatar of unknown author for email message", async () => {
@@ -1624,7 +1613,7 @@ test("Show email_from of message without author for email message", async () => 
     });
     await start();
     await openFormView("res.partner", serverState.partnerId);
-    await contains(".o-mail-Message-author", { text: "md@oilcompany.fr" });
+    await contains(".o-mail-Message-author:contains(md@oilcompany.fr)");
 });
 
 test("Avatar of unknown author for not email message", async () => {
@@ -1656,7 +1645,7 @@ test("Show email_from of message without author for not email message", async ()
     });
     await start();
     await openFormView("res.partner", serverState.partnerId);
-    await contains(".o-mail-Message-author", { text: "md@oilcompany.fr" });
+    await contains(".o-mail-Message-author:contains(md@oilcompany.fr)");
 });
 
 test("Message should display attachments in order", async () => {
@@ -1679,9 +1668,9 @@ test("Message should display attachments in order", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(":nth-child(1 of .o-mail-AttachmentCard)", { text: "A.txt" });
-    await contains(":nth-child(2 of .o-mail-AttachmentCard)", { text: "B.txt" });
-    await contains(":nth-child(3 of .o-mail-AttachmentCard)", { text: "C.txt" });
+    await contains(".o-mail-AttachmentCard:eq(0):contains(A.txt)");
+    await contains(".o-mail-AttachmentCard:eq(1):contains(B.txt)");
+    await contains(".o-mail-AttachmentCard:eq(2):contains(C.txt)");
 });
 
 test("Can edit a message only containing an attachment", async () => {
@@ -1724,11 +1713,11 @@ test("Click on view reactions shows the reactions on the message", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Add a Reaction']");
-    await click(".o-Emoji", { text: "😅" });
-    await contains(".o-mail-MessageReaction", { text: "😅1" });
+    await click(".o-Emoji:contains(😅)");
+    await contains(".o-mail-MessageReaction:contains(😅\n1)");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='View Reactions']");
-    await contains(".o-mail-MessageReactionMenu", { text: "😅1" });
+    await contains(".o-mail-MessageReactionMenu:contains(😅\n1)");
 });
 
 test("discuss - bigger font size when there is only emoji", async () => {
@@ -1741,10 +1730,10 @@ test("discuss - bigger font size when there is only emoji", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "🥳");
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message-body", { text: "🥳" });
+    await contains(".o-mail-Message-body:contains(🥳)");
     await insertText(".o-mail-Composer-input", "not only emoji!! 😅");
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message-body", { text: "not only emoji!! 😅" });
+    await contains(".o-mail-Message-body:contains(not only emoji!! 😅)");
     const [emojiMessage, textMessage] = document.querySelectorAll(".o-mail-Message-body");
     expect(
         parseFloat(getComputedStyle(emojiMessage).getPropertyValue("font-size"))
@@ -1758,11 +1747,11 @@ test("chatter - font size unchanged when there is only emoji", async () => {
     await click(".o-mail-Chatter-sendMessage");
     await insertText(".o-mail-Composer-input", "🥳");
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message-body", { text: "🥳" });
+    await contains(".o-mail-Message-body:contains(🥳)");
     await click(".o-mail-Chatter-sendMessage");
     await insertText(".o-mail-Composer-input", "not only emoji!! 😅");
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message-body", { text: "not only emoji!! 😅" });
+    await contains(".o-mail-Message-body:contains(not only emoji!! 😅)");
     const [emojiMessage, textMessage] = document.querySelectorAll(".o-mail-Message-body");
     expect(parseFloat(getComputedStyle(emojiMessage).getPropertyValue("font-size"))).toBe(
         parseFloat(getComputedStyle(textMessage).getPropertyValue("font-size"))

@@ -36,7 +36,7 @@ test("Unknown visitor", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebar .o-mail-DiscussSidebarCategory-livechat");
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Visitor 11" });
+    await contains(".o-mail-DiscussSidebarChannel:contains(Visitor 11)");
 });
 
 test("Known user with country", async () => {
@@ -59,7 +59,7 @@ test("Known user with country", async () => {
     });
     await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Jean (Belgium)" });
+    await contains(".o-mail-DiscussSidebarChannel:contains(Jean (Belgium))");
 });
 
 test("Do not show channel when visitor is typing", async () => {
@@ -211,7 +211,7 @@ test("Counter should have correct value of unread threads if category is folded 
     await openDiscuss();
     // first, close the live chat category
     await click(".o-mail-DiscussSidebarCategory-livechat .btn");
-    await contains(".o-mail-DiscussSidebarCategory-livechat .o-discuss-badge", { text: "1" });
+    await contains(".o-mail-DiscussSidebarCategory-livechat .o-discuss-badge:contains(1)");
 });
 
 test("Close manually by clicking the title", async () => {
@@ -317,7 +317,7 @@ test("Clicking on unpin button unpins the channel", async () => {
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
-    await contains(".o_notification", { text: "You unpinned your conversation with Visitor 11" });
+    await contains(".o_notification:contains(You unpinned your conversation with Visitor 11)");
 });
 
 test("Message unread counter", async () => {
@@ -346,7 +346,7 @@ test("Message unread counter", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-DiscussSidebarChannel .badge", { text: "1" });
+    await contains(".o-mail-DiscussSidebarChannel .badge:contains(1)");
 });
 
 test("unknown livechat can be displayed and interacted with", async () => {
@@ -359,21 +359,20 @@ test("unknown livechat can be displayed and interacted with", async () => {
     });
     await start();
     await openDiscuss();
-    await contains("button.o-active", { text: "Inbox" });
+    await contains("button.o-active:contains(Inbox)");
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await openDiscuss(channelId);
     await contains(
-        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel.o-active",
-        { text: "Jane" }
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel.o-active:contains(Jane)"
     );
     await insertText(".o-mail-Composer-input", "Hello", { replace: true });
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message", { text: "Hello" });
-    await click("button", { text: "Inbox" });
-    await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Jane" });
+    await contains(".o-mail-Message:contains(Hello)");
+    await click("button:contains(Inbox)");
+    await contains(".o-mail-DiscussSidebarChannel:not(.o-active):contains(Jane)");
     await click("div[title='Unpin Conversation']", {
-        parent: [".o-mail-DiscussSidebarChannel", { text: "Jane" }],
+        parent: [".o-mail-DiscussSidebarChannel:contains(Jane)"],
     });
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });

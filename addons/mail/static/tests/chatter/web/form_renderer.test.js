@@ -94,7 +94,7 @@ test("Attachments that have been unlinked from server should be visually unlinke
         resId: partnerId_1,
         resIds: [partnerId_1, partnerId_2],
     });
-    await contains("button[aria-label='Attach files']", { text: "2" });
+    await contains("button[aria-label='Attach files']:contains(2)");
     // The attachment links are updated on (re)load,
     // so using pager is a way to reload the record "Partner1".
     await click(".o_pager_next");
@@ -102,7 +102,7 @@ test("Attachments that have been unlinked from server should be visually unlinke
     // Simulate unlinking attachment 1 from Partner 1.
     pyEnv["ir.attachment"].write([attachmentId_1], { res_id: 0 });
     await click(".o_pager_previous");
-    await contains("button[aria-label='Attach files']", { text: "1" });
+    await contains("button[aria-label='Attach files']:contains(1)");
 });
 
 test("read more/less links are not duplicated when switching from read to edit mode", async () => {
@@ -174,9 +174,9 @@ test("read more links becomes read less after being clicked", async () => {
     });
     await contains(".o-mail-Chatter");
     await contains(".o-mail-Message");
-    await contains(".o-mail-read-more-less", { text: "Read More" });
+    await contains(".o-mail-read-more-less:contains(Read More)");
     await click(".o-mail-read-more-less");
-    await contains(".o-mail-read-more-less", { text: "Read Less" });
+    await contains(".o-mail-read-more-less:contains(Read Less)");
 });
 
 test("[TECHNICAL] unfolded read more/less links should not fold on message click besides those button links", async () => {
@@ -217,11 +217,11 @@ test("[TECHNICAL] unfolded read more/less links should not fold on message click
                 <chatter/>
             </form>`,
     });
-    await contains(".o-mail-read-more-less", { text: "Read More" });
+    await contains(".o-mail-read-more-less:contains(Read More)");
     await click(".o-mail-read-more-less");
-    await contains(".o-mail-read-more-less", { text: "Read Less" });
+    await contains(".o-mail-read-more-less:contains(Read Less)");
     await click(".o-mail-Message");
-    await contains(".o-mail-read-more-less", { text: "Read Less" });
+    await contains(".o-mail-read-more-less:contains(Read Less)");
 });
 
 test("read more/less links on message of type notification", async () => {
@@ -255,5 +255,5 @@ test("read more/less links on message of type notification", async () => {
                 <chatter/>
             </form>`,
     });
-    await contains(".o-mail-Message a", { text: "Read More" });
+    await contains(".o-mail-Message a:contains(Read More)");
 });

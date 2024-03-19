@@ -40,7 +40,7 @@ test("base non-empty rendering", async () => {
             </form>`,
     });
     await contains(".o-mail-AttachmentBox");
-    await contains("button", { text: "Attach files" });
+    await contains("button:contains(Attach files)");
     await contains(".o-mail-Chatter input[type='file']");
     await contains(".o-mail-AttachmentList");
 });
@@ -65,7 +65,7 @@ test("remove attachment should ask for confirmation", async () => {
     await contains(".o-mail-AttachmentCard");
     await contains("button[title='Remove']");
     await click("button[title='Remove']");
-    await contains(".modal-body", { text: 'Do you really want to delete "Blah.txt"?' });
+    await contains('.modal-body:contains(Do you really want to delete "Blah.txt"?)');
     // Confirm the deletion
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentImage", { count: 0 });
@@ -98,13 +98,13 @@ test("view attachments", async () => {
     });
     await click('.o-mail-AttachmentCard[aria-label="Blah.txt"] .o-mail-AttachmentCard-image');
     await contains(".o-FileViewer");
-    await contains(".o-FileViewer-header", { text: "Blah.txt" });
+    await contains(".o-FileViewer-header:contains(Blah.txt)");
     await contains(".o-FileViewer div[aria-label='Next']");
     await click(".o-FileViewer div[aria-label='Next']");
-    await contains(".o-FileViewer-header", { text: "Blu.txt" });
+    await contains(".o-FileViewer-header:contains(Blu.txt)");
     await contains(".o-FileViewer div[aria-label='Next']");
     await click(".o-FileViewer div[aria-label='Next']");
-    await contains(".o-FileViewer-header", { text: "Blah.txt" });
+    await contains(".o-FileViewer-header:contains(Blah.txt)");
 });
 
 test("scroll to attachment box when toggling on", async () => {
@@ -173,11 +173,11 @@ test("attachment box should order attachments from newest to oldest", async () =
     ]);
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Chatter [aria-label='Attach files']", { text: "3" });
+    await contains(".o-mail-Chatter [aria-label='Attach files']:contains(3)");
     await click(".o-mail-Chatter [aria-label='Attach files']"); // open attachment box
-    await contains(":nth-child(1 of .o-mail-AttachmentCard)", { text: "C.txt" });
-    await contains(":nth-child(2 of .o-mail-AttachmentCard)", { text: "B.txt" });
-    await contains(":nth-child(3 of .o-mail-AttachmentCard)", { text: "A.txt" });
+    await contains(".o-mail-AttachmentCard:eq(0):contains(C.txt)");
+    await contains(".o-mail-AttachmentCard:eq(1):contains(B.txt)");
+    await contains(".o-mail-AttachmentCard:eq(2):contains(A.txt)");
 });
 
 test("attachment box auto-closed on switch to record wih no attachments", async () => {

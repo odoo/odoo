@@ -28,12 +28,12 @@ test("Can invite a partner to a livechat channel", async () => {
     await openDiscuss(channelId);
     await click("button[title='Add Users']");
     await click("input", {
-        parent: [".o-discuss-ChannelInvitation-selectable", { text: "James" }],
+        parent: [".o-discuss-ChannelInvitation-selectable:contains(James)"],
     });
-    await click("button:enabled", { text: "Invite" });
+    await click("button:contains(Invite):enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await click("button[title='Show Member List']");
-    await contains(".o-discuss-ChannelMember", { text: "James" });
+    await contains(".o-discuss-ChannelMember:contains(James)");
 });
 
 test("Available operators come first", async () => {
@@ -64,8 +64,8 @@ test("Available operators come first", async () => {
     await openDiscuss(channelId);
     await click("button[title='Add Users']");
     await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });
-    await contains(":nth-child(1 of .o-discuss-ChannelInvitation-selectable)", { text: "Ron" });
-    await contains(":nth-child(2 of .o-discuss-ChannelInvitation-selectable)", { text: "Harry" });
+    await contains(".o-discuss-ChannelInvitation-selectable:eq(0):contains(Ron)");
+    await contains(".o-discuss-ChannelInvitation-selectable:eq(1):contains(Harry)");
 });
 
 test("Partners invited most frequently by the current user come first", async () => {
@@ -102,13 +102,13 @@ test("Partners invited most frequently by the current user come first", async ()
     });
     await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebarChannel", { text: "Visitor #1" });
+    await click(".o-mail-DiscussSidebarChannel:contains(Visitor #1)");
     await click("button[title='Add Users']");
-    await click("input", { parent: [".o-discuss-ChannelInvitation-selectable", { text: "John" }] });
-    await click("button:enabled", { text: "Invite" });
-    await click(".o-mail-DiscussSidebarChannel", { text: "Visitor #2" });
+    await click("input", { parent: [".o-discuss-ChannelInvitation-selectable:contains(John)"] });
+    await click("button:contains(Invite):enabled");
+    await click(".o-mail-DiscussSidebarChannel:contains(Visitor #2)");
     await click("button[title='Add Users']");
     await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });
-    await contains(":nth-child(1 of .o-discuss-ChannelInvitation-selectable)", { text: "John" });
-    await contains(":nth-child(2 of .o-discuss-ChannelInvitation-selectable)", { text: "Albert" });
+    await contains(".o-discuss-ChannelInvitation-selectable:eq(0):contains(John)");
+    await contains(".o-discuss-ChannelInvitation-selectable:eq(1):contains(Albert)");
 });

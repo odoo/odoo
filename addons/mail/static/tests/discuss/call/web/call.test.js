@@ -42,9 +42,9 @@ test("no default rtc after joining a group conversation", async () => {
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await insertText(".o-discuss-ChannelSelector input", "mario");
-    await click(".o-discuss-ChannelSelector-suggestion", { text: "Mario" });
+    await click(".o-discuss-ChannelSelector-suggestion:contains(Mario)");
     await insertText(".o-discuss-ChannelSelector input", "luigi", { replace: true });
-    await click(".o-discuss-ChannelSelector-suggestion", { text: "Luigi" });
+    await click(".o-discuss-ChannelSelector-suggestion:contains(Luigi)");
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-Discuss-content .o-mail-Message", { count: 0 });

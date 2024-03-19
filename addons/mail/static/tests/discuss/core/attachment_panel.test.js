@@ -17,9 +17,9 @@ test("Empty attachment panel", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Show Attachments']");
-    await contains(".o-mail-Discuss-inspector", {
-        text: "This channel doesn't have any attachments.",
-    });
+    await contains(
+        ".o-mail-Discuss-inspector:contains(This channel doesn't have any attachments.)"
+    );
 });
 
 test("Attachment panel sort by date", async () => {
@@ -42,14 +42,12 @@ test("Attachment panel sort by date", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Show Attachments']");
-    await contains(".o-mail-AttachmentList", {
-        text: "file2.pdf",
-        after: [".o-mail-DateSection", { text: "September, 2023" }],
-        before: [".o-mail-DateSection", { text: "August, 2023" }],
+    await contains(".o-mail-AttachmentList:contains(file2.pdf)", {
+        after: [".o-mail-DateSection:contains('September, 2023')"],
+        before: [".o-mail-DateSection:contains('August, 2023')"],
     });
-    await contains(".o-mail-AttachmentList", {
-        text: "file1.pdf",
-        after: [".o-mail-DateSection", { text: "August, 2023" }],
+    await contains(".o-mail-AttachmentList:contains(file1.pdf)", {
+        after: [".o-mail-DateSection:contains('August, 2023')"],
     });
 });
 
@@ -61,18 +59,18 @@ test("Can toggle allow public upload", async () => {
     await openDiscuss(channelId, { target: env1 });
     await click(".o-mail-Discuss-header button[title='Show Attachments']", { target: env1 });
     await contains(".o-mail-ActionPanel", {
-        contains: ["label", { text: "File upload is disabled for external users" }],
+        contains: ["label:contains(File upload is disabled for external users)"],
         target: env1,
     });
     await openDiscuss(channelId, { target: env2 });
     await click(".o-mail-Discuss-header button[title='Show Attachments']", { target: env2 });
     await contains(".o-mail-ActionPanel", {
-        contains: ["label", { text: "File upload is disabled for external users" }],
+        contains: ["label:contains(File upload is disabled for external users)"],
         target: env2,
     });
     await click(".o-mail-ActionPanel input[type='checkbox']", { target: env1 });
     await contains(".o-mail-ActionPanel", {
-        contains: ["label", { text: "File upload is enabled for external users" }],
+        contains: ["label:contains(File upload is enabled for external users)"],
         target: env2,
     });
 });

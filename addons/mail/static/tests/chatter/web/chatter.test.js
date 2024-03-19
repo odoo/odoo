@@ -79,13 +79,13 @@ test("can post a message on a record thread", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains("button", { text: "Send message" });
+    await contains("button:contains(Send message)");
     await contains(".o-mail-Composer", { count: 0 });
-    await click("button", { text: "Send message" });
+    await click("button:contains(Send message)");
     await contains(".o-mail-Composer");
     await insertText(".o-mail-Composer-input", "hey");
     await contains(".o-mail-Message", { count: 0 });
-    await click(".o-mail-Composer button:enabled", { text: "Send" });
+    await click(".o-mail-Composer button:enabled:contains(Send)");
     await contains(".o-mail-Message");
     await assertSteps(["/mail/message/post"]);
 });
@@ -115,13 +115,13 @@ test("can post a note on a record thread", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains("button", { text: "Log note" });
+    await contains("button:contains(Log note)");
     await contains(".o-mail-Composer", { count: 0 });
-    await click("button", { text: "Log note" });
+    await click("button:contains(Log note)");
     await contains(".o-mail-Composer");
     await insertText(".o-mail-Composer-input", "hey");
     await contains(".o-mail-Message", { count: 0 });
-    await click(".o-mail-Composer button:enabled", { text: "Log" });
+    await click(".o-mail-Composer button:enabled:contains(Log)");
     await contains(".o-mail-Message");
     await assertSteps(["/mail/message/post"]);
 });
@@ -152,7 +152,7 @@ test("Composer toggle state is kept when switching from aside to bottom", async 
     await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
-    await click("button", { text: "Send message" });
+    await click("button:contains(Send message)");
     await contains(".o-mail-Form-chatter.o-aside .o-mail-Composer-input");
     patchUiSize({ size: SIZES.LG });
     window.dispatchEvent(new Event("resize"));
@@ -165,13 +165,13 @@ test("Textarea content is kept when switching from aside to bottom", async () =>
     await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
-    await click("button", { text: "Send message" });
+    await click("button:contains(Send message)");
     await contains(".o-mail-Form-chatter.o-aside .o-mail-Composer-input");
     await insertText(".o-mail-Composer-input", "Hello world !");
     patchUiSize({ size: SIZES.LG });
     window.dispatchEvent(new Event("resize"));
     await contains(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
-    await contains(".o-mail-Composer-input", { value: "Hello world !" });
+    await contains(".o-mail-Composer-input:value(Hello world !)");
 });
 
 test("Composer type is kept when switching from aside to bottom", async () => {
@@ -180,12 +180,12 @@ test("Composer type is kept when switching from aside to bottom", async () => {
     await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
-    await click("button", { text: "Log note" });
+    await click("button:contains(Log note)");
     patchUiSize({ size: SIZES.LG });
     window.dispatchEvent(new Event("resize"));
     await contains(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
-    await contains("button.btn-primary", { text: "Log note" });
-    await contains("button:not(.btn-primary)", { text: "Send message" });
+    await contains("button.btn-primary:contains(Log note)");
+    await contains("button:not(.btn-primary):contains(Send message)");
 });
 
 test("chatter: drop attachments", async () => {
@@ -230,7 +230,7 @@ test("chatter: drop attachment should refresh thread data with hasParentReloadOn
     onRpc((route) => {
         if (route === "/mail/attachment/upload") {
             const attachmentId = pyEnv["ir.attachment"].create([
-                { res_id: partnerId, res_model: "res.partner", mimetype: "application/pdf" }
+                { res_id: partnerId, res_model: "res.partner", mimetype: "application/pdf" },
             ]);
             pyEnv["res.partner"].write([partnerId], { message_main_attachment_id: attachmentId });
             return Promise.resolve();
@@ -248,7 +248,7 @@ test("chatter: drop attachment should refresh thread data with hasParentReloadOn
                 </sheet>
                 <div class="o_attachment_preview" />
                 <chatter reload_on_post="True" reload_on_attachment="True"/>
-            </form>`
+            </form>`,
     });
     const files = [
         await createFile({
@@ -272,7 +272,7 @@ test("should display subject when subject isn't infered from the record", async 
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message", { text: "Subject: Salutations, voyageurnot empty" });
+    await contains(".o-mail-Message:contains(Subject: Salutations, voyageurnot empty");
 });
 
 test("should not display user notification messages in chatter", async () => {
@@ -285,7 +285,7 @@ test("should not display user notification messages in chatter", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
+    await contains(".o-mail-Thread:contains(There are no messages in this conversation.)");
     await contains(".o-mail-Message", { count: 0 });
 });
 
@@ -294,7 +294,7 @@ test('post message with "CTRL-Enter" keyboard shortcut in chatter', async () => 
     const partnerId = pyEnv["res.partner"].create({});
     await start();
     await openFormView("res.partner", partnerId);
-    await click("button", { text: "Send message" });
+    await click("button:contains(Send message)");
     await contains(".o-mail-Message", { count: 0 });
     await insertText(".o-mail-Composer-input", "Test");
     triggerHotkey("control+Enter");
@@ -328,9 +328,9 @@ test("base rendering when chatter has no record", async () => {
     await contains(".o-mail-AttachmentBox", { count: 0 });
     await contains(".o-mail-Chatter .o-mail-Thread");
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message-author", { text: "Mitchell Admin" });
-    await contains(".o-mail-Message-body", { text: "Creating a new record..." });
-    await contains("button", { count: 0, text: "Load More" });
+    await contains(".o-mail-Message-author:contains(Mitchell Admin)");
+    await contains(".o-mail-Message-body:contains(Creating a new record...)");
+    await contains("button:contains(Load More)", { count: 0 });
     await contains(".o-mail-Message-actions");
 });
 
@@ -380,7 +380,7 @@ test("show attachment box", async () => {
     await contains(".o-mail-Chatter");
     await contains(".o-mail-Chatter-topbar");
     await contains("button[aria-label='Attach files']");
-    await contains("button[aria-label='Attach files']", { text: "2" });
+    await contains("button[aria-label='Attach files']:contains(2)");
     await contains(".o-mail-AttachmentBox", { count: 0 });
     await click("button[aria-label='Attach files']");
     await contains(".o-mail-AttachmentBox");
@@ -391,20 +391,20 @@ test("composer show/hide on log note/send message [REQUIRE FOCUS]", async () => 
     const partnerId = pyEnv["res.partner"].create({});
     await start();
     await openFormView("res.partner", partnerId);
-    await contains("button", { text: "Send message" });
-    await contains("button", { text: "Log note" });
+    await contains("button:contains(Send message)");
+    await contains("button:contains(Log note)");
     await contains(".o-mail-Composer", { count: 0 });
-    await click("button", { text: "Send message" });
+    await click("button:contains(Send message)");
     await contains(".o-mail-Composer");
     expect(document.activeElement).toBe($(".o-mail-Composer-input")[0]);
-    await click("button", { text: "Log note" });
+    await click("button:contains(Log note)");
     await contains(".o-mail-Composer");
     expect(document.activeElement).toBe($(".o-mail-Composer-input")[0]);
-    await click("button", { text: "Log note" });
+    await click("button:contains(Log note)");
     await contains(".o-mail-Composer", { count: 0 });
-    await click("button", { text: "Send message" });
+    await click("button:contains(Send message)");
     await contains(".o-mail-Composer");
-    await click("button", { text: "Send message" });
+    await click("button:contains(Send message)");
     await contains(".o-mail-Composer", { count: 0 });
 });
 
@@ -413,7 +413,7 @@ test('do not post message with "Enter" keyboard shortcut', async () => {
     const partnerId = pyEnv["res.partner"].create({});
     await start();
     await openFormView("res.partner", partnerId);
-    await click("button", { text: "Send message" });
+    await click("button:contains(Send message)");
     await contains(".o-mail-Message", { count: 0 });
     await insertText(".o-mail-Composer-input", "Test");
     triggerHotkey("Enter");
@@ -434,10 +434,9 @@ test("should not display subject when subject is the same as the thread name", a
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message", { text: "not empty" });
-    await contains(".o-mail-Message", {
+    await contains(".o-mail-Message:contains(not empty)");
+    await contains(".o-mail-Message:contains(Subject: Salutations, voyageurnot empty)", {
         count: 0,
-        text: "Subject: Salutations, voyageurnot empty",
     });
 });
 
@@ -507,7 +506,7 @@ test('chatter just contains "creating a new record" message during the creation 
     await openFormView("res.partner", partnerId);
     await click(".o_control_panel_collapsed_create .o_form_button_create");
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message-body", { text: "Creating a new record..." });
+    await contains(".o-mail-Message-body:contains(Creating a new record...)");
 });
 
 test("should display subject when subject is not the same as the default subject", async () => {
@@ -521,7 +520,7 @@ test("should display subject when subject is not the same as the default subject
     });
     await start();
     await openFormView("res.fake", fakeId);
-    await contains(".o-mail-Message", { text: "Subject: Another Subjectnot empty" });
+    await contains(".o-mail-Message:contains(Subject: Another Subjectnot empty)");
 });
 
 test("should not display subject when subject is the same as the default subject", async () => {
@@ -535,10 +534,9 @@ test("should not display subject when subject is the same as the default subject
     });
     await start();
     await openFormView("res.fake", fakeId);
-    await contains(".o-mail-Message", { text: "not empty" });
-    await contains(".o-mail-Message", {
+    await contains(".o-mail-Message:contains(not empty)");
+    await contains(".o-mail-Message:contains(Subject: Custom Default Subjectnot empty)", {
         count: 0,
-        text: "Subject: Custom Default Subjectnot empty",
     });
 });
 
@@ -553,10 +551,9 @@ test("should not display subject when subject is the same as the thread name wit
     });
     await start();
     await openFormView("res.fake", fakeId);
-    await contains(".o-mail-Message", { text: "not empty" });
-    await contains(".o-mail-Message", {
+    await contains(".o-mail-Message:contains(not empty)");
+    await contains(".o-mail-Message:contains(Subject: Custom Default Subjectnot empty)", {
         count: 0,
-        text: "Subject: Custom Default Subjectnot empty",
     });
 });
 
@@ -597,11 +594,11 @@ test("post message on draft record", async () => {
                 <chatter/>
             </form>`,
     });
-    await click("button", { text: "Send message" });
+    await click("button:contains(Send message)");
     await insertText(".o-mail-Composer-input", "Test");
-    await click(".o-mail-Composer button:enabled", { text: "Send" });
+    await click(".o-mail-Composer button:enabled:contains(Send)");
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message-content", { text: "Test" });
+    await contains(".o-mail-Message-content:contains(Test)");
 });
 
 test("schedule activities on draft record should prompt with scheduling an activity (proceed with action)", async () => {
@@ -635,7 +632,7 @@ test("schedule activities on draft record should prompt with scheduling an activ
                 <chatter/>
             </form>`,
     });
-    await click("button", { text: "Activities" });
+    await click("button:contains(Activities)");
     await wizardOpened;
     await assertSteps(["mail.activity.schedule"]);
 });
@@ -652,7 +649,7 @@ test("upload attachment on draft record", async () => {
             </form>`,
     });
     await contains("button[aria-label='Attach files']");
-    await contains("button[aria-label='Attach files']", { count: 0, text: "1" });
+    await contains("button[aria-label='Attach files']:contains(1)", { count: 0 });
     const files = [
         await createFile({
             content: "hello, world",
@@ -662,13 +659,13 @@ test("upload attachment on draft record", async () => {
     ];
     await dragenterFiles(".o-mail-Chatter", files);
     await dropFiles(".o-mail-Dropzone", files);
-    await contains("button[aria-label='Attach files']", { text: "1" });
+    await contains("button[aria-label='Attach files']:contains(1)");
 });
 
 test("Follower count of draft record is set to 0", async () => {
     await start();
     await openFormView("res.partner");
-    await contains(".o-mail-Followers", { text: "0" });
+    await contains(".o-mail-Followers:contains(0)");
 });
 
 test("Mentions in composer should still work when using pager", async () => {
@@ -680,7 +677,7 @@ test("Mentions in composer should still work when using pager", async () => {
     patchUiSize({ size: SIZES.LG });
     await start();
     await openFormView("res.partner", partnerId_1, { resIds: [partnerId_1, partnerId_2] });
-    await click("button", { text: "Log note" });
+    await click("button:contains(Log note)");
     await click(".o_pager_next");
     await insertText(".o-mail-Composer-input", "@");
     // all records in DB: Mitchell Admin | Hermit | OdooBot | Public user

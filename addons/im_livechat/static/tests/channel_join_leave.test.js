@@ -24,13 +24,13 @@ test("from the discuss app", async () => {
     await start();
     await openDiscuss();
     await click("[title='Leave HR']", {
-        parent: [".o-mail-DiscussSidebarCategory-livechat", { text: "HR" }],
+        parent: [".o-mail-DiscussSidebarCategory-livechat:contains(HR)"],
     });
     await click("[title='Join HR']", {
-        parent: [".o-mail-DiscussSidebarCategory-livechat", { text: "HR" }],
+        parent: [".o-mail-DiscussSidebarCategory-livechat:contains(HR)"],
     });
     await contains("[title='Leave HR']", {
-        parent: [".o-mail-DiscussSidebarCategory-livechat", { text: "HR" }],
+        parent: [".o-mail-DiscussSidebarCategory-livechat:contains(HR)"],
     });
 });
 
@@ -44,10 +44,10 @@ test("from the command palette", async () => {
     pyEnv["im_livechat.channel"].create({ name: "HR", user_ids: [serverState.userId] });
     await start();
     await triggerHotkey("control+k");
-    await click(".o_command", { text: "Leave HR" });
-    await contains(".o_notification", { text: "You left HR." });
-    await contains(".o_command", { text: "HR", count: 0 });
+    await click(".o_command:contains(Leave HR)");
+    await contains(".o_notification:contains(You left HR.)");
+    await contains(".o_command:contains(HR)", { count: 0 });
     await triggerHotkey("control+k");
-    await click(".o_command", { text: "Join HR" });
-    await contains(".o_notification", { text: "You joined HR." });
+    await click(".o_command:contains(Join HR)");
+    await contains(".o_notification:contains(You joined HR.)");
 });

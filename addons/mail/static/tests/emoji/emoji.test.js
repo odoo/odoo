@@ -22,7 +22,7 @@ test("search emoji from keywords", async () => {
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "mexican");
-    await contains(".o-Emoji", { text: "🌮" });
+    await contains(".o-Emoji:contains(🌮)");
 });
 
 test("search emoji from keywords should be case insensitive", async () => {
@@ -32,7 +32,7 @@ test("search emoji from keywords should be case insensitive", async () => {
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "ok");
-    await contains(".o-Emoji", { text: "🆗" }); // all search terms are uppercase OK
+    await contains(".o-Emoji:contains(🆗)"); // all search terms are uppercase OK
 });
 
 test("search emoji from keywords with special regex character", async () => {
@@ -42,7 +42,7 @@ test("search emoji from keywords with special regex character", async () => {
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "(blood");
-    await contains(".o-Emoji", { text: "🆎" });
+    await contains(".o-Emoji:contains(🆎)");
 });
 
 test("updating search emoji should scroll top", async () => {
@@ -87,7 +87,7 @@ test("Basic keyboard navigation", async () => {
     );
     triggerHotkey("Enter");
     await contains(".o-EmojiPicker", { count: 0 });
-    await contains(".o-mail-Composer-input", { value: codepoints });
+    await contains(`.o-mail-Composer-input:value(${codepoints})`);
 });
 
 test("recent category (basic)", async () => {
@@ -97,13 +97,12 @@ test("recent category (basic)", async () => {
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await contains(".o-EmojiPicker-navbar [title='Frequently used']", { count: 0 });
-    await click(".o-EmojiPicker-content .o-Emoji", { text: "😀" });
+    await click(".o-EmojiPicker-content .o-Emoji:contains(😀)");
     await click("button[aria-label='Emojis']");
     await contains(".o-EmojiPicker-navbar [title='Frequently used']");
-    await contains(".o-Emoji", {
-        text: "😀",
-        after: ["span", { textContent: "Frequently used" }],
-        before: ["span", { textContent: "Smileys & Emotion" }],
+    await contains(".o-Emoji:contains(😀)", {
+        after: [".o-EmojiPicker-categoryName:contains(Frequently used)"],
+        before: [".o-EmojiPicker-categoryName:contains(Smileys & Emotion)"],
     });
 });
 
@@ -113,21 +112,19 @@ test("emoji usage amount orders frequent emojis", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    await click(".o-EmojiPicker-content .o-Emoji", { text: "😀" });
+    await click(".o-EmojiPicker-content .o-Emoji:contains(😀)");
     await click("button[aria-label='Emojis']");
-    await click(".o-EmojiPicker-content .o-Emoji", { text: "👽" });
+    await click(".o-EmojiPicker-content .o-Emoji:contains(👽)");
     await click("button[aria-label='Emojis']");
-    await click(".o-EmojiPicker-content .o-Emoji", { text: "👽" });
+    await click(".o-EmojiPicker-content .o-Emoji:contains(👽)");
     await click("button[aria-label='Emojis']");
-    await contains(".o-Emoji", {
-        text: "👽",
-        after: ["span", { textContent: "Frequently used" }],
+    await contains(".o-Emoji:contains(👽)", {
+        after: [".o-EmojiPicker-categoryName:contains(Frequently used)"],
         before: [
-            ".o-Emoji",
+            ".o-Emoji:contains(😀)",
             {
-                text: "😀",
-                after: ["span", { textContent: "Frequently used" }],
-                before: ["span", { textContent: "Smileys & Emotion" }],
+                after: [".o-EmojiPicker-categoryName:contains(Frequently used)"],
+                before: [".o-EmojiPicker-categoryName:contains(Smileys & Emotion)"],
             },
         ],
     });
@@ -139,7 +136,7 @@ test("first category should be highlighted by default", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    await contains(".o-EmojiPicker-navbar :nth-child(1 of .o-Emoji).o-active");
+    await contains(".o-EmojiPicker-navbar .o-Emoji:eq(0).o-active");
 });
 
 test("selecting an emoji while holding down the Shift key prevents the emoji picker from closing", async () => {
@@ -148,8 +145,8 @@ test("selecting an emoji while holding down the Shift key prevents the emoji pic
     await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    await click(".o-EmojiPicker-content .o-Emoji", { shiftKey: true, text: "👺" });
+    await click(".o-EmojiPicker-content .o-Emoji:contains(👺)", { shiftKey: true });
     await contains(".o-EmojiPicker-navbar [title='Frequently used']");
     await contains(".o-EmojiPicker");
-    await contains(".o-mail-Composer-input", { value: "👺" });
+    await contains(".o-mail-Composer-input:value(👺)");
 });

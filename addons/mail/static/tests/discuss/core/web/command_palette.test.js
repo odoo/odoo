@@ -19,8 +19,8 @@ test("open the chatWindow of a user from the command palette", async () => {
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
     await contains(".o_command", { count: 2 });
-    await click(".o_command.focused", { text: "OdooBot" });
-    await contains(".o-mail-ChatWindow", { text: "OdooBot" });
+    await click(".o_command.focused:contains(OdooBot)");
+    await contains(".o-mail-ChatWindow:contains(OdooBot)");
 });
 
 test("open the chatWindow of a channel from the command palette", async () => {
@@ -47,10 +47,10 @@ test("open the chatWindow of a channel from the command palette", async () => {
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "#");
     await contains(".o_command", { count: 2 });
-    await contains(".o_command", { text: "project", before: [".o_command", { text: "general" }] });
+    await contains(".o_command:contains(project)", { before: [".o_command:contains(general)"] });
     await contains(".o_command.focused");
-    await click(".o_command.focused", { text: "project" });
-    await contains(".o-mail-ChatWindow", { text: "project" });
+    await click(".o_command.focused:contains(project)");
+    await contains(".o-mail-ChatWindow:contains(project)");
 });
 
 test("Channel mentions in the command palette of Discuss app with @", async () => {
@@ -80,18 +80,18 @@ test("Channel mentions in the command palette of Discuss app with @", async () =
     await insertText(".o_command_palette_search input", "@", { replace: true });
     await contains(".o_command_palette .o_command_category", {
         contains: [
-            ["span.fw-bold", { text: "Mentions" }],
-            [".o_command.focused .o_command_name", { text: "Mitchell Admin and Mario" }],
+            ["span.fw-bold:contains(MENTIONS)"],
+            [".o_command.focused .o_command_name:contains(Mitchell Admin and Mario)"],
         ],
     });
     await contains(".o_command_palette .o_command_category", {
         contains: [
-            [".o_command_name", { text: "Mario" }],
-            [".o_command_name", { text: "Mitchell Admin" }],
+            [".o_command_name:eq(0):contains(Mario)"],
+            [".o_command_name:contains(Mitchell Admin)"],
         ],
     });
     await click(".o_command.focused");
-    await contains(".o-mail-ChatWindow", { text: "Mitchell Admin and Mario" });
+    await contains(".o-mail-ChatWindow:contains(Mitchell Admin and Mario)");
 });
 
 test("Max 3 most recent channels in command palette of Discuss app with #", async () => {
@@ -104,9 +104,6 @@ test("Max 3 most recent channels in command palette of Discuss app with #", asyn
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "#", { replace: true });
     await contains(".o_command_palette .o_command_category", {
-        contains: [
-            ["span.fw-bold", { text: "Recent" }],
-            [".o_command", { count: 3 }],
-        ],
+        contains: [["span.fw-bold:contains(RECENT)"], [".o_command", { count: 3 }]],
     });
 });

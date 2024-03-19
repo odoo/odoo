@@ -44,7 +44,7 @@ test('do not send typing notification on typing after selecting suggestion from 
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/");
-    await click(":nth-child(1 of .o-mail-Composer-suggestion)");
+    await click(".o-mail-Composer-suggestion:eq(0)");
     await contains(".o-mail-Composer-suggestion strong", { count: 0 });
     await insertText(".o-mail-Composer-input", " is user?");
     await assertSteps([]); // No rpc done"
@@ -58,11 +58,11 @@ test("add an emoji after a command", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-input", { value: "" });
+    await contains(".o-mail-Composer-input:value()");
     await insertText(".o-mail-Composer-input", "/");
-    await click(":nth-child(1 of .o-mail-Composer-suggestion)");
-    await contains(".o-mail-Composer-input", { value: "/who " });
+    await click(".o-mail-Composer-suggestion:eq(0)");
+    await contains(".o-mail-Composer-input:value(/who )");
     await click("button[aria-label='Emojis']");
-    await click(".o-Emoji", { text: "😊" });
-    await contains(".o-mail-Composer-input", { value: "/who 😊" });
+    await click(".o-Emoji:contains(😊)");
+    await contains(".o-mail-Composer-input:value(/who 😊)");
 });

@@ -46,5 +46,5 @@ test("Spaces in notifications are not encoded", async () => {
             res_id: channelId,
         },
     });
-    await contains(".o_notification:has(.o_notification_bar.bg-info)", { text: "Hello world!" });
+    await contains(".o_notification:has(.o_notification_bar.bg-info):contains(Hello world!)");
 });

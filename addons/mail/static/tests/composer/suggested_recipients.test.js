@@ -48,9 +48,9 @@ test("with 3 or less suggested recipients: no 'show more' button", async () => {
     });
     await start();
     await openFormView("res.fake", fakeId);
-    await click("button", { text: "Send message" });
+    await click("button:contains(Send message)");
     await contains(".o-mail-SuggestedRecipient", { count: 2 });
-    await contains("button", { count: 0, text: "Show more" });
+    await contains("button:contains(Show more)", { count: 0 });
 });
 
 test("Opening full composer in 'send message' mode should copy selected suggested recipients", async () => {
@@ -91,13 +91,11 @@ test("Opening full composer in 'send message' mode should copy selected suggeste
     });
     await start();
     await openFormView("res.fake", fakeId);
-    await click("button", { text: "Send message" });
-    await contains(".o-mail-SuggestedRecipient", {
-        text: "john@test.be",
+    await click("button:contains(Send message)");
+    await contains(".o-mail-SuggestedRecipient:contains(john@test.be)", {
         contains: ["input[type=checkbox]:checked"],
     });
-    await contains(".o-mail-SuggestedRecipient", {
-        text: "John Jane",
+    await contains(".o-mail-SuggestedRecipient:contains(John Jane)", {
         contains: ["input[type=checkbox]:checked"],
     });
     await click("button[title='Full composer']");
@@ -135,16 +133,14 @@ test("Opening full composer in 'log note' mode should not copy selected suggeste
     });
     await start();
     await openFormView("res.fake", fakeId);
-    await click("button", { text: "Send message" });
-    await contains(".o-mail-SuggestedRecipient", {
-        text: "john@test.be",
+    await click("button:contains(Send message)");
+    await contains(".o-mail-SuggestedRecipient:contains(john@test.be)", {
         contains: ["input[type=checkbox]:checked"],
     });
-    await contains(".o-mail-SuggestedRecipient", {
-        text: "John Jane",
+    await contains(".o-mail-SuggestedRecipient:contains(John Jane)", {
         contains: ["input[type=checkbox]:checked"],
     });
-    await click("button", { text: "Log note" });
+    await click("button:contains(Log note)");
     await click("button[title='Full composer']");
     await def;
     await assertSteps(["do-action"]);
@@ -164,8 +160,8 @@ test("more than 3 suggested recipients: display only 3 and 'show more' button", 
     registerArchs(archs);
     await start();
     await openFormView("res.fake", fakeId);
-    await click("button", { text: "Send message" });
-    await contains("button", { text: "Show more" });
+    await click("button:contains(Send message)");
+    await contains("button:contains(Show more)");
 });
 
 test("more than 3 suggested recipients: show all of them on click 'show more' button", async () => {
@@ -182,8 +178,8 @@ test("more than 3 suggested recipients: show all of them on click 'show more' bu
     registerArchs(archs);
     await start();
     await openFormView("res.fake", fakeId);
-    await click("button", { text: "Send message" });
-    await click("button", { text: "Show more" });
+    await click("button:contains(Send message)");
+    await click("button:contains(Show more)");
     await contains(".o-mail-SuggestedRecipient", { count: 4 });
 });
 
@@ -201,9 +197,9 @@ test("more than 3 suggested recipients -> click 'show more' -> 'show less' butto
     registerArchs(archs);
     await start();
     await openFormView("res.fake", fakeId);
-    await click("button", { text: "Send message" });
-    await click("button", { text: "Show more" });
-    await contains("button", { text: "Show less" });
+    await click("button:contains(Send message)");
+    await click("button:contains(Show more)");
+    await contains("button:contains(Show less)");
 });
 
 test("suggested recipients list display 3 suggested recipient and 'show more' button when 'show less' button is clicked", async () => {
@@ -220,11 +216,11 @@ test("suggested recipients list display 3 suggested recipient and 'show more' bu
     registerArchs(archs);
     await start();
     await openFormView("res.fake", fakeId);
-    await click("button", { text: "Send message" });
-    await click("button", { text: "Show more" });
-    await click("button", { text: "Show less" });
+    await click("button:contains(Send message)");
+    await click("button:contains(Show more)");
+    await click("button:contains(Show less)");
     await contains(".o-mail-SuggestedRecipient", { count: 3 });
-    await contains("button", { text: "Show more" });
+    await contains("button:contains(Show more)");
 });
 
 test("suggest recipient on 'Send message' composer (all checked by default)", async () => {
@@ -240,7 +236,7 @@ test("suggest recipient on 'Send message' composer (all checked by default)", as
     registerArchs(archs);
     await start();
     await openFormView("res.fake", fakeId);
-    await click("button", { text: "Send message" });
+    await click("button:contains(Send message)");
     await contains(".o-mail-SuggestedRecipient input:checked", { count: 2 });
     expect(
         $(".o-mail-SuggestedRecipient:not([data-partner-id]) input[type=checkbox]")[0]
@@ -253,7 +249,7 @@ test("suggest recipient on 'Send message' composer (all checked by default)", as
     expect(partners.length).toBe(0);
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await click(".o-mail-Composer-send");
-    await contains(".o-mail-Followers-counter", { text: "2" });
+    await contains(".o-mail-Followers-counter:contains(2)");
     partners = pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]]);
     expect(partners.length).toBe(1);
 });
@@ -264,7 +260,7 @@ test("suggest recipient on 'Send message' composer (recipient checked/unchecked)
     registerArchs(archs);
     await start();
     await openFormView("res.fake", fakeId);
-    await click("button", { text: "Send message" });
+    await click("button:contains(Send message)");
     await contains(".o-mail-SuggestedRecipient input:checked", { count: 1 });
     expect(
         $(".o-mail-SuggestedRecipient:not([data-partner-id]) input[type=checkbox]")[0]
@@ -279,7 +275,7 @@ test("suggest recipient on 'Send message' composer (recipient checked/unchecked)
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await click(".o-mail-Composer-send");
     await tick();
-    await contains(".o-mail-Followers-counter", { text: "1" });
+    await contains(".o-mail-Followers-counter:contains(1)");
 });
 
 test("display reason for suggested recipient on mouse over", async () => {
@@ -292,7 +288,7 @@ test("display reason for suggested recipient on mouse over", async () => {
     registerArchs(archs);
     await start();
     await openFormView("res.fake", fakeId);
-    await click("button", { text: "Send message" });
+    await click("button:contains(Send message)");
     await contains(
         `.o-mail-SuggestedRecipient[data-partner-id="${partnerId}"][title="Add as recipient and follower (reason: Email partner)"]`
     );
@@ -311,7 +307,7 @@ test("suggested recipients should not be notified when posting an internal note"
     });
     await start();
     await openFormView("res.fake", fakeId);
-    await click("button", { text: "Log note" });
+    await click("button:contains(Log note)");
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message");
@@ -328,9 +324,9 @@ test("suggested recipients should be added as follower when posting a message", 
     registerArchs(archs);
     await start();
     await openFormView("res.fake", fakeId);
-    await click("button", { text: "Send message" });
+    await click("button:contains(Send message)");
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message");
-    await contains(".o-mail-Followers-counter", { text: "1" });
+    await contains(".o-mail-Followers-counter:contains(1)");
 });

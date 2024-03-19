@@ -64,8 +64,8 @@ test("layout with card details and filename and extension", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-AttachmentCard", { text: "test.txt" });
-    await contains(".o-mail-AttachmentCard small", { text: "txt" });
+    await contains(".o-mail-AttachmentCard:contains(test.txt)");
+    await contains(".o-mail-AttachmentCard small:contains(txt)");
 });
 
 test("clicking on the delete attachment button multiple times should do the rpc only once", async () => {
@@ -299,8 +299,8 @@ test("should not view attachment from click on non-viewable attachment in list c
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentImage[title='test.png'] img.o-viewable");
-    await contains(".o-mail-AttachmentCard:not(.o-viewable)", { text: "test.odt" });
-    await click(".o-mail-AttachmentCard", { text: "test.odt" });
+    await contains(".o-mail-AttachmentCard:not(.o-viewable):contains(test.odt)");
+    await click(".o-mail-AttachmentCard:contains(test.odt)");
     // weak test, no guarantee that we waited long enough for the potential file viewer to show
     await contains(".o-FileViewer", { count: 0 });
     await click(".o-mail-AttachmentImage[title='test.png']");

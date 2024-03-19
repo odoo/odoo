@@ -61,8 +61,8 @@ test("should have correct members in member list", async () => {
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { count: 2 });
-    await contains(".o-discuss-ChannelMember", { text: serverState.partnerName });
-    await contains(".o-discuss-ChannelMember", { text: "Demo" });
+    await contains(`.o-discuss-ChannelMember:contains(${serverState.partnerName})`);
+    await contains(".o-discuss-ChannelMember:contains(Demo)");
 });
 
 test("there should be a button to hide member list in the thread view topbar when the member list is visible", async () => {
@@ -117,7 +117,7 @@ test("should show a button to load more members if they are not all loaded", asy
     await openDiscuss(channelId);
     pyEnv["discuss.channel"].write([channelId], { channel_member_ids });
     await click("[title='Show Member List']");
-    await contains("button", { text: "Load more" });
+    await contains("button:contains(Load more)");
 });
 
 test("Load more button should load more members", async () => {
@@ -148,13 +148,13 @@ test("Channel member count update after user joined", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
-    await contains(".o-discuss-ChannelMemberList h6", { text: "Offline - 1" });
+    await contains(".o-discuss-ChannelMemberList h6:contains(Offline - 1)");
     await click("[title='Add Users']");
-    await click(".o-discuss-ChannelInvitation-selectable", { text: "Harry" });
+    await click(".o-discuss-ChannelInvitation-selectable:contains(Harry)");
     await click("[title='Invite to Channel']:enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await click("[title='Show Member List']");
-    await contains(".o-discuss-ChannelMemberList h6", { text: "Offline - 2" });
+    await contains(".o-discuss-ChannelMemberList h6:contains(Offline - 2)");
 });
 
 test("Channel member count update after user left", async () => {

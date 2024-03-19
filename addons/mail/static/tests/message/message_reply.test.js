@@ -34,9 +34,9 @@ test("click on message in reply to highlight the parent message", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-MessageInReply-message", {
-        parent: [".o-mail-Message", { text: "Reply to Hey" }],
+        parent: [".o-mail-Message:contains(Reply to Hey)"],
     });
-    await contains(".o-mail-Message.o-highlighted .o-mail-Message-content", { text: "Hey lol" });
+    await contains(".o-mail-Message.o-highlighted .o-mail-Message-content:contains(Hey lol)");
 });
 
 test("click on message in reply to scroll to the parent message", async () => {
@@ -68,9 +68,9 @@ test("click on message in reply to scroll to the parent message", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-MessageInReply-message", {
-        parent: [".o-mail-Message", { text: "Response to first message" }],
+        parent: [".o-mail-Message:contains(Response to first message)"],
     });
-    await contains(":nth-child(1 of .o-mail-Message)", { visible: true });
+    await contains(".o-mail-Message:eq(0)", { visible: true });
 });
 
 test("reply shows correct author avatar", async () => {

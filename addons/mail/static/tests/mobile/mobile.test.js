@@ -18,8 +18,8 @@ test("auto-select 'Inbox' when discuss had channel as active thread", async () =
     patchUiSize({ height: 360, width: 640 });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-MessagingMenu-tab.text-primary.fw-bolder", { text: "Channel" });
-    await click("button", { text: "Mailboxes" });
-    await contains(".o-mail-MessagingMenu-tab.text-primary.fw-bolder", { text: "Mailboxes" });
-    await contains("button.active", { text: "Inbox" });
+    await contains(".o-mail-MessagingMenu-tab.text-primary.fw-bolder:contains(Channel)");
+    await click("button:contains(Mailboxes)");
+    await contains(".o-mail-MessagingMenu-tab.text-primary.fw-bolder:contains(Mailboxes)");
+    await contains("button:contains(Inbox).active");
 });

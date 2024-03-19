@@ -40,11 +40,10 @@ test("Basic jump to present when scrolling to outdated messages", async () => {
     );
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
-    await contains(".o-mail-Thread", { text: "You're viewing older messagesJump to Present" });
+    await contains(`.o-mail-Thread:contains("You're viewing older messages\nJump to Present")`);
     await click(".o-mail-Thread-jumpPresent");
-    await contains(".o-mail-Thread", {
+    await contains(`.o-mail-Thread:contains("You're viewing older messages\nJump to Present")`, {
         count: 0,
-        text: "You're viewing older messagesJump to Present",
     });
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
@@ -71,11 +70,10 @@ test("Basic jump to present when scrolling to outdated messages (chatter, DESC)"
     );
     await contains(".o-mail-Chatter", { scroll: 0 });
     await scroll(".o-mail-Chatter", "bottom");
-    await contains(".o-mail-Chatter", { text: "You're viewing older messagesJump to Present" });
+    await contains(`.o-mail-Chatter:contains("You're viewing older messages\nJump to Present")`);
     await click(".o-mail-Thread-jumpPresent");
-    await contains(".o-mail-Thread", {
+    await contains(`.o-mail-Thread:contains("You're viewing older messages\nJump to Present")`, {
         count: 0,
-        text: "You're viewing older messagesJump to Present",
     });
     await contains(".o-mail-Chatter", { scroll: 0 });
 });
@@ -114,7 +112,7 @@ test("Jump to old reply should prompt jump to present", async () => {
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");
     await contains(".o-mail-Message", { count: 16 });
-    await contains(":nth-child(1 of .o-mail-Message)", { text: "Hello world!" });
+    await contains(".o-mail-Message:eq(0):contains(Hello world!)");
     await contains(".o-mail-Thread-jumpPresent");
     await click(".o-mail-Thread-jumpPresent");
     await contains(".o-mail-Thread-jumpPresent", { count: 0 });
@@ -198,11 +196,10 @@ test("Post message when seeing old message should jump to present", async () => 
     await click(".o-mail-MessageInReply .cursor-pointer");
     await contains(".o-mail-Thread-jumpPresent");
     await insertText(".o-mail-Composer-input", "Newly posted");
-    await click(".o-mail-Composer button:enabled", { text: "Send" });
+    await click(".o-mail-Composer button:contains(Send):enabled");
     await contains(".o-mail-Thread-jumpPresent", { count: 0 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
-    await contains(".o-mail-Message-content", {
-        text: "Newly posted",
-        after: [".o-mail-Message-content", { text: "Most Recent!" }], // should load around present
+    await contains(".o-mail-Message-content:contains(Newly posted)", {
+        after: [".o-mail-Message-content:contains(Most Recent!)"], // should load around present
     });
 });

@@ -47,10 +47,10 @@ test("Rendering of visitor banner", async () => {
     );
     await contains(".o-website_livechat-VisitorBanner .o-mail-ImStatus");
     await contains(".o_country_flag[data-src='/base/static/img/country_flags/be.png']");
-    await contains(".o-website_livechat-VisitorBanner span", { text: `Visitor #${visitorId}` });
-    await contains("span", { text: "English" });
-    await contains("span > span", { text: "General website" });
-    await contains("span", { text: "Home → Contact" });
+    await contains(`.o-website_livechat-VisitorBanner span:contains(Visitor #${visitorId})`);
+    await contains("span:contains(English)");
+    await contains("span > span:contains(General website)");
+    await contains("span:contains(Home → Contact)");
 });
 
 test("Livechat with non-logged visitor should show visitor banner", async () => {
@@ -109,7 +109,7 @@ test("Livechat with logged visitor should show visitor banner", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-website_livechat-VisitorBanner");
-    await contains(".o-website_livechat-VisitorBanner", { text: "Partner Visitor" });
+    await contains(".o-website_livechat-VisitorBanner:contains(Partner Visitor)");
 });
 
 test("Livechat without visitor should not show visitor banner", async () => {

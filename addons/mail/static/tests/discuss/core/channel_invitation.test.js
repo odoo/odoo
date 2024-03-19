@@ -53,12 +53,12 @@ test("can invite users in channel from chat window", async () => {
     await click("[title='Open Actions Menu']");
     await click("[title='Add Users']");
     await contains(".o-discuss-ChannelInvitation");
-    await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner" });
+    await click(".o-discuss-ChannelInvitation-selectable:contains(TestPartner)");
     await click("[title='Invite to Channel']:enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
-    await contains(".o-mail-Thread .o-mail-NotificationMessage", {
-        text: "Mitchell Admin invited TestPartner to the channel",
-    });
+    await contains(
+        ".o-mail-Thread .o-mail-NotificationMessage:contains(Mitchell Admin invited TestPartner to the channel)"
+    );
 });
 
 test("should be able to search for a new user to invite from an existing chat", async () => {
@@ -85,7 +85,7 @@ test("should be able to search for a new user to invite from an existing chat", 
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
-    await contains(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" });
+    await contains(".o-discuss-ChannelInvitation-selectable:contains(TestPartner2)");
 });
 
 test("Invitation form should display channel group restriction", async () => {
@@ -107,10 +107,10 @@ test("Invitation form should display channel group restriction", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
-    await contains(".o-discuss-ChannelInvitation div", {
-        text: 'Access restricted to group "testGroup"',
-        after: ["button .fa.fa-copy"],
-    });
+    await contains(
+        '.o-discuss-ChannelInvitation div:contains(Access restricted to group "testGroup")',
+        { after: ["button .fa.fa-copy"] }
+    );
 });
 
 test("should be able to create a new group chat from an existing chat", async () => {
@@ -137,11 +137,11 @@ test("should be able to create a new group chat from an existing chat", async ()
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
-    await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" });
+    await click(".o-discuss-ChannelInvitation-selectable:contains(TestPartner2)");
     await click("button[title='Create Group Chat']:enabled");
-    await contains(".o-mail-DiscussSidebarChannel", {
-        text: "Mitchell Admin, TestPartner, and TestPartner2",
-    });
+    await contains(
+        ".o-mail-DiscussSidebarChannel:contains(Mitchell Admin, TestPartner, and TestPartner2)"
+    );
 });
 
 test("unnamed group chat should display correct name just after being invited", async () => {
@@ -160,16 +160,14 @@ test("unnamed group chat should display correct name just after being invited", 
     ]);
     const env = await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Jane and Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebarChannel:contains(General)");
+    await contains(".o-mail-DiscussSidebarChannel:contains(Jane and Mitchell Admin)", { count: 0 });
     const currentPartnerId = serverState.partnerId;
     await withUser(userId, async () => {
         await env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
             partner_ids: [currentPartnerId],
         });
     });
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Jane and Mitchell Admin" });
-    await contains(".o_notification", {
-        text: "You have been invited to #Jane and Mitchell Admin",
-    });
+    await contains(".o-mail-DiscussSidebarChannel:contains(Jane and Mitchell Admin)");
+    await contains(".o_notification:contains(You have been invited to #Jane and Mitchell Admin)");
 });

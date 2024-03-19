@@ -62,6 +62,7 @@ export class Thread extends Component {
     static template = "mail.Thread";
 
     setup() {
+        window.aku1 = this;
         this.escape = escape;
         this.store = useState(useService("mail.store"));
         this.state = useState({

@@ -29,11 +29,11 @@ test("Suggestions are shown after delimiter was used in text (:)", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", ":");
-    await contains(".o-mail-Composer-suggestion strong", { text: "hello" });
+    await contains(".o-mail-Composer-suggestion strong:contains(hello)");
     await insertText(".o-mail-Composer-input", ")");
     await contains(".o-mail-Composer-suggestion strong", { count: 0 });
     await insertText(".o-mail-Composer-input", " :");
-    await contains(".o-mail-Composer-suggestion strong", { text: "hello" });
+    await contains(".o-mail-Composer-suggestion strong:contains(hello)");
 });
 
 test.skip("Cannot mention other channels in a livechat", async () => {
