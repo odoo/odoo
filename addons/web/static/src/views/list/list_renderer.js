@@ -1818,11 +1818,14 @@ export class ListRenderer extends Component {
         }
         element.classList.remove("o_row_draggable");
         const refId = previous ? previous.dataset.id : null;
-        this.resequencePromise = this.props.list.resequence(dataRowId, refId, {
-            handleField: this.props.archInfo.handleField,
-        });
-        await this.resequencePromise;
-        element.classList.add("o_row_draggable");
+        try {
+            this.resequencePromise = this.props.list.resequence(dataRowId, refId, {
+                handleField: this.props.archInfo.handleField,
+            });
+            await this.resequencePromise;
+        } finally {
+            element.classList.add("o_row_draggable");
+        }
     }
 
     /**
