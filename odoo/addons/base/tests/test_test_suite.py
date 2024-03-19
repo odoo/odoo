@@ -10,7 +10,7 @@ from pathlib import PurePath
 from unittest import TestCase
 from unittest.mock import patch
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, BaseCase
 from odoo.tests.common import users, warmup
 from odoo.tests.runner import OdooTestResult
 
@@ -39,7 +39,7 @@ class TestRunnerLoggingCommon(TransactionCase):
         self.expected_first_frame_methods = None
         return super().setUp()
 
-    def _feedErrorsToResult(self, result, errors):
+    def _feedErrorsToResult(self, result, errors):  # this will change in 16.0 with https://github.com/odoo/odoo/pull/112294/commits
         # We use this hook to catch the logged error. It is initially called
         # post tearDown, and logs the actual errors. Because of our hack
         # tests.common._ErrorCatcher, the errors are logged directly. This is
@@ -134,6 +134,10 @@ class TestRunnerLoggingCommon(TransactionCase):
         message = message.replace(f'"{python_path}', '"/usr/lib/python')
         message = message.replace('\\', '/')
         return message
+
+    if BaseCase._python_version >= (3, 11, 0):
+        def run(self, _result):
+            _logger.runbot('Skipping %s after python 3.10, will be adapted in 16.0' % self._testMethodName)
 
 
 class TestRunnerLogging(TestRunnerLoggingCommon):
