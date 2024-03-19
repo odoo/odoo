@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- PREGUNTA -->
+    <record id="pregunta_action" model="ir.actions.act_window">
+        <field name="name">pregunta.action</field>
+        <field name="res_model">pregunta</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="pregunta_tree" model="ir.ui.view">
+        <field name="name">pregunta.tree</field>
+        <field name="model">pregunta</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="pregunta_texto"/>
+                <field name="tipo"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- EVALUACION -->
+    <record id="evaluacion_action" model="ir.actions.act_window">
+        <field name="name">evaluacion.action</field>
+        <field name="res_model">evaluacion</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="evaluacion_tree" model="ir.ui.view">
+        <field name="name">evaluacion.tree</field>
+        <field name="model">evaluacion</field>
+
+        <field name="arch" type="xml">
+            <tree>
+                <field name="nombre"/>
+                <field name="estado"/>
+                <field name="pregunta_ids"/>
+                <field name="competencia_ids"/>
+                <field name="usuario_ids"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- OPCION -->
+    <record id="opcion_action" model="ir.actions.act_window">
+        <field name="name">opcion.action</field>
+        <field name="res_model">opcion</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="opcion_tree" model="ir.ui.view">
+        <field name="name">opcion.tree</field>
+        <field name="model">opcion</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="opcion_texto"/>
+                <field name="pregunta_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- COMPETENCIA -->
+    <record id="competencia_action" model="ir.actions.act_window">
+        <field name="name">competencia.action</field>
+        <field name="res_model">competencia</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="competencia_tree" model="ir.ui.view">
+        <field name="name">competencia.tree</field>
+        <field name="model">competencia</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="nombre"/>
+                <field name="descripcion"/>
+                <field name="company_id"/>
+                <field name="pregunta_ids"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="usuario_evaluacion_rel_form" model="ir.ui.view">
+        <field name="name">Asignación</field>
+        <field name="model">usuario.evaluacion.rel</field>
+        <field name="arch" type="xml">
+            <form string="Evaluation Assignment">
+                <!-- Your other fields here -->
+                <field name="evaluacion_id"/>
+                <field name="usuario_id"/>
+            </form>
+        </field>
+    </record>
+</odoo>
+    
