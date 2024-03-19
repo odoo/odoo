@@ -665,7 +665,7 @@
             <div class="offcanvas-body d-flex justify-content-between flex-grow-0 border-top overflow-hidden">
                 <a t-attf-class="btn btn-{{navClass}} d-flex py-1 mb-2 {{(not attrib_values and not isFilteringByPrice) and 'disabled' }}"
                    t-att-aria-disabled="(not attrib_values and not isFilteringByPrice) and 'true' or 'false'"
-                   href="/shop"
+                   t-att-href="keep('/shop'+ ('/category/'+slug(category)) if category else None, attrib=0)"
                    title="Clear Filters">
                     Clear Filters
                 </a>
