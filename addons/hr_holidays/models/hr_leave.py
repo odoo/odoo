@@ -105,13 +105,22 @@ class HolidaysRequest(models.Model):
         # Instead of overwriting all the javascript methods to use
         # request_date_{from,to} instead of date_{from,to}, we just convert
         # date_{from,to} to request_date_{from,to} here.
+
+        # Request dates are determined during an onchange scenario.
+        # To ensure that the values are correct in the client context (UI),
+        # the timezone must be applied (because no processing is carried out
+        # when these dates are received on the frontend).
+        # Note:
+        # Without the application of the timezone, days based on UTC datetimes
+        # will be returned (and will therefore not be correct for the client).
+        client_tz = timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
         if values.get('date_from'):
             if not values.get('request_date_from'):
-                values['request_date_from'] = values['date_from']
+                values['request_date_from'] = pytz.utc.localize(values['date_from']).astimezone(client_tz)
             del values['date_from']
         if values.get('date_to'):
             if not values.get('request_date_to'):
-                values['request_date_to'] = values['date_to']
+                values['request_date_to'] = pytz.utc.localize(values['date_to']).astimezone(client_tz)
             del values['date_to']
         return values
 
