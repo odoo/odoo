@@ -39,7 +39,8 @@
 
 // ------- Sample mode -------
 .o_pivot_view .o_view_sample_data {
-    table {
+    overflow: hidden !important;
+    .o_pivot {
         @include o-sample-data-disabled;
     }
 }
