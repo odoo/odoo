@@ -8,7 +8,7 @@ from markupsafe import Markup, escape
 from operator import itemgetter
 
 from odoo import api, fields, models, _, Command
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare, convert
 from odoo.service.common import exp_version
 from odoo.osv.expression import AND
@@ -2275,6 +2275,8 @@ class PosSession(models.Model):
 
     @api.model
     def _load_onboarding_data(self):
+        if not self.env.user.has_group("point_of_sale.group_pos_user"):
+            raise AccessDenied()
         convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init', kind='data')
         shop_config = self.env.ref('point_of_sale.pos_config_main', raise_if_not_found=False)
         if shop_config and shop_config.active:
