@@ -3434,7 +3434,7 @@ export class Wysiwyg extends Component {
             return;
         }
         const attachment = await this._serviceRpc(
-            '/web_editor/attachment/add_data',
+            '/web_editor/media/add_data',
             {
                 name: el.dataset.fileName || '',
                 data: imageData,

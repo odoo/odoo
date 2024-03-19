@@ -34,9 +34,9 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         self.env['blog.blog'].create({'name': 'Travel'})
 
         # Ensure at least one image exists for the step that chooses one
-        self.env['ir.attachment'].create({
+        self.env['web_editor.media'].create({
             'public': True,
-            'type': 'url',
+            'res_model': 'ir.ui.view',
             'url': '/web/image/123/transparent.png',
             'name': 'transparent.png',
             'mimetype': 'image/png',

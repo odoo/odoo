@@ -63,8 +63,13 @@ def get_existing_attachment(IrAttachment, vals):
     so, None otherwise.
     """
     fields = dict(vals)
-    # Falsy res_id defaults to 0 on attachment creation.
-    fields['res_id'] = fields.get('res_id') or 0
+    if fields['res_model'] == 'web_editor.media':
+        # For a media attachment, the res_id is the media's id, which (if it
+        # exists) we don't know at this point. We do the comparison on the rest.
+        fields.pop('res_id', None)
+    else:
+        # Falsy res_id defaults to 0 on attachment creation.
+        fields['res_id'] = fields.get('res_id') or 0
     raw, datas = fields.pop('raw', None), fields.pop('datas', None)
     domain = [(field, '=', value) for field, value in fields.items()]
     if fields.get('type') == 'url':
@@ -258,21 +263,21 @@ class Web_Editor(http.Controller):
             hide_dm_share=hide_dm_share
         )
 
-    @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
-    def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
+    def _preprocess_data(self, name, data, is_image, quality=0, width=0, height=0, **kwargs):
         data = b64decode(data)
+        preprocessed_data = {}
         if is_image:
             format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_MIMETYPES.values()))
             try:
                 data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
-                mimetype = guess_mimetype(data)
-                if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
+                preprocessed_data['mimetype'] = guess_mimetype(data)
+                if preprocessed_data['mimetype'] not in SUPPORTED_IMAGE_MIMETYPES:
                     return {'error': format_error_msg}
                 if not name:
                     name = '%s-%s%s' % (
                         datetime.now().strftime('%Y%m%d%H%M%S'),
                         str(uuid.uuid4())[:6],
-                        SUPPORTED_IMAGE_MIMETYPES[mimetype],
+                        SUPPORTED_IMAGE_MIMETYPES[preprocessed_data['mimetype']],
                     )
             except UserError:
                 # considered as an image by the browser file input, but not
@@ -281,15 +286,51 @@ class Web_Editor(http.Controller):
             except ValueError as e:
                 return {'error': e.args[0]}
 
+        preprocessed_data.update({
+            'name': name,
+            'data': data,
+        })
+        return preprocessed_data
+
+    @http.route('/web_editor/media/add_data', type='json', auth='user', methods=['POST'], website=True)
+    def add_media_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
+        """Creates a `web_editor.media` and its related `ir.attachment`."""
+        preprocessed_data = self._preprocess_data(name, data, is_image, quality, width, height)
+        if 'error' in preprocessed_data:
+            return preprocessed_data
+
         self._clean_context()
-        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
+        media = self._media_create(
+            name=preprocessed_data['name'],
+            data=preprocessed_data['data'],
+            mimetype=preprocessed_data.get('mimetype'),
+            res_id=res_id,
+            res_model=res_model
+        )
+        return media._get_media_info()
+
+    @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
+    def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
+        preprocessed_data = self._preprocess_data(name, data, is_image, quality, width, height)
+        if 'error' in preprocessed_data:
+            return preprocessed_data
+
+        self._clean_context()
+        attachment = self._attachment_create(name=preprocessed_data['name'], data=preprocessed_data['data'], res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
 
-    @http.route('/web_editor/attachment/add_url', type='json', auth='user', methods=['POST'], website=True)
+    @http.route('/web_editor/media/add_url', type='json', auth='user', methods=['POST'], website=True)
     def add_url(self, url, res_id=False, res_model='ir.ui.view', **kwargs):
+        """Creates a `web_editor.media` and its related `ir.attachment` when
+        the media is given through a link.
+        """
         self._clean_context()
-        attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model)
-        return attachment._get_media_info()
+        media = self._media_create(url=url, res_id=res_id, res_model=res_model)
+        return media._get_media_info()
+
+    @http.route('/web_editor/media/fetch', type='json', auth='user', methods=['POST'], website=True)
+    def fetch_media_attachments(self, media_domain, attachments_domain, offset, limit, **kwargs):
+        return request.env['web_editor.media']._fetch_media_attachments(media_domain, attachments_domain, offset, limit)
 
     @http.route('/web_editor/attachment/remove', type='json', auth='user', website=True)
     def remove(self, ids, **kwargs):
@@ -300,6 +341,7 @@ class Web_Editor(http.Controller):
         """
         self._clean_context()
         Attachment = attachments_to_remove = request.env['ir.attachment']
+        Media = media = media_to_remove = request.env['web_editor.media']
         Views = request.env['ir.ui.view']
 
         # views blocking removal of the attachment
@@ -317,8 +359,19 @@ class Web_Editor(http.Controller):
 
             if views:
                 removal_blocked_by[attachment.id] = views.read(['name'])
+                continue
+
+            # For original attachments: find the media that generated it.
+            if attachment.res_model == 'web_editor.media':
+                media = Media.search([('id', '=', attachment.res_id)])
+            if media:
+                # The media will automatically delete its attachment.
+                media_to_remove += media
             else:
                 attachments_to_remove += attachment
+
+        if media_to_remove:
+            media_to_remove.unlink()
         if attachments_to_remove:
             attachments_to_remove.unlink()
         return removal_blocked_by
@@ -345,6 +398,7 @@ class Web_Editor(http.Controller):
             attachment = request.env['ir.attachment'].search([
                 '|', ('url', '=like', src), ('url', '=like', '%s?%%' % src),
                 ('mimetype', 'in', list(SUPPORTED_IMAGE_MIMETYPES.keys())),
+                ('res_field', 'in', (False, 'media_content')),
             ], limit=1)
         if not attachment:
             return {
@@ -356,10 +410,7 @@ class Web_Editor(http.Controller):
             'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
         }
 
-    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
-        """Create and return a new attachment."""
-        IrAttachment = request.env['ir.attachment']
-
+    def _prepare_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view', mimetype=None, **kwargs):
         if name.lower().endswith('.bmp'):
             # Avoid mismatch between content type and mimetype, see commit msg
             name = name[:-4]
@@ -379,6 +430,8 @@ class Web_Editor(http.Controller):
             'res_model': res_model,
         }
 
+        if mimetype:
+            attachment_data['mimetype'] = mimetype
         if data:
             attachment_data['raw'] = data
             if url:
@@ -391,6 +444,45 @@ class Web_Editor(http.Controller):
         else:
             raise UserError(_("You need to specify either data or url to create an attachment."))
 
+        return attachment_data
+
+    def _media_create(self, name='', data=False, mimetype=None, url=False, res_id=False, res_model='ir.ui.view'):
+        """Create and return a new media attachment."""
+        Media = request.env['web_editor.media']
+        IrAttachment = request.env['ir.attachment']
+
+        attachment_data = Web_Editor._prepare_create(self, name, data, url, res_id, res_model, mimetype)
+
+        # Despite the user having no right to create an attachment, he can still
+        # create an image attachment through some flows
+        if (
+            not request.env.is_admin()
+            and IrAttachment._can_bypass_rights_on_media_dialog(**attachment_data)
+        ):
+            media = Media.sudo().create(attachment_data)
+            # When portal users upload an attachment with the wysiwyg widget,
+            # the access token is needed to use the image in the editor. If
+            # the attachment is not public, the user won't be able to generate
+            # the token, so we need to generate it using sudo
+            if not attachment_data['public']:
+                attachment = media._get_attachment()
+                attachment.sudo().generate_access_token()
+        else:
+            existing_attachment_data = dict(attachment_data)
+            existing_attachment_data.update({
+                'res_model': 'web_editor.media',
+                'res_field': None if attachment_data.get('type') == 'url' else 'media_content'
+            })
+            existing_attachment = get_existing_attachment(IrAttachment, existing_attachment_data)
+            media = Media.search([('id', '=', existing_attachment.res_id)]) \
+                if existing_attachment else Media.create(attachment_data)
+        return media
+
+    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
+        """Create and return a new attachment."""
+        IrAttachment = request.env['ir.attachment']
+
+        attachment_data = Web_Editor._prepare_create(self, name, data, url, res_id, res_model)
         # Despite the user having no right to create an attachment, he can still
         # create an image attachment through some flows
         if (
@@ -572,6 +664,7 @@ class Web_Editor(http.Controller):
             'datas': data,
             'type': 'binary',
             'res_model': res_model or 'ir.ui.view',
+            'res_field': None if attachment.res_field == 'media_content' else attachment.res_field,
             'mimetype': mimetype or attachment.mimetype,
             'name': name or attachment.name,
         }
@@ -868,7 +961,7 @@ class Web_Editor(http.Controller):
             name = '_'.join([media[id]['query'], url.split('/')[-1]])
             # Need to bypass security check to write image with mimetype image/svg+xml
             # ok because svgs come from whitelisted origin
-            attachment = request.env['ir.attachment'].with_user(SUPERUSER_ID).create({
+            media_attachment = request.env['web_editor.media'].with_user(SUPERUSER_ID).create({
                 'name': name,
                 'mimetype': req.headers['content-type'],
                 'public': True,
@@ -876,6 +969,7 @@ class Web_Editor(http.Controller):
                 'res_model': 'ir.ui.view',
                 'res_id': 0,
             })
+            attachment = media_attachment._get_attachment()
             if media[id]['is_dynamic_svg']:
                 colorParams = werkzeug.urls.url_encode(media[id]['dynamic_colors'])
                 attachment['url'] = '/web_editor/shape/illustration/%s?%s' % (slug(attachment), colorParams)

@@ -229,13 +229,21 @@ export class FileSelector extends Component {
         return this.props.selectedMedia[this.props.id].filter(media => media.mediaType === 'attachment').map(({ id }) => id);
     }
 
+    get mediaDomain() {
+        return [
+            "|", ["public", "=", true],
+                 "&", ["res_model", "=", this.props.resModel || "ir.ui.view"],
+                      ["res_id", "in", [0, this.props.resId]],
+        ];
+    }
+
     get attachmentsDomain() {
         const domain = [
-            '&',
-            ['res_model', '=', this.props.resModel],
-            ['res_id', '=', this.props.resId || 0]
+            "&",
+            ["res_model", "=", "web_editor.media"],
+            "|", "&", ["res_field", "=", "media_content"], ["type", "=", "binary"],
+                ["type", "=", "url"],
         ];
-        domain.unshift('|', ['public', '=', true]);
         domain.push(['name', 'ilike', this.state.needle]);
         return domain;
     }
@@ -255,19 +263,12 @@ export class FileSelector extends Component {
         this.state.isFetchingAttachments = true;
         let attachments = [];
         try {
-            attachments = await this.orm.call(
-                'ir.attachment',
-                'search_read',
-                [],
-                {
-                    domain: this.attachmentsDomain,
-                    fields: ['name', 'mimetype', 'description', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height', 'original_id'],
-                    order: 'id desc',
-                    // Try to fetch first record of next page just to know whether there is a next page.
-                    limit,
-                    offset,
-                }
-            );
+            attachments = await rpc('/web_editor/media/fetch', {
+                media_domain: this.mediaDomain,
+                attachments_domain: this.attachmentsDomain,
+                offset,
+                limit,
+            });
             attachments.forEach(attachment => attachment.mediaType = 'attachment');
         } catch (e) {
             // Reading attachments as a portal user is not permitted and will raise
