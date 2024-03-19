@@ -1,0 +1,14 @@
+<odoo>
+    <record id="account_invoice_product_weight_form_view" model="ir.ui.view">
+        <field name="name">account.invoice.product.weight.form.view</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group/group[2]" position="inside">
+                <field name="customer_credit" invisible="move_type not in ['out_invoice', 'out_refund']"/>
+                <field name="print_customer_credit_on_invoice" string="Print Customer Credit on Invoice" invisible="move_type not in ['out_invoice']"/>
+                <field name="print_customer_credit_on_invoice" string="Print Customer Credit on Credit Note" invisible="move_type not in ['out_refund']"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

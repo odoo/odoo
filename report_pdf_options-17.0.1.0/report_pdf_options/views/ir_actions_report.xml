@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="act_report_view_inherit" model="ir.ui.view">
+            <field name="name">ir.actions.report.inherit</field>
+            <field name="model">ir.actions.report</field>
+            <field name="inherit_id" ref="base.act_report_xml_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='advanced']" position="inside">
+                    <group>
+                        <field name="default_print_option" invisible="report_type != 'qweb-pdf'"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

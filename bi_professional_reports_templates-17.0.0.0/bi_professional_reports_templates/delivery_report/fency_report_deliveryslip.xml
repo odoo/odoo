@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="fency_report_deliveryslip_document">
+            <t t-if="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id"></t>
+            </t>
+            <t t-if="not o or not 'company_id' in o">
+                <t t-set="company" t-value="res_company"></t>
+            </t>
+            <div class="header">
+                <div class="row mt32 mb32">
+                    <div class="col-6">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+                             style="max-height: 80px;"/>
+                    </div>
+                    <div class="col-6 text-right"
+                         style="font:16px lucida-console,sans-serif !important; text-align: right;">
+                        <span t-field="company.partner_id"/>
+                        <br/>
+                        <span t-if="company.partner_id.street">
+                            <span t-if="company.partner_id.street" t-field="company.partner_id.street"/>
+                        </span>
+                        <br/>
+                        <span t-if="company.partner_id.street2">
+                            <span t-field="company.partner_id.street2"/>
+                            <br/>
+                        </span>
+
+                        <span t-if="company.partner_id.city" t-field="company.partner_id.city"/>
+                        <br/>
+                        <span t-if="company.partner_id.country_id" t-field="company.partner_id.country_id"/>
+                        <br/>
+                        <span t-if="company.partner_id.vat" t-field="company.partner_id.vat"/>
+                        <br/>
+                    </div>
+                </div>
+            </div>
+
+            <t t-call="web.external_layout">
+                <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row">
+                        <div class="col-6" style="font:15px lucida-console,sans-serif !important;">
+                            <strong>
+                                <span t-attf-style="color:#{company.color_stock}; !important;">Customer Address</span>
+                            </strong>
+                            <br/>
+                            <span t-field="o.partner_id"/>
+                            <br/>
+                            <span t-field="o.partner_id.street"/>
+                            <br/>
+                            <t t-if="o.partner_id.street2">
+                                <span t-field="o.partner_id.street2"/>
+                                <br/>
+                            </t>
+                            <span t-field="o.partner_id.city"/>
+                            <br/>
+                            <span t-field="o.partner_id.state_id"/>
+                            <br/>
+                            <span t-field="o.partner_id.country_id"/>
+                            <br/>
+                            <span t-field="o.partner_id.vat"/>
+                            <br/>
+                        </div>
+
+                        <div class="col-6 text-right"
+                             style="font:15px lucida-console,sans-serif !important;text-align: right;  ">
+                            <strong>
+                                <span t-attf-style="color:#{company.color_stock}; !important; ">Delivery Address</span>
+                            </strong>
+                            <div t-if="o.move_ids and o.move_ids[0].partner_id and o.move_ids[0].partner_id.id != o.partner_id.id">
+                                <div>
+                                    <div t-field="o.move_ids[0].partner_id"
+                                         t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                                    <div t-field="o.move_ids[0].partner_id.street"/>
+                                    <t t-if="o.move_ids[0].partner_id.street2">
+                                        <span t-field="o.move_ids[0].partner_id.street2"/>
+                                        <br/>
+                                    </t>
+                                    <span t-field="o.move_ids[0].partner_id.city"/>
+                                    <br/>
+                                    <span t-field="o.move_ids[0].partner_id.country_id"/>
+                                    <br/>
+                                    <span t-field="o.move_ids[0].partner_id.zip"/>
+                                    <br/>
+                                    <div t-field="o.move_ids[0].partner_id.vat"/>
+                                </div>
+                            </div>
+                            <div t-if="(o.move_ids and o.move_ids[0].partner_id and o.move_ids[0].partner_id.id == o.partner_id.id) or o.move_ids and not o.move_ids[0].partner_id">
+                                <span t-field="o.partner_id"/>
+                                <br/>
+                                <span t-field="o.partner_id.street"/>
+                                <br/>
+                                <t t-if="o.partner_id.street2">
+                                    <span t-field="o.partner_id.street2"/>
+                                    <br/>
+                                </t>
+                                <span t-field="o.partner_id.city"/>
+                                <br/>
+                                <span t-field="o.partner_id.state_id"/>
+                                <br/>
+                                <span t-field="o.partner_id.country_id"/>
+                                <br/>
+                                <span t-field="o.partner_id.vat"/>
+                                <br/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-4"/>
+                        <div class="col-8 text-right"
+                             t-attf-style="border-radius: 20px; font:15px lucida-console,sans-serif !important; background-color:#{company.color_stock}; !important;  ">
+                            <h2>
+                                <span>
+                                    <font t-attf-style="color:#{company.text_color_stock}; !important;padding-left: 20px;">
+                                        Delivery Note #
+                                    </font>
+                                    <span t-attf-style="color:#{company.text_color_stock}; !important;"
+                                          t-field="o.name"/>
+                                </span>
+                                <br/>
+                            </h2>
+                            <div>
+                                <div class="col-5">
+                                    <div>
+                                        <font t-attf-style="color:#{company.text_color_stock}; !important;padding-left: 20px;">
+                                            Origin:
+                                        </font>
+                                    </div>
+                                    <div t-attf-style="color:#{company.text_color_stock}; !important;padding-left:20px;"
+                                         t-field="o.picking_type_id"/>
+                                </div>
+                                <div class="col-4">
+                                    <div>
+                                        <div>
+                                            <font t-attf-style="color:#{company.text_color_stock}; !important;padding-left: 20px;">
+                                                Scheduled Date:
+                                            </font>
+                                        </div>
+                                        <div t-attf-style="color:#{company.text_color_stock}; !important;padding-left: 20px;"
+                                             t-field="o.scheduled_date"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <table class="table table-sm table-borderless" style="padding-top=50px; padding-bottom=50px;"
+                           t-if="not o.move_line_ids">
+                        <thead>
+                            <tr>
+                                <th t-attf-style="background-color:#{company.color_stock}; !important;color:#{company.text_color_stock}; !important;">
+                                    Product
+                                </th>
+                                <th t-attf-style="background-color:#{company.color_stock}; !important;color:#{company.text_color_stock}; !important;">
+                                    Ordered
+                                    Quantity
+                                </th>
+                                <th t-attf-style="background-color:#{company.color_stock}; !important;color:#{company.text_color_stock}; !important;">
+                                    Delivered
+                                    Quantity
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.move_ids" t-as="move">
+                                <td class="text-center">
+                                    <span t-field="move.product_id"/>
+                                </td>
+                                <td class="text-center">
+                                    <span t-field="move.product_uom_qty"/>
+                                    <span t-field="move.product_uom"/>
+                                </td>
+                                <td class="text-center">
+                                    <span t-field="move.quantity"/>
+                                    <span t-field="move.product_uom"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-borderless" style="padding-top=50px;" t-if="o.move_line_ids">
+                        <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')"
+                           groups="stock.group_production_lot"/>
+                        <thead>
+                            <tr>
+                                <th t-attf-style="background-color:#{company.color_stock}; !important;color:#{company.text_color_stock}; !important;">
+                                    Product
+                                </th>
+                                <th t-attf-style="background-color:#{company.color_stock}; !important;color:#{company.text_color_stock}; !important;"
+                                    name="lot_serial"
+                                    t-if="has_serial_number">
+                                    Lot/Serial Number
+                                </th>
+                                <th t-attf-style="background-color:#{company.color_stock}; !important;color:#{company.text_color_stock}; !important;">
+                                    Ordered
+                                    Quantity
+                                </th>
+                                <th t-if="any([move_line.state == 'done' for move_line in o.move_line_ids])"
+                                    t-attf-style="background-color:#{company.color_stock}; !important;color:#{company.text_color_stock}; !important;">
+                                    Delivered Quantity
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.move_line_ids" t-as="move_line">
+                                <td class="text-center">
+                                    <span t-field="move_line.product_id"/>
+                                    <span t-if="o.picking_type_code == 'outgoing'">
+                                        <span t-field="move_line.product_id.description_pickingout"/>
+                                    </span>
+                                    <span t-if="o.picking_type_code == 'incoming'">
+                                        <span t-field="move_line.product_id.description_pickingin"/>
+                                    </span>
+                                    <t t-if="not move_line.product_id and move_line.package_id">
+                                        <span t-field="move_line.package_id"/>
+                                    </t>
+                                </td>
+                                <t t-if="has_serial_number">
+                                    <td>
+                                        <table width="100%">
+                                            <tr>
+                                                <td class="text-center">
+                                                    <span t-field="move_line.lot_id"/>
+                                                    <t t-if="not move_line.lot_id">
+                                                        <span t-field="move_line.lot_name"/>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </t>
+                                <td class="text-center">
+                                    <span t-field="move_line.package_id"/>
+                                    <span t-if="move_line.package_id">:</span>
+                                    <span t-field="move_line.quantity"/>
+                                    <span t-field="move_line.product_uom_id"/>
+                                </td>
+                                <td class="text-center" t-if="move_line.state == 'done'">
+                                    <t t-if="move_line.quantity_product_uom != move_line.quantity">
+                                        <t t-set="backorder" t-value="True"/>
+                                    </t>
+                                    <span t-field="move_line.quantity"/>
+                                    <span t-field="move_line.product_uom_id"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p t-if="o.backorder_id">
+                        This shipment is a backorder of<t t-esc="o.backorder_id.name"/>.
+                    </p>
+                    <p>
+                        <t t-if="backorder">
+                            All items couldn't be shipped, the remaining ones will be shipped as soon as they become
+                            available.
+                        </t>
+                    </p>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

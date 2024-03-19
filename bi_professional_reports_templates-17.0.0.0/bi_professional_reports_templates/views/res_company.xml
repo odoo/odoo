@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_company_custom_inherit_form_view" model="ir.ui.view">
+            <field name="name">res_company_inherit.inherit.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="before">
+                    <field name="bank_account_id"/>
+                </field>
+                <xpath expr="//page[@name='general_info']" position="after">
+                    <page name="report_templates" string="Report Templates">
+                        <group>
+                            <group string='Sale Report'>
+                                <field name="sale_template"/>
+                                <field name="color_sale" widget="color" invisible="not sale_template"/>
+                                <field name="text_color_sale" widget="color" invisible="not sale_template"/>
+                            </group>
+                            <group string='Purchase Report'>
+                                <field name="purchase_template"/>
+                                <field name="color_purchase" widget="color" invisible="not purchase_template"/>
+                                <field name="text_color_purchase" widget="color" invisible="not purchase_template"/>
+
+
+                            </group>
+
+                        </group>
+                        <group>
+                            <group string='Account Report'>
+                                <field name="account_template"/>
+                                <field name="color_account" widget="color" invisible="not account_template"/>
+                                <field name="text_color_account" widget="color" invisible="not account_template"/>
+
+                            </group>
+                            <group string='Stock Report'>
+                                <field name="stock_template"/>
+                                <field name="color_stock" widget="color" invisible="not stock_template"/>
+                                <field name="text_color_stock" widget="color" invisible="not stock_template"/>
+
+                            </group>
+                            <group>
+                                <field name="file_name"  invisible="1"/>
+                                <field name="watermark_pdf" filename="file_name" widget="pdf_viewer"/>
+                            </group>
+                        </group>
+
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <record id="account_invoice_inherit_form_view" model="ir.ui.view">
+            <field name="name">account_invoice_inherit.inherit_form_view</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_reference']" position="after">
+                    <field name="paypal_chk"/>
+                    <field name="paypal_id" invisible="not paypal_chk" required="paypal_chk"/>
+                </xpath>
+            </field>
+        </record>
+
+                <record id="res_company_inherit_form_view" model="ir.ui.view">
+                    <field name="name">res_company_inherit.inherit_form_view</field>
+                    <field name="model">res.company</field>
+                    <field name="inherit_id" ref="base.view_company_form" />
+                    <field name="type">form</field>
+                    <field name="arch" type="xml">
+                        <field name="parent_id" position="before">
+                            <field name="bank_account_id"/>
+                        </field>
+                    </field>
+                </record>
+
+        <record id="res_partner_bank_inherit_form_view" model="ir.ui.view">
+            <field name="name">res_partner_bank_inherit.inherit_form_view</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="company_id" position="after">
+                    <field name="branch_name"/>
+                    <label for="street" string="Address"/>
+                    <div class="o_address_format">
+                        <field name="street" placeholder="Street..." class="o_address_street"/>
+                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                        <field name="city" placeholder="City" class="o_address_city"/>
+                        <field name="state_id" class="o_address_state" placeholder="State"/>
+                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                        <field name="country_id" placeholder="Country" class="o_address_country"/>
+                    </div>
+                    <field name="swift_code"/>
+                    <field name="ifsc"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

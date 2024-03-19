@@ -1,0 +1,39 @@
+// ------------------------------------------------------------------
+// Cairo
+// ------------------------------------------------------------------
+$cairo-font-path: '../fonts/Cairo';
+
+@mixin cairo-font($type, $weight, $style) {
+    @font-face {
+        font-family: 'Cairo';
+        src: url('#{$cairo-font-path}/Cairo-#{$type}.eot');
+        src: url('#{$cairo-font-path}/Cairo-#{$type}.eot?#iefix') format('embedded-opentype'),
+             url('#{$cairo-font-path}/Cairo-#{$type}.woff') format('woff'),
+             url('#{$cairo-font-path}/Cairo-#{$type}.ttf') format('truetype'),
+             url('#{$cairo-font-path}/Cairo-#{$type}.svg#Cairo') format('svg');
+        font-weight: $weight;
+        font-style: $style;
+    }
+
+    @font-face {
+        font-family: 'Cairo-#{$type}';
+        src: url('#{$cairo-font-path}/Cairo-#{$type}.eot');
+        src: url('#{$cairo-font-path}/Cairo-#{$type}.eot?#iefix') format('embedded-opentype'),
+             url('#{$cairo-font-path}/Cairo-#{$type}.woff') format('woff'),
+             url('#{$cairo-font-path}/Cairo-#{$type}.ttf') format('truetype'),
+             url('#{$cairo-font-path}/Cairo-#{$type}.svg#Cairo') format('svg');
+    }
+}
+
+@mixin cairo-font-pair($type, $weight) {
+    @include cairo-font('#{$type}', $weight, normal);
+    @include cairo-font('#{$type}Italic', $weight, italic);
+}
+
+
+@include cairo-font-pair('ExtraLight', 200);
+@include cairo-font-pair('Light', 300);
+@include cairo-font-pair('Regular', 400);
+@include cairo-font-pair('SemiBold', 600);
+@include cairo-font-pair('Bold', 700);
+@include cairo-font-pair('Black', 900);

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="report_pdf_options.ButtonOptions">
+        <Dialog size="'sm'" title="title">
+            <div style="text-align:center;">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-info" t-on-click="() => this.executePdfAction('print')">
+                        <i class="fa fa-print me-2"/>
+                        <span>Print</span>
+                    </button>
+                    <button class="btn btn-info" t-on-click="() => this.executePdfAction('download')">
+                        <i class="fa fa-download me-2"/>
+                        <span>Download</span>
+                    </button>
+                    <button class="btn btn-info" t-on-click="() => this.executePdfAction('open')">
+                        <i class="fa fa-file-text me-2"/>
+                        <span>Open</span>
+                    </button>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+</templates>
