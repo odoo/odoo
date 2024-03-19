@@ -3945,3 +3945,58 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertEqual(wos[0].date_finished, dt + timedelta(hours=1, minutes=1))
         self.assertEqual(wos[1].date_finished, dt + timedelta(hours=1, minutes=2))
+
+    def test_update_workcenter_adapt_finish_date(self):
+        """
+        Test that changing the workcenter of a workorder will adapt the end date to make
+        sure the duration expected is respected
+        """
+        self.workcenter_4 = self.env['mrp.workcenter'].create({
+            'name': 'Test workcenter',
+        })
+
+        self.workcenter_5 = self.env['mrp.workcenter'].create({
+            'name': 'Test workcenter',
+        })
+
+        operation = self.env['mrp.routing.workcenter'].create({
+            'name': 'Test order',
+            'workcenter_id': self.workcenter_4.id,
+            'bom_id': self.bom_1.id,
+            'time_cycle_manual': 30,
+        })
+
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'product_uom_id': self.bom_1.product_uom_id.id,
+        })
+
+        dt = datetime(2024, 1, 17, 11)
+        wo = self.env['mrp.workorder'].create([
+            {
+                'name': 'Test order',
+                'workcenter_id': self.workcenter_4.id,
+                'product_uom_id': self.bom_1.product_uom_id.id,
+                'production_id': mo.id,
+                'duration_expected': 30.0,
+                'date_start': dt,
+                'operation_id': operation.id,
+            }
+        ])
+        self.assertEqual(wo.date_start, dt)
+        self.assertEqual(wo.date_finished, dt + timedelta(hours=1, minutes=30))
+
+        # We change the date finished and make sure the duration expected is adapted
+        wo.write({
+            'date_finished': dt + timedelta(hours=2),
+        })
+        self.assertEqual(wo.duration_expected, 60.0)
+
+        # We change the workcenter and make sure the duration expected and the date finish
+        # is adapted accordingly
+        wo.write({
+            'workcenter_id': self.workcenter_5.id,
+        })
+        self.assertEqual(wo.duration_expected, 30.0)
+        self.assertEqual(wo.date_start, dt)
+        self.assertEqual(wo.date_finished, dt + timedelta(hours=1, minutes=30))
