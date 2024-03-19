@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -9,7 +8,7 @@ class TestHrHomeworkingCommon(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestHrHomeworkingCommon, cls).setUpClass()
+        super().setUpClass()
         cls.env.user.tz = 'Europe/Brussels'
 
         cls.user_employee = mail_new_test_user(cls.env, login='david', groups='base.group_user')

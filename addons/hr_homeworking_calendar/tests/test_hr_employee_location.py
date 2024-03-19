@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.hr_homeworking.tests.common import TestHrHomeworkingCommon
+from odoo.addons.hr_homeworking_calendar.tests.common import TestHrHomeworkingCommon
 
 from odoo.tests import tagged
 from datetime import datetime
@@ -10,7 +9,7 @@ from datetime import datetime
 class TestHrHomeworkingHrEmployeeLocation(TestHrHomeworkingCommon):
     @classmethod
     def setUpClass(cls):
-        super(TestHrHomeworkingHrEmployeeLocation, cls).setUpClass()
+        super().setUpClass()
         cls.HrEmployeeLocation = cls.env['hr.employee.location']
 
     def test_set_location_with_weekly_option_changes_employee_location(self):

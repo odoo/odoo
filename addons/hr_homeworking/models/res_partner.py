@@ -16,8 +16,3 @@ class ResPartner(models.Model):
             if im_status == "online" or im_status == "away" or im_status == "offline":
                 user.partner_id.im_status = location_type + "_" + im_status
 
-    def get_worklocation(self, start_date, end_date):
-        employee_id = self.env['hr.employee'].search([
-            ('work_contact_id', 'in', self.ids),
-            ('company_id', '=', self.env.company.id)])
-        return employee_id._get_worklocation(start_date, end_date)
