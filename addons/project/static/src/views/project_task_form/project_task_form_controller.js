@@ -1,12 +1,12 @@
 /** @odoo-module */
 
-import { FormController } from '@web/views/form/form_controller';
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import HistoryDialog from '@web_editor/components/history_dialog/history_dialog';
 import { useService } from '@web/core/utils/hooks';
 import { markup } from '@odoo/owl';
 import { escape } from '@web/core/utils/strings';
+import { FormControllerWithHTMLExpander } from '@resource/views/form_with_html_expander/form_controller_with_html_expander';
 
 export const subTaskDeleteConfirmationMessage = _t(
     `Deleting a task will also delete its associated sub-tasks. \
@@ -15,7 +15,7 @@ If you wish to preserve the sub-tasks, make sure to unlink them from their paren
 Are you sure you want to proceed?`
 );
 
-export class ProjectTaskFormController extends FormController {
+export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
     setup() {
         super.setup();
         this.notifications = useService("notification");
