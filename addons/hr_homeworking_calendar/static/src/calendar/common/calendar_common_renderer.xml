@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <templates>
-    <t t-name="hr_homeworking.CalendarCommonRendererHeader" t-inherit="web.CalendarCommonRendererHeader" t-inherit-mode="primary">
+    <t t-name="hr_homeworking_calendar.CalendarCommonRendererHeader" t-inherit="web.CalendarCommonRendererHeader" t-inherit-mode="primary">
         <xpath expr="//span[hasclass('o_cw_day_number')]" position="after">
-            <t t-if="scale != 'month'" t-call="hr.homeworking.CalendarCommonRenderer.buttonWorklocation"/>
+            <t t-if="scale != 'month'" t-call="hr_homeworking_calendar.CalendarCommonRenderer.buttonWorklocation"/>
         </xpath>
     </t>
 
-    <t t-name="hr.homeworking.CalendarCommonRenderer.buttonWorklocation">
+    <t t-name="hr_homeworking_calendar.CalendarCommonRenderer.buttonWorklocation">
         <t t-if="multiCalendar">
-            <t t-call="hr.homeworking.MultiCalendarButtonWorkLocation"/>
+            <t t-call="hr_homeworking_calendar.MultiCalendarButtonWorkLocation"/>
         </t>
         <t t-else="">
-            <t t-call="hr.homeworking.SingleCalendarButtonWorkLocation"/>
+            <t t-call="hr_homeworking_calendar.SingleCalendarButtonWorkLocation"/>
         </t>
     </t>
 
-    <div t-name="hr.homeworking.MultiCalendarButtonWorkLocation" class="o_worklocation_btn w-100 d-flex align-items-center">
+    <div t-name="hr_homeworking_calendar.MultiCalendarButtonWorkLocation" class="o_worklocation_btn w-100 d-flex align-items-center">
         <div class="o_homework_multi d-flex gap-1 ms-1">
             <t t-foreach="Object.keys(worklocation)" t-as="location" t-key="location">
                 <t t-foreach="worklocation[location]" t-as="wl" t-key="wl.id">
@@ -32,7 +32,7 @@
         </button>
     </div>
 
-    <div t-name="hr.homeworking.SingleCalendarButtonWorkLocation" class="o_worklocation_btn w-100 d-flex align-items-center">
+    <div t-name="hr_homeworking_calendar.SingleCalendarButtonWorkLocation" class="o_worklocation_btn w-100 d-flex align-items-center">
         <div t-if="workLocationSetForCurrentUser" class="w-100 d-flex align-items-center wl_action o_homework_single">
             <t t-if="worklocation.display">
                 <button t-attf-class='o_worklocation_text border-0 rounded-pill px-lg-2 py-0 text-nowrap wl_color_{{worklocation.colorIndex}}'>
