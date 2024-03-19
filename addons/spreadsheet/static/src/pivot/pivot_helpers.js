@@ -10,6 +10,42 @@ import { EvaluationError } from "@odoo/o-spreadsheet";
 
 export const pivotFormulaRegex = /^=.*PIVOT/;
 
+export const AGGREGATOR_NAMES = {
+    count: _t("Count"),
+    count_distinct: _t("Count Distinct"),
+    bool_and: _t("Boolean And"),
+    bool_or: _t("Boolean Or"),
+    max: _t("Maximum"),
+    min: _t("Minimum"),
+    avg: _t("Average"),
+    sum: _t("Sum"),
+};
+
+const NUMBER_AGGREGATORS = ["max", "min", "avg", "sum", "count_distinct", "count"];
+const DATE_AGGREGATORS = ["max", "min", "count_distinct", "count"];
+
+const AGGREGATORS_BY_FIELD_TYPE = {
+    integer: NUMBER_AGGREGATORS,
+    float: NUMBER_AGGREGATORS,
+    monetary: NUMBER_AGGREGATORS,
+    date: DATE_AGGREGATORS,
+    datetime: DATE_AGGREGATORS,
+    boolean: ["count_distinct", "count", "bool_and", "bool_or"],
+    char: ["count_distinct", "count"],
+    many2one: ["count_distinct", "count"],
+};
+
+export const AGGREGATORS = {};
+
+for (const type in AGGREGATORS_BY_FIELD_TYPE) {
+    AGGREGATORS[type] = {};
+    for (const aggregator of AGGREGATORS_BY_FIELD_TYPE[type]) {
+        AGGREGATORS[type][aggregator] = AGGREGATOR_NAMES[aggregator];
+    }
+}
+
+const DATE_FIELDS = ["date", "datetime"];
+
 //--------------------------------------------------------------------------
 // Public
 //--------------------------------------------------------------------------
@@ -79,15 +115,15 @@ export const PERIODS = {
  * e.g. "create_date:month"
  * @param {Record<string, Field | undefined>} allFields
  * @param {string} groupFieldString
- * @returns {{field: Field, aggregateOperator: string, isPositional: boolean}}
+ * @returns {{field: Field, granularity: string, isPositional: boolean, dimensionWithGranularity: string}}
  */
 export function parseGroupField(allFields, groupFieldString) {
     let fieldName = groupFieldString;
-    let aggregateOperator = undefined;
+    let granularity = undefined;
     const index = groupFieldString.indexOf(":");
     if (index !== -1) {
         fieldName = groupFieldString.slice(0, index);
-        aggregateOperator = groupFieldString.slice(index + 1);
+        granularity = groupFieldString.slice(index + 1);
     }
     const isPositional = fieldName.startsWith("#");
     fieldName = isPositional ? fieldName.substring(1) : fieldName;
@@ -95,12 +131,37 @@ export function parseGroupField(allFields, groupFieldString) {
     if (field === undefined) {
         throw new EvaluationError(sprintf(_t("Field %s does not exist"), fieldName));
     }
-    if (["date", "datetime"].includes(field.type)) {
-        aggregateOperator = aggregateOperator || "month";
+    const dimensionWithGranularity = granularity ? `${fieldName}:${granularity}` : fieldName;
+    if (isDateField(field)) {
+        granularity = granularity || "month";
     }
     return {
         isPositional,
         field,
-        aggregateOperator,
+        granularity,
+        dimensionWithGranularity,
     };
+}
+
+/**
+ * Parse a dimension string into a pivot dimension definition.
+ * e.g "create_date:month" => { name: "create_date", granularity: "month" }
+ *
+ * @param {string} dimension
+ * @returns {import("@spreadsheet").PivotDimensionDefinition}
+ */
+export function parseDimension(dimension) {
+    const [name, granularity] = dimension.split(":");
+    if (granularity) {
+        return { name, granularity };
+    }
+    return { name };
+}
+
+/**
+ * @param {Field} field
+ * @returns {boolean}
+ */
+export function isDateField(field) {
+    return DATE_FIELDS.includes(field.type);
 }

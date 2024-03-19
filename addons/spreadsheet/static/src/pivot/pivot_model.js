@@ -8,7 +8,7 @@ import { PivotModel } from "@web/views/pivot/pivot_model";
 import { helpers, constants, EvaluationError } from "@odoo/o-spreadsheet";
 import { SpreadsheetPivotTable } from "@spreadsheet/pivot/pivot_table";
 import { pivotTimeAdapter } from "./pivot_time_adapters";
-import { parseGroupField } from "./pivot_helpers";
+import { isDateField, parseGroupField } from "./pivot_helpers";
 
 const { toString, toNumber, toBoolean } = helpers;
 const { DEFAULT_LOCALE } = constants;
@@ -38,10 +38,10 @@ function throwUnsupportedFieldError(field) {
  * the two group values are "42" and "won".
  * @param {object} field
  * @param {number | boolean | string} groupValue
- * @param {"day" | "week" | "month" | "quarter" | "year" | undefined} aggregateOperator
+ * @param {"day" | "week" | "month" | "quarter" | "year" | undefined} granularity
  * @returns {number | boolean | string}
  */
-export function toNormalizedPivotValue(field, groupValue, aggregateOperator) {
+export function toNormalizedPivotValue(field, groupValue, granularity) {
     const groupValueString =
         typeof groupValue === "boolean"
             ? toString(groupValue).toLocaleLowerCase()
@@ -56,10 +56,7 @@ export function toNormalizedPivotValue(field, groupValue, aggregateOperator) {
     switch (field.type) {
         case "datetime":
         case "date":
-            return pivotTimeAdapter(aggregateOperator).normalizeFunctionValue(
-                groupValueString,
-                field
-            );
+            return pivotTimeAdapter(granularity).normalizeFunctionValue(groupValueString, field);
         case "selection":
         case "char":
         case "text":
@@ -157,11 +154,11 @@ export class OdooPivotModel extends PivotModel {
         if (groupValueString === NO_RECORD_AT_THIS_POSITION) {
             return "";
         }
-        const { field, aggregateOperator } = this.parseGroupField(groupFieldString);
-        const value = toNormalizedPivotValue(field, groupValueString, aggregateOperator);
+        const { field, granularity } = this.parseGroupField(groupFieldString);
+        const value = toNormalizedPivotValue(field, groupValueString, granularity);
         const undef = _t("None");
-        if (this._isDateField(field)) {
-            const adapter = pivotTimeAdapter(aggregateOperator);
+        if (isDateField(field)) {
+            const adapter = pivotTimeAdapter(granularity);
             return adapter.toCellValue(value);
         }
         if (field.relation) {
@@ -191,9 +188,9 @@ export class OdooPivotModel extends PivotModel {
     getLastPivotGroupValue(domainArgs) {
         const groupFieldString = domainArgs.at(-2);
         if (groupFieldString.startsWith("#")) {
-            const { field } = this.parseGroupField(groupFieldString);
+            const { dimensionWithGranularity } = this.parseGroupField(groupFieldString);
             const { cols, rows } = this._getColsRowsValuesFromDomain(domainArgs);
-            return this._isCol(field) ? cols.at(-1) : rows.at(-1);
+            return this._isCol(dimensionWithGranularity) ? cols.at(-1) : rows.at(-1);
         }
         const groupValueString = domainArgs.at(-1);
         return groupValueString;
@@ -233,11 +230,11 @@ export class OdooPivotModel extends PivotModel {
         const valuesWithLabels = [];
         const valuesUniqueness = new Set();
         const groupBys = (
-            this._isCol(field) ? this.metaData.fullColGroupBys : this.metaData.fullRowGroupBys
+            this._isCol(fieldName) ? this.metaData.fullColGroupBys : this.metaData.fullRowGroupBys
         )
             .map(this.parseGroupField)
             .map(({ field }) => field.name);
-        const tree = this._isCol(field) ? this.data.colGroupTree : this.data.rowGroupTree;
+        const tree = this._isCol(fieldName) ? this.data.colGroupTree : this.data.rowGroupTree;
         const groupByIndex = groupBys.indexOf(fieldName);
         const visitTree = (tree) => {
             const { values, labels } = tree.root;
@@ -340,29 +337,14 @@ export class OdooPivotModel extends PivotModel {
     }
 
     /**
-     * Determines if the given field is a date or datetime field.
-     *
-     * @param {Field} field Field description
-     * @private
-     * @returns {boolean} True if the type of the field is date or datetime
-     */
-    _isDateField(field) {
-        return ["date", "datetime"].includes(field.type);
-    }
-
-    /**
      * @override
      */
     _getGroupValues(group, groupBys) {
         return groupBys.map((gb) => {
             const groupBy = this._normalize(gb);
-            const { field, aggregateOperator } = this.parseGroupField(gb);
-            if (this._isDateField(field)) {
-                return pivotTimeAdapter(aggregateOperator).normalizeServerValue(
-                    groupBy,
-                    field,
-                    group
-                );
+            const { field, granularity } = this.parseGroupField(gb);
+            if (isDateField(field)) {
+                return pivotTimeAdapter(granularity).normalizeServerValue(groupBy, field, group);
             }
             return this._sanitizeValue(group[groupBy]);
         });
@@ -371,27 +353,21 @@ export class OdooPivotModel extends PivotModel {
     /**
      * Check if the given field is used as col group by
      */
-    _isCol(field) {
-        return this.metaData.fullColGroupBys
-            .map(this.parseGroupField)
-            .map(({ field }) => field.name)
-            .includes(field.name);
+    _isCol(nameWithGranularity) {
+        return this.metaData.fullColGroupBys.includes(nameWithGranularity);
     }
 
     /**
      * Check if the given field is used as row group by
      */
-    _isRow(field) {
-        return this.metaData.fullRowGroupBys
-            .map(this.parseGroupField)
-            .map(({ field }) => field.name)
-            .includes(field.name);
+    _isRow(nameWithGranularity) {
+        return this.metaData.fullRowGroupBys.includes(nameWithGranularity);
     }
 
     /**
      * Get the value of a field-value for a positional group by
      *
-     * @param {object} field Field of the group by
+     * @param {string} dimensionWithGranularity e.g. create_date:month
      * @param {unknown} groupValueString Value of the group by
      * @param {(number | boolean | string)[]} rows Values for the previous row group bys
      * @param {(number | boolean | string)[]} cols Values for the previous col group bys
@@ -399,10 +375,10 @@ export class OdooPivotModel extends PivotModel {
      * @private
      * @returns {number | boolean | string}
      */
-    _parsePivotFormulaWithPosition(field, groupValueString, cols, rows) {
+    _parsePivotFormulaWithPosition(dimensionWithGranularity, groupValueString, cols, rows) {
         const position = toNumber(groupValueString, DEFAULT_LOCALE) - 1;
         let tree;
-        if (this._isCol(field)) {
+        if (this._isCol(dimensionWithGranularity)) {
             tree = this.data.colGroupTree;
             for (const col of cols) {
                 tree = tree && tree.directSubTrees.get(col);
@@ -435,18 +411,27 @@ export class OdooPivotModel extends PivotModel {
         while (i < domain.length) {
             const groupFieldString = domain[i];
             const groupValue = domain[i + 1];
-            const { field, isPositional, aggregateOperator } =
+            const { field, isPositional, granularity, dimensionWithGranularity } =
                 this.parseGroupField(groupFieldString);
             let value;
             if (isPositional) {
-                value = this._parsePivotFormulaWithPosition(field, groupValue, cols, rows);
+                value = this._parsePivotFormulaWithPosition(
+                    dimensionWithGranularity,
+                    groupValue,
+                    cols,
+                    rows
+                );
             } else {
-                value = toNormalizedPivotValue(field, groupValue, aggregateOperator);
+                value = toNormalizedPivotValue(field, groupValue, granularity);
             }
-            if (this._isCol(field)) {
+            if (this._isCol(dimensionWithGranularity)) {
                 cols.push(value);
-            } else if (this._isRow(field)) {
+            } else if (this._isRow(dimensionWithGranularity)) {
                 rows.push(value);
+            } else {
+                throw new EvaluationError(
+                    sprintf(_t("Dimension %s is not a group by"), dimensionWithGranularity)
+                );
             }
             i += 2;
         }
@@ -547,5 +532,35 @@ export class OdooPivotModel extends PivotModel {
         });
 
         return headers;
+    }
+
+    /**
+     * @override
+     * @protected
+     * @return {string[]}
+     */
+    _getMeasureSpecs() {
+        return this.getDefinition().measures.map((measure) => {
+            if (measure.type === "many2one" && !measure.aggregator) {
+                return `${measure.name}:count_distinct`;
+            }
+            return measure.nameWithAggregator;
+        });
+    }
+
+    /**
+     * @override to add the order by clause to the read_group kwargs
+     */
+    _getSubGroups(groupBys, params) {
+        const { columns, rows } = this.getDefinition();
+        const order = columns
+            .concat(rows)
+            .filter(
+                (dimension) => dimension.order && groupBys.includes(dimension.nameWithGranularity)
+            )
+            .map((dimension) => `${dimension.nameWithGranularity} ${dimension.order}`)
+            .join(",");
+        params.kwargs.orderby = order;
+        return super._getSubGroups(groupBys, params);
     }
 }

@@ -146,7 +146,7 @@ export class OdooPivot extends OdooViewsDataSource {
      * @returns {string | undefined}
      */
     getPivotFieldFormat(fieldName) {
-        const { field, aggregateOperator } = this.parseGroupField(fieldName);
+        const { field, granularity } = this.parseGroupField(fieldName);
         switch (field.type) {
             case "integer":
                 return "0";
@@ -156,11 +156,22 @@ export class OdooPivot extends OdooViewsDataSource {
                 return this.getters.getCompanyCurrencyFormat() || "#,##0.00";
             case "date":
             case "datetime": {
-                const timeAdapter = pivotTimeAdapter(aggregateOperator);
+                const timeAdapter = pivotTimeAdapter(granularity);
                 return timeAdapter.getFormat(this.getters.getLocale());
             }
             default:
                 return undefined;
+        }
+    }
+
+    getPivotMeasureFormat(measureName) {
+        const measure = this.getMeasure(measureName);
+        switch (measure.aggregator) {
+            case "count":
+            case "count_distinct":
+                return "0";
+            default:
+                return this.getPivotFieldFormat(measure.name);
         }
     }
 
@@ -278,8 +289,8 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
                 sortedColumn: this.sortedColumn,
                 activeMeasures: this.measures.map((m) => m.name),
                 resModel: this.model,
-                colGroupBys: this.columns.map((c) => c.name),
-                rowGroupBys: this.rows.map((r) => r.name),
+                colGroupBys: this.columns.map((c) => c.nameWithGranularity),
+                rowGroupBys: this.rows.map((r) => r.nameWithGranularity),
                 fieldAttrs: {},
                 fields,
             },

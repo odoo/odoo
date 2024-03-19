@@ -19,6 +19,7 @@ export class PivotUIPlugin extends OdooUIPlugin {
         "getPivotDataSourceId",
         "getPivotDomainArgsFromPosition",
         "isPivotUnused",
+        "areDomainArgsFieldsValid",
     ]);
     constructor(config) {
         super(config);
@@ -202,6 +203,42 @@ export class PivotUIPlugin extends OdooUIPlugin {
 
     isPivotUnused(pivotId) {
         return this._getUnusedPivots().includes(pivotId);
+    }
+
+    /**
+     * Check if the fields in the domain part of
+     * a pivot function are valid according to the pivot definition.
+     * e.g. =PIVOT.VALUE(1,"revenue","country_id",...,"create_date:month",...,"source_id",...)
+     * @param {string} pivotId
+     * @param {string[]} domainArgs
+     * @returns {boolean}
+     */
+    areDomainArgsFieldsValid(pivotId, domainArgs) {
+        const dimensions = domainArgs
+            .filter((arg, index) => index % 2 === 0)
+            .map((name) => (name.startsWith("#") ? name.slice(1) : name));
+        let argIndex = 0;
+        let definitionIndex = 0;
+        const pivot = this.getPivot(pivotId);
+        const definition = pivot.definition;
+        const cols = definition.columns.map((col) => col.nameWithGranularity);
+        const rows = definition.rows.map((row) => row.nameWithGranularity);
+        while (
+            dimensions[argIndex] !== undefined &&
+            dimensions[argIndex] === rows[definitionIndex]
+        ) {
+            argIndex++;
+            definitionIndex++;
+        }
+        definitionIndex = 0;
+        while (
+            dimensions[argIndex] !== undefined &&
+            dimensions[argIndex] === cols[definitionIndex]
+        ) {
+            argIndex++;
+            definitionIndex++;
+        }
+        return dimensions.length === argIndex;
     }
 
     // ---------------------------------------------------------------------

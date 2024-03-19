@@ -172,7 +172,7 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
 
         for (const filter of filters) {
             const dataSource = this.getters.getPivot(pivotId);
-            const { field, aggregateOperator: time } = dataSource.parseGroupField(argField);
+            const { field, granularity: time } = dataSource.parseGroupField(argField);
             const pivotFieldMatching = this.getters.getPivotFieldMatching(pivotId, filter.id);
             if (pivotFieldMatching && pivotFieldMatching.chain === field.name) {
                 let value = dataSource.getLastPivotGroupValue(domainArgs.slice(-2));
@@ -221,10 +221,10 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
 
     /**
      * @param {import("../../data_sources/metadata_repository").Field} field
-     * @param {"day" | "week" | "month" | "quarter" | "year"} aggregateOperator
+     * @param {"day" | "week" | "month" | "quarter" | "year"} granularity
      * @returns {string | undefined}
      */
-    _getFieldFormat(field, aggregateOperator) {
+    _getFieldFormat(field, granularity) {
         switch (field.type) {
             case "integer":
                 return "0";
@@ -234,7 +234,7 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
                 return this.getters.getCompanyCurrencyFormat() || "#,##0.00";
             case "date":
             case "datetime": {
-                const timeAdapter = pivotTimeAdapter(aggregateOperator);
+                const timeAdapter = pivotTimeAdapter(granularity);
                 return timeAdapter.getFormat(this.getters.getLocale());
             }
             default:

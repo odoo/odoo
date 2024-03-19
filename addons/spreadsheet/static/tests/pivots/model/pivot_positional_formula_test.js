@@ -110,10 +110,10 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    colGroupBys: ["foo"],
-                    rowGroupBys: ["bar"],
+                    columns: [{ name: "foo" }],
+                    rows: [{ name: "bar" }],
                     domain: [],
-                    measures: ["probability"],
+                    measures: [{ name: "probability", aggregator: "sum" }],
                     model: "partner",
                     sortedColumn: {
                         groupId: [[], [1]],
@@ -148,10 +148,10 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    colGroupBys: ["foo"],
-                    rowGroupBys: ["bar"],
+                    columns: [{ name: "foo" }],
+                    rows: [{ name: "bar" }],
                     domain: [],
-                    measures: ["probability"],
+                    measures: [{ name: "probability", aggregator: "sum" }],
                     model: "partner",
                     sortedColumn: {
                         groupId: [[], [1]],
@@ -186,11 +186,11 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    colGroupBys: ["foo"],
+                    columns: [{ name: "foo" }],
                     domain: [],
-                    measures: ["probability"],
+                    measures: [{ name: "probability", aggregator: "sum" }],
                     model: "partner",
-                    rowGroupBys: ["bar"],
+                    rows: [{ name: "bar" }],
                     name: "Partners by Foo",
                     sortedColumn: {
                         groupId: [[], [2]],
@@ -225,11 +225,11 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    colGroupBys: ["foo"],
+                    columns: [{ name: "foo" }],
                     domain: [],
-                    measures: ["probability"],
+                    measures: [{ name: "probability", aggregator: "sum" }],
                     model: "partner",
-                    rowGroupBys: ["bar"],
+                    rows: [{ name: "bar" }],
                     name: "Partners by Foo",
                     sortedColumn: {
                         groupId: [[], [2]],
@@ -264,10 +264,13 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    rowGroupBys: ["product_id"],
-                    colGroupBys: [],
+                    rows: [{ name: "product_id" }],
+                    columns: [],
                     domain: [],
-                    measures: ["probability", "foo"],
+                    measures: [
+                        { name: "probability", aggregator: "sum" },
+                        { name: "foo", aggregator: "sum" },
+                    ],
                     model: "partner",
                     sortedColumn: {
                         groupId: [[], []],
@@ -298,11 +301,14 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    colGroupBys: [],
+                    columns: [],
                     domain: [],
-                    measures: ["probability", "foo"],
+                    measures: [
+                        { name: "probability", aggregator: "sum" },
+                        { name: "foo", aggregator: "sum" },
+                    ],
                     model: "partner",
-                    rowGroupBys: ["product_id"],
+                    rows: [{ name: "product_id" }],
                     sortedColumn: {
                         groupId: [[], []],
                         measure: "foo",

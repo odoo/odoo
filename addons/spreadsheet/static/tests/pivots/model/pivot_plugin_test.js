@@ -285,11 +285,11 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 pivots: {
                     1: {
                         type: "ODOO",
-                        colGroupBys: ["foo"],
+                        columns: [{ name: "foo" }],
                         domain: [],
-                        measures: ["probability"],
+                        measures: [{ name: "probability" }],
                         model: "partner",
-                        rowGroupBys: ["bar"],
+                        rows: [{ name: "bar" }],
                         context: {
                             allowed_company_ids: [16],
                             default_stage_id: 9,
@@ -342,20 +342,20 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    colGroupBys: ["foo"],
+                    columns: [{ name: "foo" }],
                     domain: [],
-                    measures: ["probability"],
+                    measures: [{ name: "probability", aggregator: "sum" }],
                     model: "partner",
-                    rowGroupBys: ["bar"],
+                    rows: [{ name: "bar" }],
                     context: {},
                 },
                 2: {
                     type: "ODOO",
-                    colGroupBys: ["bar"],
+                    columns: [{ name: "bar" }],
                     domain: [],
                     measures: [{ field: "probability", operator: "max" }],
                     model: "partner",
-                    rowGroupBys: ["foo"],
+                    rows: [{ name: "foo" }],
                     context: {},
                 },
             },
@@ -379,11 +379,11 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    colGroupBys: ["foo"],
+                    columns: [{ name: "foo" }],
                     domain: [],
-                    measures: ["probability"],
+                    measures: [{ name: "probability", aggregator: "sum" }],
                     model: "partner",
-                    rowGroupBys: ["bar"],
+                    rows: [{ name: "bar" }],
                 },
             },
         };
@@ -416,19 +416,19 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    colGroupBys: ["foo"],
+                    columns: [{ name: "foo" }],
                     domain: [],
-                    measures: ["probability"],
+                    measures: [{ name: "probability", aggregator: "sum" }],
                     model: "partner",
-                    rowGroupBys: ["bar"],
+                    rows: [{ name: "bar" }],
                 },
                 2: {
                     type: "ODOO",
-                    colGroupBys: ["foo"],
+                    columns: [{ name: "foo" }],
                     domain: [],
-                    measures: ["probability"],
+                    measures: [{ name: "probability", aggregator: "sum" }],
                     model: "partner",
-                    rowGroupBys: ["bar"],
+                    rows: [{ name: "bar" }],
                 },
             },
         };
@@ -454,11 +454,11 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    colGroupBys: ["foo"],
+                    columns: [{ name: "foo" }],
                     domain: [],
-                    measures: ["probability"],
+                    measures: [{ name: "probability", aggregator: "sum" }],
                     model: "partner",
-                    rowGroupBys: ["bar"],
+                    rows: [{ name: "bar" }],
                 },
             },
         };
@@ -491,11 +491,11 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    colGroupBys: ["product_id"],
+                    columns: [{ name: "product_id" }],
                     domain: [],
-                    measures: ["probability"],
+                    measures: [{ name: "probability", aggregator: "sum" }],
                     model: "partner",
-                    rowGroupBys: [],
+                    rows: [],
                 },
             },
         };
@@ -650,11 +650,11 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    colGroupBys: ["foo"],
+                    columns: [{ name: "foo" }],
                     domain: [],
-                    measures: ["probability"],
+                    measures: [{ name: "probability", aggregator: "sum" }],
                     model: "partner",
-                    rowGroupBys: ["bar"],
+                    rows: [{ name: "bar" }],
                     sortedColumn: {
                         measure: "probability",
                         order: "asc",
@@ -682,11 +682,11 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             pivots: {
                 1: {
                     type: "ODOO",
-                    colGroupBys: [],
+                    columns: [],
                     domain: '[("foo", "=", uid)]',
-                    measures: ["probability"],
+                    measures: [{ name: "probability", aggregator: "sum" }],
                     model: "partner",
-                    rowGroupBys: [],
+                    rows: [],
                     name: "A pivot",
                 },
             },
@@ -1009,23 +1009,23 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         const { model } = await createSpreadsheetWithPivot();
         const [pivotId] = model.getters.getPivotIds();
         let definition = model.getters.getPivotDefinition(pivotId);
-        assert.deepEqual(definition.colGroupBys, ["foo"]);
-        assert.deepEqual(definition.rowGroupBys, ["bar"]);
+        assert.deepEqual(definition.columns, [{ name: "foo" }]);
+        assert.deepEqual(definition.rows, [{ name: "bar" }]);
         model.dispatch("UPDATE_PIVOT", {
             pivotId,
             pivot: {
                 ...model.getters.getPivotDefinition(pivotId),
-                colGroupBys: [],
-                rowGroupBys: [],
+                columns: [],
+                rows: [],
             },
         });
         definition = model.getters.getPivotDefinition(pivotId);
-        assert.deepEqual(definition.colGroupBys, []);
-        assert.deepEqual(definition.rowGroupBys, []);
+        assert.deepEqual(definition.columns, []);
+        assert.deepEqual(definition.rows, []);
         model.dispatch("REQUEST_UNDO");
         definition = model.getters.getPivotDefinition(pivotId);
-        assert.deepEqual(definition.colGroupBys, ["foo"]);
-        assert.deepEqual(definition.rowGroupBys, ["bar"]);
+        assert.deepEqual(definition.columns, [{ name: "foo" }]);
+        assert.deepEqual(definition.rows, [{ name: "bar" }]);
     });
 
     QUnit.test("field matching is removed when filter is deleted", async function (assert) {
@@ -1192,5 +1192,221 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
 
         setCellContent(model, "A1", "=PIVOT(1)");
         assert.equal(model.getters.isPivotUnused(pivotId), false);
+    });
+
+    QUnit.test("Data are fetched with the correct aggregator", async (assert) => {
+        await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+                <pivot>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+            mockRPC: async function (route, args) {
+                if (args.method === "read_group") {
+                    assert.deepEqual(args.kwargs.fields, ["probability:avg"]);
+                    assert.step("read_group");
+                }
+            },
+        });
+        assert.verifySteps(["read_group"]);
+    });
+
+    QUnit.test("changing measure aggregates", async (assert) => {
+        const { model, pivotId } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+                <pivot>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+            mockRPC: async function (route, args) {
+                if (args.method === "read_group") {
+                    assert.step(args.kwargs.fields.join());
+                }
+            },
+        });
+        assert.verifySteps(["probability:avg"]);
+        model.dispatch("UPDATE_PIVOT", {
+            pivotId,
+            pivot: {
+                ...model.getters.getPivotDefinition(pivotId),
+                measures: [{ name: "probability", aggregator: "sum" }],
+            },
+        });
+        await nextTick();
+        assert.verifySteps(["probability:sum"]);
+        model.dispatch("UPDATE_PIVOT", {
+            pivotId,
+            pivot: {
+                ...model.getters.getPivotDefinition(pivotId),
+                measures: [{ name: "foo", aggregator: "sum" }],
+            },
+        });
+        await nextTick();
+        assert.verifySteps(["foo:sum"]);
+    });
+
+    QUnit.test(
+        "many2one measures are aggregated with count_distinct by default",
+        async (assert) => {
+            const { model, pivotId } = await createSpreadsheetWithPivot({
+                arch: /* xml */ `
+                <pivot>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+                mockRPC: async function (route, args) {
+                    if (args.method === "read_group") {
+                        assert.step(args.kwargs.fields.join());
+                    }
+                },
+            });
+            assert.verifySteps(["probability:avg"]);
+            model.dispatch("UPDATE_PIVOT", {
+                pivotId,
+                pivot: {
+                    ...model.getters.getPivotDefinition(pivotId),
+                    measures: [{ name: "product_id" }], // no aggregator specified
+                },
+            });
+            setCellContent(model, "A1", '=PIVOT.VALUE(1, "product_id")');
+            await nextTick();
+            assert.strictEqual(getEvaluatedCell(model, "A1").value, 2);
+            assert.verifySteps(["product_id:count_distinct"]);
+        }
+    );
+
+    QUnit.test("changing measure aggregates changes the format", async (assert) => {
+        const { model, pivotId } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+                <pivot>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+        });
+        setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability")');
+        assert.strictEqual(getEvaluatedCell(model, "A1").format, "#,##0.00");
+        model.dispatch("UPDATE_PIVOT", {
+            pivotId,
+            pivot: {
+                ...model.getters.getPivotDefinition(pivotId),
+                measures: [{ name: "probability", aggregator: "count_distinct" }],
+            },
+        });
+        await nextTick();
+        assert.strictEqual(getEvaluatedCell(model, "A1").format, "0");
+    });
+
+    QUnit.test("changing order of group by", async (assert) => {
+        const { model, pivotId } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+                <pivot>
+                    <field name="foo" type="col"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+            mockRPC: async function (route, args) {
+                if (args.method === "read_group") {
+                    assert.step(args.kwargs.orderby || "NO_ORDER");
+                }
+            },
+        });
+        assert.verifySteps(["NO_ORDER", "NO_ORDER"]);
+        model.dispatch("UPDATE_PIVOT", {
+            pivotId,
+            pivot: {
+                ...model.getters.getPivotDefinition(pivotId),
+                columns: [{ name: "foo", order: "asc" }],
+            },
+        });
+        assert.deepEqual(model.getters.getPivotDefinition(pivotId).columns, [
+            { name: "foo", order: "asc" },
+        ]);
+        await nextTick();
+        assert.verifySteps(["NO_ORDER", "foo asc"]);
+        model.dispatch("UPDATE_PIVOT", {
+            pivotId,
+            pivot: {
+                ...model.getters.getPivotDefinition(pivotId),
+                columns: [{ name: "foo" }],
+            },
+        });
+        await nextTick();
+        assert.verifySteps(["NO_ORDER", "NO_ORDER"]);
+    });
+
+    QUnit.test("change date order", async (assert) => {
+        const { model, pivotId } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+                <pivot>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+            mockRPC: async function (route, args) {
+                if (args.method === "read_group") {
+                    assert.step(args.kwargs.orderby || "NO_ORDER");
+                }
+            },
+        });
+        assert.verifySteps(["NO_ORDER"]);
+        model.dispatch("UPDATE_PIVOT", {
+            pivotId,
+            pivot: {
+                ...model.getters.getPivotDefinition(pivotId),
+                columns: [
+                    { name: "date", granularity: "year", order: "asc" },
+                    { name: "date", granularity: "month", order: "desc" },
+                ],
+            },
+        });
+        await nextTick();
+        assert.verifySteps(["NO_ORDER", "date:year asc", "date:year asc,date:month desc"]);
+    });
+
+    QUnit.test("duplicated dimension on col and row with different granularity", async (assert) => {
+        const serverData = getBasicServerData();
+        serverData.models.partner.records = [{ id: 1, date: "2024-03-30", probability: 11 }];
+        const { model } = await createSpreadsheetWithPivot({
+            serverData,
+            arch: /* xml */ `
+                <pivot>
+                    <field name="date" type="col" interval="year"/>
+                    <field name="date" type="row" interval="month"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+        });
+
+        setCellContent(
+            model,
+            "A1",
+            '=PIVOT.VALUE(1,"probability","date:month","3/2024","date:year",2024)'
+        );
+        setCellContent(model, "A2", '=PIVOT.VALUE(1,"probability","#date:month",1,"#date:year",1)'); // positional
+        assert.strictEqual(getEvaluatedCell(model, "A1").value, 11);
+        assert.strictEqual(getEvaluatedCell(model, "A2").value, 11);
+    });
+
+    QUnit.test("changing granularity of group by", async (assert) => {
+        const { model, pivotId } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+                <pivot>
+                    <field name="date" type="col"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+            mockRPC: async function (route, args) {
+                if (args.method === "read_group") {
+                    const groupBys = args.kwargs.groupby;
+                    if (groupBys.length) {
+                        assert.step(args.kwargs.groupby.join(","));
+                    }
+                }
+            },
+        });
+        assert.verifySteps(["date:month"]);
+        model.dispatch("UPDATE_PIVOT", {
+            pivotId,
+            pivot: {
+                ...model.getters.getPivotDefinition(pivotId),
+                columns: [{ name: "date", granularity: "day" }],
+            },
+        });
+        assert.deepEqual(model.getters.getPivotDefinition(pivotId).columns, [
+            { name: "date", granularity: "day" },
+        ]);
+        await nextTick();
+        assert.verifySteps(["date:day"]);
     });
 });

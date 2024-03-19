@@ -2,12 +2,15 @@
 // @ts-check
 
 import { _t } from "@web/core/l10n/translation";
-import { PERIODS, parseGroupField } from "@spreadsheet/pivot/pivot_helpers";
 
 /**
  * @typedef {import("@spreadsheet").Fields} Fields
  * @typedef {import("@spreadsheet").CommonPivotDefinition} CommonPivotDefinition
  * @typedef {import("@spreadsheet").SortedColumn} SortedColumn
+ * @typedef {import("@spreadsheet").PivotMeasureDefinition} PivotMeasureDefinition
+ * @typedef {import("@spreadsheet").PivotMeasure} PivotMeasure
+ * @typedef {import("@spreadsheet").PivotDimensionDefinition} PivotDimensionDefinition
+ * @typedef {import("@spreadsheet").PivotDimension} PivotDimension
  */
 
 /**
@@ -25,11 +28,13 @@ export class PivotRuntimeDefinition {
         /** @type {SortedColumn} */
         this._sortedColumn = definition.sortedColumn;
         /** @type {Array<PivotMeasure>} */
-        this._measures = definition.measures.map((name) => new PivotMeasure(fields, name));
+        this._measures = definition.measures.map((measure) => createMeasure(fields, measure));
         /** @type {Array<PivotDimension>} */
-        this._columns = definition.colGroupBys.map((name) => new PivotDimension(fields, name));
+        this._columns = definition.columns.map((dimension) =>
+            createPivotDimension(fields, dimension)
+        );
         /** @type {Array<PivotDimension>} */
-        this._rows = definition.rowGroupBys.map((name) => new PivotDimension(fields, name));
+        this._rows = definition.rows.map((dimension) => createPivotDimension(fields, dimension));
     }
 
     get sortedColumn() {
@@ -50,93 +55,75 @@ export class PivotRuntimeDefinition {
 }
 
 /**
- * Represent a measure in a pivot. A measure is a field that is aggregated.
+ * @param {Fields} fields
+ * @param {PivotMeasureDefinition} measure
+ * @returns {PivotMeasure}
  */
-export class PivotMeasure {
-    /**
-     * @param {Fields} fields All fields of the model
-     * @param {string} measureName Name of the measure
-     */
-    constructor(fields, measureName) {
-        this._fields = fields;
-        this._measureName = measureName;
-    }
-
-    /**
-     * Get the display name of the measure
-     * e.g. "__count" -> "Count", "amount_total" -> "Total Amount"
-     */
-    get displayName() {
-        return this._measureName === "__count"
-            ? _t("Count")
-            : this._fields[this._measureName].string;
-    }
-
-    /**
-     * Get the name of the measure, as it is stored in the pivot formula
-     */
-    get name() {
-        return this._measureName;
-    }
+function createMeasure(fields, measure) {
+    const name = measure.name;
+    const aggregator = measure.aggregator || fields[name]?.aggregator;
+    return {
+        nameWithAggregator: name + (aggregator ? `:${aggregator}` : ""),
+        /**
+         * Display name of the measure
+         * e.g. "__count" -> "Count", "amount_total" -> "Total Amount"
+         */
+        displayName: name === "__count" ? _t("Count") : fields[name].string,
+        /**
+         * Get the name of the measure, as it is stored in the pivot formula
+         */
+        name,
+        /**
+         * Get the aggregator of the measure
+         */
+        aggregator,
+        /**
+         * Get the type of the measure field
+         * e.g. "stage_id" -> "many2one", "create_date:month" -> "date"
+         */
+        type: name === "__count" ? "integer" : fields[name].type,
+    };
 }
 
 /**
- * Represent a dimension in a pivot. A dimension is a field that is grouped by.
- * e.g. "stage_id", "create_date:month"
+ * @param {Fields} fields
+ * @param {PivotDimensionDefinition} dimension
+ * @returns {PivotDimension}
  */
-export class PivotDimension {
-    /**
-     * @param {Fields} fields All fields of the model
-     * @param {string} name Name of the dimension
-     */
-    constructor(fields, name) {
-        this._fields = fields;
-        const { field, aggregateOperator } = parseGroupField(fields, name);
-        this._field = field;
-        this._aggregateOperator = aggregateOperator;
-        this._name = name;
-    }
+function createPivotDimension(fields, dimension) {
+    const field = fields[dimension.name];
+    return {
+        /**
+         * Get the display name of the dimension
+         * e.g. "stage_id" -> "Stage", "create_date:month" -> "Create Date"
+         */
+        displayName: field.string,
 
-    /**
-     * Get the display name of the dimension
-     * e.g. "stage_id" -> "Stage", "create_date:month" -> "Create Date (Month)"
-     */
-    get displayName() {
-        return (
-            this._field.string +
-            (this._aggregateOperator ? ` (${PERIODS[this._aggregateOperator]})` : "")
-        );
-    }
+        /**
+         * Get the name of the dimension, as it is stored in the pivot formula
+         * e.g. "stage_id", "create_date:month"
+         */
+        nameWithGranularity:
+            dimension.name + (dimension.granularity ? `:${dimension.granularity}` : ""),
 
-    /**
-     * Get the name of the dimension, as it is stored in the pivot formula
-     * e.g. "stage_id", "create_date:month"
-     */
-    get name() {
-        return this._name;
-    }
+        /**
+         * Get the name of the field of the dimension
+         * e.g. "stage_id" -> "stage_id", "create_date:month" -> "create_date"
+         */
+        name: dimension.name,
 
-    /**
-     * Get the name of the field of the dimension
-     * e.g. "stage_id" -> "stage_id", "create_date:month" -> "create_date"
-     */
-    get fieldName() {
-        return this._field.name;
-    }
+        /**
+         * Get the aggregate operator of the dimension
+         * e.g. "stage_id" -> undefined, "create_date:month" -> "month"
+         */
+        granularity: dimension.granularity,
 
-    /**
-     * Get the aggregate operator of the dimension
-     * e.g. "stage_id" -> undefined, "create_date:month" -> "month"
-     */
-    get aggregateOperator() {
-        return this._aggregateOperator;
-    }
+        /**
+         * Get the type of the field of the dimension
+         * e.g. "stage_id" -> "many2one", "create_date:month" -> "date"
+         */
+        type: field.type,
 
-    /**
-     * Get the type of the field of the dimension
-     * e.g. "stage_id" -> "many2one", "create_date:month" -> "date"
-     */
-    get type() {
-        return this._field.type;
-    }
+        order: dimension.order,
+    };
 }

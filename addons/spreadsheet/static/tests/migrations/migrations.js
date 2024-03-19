@@ -78,6 +78,8 @@ QUnit.test("Global filters: pivot fields is correctly added", (assert) => {
             1: {
                 name: "test",
                 measures: [],
+                colGroupBys: [],
+                rowGroupBys: [],
             },
         },
     };
@@ -148,10 +150,14 @@ QUnit.test("Pivot name default is model name", (assert) => {
                 name: "Name",
                 model: "Model",
                 measures: [],
+                colGroupBys: [],
+                rowGroupBys: [],
             },
             2: {
                 model: "Model",
                 measures: [],
+                colGroupBys: [],
+                rowGroupBys: [],
             },
         },
     };
@@ -192,6 +198,8 @@ QUnit.test("fieldMatchings are moved from filters to their respective datasource
             1: {
                 name: "Name",
                 measures: [],
+                colGroupBys: [],
+                rowGroupBys: [],
             },
         },
         lists: {
@@ -259,6 +267,8 @@ QUnit.test("fieldMatchings offsets are correctly preserved after migration", (as
             1: {
                 name: "Name",
                 measures: [],
+                colGroupBys: [],
+                rowGroupBys: [],
             },
         },
         lists: {
@@ -385,6 +395,8 @@ QUnit.test("Pivot are migrated from 6 to 9", (assert) => {
                 name: "Name",
                 model: "Model",
                 measures: [],
+                colGroupBys: [],
+                rowGroupBys: [],
                 fieldMatching: { 1: { chain: "foo", type: "char" } },
             },
         },
@@ -397,6 +409,36 @@ QUnit.test("Pivot are migrated from 6 to 9", (assert) => {
         name: "Name",
         model: "Model",
         measures: [],
+        columns: [],
+        rows: [],
+        formulaId: "1",
+    });
+});
+
+QUnit.test("Pivot are migrated from 9 to 10", (assert) => {
+    const data = {
+        odooVersion: 9,
+        pivots: {
+            1: {
+                type: "ODOO",
+                name: "Name",
+                model: "res.model",
+                measures: ["probability"],
+                colGroupBys: ["foo"],
+                rowGroupBys: ["create_date:month"],
+                formulaId: "1",
+            },
+        },
+    };
+    const migratedData = migrate(data);
+    assert.strictEqual(Object.values(migratedData.pivots).length, 1);
+    assert.deepEqual(migratedData.pivots["1"], {
+        type: "ODOO",
+        name: "Name",
+        model: "res.model",
+        measures: [{ name: "probability" }],
+        columns: [{ name: "foo" }],
+        rows: [{ name: "create_date", granularity: "month" }],
         formulaId: "1",
     });
 });
