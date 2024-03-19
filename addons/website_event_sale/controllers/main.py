@@ -23,20 +23,31 @@ class WebsiteEventSaleController(WebsiteEventController):
         if not any(info.get('event_ticket_id') for info in registration_data):
             return super()._create_attendees_from_registration_post(event, registration_data)
 
+        event_ticket_ids = [registration['event_ticket_id'] for registration in registration_data if registration.get('event_ticket_id')]
+        event_ticket_by_id = {
+            event_ticket.id: event_ticket
+            for event_ticket in request.env['event.event.ticket'].sudo().browse(event_ticket_ids)
+        }
+
+        if all(event_ticket.price == 0 for event_ticket in event_ticket_by_id.values()):
+            # all chosen tickets are free, skip SO and payment process
+            return super()._create_attendees_from_registration_post(event, registration_data)
+
         order_sudo = request.website.sale_get_order(force_create=True)
         if order_sudo.state != 'draft':
             request.website.sale_reset()
             order_sudo = request.website.sale_get_order(force_create=True)
 
-        tickets_data = defaultdict(int)
+        paid_tickets_data = defaultdict(int)
         for data in registration_data:
             event_ticket_id = data.get('event_ticket_id')
-            if event_ticket_id:
-                tickets_data[event_ticket_id] += 1
+            event_ticket = event_ticket_by_id.get(event_ticket_id)
+            if event_ticket and event_ticket.price != 0:
+                paid_tickets_data[event_ticket_id] += 1
 
         cart_data = {}
-        for ticket_id, count in tickets_data.items():
-            ticket_sudo = request.env['event.event.ticket'].sudo().browse(ticket_id)
+        for ticket_id, count in paid_tickets_data.items():
+            ticket_sudo = event_ticket_by_id.get(ticket_id)
             cart_values = order_sudo._cart_update(
                 product_id=ticket_sudo.product_id.id,
                 add_qty=count,
@@ -46,7 +57,8 @@ class WebsiteEventSaleController(WebsiteEventController):
 
         for data in registration_data:
             event_ticket_id = data.get('event_ticket_id')
-            if event_ticket_id:
+            event_ticket = event_ticket_by_id.get(event_ticket_id)
+            if event_ticket and event_ticket.price != 0:
                 data['sale_order_id'] = order_sudo.id
                 data['sale_order_line_id'] = cart_data[event_ticket_id]
 
@@ -59,10 +71,13 @@ class WebsiteEventSaleController(WebsiteEventController):
         res = super().registration_confirm(event, **post)
 
         registrations = self._process_attendees_form(event, post)
+        order_sudo = request.website.sale_get_order()
+        if not any(line.event_ticket_id for line in order_sudo.order_line):
+            # order does not contain any tickets, meaning we are confirming a free event
+            return res
 
         # we have at least one registration linked to a ticket -> sale mode activate
         if any(info['event_ticket_id'] for info in registrations):
-            order_sudo = request.website.sale_get_order()
             if order_sudo.amount_total:
                 if order_sudo.partner_id.is_public:
                     first_registration = registrations[0]
