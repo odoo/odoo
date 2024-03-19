@@ -123,6 +123,10 @@ class AccountEdiFormat(models.Model):
         else:
             return self._l10n_in_edi_ewaybill_post_invoice_edi(invoices)
 
+    def _l10n_in_edi_ewaybill_get_cancel_reason_code(self, cancel_reason):
+        # The cancel reason code for e-waybill is different at these two keys from e-invoice
+        return {"2": "3", "3": "2"}.get(cancel_reason, cancel_reason)
+
     def _cancel_invoice_edi(self, invoices):
         if self.code != "in_ewaybill_1_03":
             return super()._cancel_invoice_edi(invoices)
@@ -131,7 +135,7 @@ class AccountEdiFormat(models.Model):
         ewaybill_response_json = invoices._get_l10n_in_edi_ewaybill_response_json()
         cancel_json = {
             "ewbNo": ewaybill_response_json.get("ewayBillNo") or ewaybill_response_json.get("EwbNo"),
-            "cancelRsnCode": int(invoices.l10n_in_edi_cancel_reason),
+            "cancelRsnCode": int(self._l10n_in_edi_ewaybill_get_cancel_reason_code(invoices.l10n_in_edi_cancel_reason)),
             "CnlRem": invoices.l10n_in_edi_cancel_remarks,
         }
         response = self._l10n_in_edi_ewaybill_cancel(invoices.company_id, cancel_json)
