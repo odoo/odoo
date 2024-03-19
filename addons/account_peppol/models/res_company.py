@@ -87,7 +87,7 @@ class ResCompany(models.Model):
             "Currently, only European countries are supported.")
 
         if not phonenumbers:
-            raise ValidationError(error_message)
+            raise ValidationError(_("Please install the phonenumbers library."))
 
         phone_number = self.account_peppol_phone_number
         if not phone_number.startswith('+'):
