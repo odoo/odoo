@@ -368,7 +368,9 @@ class Website(models.Model):
             request.session['website_sale_cart_quantity'] = sale_order_sudo.cart_quantity
 
         # check for change of partner_id ie after signup
-        if sale_order_sudo.partner_id.id != partner_sudo.id and request.website.partner_id.id != partner_sudo.id:
+        if (sale_order_sudo.partner_id.id != partner_sudo.id
+                and hasattr(request, "website")
+                and request.website.partner_id.id != partner_sudo.id):
             previous_fiscal_position = sale_order_sudo.fiscal_position_id
             previous_pricelist = sale_order_sudo.pricelist_id
 
