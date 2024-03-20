@@ -80,6 +80,16 @@ class TestReports(TestReportsCommon):
         self.assertEqual(target, rendering.replace(b' ', b''), 'The rendering is not good')
         self.assertEqual(qweb_type, 'text', 'the report type is not good')
 
+    def test_reports_product_no_barcode(self):
+        """ Test that product without barcode is correctly rendered without a barcode.
+        """
+        report = self.env.ref('stock.label_product_product')
+        self.product1.barcode = False
+        target = b'\n\t\t\n\n\n\n\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n\n\n\n^XZ\n\n\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n\n\n\n^XZ\n\n\n\n\n'
+        rendering, qweb_type = report._render_qweb_text(self.product1.product_tmpl_id.id, {'quantity_by_product': {self.product1.product_tmpl_id.id: 2}, 'active_model': 'product.template'})
+        self.assertEqual(target, rendering.replace(b' ', b''), 'Product name, default code or barcode is not correctly rendered, make sure the quotes are escaped correctly')
+        self.assertEqual(qweb_type, 'text', 'the report type is not good')
+
     def test_report_quantity_1(self):
         product_form = Form(self.env['product.product'])
         product_form.detailed_type = 'product'
