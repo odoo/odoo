@@ -6,7 +6,7 @@
             <field name="name">Event: Registration Badge</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="subject">Your badge for {{ object.event_id.name }}</field>
-            <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') }}</field>
+            <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.company_id.email_formatted or user.email_formatted or '') }}</field>
             <field name="email_to">{{ (object.email and '"%s" &lt;%s&gt;' % (object.name, object.email) or object.partner_id.email_formatted or '') }}</field>
             <field name="description">Sent automatically to someone after they registered to an event</field>
             <field name="body_html" type="html">
@@ -246,7 +246,7 @@
             <field name="name">Event: Registration Confirmation</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="subject">Your registration at {{ object.event_id.name }}</field>
-            <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') }}</field>
+            <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.company_id.email_formatted or user.email_formatted or '') }}</field>
             <field name="email_to">{{ (object.email and '"%s" &lt;%s&gt;' % (object.name, object.email) or object.partner_id.email_formatted or '') }}</field>
             <field name="description">Sent to attendees after registering to an event</field>
             <field name="body_html" type="html">
@@ -504,7 +504,7 @@
             <field name="name">Event: Reminder</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="subject">{{ object.event_id.name }}: {{ object.event_date_range }}</field>
-            <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') }}</field>
+            <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.company_id.email_formatted or user.email_formatted or '') }}</field>
             <field name="email_to">{{ (object.email and '"%s" &lt;%s&gt;' % (object.name, object.email) or object.partner_id.email_formatted or '') }}</field>
             <field name="description">Sent automatically to attendees if there is a reminder defined on the event</field>
             <field name="body_html" type="html">
