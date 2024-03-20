@@ -2,6 +2,7 @@ import {
     deleteConfirmationMessage,
     ConfirmationDialog,
 } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { useFeatures } from "@web/core/features";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
@@ -13,6 +14,7 @@ import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { session } from "@web/session";
 import { useSetupView } from "@web/views/view_hook";
 import { useModelWithSampleData } from "@web/model/model";
+
 import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
@@ -56,6 +58,8 @@ export class KanbanController extends Component {
     setup() {
         this.actionService = useService("action");
         this.dialog = useService("dialog");
+        this.features = useFeatures();
+
         const { Model, archInfo } = this.props;
 
         class KanbanSampleModel extends Model {
@@ -182,9 +186,9 @@ export class KanbanController extends Component {
         const { activeFields, fields } = extractFieldsFromArchInfo(archInfo, this.props.fields);
 
         // Remove fields aggregator unused to avoid asking them for no reason
-        const aggregateFieldNames = this.progressBarAggregateFields.map((field) => field.name)
+        const aggregateFieldNames = this.progressBarAggregateFields.map((field) => field.name);
         for (const [key, value] of Object.entries(activeFields)) {
-            if (!aggregateFieldNames.includes(key)){
+            if (!aggregateFieldNames.includes(key)) {
                 value.aggregator = null;
             }
         }
@@ -246,8 +250,11 @@ export class KanbanController extends Component {
         });
     }
 
-    evalViewModifier(modifier) {
-        return evaluateBooleanExpr(modifier, { context: this.props.context });
+    isButtonVisible(button) {
+        return (
+            (!("advanced" in button) || button.advanced === this.features.advanced) &&
+            !evaluateBooleanExpr(button.invisible, this.model.root.evalContext)
+        );
     }
 
     async openRecord(record, mode) {

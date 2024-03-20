@@ -33,6 +33,7 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
+import { features } from "@web/core/features";
 import { registry } from "@web/core/registry";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { translatedTerms } from "@web/core/l10n/translation";
@@ -14701,4 +14702,108 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(target, ".o_kanban_group", 3);
         }
     );
+
+    QUnit.test("kanban with attribute advanced='1' on various nodes", async function (assert) {
+        class MyComponent extends Component {
+            static props = ["*"];
+            static template = xml`<div class="my_widget">Hello</div>`;
+        }
+        const myComponent = {
+            component: MyComponent,
+        };
+        registry.category("view_widgets").add("test_widget", myComponent);
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch:
+                `<kanban>
+                    <header>
+                        <button class="my_custom_btn" type="object" name="some_method" string="Do it" advanced="1" display="always"/>
+                    </header>
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div class="custom_div" advanced="1">Some div</div>
+                                <field name="foo" advanced="1"/>
+                                <field name="product_id" widget="many2one" advanced="0"/>
+                                <widget name="test_widget" advanced="1"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            domain: [['id', '=', 1]],
+        });
+
+        assert.containsOnce(target, ".o_kanban_record:not(.o_kanban_ghost)");
+
+        assert.containsNone(target, ".o_control_panel .my_custom_btn:visible");
+        assert.containsNone(target, ".o_kanban_record div.custom_div");
+        assert.containsNone(target, ".o_kanban_record span:contains(yop)"); // foo
+        assert.containsOnce(target, ".o_kanban_record .o_field_widget[name=product_id]");
+        assert.containsNone(target, ".o_kanban_record .my_widget");
+
+        features.advanced = true;
+        await nextTick();
+
+        assert.containsOnce(target, ".o_control_panel .my_custom_btn:visible");
+        assert.containsOnce(target, ".o_kanban_record div.custom_div");
+        assert.containsOnce(target, ".o_kanban_record span:contains(yop)"); // foo
+        assert.containsNone(target, ".o_kanban_record .o_field_widget[name=product_id]");
+        assert.containsOnce(target, ".o_kanban_record .my_widget");
+    });
+
+    QUnit.test("kanban with attribute advanced='0' on various nodes", async function (assert) {
+        class MyComponent extends Component {
+            static props = ["*"];
+            static template = xml`<div class="my_widget">Hello</div>`;
+        }
+        const myComponent = {
+            component: MyComponent,
+        };
+        registry.category("view_widgets").add("test_widget", myComponent);
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch:
+                `<kanban>
+                    <header>
+                        <button class="my_custom_btn" type="object" name="some_method" string="Do it" advanced="0" display="always"/>
+                    </header>
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div class="custom_div" advanced="0">Some div</div>
+                                <field name="foo" advanced="0"/>
+                                <field name="product_id" widget="many2one" advanced="0"/>
+                                <widget name="test_widget" advanced="0"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            domain: [['id', '=', 1]],
+        });
+
+        assert.containsOnce(target, ".o_kanban_record:not(.o_kanban_ghost)");
+
+        assert.containsOnce(target, ".o_control_panel .my_custom_btn:visible");
+        assert.containsOnce(target, ".o_kanban_record div.custom_div");
+        assert.containsOnce(target, ".o_kanban_record span:contains(yop)"); // foo
+        assert.containsOnce(target, ".o_kanban_record .o_field_widget[name=product_id]");
+        assert.containsOnce(target, ".o_kanban_record .my_widget");
+
+        features.advanced = true;
+        await nextTick();
+
+        assert.containsNone(target, ".o_control_panel .my_custom_btn:visible");
+        assert.containsNone(target, ".o_kanban_record div.custom_div");
+        assert.containsNone(target, ".o_kanban_record span:contains(yop)"); // foo
+        assert.containsNone(target, ".o_kanban_record .o_field_widget[name=product_id]");
+        assert.containsNone(target, ".o_kanban_record .my_widget");
+    });
 });

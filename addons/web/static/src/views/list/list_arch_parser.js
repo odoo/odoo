@@ -67,31 +67,44 @@ export class ListArchParser {
         let nextId = 0;
         const fieldNextIds = {};
         visitXML(xmlDoc, (node) => {
+            let parsedNode;
+            let visitChildren = true;
             if (node.tagName !== "button") {
                 buttonGroup = undefined;
             }
             if (node.tagName === "button") {
-                const button = {
+                parsedNode = {
                     ...this.processButton(node),
                     defaultRank: "btn-link",
                     type: "button",
                     id: buttonId++,
                 };
                 if (buttonGroup) {
-                    buttonGroup.buttons.push(button);
+                    buttonGroup.buttons.push(parsedNode);
                     buttonGroup.column_invisible = combineModifiers(
                         buttonGroup.column_invisible,
                         node.getAttribute("column_invisible"),
                         "AND"
                     );
+                    if (node.hasAttribute("advanced") && "advanced" in buttonGroup) {
+                        const advanced = archParseBoolean(node.getAttribute("advanced"));
+                        if (advanced !== buttonGroup.advanced) {
+                            delete buttonGroup.advanced;
+                        }
+                    } else {
+                        delete buttonGroup.advanced;
+                    }
                 } else {
                     buttonGroup = {
                         id: `column_${nextId++}`,
                         type: "button_group",
-                        buttons: [button],
+                        buttons: [parsedNode],
                         hasLabel: false,
                         column_invisible: node.getAttribute("column_invisible"),
                     };
+                    if (node.hasAttribute("advanced")) {
+                        buttonGroup.advanced = archParseBoolean(node.getAttribute("advanced"));
+                    }
                     columns.push(buttonGroup);
                 }
             } else if (node.tagName === "field") {
@@ -106,7 +119,7 @@ export class ListArchParser {
                     handleField = fieldInfo.name;
                 }
                 const label = fieldInfo.field.label;
-                columns.push({
+                parsedNode = {
                     ...fieldInfo,
                     id: `column_${nextId++}`,
                     className: node.getAttribute("class"), // for oe_edit_only and oe_read_only
@@ -116,8 +129,9 @@ export class ListArchParser {
                         archParseBoolean(fieldInfo.attrs.nolabel) || fieldInfo.field.noLabel
                     ),
                     label: (fieldInfo.widget && label && label.toString()) || fieldInfo.string,
-                });
-                return false;
+                };
+                columns.push(parsedNode);
+                visitChildren = false;
             } else if (node.tagName === "widget") {
                 const widgetInfo = this.parseWidgetNode(node);
                 const widgetId = `widget_${++widgetNextId}`;
@@ -131,12 +145,13 @@ export class ListArchParser {
                     node: encodeObjectForTemplate({ attrs: widgetInfo.attrs }).slice(1, -1),
                     className: node.getAttribute("class") || "",
                 };
-                columns.push({
+                parsedNode = {
                     ...widgetInfo,
                     props: widgetProps,
                     id: `column_${nextId++}`,
                     type: "widget",
-                });
+                };
+                columns.push(parsedNode);
             } else if (node.tagName === "groupby" && node.getAttribute("name")) {
                 const fieldName = node.getAttribute("name");
                 const coModelName = fields[fieldName].relation;
@@ -146,7 +161,7 @@ export class ListArchParser {
                     fieldNodes: groupByArchInfo.fieldNodes,
                     fields: models[coModelName].fields,
                 };
-                return false;
+                visitChildren = false;
             } else if (node.tagName === "header") {
                 // AAB: not sure we need to handle invisible="True" button as the usecase seems way
                 // less relevant than for fields (so for buttons, relying on the modifiers logic
@@ -156,7 +171,7 @@ export class ListArchParser {
                     type: "button",
                     id: buttonId++,
                 }));
-                return false;
+                visitChildren = false;
             } else if (node.tagName === "control") {
                 for (const childNode of node.children) {
                     if (childNode.tagName === "button") {
@@ -172,7 +187,7 @@ export class ListArchParser {
                         });
                     }
                 }
-                return false;
+                visitChildren = false;
             } else if (["tree", "list"].includes(node.tagName)) {
                 const activeActions = {
                     ...getActiveActions(xmlDoc),
@@ -213,6 +228,10 @@ export class ListArchParser {
                 const type = xmlDoc.getAttribute("type");
                 treeAttr.openAction = action && type ? { action, type } : null;
             }
+            if (parsedNode && node.hasAttribute("advanced")) {
+                parsedNode.advanced = archParseBoolean(node.getAttribute("advanced"));
+            }
+            return visitChildren;
         });
 
         if (!treeAttr.defaultOrder.length && handleField) {

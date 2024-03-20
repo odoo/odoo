@@ -3,6 +3,7 @@ import {
     deleteConfirmationMessage,
     ConfirmationDialog,
 } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { useFeatures } from "@web/core/features";
 import { download } from "@web/core/network/download";
 import { rpc } from "@web/core/network/rpc";
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
@@ -16,6 +17,7 @@ import { usePager } from "@web/search/pager_hook";
 import { useModelWithSampleData } from "@web/model/model";
 import { DynamicRecordList } from "@web/model/relational_model/dynamic_record_list";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
+
 import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { ViewButton } from "@web/views/view_button/view_button";
@@ -74,6 +76,7 @@ export class ListController extends Component {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
         this.rootRef = useRef("root");
+        this.features = useFeatures();
 
         this.archInfo = this.props.archInfo;
         const openFormView = this.props.editable ? this.archInfo.openFormView : false;
@@ -417,8 +420,11 @@ export class ListController extends Component {
         this.model.root.selectDomain(false);
     }
 
-    evalViewModifier(modifier) {
-        return evaluateBooleanExpr(modifier, this.model.root.evalContext);
+    isButtonVisible(button) {
+        return (
+            (!("advanced" in button) || button.advanced === this.features.advanced) &&
+            !evaluateBooleanExpr(button.invisible, this.model.root.evalContext)
+        );
     }
 
     get className() {

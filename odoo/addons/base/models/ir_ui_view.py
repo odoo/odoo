@@ -1153,14 +1153,14 @@ actual arch.
             if field:
                 if field.groups:
                     if node.get('groups'):
-                        # if the node has a group (e.g. "base.group_no_one")
+                        # if the node has a group (e.g. "base.group_multi_company")
                         # and the field in the Python model has a group as well (e.g. "base.group_system")
                         # the user must have both group to see the field.
-                        # groups="base.group_no_one,base.group_system" directly on the node
+                        # groups="base.group_multi_company,base.group_system" directly on the node
                         # would be one of the two groups, not both (OR instead of AND).
                         # To make mandatory to have both groups, wrap the field node in a <t> node with the group
                         # set on the field in the Python model
-                        # e.g. <t groups="base.group_system"><field name="foo" groups="base.group_no_one"/></t>
+                        # e.g. <t groups="base.group_system"><field name="foo" groups="base.group_multi_company"/></t>
                         # The <t> node will be removed later, in _postprocess_access_rights.
                         node_t = E.t(groups=field.groups, postprocess_added='1')
                         node.getparent().replace(node, node_t)
@@ -2977,12 +2977,6 @@ class NameManager:
                             )
                         ) for mandatory_combination in mandatory_combinations
                     )
-                    )
-                    # if 'base.group_no_one' is in available_combinations the group
-                    # must be in mandatory_combinations because depending of session
-                    or (
-                        {'base.group_no_one'} in available_combinations and
-                        not all('base.group_no_one' in combination for combination in mandatory_combinations)
                     ))
                 ):
                     msg = _(

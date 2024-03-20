@@ -210,8 +210,6 @@ class IapAccount(models.Model):
         account = self.env['iap.account'].get('partner_autocomplete')
         action = self.env.ref('iap.iap_account_action')
         menu = self.env.ref('iap.iap_account_menu')
-        if not self.env.user.has_group('base.group_no_one'):
-            return False
         if account:
             url = "/web#id=%s&action=%s&model=iap.account&view_type=form&menu_id=%s" % (account.id, action.id, menu.id)
         else:

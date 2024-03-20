@@ -1,6 +1,7 @@
 /** @odoo-module alias=@web/../tests/core/debug/debug_manager_tests default=false */
 
 import { browser } from "@web/core/browser/browser";
+import { features } from "@web/core/features";
 import { DebugMenu } from "@web/core/debug/debug_menu";
 import { regenerateAssets } from "@web/core/debug/debug_menu_items";
 import { registry } from "@web/core/registry";
@@ -10,6 +11,7 @@ import { uiService } from "@web/core/ui/ui_service";
 import { useSetupView } from "@web/views/view_hook";
 import { ActionDialog } from "@web/webclient/actions/action_dialog";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { registerCleanup } from "../../helpers/cleanup";
 import { makeTestEnv, prepareRegistriesWithCleanup } from "../../helpers/mock_env";
 import {
     fakeCompanyService,
@@ -27,6 +29,7 @@ import {
 } from "../../helpers/utils";
 import { mountInFixture } from "../../helpers/mount_in_fixture";
 import { createWebClient, doAction, getActionManagerServerData } from "../../webclient/helpers";
+import { advancedModeItem } from "@web/webclient/debug/advanced_mode_item/advanced_mode_item";
 import { openViewItem } from "@web/webclient/debug/debug_items";
 import {
     editSearchView,
@@ -874,5 +877,19 @@ QUnit.module("DebugMenu", (hooks) => {
             ["partner", "reference", {"displayName": "Test", "resId": 1, "resModel": "pony"}, true, true, false],
             ["partner", "m2o", 1, true, true, false],
         ]);
+    });
+
+    QUnit.test("toggle advanced mode", async (assert) => {
+        assert.strictEqual(features.advanced, false);
+        registerCleanup(() => (features.advanced = false));
+        
+        registry.category("debug").category("default").add("advancedModeItem", advancedModeItem);
+
+        const env = await makeTestEnv(testConfig);
+        await mountInFixture(DebugMenuParent, target, { env });
+        await click(target.querySelector(".o_debug_manager button"));
+        await click(target.querySelector(".dropdown-menu .dropdown-item input"));
+
+        assert.strictEqual(features.advanced, true);
     });
 });

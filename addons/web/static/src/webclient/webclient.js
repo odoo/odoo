@@ -1,6 +1,8 @@
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { DebugMenu } from "@web/core/debug/debug_menu";
+import { features } from "@web/core/features";
 import { localization } from "@web/core/l10n/localization";
+import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -23,6 +25,7 @@ export class WebClient extends Component {
         this.menuService = useService("menu");
         this.actionService = useService("action");
         this.title = useService("title");
+        this.commandService = useService("command");
         useOwnDebugContext({ categories: ["default"] });
         if (this.env.debug) {
             registry.category("systray").add(
@@ -33,6 +36,12 @@ export class WebClient extends Component {
                 { sequence: 100 }
             );
         }
+        // add command palette entry to toggle advanced mode
+        const toggle = () => {
+            features.advanced = !features.advanced;
+        };
+        const options = { category: "debug", global: true };
+        this.commandService.add(_t("Toggle Advanced Mode"), toggle, options);
         this.localization = localization;
         this.state = useState({
             fullscreen: false,

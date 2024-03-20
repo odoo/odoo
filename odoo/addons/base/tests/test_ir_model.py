@@ -432,10 +432,9 @@ class TestIrModelEdition(TransactionCase):
             'name': 'Bananas',
             'model': 'x_bananas'
         })
-        with self.debug_mode():
-            form = Form(self.env['ir.model.fields'].with_context(default_model_id=model.id))
-            form.related = 'id'
-            self.assertEqual(form.ttype, 'integer')
+        form = Form(self.env['ir.model.fields'].with_context(default_model_id=model.id))
+        form.related = 'id'
+        self.assertEqual(form.ttype, 'integer')
 
     def test_delete_manual_models_with_base_fields(self):
         model = self.env["ir.model"].create({

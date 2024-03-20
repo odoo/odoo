@@ -1436,7 +1436,7 @@ class TestTemplating(ViewCase):
             'name': "Base View",
             'type': 'qweb',
             'arch': """<root>
-                <item groups="base.group_no_one"/>
+                <item groups="base.group_multi_company"/>
             </root>""",
         })
 
@@ -1445,7 +1445,7 @@ class TestTemplating(ViewCase):
         self.View.distribute_branding(arch)
 
         self.assertEqual(arch, E.root(E.item({
-            'groups': 'base.group_no_one',
+            'groups': 'base.group_multi_company',
             'data-oe-model': 'ir.ui.view',
             'data-oe-id': str(view.id),
             'data-oe-field': 'arch',
@@ -2283,14 +2283,29 @@ class TestViews(ViewCase):
         """
         self.assertInvalid(arch, "Search tag can only contain one search panel")
 
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_groups_field(self):
         arch = """
             <form string="View">
                 <field name="name" groups="%s"/>
             </form>
         """
-        self.assertValid(arch % 'base.group_no_one')
-        self.assertWarning(arch % 'base.dummy')
+        self.assertValid(arch % 'base.group_multi_company')
+
+        self.View.create({
+            'name': 'invalid view',
+            'model': 'ir.ui.view',
+            'arch': arch % 'base.dummy',
+        })
+        with self.assertLogs('odoo.addons.base.models.ir_ui_view', level="WARNING") as log_catcher:
+            self.View.create({
+                'name': 'invalid view',
+                'model': 'ir.ui.view',
+                'arch': arch % 'base.dummy',
+            })
+        self.assertEqual(len(log_catcher.output), 1, "Exactly one warning should be logged")
+        message = log_catcher.output[0]
+        self.assertIn("The group 'base.dummy' defined in view does not exist!", message)
 
     def test_attrs_groups_behavior(self):
         view = self.View.create({
@@ -2764,25 +2779,6 @@ class TestViews(ViewCase):
                 <field name="name" groups="!base.group_system"/>
                 <field name="name" groups="base.group_system"/>
                 <field name="inherit_id" groups="base.group_portal" %(attrs)s/>
-            </form>
-        """, valid=True)
-
-        # Assert using a field restricted to a 'base.group_no_one' in another
-        # field with a group implied 'base.group_no_one' is invalid. The group
-        # 'base.group_no_one' must be in the view because it's depending of the
-        # session.
-        validate("""
-            <form string="View">
-                <field name="name" groups="base.group_no_one"/>
-                <field name="inherit_id" %(attrs)s groups="base.group_user"/>
-            </form>
-        """, valid=False)
-        validate("""
-            <form string="View">
-                <field name="name" groups="base.group_no_one"/>
-                <group groups="base.group_no_one">
-                    <field name="inherit_id" %(attrs)s groups="base.group_user"/>
-                </group>
             </form>
         """, valid=True)
 

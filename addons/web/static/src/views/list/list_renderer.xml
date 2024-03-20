@@ -247,7 +247,7 @@
                 <t t-if="column.type === 'button_group'">
                     <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell cursor-pointer" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
                         <t t-foreach="column.buttons" t-as="button" t-key="button.id">
-                            <ViewButton t-if="!evalInvisible(button.invisible, record)"
+                            <ViewButton t-if="isButtonVisible(button, record)"
                                 className="button.className"
                                 clickParams="button.clickParams"
                                 defaultRank="button.defaultRank"

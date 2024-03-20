@@ -13,6 +13,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Component, onRendered, xml } from "@odoo/owl";
+
+import { features } from "@web/core/features";
 import { registry } from "@web/core/registry";
 
 import { NavBar } from "@web/webclient/navbar/navbar";
@@ -636,4 +638,131 @@ test("Do not execute adapt when navbar is destroyed", async () => {
     destroy(navbar);
     await runAllTimers();
     expect([]).toVerifySteps();
+});
+
+test.tags("desktop")("Navbar with advanced menus", async () => {
+    defineMenus([
+        {
+            id: "root",
+            children: [
+                // First App
+                {
+                    id: 1,
+                    children: [
+                        {
+                            id: 10,
+                            children: [],
+                            name: "Section 10",
+                            appID: 1,
+                            action: 10,
+                            advanced: true,
+                        },
+                        {
+                            id: 11,
+                            children: [],
+                            name: "Section 11",
+                            appID: 1,
+                            action: 11,
+                            advanced: false,
+                        },
+                        {
+                            id: 12,
+                            children: [
+                                {
+                                    id: 120,
+                                    children: [],
+                                    name: "Section 120",
+                                    appID: 1,
+                                    action: 120,
+                                    advanced: true,
+                                },
+                                {
+                                    id: 121,
+                                    children: [],
+                                    name: "Section 121",
+                                    appID: 1,
+                                    action: 121,
+                                    advanced: false,
+                                },
+                            ],
+                            name: "Section 12",
+                            appID: 1,
+                            advanced: false,
+                        },
+                        {
+                            id: 13,
+                            children: [
+                                {
+                                    id: 131,
+                                    children: [],
+                                    name: "Section 131",
+                                    appID: 1,
+                                    action: 131,
+                                    advanced: true,
+                                },
+                            ],
+                            name: "Section 13",
+                            appID: 1,
+                            advanced: true,
+                        },
+                    ],
+                    name: "App 1",
+                    appID: 1,
+                    advanced: false,
+                },
+                // Second App
+                {
+                    id: 2,
+                    children: [
+                        {
+                            id: 20,
+                            children: [],
+                            name: "Section 20",
+                            appID: 2,
+                            action: 20,
+                            advanced: true,
+                        },
+                    ],
+                    name: "App 2",
+                    appID: 2,
+                    advanced: true,
+                },
+            ],
+            name: "root",
+            appID: "root",
+        },
+    ]);
+
+    await makeMockEnv();
+
+    getService("menu").setCurrentMenu(1);
+
+    // advanced mode **disabled**
+    features.advanced = false;
+
+    await mountWithCleanup(NavBar);
+
+    await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
+    expect(".dropdown-menu").toHaveCount(1);
+    expect(queryAllTexts(".dropdown-menu .dropdown-item")).toEqual(["App 1"]);
+    expect(queryAllTexts(".o_menu_sections > *")).toEqual(["Section 11", "Section 12"]);
+    await contains(".o_menu_sections button.dropdown-toggle").click();
+    expect(".dropdown-menu").toHaveCount(1);
+    expect(queryAllTexts(".dropdown-menu .dropdown-item")).toEqual(["Section 121"]);
+
+    // advanced mode **enabled**
+    features.advanced = true;
+
+    await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
+    expect(".dropdown-menu").toHaveCount(1);
+    expect(queryAllTexts(".dropdown-menu .dropdown-item")).toEqual(["App 1", "App 2"]);
+    expect(queryAllTexts(".o_menu_sections > *")).toEqual([
+        "Section 10",
+        "Section 11",
+        "Section 12",
+        "Section 13",
+    ]);
+    await contains(".o_menu_sections button.dropdown-toggle").click();
+    expect(".dropdown-menu").toHaveCount(1);
+    expect(queryAllTexts(".dropdown-menu .dropdown-item")).toEqual(["Section 120", "Section 121"]);
 });

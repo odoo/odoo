@@ -1,6 +1,7 @@
 /** @odoo-module alias=@web/../tests/setup default=false */
 
 import { assets } from "@web/core/assets";
+import { features } from "@web/core/features";
 import { user, _makeUser } from "@web/core/user";
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
 import { patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -259,6 +260,10 @@ function patchSessionInfo() {
     });
 }
 
+function cleanFeatures() {
+    patchWithCleanup(features, { advanced: false });
+}
+
 function replaceAttr(attrName, prefix, element) {
     const attrKey = `${prefix}${attrName}`;
     const attrValue = element.getAttribute(attrKey);
@@ -368,6 +373,7 @@ export async function setupTests() {
         patchEventBus();
         patchOdoo();
         patchSessionInfo();
+        cleanFeatures();
         patchOwlApp();
     });
 

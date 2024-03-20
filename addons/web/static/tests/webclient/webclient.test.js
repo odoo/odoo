@@ -1,5 +1,6 @@
-import { expect, test } from "@odoo/hoot";
+import { after, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
+import { press } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 
 import {
@@ -8,6 +9,7 @@ import {
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { features } from "@web/core/features";
 import { registry } from "@web/core/registry";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -95,4 +97,18 @@ test.tags("desktop")("control-click propagation stopped on <a href/>", async () 
     await contains(".MyComponent").click({ ctrlKey: true });
 
     expect(["click"]).toVerifySteps();
+});
+
+test("can toggle advanced mode with the command palette", async () => {
+    expect(features.advanced).toBe(false);
+    after(() => (features.advanced = false));
+
+    await mountWithCleanup(WebClient);
+
+    press("control+k");
+    await animationFrame();
+    await contains(`.o_command .o_command_name[title="Toggle Advanced Mode"]`).click();
+
+    expect(".o_dialog").toHaveCount(0);
+    expect(features.advanced).toBe(true);
 });

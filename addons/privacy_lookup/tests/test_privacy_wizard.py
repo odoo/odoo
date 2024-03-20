@@ -36,7 +36,7 @@ class TestPrivacyWizard(TransactionCase):
         self.assertEqual(wizard.log_id.anonymized_name, 'R***** T**')
         self.assertEqual(wizard.log_id.anonymized_email, 'r*****.t**@gmail.com')
         self.assertEqual(wizard.log_id.execution_details, 'Archived Contact #%s' % (self.partner.id))
-        self.assertEqual(wizard.log_id.records_description, 'Contact (1): #%s' % (self.partner.id))
+        self.assertEqual(wizard.log_id.records_description, 'Contact - res.partner (1): #%s' % (self.partner.id))
 
         # Delete
         wizard.line_ids.action_unlink()

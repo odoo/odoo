@@ -2,6 +2,7 @@ import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useFeatures } from "@web/core/features";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Pager } from "@web/core/pager/pager";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
@@ -9,6 +10,7 @@ import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { getTabableElements } from "@web/core/utils/ui";
+
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
 import { getClassNameFromDecoration } from "@web/views/utils";
@@ -95,6 +97,7 @@ export class ListRenderer extends Component {
 
     setup() {
         this.uiService = useService("ui");
+        this.features = useFeatures();
         this.notificationService = useService("notification");
         this.keyOptionalFields = this.createKeyOptionalFields();
         this.cellClassByColumn = {};
@@ -142,6 +145,7 @@ export class ListRenderer extends Component {
             this.columns = this.getActiveColumns(this.props.list);
             this.withHandleColumn = this.columns.some((col) => col.widget === "handle");
         });
+
         let dataRowId;
         this.rootRef = useRef("root");
         this.resequencePromise = Promise.resolve();
@@ -247,6 +251,9 @@ export class ListRenderer extends Component {
                 return false; // no handle column if the list is grouped
             }
             if (col.optional && !this.optionalActiveFields[col.name]) {
+                return false;
+            }
+            if ("advanced" in col && col.advanced !== this.features.advanced) {
                 return false;
             }
             if (this.evalColumnInvisible(col.column_invisible)) {
@@ -598,7 +605,10 @@ export class ListRenderer extends Component {
         const propertyGroups = {};
         const optionalFields = [];
         const optionalColumns = this.allColumns.filter(
-            (col) => col.optional && !this.evalColumnInvisible(col.column_invisible)
+            (col) =>
+                col.optional &&
+                !this.evalColumnInvisible(col.column_invisible) &&
+                (!("advanced" in col) || col.advanced === this.features.advanced)
         );
         for (const col of optionalColumns) {
             const optionalField = {
@@ -625,7 +635,10 @@ export class ListRenderer extends Component {
 
     get hasOptionalFields() {
         return this.allColumns.some(
-            (col) => col.optional && !this.evalColumnInvisible(col.column_invisible)
+            (col) =>
+                col.optional &&
+                !this.evalColumnInvisible(col.column_invisible) &&
+                (!("advanced" in col) || col.advanced === this.features.advanced)
         );
     }
 
@@ -790,12 +803,18 @@ export class ListRenderer extends Component {
         if (column.widget) {
             classNames.push(`o_${column.widget}_cell`);
         }
-
         return classNames.join(" ");
     }
 
     getColumns(record) {
         return this.columns;
+    }
+
+    isButtonVisible(button, record) {
+        return (
+            (!("advanced" in button) || button.advanced === this.features.advanced) &&
+            !this.evalInvisible(button.invisible, record)
+        );
     }
 
     isNumericColumn(column) {

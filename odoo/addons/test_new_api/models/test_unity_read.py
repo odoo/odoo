@@ -10,7 +10,7 @@ class Course(models.Model):
     name = fields.Char('Name')
     lesson_ids = fields.One2many('test_new_api.lesson', 'course_id')
     author_id = fields.Many2one('test_new_api.person')
-    private_field = fields.Char(groups="base.group_no_one")
+    private_field = fields.Char(groups="base.group_multi_company")
     reference = fields.Reference(string='reference to lesson', selection='_selection_reference_model')
     m2o_reference_id = fields.Many2oneReference(string='reference to lesson too', model_field='m2o_reference_model')
     m2o_reference_model = fields.Char(string='reference to the model for m2o_reference')

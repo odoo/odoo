@@ -44,7 +44,6 @@ class LoyaltyRule(models.Model):
     currency_id = fields.Many2one(related='program_id.currency_id')
 
     # Only for dev mode
-    user_has_debug = fields.Boolean(compute='_compute_user_has_debug')
     product_domain = fields.Char(default="[]")
 
     product_ids = fields.Many2many('product.product', string='Products')
@@ -108,11 +107,6 @@ class LoyaltyRule(models.Model):
                 rule.mode = 'with_code'
             else:
                 rule.mode = 'auto'
-
-    @api.depends_context('uid')
-    @api.depends("mode")
-    def _compute_user_has_debug(self):
-        self.user_has_debug = self.env.user.has_group('base.group_no_one')
 
     def _get_valid_product_domain(self):
         self.ensure_one()

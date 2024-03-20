@@ -324,6 +324,9 @@ export function usePartnerAutocomplete() {
     }
 
     async function notifyAccountToken() {
+        if (!this.env.debug) {
+            return;
+        }
         const url = await orm.call(
             'iap.account',
             'get_config_account_url',
