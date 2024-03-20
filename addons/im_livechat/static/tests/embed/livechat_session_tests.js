@@ -69,7 +69,8 @@ test("Seen message is saved on the server", async (assert) => {
     triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello, I need help!" });
     await waitUntilSubscribe();
-    const initialSeenMessageId = env.services["im_livechat.livechat"].thread.seen_message_id;
+    const initialSeenMessageId =
+        env.services["im_livechat.livechat"].thread.selfMember.seen_message_id?.id;
     $(".o-mail-Composer-input").blur();
     await pyEnv.withUser(pyEnv.adminUserId, () =>
         rpc("/mail/message/post", {
@@ -91,7 +92,7 @@ test("Seen message is saved on the server", async (assert) => {
     ]);
     assert.notEqual(initialSeenMessageId, member.seen_message_id[0]);
     assert.strictEqual(
-        env.services["im_livechat.livechat"].thread.seen_message_id,
+        env.services["im_livechat.livechat"].thread.selfMember.seen_message_id.id,
         member.seen_message_id[0]
     );
 });

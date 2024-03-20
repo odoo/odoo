@@ -359,7 +359,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
-                "seen_message_id": False,
                 "state": "closed",
                 "uuid": channel.uuid,
             }
@@ -424,7 +423,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
-                "seen_message_id": last_message.id,
                 "state": "closed",
                 "uuid": channel.uuid,
             }
@@ -489,7 +487,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
-                "seen_message_id": last_message.id,
                 "state": "closed",
                 "uuid": channel.uuid,
             }
@@ -615,7 +612,6 @@ class TestDiscussFullPerformance(HttpCase):
                 ],
                 "custom_notifications": False,
                 "mute_until_dt": False,
-                "seen_message_id": last_message.id,
                 "state": "closed",
                 "uuid": channel.uuid,
             }
@@ -680,7 +676,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
-                "seen_message_id": last_message.id,
                 "state": "closed",
                 "uuid": channel.uuid,
             }
@@ -767,7 +762,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
-                "seen_message_id": False,
                 "state": "closed",
                 "uuid": channel.uuid,
             }
@@ -854,7 +848,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
-                "seen_message_id": False,
                 "state": "open",
                 "uuid": channel.uuid,
             }
@@ -941,7 +934,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
-                "seen_message_id": False,
                 "state": "closed",
                 "uuid": channel.uuid,
             }
@@ -1028,7 +1020,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
-                "seen_message_id": False,
                 "state": "closed",
                 "uuid": channel.uuid,
             }
@@ -1117,7 +1108,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
-                "seen_message_id": False,
                 "state": "closed",
                 "uuid": channel.uuid,
             }
@@ -1211,7 +1201,6 @@ class TestDiscussFullPerformance(HttpCase):
                     "write_date": write_date_0,
                 },
                 "rtcSessions": [["ADD", []]],
-                "seen_message_id": False,
                 "state": "closed",
                 "uuid": channel.uuid,
             }
@@ -1296,7 +1285,6 @@ class TestDiscussFullPerformance(HttpCase):
                     "write_date": write_date_0,
                 },
                 "rtcSessions": [["ADD", []]],
-                "seen_message_id": False,
                 "state": "closed",
                 "uuid": channel.uuid,
             }

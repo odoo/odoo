@@ -224,8 +224,6 @@ export class Thread extends Record {
     });
     /** @type {string} */
     name;
-    /** @type {number|false} */
-    seen_message_id;
     selfMember = Record.one("ChannelMember", {
         inverse: "threadAsSelf",
     });

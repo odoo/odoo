@@ -113,17 +113,23 @@ export class DiscussCoreCommon {
                 const { channel_id, guest_id, id, last_message_id, partner_id } = payload;
                 const member = this.store.ChannelMember.insert({
                     id,
-                    seen_message_id: { id: last_message_id },
+                    seen_message_id: last_message_id ? { id: last_message_id } : null,
                     persona: { type: partner_id ? "partner" : "guest", id: partner_id ?? guest_id },
                     thread: { id: channel_id, model: "discuss.channel" },
                 });
                 if (member?.persona.eq(this.store.self)) {
-                    this.threadService.updateSeen(member.thread, last_message_id);
+                    this.threadService.updateSeen(
+                        member.thread,
+                        last_message_id ? this.store.Message.get(last_message_id) : null
+                    );
                 }
             });
             this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
                 if (message.thread) {
-                    if (message.id > message.thread.seen_message_id) {
+                    if (
+                        !message.thread.selfMember?.seen_message_id ||
+                        message.id > message.thread.selfMember.seen_message_id.id
+                    ) {
                         message.thread.message_unread_counter--;
                     }
                 }
@@ -187,7 +193,7 @@ export class DiscussCoreCommon {
         if (!channel) {
             return;
         }
-        this.store.Message.get(messageData.temporary_id)?.delete();
+        const temporaryId = messageData.temporary_id;
         messageData.temporary_id = null;
         let message = this.store.Message.get(messageData.id);
         const alreadyInNeedaction = message?.in(message.thread?.needactionMessages);
@@ -199,7 +205,7 @@ export class DiscussCoreCommon {
                 channel.pendingNewMessages.push(message);
             }
             if (message.isSelfAuthored) {
-                channel.seen_message_id = message.id;
+                channel.selfMember.seen_message_id = message;
             } else {
                 if (notifId > this.store.initBusId) {
                     channel.incrementUnreadCounter();
@@ -218,6 +224,9 @@ export class DiscussCoreCommon {
                 }
             }
         }
+        // Only delete the temporary message now that seen_message_id is updated
+        // to avoid flickering.
+        this.store.Message.get(temporaryId)?.delete();
         if (
             !channel.correspondent?.eq(this.store.odoobot) &&
             channel.channel_type !== "channel" &&

@@ -751,16 +751,12 @@ test("first unseen message should be directly preceded by the new message separa
             Command.create({ partner_id: serverState.partnerId }),
         ],
     });
-    pyEnv["mail.message"].create([
-        {
-            body: "not empty",
-            model: "discuss.channel",
-            res_id: channelId,
-        },
-    ]);
     const env = await start();
     rpc = rpcWithEnv(env);
     await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "not empty");
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message", { text: "not empty" });
     // send a command that leads to receiving a transient message
     await insertText(".o-mail-Composer-input", "/who");
     await click(".o-mail-Composer-send:enabled");
@@ -777,7 +773,7 @@ test("first unseen message should be directly preceded by the new message separa
     );
     await contains(".o-mail-Message", { count: 3 });
     await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
-    await contains(".o-mail-Message[aria-label='Note'] + .o-mail-Thread-newMessage");
+    await contains(".o-mail-Message:not([aria-label='Note']) + .o-mail-Thread-newMessage");
 });
 
 test("composer should be focused automatically after clicking on the send button", async () => {
