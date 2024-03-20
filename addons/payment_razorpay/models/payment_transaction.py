@@ -39,8 +39,10 @@ class PaymentTransaction(models.Model):
 
         customer_id = self._razorpay_create_customer()['id']
         order_id = self._razorpay_create_order(customer_id)['id']
+        # razorpay_public_token = self._get_razorpay_public_token()
         return {
             'razorpay_key_id': self.provider_id.razorpay_key_id,
+            'razorpay_public_token': self.provider_id.razorpay_public_token,
             'razorpay_customer_id': customer_id,
             'is_tokenize_request': self.tokenize,
             'razorpay_order_id': order_id,
