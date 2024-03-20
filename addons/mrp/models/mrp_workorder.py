@@ -3,7 +3,7 @@
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from collections import defaultdict
+from collections import defaultdict, deque
 import json
 
 from odoo import api, fields, models, _, SUPERUSER_ID
@@ -153,15 +153,19 @@ class MrpWorkorder(models.Model):
         # Force to compute the production_availability right away.
         # It is a trick to force that the state of workorder is computed at the end of the
         # cyclic depends with the mo.state, mo.reservation_state and wo.state and avoid recursion error
-        self.mapped('production_availability')
+        # self.mapped('production_availability')
         for workorder in self:
+            if workorder.state in ('done', 'cancel'):
+                continue # As done & cancel are explicitely written, avoid further recursion
+            if workorder.env.context.get('bypass_state_calculation'):
+                continue
             if workorder.state == 'pending':
-                if all([wo.state in ('done', 'cancel') for wo in workorder.blocked_by_workorder_ids]):
+                if self._is_dependency_solved():
                     workorder.state = 'ready' if workorder.production_availability == 'assigned' else 'waiting'
                     continue
             if workorder.state not in ('waiting', 'ready'):
                 continue
-            if not all([wo.state in ('done', 'cancel') for wo in workorder.blocked_by_workorder_ids]):
+            if not self._is_dependency_solved():
                 workorder.state = 'pending'
                 continue
             if workorder.production_availability not in ('waiting', 'confirmed', 'assigned'):
@@ -170,6 +174,43 @@ class MrpWorkorder(models.Model):
                 workorder.state = 'ready'
             elif workorder.production_availability != 'assigned' and workorder.state == 'ready':
                 workorder.state = 'waiting'
+
+    def _is_dependency_solved(self):
+        """ TODO : Description
+        DO NOT make recursive : it may lead to a RecursionError or stack overflow
+        """
+        if not self.blocked_by_workorder_ids:
+            return True
+
+        def _check_state(wo):
+            return wo.with_context(bypass_state_calculation=True).state not in ('done', 'cancel')
+        # valid_wo_ids = self.env['mrp.workorder']._read_group([('production_id', '=', self.production_id.id), ('state', 'in', ('done', 'cancel'))], groupby=(), aggregates=['id:array_agg'])
+        known_wo_ids = set()
+        wo_stack = deque([self])  # TODO : Allow batching : "yield {wo_id: Bool}" rather than "return Bool", allow multiple stacks (each in self) but keep same set
+
+        while len(wo_stack) > 0:
+            wo = wo_stack[-1]
+            if wo.id in known_wo_ids:
+                wo_stack.pop()  # WO state has already been approved
+            else:
+                blocking_wo_ids = wo.blocked_by_workorder_ids
+                if blocking_wo_ids:
+                    if set(blocking_wo_ids.ids) in known_wo_ids:
+                        if _check_state(wo):
+                            return False
+                        known_wo_ids.add(wo.id)  # Blocking WO states have been approved so current WO is approved too
+                        wo_stack.pop()
+                    else:
+                        wo_stack.extend(wo for wo in blocking_wo_ids if wo.id not in known_wo_ids)
+                else:
+                    # if valid_wo_ids.get(wo.id, False):
+                    # if wo_states.get(wo.id, False) in ('done', 'cancel'):
+                    # if wo.env.cache.get('state', False) in ('done', 'cancel'):
+                    if _check_state(wo):
+                        return False
+                    known_wo_ids.add(wo.id)
+                    wo_stack.pop()
+        return True  # All WOs state have been approved
 
     @api.depends('production_state', 'date_start', 'date_finished')
     def _compute_json_popover(self):
