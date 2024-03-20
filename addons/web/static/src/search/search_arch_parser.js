@@ -231,13 +231,8 @@ export class SearchArchParser {
                 visitChildren();
                 preSearchItem.optionsParams = optionsParams;
                 this.optionsParams = null;
-            } else {
-                let stringRepr = "[]";
-                if (node.hasAttribute("domain")) {
-                    stringRepr = node.getAttribute("domain");
-                }
-                preSearchItem.domain = stringRepr;
             }
+            preSearchItem.domain = node.getAttribute("domain") || "[]";
         }
         if (node.hasAttribute("invisible")) {
             preSearchItem.invisible = node.getAttribute("invisible");
