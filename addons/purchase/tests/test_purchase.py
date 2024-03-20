@@ -531,3 +531,48 @@ class TestPurchase(AccountTestInvoicingCommon):
         product._invalidate_cache()
         self.assertEqual(product.seller_ids[0].partner_id, self.partner_a)
         self.assertEqual(product.seller_ids[0].company_id, company_a)
+
+    def test_orderline_supplierinfo_description(self):
+        supplierinfo_vals = {
+            'partner_id': self.partner_a.id,
+            'min_qty': 1,
+            'product_id': self.product_a.id,
+            'product_tmpl_id': self.product_a.product_tmpl_id.id,
+        }
+
+        self.env["product.supplierinfo"].create([
+            {
+                **supplierinfo_vals,
+                'price': 10,
+                'product_name': 'Name 1',
+                'product_code': 'Code 1',
+            },
+            {
+                **supplierinfo_vals,
+                'price': 20,
+                'product_name': 'Name 2',
+                'product_code': 'Code 2',
+            },
+            {
+                'partner_id': self.partner_a.id,
+                'min_qty': 1,
+                'product_id': self.product_b.id,
+                'product_tmpl_id': self.product_b.product_tmpl_id.id,
+                'price': 5,
+                'product_name': 'Name 3',
+                'product_code': 'Code 3',
+            }
+        ])
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_a
+            line.product_qty = 1
+        po = po_form.save()
+        self.assertEqual(po.order_line.name, '[Code 1] Name 1')
+
+        with po_form.order_line.edit(0) as line:
+            line.product_id = self.product_b
+        po = po_form.save()
+        self.assertEqual(po.order_line.name, '[Code 3] Name 3')
