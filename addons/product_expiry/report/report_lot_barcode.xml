@@ -21,38 +21,38 @@
     <xpath expr="//t" position="replace">
         <t t-foreach="docs" t-as="lot">
             <t t-translation="off">
-^XA
+^XA^CI28
 ^FO100,50
-^A0N,44,33^FD<t t-esc="lot.product_id.display_name"/>^FS
+^A0N,44,33^FD<t t-out="lot['display_name_markup']"/>^FS
 ^FO100,100
-^A0N,44,33^FDLN/SN: <t t-esc="lot.name"/>^FS
-<t t-if="lot.use_expiration_date and lot.use_date">
+^A0N,44,33^FDLN/SN: <t t-out="lot['name']"/>^FS
+<t t-if="lot['lot_record'].use_expiration_date and lot['lot_record'].use_date">
 ^FO100,150
-^A0N,44,33^FDBest before: <t t-esc="lot.use_date" t-options='{"widget": "date"}'/>^FS
-<t t-if="lot.expiration_date">
+^A0N,44,33^FDBest before: <t t-out="lot['lot_record'].use_date" t-options='{"widget": "date"}'/>^FS
+<t t-if="lot['lot_record'].expiration_date">
 ^FO100,200
-^A0N,44,33^FDUse by: <t t-esc="lot.expiration_date" t-options='{"widget": "date"}'/>^FS
+^A0N,44,33^FDUse by: <t t-out="lot['lot_record'].expiration_date" t-options='{"widget": "date"}'/>^FS
 ^FO100,250^BY3
 ^BCN,100,Y,N,N
-^FD<t t-esc="lot.name"/>^FS
+^FD<t t-out="lot['name']"/>^FS
 </t>
 <t t-else="">
 ^FO100,200^BY3
 ^BCN,100,Y,N,N
-^FD<t t-esc="lot.name"/>^FS
+^FD<t t-out="lot['name']"/>^FS
 </t>
 </t>
-<t t-elif="lot.use_expiration_date and lot.expiration_date">
+<t t-elif="lot['lot_record'].use_expiration_date and lot['lot_record'].expiration_date">
 ^FO100,150
-^A0N,44,33^FDUse by: <t t-esc="lot.expiration_date" t-options='{"widget": "date"}'/>^FS
+^A0N,44,33^FDUse by: <t t-out="lot['lot_record'].expiration_date" t-options='{"widget": "date"}'/>^FS
 ^FO100,200^BY3
 ^BCN,100,Y,N,N
-^FD<t t-esc="lot.name"/>^FS
+^FD<t t-out="lot['name']"/>^FS
 </t>
 <t t-else="">
 ^FO100,150^BY3
 ^BCN,100,Y,N,N
-^FD<t t-esc="lot.name"/>^FS
+^FD<t t-out="lot['name']"/>^FS
 </t>
 ^XZ
             </t>
