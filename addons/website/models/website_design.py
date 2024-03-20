@@ -16,6 +16,8 @@ class WebsiteDesign(models.Model):
     btn__ripple = fields.Many2one('website.design.option', string='Button Ripple', default=lambda self: self.env.ref('website.design_option_btnripple_false'))
     header__scroll__effect = fields.Many2one('website.design.option', string='Header Scroll Effect', default=lambda self: self.env.ref('website.design_option_headerscrolleffect_standard'))
     link__underline = fields.Many2one('website.design.option', string='Link Underline', default=lambda self: self.env.ref('website.design_option_linkunderline_hover'))
+    header__template = fields.Many2one('website.design.option', string='Header Template', default=lambda self: self.env.ref('website.design_option_headertemplate_default'))
+    header__links__style = fields.Many2one('website.design.option', string='Header Links Style', default=lambda self: self.env.ref('website.design_option_headerlinksstyle_default'))
 
     paragraph__margin__top = fields.Char(string='Paragraph Margin Top', default='0')
     paragraph__margin__bottom = fields.Char(string='Paragraph Margin Bottom', default='16px')

@@ -97,5 +97,106 @@
             <field name="display_name">Always Underline</field>
             <field name="value">always</field>
         </record>
+        <!-- Header Template Options -->
+        <record id="design_option_headertemplate_default" model="website.design.option">
+            <field name="name">header__template</field>
+            <field name="display_name">Default</field>
+            <field name="value">default</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_header_default')])]"/>
+        </record>
+        <record id="design_option_headertemplate_hamburger" model="website.design.option">
+            <field name="name">header__template</field>
+            <field name="display_name">Hamburger Menu</field>
+            <field name="value">hamburger</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_header_hamburger'), ref('website.no_autohide_menu')])]"/>
+        </record>
+        <record id="design_option_headertemplate_boxed" model="website.design.option">
+            <field name="name">header__template</field>
+            <field name="display_name">Rounded box menu</field>
+            <field name="value">boxed</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.header_navbar_pills_style'), ref('website.template_header_boxed')])]"/>
+        </record>
+        <record id="design_option_headertemplate_stretch" model="website.design.option">
+            <field name="name">header__template</field>
+            <field name="display_name">Stretch Menu</field>
+            <field name="value">stretch</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_header_stretch')])]"/>
+        </record>
+        <record id="design_option_headertemplate_vertical" model="website.design.option">
+            <field name="name">header__template</field>
+            <field name="display_name">Vertical</field>
+            <field name="value">vertical</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_header_vertical')])]"/>
+        </record>
+        <record id="design_option_headertemplate_search" model="website.design.option">
+            <field name="name">header__template</field>
+            <field name="display_name">Menu with Search bar</field>
+            <field name="value">search</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_header_search')])]"/>
+        </record>
+        <record id="design_option_headertemplate_salesone" model="website.design.option">
+            <field name="name">header__template</field>
+            <field name="display_name">Menu - Sales 1</field>
+            <field name="value">sales_one</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_header_sales_one')])]"/>
+        </record>
+        <record id="design_option_headertemplate_salestwo" model="website.design.option">
+            <field name="name">header__template</field>
+            <field name="display_name">Menu - Sales 2</field>
+            <field name="value">sales_two</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_header_sales_two')])]"/>
+        </record>
+        <record id="design_option_headertemplate_salesthree" model="website.design.option">
+            <field name="name">header__template</field>
+            <field name="display_name">Menu - Sales 3</field>
+            <field name="value">sales_three</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_header_sales_three')])]"/>
+        </record>
+        <record id="design_option_headertemplate_salesfour" model="website.design.option">
+            <field name="name">header__template</field>
+            <field name="display_name">Menu - Sales 4</field>
+            <field name="value">sales_four</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_header_sales_four')])]"/>
+        </record>
+        <record id="design_option_headertemplate_sidebar" model="website.design.option">
+            <field name="name">header__template</field>
+            <field name="display_name">Sidebar</field>
+            <field name="value">sidebar</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_header_sidebar'), ref('website.no_autohide_menu')])]"/>
+        </record>
+        <!-- Header Link Style Options -->
+        <record id="design_option_headerlinksstyle_default" model="website.design.option">
+            <field name="name">header__links__style</field>
+            <field name="display_name">Default</field>
+            <field name="value">default</field>
+        </record>
+        <record id="design_option_headerlinksstyle_fill" model="website.design.option">
+            <field name="name">header__links__style</field>
+            <field name="display_name">Fill</field>
+            <field name="value">fill</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.header_navbar_pills_style')])]"/>
+        </record>
+        <record id="design_option_headerlinksstyle_outline" model="website.design.option">
+            <field name="name">header__links__style</field>
+            <field name="display_name">Outline</field>
+            <field name="value">outline</field>
+        </record>
+        <record id="design_option_headerlinksstyle_pills" model="website.design.option">
+            <field name="name">header__links__style</field>
+            <field name="display_name">Pills</field>
+            <field name="value">pills</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.header_navbar_pills_style')])]"/>
+        </record>
+        <record id="design_option_headerlinksstyle_block" model="website.design.option">
+            <field name="name">header__links__style</field>
+            <field name="display_name">Block</field>
+            <field name="value">block</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.header_navbar_pills_style')])]"/>
+        </record>
+        <record id="design_option_headerlinksstyle_borderbottom" model="website.design.option">
+            <field name="name">header__links__style</field>
+            <field name="display_name">Border Bottom</field>
+            <field name="value">border-bottom</field>
+        </record>
     </data>
 </odoo>

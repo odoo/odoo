@@ -725,82 +725,38 @@
          data-selector="#wrapwrap > header"
          data-no-check="true"
          groups="website.group_website_designer">
-        <we-select string="Template" data-variable="header-template"
-                   data-default-variables="header-links-style: default"
-                   data-reload="/" data-no-preview="true">
-            <we-button title="Default"
-                       data-name="header_default_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_default"
-                       data-customize-website-variable="'default'"
-                       data-img="/website/static/src/img/snippets_options/header_template_default.svg"/>
-            <we-button title="Hamburger menu"
-                       data-name="header_hamburger_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_hamburger, website.no_autohide_menu"
-                       data-customize-website-variable="'hamburger'"
-                       data-img="/website/static/src/img/snippets_options/header_template_hamburger.svg"/>
-            <we-button title="Rounded box menu"
-                       data-name="header_boxed_opt"
-                       data-trigger="over_content_header_visibility_opt"
-                       data-customize-website-views="website.header_navbar_pills_style,website.template_header_boxed"
-                       data-customize-website-variable="'boxed'"
-                       data-customize-website-variables="header-links-style: pills"
-                       data-img="/website/static/src/img/snippets_options/header_template_boxed.svg"/>
-            <we-button title="Stretch menu"
-                       data-name="header_stretch_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_stretch"
-                       data-customize-website-variable="'stretch'"
-                       data-img="/website/static/src/img/snippets_options/header_template_stretch.svg"/>
-            <we-button title="Vertical"
-                       data-name="header_vertical_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_vertical"
-                       data-customize-website-variable="'vertical'"
-                       data-img="/website/static/src/img/snippets_options/header_template_vertical.svg"/>
-            <we-button title="Menu with Search bar"
-                       data-name="header_search_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_search"
-                       data-customize-website-variable="'search'"
-                       data-img="/website/static/src/img/snippets_options/header_template_search.svg"/>
-            <we-button title="Menu - Sales 1"
-                       data-name="header_sales_one_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_sales_one"
-                       data-customize-website-variable="'sales_one'"
-                       data-img="/website/static/src/img/snippets_options/header_template_sales_one.svg"/>
-            <we-button title="Menu - Sales 2"
-                       data-name="header_sales_two_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_sales_two"
-                       data-customize-website-variable="'sales_two'"
-                       data-img="/website/static/src/img/snippets_options/header_template_sales_two.svg"/>
-            <we-button title="Menu - Sales 3"
-                       data-name="header_sales_three_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_sales_three"
-                       data-customize-website-variable="'sales_three'"
-                       data-img="/website/static/src/img/snippets_options/header_template_sales_three.svg"/>
-            <we-button title="Menu - Sales 4"
-                       data-name="header_sales_four_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_sales_four"
-                       data-customize-website-variable="'sales_four'"
-                       data-img="/website/static/src/img/snippets_options/header_template_sales_four.svg"/>
-            <we-button title="Sidebar"
-                       data-name="header_sidebar_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_sidebar, website.no_autohide_menu"
-                       data-customize-website-variable="'sidebar'"
-                       data-img="/website/static/src/img/snippets_options/header_template_sidebar.svg"/>
-        </we-select>
+        <!-- TODO: make the data-trigger work with the `header__links__style` stuff (maybe by merging calls ?) -->
+        <we-designoptionselector string="Template" data-variable="header__template" data-reload="/" data-no-preview="true" data-text-mode="title">
+            <attribute target="[data-name='header__template_default_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_default.svg"/>
+            <attribute target="[data-name='header__template_hamburger_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_hamburger.svg"/>
+            <attribute target="[data-name='header__template_boxed_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_boxed.svg"/>
+            <attribute target="[data-name='header__template_stretch_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_stretch.svg"/>
+            <attribute target="[data-name='header__template_vertical_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_vertical.svg"/>
+            <attribute target="[data-name='header__template_search_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_search.svg"/>
+            <attribute target="[data-name='header__template_sales_one_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_sales_one.svg"/>
+            <attribute target="[data-name='header__template_sales_two_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_sales_two.svg"/>
+            <attribute target="[data-name='header__template_sales_three_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_sales_three.svg"/>
+            <attribute target="[data-name='header__template_sales_four_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_sales_four.svg"/>
+            <attribute target="[data-name='header__template_sidebar_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_sidebar.svg"/>
+
+            <attribute target="[data-name='header__template_default_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_hamburger_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_boxed_opt']" name="data-trigger" value="header__links__style_pills_opt, over_content_header_visibility_opt"/>
+
+            <attribute target="[data-name='header__template_stretch_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_vertical_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_search_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_sales_one_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_sales_two_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_sales_three_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_sales_four_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_sidebar_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+        </we-designoptionselector>
 
         <!-- Header Sidebar Template - Options -->
         <we-input string="Width"
                   class="o_we_sublevel_1"
-                  data-dependencies="header_sidebar_opt"
+                  data-dependencies="header__template_sidebar_opt"
                   data-customize-website-variable="null"
                   data-variable="sidebar__width"
                   data-unit="px"
@@ -813,28 +769,28 @@
                             data-null-value="'NULL'"
                             data-with-combinations="customizeWebsiteColor"
                             data-with-gradients="true"/>
-            <we-colorpicker data-dependencies="header_sales_one_opt"
+            <we-colorpicker data-dependencies="header__template_sales_one_opt"
                             data-customize-website-color="" data-color="header-sales_one"
                             data-customize-website-layer2-color="" data-layer-color="header-sales_one-custom" data-layer-gradient="menu-secondary-gradient"
                             data-no-bundle-reload="true"
                             data-null-value="'NULL'"
                             data-with-combinations="customizeWebsiteColor"
                             data-with-gradients="true"/>
-            <we-colorpicker data-dependencies="header_sales_two_opt"
+            <we-colorpicker data-dependencies="header__template_sales_two_opt"
                             data-customize-website-color="" data-color="header-sales_two"
                             data-customize-website-layer2-color="" data-layer-color="header-sales_two-custom" data-layer-gradient="menu-secondary-gradient"
                             data-no-bundle-reload="true"
                             data-null-value="'NULL'"
                             data-with-combinations="customizeWebsiteColor"
                             data-with-gradients="true"/>
-            <we-colorpicker data-dependencies="header_sales_three_opt"
+            <we-colorpicker data-dependencies="header__template_sales_three_opt"
                             data-customize-website-color="" data-color="header-sales_three"
                             data-customize-website-layer2-color="" data-layer-color="header-sales_three-custom" data-layer-gradient="menu-secondary-gradient"
                             data-no-bundle-reload="true"
                             data-null-value="'NULL'"
                             data-with-combinations="customizeWebsiteColor"
                             data-with-gradients="true"/>
-            <we-colorpicker data-dependencies="header_sales_four_opt"
+            <we-colorpicker data-dependencies="header__template_sales_four_opt"
                             data-customize-website-color="" data-color="header-sales_four"
                             data-customize-website-layer2-color="" data-layer-color="header-sales_four-custom" data-layer-gradient="menu-secondary-gradient"
                             data-no-bundle-reload="true"
@@ -868,7 +824,7 @@
     <div data-selector="#wrapwrap > header"
          data-no-check="true"
          groups="website.group_website_designer">
-        <we-designoptionselector string="Scroll Effect" data-dependencies="!header_sidebar_opt" class="o_scroll_effects_selector" data-variable="header__scroll__effect">
+        <we-designoptionselector string="Scroll Effect" data-dependencies="!header__template_sidebar_opt" class="o_scroll_effects_selector" data-variable="header__scroll__effect">
             <attribute target="*" name="class" value="o_we_img_animate"/>
             <attribute target="[data-name='header__scroll__effect_standard_opt']" name="data-select-class" value="o_header_standard"/>
             <attribute target="[data-name='header__scroll__effect_standard_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_effect_standard.png"/>
@@ -887,7 +843,7 @@
          data-selector="[data-main-object^='website.page('] #wrapwrap > header"
          data-no-check="true">
         <we-select string="Header Position" data-no-preview="true"
-                   data-dependencies="!header_sidebar_opt">
+                   data-dependencies="!header__template_sidebar_opt">
             <we-button data-name="over_content_header_visibility_opt"
                        data-visibility="transparent">Over The Content</we-button>
             <we-button data-name="regular_header_visibility_opt"
@@ -999,28 +955,9 @@
             </we-select>
         </we-row>
 
-        <we-select string="Links Style" data-variable="header-links-style" data-reload="/" data-dependencies="!header_stretch_opt">
-            <we-button data-name="option_header_navbar_links_default"
-                       data-customize-website-views=""
-                       data-customize-website-variable="'default'">Default</we-button>
-            <we-button data-name="option_header_navbar_links_fill"
-                       data-customize-website-views="website.header_navbar_pills_style"
-                       data-customize-website-variable="'fill'">Fill</we-button>
-            <we-button data-name="option_header_navbar_links_outline"
-                       data-customize-website-views=""
-                       data-customize-website-variable="'outline'">Outline</we-button>
-            <we-button data-name="option_header_navbar_links_pills"
-                       data-customize-website-views="website.header_navbar_pills_style"
-                       data-customize-website-variable="'pills'">Pills</we-button>
-            <we-button data-name="option_header_navbar_block"
-                       data-customize-website-views="website.header_navbar_pills_style"
-                       data-customize-website-variable="'block'">Block</we-button>
-            <we-button data-name="option_header_navbar_border_bottom"
-                       data-customize-website-views=""
-                       data-customize-website-variable="'border-bottom'">Border Bottom</we-button>
-        </we-select>
+        <we-designoptionselector string="Links Style" data-variable="header__links__style" data-reload="/" data-dependencies="!header__template_stretch_opt"/>
 
-        <we-select id="option_header_dropdown" string="Sub Menus" data-dependencies="!header_hamburger_opt" data-no-preview="true">
+        <we-select id="option_header_dropdown" string="Sub Menus" data-dependencies="!header__template_hamburger_opt" data-no-preview="true">
             <we-button data-select-class="o_hoverable_dropdown"
                        data-customize-website-views="website.header_hoverable_dropdown">On Hover</we-button>
             <we-button data-select-class="" data-name="header_dropdown_on_click_opt">On Click</we-button>
