@@ -22,7 +22,7 @@ Odoo Web Editor widget.
         # MAIN BUNDLES
         #----------------------------------------------------------------------
 
-        'web_editor.assets_legacy_wysiwyg': [
+        'web_editor.assets_snippets_menu': [
             'web_editor/static/src/js/editor/snippets.editor.js',
             'web_editor/static/src/js/editor/snippets.options.js',
         ],
@@ -268,7 +268,7 @@ Odoo Web Editor widget.
         # ----------------------------------------------------------------------
 
         'web.qunit_suite_tests': [
-            ('include', 'web_editor.assets_legacy_wysiwyg'),
+            ('include', 'web_editor.assets_snippets_menu'),
             ('include', 'web_editor.backend_assets_wysiwyg'),
 
             'web_editor/static/tests/**/*',

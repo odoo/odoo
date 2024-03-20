@@ -37,7 +37,7 @@ This module provides the core of the Odoo Web Client.
         # 3) an arbitrary name, relevant to the content of the bundle.
         #
         # Examples:
-        #   > web_editor.assets_legacy_wysiwyg = assets needed by components defined in the "web_editor" module.
+        #   > web_editor.assets_snippets_menu = assets needed by components defined in the "web_editor" module.
 
         'web.assets_emoji': [
             'web/static/src/core/emoji_picker/emoji_data.js'
