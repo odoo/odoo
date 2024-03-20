@@ -1127,6 +1127,10 @@ class Meeting(models.Model):
         """ Delete the current recurrence, reactivate base event and apply updated recurrence values. """
         self.ensure_one()
         base_event = self.recurrence_id.base_event_id
+        # Edge case: needed when the base_event is archived (recurrence_id = False), to ensure events gets archived
+        if not base_event.recurrence_id:
+            self.recurrence_id._select_new_base_event()
+            base_event = self.recurrence_id.base_event_id
         update_dict = self._get_time_update_dict(base_event, time_values)
         time_values.update(update_dict)
 

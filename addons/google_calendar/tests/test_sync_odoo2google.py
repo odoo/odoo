@@ -757,3 +757,32 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
             'transparency': 'opaque',
         })
+
+    @patch_api
+    def test_google_old_events_are_archived(self):
+        """
+            In scenarios where the start day of an event differs from its
+            recurrence day, this test verifies that upon updating the recurrence,
+            old events in google calendar are archived.
+        """
+        google_id = 'aaaaaaaaa'
+        event = self.env['calendar.event'].create({
+            'name': "Event",
+            'start': datetime(2020, 1, 15, 10, 0),
+            'stop': datetime(2020, 1, 15, 10, 0),
+            'need_sync': False,
+        })
+        recurrence = self.env['calendar.recurrence'].create({
+            'google_id': google_id,
+            'rrule': 'FREQ=MONTHLY;COUNT=3;BYMONTHDAY=1',
+            'base_event_id': event.id,
+            'need_sync': False,
+        })
+        recurrence._apply_recurrence()
+        old_events = recurrence.calendar_event_ids
+        old_events[0].write({
+            'recurrence_update': 'all_events',
+            'day': 2,
+        })
+        self.assertGoogleEventDeleted(google_id)
+        self.assertEqual([False, False, False], old_events.mapped('active'))

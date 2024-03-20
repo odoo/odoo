@@ -118,6 +118,10 @@ class RecurrenceRule(models.Model):
                 attendees = existing_attendees.exists().filtered(lambda att: att.email == email_normalize(odoo_attendee_email) and att.partner_id not in organizers_partner_ids)
                 self.calendar_event_ids.write({'need_sync': False, 'partner_ids': [Command.unlink(att.partner_id.id) for att in attendees]})
 
+        # Edge case: needed when the base_event is archived
+        if not self.base_event_id.recurrence_id:
+            self._select_new_base_event()
+        # Update the recurrence values
         old_event_values = self.base_event_id and self.base_event_id.read(base_event_time_fields)[0]
         if old_event_values and any(new_event_values[key] != old_event_values[key] for key in base_event_time_fields):
             # we need to recreate the recurrence, time_fields were modified.

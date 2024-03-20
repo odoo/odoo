@@ -844,3 +844,39 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
             (datetime(2019, 11, 25, 1, 0), datetime(2019, 11, 27, 18, 0)),
             (datetime(2019, 12, 25, 1, 0), datetime(2019, 12, 27, 18, 0)),
         ])
+
+    def test_old_events_archived_all_events_updated(self):
+        """
+            In scenarios where the start day of an event differs from its
+            recurrence day, this test verifies that upon updating the recurrence,
+            old events are archived, and new ones are accurately created.
+        """
+        # create an event where start day is different than recurring rule day, it will be detached.
+        detached_event = self.env['calendar.event'].create({
+            'name': 'Recurrent Event',
+            'start': datetime(2024, 3, 22, 1, 0),
+            'stop': datetime(2024, 3, 22, 18, 0),
+            'recurrency': True,
+            'rrule_type': 'monthly',
+            'interval': 1,
+            'count': 3,
+            'month_by': 'date',
+            'day': 1,
+            'event_tz': 'Etc/GMT-4',
+        })
+        old_recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', detached_event.id)])
+        old_events = old_recurrence.calendar_event_ids
+        # change the rule day
+        old_events[0].write({
+            'recurrence_update': 'all_events',
+            'day': 2,
+        })
+        # check new events are created correctly
+        new_recurrence = self.env['calendar.recurrence'].search([('id', '>', old_recurrence.id)])
+        self.assertEventDates(new_recurrence.calendar_event_ids, [
+            (datetime(2024, 4, 2, 1, 0), datetime(2024, 4, 2, 18, 0)),
+            (datetime(2024, 5, 2, 1, 0), datetime(2024, 5, 2, 18, 0)),
+            (datetime(2024, 6, 2, 1, 0), datetime(2024, 6, 2, 18, 0)),
+        ])
+        # check old events are archived
+        self.assertEqual([False, False, False], old_events.mapped('active'))
