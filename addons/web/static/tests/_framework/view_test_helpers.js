@@ -116,6 +116,7 @@ class ViewDialog extends Component {
     static props = {
         viewEnv: Object,
         viewProps: Object,
+        close: Function,
     };
 
     static template = xml`
