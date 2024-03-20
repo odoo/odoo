@@ -34,10 +34,26 @@ class PaymentTransaction(models.Model):
         for trans in self:
             trans.sale_order_ids_nbr = len(trans.sale_order_ids)
 
-    def _finalize_post_processing(self):
+    def _post_process(self):
 
-        super()._finalize_post_processing()
+        super()._post_process()
         for tx in self:
+            if tx.state == 'done':
+                confirmed_orders = self._check_amount_and_confirm_order()
+                confirmed_orders._send_order_confirmation_mail()  # in case of validation it is empty
+                (
+                            self.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()  # this is problematic for subscription but maubr not if in confirmed orders will be tje order we are doing
+                # if addind payment method then there is no sale_order
+
+                auto_invoice = str2bool(
+                    self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'))
+                if auto_invoice:
+                    # Invoice the sale orders in self instead of in confirmed_orders to create the invoice
+                    # even if only a partial payment was made.
+                    self._invoice_sale_orders()
+                if auto_invoice:
+                    # Must be called after the super() call to make sure the invoice are correctly posted.
+                    self._send_invoice()
             if tx.state == 'pending':  # Consider only transactions that are indeed set pending.
                 sales_orders = tx.sale_order_ids.filtered(lambda so: so.state in ['draft', 'sent'])
                 sales_orders.filtered(
@@ -101,22 +117,6 @@ class PaymentTransaction(models.Model):
         for order in self.sale_order_ids or self.source_transaction_id.sale_order_ids:
             order.message_post(body=message)
 
-    def _reconcile_after_done(self):
-        """ Override of payment to automatically confirm quotations and generate invoices. """
-        confirmed_orders = self._check_amount_and_confirm_order()
-        confirmed_orders._send_order_confirmation_mail()
-        (self.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
-
-        auto_invoice = str2bool(
-            self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'))
-        if auto_invoice:
-            # Invoice the sale orders in self instead of in confirmed_orders to create the invoice
-            # even if only a partial payment was made.
-            self._invoice_sale_orders()
-        super()._reconcile_after_done()
-        if auto_invoice:
-            # Must be called after the super() call to make sure the invoice are correctly posted.
-            self._send_invoice()
 
     def _send_invoice(self):
         template_id = int(self.env['ir.config_parameter'].sudo().get_param(

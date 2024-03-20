@@ -93,27 +93,37 @@ class PaymentTransaction(models.Model):
 
     #=== BUSINESS METHODS - POST-PROCESSING ===#
 
-    def _reconcile_after_done(self):
-        """ Post relevant fiscal documents and create missing payments.
-
-        As there is nothing to reconcile for validation transactions, no payment is created for
-        them. This is also true for validations with a validity check (transfer of a small amount
-        with immediate refund) because validation amounts are not included in payouts.
-
-        As the reconciliation is done in the child transactions for partial voids and captures, no
-        payment is created for their source transactions.
+    def _post_process(self):
+        """ Override of `payment`. Write a message in the chatter with the
+        payment and transaction references for done transactions or cancel invoice for canceled
+        transactions.
 
         :return: None
         """
-        super()._reconcile_after_done()
+        super()._post_process()
+        for tx in self:
+            if tx.state == 'done':
+                # Validate invoices automatically once the transaction is confirmed
+                self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
 
-        # Validate invoices automatically once the transaction is confirmed
-        self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
+                # Create and post missing payments for transactions requiring reconciliation
+                if (tx.operation != 'validation'
+                        and not tx.payment_id
+                        and not any(child.state in ['done', 'cancel'] for child
+                                    in tx.child_transaction_ids)):
+                    tx._create_payment()
 
-        # Create and post missing payments for transactions requiring reconciliation
-        for tx in self.filtered(lambda t: t.operation != 'validation' and not t.payment_id):
-            if not any(child.state in ['done', 'cancel'] for child in tx.child_transaction_ids):
-                tx._create_payment()
+                if tx.payment_id:
+                    message = _(
+                        "The payment related to the transaction with reference %(ref)s has been"
+                        " posted: %(link)s",
+                        ref=tx.reference,
+                        link=tx.payment_id._get_html_link(),
+                    )
+                    tx._log_message_on_linked_documents(message)
+
+            elif tx.state == 'cancel':
+                tx.payment_id.action_cancel()
 
     def _create_payment(self, **extra_create_values):
         """Create an `account.payment` record for the current transaction.
@@ -193,25 +203,3 @@ class PaymentTransaction(models.Model):
                 payment_id.message_post(body=message)
         for invoice in self.invoice_ids:
             invoice.message_post(body=message)
-
-    #=== BUSINESS METHODS - POST-PROCESSING ===#
-
-    def _finalize_post_processing(self):
-        """ Override of `payment`. Write a message in the chatter with the
-        payment and transaction references for done transactions or cancel invoice for canceled
-        transactions.
-
-        :return: None
-        """
-        super()._finalize_post_processing()
-        for tx in self.filtered('payment_id'):
-            if tx.state == 'done':
-                message = _(
-                    "The payment related to the transaction with reference %(ref)s has been"
-                    " posted: %(link)s",
-                    ref=tx.reference,
-                    link=tx.payment_id._get_html_link(),
-                )
-                tx._log_message_on_linked_documents(message)
-            elif tx.state == 'cancel':
-                tx.payment_id.action_cancel()

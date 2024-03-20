@@ -902,7 +902,7 @@ class PaymentTransaction(models.Model):
             ])
         for tx in txs_to_post_process:
             try:
-                tx._finalize_post_processing()
+                tx._post_process()
                 self.env.cr.commit()
             except psycopg2.OperationalError:
                 self.env.cr.rollback()  # Rollback and try later.
@@ -913,23 +913,12 @@ class PaymentTransaction(models.Model):
                 )
                 self.env.cr.rollback()
 
-    def _finalize_post_processing(self):
+    def _post_process(self):
         """ Trigger the final post-processing tasks and mark the transactions as post-processed.
 
         :return: None
         """
-        self.filtered(lambda tx: tx.operation != 'validation' and tx.state == 'done')._reconcile_after_done()
         self.is_post_processed = True
-
-    def _reconcile_after_done(self):
-        """ Perform compute-intensive operations on related documents.
-
-        For a provider to handle transaction post-processing, it must overwrite this method and
-        execute its compute-intensive operations on documents linked to confirmed transactions.
-
-        :return: None
-        """
-        return
 
     #=== BUSINESS METHODS - LOGGING ===#
 

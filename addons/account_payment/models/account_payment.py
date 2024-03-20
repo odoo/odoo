@@ -132,7 +132,7 @@ class AccountPayment(models.Model):
             tx._send_payment_request()
 
         # Post payments for issued transactions
-        transactions._finalize_post_processing()
+        transactions._post_process()
         payments_tx_done = payments_need_tx.filtered(
             lambda p: p.payment_transaction_id.state == 'done'
         )
