@@ -37,7 +37,11 @@ threadActionsRegistry
     })
     .add("expand-form", {
         condition(component) {
-            return component.thread?.type === "chatter" && component.props.chatWindow?.isOpen;
+            return (
+                component.thread &&
+                !["mail.box", "discuss.channel"].includes(component.thread.model) &&
+                component.props.chatWindow?.isOpen
+            );
         },
         icon: "fa fa-fw fa-expand",
         name: _t("Open Form View"),

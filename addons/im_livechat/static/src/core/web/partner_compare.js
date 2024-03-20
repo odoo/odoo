@@ -3,7 +3,7 @@ import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
 partnerCompareRegistry.add(
     "im_livechat.available",
     (p1, p2, { thread }) => {
-        if (thread?.type === "livechat" && p1.is_available !== p2.is_available) {
+        if (thread?.channel_type === "livechat" && p1.is_available !== p2.is_available) {
             return p1.is_available ? -1 : 1;
         }
     },
@@ -13,7 +13,10 @@ partnerCompareRegistry.add(
 partnerCompareRegistry.add(
     "im_livechat.invite-count",
     (p1, p2, { thread }) => {
-        if (thread?.type === "livechat" && p1.invite_by_self_count !== p2.invite_by_self_count) {
+        if (
+            thread?.channel_type === "livechat" &&
+            p1.invite_by_self_count !== p2.invite_by_self_count
+        ) {
             return p2.invite_by_self_count - p1.invite_by_self_count;
         }
     },

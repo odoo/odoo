@@ -23,7 +23,7 @@ export class DiscussChannelListController extends ListController {
             model: "discuss.channel",
             id: record.resId,
         });
-        if (!thread?.type) {
+        if (!thread?.channel_type) {
             thread = await this.threadService.fetchChannel(record.resId);
         }
         if (thread) {

@@ -134,7 +134,8 @@ export class Thread extends Record {
     displayToSelf = Record.attr(false, {
         compute() {
             return (
-                this.is_pinned || (["channel", "group"].includes(this.type) && this.hasSelfAsMember)
+                this.is_pinned ||
+                (["channel", "group"].includes(this.channel_type) && this.hasSelfAsMember)
             );
         },
         onUpdate() {
@@ -241,25 +242,11 @@ export class Thread extends Record {
              * only the thread type. In particular for chatter, it should depend
              * whether it is displayed in chatter or chat window.
              */
-            return this.type === "chatter" ? 0 : "bottom";
+            return ["mail.box", "discuss.channel"].includes(this.model) ? "bottom" : 0;
         },
     });
     showOnlyVideo = false;
     transientMessages = Record.many("Message");
-    /** @type {'channel'|'chat'|'chatter'|'livechat'|'group'|'mailbox'} */
-    type = Record.attr("", {
-        /** @this {import("models").Thread} */
-        compute() {
-            if (this.model === "discuss.channel") {
-                return this.channel_type;
-            }
-            if (this.model === "mail.box") {
-                return "mailbox";
-            }
-            return "chatter";
-        },
-        eager: true,
-    });
     discussAppCategory = Record.one("DiscussAppCategory", {
         compute() {
             return this._computeDiscussAppCategory();

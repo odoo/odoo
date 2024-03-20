@@ -7,7 +7,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Composer.prototype, {
     get placeholder() {
-        if (this.thread?.type !== "livechat") {
+        if (this.thread?.channel_type !== "livechat") {
             return super.placeholder;
         }
         return options.input_placeholder || _t("Say something...");

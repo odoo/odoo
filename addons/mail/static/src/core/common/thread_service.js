@@ -163,7 +163,7 @@ export class ThreadService {
      */
     async fetchMessages(thread, { after, before } = {}) {
         thread.status = "loading";
-        if (thread.type === "chatter" && !thread.id) {
+        if (!["mail.box", "discuss.channel"].includes(thread.model) && !thread.id) {
             thread.isLoaded = true;
             return [];
         }
@@ -458,12 +458,14 @@ export class ThreadService {
             partner_ids: [this.store.self.id],
         });
         const thread = this.store.Thread.insert({
+            channel_type: "channel",
             id,
             model: "discuss.channel",
             name,
-            channel_type: "channel",
-            channel: { avatarCacheKey: "hello" },
         });
+        if (!thread.avatarCacheKey) {
+            thread.avatarCacheKey = "hello";
+        }
         this.open(thread);
         return thread;
     }
@@ -584,7 +586,7 @@ export class ThreadService {
         if (parentId) {
             params.post_data.parent_id = parentId;
         }
-        if (thread.type === "chatter") {
+        if (thread.model !== "discuss.channel") {
             params.thread_id = thread.id;
             params.thread_model = thread.model;
         } else {
