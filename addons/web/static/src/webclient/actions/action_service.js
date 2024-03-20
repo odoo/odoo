@@ -1142,8 +1142,7 @@ export function makeActionManager(env, router = _router) {
                 action,
                 ..._getActionInfo(action, options.props),
             };
-            controller.displayName ||=
-                clientAction.displayName?.toString() || clientAction.name || "";
+            controller.displayName ||= clientAction.displayName?.toString() || "";
             const updateUIOptions = {
                 index: options.index,
                 clearBreadcrumbs: options.clearBreadcrumbs,
