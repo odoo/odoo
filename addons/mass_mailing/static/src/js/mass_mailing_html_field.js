@@ -10,10 +10,9 @@ import { loadBundle } from "@web/core/assets";
 import { renderToElement } from "@web/core/utils/render";
 import { useService } from "@web/core/utils/hooks";
 import { HtmlField, htmlField } from "@web_editor/js/backend/html_field";
-import { MassMailingMobilePreviewDialog } from "./mass_mailing_mobile_preview";
 import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { utils as uiUtils } from "@web/core/ui/ui_service";
-import { useSubEnv, status, markup } from "@odoo/owl";
+import { useSubEnv, status } from "@odoo/owl";
 
 export class MassMailingHtmlField extends HtmlField {
     static props = {
@@ -250,21 +249,6 @@ export class MassMailingHtmlField extends HtmlField {
             }
             this.wysiwyg.snippetsMenu.activateSnippet(false);
             this.onIframeUpdated();
-        });
-        const $previewBtn = $snippetsSideBar.find('.o_mobile_preview_btn');
-        $previewBtn.off('click');
-        $previewBtn.on('click', () => {
-            $previewBtn.prop('disabled', true); // Prevent double execution when double-clicking on the button
-            let mailingHtml = new DOMParser().parseFromString(this.wysiwyg.getValue(), 'text/html');
-            [...mailingHtml.querySelectorAll('a')].forEach(el => {
-                el.style.setProperty('pointer-events', 'none');
-            });
-            this.mobilePreview = this.dialog.add(MassMailingMobilePreviewDialog, {
-                title: _t("Mobile Preview"),
-                preview: markup(mailingHtml.body.innerHTML),
-            }, {
-                onClose: () => $previewBtn.prop('disabled', false),
-            });
         });
 
         if (!this._themeParams) {

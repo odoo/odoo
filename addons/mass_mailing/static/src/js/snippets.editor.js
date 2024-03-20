@@ -2,10 +2,13 @@
 
 import { _t } from "@web/core/l10n/translation";
 import snippetsEditor from "@web_editor/js/editor/snippets.editor";
+import { MassMailingMobilePreviewDialog } from "./mass_mailing_mobile_preview";
+import { markup } from "@odoo/owl";
 
 export const MassMailingSnippetsMenu = snippetsEditor.SnippetsMenu.extend({
     events: Object.assign({}, snippetsEditor.SnippetsMenu.prototype.events, {
         'click .o_we_customize_design_btn': '_onDesignTabClick',
+        'click .o_mobile_preview_btn': '_onMobilePreviewBtnClick',
     }),
     custom_events: Object.assign({}, snippetsEditor.SnippetsMenu.prototype.custom_events, {
         drop_zone_over: '_onDropZoneOver',
@@ -194,6 +197,25 @@ export const MassMailingSnippetsMenu = snippetsEditor.SnippetsMenu.extend({
             }
             throw e;
         }
+    },
+    /**
+     * Display the mobile preview dialog with the current mailing content.
+     *
+     * @param {PointerEvent} ev
+     */
+    _onMobilePreviewBtnClick(ev) {
+        const previewBtn = ev.target.closest('.o_mobile_preview_btn');
+        previewBtn.setAttribute("disabled", true); // Prevent double execution when double-clicking on the button
+        const mailingHtml = new DOMParser().parseFromString(this.options.wysiwyg.getValue(), 'text/html');
+        [...mailingHtml.querySelectorAll('a')].forEach(el => {
+            el.style.setProperty('pointer-events', 'none');
+        });
+        this.mobilePreview = this.dialog.add(MassMailingMobilePreviewDialog, {
+            title: _t("Mobile Preview"),
+            preview: markup(mailingHtml.body.innerHTML),
+        }, {
+            onClose: () => previewBtn.removeAttribute("disabled"),
+        });
     },
 });
 
