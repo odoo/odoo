@@ -12,7 +12,10 @@ export const pttExtensionHookService = {
 
         browser.addEventListener("message", ({ data }) => {
             const rtc = env.services["discuss.rtc"];
-            if (data.from !== "discuss-push-to-talk" || !rtc) {
+            if (
+                data.from !== "discuss-push-to-talk" ||
+                (!rtc && data.type !== "answer-is-enabled")
+            ) {
                 return;
             }
             switch (data.type) {
