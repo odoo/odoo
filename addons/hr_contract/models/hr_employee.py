@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date
@@ -48,7 +47,7 @@ class Employee(models.Model):
             contracts = remove_gap(contracts)
         return min(contracts.mapped('date_start')) if contracts else False
 
-    @api.depends('contract_ids.state', 'contract_ids.date_start')
+    @api.depends('contract_ids.state', 'contract_ids.date_start', 'contract_ids.active')
     def _compute_first_contract_date(self):
         for employee in self:
             employee.first_contract_date = employee._get_first_contract_date()
