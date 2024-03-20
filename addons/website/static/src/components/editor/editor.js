@@ -29,14 +29,6 @@ export class WebsiteEditorComponent extends Component {
         });
         this.wysiwygOptions = {};
 
-        // TODO: This is done here because the snippet menu cannot access
-        // OWL services. Once it can, the logic for invalidating the
-        // cache should probably be moved there.
-        if (this.websiteService.invalidateSnippetCache) {
-            this.wysiwygOptions.invalidateSnippetCache = true;
-            this.websiteService.invalidateSnippetCache = false;
-        }
-
         onWillStart(async () => {
             await this.websiteService.loadWysiwyg();
             const adapterModule = await odoo.loader.modules.get('@website/components/wysiwyg_adapter/wysiwyg_adapter');
@@ -84,7 +76,6 @@ export class WebsiteEditorComponent extends Component {
             document.body.classList.remove('editor_has_dummy_snippets');
             this.state.reloading = false;
         }
-        this.wysiwygOptions.invalidateSnippetCache = false;
         this.websiteService.unblockPreview();
         document.body.classList.add("o_website_navbar_transition_hide");
         setTimeout(() => document.body.classList.add("o_website_navbar_hide"), 400);
@@ -109,17 +100,13 @@ export class WebsiteEditorComponent extends Component {
      *
      * @param snippetOptionSelector {string} Selector to refocus the editor once reloaded.
      * @param [url] {string} URL to reload the iframe tp
-     * @param invalidateSnippetCache {boolean} If the SnippetMenu needs to reload the Snippets from server.
      * @returns {Promise<void>}
      */
-    async reload({ snippetOptionSelector, url, invalidateSnippetCache } = {}) {
+    async reload({ snippetOptionSelector, url } = {}) {
         this.notificationService.add(_t("Your modifications were saved to apply this option."), {
             title: _t("Content saved."),
             type: 'success'
         });
-        if (invalidateSnippetCache) {
-            this.wysiwygOptions.invalidateSnippetCache = true;
-        }
         this.state.showWysiwyg = false;
         await this.props.reloadIframe(url);
         this.reloadSelector = snippetOptionSelector;

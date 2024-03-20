@@ -68,11 +68,6 @@ class TestConfiguratorTranslation(TestConfiguratorCommon):
         website_fr = self.env['website'].create({
             'name': "New website",
         })
-        self.env.ref('web_editor.snippets').update_field_translations('arch_db', {
-            parseltongue.code: {
-                'Save': 'Save_Parseltongue'
-            }
-        })
         # disable configurator todo to ensure this test goes through
         active_todo = self.env['ir.actions.todo'].search([('state', '=', 'open')], limit=1)
         active_todo.update({'state': 'done'})

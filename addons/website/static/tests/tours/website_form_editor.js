@@ -134,7 +134,7 @@
         // Drop a form builder snippet and configure it
         {
             content: "Drop the form snippet",
-            trigger: '#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail',
+            trigger: '#oe_snippets .oe_snippet .oe_snippet_thumbnail[data-snippet=s_website_form]',
             run: 'drag_and_drop_native :iframe #wrap',
         }, {
             content: "Select form by clicking on an input field",
@@ -687,7 +687,7 @@
         // only be sent if one of the checkbox is checked.
         {
             content: "Add the form snippet",
-            trigger: '#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail',
+            trigger: '#oe_snippets .oe_snippet .oe_snippet_thumbnail[data-snippet=s_website_form]',
             run: 'drag_and_drop_native :iframe #wrap',
         }, {
             content: "Select the form by clicking on an input field",
@@ -699,9 +699,7 @@
                 // The next steps will be about removing non essential required
                 // fields. For the robustness of the test, check that amount
                 // of field stays the same.
-                const requiredFields = document.querySelectorAll(
-                    "[data-snippet] .s_website_form_required"
-                );
+                const requiredFields = this.anchor.closest("[data-snippet]").querySelectorAll(".s_website_form_required");
                 if (requiredFields.length !== NB_NON_ESSENTIAL_REQUIRED_FIELDS_IN_DEFAULT_FORM) {
                     console.error('The amount of required fields seems to have changed');
                 }

@@ -27,7 +27,7 @@ import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 import { FileViewer } from "@web/core/file_viewer/file_viewer";
 import { isMobileOS } from "@web/core/browser/feature_detection";
-import { Mutex } from "@web/core/utils/concurrency";
+import { Deferred, Mutex } from "@web/core/utils/concurrency";
 import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { ConflictDialog } from "./conflict_dialog";
@@ -36,6 +36,7 @@ import { shouldUnlink } from '@web_editor/js/wysiwyg/widgets/link_tools';
 import { LinkDialog } from "./widgets/link_dialog";
 import {
     Component,
+    EventBus,
     useRef,
     useState,
     onWillStart,
@@ -144,6 +145,8 @@ export class Wysiwyg extends Component {
         linkToolProps: false,
         showToolbar: true,
         toolbarProps: {},
+        showSnippetsMenu: false,
+        snippetsMenuFolded: false,
     });
 
     setup() {
@@ -153,6 +156,9 @@ export class Wysiwyg extends Component {
         this.popover = useService("popover");
         this.busService = this.env.services.bus_service;
         this.user = user;
+        this.snippetsMenuContainer = useRef("snippets-menu-container");
+        this.mutex = new Mutex();
+        this.snippetsMenuBus = new EventBus();
 
         const getColorPickedHandler = (colorType) => {
             return (params) => {
@@ -612,9 +618,9 @@ export class Wysiwyg extends Component {
         });
 
         if (options.snippets) {
-            $(this.odooEditor.document.body).addClass('editor_enable');
-            this.snippetsMenu = await this._createSnippetsMenuInstance(options);
+            this.snippetsMenuComponent = await this.getSnippetsMenuClass(options);
             await this._insertSnippetMenu();
+            $(this.odooEditor.document.body).addClass('editor_enable');
 
             this._onBeforeUnload = (event) => {
                 if (this.isDirty()) {
@@ -663,11 +669,11 @@ export class Wysiwyg extends Component {
                     // editor panel (like originally intended but...) / ...
                     (async () => {
                         let container;
-                        if (this.snippetsMenu) {
+                        if (this.state.showSnippetsMenu) {
                             // Await for the editor panel to be fully updated
                             // as some buttons of the link popover we create
                             // here relies on clicking in that editor panel...
-                            await this.snippetsMenu._mutex.exec(() => null);
+                            await this.mutex.exec(() => null);
                             container = this.options.document.getElementById('oe_manipulators');
                         }
                         this.linkPopover = LinkPopoverWidget.createFor({
@@ -685,7 +691,7 @@ export class Wysiwyg extends Component {
                 // resets the selection inside that element if no selection
                 // exists.
                 $target.closest('[contenteditable=true]').focus();
-                if ($target.closest('#wrapwrap').length && this.snippetsMenu) {
+                if ($target.closest('#wrapwrap').length && this.state.showSnippetsMenu) {
                     this.toggleLinkTools({
                         forceOpen: true,
                         link: $target[0],
@@ -697,7 +703,9 @@ export class Wysiwyg extends Component {
 
         this._onSelectionChange = this._onSelectionChange.bind(this);
         this.odooEditor.document.addEventListener('selectionchange', this._onSelectionChange);
-        this.setCSSVariables(this.snippetsMenu ? this.snippetsMenu.el : this.toolbarEl);
+        if (!this.state.showSnippetsMenu) {
+            this.setCSSVariables(this.toolbarEl);
+        }
 
         this.odooEditor.addEventListener('preObserverActive', () => {
             // The onPostSanitize will be called right after the
@@ -866,9 +874,6 @@ export class Wysiwyg extends Component {
             this.odooEditor.document.removeEventListener("keyup", this._signalOnline, true);
             this.odooEditor.document.removeEventListener('selectionchange', this._onSelectionChange);
             this.odooEditor.destroy();
-        }
-        if (this.snippetsMenu) {
-            this.snippetsMenu.destroy();
         }
         // If peer to peer is initializing, wait for properly closing it.
         if (this._peerToPeerLoading) {
@@ -1196,8 +1201,10 @@ export class Wysiwyg extends Component {
             this._attachHistoryIds(editable);
         }
 
-        if (this.snippetsMenu) {
-            await this.snippetsMenu.cleanForSave();
+        if (this.state.showSnippetsMenu) {
+            const cleanedProms = [];
+            this.snippetsMenuBus.trigger("CLEAN_FOR_SAVE", { proms: cleanedProms });
+            await Promise.all(cleanedProms);
         }
     }
     isSelectionInEditable() {
@@ -1352,16 +1359,14 @@ export class Wysiwyg extends Component {
         if (linkEl && (!linkEl.matches(this.customizableLinksSelector) || !linkEl.isContentEditable)) {
             return;
         }
-        if (this.snippetsMenu && !options.forceDialog) {
+        if (this.state.showSnippetsMenu && !options.forceDialog) {
             if (options.link && options.link.querySelector(mediaSelector) &&
                     !options.link.textContent.trim() && wysiwygUtils.isImg(this.lastElement)) {
                 // If the link contains a media without text, the link is
                 // editable in the media options instead.
                 if (options.shoudFocusUrl) {
                     // Wait for the editor panel to be fully updated.
-                    this.snippetsMenu._mutex.exec(() => {
-                        // This is needed to focus the URL input when clicking
-                        // on the "Edit link" of the popover.
+                    this.mutex.exec(() => {
                         this.odooEditor.dispatchEvent(new Event('activate_image_link_tool'));
                     });
                 }
@@ -1539,9 +1544,8 @@ export class Wysiwyg extends Component {
      * Removes the current Link.
      */
     removeLink() {
-        if (this.snippetsMenu && wysiwygUtils.isImg(this.lastElement)) {
-            this.snippetsMenu._mutex.exec(() => {
-                // Wait for the editor panel to be fully updated.
+        if (this.state.showSnippetsMenu && wysiwygUtils.isImg(this.lastElement)) {
+            this.mutex.exec(() => {
                 this.odooEditor.dispatchEvent(new Event('deactivate_image_link_tool'));
             });
         } else {
@@ -1748,10 +1752,13 @@ export class Wysiwyg extends Component {
             return this.odooEditor.execCommand('insert', element);
         }
 
-        if (this.snippetsMenu) {
-            this.snippetsMenu.activateSnippet($(element)).then(() => {
-                if (element.tagName === 'IMG') {
-                    $(element).trigger('image_changed');
+        if (this.state.showSnippetsMenu) {
+            this.snippetsMenuBus.trigger("ACTIVATE_SNIPPET", {
+                $snippet: $(element),
+                onSuccess: () => {
+                    if (element.tagName === 'IMG') {
+                        $(element).trigger('image_changed');
+                    }
                 }
             });
         }
@@ -1766,8 +1773,8 @@ export class Wysiwyg extends Component {
      * @returns {Promise}
      */
     waitForEmptyMutexAction() {
-        if (this.snippetsMenu) {
-            return this.snippetsMenu.execWithLoadingEffect(() => null, false);
+        if (this.state.showSnippetsMenu) {
+            return this.mutex.exec(() => null);
         }
         return Promise.resolve();
     }
@@ -1790,16 +1797,20 @@ export class Wysiwyg extends Component {
     /**
      * Returns an instance of the snippets menu.
      *
-     * @param {Object} [options]
-     * @returns {widget}
+     * @returns {Promise<Component>}
      */
-    async _createSnippetsMenuInstance(options={}) {
+    async getSnippetsMenuClass() {
         const snippetsEditor = await odoo.loader.modules.get('@web_editor/js/editor/snippets.editor')[Symbol.for('default')];
         const { SnippetsMenu } = snippetsEditor;
-        return new SnippetsMenu(this, Object.assign({
+        return SnippetsMenu;
+    }
+    get snippetsMenuOptions() {
+        return {
+            ...this.options,
             wysiwyg: this,
             selectorEditableArea: '.o_editable',
-        }, options));
+            mutex: this.mutex,
+        };
     }
     _setToolbarProps() {
         this.state.toolbarProps = {
@@ -1808,7 +1819,8 @@ export class Wysiwyg extends Component {
             onColorpaletteDropdownHide: this.onColorpaletteDropdownHide.bind(this),
             textColorPaletteProps: this.colorPalettesProps.text,
             backgroundColorPaletteProps: this.colorPalettesProps.background,
-        }
+            showRemoveFormat: this.state.snippetsMenuFolded || !this.options.snippets,
+        };
     }
     _configureToolbar(options) {
         const $toolbar = $(this.toolbarEl);
@@ -2147,7 +2159,7 @@ export class Wysiwyg extends Component {
         }
         // The image replace button is in the image options when the sidebar
         // exists.
-        if (this.snippetsMenu && !this.snippetsMenu.folded && $target.is('img')) {
+        if (this.state.showSnippetsMenu && !this.state.snippetsMenuFolded && $target.is('img')) {
             this.toolbarEl.querySelector('#media-replace')?.classList.toggle('d-none', true);
         }
         // Only show the image-transform, image-crop and media-description
@@ -2326,8 +2338,11 @@ export class Wysiwyg extends Component {
             },
         }
     }
-    _insertSnippetMenu() {
-        return this.snippetsMenu.insertBefore(this.$el);
+    async _insertSnippetMenu() {
+        const snippetsMenuMountedProm = new Deferred();
+        this.state.snippetsMenuMountedProm = snippetsMenuMountedProm;
+        this.state.showSnippetsMenu = true;
+        await snippetsMenuMountedProm;
     }
     /**
      * If the element holds a translation, saves it. Otherwise, fallback to the

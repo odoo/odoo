@@ -1,12 +1,25 @@
 /** @odoo-module **/
 
+import { localization } from '@web/core/l10n/localization';
+import { translatedTerms } from '@web/core/l10n/translation';
 import wTourUtils from '@website/js/tours/tour_utils';
 
 wTourUtils.registerWebsitePreviewTour('snippet_translation', {
     url: '/',
-    edition: true,
     test: true,
 }, () => [
+    {
+        content: "Wait for website preview and check language",
+        trigger: ":iframe body #wrapwrap",
+        run: () => {
+            if (localization.code !== "fu_GB") {
+                console.error("the user language is not properly set");
+            } else {
+                translatedTerms["Save"] = "Save in fu_GB";
+            }
+        }
+    },
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
     wTourUtils.dragNDrop({name: 'Cover'}),
     {
         content: "Check that contact us contain Parseltongue",

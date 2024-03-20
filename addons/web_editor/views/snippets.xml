@@ -1,46 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="snippets" groups="base.group_user">
-    <div class="o_we_website_top_actions">
-        <div class="o_we_external_history_buttons d-flex">
-            <button type="button" data-action="undo" class="btn btn-secondary fa fa-undo" disabled="true"/>
-            <button type="button" data-action="redo" class="btn btn-secondary fa fa-repeat" disabled="true"/>
-        </div>
-        <form class="ms-auto d-flex">
-            <!-- Uncomment the following line when the mobile preview will be available. -->
-            <!-- <button type="button" class="btn btn-secondary fa fa-mobile" name="mobile" data-action="mobilePreview"/> -->
-            <button type="button" class="btn btn-secondary" data-action="cancel" title="Discard record" accesskey="j">Discard</button>
-            <button type="button" class="btn btn-primary" data-action="save" title="Save record" accesskey="s">Save</button>
-        </form>
-    </div>
-    <div id="snippets_menu">
-        <button type="button" tabindex="1" class="o_we_add_snippet_btn active text-uppercase" accesskey="1">
-            <span>Blocks</span>
-        </button>
-        <button type="button" tabindex="2" class="o_we_customize_snippet_btn text-uppercase">
-            <span>Customize</span>
-        </button>
-    </div>
-
-    <div class="o_snippet_search_filter">
-        <input type="text" class="o_snippet_search_filter_input" placeholder="Search for a block (e.g. numbers, image wall, ...)"/>
-        <i role="button" class="fa fa-times o_snippet_search_filter_reset d-none"/>
-    </div>
-
-    <div id="o_scroll">
-        <div id="snippet_custom" class="o_panel d-none">
-            <div class="o_panel_header">Custom</div>
-            <div id="snippet_custom_body" class="o_panel_body"/>
-        </div>
-        <t id="default_snippets">
-            <div id="snippet_structure" class="o_panel">
-                <div class="o_panel_header">First Panel</div>
-                <div class="o_panel_body">
-                    <t t-snippet="web_editor.s_hr" string="Separator" t-thumbnail="/web_editor/static/src/img/snippets_thumbs/s_hr.svg"/>
-                </div>
-            </div>
-        </t>
-    </div>
+    <snippets id="snippet_custom" string="Custom"/>
+    <t id="default_snippets">
+        <snippets id="snippet_structure" string="First Panel">
+            <t t-snippet="web_editor.s_hr" string="Separator" t-thumbnail="/web_editor/static/src/img/snippets_thumbs/s_hr.svg"/>
+        </snippets>
+    </t>
 
     <div id="snippet_options" class="d-none">
         <t t-call="web_editor.snippet_options"/>

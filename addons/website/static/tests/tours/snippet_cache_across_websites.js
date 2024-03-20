@@ -19,7 +19,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_cache_across_websites', {
     {
         content: "Check that the custom snippet is not here",
         extra_trigger: '#oe_snippets:not(:has(#snippet_custom_body span:contains("custom_snippet_test")))',
-        trigger: '#oe_snippets:has(#snippet_custom.d-none)',
+        trigger: '#oe_snippets:not(:has(#snippet_custom))',
         run: () => null,
     },
 ]);
