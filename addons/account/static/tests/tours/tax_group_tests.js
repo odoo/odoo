@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { accountTourSteps } from "@account/js/tours/account";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -7,12 +8,7 @@ registry.category("web_tour.tours").add('account_tax_group', {
     test: true,
     url: "/web",
     steps: () => [stepUtils.showAppsMenuItem(),
-    {
-        id: 'account_menu_click',
-        content: "Go to Invoicing",
-        trigger: '.o_app[data-menu-xmlid="account.menu_finance"]',
-        run: "click",
-    },
+    ...accountTourSteps.goToAccountMenu("Go to Invoicing"),
     {
         content: "Go to Vendors",
         trigger: 'span:contains("Vendors")',

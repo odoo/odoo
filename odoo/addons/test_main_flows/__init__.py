@@ -7,9 +7,9 @@ from .models import model_multicompany
 #
 # This module is defined in community but some steps (defined with 'edition: "enterprise"')
 # are only used to test enterprise. As it's not possible to direcly add enterprise
-# modules dependencies, this post install hook will install account_accountant if exists.
+# modules dependencies, this post install hook will install accounting if exists.
 #
 def _auto_install_enterprise_dependencies(env):
-    module_list = ['account_accountant']
+    module_list = ['accountant']
     module_ids = env['ir.module.module'].search([('name', 'in', module_list), ('state', '=', 'uninstalled')])
     module_ids.sudo().button_install()
