@@ -394,13 +394,17 @@ export class Message extends Component {
     }
 
     onClickMarkAsUnread() {
-        const previousMessageId = this.message.thread.getPreviousMessage(this.message)?.id ?? false;
-        if (this.props.thread.seen_message_id === previousMessageId) {
+        const previousMessage = this.message.thread.getPreviousMessage(this.message);
+        if (
+            !this.props.thread.selfMember ||
+            (!this.props.thread.selfMember.seen_message_id && !previousMessage) ||
+            this.props.thread.selfMember.seen_message_id?.eq(previousMessage)
+        ) {
             return;
         }
         return rpc("/discuss/channel/set_last_seen_message", {
             channel_id: this.message.thread.id,
-            last_message_id: previousMessageId,
+            last_message_id: previousMessage ? previousMessage.id : false,
             allow_older: true,
         });
     }

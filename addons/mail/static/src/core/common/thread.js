@@ -429,4 +429,12 @@ export class Thread extends Component {
         }
         return msg.datetime.ts - prevMsg.datetime.ts < 60 * 1000;
     }
+
+    isNewMessageSeparatorVisible(previousMessage) {
+        if (!this.props.thread.selfMember) {
+            return false;
+        }
+        const seenMessage = this.props.thread.selfMember?.seen_message_id;
+        return Boolean((!previousMessage && !seenMessage) || previousMessage?.eq(seenMessage));
+    }
 }
