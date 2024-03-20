@@ -18,4 +18,7 @@ class GroupsView(models.Model):
         group_account_readonly = self.env.ref('account.group_account_readonly', raise_if_not_found=False)
         if group_account_readonly and group_account_readonly.category_id.xml_id == 'base.module_category_hidden':
             domain += [('id', '!=', group_account_readonly.id)]
+        group_account_basic = self.env.ref('account.group_account_basic', raise_if_not_found=False)
+        if group_account_basic and group_account_basic.category_id.xml_id == 'base.module_category_hidden':
+            domain += [('id', '!=', group_account_basic.id)]
         return super().get_application_groups(domain)

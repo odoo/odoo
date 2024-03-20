@@ -2,25 +2,34 @@
 <odoo>
 <data noupdate="0">
     <!--
-        There are 4 groups
-        The way the groups work is different when `account_accountant` is installed or not.
+        There are 5 groups
+        The way the groups work is different depending on whether `account`, `account_accountant` or `accountant` are installed.
 
-        Invoicing only:
+        Invoicing only (account):
         ```
          group_account_invoice ⇨ group_account_manager   (only those two should be used)
                                ⬂
-        group_account_readonly ⇨ group_account_user      (those two are only visible through a server action)
+                                 group_account_basic ⬂   (those are only visible through a server action)
+                              group_account_readonly ⇨ group_account_user
         ```
 
-        Invoicing + Accounting:
+        Invoicing Enterprise (account_accountant):
         ```
-         group_account_invoice ⬂
-        group_account_readonly ⇨ group_account_user ⇨ group_account_manager
+        group_account_invoice ⇨ group_account_basic ⇨ group_account_manager (basic accounting group activated)
+                                                    ⬂
+                             group_account_readonly ⇨ group_account_user    (these are still not visible)
+        ```
+
+        Invoicing + Accounting (accountant):
+        ```
+           group_account_invoice ⇨ group_account_basic ⬂
+                                group_account_readonly ⇨ group_account_user ⇨ group_account_manager
         ```
         `group_account_user` is almost (a bit more than) the sum of `group_account_invoice` and `group_account_readonly`
         `group_account_manager` is the king (except when Consolidation is installed, then there is a super-king)
 
         `group_account_invoice` can create/edit invoices, refunds, payments, etc but cannot see accounting related stuff (journal entries, reports, reconciliation,...)
+        `group_account_basic` can do additional accounting features (eg. basic bank recon) but not journal entries
         `group_account_readonly` can see (and only see) everything, including the journal entries, advanced configuration, reports
         `group_account_user`  is the accountant: he can do everything except advanced config (accounting periods for instance)
         `group_account_manager` can edit some config that `group_account_user` cannot do
@@ -50,10 +59,16 @@
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
+    <record id="group_account_basic" model="res.groups">
+        <field name="name">Basic</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+        <field name="implied_ids" eval="[(4, ref('group_account_invoice'))]"/>
+    </record>
+
     <record id="group_account_user" model="res.groups">
         <field name="name">Show Full Accounting Features</field>
         <field name="category_id" ref="base.module_category_hidden"/>
-        <field name="implied_ids" eval="[(4, ref('group_account_invoice')), (4, ref('group_account_readonly'))]"/>
+        <field name="implied_ids" eval="[(4, ref('group_account_basic')), (4, ref('group_account_readonly'))]"/>
     </record>
 
     <record id="group_account_manager" model="res.groups">
