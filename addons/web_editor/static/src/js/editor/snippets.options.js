@@ -1177,7 +1177,11 @@ const UnitUserValueWidget = UserValueWidget.extend({
         if (!params.unit) {
             return isSuperActive;
         }
-        return isSuperActive && this._floatToStr(parseFloat(this._value)) !== '0';
+        return isSuperActive && (
+            this._floatToStr(parseFloat(this._value)) !== '0'
+            // Or is a composite value.
+            || !!this._value.match(/\d+\s+\d+/)
+        );
     },
     /**
      * @override
