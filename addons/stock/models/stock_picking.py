@@ -777,7 +777,7 @@ class Picking(models.Model):
         })
         if any(line.reserved_qty or line.qty_done for line in self.move_ids.move_line_ids):
             return {'warning': {
-                    'title': 'Locations to update',
+                    'title': _("Locations to update"),
                     'message': _("You might want to update the locations of this transfer's operations")
                 }
             }
