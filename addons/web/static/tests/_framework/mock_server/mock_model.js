@@ -554,6 +554,9 @@ const isValidFieldValue = (record, fieldDef) => {
         case "selection": {
             return value === false || fieldDef.selection.some(([value]) => value === value);
         }
+        default: {
+            return true;
+        }
     }
 };
 
