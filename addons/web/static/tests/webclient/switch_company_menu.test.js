@@ -179,6 +179,7 @@ test("single company selected: toggling it off will keep it", async () => {
      *   [ ]    Hercules
      *   [ ]    Hulk
      */
+    await runAllTimers();
     expect(router.current).toEqual({ cids: 3 });
     expect(getService("company").activeCompanyIds).toEqual([3]);
     expect(getService("company").currentCompany.id).toBe(3);
