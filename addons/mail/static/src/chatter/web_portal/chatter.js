@@ -128,11 +128,13 @@ export class Chatter extends Component {
                             return;
                         }
                     }
-                    Promise.all(files.map((file) => this.attachmentUploader.uploadFile(file))).then(() => {
-                        if (this.props.hasParentReloadOnAttachmentsChanged) {
-                            this.reloadParentView();
+                    Promise.all(files.map((file) => this.attachmentUploader.uploadFile(file))).then(
+                        () => {
+                            if (this.props.hasParentReloadOnAttachmentsChanged) {
+                                this.reloadParentView();
+                            }
                         }
-                    })
+                    );
                     this.state.isAttachmentBoxOpened = true;
                 }
             },
@@ -145,7 +147,7 @@ export class Chatter extends Component {
                 if (this.env.chatter) {
                     this.env.chatter.fetchData = false;
                 }
-                this.load(this.state.thread, ["followers", "attachments", "suggestedRecipients"]);
+                this.load(this.state.thread, this.requestList);
             }
         });
         onWillUpdateProps((nextProps) => {
@@ -159,7 +161,7 @@ export class Chatter extends Component {
                 if (this.env.chatter) {
                     this.env.chatter.fetchData = false;
                 }
-                this.load(this.state.thread, ["followers", "attachments", "suggestedRecipients"]);
+                this.load(this.state.thread, this.requestList);
             }
         });
         useEffect(
@@ -194,6 +196,14 @@ export class Chatter extends Component {
             },
             () => [this.state.thread, this.state.thread?.isLoadingAttachments]
         );
+    }
+
+    get afterPostRequestList() {
+        return ["messages"];
+    }
+
+    get requestList() {
+        return [];
     }
 
     /**
@@ -276,9 +286,9 @@ export class Chatter extends Component {
     /**
      * Fetch data for the thread according to the request list.
      * @param {import("models").Thread} thread
-     * @param {['activities'|'followers'|'attachments'|'messages'|'suggestedRecipients']} requestList
+     * @param {string[]} requestList
      */
-    load(thread, requestList = ["followers", "attachments", "messages", "suggestedRecipients"]) {
+    load(thread, requestList) {
         if (!thread.id || !this.state.thread?.eq(thread)) {
             return;
         }
@@ -293,7 +303,7 @@ export class Chatter extends Component {
     }
 
     onActivityChanged(thread) {
-        this.load(thread);
+        this.load(thread, [...this.requestList, "messages"]);
     }
 
     async onClickFollow() {
@@ -328,7 +338,7 @@ export class Chatter extends Component {
         this.toggleComposer();
         this.state.jumpThreadPresent++;
         // Load new messages to fetch potential new messages from other users (useful due to lack of auto-sync in chatter).
-        this.load(this.state.thread, ["followers", "messages", "suggestedRecipients"]);
+        this.load(this.state.thread, this.afterPostRequestList);
     }
 
     onAddFollowers() {

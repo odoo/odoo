@@ -1,10 +1,8 @@
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { patch } from "@web/core/utils/patch";
 import { Record } from "@mail/core/common/record";
-import { assignDefined, rpcWithEnv, compareDatetime } from "@mail/utils/common/misc";
+import { assignDefined, compareDatetime } from "@mail/utils/common/misc";
 
 patch(ThreadService.prototype, {
     /**
@@ -12,41 +10,10 @@ patch(ThreadService.prototype, {
      * @param {Partial<import("services").Services>} services
      */
     setup(env, services) {
-        rpc = rpcWithEnv(env);
         super.setup(env, services);
         this.action = services.action;
         this.activityService = services["mail.activity"];
         this.chatWindowService = services["mail.chat_window"];
-    },
-    /**
-     * @param {import("models").Thread} thread
-     * @param {['activities'|'followers'|'attachments'|'messages'|'suggestedRecipients']} requestList
-     */
-    async fetchData(
-        thread,
-        requestList = ["activities", "followers", "attachments", "messages", "suggestedRecipients"]
-    ) {
-        thread.isLoadingAttachments =
-            thread.isLoadingAttachments || requestList.includes("attachments");
-        if (requestList.includes("messages")) {
-            this.fetchNewMessages(thread);
-        }
-        const result = await rpc("/mail/thread/data", {
-            request_list: requestList,
-            thread_id: thread.id,
-            thread_model: thread.model,
-        });
-        this.store.Thread.insert(result, { html: true });
-        if ("attachments" in result) {
-            Object.assign(thread, {
-                areAttachmentsLoaded: true,
-                isLoadingAttachments: false,
-            });
-        }
-        if (!thread.mainAttachment && thread.attachmentsInWebClientView.length > 0) {
-            this.setMainAttachmentFromIndex(thread, 0);
-        }
-        return result;
     },
     closeChatWindow(channel) {
         const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(channel));
