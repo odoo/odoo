@@ -4194,6 +4194,7 @@ class BaseModel(metaclass=MetaModel):
             # add magic fields
             for fname in bad_names:
                 vals.pop(fname, None)
+
             if self._log_access:
                 vals.setdefault('create_uid', self.env.uid)
                 vals.setdefault('create_date', self.env.cr.now())
@@ -4856,9 +4857,16 @@ class BaseModel(metaclass=MetaModel):
                 else:
                     blacklist_stack.append(self.env[parent_model])
 
-        fields_to_copy = {name: field
-                          for name, field in self._fields.items()
-                          if field.copy and name not in default and name not in blacklist}
+        fields_to_copy = {}
+        for name, field in self._fields.items():
+            if not field.copy or name in default or name in blacklist:
+                continue
+            if not field.related:
+                fields_to_copy[name] = field
+                continue
+            related_field_name = field.related.split(".", 1)[0]
+            if not field.store or (related_field_name not in default and related_field_name not in blacklist):
+                fields_to_copy[name] = field
 
         for record in self:
             seen_map = self.env.context['__copy_data_seen']
@@ -4906,7 +4914,7 @@ class BaseModel(metaclass=MetaModel):
             if not field.copy:
                 continue
 
-            if field.inherited and field.related.split('.')[0] in excluded:
+            if field.inherited and field.related.split('.', 1)[0] in excluded:
                 # inherited fields that come from a user-provided parent record
                 # must not copy translations, as the parent record is not a copy
                 # of the old parent record

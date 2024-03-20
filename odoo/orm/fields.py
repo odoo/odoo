@@ -410,7 +410,6 @@ class Field[T]:
             self._setup_attrs__(owner, name)
             if self._toplevel:
                 # free memory from stuff that is no longer useful
-                self.__dict__.pop('_args__', None)
                 if not self.related:
                     # keep _base_fields__ on related fields for incremental model setup
                     self.__dict__.pop('_base_fields__', None)
@@ -468,7 +467,7 @@ class Field[T]:
             # readonly), and readonly (unless inversible)
             attrs['store'] = store = attrs.get('store', False)
             attrs['compute_sudo'] = attrs.get('compute_sudo', store)
-            if not (attrs['store'] and not attrs.get('readonly', True)):
+            if not attrs['store'] or attrs.get('readonly', True):
                 attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
         if attrs.get('precompute'):
@@ -623,6 +622,13 @@ class Field[T]:
         """ Setup the attributes of a related field. """
         assert isinstance(self.related, str), self.related
 
+        # Merge base fields' args to handle the incremental setup path (registry.py) where
+        # self._args__ only contains '_base_fields__' instead of the original field args.
+        merged_args = {}
+        for bf in self._args__.get('_base_fields__', ()):
+            merged_args.update(bf._args__)
+        merged_args.update(self._args__)
+        chain_is_copyable = merged_args.get('copy', True)
         # determine the chain of fields, and make sure they are all set up
         field_seq = []
         model_name = self.model_name
@@ -636,6 +642,9 @@ class Field[T]:
                 field.setup(model.env[model_name])
             field_seq.append(field)
             model_name = field.comodel_name
+            chain_is_copyable &= field.copy
+
+        self.copy = self.store and chain_is_copyable or self.copy
 
         # check type consistency
         if self.type != field.type:
@@ -647,8 +656,9 @@ class Field[T]:
         model.pool.field_setup_dependents.add(field, self)
 
         # determine dependencies, compute, inverse, and search
-        self.compute = self._compute_related
-        if self.inherited or not (self.readonly or field.readonly):
+        if not self.compute:
+            self.compute = self._compute_related
+        if (self.inherited or not (self.readonly or field.readonly)) and not self.inverse:
             self.inverse = self._inverse_related
         if (
             not self.store
@@ -691,7 +701,7 @@ class Field[T]:
             # add modules from delegate and target fields; the first one ensures
             # that inherited fields introduced via an abstract model (_inherits
             # being on the abstract model) are assigned an XML id
-            delegate_field = model._fields[self.related.split('.')[0]]
+            delegate_field = model._fields[self.related.split('.', 1)[0]]
             self._modules = tuple({*self._modules, *delegate_field._modules, *field._modules})
 
     def _compute_related(self, records: BaseModel) -> None:
