@@ -842,7 +842,7 @@
                     <field name="stage_id" invisible="not project_id or not stage_id"/>
                     <field name="state" widget="project_task_state_selection" readonly="1"/>
                     <field name="personal_stage_id" string="Personal Stage" options="{'no_open': True}" invisible="project_id or not personal_stage_id"/>
-                    <field name="task_properties"/>
+                    <field name="task_properties" invisible="not task_properties"/>
                 </calendar>
             </field>
         </record>

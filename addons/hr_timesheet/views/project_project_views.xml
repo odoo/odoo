@@ -31,7 +31,7 @@
                     </group>
                 </xpath>
                 <xpath expr="//field[@name='date']" position="after">
-                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" invisible="not allow_timesheets"/>
+                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" invisible="not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </xpath>
                 <xpath expr="//group[@name='group_time_managment']" position="attributes">
                     <attribute name="invisible">0</attribute>
@@ -51,13 +51,14 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="after">
                     <field name="allow_timesheets" column_invisible="1"/>
-                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" optional="hide" invisible="allocated_hours == 0 or not allow_timesheets"/>
-                    <field name="effective_hours" widget="timesheet_uom_no_toggle" optional="hide" invisible="effective_hours == 0 or not allow_timesheets"/>
+                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" optional="hide" invisible="allocated_hours == 0 or not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="effective_hours" widget="timesheet_uom_no_toggle" optional="hide" invisible="effective_hours == 0 or not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="remaining_hours" widget="timesheet_uom_no_toggle"
                         decoration-danger="remaining_hours &lt; 0"
                         decoration-warning="allocated_hours > 0 and (remaining_hours / allocated_hours) &lt; 0.2"
                         optional="hide"
                         invisible="allocated_hours == 0 or not allow_timesheets"
+                        groups="hr_timesheet.group_hr_timesheet_user"
                     />
                 </xpath>
             </field>
@@ -99,7 +100,7 @@
             <field name="inherit_id" ref="project.view_project_project_filter"/>
             <field name="arch" type="xml">
                 <filter name="late_milestones" position="before">
-                    <filter string="Timesheets &gt;100%" name="projects_in_overtime" domain="[('is_project_overtime', '=', True)]"/>
+                    <filter string="Timesheets &gt;100%" name="projects_in_overtime" domain="[('is_project_overtime', '=', True)]" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </filter>
             </field>
         </record>
