@@ -23,6 +23,7 @@
         'wizard/mrp_consumption_warning_views.xml',
         'wizard/mrp_batch_produce.xml',
         'wizard/mrp_production_split.xml',
+        'wizard/bom_lead_time_info.xml',
         'views/mrp_views_menus.xml',
         'views/stock_move_views.xml',
         'views/mrp_workorder_views.xml',

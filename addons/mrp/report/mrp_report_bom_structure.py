@@ -246,6 +246,7 @@ class ReportBomStructure(models.AbstractModel):
             'name': product.display_name or bom.product_tmpl_id.display_name,
             'uom': bom.product_uom_id if bom else product.uom_id,
             'uom_name': bom.product_uom_id.name if bom else product.uom_id.name,
+            'route_id': route_info.get('route_id', ''),
             'route_type': route_info.get('route_type', ''),
             'route_name': route_info.get('route_name', ''),
             'route_detail': route_info.get('route_detail', ''),
@@ -602,6 +603,7 @@ class ReportBomStructure(models.AbstractModel):
             rules_delay += sum(rule.delay for rule in wh_manufacture_rules)
             manufacturing_lead = bom.company_id.manufacturing_lead if bom and bom.company_id else 0
             return {
+                'route_id': manufacture_rules[0].route_id.id,
                 'route_type': 'manufacture',
                 'route_name': manufacture_rules[0].route_id.display_name,
                 'route_detail': bom.display_name,

@@ -31,7 +31,7 @@
                             <th t-if="showAvailabilities" class="text-end">Ready to Produce</th>
                             <th t-if="showAvailabilities" class="text-end" title="Availabilities on products.">Free to Use / On Hand</th>
                             <th t-if="showAvailabilities" class="text-center" title="Reception time estimation.">Availability</th>
-                            <th t-if="showLeadTimes" class="text-end" title="Resupply lead time.">Lead Time</th>
+                            <th t-if="showLeadTimes" t-attf-title="Click to see lead time details." class="text-end" title="Resupply lead time.">Lead Time <i class="fa fa-info-circle" t-on-click.prevent="goToLeadTime"/></th>
                             <th t-if="showLeadTimes">Route</th>
                             <th t-if="showCosts" class="text-end" title="This is the cost based on the BoM of the product. It is computed by summing the costs of the components and operations needed to build the product.">BoM Cost</th>
                             <th t-if="showCosts" class="text-end" title="This is the cost defined on the product.">Product Cost</th>

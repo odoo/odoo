@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mrp_replenishment_info" model="ir.ui.view">
+        <field name="name">Replenishment Information</field>
+        <field name="model">mrp.bom.replenishment.info</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field nolabel="1" name="json_lead_days" colspan="2" widget="lead_days_widget_mrp"/>
+                </group>
+                <footer>
+                    <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_mrp_replenishment_info" model="ir.actions.act_window">
+        <field name="name">Replenishment Information</field>
+        <field name="res_model">mrp.bom.replenishment.info</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_mrp_replenishment_info"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

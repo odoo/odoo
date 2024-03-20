@@ -280,6 +280,17 @@ class StockWarehouse(models.Model):
                 warehouse.manufacture_pull_id.write({'name': warehouse.manufacture_pull_id.name.replace(warehouse.name, name, 1)})
         return res
 
+    def action_stock_replenishment_info_mixin(self):
+        action = self.env['ir.actions.actions']._for_xml_id('mrp.action_mrp_replenishment_info')
+        action['name'] = _('Replenishment Information')
+        res = self.env['mrp.bom.replenishment.info'].create({
+            'warehouse_id': self.env.context.get('active_id'),
+            'product_id': self.env.context.get('product_id'),
+            'route_id': self.env.context.get('route_id')
+        })
+        action['res_id'] = res.id
+        return action
+
 class Orderpoint(models.Model):
     _inherit = "stock.warehouse.orderpoint"
 
