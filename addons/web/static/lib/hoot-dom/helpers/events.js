@@ -520,18 +520,10 @@ const registerForChange = (target, initialValue, confirmAction) => {
 const registerSpecialKey = (eventInit, toggle) => {
     switch (eventInit.key) {
         case "Alt":
-            if (isMacOS()) {
-                specialKeys.ctrlKey = toggle;
-            } else {
-                specialKeys.altKey = toggle;
-            }
+            specialKeys.altKey = toggle;
             break;
         case "Control":
-            if (isMacOS()) {
-                specialKeys.metaKey = toggle;
-            } else {
-                specialKeys.ctrlKey = toggle;
-            }
+            specialKeys.ctrlKey = toggle;
             break;
         case "Meta":
             specialKeys.metaKey = toggle;
