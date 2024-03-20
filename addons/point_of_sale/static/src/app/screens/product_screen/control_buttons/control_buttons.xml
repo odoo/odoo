@@ -4,7 +4,9 @@
         <div t-attf-class="flex-{{!props.wrapped ? (ui.isSmall ? 'column' : 'wrap') : 'wrap'}}" class="control-buttons d-flex bg-300 border-bottom">
             <!-- All buttons always displayed -->
             <SelectPartnerButton partner="partner"/>
-            <button t-if="pos.models['account.fiscal.position'].length" class="control-button o_fiscal_position_button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickFiscalPosition()">
+            <button t-if="pos.models['account.fiscal.position'].length and (pos.config.module_pos_restaurant or (!pos.config.module_pos_restaurant and !props.wrapped))"
+                    class="control-button o_fiscal_position_button btn btn-light rounded-0 fw-bolder"
+                    t-on-click="() => this.clickFiscalPosition()">
                 <i class="fa fa-book me-1" role="img" aria-label="Set fiscal position"
                 title="Set fiscal position" />
                 <t t-if="currentOrder?.fiscal_position" t-esc="currentOrder.fiscal_position.display_name" />

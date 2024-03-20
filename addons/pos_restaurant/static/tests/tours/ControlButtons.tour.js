@@ -57,12 +57,14 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             NumberPopup.enterValue("15"),
             NumberPopup.isShown("15"),
             Dialog.confirm(),
+            ProductScreen.controlButtonMore(),
             ProductScreen.guestNumberIs("15"),
 
             ProductScreen.controlButton("Guests"),
             NumberPopup.enterValue("5"),
             NumberPopup.isShown("5"),
             Dialog.confirm(),
+            ProductScreen.controlButtonMore(),
             ProductScreen.guestNumberIs("5"),
         ].flat(),
 });
