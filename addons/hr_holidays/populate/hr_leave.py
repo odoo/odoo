@@ -57,7 +57,6 @@ class HolidaysRequest(models.Model):
         return [
             ('holiday_status_id', populate.randomize(allocationless_leave_type_ids)),
             ('employee_id', populate.compute(compute_employee_id)),
-            ('holiday_type', populate.constant('employee')),
             ('request_date_from', populate.compute(compute_request_date_from)),
             ('request_date_to', populate.compute(compute_request_date_to)),
             ('state', populate.randomize([

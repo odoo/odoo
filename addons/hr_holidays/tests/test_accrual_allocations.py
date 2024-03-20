@@ -130,7 +130,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             tomorrow = datetime.date.today() + relativedelta(days=2)
             self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet. The accrual starts tomorrow.')
 
-            holiday_type = self.env['hr.leave.type'].create({
+            leave_type = self.env['hr.leave.type'].create({
                 'name': 'Paid Time Off',
                 'requires_allocation': 'no',
                 'responsible_ids': [(4, self.user_hrmanager_id)],
@@ -140,7 +140,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             leave = self.env['hr.leave'].create({
                 'name': 'leave',
                 'employee_id': self.employee_emp.id,
-                'holiday_status_id': holiday_type.id,
+                'holiday_status_id': leave_type.id,
                 'request_date_from': '2017-12-06 08:00:00',
                 'request_date_to': '2017-12-06 17:00:00',
                 'request_unit_half': True,
@@ -484,7 +484,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             (allocation_not_worked_time | allocation_worked_time).action_validate()
             self.setAllocationCreateDate(allocation_not_worked_time.id, '2021-08-01 00:00:00')
             self.setAllocationCreateDate(allocation_worked_time.id, '2021-08-01 00:00:00')
-            holiday_type = self.env['hr.leave.type'].create({
+            leave_type = self.env['hr.leave.type'].create({
                 'name': 'Paid Time Off',
                 'requires_allocation': 'no',
                 'responsible_ids': [Command.link(self.user_hrmanager_id)],
@@ -493,7 +493,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             leave = self.env['hr.leave'].create({
                 'name': 'leave',
                 'employee_id': self.employee_emp.id,
-                'holiday_status_id': holiday_type.id,
+                'holiday_status_id': leave_type.id,
                 'request_date_from': '2021-09-02',
                 'request_date_to': '2021-09-02',
             })
