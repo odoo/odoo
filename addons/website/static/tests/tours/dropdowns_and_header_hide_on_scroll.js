@@ -32,8 +32,8 @@ wTourUtils.registerWebsitePreviewTour("dropdowns_and_header_hide_on_scroll", {
     wTourUtils.selectHeader(),
     wTourUtils.changeOption("undefined", 'we-select[data-variable="header-scroll-effect"]'),
     wTourUtils.changeOption("undefined", 'we-button[data-name="header_scroll_effect_fixed_opt"]'),
-    wTourUtils.changeOption("WebsiteLevelColor", 'we-select[data-variable="header-template"] we-toggler'),
-    wTourUtils.changeOption("WebsiteLevelColor", 'we-button[data-name="header_sales_two_opt"]'),
+    wTourUtils.changeOption("WebsiteLevelColor", 'we-designoptionselector[data-variable="header_template"] we-toggler'),
+    wTourUtils.changeOption("WebsiteLevelColor", 'we-button[data-name="header_template_sales_two_opt"]'),
     ...wTourUtils.clickOnSave(undefined, 30000),
     ...checkIfUserMenuNotMasked(),
     // We scroll the page a little because when clicking on the dropdown, the

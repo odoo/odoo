@@ -658,17 +658,24 @@ const DESIGN_OPTION_CACHE = {
         if (this[name]) {
             return this[name];
         }
-        const designOptions = await orm.searchRead(
+        // TODO: maybe find a cleaner solution.
+        if (this._designOptionsPromise) {
+            await this._designOptionsPromise;
+            return this[name];
+        }
+        this._designOptionsPromise = orm.searchRead(
             "website.design.option",
             [],
             ["name", "value", "display_name"],
         );
+        const designOptions = await this._designOptionsPromise;
         for (const option of designOptions) {
             if (!this[option.name]) {
                 this[option.name] = [];
             }
             this[option.name].push(option);
         }
+        this._designOptionsPromise = null;
         return this[name];
     }
 };
@@ -700,7 +707,6 @@ const DesignOptionSelector = SelectUserValueWidget.extend({
         }
         const attributeEls = this.menuEl.querySelectorAll("attribute");
         attributeEls.forEach(attEl => {
-            debugger;
             const selector = `${attEl.getAttribute("target")}:not(attribute)`;
             this.menuEl.querySelectorAll(selector).forEach(el => {
                 el.setAttribute(attEl.getAttribute("name"), attEl.getAttribute("value"));
