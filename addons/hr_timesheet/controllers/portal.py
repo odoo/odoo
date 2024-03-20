@@ -87,6 +87,13 @@ class TimesheetCustomerPortal(CustomerPortal):
     def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='none', **kw):
         Timesheet = request.env['account.analytic.line']
         domain = Timesheet._timesheet_get_portal_domain()
+        portal_user = request.env.user._is_portal()
+
+        if portal_user:
+            so_domain = kw.get('domain', [])
+            if(so_domain):
+                domain.append(so_domain)
+
         Timesheet_sudo = Timesheet.sudo()
 
         values = self._prepare_portal_layout_values()
@@ -185,9 +192,18 @@ class TimesheetCustomerPortal(CustomerPortal):
 
 class TimesheetProjectCustomerPortal(ProjectCustomerPortal):
 
-    def _show_task_report(self, task_sudo, report_type, download):
+    def _show_task_report(self, task_sudo, report_type, download, **kw):
+        portal_user = request.env.user._is_portal()
         domain = request.env['account.analytic.line']._timesheet_get_portal_domain()
+        timesheet_domain = kw.get('domain', [])
         task_domain = AND([domain, [('task_id', '=', task_sudo.id)]])
         timesheets = request.env['account.analytic.line'].sudo().search(task_domain)
+        if timesheet_domain and portal_user:
+            timesheets = timesheets.filtered(
+                lambda timesheet: (
+                    (timesheet.so_line and timesheet.allow_billable) or
+                    (not timesheet.so_line and not timesheet.allow_billable)
+                )
+            )
         return self._show_report(model=timesheets,
             report_type=report_type, report_ref='hr_timesheet.timesheet_report_task_timesheets', download=download)
