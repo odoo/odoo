@@ -11,16 +11,52 @@
                        invisible="code != 'razorpay'">
                     <field name="razorpay_key_id"
                            string="Key Id"
-                           required="code == 'razorpay' and state != 'disabled'"/>
+                           groups="base.group_no_one"/>
                     <field name="razorpay_key_secret"
                            string="Key Secret"
-                           required="code == 'razorpay' and state != 'disabled'"
+                           groups="base.group_no_one"
                            password="True"/>
-                    <field name="razorpay_webhook_secret"
-                           string="Webhook Secret"
-                           required="code == 'razorpay' and state != 'disabled'"
-                           password="True"/>
+                    <label for="razorpay_webhook_secret"/>
+                    <div class="o_row">
+                        <field
+                            name="razorpay_webhook_secret"
+                            string="Webhook Secret"
+                            required="code == 'razorpay' and state != 'disabled'"
+                            password="True"
+                        />
+                        <button
+                            string="Refresh Webhook"
+                            name="action_razorpay_create_or_update_webhook"
+                            type="object"
+                            help="If you change the your base url, you will need to update the
+                                  webhook else payment state will not be updated in odoo."
+                            class="btn-primary"
+                            invisible="not razorpay_access_token or not razorpay_webhook_secret"
+                        />
+                    </div>
                 </group>
+            </group>
+            <group name="provider_credentials" position="after">
+                <div class="alert alert-warning" role="alert" invisible="not razorpay_key_id">
+                    You are using old method key and secret suggested to change to Oauth by clicking on connect.
+                </div>
+                <div invisible="code != 'razorpay'">
+                    <button
+                        string="Connect"
+                        name="action_razorpay_redirect_to_oauth_url"
+                        type="object"
+                        class="btn-primary"
+                        invisible="razorpay_public_token"
+                    />
+                    <button
+                        string="Disconnect"
+                        name="action_razorpay_revoked_token"
+                        type="object"
+                        class="btn-secondary"
+                        confirm="Are you sure you want to disconnect?"
+                        invisible="not razorpay_public_token"
+                    />
+                </div>
             </group>
             <field name="allow_tokenization" position="after">
                 <div invisible="code != 'razorpay' or not allow_tokenization" colspan="2">

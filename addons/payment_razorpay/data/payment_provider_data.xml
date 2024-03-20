@@ -6,4 +6,14 @@
         <field name="token_inline_form_view_id" ref="token_inline_form"/>
     </record>
 
+    <record id="payment_provider_razorpay_oauth_url" model="ir.config_parameter">
+        <field name="key">OAUTH_LIVE_URL</field>
+        <field name="value">https://razorpay.api.odoo.com</field>
+    </record>
+
+    <record id="payment_provider_razorpay_oauth_test_url" model="ir.config_parameter">
+        <field name="key">OAUTH_TEST_URL</field>
+        <field name="value">https://razorpay.test.odoo.com</field>
+    </record>
+
 </odoo>
