@@ -90,7 +90,7 @@ export class MassMailingWysiwyg extends Wysiwyg {
      * @override
      */
     async _createSnippetsMenuInstance(options={}) {
-        await loadBundle('web_editor.assets_legacy_wysiwyg');
+        await loadBundle("web_editor.assets_snippets_menu");
         const { MassMailingSnippetsMenu }  = await odoo.loader.modules.get('@mass_mailing/js/snippets.editor');
         return new MassMailingSnippetsMenu(this, Object.assign({
             wysiwyg: this,
