@@ -80,7 +80,7 @@ export class CodeEditor extends Component {
                 });
                 this.aceEditor.$blockScrolling = true;
 
-                this.aceEditor.setValue(this.props.value);
+                this.aceEditor.session.setValue(this.props.value);
                 this.aceEditor.session.on("change", () => {
                     if (this.props.onChange) {
                         this.props.onChange(this.aceEditor.getValue());
