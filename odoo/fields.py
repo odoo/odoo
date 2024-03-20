@@ -1636,8 +1636,13 @@ class _String(Field):
                 update_column = True
                 update_trans = True
             elif lang != 'en_US' and lang is not None:
-                # update the translations only except if emptying
-                update_column = not cache_value
+                # update the translations only except if emptying or if we don't have a base ('en_US') translation value
+                update_column = (not cache_value or
+                                 not records.env['ir.translation'].search([
+                                     ('lang', '=', 'en_US'),
+                                     ('name', '=', self.model_name + ',' + self.name),
+                                     ('res_id', 'in', records.mapped('id'))
+                                 ], limit=1).value)
                 update_trans = True
             # else: lang = None
 
