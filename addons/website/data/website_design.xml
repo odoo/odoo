@@ -81,5 +81,21 @@
             <field name="value">fade-out</field>
             <field name="views_to_activate" eval="[(6, 0, [ref('website.header_visibility_fade_out')])]"/>
         </record>
+        <!-- Link Underline Options -->
+        <record id="design_option_linkunderline_never" model="website.design.option">
+            <field name="name">link__underline</field>
+            <field name="display_name">No Underline</field>
+            <field name="value">never</field>
+        </record>
+        <record id="design_option_linkunderline_hover" model="website.design.option">
+            <field name="name">link__underline</field>
+            <field name="display_name">Underline On Hover</field>
+            <field name="value">hover</field>
+        </record>
+        <record id="design_option_linkunderline_always" model="website.design.option">
+            <field name="name">link__underline</field>
+            <field name="display_name">Always Underline</field>
+            <field name="value">always</field>
+        </record>
     </data>
 </odoo>
