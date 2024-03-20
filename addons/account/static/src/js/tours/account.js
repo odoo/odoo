@@ -6,11 +6,17 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 import { markup } from "@odoo/owl";
 
+export const accountTourSteps = {
+    goToAccountMenu(description="Open Invoicing Menu") {
+        return stepUtils.goToAppSteps('account.menu_finance', description);
+    },
+}
+
 registry.category("web_tour.tours").add('account_tour', {
     url: "/web",
     sequence: 60,
     steps: () => [
-    ...stepUtils.goToAppSteps('account.menu_finance', markup(_t('Send invoices to your customers in no time with the <b>Invoicing app</b>.'))),
+    ...accountTourSteps.goToAccountMenu('Send invoices to your customers in no time with the <b>Invoicing app</b>.'),
     {
         trigger: "a.o_onboarding_step_action[data-method=action_open_step_company_data]",
         content: _t("Start by checking your company's data."),
