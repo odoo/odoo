@@ -178,9 +178,12 @@ QUnit.module("ActionManager", (hooks) => {
             if (route === "/web/action/load") {
                 assert.deepEqual(params, {
                     action_id: 1001,
-                    additional_context: {
-                        active_id: 4,
-                        active_ids: [4, 8],
+                    context: {
+                        active_id: 4, // aditional context
+                        active_ids: [4, 8], // aditional context
+                        lang: "en", // user context
+                        tz: "taht", // user context
+                        uid: 7, // user context
                     },
                 });
             }
@@ -802,32 +805,48 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("server action loading with id", async (assert) => {
+        serverData.actions[2].path = "my_action";
+        serverData.actions[2].code = () => {
+            return {
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
+            };
+        };
         const mockRPC = async (route, args) => {
-            if (route === "/web/action/run") {
+            if (route === "/web/action/load") {
                 assert.step(`action: ${args.action_id}`);
-                return new Promise(() => {});
             }
         };
-        redirect("/odoo/action-2/2");
+        redirect("/odoo/my_action/2");
         logHistoryInteractions(assert);
         await createWebClient({ serverData, mockRPC });
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partner", "Second record"]);
         assert.strictEqual(
             browser.location.href,
-            "http://example.com/odoo/action-2/2",
+            "http://example.com/odoo/my_action/2",
             "url did not change"
         );
-        assert.verifySteps(["action: 2"], "pushState was not called");
+        await click(target.querySelector(".o_control_panel .breadcrumb-item"));
+        assert.containsOnce(target, ".o_list_view");
+
+        assert.verifySteps(["action: my_action"], "/web/action/load is called only once");
+        await nextTick(); // pushState is debounced
+        assert.verifySteps(["pushState http://example.com/odoo/my_action"]);
     });
 
     QUnit.test("state with integer active_ids should not crash", async function (assert) {
         const mockRPC = async (route, args) => {
-            if (route === "/web/action/run") {
+            if (route === "/web/action/load") {
                 assert.step(
                     `action: ${args.action_id}, active_ids: ${JSON.stringify(
                         args.context.active_ids
                     )}`
                 );
-                return new Promise(() => {});
             }
         };
         redirect("/odoo/action-2?active_ids=3");
@@ -1048,9 +1067,12 @@ QUnit.module("ActionManager", (hooks) => {
             if (route === "/web/action/load") {
                 assert.deepEqual(params, {
                     action_id: 1001,
-                    additional_context: {
-                        active_id: 4,
-                        active_ids: [4, 8],
+                    context: {
+                        active_id: 4, // aditional context
+                        active_ids: [4, 8], // aditional context
+                        lang: "en", // user context
+                        tz: "taht", // user context
+                        uid: 7, // user context
                     },
                 });
             }
@@ -1362,10 +1384,9 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(2);
 
         const mockRPC = async (route, args) => {
-            if (route === "/web/action/run") {
+            if (route === "/web/action/load") {
                 assert.strictEqual(args.action_id, 2);
                 assert.deepEqual(args.context.active_ids, [3]);
-                return new Promise(() => {});
             }
         };
         redirect("/web#action=2&active_ids=3");
