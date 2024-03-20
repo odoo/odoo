@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <div t-name="hr_holidays.LeaveStatsComponent" class="o_leave_stats">
-        <t t-if="state.multi_employee or state.holiday_type == 'company' or state.holiday_type ==  'category'" id="o_leave_stats_multi_employee">
-            <div class="fst-italic">
-                Information for multiple employees cannot be displayed
-            </div>
-        </t>
-        <div t-elif="state.employee" id="o_leave_stats_employee">
+        <div t-if="state.employee" id="o_leave_stats_employee">
             <div class="o_hr_leave_subtitle">
                 <t t-esc="state.employee[1]"/> in <t t-esc="thisYear"/>
             </div>

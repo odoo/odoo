@@ -249,30 +249,20 @@
             </header>
             <sheet>
                 <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
-                <div class="alert alert-info" role="alert" invisible="not request_unit_hours or not tz_mismatch or holiday_type == 'category'">
-                    <span invisible="holiday_type != 'employee'">
-                        The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone
-                    </span>
-                    <span invisible="holiday_type != 'department'">
-                        The department's company has a different timezone than yours! Here dates and times are displayed in the company's timezone
-                    </span>
-                    <span invisible="holiday_type != 'company'">
-                        The company has a different timezone than yours! Here dates and times are displayed in the company's timezone
-                    </span>
+                <div class="alert alert-info" role="alert" invisible="not request_unit_hours or not tz_mismatch">
+                    <span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone</span>
                     (<field name="tz"/>).
                 </div>
                 <field name="tz_mismatch" invisible="1"/>
-                <field name="holiday_type" invisible="1" readonly="state not in ['confirm', 'draft']"/>
                 <field name="leave_type_request_unit" invisible="1"/>
                 <div class="o_hr_leave_content row">
                     <div class="o_hr_leave_column col_left col-md-6 col-12">
                         <div name="title" class="o_hr_leave_title" invisible="1">
-                            <field name="employee_id" readonly="1" force_save="1" invisible="1"/>
-                            <field name="employee_ids" invisible="1" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                             <field name="display_name" invisible="not holiday_status_id"/>
                         </div>
                         <field name="leave_type_increases_duration" invisible="True"/>
                         <group name="col_left">
+                            <field name="employee_id" invisible="1" readonly="1" force_save="1"/>
                             <field name="employee_company_id" invisible="1"/>
                             <field name="holiday_status_id" force_save="1"
                                 domain="[
@@ -447,14 +437,9 @@
                 <attribute name="invisible">0</attribute>
             </xpath>
             <xpath expr="//field[@name='holiday_status_id']" position="before">
-                <field name="holiday_type" string="Mode" groups="hr_holidays.group_hr_holidays_user" readonly="state not in ['confirm', 'draft']"/>
-                <field name="mode_company_id" string="Company" groups="hr_holidays.group_hr_holidays_user" invisible="holiday_type != 'company'" readonly="state not in ['confirm', 'draft']" required="holiday_type == 'company'"/>
-                <field name="category_id" groups="hr_holidays.group_hr_holidays_user" invisible="holiday_type != 'category'" readonly="state not in ['confirm', 'draft']" required="holiday_type == 'category'"/>
-                <field name="department_id" groups="hr_holidays.group_hr_holidays_user" invisible="holiday_type != 'department'" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" required="holiday_type == 'department'"/>
-                <field name="multi_employee" invisible="1" force_save="1"/>
-                <field name="employee_id" groups="hr_holidays.group_hr_holidays_user" invisible="holiday_type != 'employee' or state != 'validate' or not employee_id" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" widget="many2one_avatar_user"/>
-                <field name="employee_ids" groups="hr_holidays.group_hr_holidays_user" invisible="holiday_type != 'employee' or (state == 'validate' and employee_id)" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" required="holiday_type == 'employee' and state in ('draft', 'cancel', 'refuse')" widget="many2many_avatar_user"/>
-                <field name="company_id" invisible="multi_employee" groups="base.group_multi_company"/>
+                <field name="employee_id" groups="hr_holidays.group_hr_holidays_user" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" widget="many2one_avatar_user"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="department_id" groups="hr_holidays.group_hr_holidays_user"/>
             </xpath>
             <field name="name" position="replace"/>
             <field name="user_id" position="before">
@@ -485,7 +470,7 @@
                     all_day="last_several_days">
                 <field name="display_name"/>
                 <field name="holiday_status_id" color="color" filters="1" invisible="1"/>
-                <field name="employee_id" filters="1" invisible="1"/>
+                <field name="employee_id" filters="1"/>
                 <field name="is_hatched" invisible="1" />
                 <field name="is_striked" invisible="1"/>
             </calendar>
@@ -497,10 +482,8 @@
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
             <tree string="Time Off Requests" sample="1">
-                <field name="employee_id" column_invisible="True" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
-                <field name="all_employee_ids" widget="many2many_avatar_user" decoration-muted="not active_employee" string="Employees" />
+                <field name="employee_id" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
                 <field name="department_id" optional="hidden" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
-                <field name="holiday_type" string="Mode" groups="base.group_no_one" readonly="state not in ['confirm', 'draft']"/>
                 <field name="holiday_status_id" class="fw-bold" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="name"/>
                 <field name="date_from" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
@@ -508,7 +491,6 @@
                 <field name="duration_display" string="Duration"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'" decoration-danger="state == 'cancel'"/>
                 <field name="active_employee" column_invisible="True"/>
-                <field name="category_id" column_invisible="True" readonly="state not in ['confirm', 'draft']"/>
                 <field name="user_id" column_invisible="True"/>
                 <field name="message_needaction" column_invisible="True"/>
                 <button string="Approve" name="action_approve" type="object"
@@ -539,16 +521,10 @@
             <xpath expr="//tree" position="attributes">
                 <attribute name="default_order">date_from DESC</attribute>
             </xpath>
-            <xpath expr="//field[@name='all_employee_ids']" position="attributes">
-                <attribute name="column_invisible">1</attribute>
-            </xpath>
             <xpath expr="//field[@name='employee_id']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="column_invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='department_id']" position="attributes">
-                <attribute name="column_invisible">1</attribute>
-            </xpath>
-            <xpath expr="//field[@name='holiday_type']" position="attributes">
                 <attribute name="column_invisible">1</attribute>
             </xpath>
             <xpath expr="//button[@name='action_approve']" position="attributes">
@@ -723,10 +699,7 @@
             'search_default_current_year': 3,
             'hide_employee_name': 1,
             'holiday_status_display_name': False}</field>
-        <field name="domain">['|', ('employee_id.company_id', 'in', allowed_company_ids),
-                                    '&amp;', ('multi_employee', '=', True),
-                                    '&amp;', ('state', 'in', ['draft', 'confirm', 'validate1']),
-                                    ('employee_ids.company_id', 'in', allowed_company_ids)]</field>
+        <field name="domain">[('employee_id.company_id', 'in', allowed_company_ids)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Meet the time off dashboard.
@@ -793,7 +766,7 @@
             'search_default_department_id': [active_id],
             'default_department_id': active_id}
         </field>
-        <field name="domain">[('holiday_type','=','employee')]</field>
+        <field name="domain">[]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No data yet!

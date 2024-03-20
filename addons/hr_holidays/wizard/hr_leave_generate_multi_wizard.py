@@ -49,7 +49,6 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
         work_days_data = employees._get_work_days_data_batch(date_from_tz, date_to_tz)
         return [{
             'name': self.name,
-            'holiday_type': 'employee',
             'holiday_status_id': self.holiday_status_id.id,
             'date_from': date_from_tz,
             'date_to': date_to_tz,
@@ -57,7 +56,6 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
             'request_date_to': self.date_to,
             'number_of_days': work_days_data[employee.id]['days'],
             'employee_id': employee.id,
-            'employee_ids': employee,
             'state': 'validate',
         } for employee in employees if work_days_data[employee.id]['days']]
 
@@ -77,13 +75,13 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
             ('date_from', '<=', date_to_tz),
             ('date_to', '>', date_from_tz),
             ('state', 'not in', ['cancel', 'refuse']),
-            ('holiday_type', '=', 'employee'),
             ('employee_id', 'in', employees.ids)])
 
         if conflicting_leaves:
             # YTI: More complex use cases could be managed later
-            if any(l.leave_type_request_unit == 'hour' for l in conflicting_leaves):
-                raise UserError(_('You can not have 2 time off that overlaps on the same day.'))
+            invalid_time_off = conflicting_leaves.filtered(lambda l: l.leave_type_request_unit == 'hour')
+            if invalid_time_off:
+                raise UserError(_('Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n%s', '\n'.join(f"- {l.display_name}" for l in invalid_time_off)))
 
             conflicting_leaves._split_leaves(self.date_from, self.date_to + timedelta(days=1))
 

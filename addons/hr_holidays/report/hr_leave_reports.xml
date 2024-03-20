@@ -73,12 +73,12 @@
         </field>
     </record>
 
-    <record id="act_hr_employee_holiday_type" model="ir.actions.act_window">
+    <record id="action_hr_leave_report" model="ir.actions.act_window">
         <field name="name">Time Off Analysis</field>
         <field name="res_model">hr.leave.report</field>
         <field name="view_mode">graph,tree,pivot</field>
         <field name="search_view_id" ref="view_hr_holidays_filter_report"/>
-        <field name="domain">[('holiday_type','=','employee')]</field>
+        <field name="domain">[]</field>
         <field name="context">{'search_default_group_type': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

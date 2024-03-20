@@ -44,7 +44,6 @@
         <field name="name">Time Off base.group_user create/write</field>
         <field name="model_id" ref="model_hr_leave"/>
         <field name="domain_force">[
-            ('holiday_type', '=', 'employee'),
             '|',
                 '&amp;',
                     ('employee_id.user_id', '=', user.id),
@@ -85,7 +84,6 @@
         <field name="name">Time Off Responsible create/write</field>
         <field name="model_id" ref="model_hr_leave"/>
         <field name="domain_force">[
-            ('holiday_type', '=', 'employee'),
             '|',
                 '&amp;',
                     ('employee_id.user_id', '=', user.id),
@@ -111,7 +109,6 @@
         <field name="name">Time Off All Approver create/write</field>
         <field name="model_id" ref="model_hr_leave"/>
         <field name="domain_force">[
-            ('holiday_type', '=', 'employee'),
             '|',
                 '&amp;',
                     ('employee_id.user_id', '=', user.id),
@@ -169,7 +166,6 @@
         <field name="domain_force">[
             ('holiday_status_id.requires_allocation', '=', 'yes'),
             ('holiday_status_id.employee_requests', '=', 'yes'),
-            ('holiday_type', '=', 'employee'),
             '|',
                 ('employee_id.user_id', '=', user.id),
                 '&amp;',
@@ -205,7 +201,6 @@
         <field name="name">Allocations: holiday user: create/write</field>
         <field name="model_id" ref="model_hr_leave_allocation"/>
         <field name="domain_force">[
-            ('holiday_type', '=', 'employee'),
             '|',
                 '&amp;',
                     ('employee_id.user_id', '=', user.id),
