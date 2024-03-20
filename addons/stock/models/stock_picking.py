@@ -813,7 +813,7 @@ class Picking(models.Model):
         })
         if self._origin.location_id != self.location_id and any(line.quantity for line in self.move_ids.move_line_ids):
             return {'warning': {
-                    'title': 'Locations to update',
+                    'title': _("Locations to update"),
                     'message': _("You might want to update the locations of this transfer's operations")
                     }
             }
