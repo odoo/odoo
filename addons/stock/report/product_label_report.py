@@ -57,6 +57,7 @@ class ReportLotLabel(models.AbstractModel):
         lot_list = []
         for lot in lots:
             lot_list.append({
+                'lot_id': lot.id,
                 'display_name_markup': markupsafe.Markup(lot.product_id.display_name),
                 'name': markupsafe.Markup(lot.name),
             })
