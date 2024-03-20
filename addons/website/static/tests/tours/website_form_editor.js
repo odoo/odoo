@@ -543,12 +543,45 @@
         ...addCustomField("date", "text", "field E", false),
         ...selectFieldByLabel("field D"),
         ...selectButtonByData('data-set-visibility-dependency="field E"'),
-        ...selectButtonByData('data-select-data-attribute="set"'),
+        ...selectButtonByData('data-select-data-attribute="after"'),
+        {
+            content: "Enter a date in the date input",
+            trigger: "[data-name='hidden_condition_additional_date'] input",
+            run: "text 03/28/2017",
+        },
         ...wTourUtils.clickOnSave(),
         {
-            content: "Click to open the date picker popover from field E",
+            content: "Enter an invalid date in field E",
             trigger: `:iframe ${triggerFieldByLabel("field E")} input`,
-            run: "click",
+            run() {
+                this.anchor.value = "25071981";
+                this.anchor.dispatchEvent(new InputEvent("input", {bubbles: true}));
+                // Adds a delay to let the input code run.
+                setTimeout(() => {
+                    this.anchor.classList.add("invalidDate");
+                }, 500);
+            },
+        },
+        {
+            content: "Enter an valid date in field E",
+            trigger: `:iframe ${triggerFieldByLabel("field E")} input.invalidDate`,
+            run() {
+                this.anchor.classList.remove("invalidDate");
+                this.anchor.value = "07/25/1981";
+                this.anchor.dispatchEvent(new InputEvent("input", {bubbles: true}));
+                // Adds a delay to let the input code run.
+                setTimeout(() => {
+                    this.anchor.classList.add("validDate");
+                }, 500);
+            },
+        },
+        {
+            content: "Click to open the date picker popover from field E",
+            trigger: `:iframe ${triggerFieldByLabel("field E")} input.validDate`,
+            run(actions) {
+                this.anchor.classList.remove("validDate");
+                actions.click();
+            },
         },
         {
             content: "Select today's date from the date picker",
