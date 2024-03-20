@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# Copyright (C) 2015 Willow IT Pty Ltd (<http://www.willowit.com.au>).
+# Copyright (C) 2015 Willdoo IT Pty Ltd (<http://www.willdooit.com>).
 
 {
     'name': 'Australian - Accounting',
@@ -17,8 +17,8 @@ Also:
     - activates a number of regional currencies.
     - sets up Australian taxes.
     """,
-    'author': 'Richard deMeester - Willow IT',
-    'website': 'http://www.willowit.com',
+    'author': 'Richard deMeester - Willdoo IT',
+    'website': 'http://www.willdooit.com',
     'depends': ['account'],
     'data': [
              'data/l10n_au_chart_data.xml',
