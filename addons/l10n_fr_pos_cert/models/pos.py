@@ -76,7 +76,11 @@ class pos_order(models.Model):
             field_value = obj[field_str]
             if obj._fields[field_str].type == 'many2one':
                 field_value = field_value.id
-            if obj._fields[field_str].type in ['many2many', 'one2many']:
+            if field_str == "payment_ids":
+                # optimization: pos.payment.sorted() can be slow. Exploit the fact that we know its
+                # _order to use a faster sorting method.
+                field_value = sorted(field_value.ids, reverse=True)
+            elif obj._fields[field_str].type in ['many2many', 'one2many']:
                 field_value = field_value.sorted().ids
             return str(field_value)
 
