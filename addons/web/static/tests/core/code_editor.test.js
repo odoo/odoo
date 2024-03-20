@@ -48,6 +48,54 @@ function getFakeAceEditor() {
     };
 }
 
+const keyToKeyCode = {
+    Control: 17,
+    Command: 224,
+    z: 90,
+};
+const defaultKeyBoardEvent = {
+    bubbles: true,
+};
+
+/*
+A custom implementation to dispatch keyboard events for ace specifically
+It is very naive and simple, and could extended
+
+FIXME: Specificities of Ace 1.32.3
+-- Ace heavily relies on KeyboardEvent.keyCode, so hoot's helpers
+    cannot be used for this simple test.
+-- Ace still relies on the keypress event
+-- The textarea has no size in ace, it is a "hidden" input and a part of Ace's internals
+    hoot's helpers won't focus it naturally
+-- The same Ace considers that if "Win" is not part of the useragent's string, we are in a MAC environment
+    So, instead of patching the useragent, we send to ace what it wants. (ie: Command + metaKey: true)
+*/
+function dispatchKeyboardEvents(el, tupleArray) {
+    let metaKey = false;
+    function modify(evType, eventInit) {
+        if (eventInit.key === "Command") {
+            if (evType === "keydown") {
+                metaKey = true;
+            }
+            if (evType === "keyup") {
+                metaKey = false;
+            }
+        }
+    }
+
+    for (const [evType, eventInit] of tupleArray) {
+        modify(evType, eventInit);
+        const evInit = {
+            ...defaultKeyBoardEvent,
+            keyCode: keyToKeyCode[eventInit.key],
+            metaKey,
+            eventInit,
+        };
+        el.dispatchEvent(new KeyboardEvent(evType, evInit));
+        modify(evType, eventInit);
+    }
+}
+
 test("Can be rendered", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
@@ -183,6 +231,8 @@ test("Default value correctly set and updates", async () => {
     const ace_editor = window.ace.edit(queryOne(".ace_editor"));
     ace_editor.setBehavioursEnabled(false);
 
+    const aceEditor = window.ace.edit(queryOne(".ace_editor"));
+    aceEditor.selectAll();
     await editAce(textB);
     expect(getDomValue()).toBe(textB);
 
@@ -251,4 +301,36 @@ test("Theme props updates imports the theme", async () => {
     await codeEditor.setTheme("monokai");
     await animationFrame();
     expect(["ace/theme/monokai"]).toVerifySteps({ message: "Monokai theme should be loaded" });
+});
+
+test("initial value cannot be undone", async () => {
+    class Parent extends Component {
+        static components = { CodeEditor };
+        static template = xml`<CodeEditor mode="'xml'" value="'some value'" class="'h-100'" />`;
+        static props = ["*"];
+    }
+    await mountWithCleanup(Parent);
+    await animationFrame();
+    expect(".ace_editor").toHaveCount(1);
+    expect(".ace_editor .ace_content").toHaveText("some value");
+
+    const editor = window.ace.edit(queryOne(".ace_editor"));
+    const undo = editor.session.$undoManager.undo.bind(editor.session.$undoManager);
+    editor.session.$undoManager.undo = (...args) => {
+        expect.step("ace undo");
+        return undo(...args);
+    };
+
+    const aceContent = queryOne(".ace_editor textarea");
+    dispatchKeyboardEvents(aceContent, [
+        ["keydown", { key: "Command" }],
+        ["keypress", { key: "Command" }],
+        ["keydown", { key: "z" }],
+        ["keypress", { key: "z" }],
+        ["keyup", { key: "z" }],
+        ["keyup", { key: "Command" }],
+    ]);
+    await animationFrame();
+    expect(".ace_editor .ace_content").toHaveText("some value");
+    expect(["ace undo"]).toVerifySteps();
 });
