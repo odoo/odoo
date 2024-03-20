@@ -1653,6 +1653,57 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         return_picking_2.button_validate()
         self.assertEqual(return_wizard.product_return_moves.quantity, 1)
 
+    def test_2_steps_pull_and_decrease_sol_qty_to_zero(self):
+        """
+        2 steps delivery, special rules:
+        - Pull
+        - 'Cancel next move' enabled
+        SO with one product
+        On the SO, cancel the qty of the product
+        On each picking, the SM should be canceled
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        customer_location = self.env.ref('stock.stock_location_customers')
+
+        warehouse.delivery_steps = 'pick_ship'
+        warehouse.delivery_route_id.rule_ids = [
+            (5, 0, 0),
+            (0, 0, {
+                'name': 'Pull out->custo',
+                'action': 'pull',
+                'location_src_id': warehouse.wh_output_stock_loc_id.id,
+                'location_dest_id': customer_location.id,
+                'picking_type_id': warehouse.out_type_id.id,
+                'propagate_cancel': True,
+                'procure_method': 'make_to_order',
+            }),
+            (0, 0, {
+                'name': 'Pull stock->out',
+                'action': 'pull',
+                'location_src_id': warehouse.lot_stock_id.id,
+                'location_dest_id': warehouse.wh_output_stock_loc_id.id,
+                'picking_type_id': warehouse.pick_type_id.id,
+                'propagate_cancel': True,
+                'procure_method': 'make_to_stock',
+            }),
+        ]
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_a.uom_id.id,
+                'price_unit': self.product_a.list_price,
+            })],
+        })
+        so.action_confirm()
+
+        so.order_line.product_uom_qty = 0
+
+        self.assertEqual(so.picking_ids.move_ids.mapped('state'), ['cancel', 'cancel'])
+
     def test_2_steps_fixed_procurement_propagation_with_backorder(self):
         """
         When validating a picking (partially coming from a backorder) linked to 2 destinations moves in a 2-steps delivery,
