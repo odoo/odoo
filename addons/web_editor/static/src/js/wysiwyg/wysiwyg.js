@@ -2418,6 +2418,8 @@ const Wysiwyg = Widget.extend({
         }
     },
     _onBlur: function () {
+        console.log('blur');
+        debugger;
         if (this._shouldDelayBlur) {
             this._pendingBlur = true;
         } else {

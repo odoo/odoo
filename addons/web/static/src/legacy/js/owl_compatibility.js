@@ -113,6 +113,8 @@ odoo.define('web.OwlCompatibility', function (require) {
 
         setup() {
             onWillUpdateProps((nextProps) => {
+                console.log("onWillUpdateProps")
+                debugger;
                 if (this.widget) {
                     return this.updateWidget(nextProps);
                 }

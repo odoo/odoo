@@ -734,6 +734,8 @@ export class OdooEditor extends EventTarget {
         if (this.editable.textContent === '' && this.options.placeholder) {
             this._makeHint(this.editable.firstChild, this.options.placeholder, true);
         }
+        //Hide toolbar after content reset
+        this._updateToolbar(false);
     }
 
     sanitize(target) {
