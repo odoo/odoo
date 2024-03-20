@@ -757,11 +757,9 @@ class ProductTemplate(models.Model):
                     ptal.product_template_value_ids._only_active() for ptal in lines_without_no_variants
                 ])
                 # For each possible variant, create if it doesn't exist yet.
-                for combination_tuple in all_combinations:
-                    combination = self.env['product.template.attribute.value'].concat(*combination_tuple)
-                    is_combination_possible = tmpl_id._is_combination_possible_by_config(combination, ignore_no_variant=True)
-                    if not is_combination_possible:
-                        continue
+                for combination in tmpl_id._filter_combinations_impossible_by_config(
+                    all_combinations, ignore_no_variant=True,
+                ):
                     if combination in existing_variants:
                         current_variants_to_activate += existing_variants[combination]
                     else:
@@ -775,14 +773,11 @@ class ProductTemplate(models.Model):
                 variants_to_create += current_variants_to_create
                 variants_to_activate += current_variants_to_activate
 
-            else:
-                for variant in existing_variants.values():
-                    is_combination_possible = tmpl_id._is_combination_possible_by_config(
-                        combination=variant.product_template_attribute_value_ids,
-                        ignore_no_variant=True,
-                    )
-                    if is_combination_possible:
-                        current_variants_to_activate += variant
+            elif existing_variants:
+                variants_combinations = [variant.product_template_attribute_value_ids for variant in existing_variants.values()]
+                current_variants_to_activate += Product.concat(*[existing_variants[possible_combination]
+                    for possible_combination in tmpl_id._filter_combinations_impossible_by_config(variants_combinations, ignore_no_variant=True)
+                ])
                 variants_to_activate += current_variants_to_activate
 
             variants_to_unlink += all_variants - current_variants_to_activate
@@ -989,6 +984,43 @@ class ProductTemplate(models.Model):
             for attribute_value in all_product_attribute_values
         }
 
+    def _filter_combinations_impossible_by_config(self, combination_tuples, ignore_no_variant=False):
+        """ Filter combination_tuples according to the config of attributes on the template
+
+        :return: iterator over possible combinations
+        :rtype: generator
+        """
+        self.ensure_one()
+        attribute_lines = self.valid_product_template_attribute_line_ids
+        attribute_lines_active_values = attribute_lines.product_template_value_ids._only_active()
+        if ignore_no_variant:
+            attribute_lines = attribute_lines._without_no_variant_attributes()
+        attribute_lines_without_multi = attribute_lines.filtered(
+            lambda l: l.attribute_id.display_type != 'multi')
+        exclusions = self._get_own_attribute_exclusions()
+        for combination_tuple in combination_tuples:
+            combination = self.env['product.template.attribute.value'].concat(*combination_tuple)
+            combination_without_multi = combination.filtered(
+                lambda l: l.attribute_line_id.attribute_id.display_type != 'multi')
+            if len(combination_without_multi) != len(attribute_lines_without_multi):
+                # number of attribute values passed is different than the
+                # configuration of attributes on the template
+                continue
+            if attribute_lines_without_multi != combination_without_multi.attribute_line_id:
+                # combination has different attributes than the ones configured on the template
+                continue
+            if not (attribute_lines_active_values >= combination):
+                # combination has different values than the ones configured on the template
+                continue
+            if exclusions:
+                # exclude if the current value is in an exclusion,
+                # and the value excluding it is also in the combination
+                combination_ids = set(combination.ids)
+                combination_excluded_ids = set(itertools.chain(*[exclusions.get(ptav_id) for ptav_id in combination.ids]))
+                if combination_ids & combination_excluded_ids:
+                    continue
+            yield combination
+
     def _is_combination_possible_by_config(self, combination, ignore_no_variant=False):
         """Return whether the given combination is possible according to the config of attributes on the template
 
@@ -1002,40 +1034,8 @@ class ProductTemplate(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-
-        attribute_lines = self.valid_product_template_attribute_line_ids
-
-        if ignore_no_variant:
-            attribute_lines = attribute_lines._without_no_variant_attributes()
-
-        attribute_lines_without_multi = attribute_lines.filtered(
-            lambda l: l.attribute_id.display_type != 'multi')
-        combination_without_multi = combination.filtered(
-            lambda l: l.attribute_line_id.attribute_id.display_type != 'multi')
-
-        if len(combination_without_multi) != len(attribute_lines_without_multi):
-            # number of attribute values passed is different than the
-            # configuration of attributes on the template
-            return False
-
-        if attribute_lines_without_multi != combination_without_multi.attribute_line_id:
-            # combination has different attributes than the ones configured on the template
-            return False
-
-        if not (attribute_lines.product_template_value_ids._only_active() >= combination):
-            # combination has different values than the ones configured on the template
-            return False
-
-        exclusions = self._get_own_attribute_exclusions()
-        if exclusions:
-            # exclude if the current value is in an exclusion,
-            # and the value excluding it is also in the combination
-            for ptav in combination:
-                for exclusion in exclusions.get(ptav.id):
-                    if exclusion in combination.ids:
-                        return False
-
-        return True
+        # Returns False on StopIteration. Empty combination should return True.
+        return isinstance(next(self._filter_combinations_impossible_by_config([combination], ignore_no_variant), False), models.BaseModel)
 
     def _is_combination_possible(self, combination, parent_combination=None, ignore_no_variant=False):
         """
