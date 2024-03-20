@@ -155,11 +155,11 @@
                 <field name="date_deadline" position="before">
                     <field name="progress" column_invisible="True"/>
                     <field name="effective_hours" column_invisible="True"/>
-                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" sum="Total Allocated Time" invisible="allocated_hours == 0" optional="hide"/>
-                    <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show" invisible="effective_hours == 0"/>
-                    <field name="subtask_effective_hours" widget="timesheet_uom" sum="Time Spent on Sub-Tasks" optional="hide"/>
-                    <field name="total_hours_spent" widget="timesheet_uom" sum="Total Time Spent" optional="hide"/>
-                    <field name="remaining_hours" widget="timesheet_uom" sum="Time Remaining on SO" optional="hide" decoration-danger="progress &gt;= 1" decoration-warning="progress &gt;= 0.8 and progress &lt; 1" invisible="allocated_hours == 0"/>
+                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" sum="Total Allocated Time" invisible="allocated_hours == 0" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show" invisible="effective_hours == 0" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="subtask_effective_hours" widget="timesheet_uom" sum="Time Spent on Sub-Tasks" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="total_hours_spent" widget="timesheet_uom" sum="Total Time Spent" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="remaining_hours" widget="timesheet_uom" sum="Time Remaining on SO" optional="hide" decoration-danger="progress &gt;= 1" decoration-warning="progress &gt;= 0.8 and progress &lt; 1" invisible="allocated_hours == 0" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="progress" widget="project_task_progressbar" avg="Average of Progress" optional="show" groups="hr_timesheet.group_hr_timesheet_user" invisible="allocated_hours == 0" options="{'overflow_class': 'bg-danger'}" />
                 </field>
             </field>
@@ -199,8 +199,8 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='blocking']/following-sibling::separator[1]" position="after">
-                    <filter string="Timesheets 80%" name="timesheet_80" domain="[('remaining_hours_percentage', '&gt;', 0.0), ('remaining_hours_percentage', '&lt;=', 0.2)]"/>
-                    <filter string="Timesheets &gt;100%" name="timesheet_exceeded" domain="[('overtime', '&gt;', 0)]"/>
+                    <filter string="Timesheets 80%" name="timesheet_80" domain="[('remaining_hours_percentage', '&gt;', 0.0), ('remaining_hours_percentage', '&lt;=', 0.2)]" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <filter string="Timesheets &gt;100%" name="timesheet_exceeded" domain="[('overtime', '&gt;', 0)]" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <separator/>
                 </xpath>
             </field>
@@ -215,12 +215,20 @@
                     <attribute name="js_class">hr_timesheet_graphview</attribute>
                 </xpath>
                 <xpath expr="//field[@name='stage_id']" position='after'>
-                    <field name="allocated_hours" widget="timesheet_uom"/>
-                    <field name="remaining_hours" widget="timesheet_uom"/>
-                    <field name="effective_hours" widget="timesheet_uom"/>
-                    <field name="total_hours_spent" widget="timesheet_uom"/>
-                    <field name="overtime" widget="timesheet_uom"/>
-                    <field name="subtask_effective_hours" widget="timesheet_uom"/>
+                    <field name="allocated_hours" widget="timesheet_uom" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="allocated_hours" widget="timesheet_uom" invisible="1" groups="!hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="remaining_hours" widget="timesheet_uom" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="remaining_hours" widget="timesheet_uom" invisible="1" groups="!hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="effective_hours" widget="timesheet_uom" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="effective_hours" widget="timesheet_uom" invisible="1" groups="!hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="total_hours_spent" widget="timesheet_uom" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="total_hours_spent" widget="timesheet_uom" invisible="1" groups="!hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="overtime" widget="timesheet_uom" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="overtime" widget="timesheet_uom" invisible="1" groups="!hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="subtask_effective_hours" widget="timesheet_uom" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="subtask_effective_hours" widget="timesheet_uom" invisible="1" groups="!hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="progress" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="progress" invisible="1" groups="!hr_timesheet.group_hr_timesheet_user"/>
                 </xpath>
             </field>
         </record>
@@ -232,13 +240,22 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='allocated_hours']" position='attributes'>
                     <attribute name="widget">timesheet_uom</attribute>
+                    <attribute name="groups">hr_timesheet.group_hr_timesheet_user</attribute>
                 </xpath>
                 <xpath expr="//field[@name='allocated_hours']" position='after'>
-                    <field name="remaining_hours" widget="timesheet_uom"/>
-                    <field name="effective_hours" widget="timesheet_uom"/>
-                    <field name="total_hours_spent" widget="timesheet_uom"/>
-                    <field name="overtime" widget="timesheet_uom"/>
-                    <field name="subtask_effective_hours" widget="timesheet_uom"/>
+                    <field name="allocated_hours" widget="timesheet_uom" invisible="1" groups="!hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="remaining_hours" widget="timesheet_uom" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="remaining_hours" widget="timesheet_uom" invisible="1" groups="!hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="effective_hours" widget="timesheet_uom" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="effective_hours" widget="timesheet_uom" invisible="1" groups="!hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="total_hours_spent" widget="timesheet_uom" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="total_hours_spent" widget="timesheet_uom" invisible="1" groups="!hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="overtime" widget="timesheet_uom" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="overtime" widget="timesheet_uom" invisible="1" groups="!hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="subtask_effective_hours" widget="timesheet_uom" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="subtask_effective_hours" widget="timesheet_uom" invisible="1" groups="!hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="progress" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="progress" invisible="1" groups="!hr_timesheet.group_hr_timesheet_user"/>
                 </xpath>
             </field>
         </record>

@@ -6,7 +6,7 @@ from odoo import fields, models
 class ReportProjectTaskUser(models.Model):
     _inherit = 'report.project.task.user'
 
-    remaining_hours_so = fields.Float('Time Remaining on SO', readonly=True)
+    remaining_hours_so = fields.Float('Time Remaining on SO', readonly=True, groups="hr_timesheet.group_hr_timesheet_user")
 
     def _select(self):
         return super()._select() + """,
