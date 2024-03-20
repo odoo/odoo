@@ -14,30 +14,31 @@ patch(MockServer.prototype, {
      */
     mockWrite(model, args) {
         const notifications = [];
-        if (model == "discuss.channel") {
-            const vals = args[1];
-            const [channel] = this.getRecords(model, [["id", "=", args[0][0]]]);
-            if (channel) {
-                const diff = {};
-                for (const key in vals) {
-                    if (channel[key] != vals[key] && key !== "image_128") {
-                        diff[key] = vals[key];
+        const [old_channel] = this.getRecords(model, [["id", "=", args[0][0]]]);
+        const mockWriteResult = super.mockWrite(...arguments);
+        if (model == "discuss.channel" && old_channel) {
+            let notify = false;
+            const channel = this.getRecords(model, [["id", "=", args[0][0]]])[0];
+            const info = this._mockDiscussChannelBasicInfo([old_channel.id])[0];
+            for (const [key, value] of Object.entries(channel)) {
+                if (value != old_channel[key]) {
+                    notify = true;
+                    if (key === "image_128" || key in info) {
+                        continue;
                     }
+                    info[key] = value;
                 }
+            }
+            if (notify) {
                 notifications.push([
                     channel,
                     "mail.record/insert",
                     {
-                        Thread: {
-                            id: channel.id,
-                            model: "discuss.channel",
-                            ...diff,
-                        },
+                        Thread: info,
                     },
                 ]);
             }
         }
-        const mockWriteResult = super.mockWrite(...arguments);
         if (notifications.length) {
             this.pyEnv["bus.bus"]._sendmany(notifications);
         }
@@ -596,6 +597,48 @@ patch(MockServer.prototype, {
         return this._mockDiscussChannelChannelInfo([id])[0];
     },
     /**
+     * Simulates `_channel_basic_info` on `discuss.channel`.
+     *
+     * @private
+     * @param {integer} id
+     * @returns {Object[]}
+     */
+    _mockDiscussChannelBasicInfo(id) {
+        const channel = this.getRecords("discuss.channel", [["id", "=", id]])[0];
+        const messages = this.getRecords("mail.message", [
+            ["model", "=", "discuss.channel"],
+            ["res_id", "=", channel.id],
+        ]);
+        const [group_public_id] = this.getRecords("res.groups", [
+            ["id", "=", channel.group_public_id],
+        ]);
+        const messageNeedactionCounter = this.getRecords("mail.notification", [
+            ["res_partner_id", "=", this.pyEnv.currentPartnerId],
+            ["is_read", "=", false],
+            ["mail_message_id", "in", messages.map((message) => message.id)],
+        ]).length;
+        const res = assignDefined({}, channel, [
+            "id",
+            "name",
+            "defaultDisplayMode",
+            "description",
+            "uuid",
+            "create_uid",
+            "group_based_subscription",
+            "avatarCacheKey",
+        ]);
+        Object.assign(res, {
+            channel_type: channel.channel_type,
+            memberCount: this.pyEnv["discuss.channel.member"].searchCount([
+                ["channel_id", "=", channel.id],
+            ]),
+            message_needaction_counter: messageNeedactionCounter,
+            authorizedGroupFullName: group_public_id ? group_public_id.name : false,
+            model: "discuss.channel",
+        });
+        return res;
+    },
+    /**
      * Simulates `channel_info` on `discuss.channel`.
      *
      * @private
@@ -608,37 +651,7 @@ patch(MockServer.prototype, {
             const members = this.getRecords("discuss.channel.member", [
                 ["id", "in", channel.channel_member_ids],
             ]);
-            const messages = this.getRecords("mail.message", [
-                ["model", "=", "discuss.channel"],
-                ["res_id", "=", channel.id],
-            ]);
-            const [group_public_id] = this.getRecords("res.groups", [
-                ["id", "=", channel.group_public_id],
-            ]);
-            const messageNeedactionCounter = this.getRecords("mail.notification", [
-                ["res_partner_id", "=", this.pyEnv.currentPartnerId],
-                ["is_read", "=", false],
-                ["mail_message_id", "in", messages.map((message) => message.id)],
-            ]).length;
-            const res = assignDefined({}, channel, [
-                "id",
-                "name",
-                "defaultDisplayMode",
-                "description",
-                "uuid",
-                "create_uid",
-                "group_based_subscription",
-                "avatarCacheKey",
-            ]);
-            Object.assign(res, {
-                channel_type: channel.channel_type,
-                memberCount: this.pyEnv["discuss.channel.member"].searchCount([
-                    ["channel_id", "=", channel.id],
-                ]),
-                message_needaction_counter: messageNeedactionCounter,
-                authorizedGroupFullName: group_public_id ? group_public_id.name : false,
-                model: "discuss.channel",
-            });
+            const res = this._mockDiscussChannelBasicInfo(channel.id);
             const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(
                 channel.id
             );
