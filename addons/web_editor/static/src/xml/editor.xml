@@ -96,7 +96,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="removeFormat" data-call="removeFormat" title="Remove format" class="btn fa fa-eraser fa-fw"></div>
+                <div id="removeFormat" data-call="removeFormat" title="Remove format" class="btn fa fa-eraser fa-fw" t-att-class="{ 'd-none': !props.showRemoveFormat }"></div>
             </t>
             <t t-else="">
                 <div id="decoration" class="btn-group">
@@ -104,7 +104,7 @@
                     <div id="italic" data-call="italic" title="Toggle italic" class="btn fa fa-italic fa-fw"></div>
                     <div id="underline" data-call="underline" title="Toggle underline" class="btn fa fa-underline fa-fw"></div>
                     <div id="strikethrough" data-call="strikeThrough" title="Toggle strikethrough" class="btn fa fa-strikethrough fa-fw"></div>
-                    <div id="removeFormat" data-call="removeFormat" title="Remove format" class="btn fa fa-eraser fa-fw"></div>
+                    <div id="removeFormat" data-call="removeFormat" title="Remove format" class="btn fa fa-eraser fa-fw" t-att-class="{ 'd-none': !props.showRemoveFormat }"></div>
                 </div>
 
                 <div t-if="props.showColors" id="colorInputButtonGroup" class="btn-group">

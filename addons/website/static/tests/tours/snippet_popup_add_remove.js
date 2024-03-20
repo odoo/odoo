@@ -41,7 +41,7 @@ wTourUtils.dragNDrop({
 }, {
     content: "Click on the 'undo' button.",
     in_modal: false,
-    trigger: '#oe_snippets button[data-action="undo"]',
+    trigger: '#oe_snippets button.fa-undo',
 }, {
     content: "Check that the s_popup was removed.",
     in_modal: false,
@@ -49,6 +49,6 @@ wTourUtils.dragNDrop({
     run: () => null, // It's a check.
 }, {
     content: "The invisible elements panel should also be removed.",
-    trigger: '#oe_snippets:has(.o_we_invisible_el_panel.d-none)',
+    trigger: '#oe_snippets:not(:has(.o_we_invisible_el_panel)',
     run: () => null, // It's a check.
 }]);

@@ -20,6 +20,7 @@ export class Toolbar extends Component {
         showFontSize: { type: Boolean, optional: true },
         useFontSizeInput: { type: Boolean, optional: true },
         showHistory: { type: Boolean, optional: true },
+        showRemoveFormat: { type: Boolean, optional: true },
 
         showStyle: { type: Boolean, optional: true },
         showJustify: { type: Boolean, optional: true },
@@ -53,6 +54,7 @@ export class Toolbar extends Component {
         showFontSize: true,
         useFontSizeInput: false,
         showHistory: false,
+        showRemoveFormat: true,
 
         showStyle: true,
         showJustify: true,

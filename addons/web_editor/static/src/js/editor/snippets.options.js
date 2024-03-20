@@ -9111,8 +9111,8 @@ registry.VersionControl = SnippetOptionWidget.extend({
         let newBlockEl;
         this.trigger_up("find_snippet_template", {
             snippet: this.$target[0],
-            callback: (_, snippetBody) => {
-                newBlockEl = snippetBody.cloneNode(true);
+            callback: (snippet) => {
+                newBlockEl = snippet.baseBody.cloneNode(true);
             },
         });
         // Replacing the block.
@@ -9122,7 +9122,12 @@ registry.VersionControl = SnippetOptionWidget.extend({
         // Initializing the new block as if it was dropped: the mutex needs to
         // be free for that so we wait for it first.
         this.options.wysiwyg.waitForEmptyMutexAction().then(async () => {
-            await this.options.wysiwyg.snippetsMenu.callPostSnippetDrop($(newBlockEl));
+            await new Promise((resolve) => {
+                this.options.wysiwyg.snippetsMenuBus.trigger("CALL_POST_SNIPPET_DROPPED", { 
+                    $snippet: $(newBlockEl),
+                    onSuccess: resolve,
+                });
+            });
             await new Promise(resolve => {
                 this.trigger_up("remove_snippet",
                     {$snippet: this.$target, onSuccess: resolve, shouldRecordUndo: false}

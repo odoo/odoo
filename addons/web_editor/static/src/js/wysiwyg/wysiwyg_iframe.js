@@ -79,7 +79,8 @@ patch(Wysiwyg.prototype, {
         this.$editable = $('<div class="note-editable oe_structure odoo-editor-editable"></div>');
         this.$el.removeClass('note-editable oe_structure odoo-editor-editable');
         this.$iframe = $('<iframe class="wysiwyg_iframe o_iframe">').css({
-            width: '100%'
+            width: '100%',
+            height: '100%',
         });
         var avoidDoubleLoad = 0; // this bug only appears on some configurations.
 
@@ -109,15 +110,6 @@ patch(Wysiwyg.prototype, {
                 $iframeWrapper.append(self.$editable);
 
                 self.options.toolbarHandler = $('#web_editor-top-edit', self.$iframe[0].contentWindow.document);
-                self.$el.on('click', '.o_fullscreen_btn', function () {
-                    $("body").toggleClass("o_field_widgetTextHtml_fullscreen");
-                    var full = $("body").hasClass("o_field_widgetTextHtml_fullscreen");
-                    self.$iframe.parents().toggleClass('o_form_fullscreen_ancestor', full);
-                    $(window).trigger("resize"); // induce a resize() call and let other backend elements know (the navbar extra items management relies on this)
-                    if (self.env.onToggleFullscreen) {
-                        self.env.onToggleFullscreen();
-                    }
-                });
                 resolve();
             };
         });
@@ -157,13 +149,11 @@ patch(Wysiwyg.prototype, {
         });
     },
 
-    _insertSnippetMenu() {
+    async _insertSnippetMenu() {
         if (this.options.inIframe) {
-            this.el.classList.add("d-flex");
-            return this.snippetsMenu.appendTo(this.$el);
-        } else {
-            return super._insertSnippetMenu(...arguments);
+            this.el.classList.add("w-100");
         }
+        return super._insertSnippetMenu();
     },
     /**
      * Get assets for the iframe.

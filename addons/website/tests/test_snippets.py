@@ -23,7 +23,7 @@ class TestSnippets(HttpCase):
         with MockRequest(self.env, website=self.env['website'].browse(1)):
             snippets_template = self.env['ir.ui.view'].render_public_asset('website.snippets')
         html_template = html.fromstring(snippets_template)
-        data_snippet_els = html_template.xpath("//*[@class='o_panel' and not(contains(@class, 'd-none'))]//*[@data-snippet]")
+        data_snippet_els = html_template.xpath("//*[snippets and not(contains(@class, 'd-none'))]//*[@data-snippet]")
         blacklist = [
             's_facebook_page',  # avoid call to external services (facebook.com)
             's_map',  # avoid call to maps.google.com
