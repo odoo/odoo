@@ -4,6 +4,8 @@
 import base64
 from collections import OrderedDict
 from datetime import timedelta
+from unittest.mock import patch
+
 import io
 import unittest.mock
 
@@ -1493,3 +1495,56 @@ class TestVariantsExclusion(ProductAttributesCommon):
 
         exclude.unlink()
         self.assertEqual(len(self.smartphone.product_variant_ids), 4)
+
+    @mute_logger('odoo.models.unlink')
+    def test_dynamic_variants_unarchive(self):
+        """ Make sure that exclusions creation, update & delete are correctly handled.
+
+        Exclusions updates are not necessarily done from a specific template.
+        """
+        product_template = self.env['product.template'].create({
+            'name': 'Test dynamic',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.dynamic_attribute.id,
+                    'value_ids': [Command.set(self.dynamic_attribute.value_ids.ids)],
+                }),
+                Command.create({
+                    'attribute_id': self.dynamic_attribute.id,
+                    'value_ids': [Command.set(self.dynamic_attribute.value_ids.ids)],
+                })
+            ]
+        })
+        self.assertFalse(product_template.product_variant_ids)
+        first_line_ptavs = product_template.attribute_line_ids[0].product_template_value_ids
+        second_line_ptavs = product_template.attribute_line_ids[1].product_template_value_ids
+        for ptav1, ptav2 in zip(first_line_ptavs, second_line_ptavs, strict=True):
+            product_template._create_product_variant(ptav1 + ptav2)
+
+        self.assertEqual(len(product_template.product_variant_ids), 2)
+
+        pav_to_remove = self.dynamic_attribute.value_ids[:1]
+        variant_to_archive = product_template.product_variant_ids.filtered(
+            lambda pp:
+                pav_to_remove in pp.product_template_attribute_value_ids.product_attribute_value_id
+        )
+
+        # Removing one option will archive one variant
+        with patch(
+            'odoo.addons.product.models.product_product.ProductProduct._filter_to_unlink',
+            lambda products: products.filtered(
+                lambda pp: pp.product_tmpl_id.id != product_template.id
+            ),
+        ):
+            product_template.attribute_line_ids[1].value_ids = [
+                Command.unlink(self.dynamic_attribute.value_ids[:1].id)
+            ]
+        self.assertEqual(len(product_template.product_variant_ids), 1)
+        self.assertFalse(variant_to_archive.active)
+
+        # Putting it back should unarchive the archived variant
+        product_template.attribute_line_ids[1].value_ids = [
+            Command.link(self.dynamic_attribute.value_ids[:1].id)
+        ]
+        self.assertEqual(len(product_template.product_variant_ids), 2)
+        self.assertTrue(variant_to_archive.active)
