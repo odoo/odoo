@@ -431,7 +431,7 @@ export class MockServer {
                         record[fieldName] ??=
                             typeof def === "function" ? def.call(this, record) : def;
                     }
-                    record[fieldName] ??= DEFAULT_FIELD_VALUES[fieldDef.type]();
+                    record[fieldName] ??= DEFAULT_FIELD_VALUES[fieldDef.type]?.() ?? false;
                 }
                 if (seenIds.has(record.id)) {
                     throw new MockServerError(
