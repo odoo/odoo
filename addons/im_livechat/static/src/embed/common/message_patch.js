@@ -13,13 +13,13 @@ patch(Message.prototype, {
     },
 
     get quickActionCount() {
-        return this.props.thread?.type === "livechat" ? 2 : super.quickActionCount;
+        return this.props.thread?.channel_type === "livechat" ? 2 : super.quickActionCount;
     },
 
     get canAddReaction() {
         return (
             super.canAddReaction &&
-            (this.props.thread?.type !== "livechat" ||
+            (this.props.thread?.channel_type !== "livechat" ||
                 this.env.services["im_livechat.livechat"].state === SESSION_STATE.PERSISTED)
         );
     },
@@ -27,7 +27,7 @@ patch(Message.prototype, {
     get canReplyTo() {
         return (
             super.canReplyTo &&
-            (this.props.thread?.type !== "livechat" ||
+            (this.props.thread?.channel_type !== "livechat" ||
                 this.env.services["im_livechat.chatbot"].inputEnabled)
         );
     },

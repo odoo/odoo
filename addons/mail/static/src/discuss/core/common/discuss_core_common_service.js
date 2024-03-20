@@ -146,7 +146,6 @@ export class DiscussCoreCommon {
         const thread = this.store.Thread.insert({
             ...serverData,
             model: "discuss.channel",
-            type: serverData.channel_type,
             isAdmin:
                 serverData.channel_type !== "group" &&
                 serverData.create_uid === this.store.self.userId,
