@@ -59,6 +59,7 @@ class ReportLotLabel(models.AbstractModel):
             lot_list.append({
                 'display_name_markup': markupsafe.Markup(lot.product_id.display_name),
                 'name': markupsafe.Markup(lot.name),
+                'lot_record': lot,
             })
         return {
             'docs': lot_list,
