@@ -214,6 +214,7 @@ test("parsing one filter tag with default_period date attribute", async () => {
         {
             defaultGeneratorIds: ["year", "year-1"],
             description: "Date",
+            domain: "[]",
             fieldName: "date_field",
             fieldType: "date",
             type: "dateFilter",
@@ -360,6 +361,7 @@ test("parsing one filter tag with date attribute ", async () => {
         {
             defaultGeneratorIds: ["month"],
             description: "Date",
+            domain: "[]",
             fieldName: "date_field",
             fieldType: "date",
             name: "date_filter",
@@ -892,6 +894,47 @@ test("toggle a custom option in a date filter", async () => {
     ]);
     model.toggleDateFilter(filterId, "custom_today");
     expect(model.domain).toEqual([["date_field", "=", "2019-01-06"]]);
+});
+
+test("toggle a date filter with a domain", async () => {
+    mockDate("2019-01-06T15:00:00");
+    const model = await createSearchModel({
+        searchViewArch: `
+            <search>
+                <filter name="date_filter" date="date_field" string="DateFilter" domain="[('float_field', '>=', '0')]"/>
+            </search>
+        `,
+    });
+    const filterId = Object.keys(model.searchItems).map((key) => Number(key))[0];
+    expect(model.domain).toEqual([]);
+    model.toggleDateFilter(filterId);
+    expect(model.domain).toEqual([
+        "&",
+        "&",
+        ["date_field", ">=", "2019-01-01"],
+        ["date_field", "<=", "2019-01-31"],
+        ["float_field", ">=", "0"],
+    ]);
+});
+
+test("toggle a custom option in a date filter with a domain", async () => {
+    mockDate("2019-01-06T15:00:00");
+    const model = await createSearchModel({
+        searchViewArch: `
+            <search>
+                <filter name="date_filter" date="date_field" string="DateFilter" domain="[('float_field', '>=', '0')]">
+                    <filter name="today" string="Today" domain="[('date_field', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                </filter>
+            </search>
+        `,
+    });
+    const filterId = Object.keys(model.searchItems).map((key) => Number(key))[0];
+    model.toggleDateFilter(filterId, "custom_today");
+    expect(model.domain).toEqual([
+        "&",
+        ["date_field", "=", "2019-01-06"],
+        ["float_field", ">=", "0"],
+    ]);
 });
 
 test("toggle a groupBy", async () => {
