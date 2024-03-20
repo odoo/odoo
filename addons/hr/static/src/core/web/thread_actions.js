@@ -8,7 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 threadActionsRegistry.add("open-hr-profile", {
     condition(component) {
         return (
-            component.thread?.type === "chat" &&
+            component.thread?.channel_type === "chat" &&
             component.props.chatWindow?.isOpen &&
             component.thread.correspondent?.employeeId
         );

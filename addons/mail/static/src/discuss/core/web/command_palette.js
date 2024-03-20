@@ -50,13 +50,13 @@ commandProviderRegistry.add("mail.partner", {
         const displayedPartnerIds = new Set();
         if (!options.searchValue) {
             mentionedChannels.slice(0, 3).map((channel) => {
-                if (channel.type === "chat") {
+                if (channel.channel_type === "chat") {
                     displayedPartnerIds.add(channel.correspondent.id);
                 }
                 commands.push({
                     Component: DiscussCommand,
                     async action() {
-                        switch (channel.type) {
+                        switch (channel.channel_type) {
                             case "chat":
                                 threadService.openChat({ partnerId: channel.correspondent.id });
                                 break;
@@ -73,7 +73,8 @@ commandProviderRegistry.add("mail.partner", {
                     category: "discuss_mentioned",
                     props: {
                         imgUrl: channel.avatarUrl,
-                        persona: channel.type === "chat" ? channel.correspondent : undefined,
+                        persona:
+                            channel.channel_type === "chat" ? channel.correspondent : undefined,
                         counter: channel.importantCounter,
                     },
                 });
@@ -128,7 +129,7 @@ commandProviderRegistry.add("discuss.channel", {
         const shownChannels = new Set();
         if (!options.searchValue) {
             recentChannels
-                .filter((channel) => ["channel", "group"].includes(channel.type))
+                .filter((channel) => ["channel", "group"].includes(channel.channel_type))
                 .slice(0, 3)
                 .map((channel) => {
                     shownChannels.add(channel.id);
@@ -177,7 +178,7 @@ commandProviderRegistry.add("discuss.channel", {
         const groups = recentChannels.filter(
             (channel) =>
                 !shownChannels.has(channel.id) &&
-                channel.type === "group" &&
+                channel.channel_type === "group" &&
                 cleanTerm(channel.displayName).includes(cleanTerm(options.searchValue))
         );
         groups.map((channel) => {

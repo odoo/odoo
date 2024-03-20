@@ -24,7 +24,7 @@ threadActionsRegistry.add("restart", {
 const callSettingsAction = threadActionsRegistry.get("settings");
 patch(callSettingsAction, {
     condition(component) {
-        if (component.thread?.type !== "livechat") {
+        if (component.thread?.channel_type !== "livechat") {
             return super.condition(...arguments);
         }
         return (

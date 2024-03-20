@@ -21,7 +21,7 @@ patch(ChatWindow.prototype, {
     },
 
     async close() {
-        if (this.thread?.type !== "livechat") {
+        if (this.thread?.channel_type !== "livechat") {
             return super.close();
         }
         if (this.livechatService.state === SESSION_STATE.PERSISTED) {

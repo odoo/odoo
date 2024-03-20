@@ -6,7 +6,7 @@ patch(ChatWindow.prototype, {
     async close(options) {
         const thread = this.thread;
         await super.close(options);
-        if (thread?.type === "livechat") {
+        if (thread?.channel_type === "livechat") {
             await thread?.isLoadedDeferred;
             if (thread.messages.length === 0) {
                 this.threadService.unpin(thread);
