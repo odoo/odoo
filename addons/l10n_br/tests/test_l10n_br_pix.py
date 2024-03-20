@@ -48,7 +48,7 @@ class TestL10nBrPix(AccountTestInvoicingCommon):
         with self.assertRaises(ValidationError, msg="The random key"):
             self.partner_bank.proxy_value = "not a random key"
 
-    def test_get_qr_vals(self):
+    def _get_qr_code_string(self):
         self.invoice.qr_code_method = "emv_qr"
         demo_payment_reference = "NFe TÉST 0001"  # É and spaces should be removed
 
@@ -61,8 +61,17 @@ class TestL10nBrPix(AccountTestInvoicingCommon):
             structured_communication=None,
         )
 
-        qr_code_string = "".join(emv_qr_vals)
+        return "".join(emv_qr_vals)
+
+    def test_get_qr_vals(self):
         self.assertEqual(
-            qr_code_string,
+            self._get_qr_code_string(),
             "00020101021226580014br.gov.bcb.pix013671d6c6e1-64ea-4a11-9560-a10870c40ca2520400005303986540512.305802BR5914COMPANY_1_DATA62150511NFeTEST000163044CCF",
+        )
+
+    def test_get_qr_vals_without_reference(self):
+        self.partner_bank.include_reference = False
+        self.assertEqual(
+            self._get_qr_code_string(),
+            "00020101021226580014br.gov.bcb.pix013671d6c6e1-64ea-4a11-9560-a10870c40ca2520400005303986540512.305802BR5914COMPANY_1_DATA62070503***6304B27F",
         )
