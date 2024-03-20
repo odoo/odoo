@@ -1,8 +1,16 @@
 import { after, before, beforeAll, createJobScopedGetter } from "@odoo/hoot";
 
+const { Settings } = luxon;
+
 /**
  * @typedef {typeof SERVER_STATE_VALUES} ServerState
  */
+
+const applyDefaults = () => {
+    Object.assign(Settings, DEFAULT_LUXON_SETTINGS);
+
+    notifySubscribers();
+};
 
 const notifySubscribers = () => {
     // Apply new state to all subscribers
@@ -12,6 +20,13 @@ const notifySubscribers = () => {
     }
 };
 
+const DEFAULT_LUXON_SETTINGS = {
+    defaultLocale: Settings.defaultLocale,
+    defaultNumberingSystem: Settings.defaultNumberingSystem,
+    defaultOutputCalendar: Settings.defaultOutputCalendar,
+    defaultZone: Settings.defaultZone,
+    defaultWeekSettings: Settings.defaultWeekSettings,
+};
 const SERVER_STATE_VALUES = {
     companies: [{ id: 1, name: "Hermit" }],
     debug: false,
@@ -34,7 +49,7 @@ const getServerStateValues = createJobScopedGetter(
         ...JSON.parse(JSON.stringify(SERVER_STATE_VALUES)),
         ...previousValues,
     }),
-    notifySubscribers
+    applyDefaults
 );
 
 /** @type {Map<any, (state: ServerState) => any>} */
@@ -67,4 +82,4 @@ export const serverState = new Proxy(SERVER_STATE_VALUES, {
     },
 });
 
-beforeAll(notifySubscribers);
+beforeAll(applyDefaults);
