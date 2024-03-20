@@ -69,7 +69,9 @@ export class ThreadService {
                 .then(() => new Promise(setTimeout))
                 .then(() => this.markAsRead(thread));
         }
-        thread.seen_message_id = newestPersistentMessage?.id ?? false;
+        if (thread.selfMember) {
+            thread.selfMember.seen_message_id = newestPersistentMessage;
+        }
         if (
             thread.message_unread_counter > 0 &&
             thread.model === "discuss.channel" &&
@@ -80,7 +82,7 @@ export class ThreadService {
                 last_message_id: newestPersistentMessage.id,
             })
                 .then(() => {
-                    this.updateSeen(thread, newestPersistentMessage.id);
+                    this.updateSeen(thread, newestPersistentMessage);
                 })
                 .catch((e) => {
                     if (e.code !== 404) {
@@ -95,8 +97,8 @@ export class ThreadService {
         }
     }
 
-    updateSeen(thread, lastSeenId = thread.newestPersistentNotEmptyOfAllMessage?.id) {
-        const lastReadIndex = thread.messages.findIndex((message) => message.id === lastSeenId);
+    updateSeen(thread, lastSeen = thread.newestPersistentNotEmptyOfAllMessage) {
+        const lastReadIndex = thread.messages.findIndex((message) => message.eq(lastSeen));
         let newNeedactionCounter = 0;
         let newUnreadCounter = 0;
         for (const message of thread.messages.slice(lastReadIndex + 1)) {
@@ -107,8 +109,10 @@ export class ThreadService {
                 newUnreadCounter++;
             }
         }
+        if (thread.selfMember) {
+            thread.selfMember.seen_message_id = lastSeen;
+        }
         Object.assign(thread, {
-            seen_message_id: lastSeenId,
             message_needaction_counter: newNeedactionCounter,
             message_unread_counter: newUnreadCounter,
         });
@@ -121,10 +125,12 @@ export class ThreadService {
                 ["res_id", "=", thread.id],
             ],
         ]);
+        if (thread.selfMember) {
+            thread.selfMember.seen_message_id = thread.newestPersistentNotEmptyOfAllMessage;
+        }
         Object.assign(thread, {
             message_unread_counter: 0,
             message_needaction_counter: 0,
-            seen_message_id: thread.newestPersistentNotEmptyOfAllMessage?.id,
         });
     }
 
@@ -620,11 +626,13 @@ export class ThreadService {
                 { html: true }
             );
             thread.messages.push(tmpMsg);
-            thread.seen_message_id = tmpMsg.id;
+            if (thread.selfMember) {
+                thread.selfMember.seen_message_id = tmpMsg;
+            }
         }
         const data = await rpc("/mail/message/post", params);
-        tmpMsg?.delete();
         if (!data) {
+            tmpMsg?.delete();
             return;
         }
         if (data.id in this.store.Message.records) {
@@ -632,6 +640,12 @@ export class ThreadService {
         }
         const message = this.store.Message.insert(data, { html: true });
         thread.messages.add(message);
+        if (thread.selfMember?.seen_message_id?.id < message.id) {
+            thread.selfMember.seen_message_id = message;
+        }
+        // Only delete the temporary message now that seen_message_id is updated
+        // to avoid flickering.
+        tmpMsg?.delete();
         if (message.hasLink && this.store.hasLinkPreviewFeature) {
             rpc("/mail/link_preview", { message_id: data.id }, { silent: true });
         }
