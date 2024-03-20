@@ -20,6 +20,10 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
+    def _get_razorpay_public_token(self):
+        self.ensure_one()
+        return False
+
     def _get_specific_processing_values(self, processing_values):
         """ Override of `payment` to return razorpay-specific processing values.
 
@@ -39,8 +43,10 @@ class PaymentTransaction(models.Model):
 
         customer_id = self._razorpay_create_customer()['id']
         order_id = self._razorpay_create_order(customer_id)['id']
+        razorpay_public_token = self._get_razorpay_public_token()
         return {
             'razorpay_key_id': self.provider_id.razorpay_key_id,
+            'razorpay_public_token': razorpay_public_token,
             'razorpay_customer_id': customer_id,
             'is_tokenize_request': self.tokenize,
             'razorpay_order_id': order_id,
