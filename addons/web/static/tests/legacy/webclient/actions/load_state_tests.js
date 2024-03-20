@@ -274,6 +274,40 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([], "pushState was not called");
     });
 
+    QUnit.test("properly load client actions with path", async function (assert) {
+        class ClientAction extends Component {
+            static template = xml`<div class="o_client_action_test">Hello World</div>`;
+            static props = ["*"];
+            static path = "my-action";
+        }
+        actionRegistry.add("HelloWorldTest", ClientAction);
+        const mockRPC = async function (route, { method }) {
+            assert.step(method || route);
+        };
+        redirect("/odoo/HelloWorldTest");
+        logHistoryInteractions(assert);
+        await createWebClient({ serverData, mockRPC });
+        assert.deepEqual(router.current, {
+            action: "my-action",
+            actionStack: [
+                {
+                    action: "my-action",
+                    displayName: "",
+                },
+            ],
+        });
+        assert.strictEqual(
+            $(target).find(".o_client_action_test").text(),
+            "Hello World",
+            "should have correctly rendered the client action"
+        );
+        assert.verifySteps([
+            "/web/webclient/load_menus",
+            "pushState http://example.com/odoo/my-action",
+        ]);
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/my-action");
+    });
+
     QUnit.test("properly load client actions with resId", async function (assert) {
         class ClientAction extends Component {
             static template = xml`<ControlPanel/><div class="o_client_action_test">Hello World</div>`;
