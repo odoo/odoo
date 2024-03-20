@@ -32,6 +32,8 @@ class AccountPayment(models.Model):
             rec.amount = sum(self.l10n_latam_new_check_ids.mapped('amount'))
 
     def action_post(self):
+        for payment in self.filtered(lambda x: x.payment_method_code not in 'own_checks' and x.l10n_latam_new_check_ids):
+            payment.l10n_latam_new_check_ids.unlink()
         super().action_post()
         self._l10n_latam_check_split_move()
         # TODO : to look for another alternative.
@@ -50,21 +52,18 @@ class AccountPayment(models.Model):
     def _l10n_latam_check_split_move(self):
         for payment in self.filtered(lambda x: x.payment_method_code == 'own_checks' and x.payment_type == 'outbound'):
             # _prepare_move_line_default_vals
-            move_line_vals = []
             move_id = self.env['account.move'].create({
                 'journal_id': payment.journal_id.id,
             })
             liquidity_line, dummie, dummie = payment._seek_for_lines()
 
             for check in payment.l10n_latam_new_check_ids:
-
-
                 liquidity_amount_currency = -check.amount
                 liquidity_balance = payment.currency_id._convert(
                     liquidity_amount_currency,
                     payment.company_id.currency_id,
                     payment.company_id,
-                    payment.date, #TODO por ahora
+                    payment.date,
                 )
                 # Checks liquidity line
                 move_line = self.env['account.move.line'].with_context(check_move_validity=False).create({
@@ -76,7 +75,7 @@ class AccountPayment(models.Model):
                     'credit': -liquidity_balance if liquidity_balance < 0.0 else 0.0,
                     'partner_id': payment.partner_id.id,
                     'account_id': payment.outstanding_account_id.id,
-                    'move_id' : move_id.id,
+                    'move_id': move_id.id,
                 })
                 check.split_move_line_id = move_line.id
 
@@ -90,13 +89,13 @@ class AccountPayment(models.Model):
                     'credit': -liquidity_line.credit,
                     'partner_id': payment.partner_id.id,
                     'account_id': payment.outstanding_account_id.id,
-                    'move_id' : move_id.id,
+                    'move_id': move_id.id,
                 })
             move_id.action_post()
             (inverse_liquidity_line + liquidity_line).reconcile()
 
     def _l10n_latam_check_unlink_split_move(self):
-        split_move_ids = self.mapped('check_ids.split_move_line_id.move_id')
+        split_move_ids = self.mapped('l10n_latam_new_check_ids.split_move_line_id.move_id')
         split_move_ids.button_draft()
         split_move_ids.unlink()
 

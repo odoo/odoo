@@ -12,8 +12,8 @@
                             <field name="company_id" column_invisible="True"/>
                             <field name="currency_id" column_invisible="True"/>
                             <field name="name" />
-                            <field name="l10n_latam_check_bank_id" />
-                            <field name="l10n_latam_check_issuer_vat" />
+                            <field name="l10n_latam_check_bank_id" column_invisible="parent.payment_method_code == 'own_checks'"/>
+                            <field name="l10n_latam_check_issuer_vat" column_invisible="parent.payment_method_code == 'own_checks'"/>
                             <field name="l10n_latam_check_payment_date" />
                             <field name="amount" />
                         </tree>
@@ -30,9 +30,8 @@
                             <field name="company_id" column_invisible="True"/>
                             <field name="currency_id" column_invisible="True"/>
                             <field name="name" />
-                            <field name="l10n_latam_check_bank_id" />
-                            <field name="l10n_latam_check_issuer_vat" />
-                            <field name="l10n_latam_check_payment_date" />
+                            <field name="l10n_latam_check_bank_id"/>
+                            <field name="l10n_latam_check_issuer_vat"/>
                             <field name="amount" />
                             <button name="button_open_check_operations" type="object" string="⇒ Check Operations" class="oe_link"/>
                         </tree>

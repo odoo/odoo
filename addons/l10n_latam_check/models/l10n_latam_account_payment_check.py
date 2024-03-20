@@ -3,6 +3,7 @@
 import logging
 
 from odoo import models, fields, api, Command, _
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -38,7 +39,7 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
     l10n_latam_check_bank_id = fields.Many2one(
         comodel_name='res.bank',
         string='Check Bank',
-        # compute='_compute_l10n_latam_check_bank_id', store=True, readonly=False,
+        compute='_compute_l10n_latam_check_bank_id', store=True, readonly=False,
     )
     l10n_latam_check_issuer_vat = fields.Char(
         string='Check Issuer VAT',
@@ -56,9 +57,9 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
 
     def prepare_void_move_vals(self):
         return {
-                'ref' : 'Void check',
+                'ref': 'Void check',
                 'journal_id': self.split_move_line_id.move_id.journal_id.id,
-                'line_ids':[Command.create({
+                'line_ids': [Command.create({
                     'name': "Void check %s" % self.split_move_line_id.name,
                     'date_maturity': self.split_move_line_id.date_maturity,
                     'amount_currency': self.split_move_line_id.amount_currency,
@@ -69,27 +70,26 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
                     'account_id': self.payment_id.destination_account_id.id,
                    }),
                     Command.create({
-                    'name': "Void check %s" % self.split_move_line_id.name,
-                    'date_maturity': self.split_move_line_id.date_maturity,
-                    'amount_currency': -self.split_move_line_id.amount_currency,
-                    'currency_id': self.split_move_line_id.currency_id.id,
-                    'debit': -self.split_move_line_id.debit,
-                    'credit': -self.split_move_line_id.credit,
-                    'partner_id': self.split_move_line_id.partner_id.id,
-                    'account_id': self.split_move_line_id.account_id.id,
-                  })
-                ]
+                        'name': "Void check %s" % self.split_move_line_id.name,
+                        'date_maturity': self.split_move_line_id.date_maturity,
+                        'amount_currency': -self.split_move_line_id.amount_currency,
+                        'currency_id': self.split_move_line_id.currency_id.id,
+                        'debit': -self.split_move_line_id.debit,
+                        'credit': -self.split_move_line_id.credit,
+                        'partner_id': self.split_move_line_id.partner_id.id,
+                        'account_id': self.split_move_line_id.account_id.id,
+                     })]
             }
 
-    @api.depends('split_move_line_id.amount_residual')
+    @api.depends('split_move_line_id', 'split_move_line_id.amount_residual')
     def _compute_issue_state(self):
         for rec in self:
             if not rec.split_move_line_id:
                 rec.issue_state = False
             elif not rec.split_move_line_id.amount_residual:
-                reconciled_line = rec.split_move_line_id.full_reconcile_id.reconciled_line_ids- rec.split_move_line_id
+                reconciled_line = rec.split_move_line_id.full_reconcile_id.reconciled_line_ids - rec.split_move_line_id
                 voides_types = ['liability_payable', 'assets_receivable']
-                if (reconciled_line.move_id.line_ids - reconciled_line).mapped('account_id.account_type') in voides_types:
+                if (reconciled_line.move_id.line_ids - reconciled_line).mapped('account_id.account_type')[0] in voides_types:
                     rec.issue_state = 'voided'
                 else:
                     rec.issue_state = 'debited'
@@ -129,13 +129,69 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
             'res_model': 'account.payment',
             'views': [
                 # (self.env.ref('l10n_latam_check.view_account_third_party_check_operations_tree').id, 'tree'),
-                (self.env.ref('account.view_account_payment_tree').id, 'tree'),
+                (self.env.ref('l10n_latam_check.view_account_third_party_check_operations_tree').id, 'tree'),
 
                 (False, 'form')],
             'context': {'create': False},
             'domain': [('id', 'in', operations.ids)],
         }
         return action
+
+    def action_show_reconciled_move(self):
+        self.ensure_one()
+        move_id = self._get_reconciled_move()
+        return {
+            'name': _("Journal Entry"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'context': {'create': False},
+            'view_mode': 'form',
+            'res_id': move_id.id,
+        }
+
+    def _get_reconciled_move(self):
+        reconciled_line = self.split_move_line_id.full_reconcile_id.reconciled_line_ids - self.split_move_line_id
+        return (reconciled_line.move_id.line_ids - reconciled_line).mapped('move_id')
+
+    @api.constrains('name', 'journal_id')
+    def _constrains_check_number_unique(self):
+        """ Don't enforce uniqueness for third party checks"""
+        third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
+        checks = self - third_party_checks
+        if not checks:
+            return
+        self.env.flush_all()
+        self.env.cr.execute("""
+            SELECT check_line.name, move.journal_id
+              FROM l10n_latam_account_payment_check check_line
+              JOIN account_payment payment ON (check_line.payment_id = payment.id)
+              JOIN account_move move ON move.id = payment.move_id
+              JOIN account_journal journal ON journal.id = move.journal_id,
+                   l10n_latam_account_payment_check other_check
+              JOIN account_payment other_payment ON (other_check.payment_id = other_payment.id)
+              JOIN account_move other_move ON other_move.id = other_payment.move_id
+             WHERE check_line.name::BIGINT = other_check.name::BIGINT
+               AND move.journal_id = other_move.journal_id
+               AND check_line.id != other_check.id
+               AND check_line.id IN %(ids)s
+               AND move.state = 'posted'
+               AND other_move.state = 'posted'
+               AND check_line.name IS NOT NULL
+               AND other_check.name IS NOT NULL
+        """, {
+            'ids': tuple(checks.ids),
+        })
+        res = self.env.cr.dictfetchall()
+        if res:
+            raise ValidationError(_(
+                'The following numbers are already used:\n%s',
+                '\n'.join(_(
+                    '%(number)s in journal %(journal)s',
+                    number=r['name'],
+                    journal=self.env['account.journal'].browse(r['journal_id']).display_name,
+                ) for r in res)
+            ))
+
 
     # @api.depends('payment_register_id.payment_method_line_id.code', 'payment_register_id.partner_id')
     # def _compute_l10n_latam_check_bank_id(self):
