@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Add themes in editor -->
-    <template id="email_designer_snippets" inherit_id="mass_mailing.email_designer_snippets">
-        <xpath expr="//div[@id='email_designer_themes']" position="inside">
+    <template id="email_designer_themes" inherit_id="mass_mailing.email_designer_themes">
+        <xpath expr="." position="inside">
             <div data-name="event" title="Event Promo" data-img="/mass_mailing_themes/static/src/img/theme_imgs/event_thumb" data-images-info='{"logo": {"format": "png"}, "all": {"module": "mass_mailing_themes"}}'>
                 <t t-call="mass_mailing_themes.theme_event_template"/>
             </div>

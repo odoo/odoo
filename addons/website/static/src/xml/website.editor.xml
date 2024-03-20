@@ -169,4 +169,46 @@
             </t>
         </Dialog>
     </t>
+
+    <t t-name="website.SnippetsMenu" t-inherit="web_editor.SnippetsMenu" t-inherit-mode="primary">
+        <xpath expr="//button[@data-action='cancel']" position="before">
+            <button t-on-click="_onMobilePreviewClick" type="button" class="btn btn-secondary" data-action="mobile" title="Mobile Preview" accesskey="v"><span class="fa fa-mobile"/></button>
+        </xpath>
+        <xpath expr="//div[@id='snippets_menu']" position="inside">
+            <button type="button" tabindex="3" class="o_we_customize_theme_btn text-uppercase"
+                    t-att-class="{ 'active': state.currentTab === constructor.tabs.THEME }"
+                    t-on-click="_onThemeTabClick"
+                    t-if="isDesigner" accesskey="2">
+                <span>Theme</span>
+            </button>
+        </xpath>
+        <xpath expr="//we-customizeblock-options[@id='o_we_editor_toolbar_container']/we-title/span" position="after">
+            <we-button class="fa fa-fw o_we_link o_we_highlight_animated_text"
+                t-attf-class="#{state.animatedTextHighlighted ? 'fa-eye text-success' : 'fa-eye-slash'}"
+                title="Highlight Animated Text"
+                t-if="state.hasAnimatedText"
+                t-on-click="_onHighlightAnimatedTextClick"
+                aria-label="Highlight Animated Text">
+            </we-button>
+        </xpath>
+        <xpath expr="//Toolbar" position="inside">
+            <div id="animate" class="btn-group">
+                <div title="Animate text" class="btn o_we_animate_text"
+                    t-att-class="{ 'active': state.isTextAnimated }"
+                    t-on-click="_onAnimateTextClick">
+                    <span class="fa fa-play fa-fw"></span>
+                    <span>Animate</span>
+                </div>
+            </div>
+            <div id="highlight" class="btn-group">
+                <div title="Add Text Highlight Effects"
+                    class="btn o_we_text_highlight"
+                    t-att-class="{ 'active': state.isTextHighlighted }"
+                    t-on-click.stop="_onTextHighlightClick">
+                    <span class="oi oi-text-effect oi-fw"></span>
+                    <span>Highlight</span>
+                </div>
+            </div>
+        </xpath>
+    </t>
 </templates>

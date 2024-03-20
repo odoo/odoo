@@ -70,7 +70,8 @@ function checkForExcludedClasses(record, excludedClasses) {
 
 /**
  * This component adapts the Wysiwyg widget from @web_editor/wysiwyg.js.
- * It encapsulate it so that this legacy widget can work in an OWL framework.
+ * It extends it so that legacy widgets (options and uservalue widgets) can
+ * communicate with it and with the public root.
  */
 export class WysiwygAdapterComponent extends Wysiwyg {
     static props = {
@@ -84,7 +85,8 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         savableSelector: { type: String, optional: true },
         beforeEditorActive: { type: Function, optional: true },
         removeWelcomeMessage: { type: Function },
-    }
+    };
+    static template = "website.WysiwygAdapterComponent";
     /**
      * @override
      */
@@ -298,7 +300,12 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         }));
         if (this.props.snippetSelector) {
             const $snippetEl = $(this.websiteService.pageDocument).find(this.props.snippetSelector);
-            await this.snippetsMenu.activateSnippet($snippetEl);
+            await new Promise((resolve) => {
+                this.snippetsMenuBus.trigger("ACTIVATE_SNIPPET", {
+                    $snippet: $snippetEl,
+                    onSuccess: resolve,
+                });
+            });
             if ($snippetEl.length) {
                 $snippetEl[0].scrollIntoView();
             }
@@ -453,8 +460,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             toolbarOptions: {
                 ...options.toolbarOptions,
                 showChecklist: false,
-                showAnimateText: true,
-                showTextHighlights: true,
                 showFontSize: false,
                 useFontSizeInput: true,
             },
@@ -648,8 +653,8 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 return this.dialogs.add(EditMenuDialog, {
                     rootID: params[0],
                     save: () => {
-                        const snippetsMenu = this.snippetsMenu;
-                        snippetsMenu.trigger_up('request_save', {reload: true, _toMutex: true});
+                        // TODO: Rework _onSaveRequest to not take Events
+                        this._onSaveRequest({ data: { reload: true} });
                     },
                 });
         }
@@ -727,10 +732,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             $allLinksIframe.remove();
         });
 
-        // Update the panel so that color previews reflect the ones used by the
-        // edited content.
-        this.setCSSVariables(this.snippetsMenu.el);
-
         if (event.data.onSuccess) {
             return event.data.onSuccess();
         }
@@ -748,7 +749,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             const block = this.closestElement(range.endContainer, 'p, div, ol, ul, cl, h1, h2, h3, h4, h5, h6');
             if (block) {
                 block.after($clonedBody[0]);
-                this.snippetsMenu.callPostSnippetDrop($clonedBody);
+                this.snippetsMenuBus.trigger("CALL_POST_SNIPPET_DROPPED", { $snippet: $clonedBody });
             }
         };
         const commands = [
@@ -882,23 +883,16 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         const triggers = {
             'widgets_start_request': this._onRootEventRequest.bind(this),
             'widgets_stop_request': this._onRootEventRequest.bind(this),
-            'ready_to_clean_for_save': this._onRootEventRequest.bind(this),
             'will_remove_snippet': this._onRootEventRequest.bind(this),
-            'gmap_api_request': this._onRootEventRequest.bind(this),
-            'gmap_api_key_request': this._onRootEventRequest.bind(this),
             'request_save': this._onSaveRequest.bind(this),
             'context_get': this._onContextGet.bind(this),
-            'service_context_get': this._onServiceContextGet.bind(this),
             'action_demand': this._handleAction.bind(this),
             'request_cancel': this._onCancelRequest.bind(this),
             'snippet_will_be_cloned': this._onSnippetWillBeCloned.bind(this),
             'snippet_cloned': this._onSnippetCloned.bind(this),
-            'snippet_dropped': this._onSnippetDropped.bind(this),
             'snippet_removed': this._onSnippetRemoved.bind(this),
             'reload_bundles': this._reloadBundles.bind(this),
             'menu_dialog': this._onMenuDialogRequest.bind(this),
-            'request_mobile_preview': this._onMobilePreviewRequest.bind(this),
-            'get_switchable_related_views': this._onGetSwitchableRelatedViews.bind(this),
             'open_edit_head_body_dialog': this._onOpenEditHeadBodyDialog.bind(this),
         };
 
@@ -969,22 +963,12 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         return this.orm.write(resModel, [resID], {'cover_properties': JSON.stringify(coverProps)});
     }
     /**
-     *
      * @override
      */
-    async _createSnippetsMenuInstance(options = {}) {
+    async getSnippetsMenuClass() {
         const snippetsEditor = await odoo.loader.modules.get('@website/js/editor/snippets.editor')[Symbol.for('default')];
         const { SnippetsMenu } = snippetsEditor;
-        return new SnippetsMenu(this, Object.assign({
-            wysiwyg: this,
-            selectorEditableArea: '.o_editable',
-        }, options));
-    }
-    /**
-     * @override
-     */
-    _insertSnippetMenu() {
-        return this.snippetsMenu.appendTo(this.$el);
+        return SnippetsMenu;
     }
     /**
      * @override
@@ -1058,9 +1042,14 @@ export class WysiwygAdapterComponent extends Wysiwyg {
     _toggleMegaMenu(toggleEl) {
         const megaMenuEl = toggleEl.parentElement.querySelector('.o_mega_menu');
         if (!megaMenuEl || !megaMenuEl.classList.contains('show')) {
-            return this.snippetsMenu.activateSnippet(false);
+            return new Promise((resolve) => this.snippetsMenuBus.trigger("ACTIVATE_SNIPPET", {
+                $snippet: false,
+                onSuccess: resolve,
+            }));
         }
-        return this.snippetsMenu.activateSnippet($(megaMenuEl));
+        return new Promise((resolve) => {
+            return this.snippetsMenuBus.trigger("ACTIVATE_SNIPPET", { $snippet: $(megaMenuEl), onSuccess: resolve });
+        });
     }
     /**
      * @override
@@ -1113,7 +1102,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 return this.props.reloadCallback({
                     snippetOptionSelector: event.data.optionSelector,
                     url: event.data.url,
-                    invalidateSnippetCache: event.data.invalidateSnippetCache
                 });
             };
         } else if (event.data.onSuccess) {
@@ -1155,17 +1143,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
     _onOpenEditHeadBodyDialog(ev) {
         this.dialogs.add(EditHeadBodyDialog, {}, {
             onClose: ev.data.onSuccess,
-        });
-    }
-    /**
-     * Retrieves the website service context.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onServiceContextGet(ev) {
-        ev.data.callback({
-            isMobile: this.websiteService.context.isMobile,
         });
     }
     /**
@@ -1217,11 +1194,11 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      * @see web_editor/SnippetsMenu.callPostSnippetDrop
      * @private
      */
-    _onSnippetDropped(event) {
-        event.data.addPostDropAsync(new Promise(resolve => {
+    _onSnippetDropped({ $target, addPostDropAsync }) {
+        addPostDropAsync(new Promise(resolve => {
             this._websiteRootEvent('widgets_start_request', {
                 editableMode: true,
-                $target: event.data.$target,
+                $target,
                 onSuccess: () => resolve(),
             });
         }));
@@ -1256,13 +1233,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         });
     }
     /**
-     * Update the context to trigger a mobile view.
-     * @private
-     */
-    _onMobilePreviewRequest() {
-        this.websiteService.context.isMobile = !this.websiteService.context.isMobile;
-    }
-    /**
      * Called when a child needs to know about the views that can
      * be toggled on or off on a specific view related to the editable.
      *
@@ -1270,9 +1240,8 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      * @returns {Promise<void>}
      * @private
      */
-    async _onGetSwitchableRelatedViews(event) {
-        const views = await this.switchableRelatedViews;
-        event.data.onSuccess(views);
+    _getSwitchableRelatedViews(event) {
+        return this.switchableRelatedViews;
     }
     /**
      * This method returns a visual skeleton of the snippets menu, by making a
@@ -1282,11 +1251,17 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      * so that they are not triggered during a reload).
      */
     _getDummmySnippetsEl() {
-        const dummySnippetsEl = this.el.cloneNode(true);
+        const dummySnippetsEl = this.snippetsMenuContainer.el.cloneNode(true);
         dummySnippetsEl.querySelectorAll('#oe_manipulators, .d-none, .oe_snippet_body').forEach(el => el.remove());
         dummySnippetsEl.querySelectorAll('we-input input').forEach(input => {
             input.setAttribute('value', input.closest('we-input').dataset.selectStyle || '');
         });
         return dummySnippetsEl;
+    }
+    /**
+     * Stop public widgets within the iframe.
+     */
+    _widgetsStopRequest() {
+        this._websiteRootEvent('widgets_stop_request');
     }
 }

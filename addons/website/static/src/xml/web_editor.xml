@@ -37,34 +37,12 @@
     </t>
 
     <t t-inherit="web_editor.toolbar" t-inherit-mode="extension">
-        <xpath expr="//t[@t-if='this.isSmall()']//div[@id='list']" position="inside">
-            <div t-if="props.showAnimateText" title="Animate text" class="btn fa fa-play fa-fw o_we_animate_text" data-text-selector=".o_animated_text"/>
-        </xpath>
-        <xpath expr="//t[@t-else]//div[@id='list']" position="after">
-            <div t-if="props.showAnimateText" id="animate" class="btn-group">
-                <div title="Animate text" class="btn o_we_animate_text" data-text-selector=".o_animated_text">
-                    <span class="fa fa-play fa-fw"></span>
-                    <span>Animate</span>
-                </div>
-            </div>
-        </xpath>
-
         <xpath expr="//div[@id='open-chatgpt']" position="inside">
             <span>AI</span>
         </xpath>
 
         <xpath expr="//div[@id='strikethrough']" position="attributes">
             <attribute name="t-if">!props.showTextHighlights</attribute>
-        </xpath>
-        <xpath expr="//div[1]" position="inside">
-            <div t-if="props.showTextHighlights" id="highlight" class="btn-group">
-                <div title="Add Text Highlight Effects"
-                    class="btn o_we_text_highlight"
-                    data-text-selector=".o_text_highlight">
-                    <span class="oi oi-text-effect oi-fw"></span>
-                    <span>Highlight</span>
-                </div>
-            </div>
         </xpath>
     </t>
 </templates>

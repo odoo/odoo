@@ -11,7 +11,7 @@
                 <div  t-ref="readonlyElement" class="o_readonly" t-out="markupValue" />
             </t>
         </t>
-        <div t-else="" class="h-100" t-ref="spellcheck">
+        <div t-else="" class="h-100" t-ref="spellcheck" t-att-class="{'d-flex': this.wysiwygOptions.snippets}">
             <t t-if="state.showCodeView">
                 <textarea t-ref="codeView" class="o_codeview" t-att-value="markupValue"/>
             </t>

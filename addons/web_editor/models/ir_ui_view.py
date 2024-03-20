@@ -480,10 +480,7 @@ class IrUiView(models.Model):
             'type': 'qweb',
             'arch': """
                 <data inherit_id="%s">
-                    <xpath expr="//div[@id='snippet_custom']" position="attributes">
-                        <attribute name="class" remove="d-none" separator=" "/>
-                    </xpath>
-                    <xpath expr="//div[@id='snippet_custom_body']" position="inside">
+                    <xpath expr="//snippets[@id='snippet_custom']" position="inside">
                         <t t-snippet="%s" t-thumbnail="%s"/>
                     </xpath>
                 </data>

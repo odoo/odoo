@@ -9,6 +9,20 @@
             <ImageCrop t-props="this.imageCropProps"/>
         </div>
         <div t-ref="el"/>
+        <!--
+            trigger_up does not use .bind as this somehow bypasses patches to it
+            and currently the test snippets_all_drag_and_drop patches it.
+        -->
+        <div t-ref="snippets-menu-container">
+            <t t-if="this.state.showSnippetsMenu" t-component="this.snippetsMenuComponent"
+                options="this.snippetsMenuOptions"
+                folded="this.state.snippetsMenuFolded"
+                setCSSVariables.bind="this.setCSSVariables"
+                trigger_up="(ev) => this._trigger_up(ev)"
+                mountedProm="this.state.snippetsMenuMountedProm"
+                bus="this.snippetsMenuBus"
+            />
+        </div>
     </t>
 
     <!--=================-->

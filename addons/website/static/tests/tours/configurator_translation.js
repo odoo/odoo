@@ -1,5 +1,7 @@
 /** @odoo-module */
 
+import { localization } from "@web/core/l10n/localization";
+import { translatedTerms } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import wTourUtils from "@website/js/tours/tour_utils";
 
@@ -62,6 +64,16 @@ registry.category("web_tour.tours").add('configurator_translation', {
         trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
         timeout: 30000,
         isCheck: true,
+    }, {
+        content: "Check if the current interface language is active and monkey patch terms",
+        trigger: "body",
+        run: () => {
+            if (localization.code !== "pa_GB") {
+                console.error("The user language is not the correct one");
+            } else {
+                translatedTerms["Save"] = "Save_Parseltongue";
+            }
+        }
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {

@@ -174,11 +174,6 @@ class TestUiTranslate(odoo.tests.HttpCase):
                 'Contact us': 'Contact us in Parseltongue'
             }
         })
-        self.env.ref('web_editor.snippets').update_field_translations('arch_db', {
-            fake_user_lang.code: {
-                'Save': 'Save in fu_GB',
-            }
-        })
         website = self.env['website'].create({
             'name': 'website pa_GB',
             'language_ids': [(6, 0, [parseltongue.id])],
@@ -274,7 +269,7 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_07_snippet_version(self):
         website_snippets = self.env.ref('website.snippets')
-        self.env['ir.ui.view'].create([{
+        view_ids = self.env['ir.ui.view'].create([{
             'name': 'Test snip',
             'type': 'qweb',
             'key': 'website.s_test_snip',
@@ -292,7 +287,42 @@ class TestUi(odoo.tests.HttpCase):
                 </xpath>
             """,
         }])
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_version', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_version_1', login='admin')
+
+        self.env['ir.ui.view'].create([
+            {
+                'name': 'Test snippet version 999',
+                'mode': 'extension',
+                'inherit_id': view_ids[0].id,
+                'arch': """
+                    <xpath expr="//section[hasclass('s_test_snip')]" position="attributes">
+                        <attribute name="data-vjs">999</attribute>
+                    </xpath>
+                """
+            },
+            {
+                'name': 'Share snippet version 999',
+                'mode': 'extension',
+                'inherit_id': self.env.ref("website.s_share").id,
+                'arch': """
+                    <xpath expr="//div" position="attributes">
+                        <attribute name="data-vcss">999</attribute>
+                    </xpath>
+                """
+            },
+            {
+                'name': 's_text_image version 999',
+                'mode': 'extension',
+                'inherit_id': self.env.ref("website.s_text_image").id,
+                'arch': """
+                    <xpath expr="//section[hasclass('s_text_image')]" position="attributes">
+                        <attribute name="data-vxml">999</attribute>
+                    </xpath>
+                """
+            }
+        ])
+
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_version_2', login='admin')
 
     def test_08_website_style_custo(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_style_edition', login='admin')
