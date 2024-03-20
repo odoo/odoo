@@ -119,7 +119,7 @@ class Manager(Thread):
         schedule and schedule.every().day.at("00:00").do(helpers.get_certificate_status)
 
         #Setup the websocket connection
-        if helpers.get_odoo_server_url():
+        if helpers.get_odoo_server_url() and iot_client.iot_channel:
             iot_client.start()
         # Check every 3 secondes if the list of connected devices has changed and send the updated
         # list to the connected DB.
