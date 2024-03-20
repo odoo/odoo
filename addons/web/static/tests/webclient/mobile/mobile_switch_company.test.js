@@ -140,6 +140,7 @@ test("single company selected: toggling it off will keep it", async () => {
      *   [ ] Company 2
      *   [ ] Company 3
      */
+    await runAllTimers();
     expect(router.current).toEqual({ cids: 1 });
     expect(getService("company").activeCompanyIds).toEqual([1]);
     expect(getService("company").currentCompany.id).toBe(1);
