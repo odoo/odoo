@@ -141,7 +141,7 @@ class Binary(http.Controller):
                     elif js and bundle.javascripts:
                         attachment = env['ir.attachment'].sudo().browse(bundle.js().id)
                 except ValueError as e:
-                    _logger.error(e.args[0])
+                    _logger.warning("Parsing asset bundle %s has failed: %s", filename, e)
                     raise request.not_found() from e
         if not attachment:
             raise request.not_found()
