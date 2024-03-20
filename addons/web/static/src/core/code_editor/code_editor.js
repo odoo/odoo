@@ -83,7 +83,7 @@ export class CodeEditor extends Component {
                 if (!sessions[this.props.sessionId]) {
                     sessions[this.props.sessionId] = session;
                 }
-                aceEditor.setValue(this.props.value);
+                session.setValue(this.props.value);
                 session.on("change", () => {
                     if (this.props.onChange) {
                         this.props.onChange(this.aceEditor.getValue());
