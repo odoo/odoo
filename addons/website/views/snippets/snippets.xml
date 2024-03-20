@@ -868,59 +868,19 @@
     <div data-selector="#wrapwrap > header"
          data-no-check="true"
          groups="website.group_website_designer">
-
-        <we-select string="Scroll Effect" data-dependencies="!header_sidebar_opt" class="o_scroll_effects_selector" data-variable="header-scroll-effect">
-            <t t-set="header_effect_standard_label">Standard</t>
-            <t t-set="header_effect_scroll_label">Scroll</t>
-            <t t-set="header_effect_fixed_label">Fixed</t>
-            <t t-set="header_effect_disappears_label">Disappears</t>
-            <t t-set="header_effect_fadeout_label">Fade Out</t>
-            <we-button t-att-data-select-label="header_effect_standard_label"
-                       class="o_we_img_animate"
-                       data-customize-website-variable="'standard'"
-                       data-name="header_visibility_standard_opt"
-                       data-select-class="o_header_standard"
-                       data-customize-website-views="website.header_visibility_standard"
-                       data-img="/website/static/src/img/snippets_options/header_effect_standard.png">
-                <span t-esc='header_effect_standard_label'/>
-            </we-button>
-            <we-button t-att-data-select-label="header_effect_scroll_label"
-                       class="o_we_img_animate"
-                       data-customize-website-variable="'scroll'"
-                       data-name="header_effect_scroll_opt"
-                       data-select-class=""
-                       data-customize-website-views=""
-                       data-img="/website/static/src/img/snippets_options/header_effect_scroll.png">
-                <span t-esc='header_effect_scroll_label'/>
-            </we-button>
-            <we-button t-att-data-select-label="header_effect_fixed_label"
-                       class="o_we_img_animate"
-                       data-customize-website-variable="'fixed'"
-                       data-name="header_effect_fixed_opt"
-                       data-select-class="o_header_fixed"
-                       data-customize-website-views="website.header_visibility_fixed"
-                       data-img="/website/static/src/img/snippets_options/header_effect_fixed.png">
-                <span t-esc='header_effect_fixed_label'/>
-            </we-button>
-            <we-button t-att-data-select-label="header_effect_disappears_label"
-                       class="o_we_img_animate"
-                       data-customize-website-variable="'disappears'"
-                       data-name="header_effect_disappears_opt"
-                       data-select-class="o_header_disappears"
-                       data-customize-website-views="website.header_visibility_disappears"
-                       data-img="/website/static/src/img/snippets_options/header_effect_disappears.png">
-                <span t-esc="header_effect_disappears_label" />
-            </we-button>
-            <we-button t-att-data-select-label="header_effect_fadeout_label"
-                       class="o_we_img_animate"
-                       data-customize-website-variable="'fade-out'"
-                       data-name="header_effect_fade_out_opt"
-                       data-select-class="o_header_fade_out"
-                       data-customize-website-views="website.header_visibility_fade_out"
-                       data-img="/website/static/src/img/snippets_options/header_effect_fade_out.png">
-               <span t-esc='header_effect_fadeout_label'/>
-            </we-button>
-        </we-select>
+        <we-designoptionselector string="Scroll Effect" data-dependencies="!header_sidebar_opt" class="o_scroll_effects_selector" data-variable="header__scroll__effect">
+            <attribute target="*" name="class" value="o_we_img_animate"/>
+            <attribute target="[data-name='header__scroll__effect_standard_opt']" name="data-select-class" value="o_header_standard"/>
+            <attribute target="[data-name='header__scroll__effect_standard_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_effect_standard.png"/>
+            <attribute target="[data-name='header__scroll__effect_scroll_opt']" name="data-select-class" value=""/>
+            <attribute target="[data-name='header__scroll__effect_scroll_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_effect_scroll.png"/>
+            <attribute target="[data-name='header__scroll__effect_fixed_opt']" name="data-select-class" value="o_header_fixed"/>
+            <attribute target="[data-name='header__scroll__effect_fixed_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_effect_fixed.png"/>
+            <attribute target="[data-name='header__scroll__effect_disappears_opt']" name="data-select-class" value="o_header_disappears"/>
+            <attribute target="[data-name='header__scroll__effect_disappears_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_effect_disappears.png"/>
+            <attribute target="[data-name='header__scroll__effect_fade-out_opt']" name="data-select-class" value="o_header_fade_out"/>
+            <attribute target="[data-name='header__scroll__effect_fade-out_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_effect_fade_out.png"/>
+        </we-designoptionselector>
     </div>
 
     <div data-js="TopMenuVisibility"
@@ -1107,7 +1067,7 @@
                   data-variable="fixed-logo-height"
                   data-unit="px"
                   data-save-unit="rem"
-                  data-dependencies="!header_effect_scroll_opt"/>
+                  data-dependencies="!header__scroll__effect_scroll_opt"/>
     </div>
 
     <!-- Footer - Colors & Layouts -->

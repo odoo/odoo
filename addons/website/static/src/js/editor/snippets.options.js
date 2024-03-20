@@ -698,6 +698,15 @@ const DesignOptionSelector = SelectUserValueWidget.extend({
             button.dataset.name = `${option.name}_${option.value}_opt`;
             this.menuEl.appendChild(button);
         }
+        const attributeEls = this.menuEl.querySelectorAll("attribute");
+        attributeEls.forEach(attEl => {
+            debugger;
+            const selector = `${attEl.getAttribute("target")}:not(attribute)`;
+            this.menuEl.querySelectorAll(selector).forEach(el => {
+                el.setAttribute(attEl.getAttribute("name"), attEl.getAttribute("value"));
+            });
+        });
+        attributeEls.forEach(el => el.remove());
     },
 });
 

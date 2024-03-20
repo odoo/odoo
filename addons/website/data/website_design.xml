@@ -51,5 +51,35 @@
             <field name="value">true</field>
             <field name="assets_to_activate" eval="[(6, 0, [ref('website.ripple_effect_scss'), ref('website.ripple_effect_js')])]"/>
         </record>
+        <!-- Header scroll effect Options -->
+        <record id="design_option_headerscrolleffect_standard" model="website.design.option">
+            <field name="name">header__scroll__effect</field>
+            <field name="display_name">Standard</field>
+            <field name="value">standard</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.header_visibility_standard')])]"/>
+        </record>
+        <record id="design_option_headerscrolleffect_scroll" model="website.design.option">
+            <field name="name">header__scroll__effect</field>
+            <field name="display_name">Scroll</field>
+            <field name="value">scroll</field>
+        </record>
+        <record id="design_option_headerscrolleffect_fixed" model="website.design.option">
+            <field name="name">header__scroll__effect</field>
+            <field name="display_name">Fixed</field>
+            <field name="value">fixed</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.header_visibility_fixed')])]"/>
+        </record>
+        <record id="design_option_headerscrolleffect_disappears" model="website.design.option">
+            <field name="name">header__scroll__effect</field>
+            <field name="display_name">Disappears</field>
+            <field name="value">disappears</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.header_visibility_disappears')])]"/>
+        </record>
+        <record id="design_option_headerscrolleffect_fadeout" model="website.design.option">
+            <field name="name">header__scroll__effect</field>
+            <field name="display_name">Fade Out</field>
+            <field name="value">fade-out</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.header_visibility_fade_out')])]"/>
+        </record>
     </data>
 </odoo>

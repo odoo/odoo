@@ -31,7 +31,7 @@ wTourUtils.registerWebsitePreviewTour("dropdowns_and_header_hide_on_scroll", {
     wTourUtils.dragNDrop({id: "s_media_list", name: "Media List"}),
     wTourUtils.selectHeader(),
     wTourUtils.changeOption("undefined", 'we-select[data-variable="header-scroll-effect"]'),
-    wTourUtils.changeOption("undefined", 'we-button[data-name="header_effect_fixed_opt"]'),
+    wTourUtils.changeOption("undefined", 'we-button[data-name="header__scroll__effect_fixed_opt"]'),
     wTourUtils.changeOption("WebsiteLevelColor", 'we-select[data-variable="header-template"] we-toggler'),
     wTourUtils.changeOption("WebsiteLevelColor", 'we-button[data-name="header_sales_two_opt"]'),
     ...wTourUtils.clickOnSave(undefined, 30000),
