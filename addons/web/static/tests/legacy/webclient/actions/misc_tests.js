@@ -107,7 +107,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("actions can be cached", async function (assert) {
-        assert.expect(8);
+        assert.expect(10);
 
         const mockRPC = async (route, args) => {
             if (route === "/web/action/load") {
@@ -124,9 +124,9 @@ QUnit.module("ActionManager", (hooks) => {
         await loadAction(3);
         await loadAction(3);
 
-        // With specific additionalContext
-        await loadAction(3, { additionalContext: { configuratorMode: "add" } });
-        await loadAction(3, { additionalContext: { configuratorMode: "edit" } });
+        // With specific context
+        await loadAction(3, { configuratorMode: "add" });
+        await loadAction(3, { configuratorMode: "edit" });
 
         // With same active_id
         await loadAction(3, { active_id: 1 });
@@ -151,20 +151,22 @@ QUnit.module("ActionManager", (hooks) => {
 
         assert.verifySteps(
             [
-                '{"action_id":3,"additional_context":{}}',
-                '{"action_id":3,"additional_context":{"active_id":1}}',
-                '{"action_id":3,"additional_context":{"active_id":2}}',
-                '{"action_id":3,"additional_context":{"active_ids":[1,2]}}',
-                '{"action_id":3,"additional_context":{"active_ids":[1,2,3]}}',
-                '{"action_id":3,"additional_context":{"active_model":"a"}}',
-                '{"action_id":3,"additional_context":{"active_model":"b"}}',
+                '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7}}',
+                '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"configuratorMode":"add"}}',
+                '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"configuratorMode":"edit"}}',
+                '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"active_id":1}}',
+                '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"active_id":2}}',
+                '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"active_ids":[1,2]}}',
+                '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"active_ids":[1,2,3]}}',
+                '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"active_model":"a"}}',
+                '{"action_id":3,"context":{"lang":"en","tz":"taht","uid":7,"active_model":"b"}}',
             ],
             "should load from server once per active_id/active_ids/active_model change, nothing else"
         );
     });
 
-    QUnit.test("action cache: additionalContext is respected", async function (assert) {
-        assert.expect(5);
+    QUnit.test("action cache: additionalContext is used on the key", async function (assert) {
+        assert.expect(6);
 
         const mockRPC = async (route) => {
             if (route === "/web/action/load") {
@@ -188,10 +190,10 @@ QUnit.module("ActionManager", (hooks) => {
         // Modify the action in place
         action.context.additionalContext.some.deep.nested = "Nesta";
 
-        // Change additionalContext and reload from cache
+        // Change additionalContext and reload
         actionParams.additionalContext.some.deep.nested = "Marley";
         action = await loadAction(3, actionParams);
-        assert.verifySteps([], "loaded from cache");
+        assert.verifySteps(["server loaded"]);
         assert.deepEqual(action.context, actionParams);
     });
 

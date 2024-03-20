@@ -353,17 +353,14 @@ export function makeActionManager(env, router = _router) {
 
         if (typeof actionRequest === "string" || typeof actionRequest === "number") {
             // actionRequest is an id or an xmlid
-            const additional_context = {
-                active_id: context.active_id,
-                active_ids: context.active_ids,
-                active_model: context.active_model,
-            };
-            const key = `${JSON.stringify(actionRequest)},${JSON.stringify(additional_context)}`;
+            const ctx = makeContext([user.context, context]);
+            delete ctx.params;
+            const key = `${JSON.stringify(actionRequest)},${JSON.stringify(ctx)}`;
             let action;
             if (!actionCache[key]) {
                 actionCache[key] = rpc("/web/action/load", {
                     action_id: actionRequest,
-                    additional_context,
+                    context: ctx,
                 });
                 action = await actionCache[key];
                 if (action.help) {
@@ -1244,34 +1241,6 @@ export function makeActionManager(env, router = _router) {
         }
     }
 
-    // ---------------------------------------------------------------------------
-    // ir.actions.server
-    // ---------------------------------------------------------------------------
-
-    /**
-     * Executes an action of type 'ir.actions.server'.
-     *
-     * @private
-     * @param {ServerAction} action
-     * @param {ActionOptions} options
-     * @returns {Promise<void>}
-     */
-    async function _executeServerAction(action, options) {
-        const runProm = rpc("/web/action/run", {
-            action_id: action.id,
-            context: makeContext([user.context, action.context]),
-        });
-        let nextAction = await keepLast.add(runProm);
-        if (nextAction.help) {
-            nextAction.help = markup(nextAction.help);
-        }
-        nextAction = nextAction || { type: "ir.actions.act_window_close" };
-        if (typeof nextAction === "object") {
-            nextAction.path ||= action.path;
-        }
-        return doAction(nextAction, options);
-    }
-
     async function _executeCloseAction(params = {}) {
         let onClose;
         if (dialog) {
@@ -1319,8 +1288,6 @@ export function makeActionManager(env, router = _router) {
                 return _executeClientAction(action, options);
             case "ir.actions.report":
                 return _executeReportAction(action, options);
-            case "ir.actions.server":
-                return _executeServerAction(action, options);
             default: {
                 const handler = actionHandlersRegistry.get(action.type, null);
                 if (handler !== null) {

@@ -760,8 +760,22 @@ export class MockServer {
             console.warn(
                 `No action found for ID ${action_id} during test ${QUnit.config.current.testName}`
             );
+            return false;
         }
-        return action || false;
+        if (action.type === "ir.actions.server") {
+            if (action.state !== "code") {
+                throw new Error("Only server actions with code are supported on the mock server");
+            }
+            const result = action.code();
+            if (!result) {
+                return { type: "ir.actions.act_window_close" };
+            }
+            if (action.path) {
+                result.path = action.path;
+            }
+            return result;
+        }
+        return action;
     }
 
     mockLoadBreadcrumbs({ actions }) {
