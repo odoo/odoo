@@ -341,6 +341,22 @@ def load_certificate():
         start_nginx_server()
     return True
 
+def delete_iot_handlers():
+    """
+    Delete all the drivers and interfaces
+    This is needed to avoid conflicts
+    with the newly downloaded drivers
+    """
+    try:
+        for directory in ['drivers', 'interfaces']:
+            path = file_path(f'hw_drivers/iot_handlers/{directory}')
+            iot_handlers = list_file_by_os(path)
+            for file in iot_handlers:
+                unlink_file(f"odoo/addons/hw_drivers/iot_handlers/{directory}/{file}")
+        _logger.info("Deleted old IoT handlers")
+    except OSError:
+        _logger.exception('Failed to delete old IoT handlers')
+
 def download_iot_handlers(auto=True):
     """
     Get the drivers from the configured Odoo server
@@ -353,6 +369,7 @@ def download_iot_handlers(auto=True):
         try:
             resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto}, timeout=8)
             if resp.data:
+                delete_iot_handlers()
                 with writable():
                     drivers_path = ['odoo', 'addons', 'hw_drivers', 'iot_handlers']
                     path = path_file(str(Path().joinpath(*drivers_path)))
