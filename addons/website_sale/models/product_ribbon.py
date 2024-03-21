@@ -21,7 +21,7 @@ class ProductRibbon(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if 'bg_color' in vals and not '!important' in vals['bg_color']:
+            if vals['bg_color'] and not '!important' in vals['bg_color']:
                 vals['bg_color'] += ' !important'
         return super().create(vals_list)
 
