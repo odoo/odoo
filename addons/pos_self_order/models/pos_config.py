@@ -94,6 +94,7 @@ class PosConfig(models.Model):
         string="Self Order Kiosk Image Brand Name",
         help="Name of the image to display on the self order screen",
     )
+    has_paper = fields.Boolean("Has paper", default=True)
 
     def _update_access_token(self):
         self.access_token = uuid.uuid4().hex[:16]
@@ -317,6 +318,7 @@ class PosConfig(models.Model):
         return {
             "pos_config_id": self.id,
             "pos_session": self.current_session_id.read(["id", "access_token"])[0] if self.current_session_id and self.current_session_id.state == 'opened' else False,
+            "has_paper": self.has_paper,
             "company": {
                 **self.company_id.read(["name", "color", "email", "website", "vat", "name", "phone", "point_of_sale_use_ticket_qr_code", "point_of_sale_ticket_unique_code"])[0],
                 "partner_id": [None, self.company_id.partner_id.contact_address],

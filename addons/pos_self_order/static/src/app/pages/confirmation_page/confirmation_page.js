@@ -5,6 +5,8 @@ import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
+import { rpc } from "@web/core/network/rpc";
+import { OutOfPaperPopup } from "@pos_self_order/app/components/out_of_paper_popup/out_of_paper_popup";
 
 export class ConfirmationPage extends Component {
     static template = "pos_self_order.ConfirmationPage";
@@ -14,6 +16,7 @@ export class ConfirmationPage extends Component {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
         this.printer = useService("printer");
+        this.dialog = useService("dialog");
         this.confirmedOrder = {};
         this.changeToDisplay = [];
         this.state = useState({
@@ -33,8 +36,21 @@ export class ConfirmationPage extends Component {
                             data: this.selfOrder.export_for_printing(this.confirmedOrder),
                             formatCurrency: this.selfOrder.formatMonetary,
                         });
+                        if (!this.selfOrder.has_paper) {
+                            this.updateHasPaper(true);
+                        }
                     } catch (e) {
-                        console.error(e);
+                        if (e.errorCode === "EPTR_REC_EMPTY") {
+                            this.dialog.add(OutOfPaperPopup, {
+                                title: `No more paper in the printer, please remember your order number: '${this.confirmedOrder.trackingNumber}'.`,
+                                close: () => {
+                                    this.router.navigate("default");
+                                },
+                            });
+                            this.updateHasPaper(false);
+                        } else {
+                            console.error(e);
+                        }
                     }
                 }, 500);
             }
@@ -70,6 +86,14 @@ export class ConfirmationPage extends Component {
         if (!this.setDefautLanguage()) {
             this.router.navigate("default");
         }
+    }
+
+    async updateHasPaper(state) {
+        await rpc("/pos-self-order/change-printer-status", {
+            access_token: this.selfOrder.access_token,
+            has_paper: state,
+        });
+        this.selfOrder.has_paper = state;
     }
 
     setDefautLanguage() {

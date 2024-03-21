@@ -198,6 +198,13 @@ class PosSelfOrderController(http.Controller):
 
         return {'order': order_sudo._export_for_self_order(), 'payment_status': status}
 
+    @http.route('/pos-self-order/change-printer-status', auth='public', type='json', website=True)
+    def change_printer_status(self, access_token, has_paper):
+        pos_config = self._verify_pos_config(access_token)
+        if has_paper != pos_config.has_paper:
+            pos_config.write({'has_paper': has_paper})
+
+
     def _process_lines(self, lines, pos_config, pos_order_id, takeaway=False):
         appended_uuid = []
         newLines = []

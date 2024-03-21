@@ -37,6 +37,7 @@ export class PrinterService extends Reactive {
         throw {
             title: printResult.message.title || "Error",
             body: printResult.message.body,
+            errorCode: printResult.errorCode,
         };
     }
     async print(component, props, options) {
