@@ -107,8 +107,10 @@ export class PosOrder extends Base {
             date: this.receiptDate,
             pos_qr_code:
                 this.company.point_of_sale_use_ticket_qr_code &&
+                this.finalized &&
                 qrCodeSrc(`${baseUrl}/pos/ticket/validate?access_token=${this.access_token}`),
-            ticket_code: this.company.point_of_sale_ticket_unique_code && this.ticketCode,
+            ticket_code:
+                this.company.point_of_sale_ticket_unique_code && this.finalized && this.ticketCode,
             base_url: baseUrl,
             footer: this.config.receipt_footer,
             // FIXME: isn't there a better way to handle this date?

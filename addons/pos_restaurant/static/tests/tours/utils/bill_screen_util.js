@@ -18,13 +18,3 @@ export function isShown() {
         },
     ];
 }
-
-export function isQRCodeShown() {
-    return [
-        {
-            content: "QR codes are shown",
-            trigger: "#posqrcode",
-            run: () => {},
-        },
-    ];
-}

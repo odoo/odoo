@@ -172,6 +172,12 @@ registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
         ].flat(),
 });
 
+const billScreenQRCode = {
+    content: "QR codes are shown",
+    trigger: ".pos-receipt #posqrcode",
+    run: () => {},
+};
+
 registry.category("web_tour.tours").add("BillScreenTour", {
     test: true,
     steps: () =>
@@ -180,12 +186,13 @@ registry.category("web_tour.tours").add("BillScreenTour", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.controlButton("Bill"),
-            negateStep(BillScreen.isQRCodeShown()),
+            // HACK: is_modal should be false so that the trigger can be found.
+            { ...negateStep(billScreenQRCode), in_modal: false },
             BillScreen.closeBillPopup(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            BillScreen.isQRCodeShown(),
+            billScreenQRCode,
         ].flat(),
 });
 
