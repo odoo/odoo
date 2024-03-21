@@ -918,7 +918,7 @@ test("display shortcuts correctly for non-MacOS ", async () => {
 });
 
 test("display shortcuts correctly for MacOS ", async () => {
-    mockUserAgent("chrome", "mac");
+    mockUserAgent("mac");
 
     class MyComponent extends Component {
         static components = { TestComponent };
@@ -986,7 +986,7 @@ test("display shortcuts correctly for non-MacOS with a new overlayModifier", asy
 });
 
 test("display shortcuts correctly for MacOS with a new overlayModifier", async () => {
-    mockUserAgent("chrome", "mac");
+    mockUserAgent("mac");
 
     const hotkeyService = registry.category("services").get("hotkey");
     patchWithCleanup(hotkeyService, {
