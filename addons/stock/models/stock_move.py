@@ -1462,6 +1462,9 @@ Please change the quantity done or the rounding precision of your unit of measur
             (new_push_moves - neg_push_moves).sudo()._action_confirm()
             # Negative moves do not have any picking, so we should try to merge it with their siblings
             neg_push_moves._action_confirm(merge_into=neg_push_moves.move_orig_ids.move_dest_ids)
+
+        # run scheduler for moves forecasted to not have enough in stock
+        moves.filtered(lambda move: move.state not in ('draft', 'cancel', 'done'))._trigger_scheduler()
         return moves
 
     def _prepare_procurement_origin(self):

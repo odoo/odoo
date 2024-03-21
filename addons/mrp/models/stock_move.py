@@ -523,6 +523,11 @@ class StockMove(models.Model):
                 mo_to_cancel._action_cancel()
         return res
 
+    def _trigger_scheduler(self):
+        ignore_mo_ids = self.env.context.get('ignore_mo_ids', [])
+        self = self.with_context(ignore_mo_ids=ignore_mo_ids + self.raw_material_production_id.ids)
+        super()._trigger_scheduler()
+
     def _prepare_move_split_vals(self, qty):
         defaults = super()._prepare_move_split_vals(qty)
         defaults['workorder_id'] = False

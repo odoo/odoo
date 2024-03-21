@@ -3,6 +3,7 @@
 
 from datetime import date, datetime, timedelta
 
+from odoo import Command
 from odoo.tests import Form, TransactionCase
 from odoo.tools import mute_logger
 from odoo.exceptions import UserError
@@ -291,6 +292,78 @@ class TestProcRule(TransactionCase):
         self.assertTrue(receipt_move2)
         self.assertEqual(receipt_move2.date.date(), date.today())
         self.assertEqual(receipt_move2.product_uom_qty, 10.0)
+
+    def test_auto_rr_chain(self):
+        """ test reordering rules chaining is working correctly:
+            auto RR should be triggered at any stock move confirmation """
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        self.product_01 = self.env['product.product'].create({
+            'name': 'Desk Combination',
+            'type': 'product',
+        })
+        pre_input_loc, input_loc = self.env['stock.location'].create([{
+            'name': 'Pre Input Location',
+            'location_id': wh.view_location_id.id,
+            'usage': 'internal',
+        }, {
+            'name': 'Input Location',
+            'location_id': wh.view_location_id.id,
+            'usage': 'internal',
+        }])
+        route1, route2 = self.env['stock.route'].create([{
+            'name': 'Route 1',
+            'rule_ids': [Command.create({
+                'name': 'first step',
+                'location_src_id': pre_input_loc.id,
+                'location_dest_id': input_loc.id,
+                'picking_type_id': wh.int_type_id.id,
+                'action': 'pull',
+            })],
+        }, {
+            'name': 'Route 2',
+            'rule_ids': [Command.create({
+                'name': 'first step',
+                'location_src_id': input_loc.id,
+                'location_dest_id': wh.lot_stock_id.id,
+                'picking_type_id': wh.int_type_id.id,
+                'action': 'pull',
+            })],
+        }])
+
+        self.env['stock.warehouse.orderpoint'].create([{
+            'warehouse_id': wh.id,
+            'location_id': input_loc.id,
+            'product_id': self.product_01.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+            'route_id': route1.id,
+            'trigger': 'auto',
+        }, {
+            'warehouse_id': wh.id,
+            'location_id': wh.lot_stock_id.id,
+            'product_id': self.product_01.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+            'route_id': route2.id,
+            'trigger': 'auto',
+        }])
+        delivery_move = self.env['stock.move'].create({
+            'name': 'Delivery',
+            'product_id': self.product_01.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'location_id': wh.lot_stock_id.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+        })
+        delivery_move._action_confirm()
+
+        pre_input_move = self.env['stock.move'].search([
+            ('product_id', '=', self.product_01.id),
+            ('location_id', '=', pre_input_loc.id),
+            ('location_final_id', '=', input_loc.id),
+        ])
+        # the delivery correctly triggers 2 auto rrs
+        self.assertTrue(pre_input_move)
 
     def test_reordering_rule_3(self):
         """Test how qty_multiple affects qty_to_order"""
