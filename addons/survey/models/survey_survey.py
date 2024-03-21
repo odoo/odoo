@@ -370,10 +370,10 @@ class Survey(models.Model):
     @api.depends_context('uid')
     def _compute_allowed_survey_types(self):
         self.allowed_survey_types = [
-            ('survey', 'Survey'),
-            ('live_session', 'Live session'),
-            ('assessment', 'Assessment'),
-            ('custom', 'Custom'),
+            'survey',
+            'live_session',
+            'assessment',
+            'custom',
         ] if self.env.user.has_group('survey.group_survey_user') else False
 
     @api.onchange('survey_type')
