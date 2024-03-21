@@ -584,11 +584,16 @@ async function mail_message_update_content(request) {
 
     const { attachment_ids, body, message_id } = await parseRequestParams(request);
     MailMessage.write([message_id], { body, attachment_ids });
+    if (body === "") {
+        MailMessage.write([message_id], { pinned_at: false });
+    }
+    const [message] = MailMessage.search_read([["id", "=", message_id]]);
     BusBus._sendone(MailMessage._bus_notification_target(message_id), "mail.record/insert", {
         Message: {
             id: message_id,
             body,
             attachments: IrAttachment._attachment_format(attachment_ids),
+            pinned_at: message.pinned_at,
         },
     });
     return MailMessage.message_format([message_id])[0];

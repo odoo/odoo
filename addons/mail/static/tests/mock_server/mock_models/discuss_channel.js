@@ -821,8 +821,8 @@ export class DiscussChannel extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const pinnedAt = pinned && serializeDateTime(DateTime.now());
-        MailMessage.write([message_id], { pinned_at: pinnedAt });
+        const pinned_at = pinned && serializeDateTime(DateTime.now());
+        MailMessage.write([message_id], { pinned_at });
         const [partner] = ResPartner.read(this.env.user.partner_id);
         const notification = `<div data-oe-type="pin" class="o_mail_notification">
                 ${partner.display_name} pinned a
@@ -841,7 +841,7 @@ export class DiscussChannel extends models.ServerModel {
         BusBus._sendone(channel, "mail.record/insert", {
             Message: {
                 id: message_id,
-                pinned_at: pinnedAt,
+                pinned_at,
             },
         });
     }

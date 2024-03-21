@@ -349,9 +349,9 @@ patch(MockServer.prototype, {
      * @param {boolean} pinned
      */
     _mockDiscussChannelSetMessagePin(id, message_id, pinned) {
-        const pinnedAt = pinned ? formatDate(luxon.DateTime.now()) : false;
+        const pinned_at = pinned ? formatDate(luxon.DateTime.now()) : false;
         this.pyEnv["mail.message"].write([message_id], {
-            pinned_at: pinnedAt,
+            pinned_at,
         });
         const notification = `<div data-oe-type="pin" class="o_mail_notification">
                 ${this.pyEnv.currentPartner.display_name} pinned a
@@ -367,7 +367,7 @@ patch(MockServer.prototype, {
         this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
             Message: {
                 id: message_id,
-                pinned_at: pinnedAt,
+                pinned_at,
             },
         });
     },

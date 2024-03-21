@@ -6,7 +6,7 @@
                 <div class="card-body py-2">
                     <div class="d-flex justify-content-end position-absolute top-0 end-0 o-z-index-1 m-2">
                         <button class="o-mail-MessageCard-jump btn rounded bg-400 badge opacity-0 flex-shrink-0" t-att-class="{ 'opacity-100 py-1 px-2': ui.isSmall }" t-on-click="() => this.onClickJump(message)">Jump</button>
-                        <button t-if="props.mode === 'pin'" class="btn ms-2 p-0 text-700 shadow-none" t-att-class="{ 'fs-5 align-self-end': ui.isSmall }" title="Unpin" t-on-click="() => this.props.onClickUnpin(message)">
+                        <button t-if="props.mode === 'pin'" class="btn ms-2 p-0 text-700 shadow-none" t-att-class="{ 'fs-5 align-self-end': ui.isSmall }" title="Unpin" t-on-click="() => message.unpin()">
                             <i class="d-block fa fa-times"/>
                         </button>
                     </div>
