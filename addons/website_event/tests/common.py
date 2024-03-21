@@ -32,7 +32,7 @@ class OnlineEventCase(EventCase):
         })
 
     def _get_menus(self):
-        return set(['Introduction', 'Location', 'Register', 'Community'])
+        return {'Introduction', 'Community', 'Info', 'Location'}
 
     def _assert_website_menus(self, event, menus_in=None, menus_out=None):
         self.assertTrue(event.menu_id)

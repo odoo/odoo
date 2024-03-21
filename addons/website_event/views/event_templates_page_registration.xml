@@ -45,8 +45,10 @@
                     <div class="col pe-xxl-5">
                         <t t-call="website_event.navbar"/>
                         <!-- Show the button tickets only on mobile -->
-                        <div class="o_wevent_event_main_cta_block d-lg-none  mb-3">
-                            <t t-call="website_event.registration_template"/>
+                        <div class="o_wevent_event_main_cta_block d-lg-none mb-3">
+                            <t t-call="website_event.registration_template">
+                                <t t-set="cta_additional_classes">w-100 py-sm-3 mt-sm-2</t>
+                            </t>
                         </div>
                         <!-- Description -->
                         <div id="o_wevent_event_main_col">
@@ -79,7 +81,9 @@
                     <aside id="o_wevent_event_main_sidebar" class="col-lg-4 my-3 mb-lg-0 d-print-none">
                         <!-- CTA (desktop only) -->
                         <div class="d-none d-lg-block mb-3">
-                            <t t-call="website_event.registration_template"/>
+                            <t t-call="website_event.registration_template">
+                                <t t-set="cta_additional_classes">w-100</t>
+                            </t>
                         </div>
                         <!-- Date & Time (desktop only) -->
                         <div class="d-none d-lg-block border-bottom pb-2 mb-3">
@@ -136,13 +140,13 @@
                 </div>
             </div>
         </section>
-        <t t-call="website_event.modal_ticket_registration"/>
     </t>
 </template>
 
 <!-- Event - Registration -->
+<!-- cta_additional_classes {string} - classes applied to the main CTA   -->
 <template id="registration_template" name="Registration">
-    <button t-if="event.event_registrations_open" type="button" data-bs-toggle="modal" data-bs-target="#modal_ticket_registration" class="btn btn-primary w-100">Register</button>
+    <button t-if="event.event_registrations_open" type="button" data-bs-toggle="modal" data-bs-target="#modal_ticket_registration" t-attf-class="btn btn-primary {{cta_additional_classes}}">Register</button>
     <div t-if="toast_message" class="o_wevent_register_toaster d-none" t-att-data-message="toast_message"/>
     <t t-if="not event.event_registrations_open">
         <!-- Delayed registration time -->

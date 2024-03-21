@@ -58,9 +58,6 @@ class Event(models.Model):
         compute='_compute_website_menu', precompute=True, readonly=False, store=True,
         help="Allows to display and manage event-specific menus on website.")
     menu_id = fields.Many2one('website.menu', 'Event Menu', copy=False)
-    menu_register_cta = fields.Boolean(
-        'Extra Register Button', compute='_compute_menu_register_cta',
-        readonly=False, store=True)
     # sub-menus management
     introduction_menu = fields.Boolean(
         "Introduction Menu", compute="_compute_website_menu_data",
@@ -224,17 +221,6 @@ class Event(models.Model):
             event.introduction_menu = event.website_menu
             event.location_menu = event.website_menu
             event.register_menu = event.website_menu
-
-    @api.depends("event_type_id", "website_menu")
-    def _compute_menu_register_cta(self):
-        """ At type onchange: synchronize. At website_menu update: synchronize. """
-        for event in self:
-            if event.event_type_id and event.event_type_id != event._origin.event_type_id:
-                event.menu_register_cta = event.event_type_id.menu_register_cta
-            elif event.website_menu and (event.website_menu != event._origin.website_menu or not event.menu_register_cta):
-                event.menu_register_cta = True
-            elif not event.website_menu:
-                event.menu_register_cta = False
 
     @api.depends('date_begin', 'date_end')
     def _compute_time_data(self):
@@ -406,7 +392,7 @@ class Event(models.Model):
         return [
             (_('Introduction'), False, 'website_event.template_intro', 1, 'introduction'),
             (_('Location'), False, 'website_event.template_location', 50, 'location'),
-            (_('Register'), '/event/%s/register' % slug(self), False, 100, 'register'),
+            (_('Info'), '/event/%s/register' % slug(self), False, 100, 'register'),
             (_('Community'), '/event/%s/community' % slug(self), False, 80, 'community'),
         ]
 
