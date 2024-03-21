@@ -21,6 +21,7 @@ This module extend the employee form with a organizational chart.
         'views/hr_employee_public_views.xml',
         'views/hr_org_chart_menus.xml',
     ],
+    'uninstall_hook': '_uninstall_hook',
     'assets': {
         'web._assets_primary_variables': [
             'hr_org_chart/static/src/scss/variables.scss',
