@@ -401,7 +401,7 @@
             <!-- Only shown if in the first 3 icons -->
             <t t-foreach="provider.payment_method_ids.filtered(lambda r: r.image_payment_form)" t-as="payment_method">
                 <li t-attf-class="list-inline-item{{'' if (icon_index &lt; MAX_ICONS_DISPLAYED) else ' d-none'}}">
-                    <span t-esc="payment_method.image_payment_form"
+                    <span t-field="payment_method.image_payment_form"
                           t-options="{'widget': 'image', 'alt-field': 'name'}"
                           data-bs-toggle="tooltip"
                           t-att-title="payment_method.name"/>
