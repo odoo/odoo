@@ -757,6 +757,9 @@ class Channel(models.Model):
         if 'name' not in default:
             default['name'] = f"{self.name} ({_('copy')})"
 
+        if 'enroll' not in default and self.visibility == "members":
+            default['enroll'] = 'invite'
+
         return super().copy_data(default)
 
     def write(self, vals):
