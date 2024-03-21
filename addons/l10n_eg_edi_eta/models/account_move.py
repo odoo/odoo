@@ -5,7 +5,7 @@ import json
 
 from odoo import api, models, fields, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import float_is_zero
+from odoo.tools import float_compare, float_is_zero
 from odoo.tools.sql import column_exists, create_column
 from datetime import datetime
 
@@ -127,3 +127,11 @@ class AccountMove(models.Model):
             if not float_is_zero(amount_currency, precision_rounding=from_currency.rounding):
                 return abs(self.invoice_line_ids[0].balance / amount_currency)
         return 1.0
+
+    def _l10n_eg_edi_global_discount_amount(self):
+        self.ensure_one()
+        """ assuming that a negative line on the invoice would be a global discount."""
+        if not self.env['ir.config_parameter'].sudo().get_param("l10n_eg_global_discount_enabled"):
+            return 0.0
+        sign = 1 if self.is_outbound() else -1
+        return sum(line.balance for line in self.invoice_line_ids.filtered(lambda line: float_compare(sign * line.balance, 0, precision_rounding=line.currency_id.rounding) != 1))

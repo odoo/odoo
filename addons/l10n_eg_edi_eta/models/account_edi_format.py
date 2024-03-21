@@ -11,7 +11,7 @@ from json.decoder import JSONDecodeError
 from urllib3.util.ssl_ import create_urllib3_context
 
 from odoo import api, models, _
-from odoo.tools.float_utils import json_float_round
+from odoo.tools.float_utils import float_compare, json_float_round
 
 _logger = logging.getLogger(__name__)
 
@@ -225,6 +225,7 @@ class AccountEdiFormat(models.Model):
         date_string = invoice.invoice_date.strftime('%Y-%m-%dT%H:%M:%SZ')
         grouped_taxes = invoice._prepare_edi_tax_details(grouping_key_generator=group_tax_retention)
         invoice_line_data, totals = self._l10n_eg_eta_prepare_invoice_lines_data(invoice, grouped_taxes['invoice_line_tax_details'])
+        global_discount_amount = self._l10n_eg_edi_round(invoice._l10n_eg_edi_global_discount_amount())
         eta_invoice = {
             'issuer': self._l10n_eg_eta_prepare_address_data(invoice.journal_id.l10n_eg_branch_id, invoice, issuer=True,),
             'receiver': self._l10n_eg_eta_prepare_address_data(invoice.partner_id, invoice),
@@ -242,9 +243,9 @@ class AccountEdiFormat(models.Model):
             } for tax in grouped_taxes['tax_details'].values()],
             'totalDiscountAmount': self._l10n_eg_edi_round(totals['discount_total']),
             'totalSalesAmount': self._l10n_eg_edi_round(totals['total_price_subtotal_before_discount']),
-            'netAmount': self._l10n_eg_edi_round(abs(invoice.amount_untaxed_signed)),
+            'netAmount': abs(self._l10n_eg_edi_round(invoice.amount_untaxed_signed+global_discount_amount)),
             'totalAmount': self._l10n_eg_edi_round(abs(invoice.amount_total_signed)),
-            'extraDiscountAmount': 0.0,
+            'extraDiscountAmount': abs(global_discount_amount),
             'totalItemsDiscountAmount': 0.0,
         })
         if invoice.ref:
@@ -254,13 +255,21 @@ class AccountEdiFormat(models.Model):
         return eta_invoice
 
     @api.model
+    def _l10n_eg_invoice_line_filter(self, invoice_line):
+        # we are not interested in sending all the lines to the ETA, Only positive accounting lines are needed.
+        if not self.env['ir.config_parameter'].sudo().get_param("l10n_eg_global_discount_enabled"):
+            return invoice_line.display_type not in ('line_note', 'line_section')
+        sign = 1 if invoice_line.move_id.is_outbound() else -1
+        return invoice_line.display_type not in ('line_note', 'line_section') and float_compare(sign * invoice_line.balance, 0,  precision_rounding=invoice_line.currency_id.rounding) != -1
+
+    @api.model
     def _l10n_eg_eta_prepare_invoice_lines_data(self, invoice, tax_data):
         lines = []
         totals = {
             'discount_total': 0.0,
             'total_price_subtotal_before_discount' : 0.0,
         }
-        for line in invoice.invoice_line_ids.filtered(lambda x: not x.display_type):
+        for line in invoice.invoice_line_ids.filtered(lambda x: self._l10n_eg_invoice_line_filter(x)):
             line_tax_details = tax_data.get(line, {})
             price_unit = self._l10n_eg_edi_round(abs((line.balance / line.quantity) / (1 - (line.discount / 100.0)))) if line.quantity and line.discount != 100.0 else line.price_unit
             price_subtotal_before_discount = self._l10n_eg_edi_round(abs(line.balance / (1 - (line.discount / 100)))) if line.discount != 100.0 else self._l10n_eg_edi_round(price_unit * line.quantity)
@@ -358,11 +367,11 @@ class AccountEdiFormat(models.Model):
             errors.append(_("Please add all the required fields in the branch details"))
         if not self._l10n_eg_validate_info_address(invoice.partner_id, invoice=invoice):
             errors.append(_("Please add all the required fields in the customer details"))
-        if not all(aml.product_uom_id.l10n_eg_unit_code_id.code for aml in invoice.invoice_line_ids.filtered(lambda x: not x.display_type)):
+        if not all(aml.product_uom_id.l10n_eg_unit_code_id.code for aml in invoice.invoice_line_ids.filtered(lambda x: self._l10n_eg_invoice_line_filter(x))):
             errors.append(_("Please make sure the invoice lines UoM codes are all set up correctly"))
-        if not all(tax.l10n_eg_eta_code for tax in invoice.invoice_line_ids.filtered(lambda x: not x.display_type).tax_ids):
+        if not all(tax.l10n_eg_eta_code for tax in invoice.invoice_line_ids.filtered(lambda x: self._l10n_eg_invoice_line_filter(x)).tax_ids):
             errors.append(_("Please make sure the invoice lines taxes all have the correct ETA tax code"))
-        if not all(aml.product_id.l10n_eg_eta_code or aml.product_id.barcode for aml in invoice.invoice_line_ids.filtered(lambda x: not x.display_type)):
+        if not all(aml.product_id.l10n_eg_eta_code or aml.product_id.barcode for aml in invoice.invoice_line_ids.filtered(lambda x: self._l10n_eg_invoice_line_filter(x))):
             errors.append(_("Please make sure the EGS/GS1 Barcode is set correctly on all products"))
         return errors
 
