@@ -659,22 +659,23 @@ const DESIGN_OPTION_CACHE = {
             return this[name];
         }
         // TODO: maybe find a cleaner solution.
-        if (this._designOptionsPromise) {
-            await this._designOptionsPromise;
-            return this[name];
+        if (!this._designOptionsPromise) {
+            console.log("Fetching design options");
+            this._designOptionsPromise = orm.searchRead(
+                "website.design.option",
+                [],
+                ["name", "value", "display_name"],
+            );
+            this._designOptionsPromise.then(designOptions => {
+                for (const option of designOptions) {
+                    if (!this[option.name]) {
+                        this[option.name] = [];
+                    }
+                    this[option.name].push(option);
+                }
+            });
         }
-        this._designOptionsPromise = orm.searchRead(
-            "website.design.option",
-            [],
-            ["name", "value", "display_name"],
-        );
-        const designOptions = await this._designOptionsPromise;
-        for (const option of designOptions) {
-            if (!this[option.name]) {
-                this[option.name] = [];
-            }
-            this[option.name].push(option);
-        }
+        await this._designOptionsPromise;
         this._designOptionsPromise = null;
         return this[name];
     }

@@ -425,13 +425,19 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         if (!this.websiteDesignId) {
             await this._fetchWebsiteDesignId();
         }
-        [this.designData] = await this.orm.searchRead(
-            "website.design",
-            [["id", "=", this.websiteDesignId]],
-            [],
-        );
-        this.designDataUpToDate = true;
-        return this.designData;
+        if (!this._designDataPromise) {
+            this._designDataPromise = this.orm.searchRead(
+                "website.design",
+                [["id", "=", this.websiteDesignId]],
+                [],
+            ).then(([designData]) => {
+                this.designData = designData;
+                this.designDataUpToDate = true;
+                this._designDataPromise = null;
+                return this.designData;
+            });
+        }
+        return this._designDataPromise;
     }
     /**
      * Customizes the website design record.
@@ -475,12 +481,18 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      * @private
      */
     async _fetchWebsiteDesignId() {
-        const [website] = await this.orm.searchRead(
-            "website",
-            [["id", "=", this.websiteService.currentWebsite.id.toString()]],
-            ["design_ids"]
-        );
-        this.websiteDesignId = website.design_ids[0];
+        if (!this._websiteDesignIdPromise) {
+            this._websiteDesignIdPromise = this.orm.searchRead(
+                "website",
+                [["id", "=", this.websiteService.currentWebsite.id.toString()]],
+                ["design_ids"]
+            ).then(([website]) => {
+                this.websiteDesignId = website.design_ids[0];
+                this._websiteDesignIdPromise = null;
+                return this.websiteDesignId;
+            });
+        }
+        return this._websiteDesignIdPromise;
     }
     /**
      * Nothing to render for the website specialization.
