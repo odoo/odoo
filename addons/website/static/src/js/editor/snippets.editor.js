@@ -79,7 +79,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         };
         this.$body[0].addEventListener("dragstart", this.__onDragStart);
 
-        this._adaptHighlightOnEdit = throttleForAnimation(this._adaptHighlightOnEdit.bind(this));
+        this._adaptHighlightOnEdit = throttleForAnimation(switchTextHighlight);
 
         // Used to adjust highlight SVGs when the text is edited.
         this.textHighlightObserver = new MutationObserver(mutations => {
@@ -381,13 +381,12 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         return wUtils.isMobile(this);
     },
     /**
-     * This callback type is used to identify the function used to apply the
-     * text option on a selected text.
+     * This callback type is used to identify the function used to apply some
+     * actions on the activated text snippet.
      *
-     * @deprecated
      * @callback TextOptionCallback
-     * @param {HTMLElement} selectedTextEl The selected text element on which
-     * the option should be applied.
+     * @param {jQuery} $snippet The selected text element on which the option
+     * should be applied.
      */
     /**
      * Used to handle "text options" button click according to whether the
@@ -396,13 +395,10 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      * @private
      * @param {HTMLElement} targetEl
      * @param {Array<String>} optionClassList
-     * @param {TextOptionCallback} applyTextOption callback function to set
-     * text option's classes, updates...
+     * @param {TextOptionCallback} textOptionsPostActivate callback to trigger
+     * actions when the text snippet is activated.
      */
-    _handleTextOptions(targetEl, optionClassList, applyTextOption = () => {}) {
-        // TODO adapt in master
-        const __handleTextOptionsPostActivate = this.__handleTextOptionsPostActivate;
-
+    _handleTextOptions(targetEl, optionClassList, textOptionsPostActivate = () => {}) {
         const classSelector = targetEl.dataset.textSelector;
         const sel = this._getSelection();
         if (!this._isValidSelection(sel)) {
@@ -453,15 +449,10 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             }
             if ($snippet) {
                 $snippet[0].normalize();
-                applyTextOption($snippet[0]); // TODO remove in master, useless in standard
                 this.trigger_up('activate_snippet', {
                     $snippet: $snippet,
                     previewMode: false,
-                    onSuccess: () => {
-                        if (__handleTextOptionsPostActivate) {
-                            __handleTextOptionsPostActivate($snippet);
-                        }
-                    },
+                    onSuccess: () => textOptionsPostActivate($snippet),
                 });
                 this.options.wysiwyg.odooEditor.historyStep();
             } else {
@@ -481,19 +472,6 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             this._toggleHighlightAnimatedTextButton();
         }
         targetEl.classList.remove('active');
-    },
-    /**
-     * Used to adjust the highlight effect when the text content is edited.
-     *
-     * TODO: Should be directly replaced by `switchTextHighlight()` in master
-     * (left in stable for compatibility).
-     *
-     * @private
-     * @param {HTMLElement} target
-     * @param {String} [highlightID]
-     */
-    _adaptHighlightOnEdit(target, highlightID) {
-        return switchTextHighlight(target, highlightID);
     },
     /**
      * @private
@@ -631,7 +609,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             this._getOptionTextClass(target),
             "o_animate",
             "o_animate_preview",
-            "o_anim_fade_in"
+            "o_anim_fade_in",
         ]);
     },
     /**
@@ -652,18 +630,17 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         ev.stopPropagation();
         this._closeWidgets();
         const target = ev.currentTarget;
-        this.__handleTextOptionsPostActivate = ($snippet) => {
-            // TODO should be reviewed
-            $snippet.data("snippet-editor")?.trigger_up("option_update", {
-                optionName: "TextHighlight",
-                name: "new_text_highlight",
-            });
-        };
         this._handleTextOptions(
             target,
             [this._getOptionTextClass(target), "o_text_highlight_underline"],
+            ($snippet) => {
+                // TODO should be reviewed
+                $snippet.data("snippet-editor")?.trigger_up("option_update", {
+                    optionName: "TextHighlight",
+                    name: "new_text_highlight",
+                });
+            }
         );
-        delete this.__handleTextOptionsPostActivate;
     },
     /**
      * On reload bundles, when it's from the theme tab, destroy any
@@ -747,28 +724,6 @@ weSnippetEditor.SnippetEditor.include({
             };
         }
         return restore;
-    },
-    /**
-     * TODO: Remove in master (left in stable for compatibility)
-     *
-     * @private
-     */
-    _highlightResizeObserve() {
-        // The callback of `this.editorResizeObserver` will fire automatically
-        // when observation starts, which triggers a useless highlight
-        // adjustment. We use `this.observerLock` to prevent it.
-        this.observerLock = true;
-        this.editorResizeObserver.observe(this.$target[0]);
-    },
-    /**
-     * TODO: Remove in master (left in stable for compatibility)
-     *
-     * @private
-     */
-    _adaptOnOptionResize() {
-        [...this.$target[0].querySelectorAll(".o_text_highlight")].forEach(textEl => {
-            switchTextHighlight(textEl);
-        });
     },
 });
 

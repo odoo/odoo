@@ -1918,64 +1918,6 @@ registry.TextHighlight = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Right after custom fonts loading, the text width can change (even after
-     * adapting the highlights), leading to a highlight SVG slightly longer or
-     * shorter than the text content... `document.fonts.ready` is resolved
-     * before the text width is updated, so we need to do the update manually
-     * here by adjusting the highlights if the text width changes using a
-     * `ResizeObserver`.
-     *
-     * TODO: Remove in master (left in stable for compatibility)
-     *
-     * @private
-     */
-    _adaptOnFontsLoading() {
-        this.observerLocked = new Map();
-        // The idea here is to adapt the highlights when a width change is
-        // detected, but after every adjustment, the `ResizeObserver` will
-        // unfortunately immediately notify a size change once new highlight
-        // items are observed leading to an infinite loop. To avoid that,
-        // we use a lock map (`observerLocked`) to block the callback on this
-        // first notification for observed items.
-        this.resizeObserver = new window.ResizeObserver(entries => {
-            window.requestAnimationFrame(() => {
-                const topTextEls = new Set();
-                entries.forEach(entry => {
-                    const target = entry.target;
-                    if (this.observerLocked.get(target)) {
-                        // Unlock the target, the next resize will trigger
-                        // highlight adaptation.
-                        return this.observerLocked.set(target, false);
-                    }
-                    const topTextEl = target.closest(".o_text_highlight");
-                    if (topTextEl) {
-                        topTextEls.add(topTextEl);
-                        // Unobserve the target (it will be replaced by a new
-                        // one after the update).
-                        this.resizeObserver.unobserve(target);
-                    }
-                });
-                // The `ResizeObserver` cannot detect the width change on the
-                // entire `.o_text_highlight` element, so we need to observe
-                // the highlight units (`.o_text_highlight_item`) and do the
-                // adjustment only once for the whole container.
-                topTextEls.forEach(async topTextEl => {
-                    // We don't need to track old items, they will be removed
-                    // after the adaptation.
-                    [...topTextEl.querySelectorAll(".o_text_highlight_item")].forEach(unit => {
-                        this.observerLocked.delete(unit);
-                    });
-                    // Adapt the highlight, lock new items and observe them.
-                    switchTextHighlight(topTextEl);
-                    this._lockHighlightObserver(topTextEl);
-                    this._observeHighlightResize(topTextEl);
-                });
-            });
-        });
-        this._observeHighlightResize();
-        this._lockHighlightObserver();
-    },
-    /**
      * The `resizeObserver` ignores an element if it has an inline display.
      * We need to target the closest non-inline parent.
      *
