@@ -25,6 +25,7 @@ Tento modul definuje:
     ],
     'auto_install': ['account'],
     'data': [
+        'data/tax_report.xml',
         'views/report_invoice.xml',
         'views/res_partner_views.xml',
         'views/res_company_views.xml',
