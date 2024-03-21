@@ -600,18 +600,7 @@ class Channel(models.Model):
         message_format = message.message_format()[0]
         if "temporary_id" in self.env.context:
             message_format["temporary_id"] = self.env.context["temporary_id"]
-        # Last interest and is_pinned are updated for a channel when posting a message.
-        # So a notification is needed to update UI, and it should come before the
-        # notification of the message itself to ensure the channel automatically opens.
-        payload = {
-            "Thread": {
-                "id": self.id,
-                "last_interest_dt": fields.Datetime.now(),
-                "model": "discuss.channel",
-            },
-        }
         bus_notifications = [
-            (self, "mail.record/insert", payload),
             ((self, "members"), "mail.record/insert", {
                 "Thread": {"id": self.id, "is_pinned": True, "model": "discuss.channel"}
             }),
@@ -1006,8 +995,9 @@ class Channel(models.Model):
                     Command.create({
                         'partner_id': partner_id,
                         # only pin for the current user, so the chat does not show up for the correspondent until a message has been sent
-                        # one more second to make sure that it works well with the default last_interest_dt (datetime.now())
-                        'unpin_dt': False if partner_id == self.env.user.partner_id.id else fields.Datetime.now() + timedelta(seconds=1),
+                        # manually set the last_interest_dt to make sure that it works well with the default last_interest_dt (datetime.now())
+                        'unpin_dt': False if partner_id == self.env.user.partner_id.id else fields.Datetime.now(),
+                        'last_interest_dt': fields.Datetime.now() if partner_id == self.env.user.partner_id.id else fields.Datetime.now() - timedelta(seconds=30),
                     }) for partner_id in partners_to
                 ],
                 'channel_type': 'chat',

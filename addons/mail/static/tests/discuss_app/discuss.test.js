@@ -1193,7 +1193,11 @@ test("should auto-pin chat when receiving a new DM", async () => {
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ is_pinned: false, partner_id: serverState.partnerId }),
+            Command.create({
+                unpin_dt: "2021-01-01 12:00:00",
+                last_interest_dt: "2021-01-01 10:00:00",
+                partner_id: serverState.partnerId
+            }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -1733,7 +1737,11 @@ test("sidebar: cannot unpin channel group_based_subscription: mandatorily pinned
     pyEnv["discuss.channel"].create({
         name: "General",
         channel_member_ids: [
-            Command.create({ is_pinned: false, partner_id: serverState.partnerId }),
+            Command.create({
+                unpin_dt: "2021-01-01 12:00:00",
+                last_interest_dt: "2021-01-01 10:00:00",
+                partner_id: serverState.partnerId
+            }),
         ],
         group_ids: [Command.create({ name: "test" })],
     });
@@ -1795,7 +1803,7 @@ test("Message shows up even if channel data is incomplete", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({
-                is_pinned: true,
+                unpin_dt: false,
                 partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: correspondentPartnerId }),
@@ -2027,7 +2035,7 @@ test("Newly created chat should be at the top of the direct message list", async
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({
-                is_pinned: true,
+                unpin_dt: false,
                 last_interest_dt: "2021-01-01 10:00:00",
                 partner_id: serverState.partnerId,
             }),

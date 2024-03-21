@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
+from unittest.mock import patch
 
 from odoo import fields
 from odoo.addons.mail.tests.common import MailCommon
@@ -146,7 +147,9 @@ class TestChannelRTC(MailCommon):
                 },
             ]
         ):
-            res = channel_member._rtc_join_call()
+            now = fields.Datetime.now()
+            with patch.object(fields.Datetime, 'now', lambda: now + relativedelta(seconds=5)):
+                res = channel_member._rtc_join_call()
         self.assertIn('invitedMembers', res)
         self.assertEqual(res['invitedMembers'], [('ADD', [{
             'id': channel_member_test_user.id,
@@ -257,7 +260,9 @@ class TestChannelRTC(MailCommon):
                 },
             ]
         ):
-            res = channel_member._rtc_join_call()
+            now = fields.Datetime.now()
+            with patch.object(fields.Datetime, 'now', lambda: now + relativedelta(seconds=5)):
+                res = channel_member._rtc_join_call()
         self.assertIn('invitedMembers', res)
         self.assertEqual(res['invitedMembers'], [('ADD', [
             {
@@ -607,7 +612,9 @@ class TestChannelRTC(MailCommon):
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
         channel = self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda member: member.partner_id == self.user_employee.partner_id)
-        channel_member._rtc_join_call()
+        now = fields.Datetime.now()
+        with patch.object(fields.Datetime, 'now', lambda: now + relativedelta(seconds=5)):
+            channel_member._rtc_join_call()
         self.env['bus.bus'].sudo().search([]).unlink()
 
         with self.mock_bus():
@@ -618,17 +625,16 @@ class TestChannelRTC(MailCommon):
         found_bus_notifs = self.assertBusNotifications(
             [
                 (self.cr.dbname, 'discuss.channel', channel.id),  # channel joined -- seen (not asserted below)
-                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # channel joined  -- last_interrest (not asserted below)
+                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # channel joined  -- last_interest (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id),  # message_post -- new_message (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id),  # message_post -- seen (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id, "members"),  # update of pin state (not asserted below)
-                (self.cr.dbname, 'discuss.channel', channel.id),  # message_post -- last_interrest (not asserted below)
+                (self.cr.dbname, 'discuss.channel', channel.id),  # message_post -- last_interest (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id),  # new members (not asserted below)
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # incoming invitation
                 (self.cr.dbname, 'mail.guest', test_guest.id),  # incoming invitation
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update list of invitations
                 (self.cr.dbname, 'discuss.channel', channel.id, "members"),  # update of pin state (not asserted below)
-                (self.cr.dbname, 'discuss.channel', channel.id),  # update of last interest (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id),  # new member (guest) (not asserted below)
                 (self.cr.dbname, 'mail.guest', test_guest.id),  # channel joined for guest (not asserted below)
             ],
@@ -740,7 +746,9 @@ class TestChannelRTC(MailCommon):
                 },
             ],
         ):
-            channel_member._rtc_leave_call()
+            now = fields.Datetime.now()
+            with patch.object(fields.Datetime, 'now', lambda: now + relativedelta(seconds=5)):
+                channel_member._rtc_leave_call()
 
     @users('employee')
     @mute_logger('odoo.models.unlink')

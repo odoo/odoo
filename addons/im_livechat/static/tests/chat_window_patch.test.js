@@ -13,7 +13,7 @@ test("closing a chat window with no message from admin side unpins it", async ()
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({
-                is_pinned: true,
+                unpin_dt: false,
                 partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),

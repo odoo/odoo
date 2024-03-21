@@ -313,7 +313,8 @@ test("messaging menu counter should ignore unread messages in channels that are 
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({
-                is_pinned: false,
+                unpin_dt: "2023-01-01 12:00:00",
+                last_interest_dt: "2023-01-01 11:00:00",
                 message_unread_counter: 1,
                 partner_id: serverState.partnerId,
             }),

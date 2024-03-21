@@ -1,6 +1,5 @@
 import { parseEmail } from "@mail/utils/common/format";
 import { Command, models } from "@web/../tests/web_test_helpers";
-import { serializeDateTime, today } from "@web/core/l10n/dates";
 import { parseModelParams } from "../mail_mock_server";
 import { Kwargs } from "@web/../tests/_framework/mock_server/mock_server_utils";
 
@@ -420,8 +419,6 @@ export class MailThread extends models.ServerModel {
             // members
             const channels = DiscussChannel._filter([["id", "=", message.res_id]]);
             for (const channel of channels) {
-                // notify update of last_interest_dt
-                const now = serializeDateTime(today());
                 notifications.push([
                     [channel, "members"],
                     "mail.record/insert",
@@ -429,17 +426,6 @@ export class MailThread extends models.ServerModel {
                         Thread: {
                             id: channel.id,
                             is_pinned: true,
-                            model: "discuss.channel",
-                        },
-                    },
-                ]);
-                notifications.push([
-                    channel,
-                    "mail.record/insert",
-                    {
-                        Thread: {
-                            id: channel.id,
-                            last_interest_dt: now,
                             model: "discuss.channel",
                         },
                     },

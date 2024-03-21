@@ -72,16 +72,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         # so we can see if the `last_interest_dt` is updated correctly
         with patch.object(fields.Datetime, 'now', lambda: post_time):
             chat.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
-        channel_member_employee = self.env['discuss.channel.member'].search([
-            ('partner_id', '=', self.partner_employee.id),
-            ('channel_id', '=', chat.id),
-        ])
-        channel_member_admin = self.env['discuss.channel.member'].search([
-            ('partner_id', '=', self.partner_admin.id),
-            ('channel_id', '=', chat.id),
-        ])
-        self.assertEqual(channel_member_employee.last_interest_dt, post_time)
-        self.assertEqual(channel_member_admin.last_interest_dt, post_time)
+        self.assertEqual(chat.last_interest_dt, post_time)
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
