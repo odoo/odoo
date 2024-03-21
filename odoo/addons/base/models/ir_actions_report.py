@@ -787,7 +787,7 @@ class IrActionsReport(models.Model):
         else:
             try:
                 result = self._merge_pdfs(streams)
-            except PdfReadError:
+            except (PdfReadError, NotImplementedError):
                 raise UserError(_("One of the documents you are trying to merge is encrypted"))
 
         # We have to close the streams after PdfFileWriter's call to write()
@@ -804,7 +804,7 @@ class IrActionsReport(models.Model):
                 reader = PdfFileReader(stream)
                 writer.appendPagesFromReader(reader)
                 writer.write(result_stream)
-            except (PdfReadError, TypeError, ValueError):
+            except (PdfReadError, TypeError, ValueError, NotImplementedError):
                 unreadable_streams.append(stream)
 
         return unreadable_streams
