@@ -1,11 +1,14 @@
+import collections
 import contextlib
 import contextvars
+import functools
 import os
 from collections import deque
 from contextlib import ExitStack
 from typing import Optional
 
 import astroid
+
 try:
     from astroid import NodeNG
 except ImportError:
@@ -23,20 +26,20 @@ DFTL_CURSOR_EXPR = [
     'self.cr',  # controllers and test
     'cr',  # old api
     'odoo.tools',
-    'tools'
+    'tools',
 ]
 # <attribute> or <name>.<attribute> or <call>.<attribute>
 ATTRIBUTE_WHITELIST = [
     '_table', 'name', 'lang', 'id', 'get_lang.code'
 ]
 
-FUNCTION_WHITELIST = [
+FUNCTION_WHITELIST = {
     'create', 'read', 'write', 'browse', 'select', 'get', 'strip', 'items', '_select', '_from', '_where',
-    'any', 'join', 'split', 'tuple', 'get_sql', 'search', 'list', 'set', 'next', '_get_query', '_where_calc', 'SQL'
-]
+    'any', 'join', 'split', 'tuple', 'get_sql', 'search', 'list', 'set', 'next', '_where_calc', 'SQL'
+}
 
-func_call = {}
-func_called_for_query = []
+function_definitions = collections.defaultdict(list)
+callsites_for_queries = collections.defaultdict(list)
 root_call: contextvars.ContextVar[Optional[astroid.Call]] =\
     contextvars.ContextVar('root_call', default=None)
 @contextlib.contextmanager
@@ -108,16 +111,16 @@ class OdooBaseChecker(BaseChecker):
             return True
         if name == node.scope().name:
             return True
-        if  name not in func_called_for_query:
-            func_called_for_query.append((name, position, root_call.get()))
-            cst_args = self.all_const(node.args, args_allowed=args_allowed)
-        if  name in func_call:
-            for fun in func_call[name]:
-                func_call[name].pop(func_call[name].index(fun))
-                for returnNode in self._get_return_node(fun):
-                    if not self._is_constexpr(returnNode.value, cst_args, position=position):
-                        func_call.pop(name)
-                        return False
+
+        const_args = self.all_const(node.args, args_allowed=args_allowed)
+        # store callsite in case the function is not define yet
+        callsites_for_queries[name].append((position, const_args, root_call.get()))
+        # evaluate known defs for callsite
+        if funs := function_definitions[name]:
+            return all(
+                self._is_const_def(fun, const_args=const_args, position=position)
+                for fun in funs
+            )
         return True
 
     def _is_fstring_cst(self, node: astroid.JoinedStr, args_allowed=False, position=None):
@@ -138,7 +141,7 @@ class OdooBaseChecker(BaseChecker):
             for node in nodes
         )
 
-    def _is_constexpr(self, node: NodeNG, args_allowed=False, position=None):
+    def _is_constexpr(self, node: NodeNG, *, args_allowed=False, position=None):
         if isinstance(node, astroid.Const): # astroid.const is always safe
             return True
         elif isinstance(node, (astroid.List, astroid.Set)):
@@ -170,6 +173,8 @@ class OdooBaseChecker(BaseChecker):
             assignements = node.lookup(node.name)
             assigned_node = []
             for n in assignements[1]: #assignement[0] contains the scope, so assignment[1] contains the assignement nodes
+                # FIXME: makes no sense, assuming this gets
+                #        `visit_functiondef`'d we should just ignore it
                 if isinstance(n.parent, astroid.FunctionDef):
                     assigned_node += [args_allowed]
                 elif isinstance(n.parent, astroid.Arguments):
@@ -257,8 +262,6 @@ class OdooBaseChecker(BaseChecker):
         if self._is_constexpr(node):  # If we can infer the value at compile time, it cannot be injected
             return True
 
-        if isinstance(node, astroid.Call):
-            node = node.func
         # self._thing is OK (mostly self._table), self._thing() also because
         # it's a common pattern of reports (self._select, self._group_by, ...)
         return (isinstance(node, astroid.Attribute)
@@ -362,24 +365,32 @@ class OdooBaseChecker(BaseChecker):
         if os.path.basename(self.linter.current_file).startswith('test_'):
             return
 
+        # store def for future callsites
+        function_definitions[node.name].append(node)
+
+        # evaluate previously seen callsites
+        # TODO: group by (position, const_args), if any None check that, otherwise check individual positions
+        for p, a, call in callsites_for_queries[node.name]:
+            if not self._is_const_def(node, const_args=a, position=p):
+                self.add_message(
+                    'sql-injection',
+                    node=node,
+                    args='because it is used to build a query in file %(file)s:%(line)s' % {
+                        'file': self._infer_filename(call),
+                        'line': str(call.lineno)
+                    }
+                )
+
+    @functools.lru_cache(None)
+    def _is_const_def(self, node: astroid.FunctionDef, /, *, position: Optional[int], const_args: bool = False) -> bool:
         if node.name.startswith('__') or node.name in FUNCTION_WHITELIST:
-            return
+            return True
 
-        nodes = func_call.setdefault(node.name, [])
-        if node not in nodes:
-            nodes.append(node)
-
-        mapped_func_called_for_query = [x[0] for x in func_called_for_query]
-        if node.name not in mapped_func_called_for_query:
-            return
-
-        index = mapped_func_called_for_query.index(node.name)
-        _, position, call = func_called_for_query.pop(index)
-        if not all(
-            self._is_constexpr(return_node.value, position=position)
+        return all(
+            self._is_constexpr(return_node.value, args_allowed=const_args, position=position)
             for return_node in self._get_return_node(node)
-        ):
-            self.add_message('sql-injection', node=node, args='because it is used to build a query in file %(file)s:%(line)s'% {'file': self._infer_filename(call), 'line':str(call.lineno)})
+        )
+
 
 def register(linter):
     linter.register_checker(OdooBaseChecker(linter))
