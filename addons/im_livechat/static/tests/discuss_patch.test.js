@@ -30,7 +30,11 @@ test("add livechat in the sidebar on visitor sending first message", async () =>
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor (Belgium)",
         channel_member_ids: [
-            Command.create({ is_pinned: false, partner_id: serverState.partnerId }),
+            Command.create({ 
+                unpin_dt: "2021-01-01 12:00:00",
+                last_interest_dt: "2021-01-01 10:00:00",
+                partner_id: serverState.partnerId
+            }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
