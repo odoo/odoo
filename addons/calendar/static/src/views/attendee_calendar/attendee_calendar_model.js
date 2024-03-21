@@ -45,10 +45,10 @@ export class AttendeeCalendarModel extends CalendarModel {
      *
      * Upon updating a record with recurrence, we need to ask how it will affect recurrent events.
      */
-    async updateRecord(record) {
+    async updateRecord(record, show_all_events = true) {
         const rec = this.records[record.id];
         if (rec.rawRecord.recurrency) {
-            const recurrenceUpdate = await askRecurrenceUpdatePolicy(this.dialog);
+            const recurrenceUpdate = await askRecurrenceUpdatePolicy(this.dialog, show_all_events);
             if (!recurrenceUpdate) {
                 return this.notify();
             }

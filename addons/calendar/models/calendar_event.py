@@ -258,6 +258,7 @@ class CalendarEvent(models.Model):
     tentative_count = fields.Integer(compute='_compute_attendees_count')
     awaiting_count = fields.Integer(compute="_compute_attendees_count")
     user_can_edit = fields.Boolean(compute='_compute_user_can_edit')
+    show_all_events = fields.Boolean(compute='_compute_show_all_events')
 
     @api.depends("attendee_ids")
     def _compute_should_show_status(self):
@@ -380,6 +381,16 @@ class CalendarEvent(models.Model):
             event.stop = event.start and event.start + timedelta(minutes=round((event.duration or 1.0) * 60))
             if event.allday:
                 event.stop -= timedelta(seconds=1)
+
+    @api.depends('start')
+    def _compute_show_all_events(self):
+        for event in self:
+            if event.start and event._origin.start:
+                old_day = event._origin.start.date().day
+                new_day = event.start.date().day
+                event.show_all_events = old_day == new_day
+            else:
+                event.show_all_events = True
 
     @api.onchange('start_date', 'stop_date')
     def _onchange_date(self):

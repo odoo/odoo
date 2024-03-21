@@ -10,9 +10,11 @@ export class AskRecurrenceUpdatePolicyDialog extends Component {
     static props = {
         confirm: Function,
         close: Function,
+        show_all_events: Boolean,
     };
 
     setup() {
+        super.setup();
         this.possibleValues = {
             self_only: {
                 checked: true,
@@ -22,11 +24,13 @@ export class AskRecurrenceUpdatePolicyDialog extends Component {
                 checked: false,
                 label: _t("This and following events"),
             },
-            all_events: {
+        };
+        if (this.props.show_all_events) {
+            this.possibleValues.all_events = {
                 checked: false,
                 label: _t("All events"),
-            },
-        };
+            }
+        }
     }
 
     get selected() {
