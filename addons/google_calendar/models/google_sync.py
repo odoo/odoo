@@ -145,13 +145,15 @@ class GoogleSync(models.AbstractModel):
         self.unlink()
 
     @api.model
-    def _sync_google2odoo(self, google_events: GoogleEvent, default_reminders=()):
+    def _sync_google2odoo(self, google_events: GoogleEvent, write_dates=None, default_reminders=()):
         """Synchronize Google recurrences in Odoo. Creates new recurrences, updates
         existing ones.
 
         :param google_recurrences: Google recurrences to synchronize in Odoo
+        :param write_dates: A dictionary mapping Odoo record IDs to their write dates.
         :return: synchronized odoo recurrences
         """
+        write_dates = dict(write_dates or {})
         existing = google_events.exists(self.env)
         new = google_events - existing - google_events.cancelled()
 
@@ -181,8 +183,10 @@ class GoogleSync(models.AbstractModel):
             # This could be dangerous if google server time and odoo server time are different
             updated = parse(gevent.updated)
             odoo_record = self.browse(gevent.odoo_id(self.env))
+            # Use the record's write_date to apply Google updates only if they are newer than Odoo's write_date.
+            odoo_record_write_date = write_dates.get(odoo_record.id, odoo_record.write_date)
             # Migration from 13.4 does not fill write_date. Therefore, we force the update from Google.
-            if not odoo_record.write_date or updated >= pytz.utc.localize(odoo_record.write_date):
+            if not odoo_record_write_date or updated >= pytz.utc.localize(odoo_record_write_date):
                 vals = dict(self._odoo_values(gevent, default_reminders), need_sync=False)
                 odoo_record.with_context(dont_notify=True)._write_from_google(gevent, vals)
                 synced_records |= odoo_record

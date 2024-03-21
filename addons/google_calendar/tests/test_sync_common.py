@@ -7,7 +7,10 @@ from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarServ
 from odoo.addons.google_account.models.google_service import GoogleService
 from odoo.addons.google_calendar.models.res_users import User
 from odoo.addons.google_calendar.models.google_sync import GoogleSync
-from odoo.tests.common import HttpCase
+from odoo.tests.common import HttpCase, new_test_user
+from freezegun import freeze_time
+from contextlib import contextmanager
+
 
 def patch_api(func):
     @patch.object(GoogleSync, '_google_insert', MagicMock(spec=GoogleSync._google_insert))
@@ -24,6 +27,19 @@ class TestSyncGoogle(HttpCase):
         super().setUp()
         self.google_service = GoogleCalendarService(self.env['google.service'])
         self.env.user.sudo().unpause_google_synchronization()
+        self.organizer_user = new_test_user(self.env, login="organizer_user")
+        self.attendee_user = new_test_user(self.env, login='attendee_user')
+
+    @contextmanager
+    def mock_datetime_and_now(self, mock_dt):
+        """
+        Used when synchronization date (using env.cr.now()) is important
+        in addition to standard datetime mocks. Used mainly to detect sync
+        issues.
+        """
+        with freeze_time(mock_dt), \
+                patch.object(self.env.cr, 'now', lambda: mock_dt):
+            yield
 
     def assertGoogleEventDeleted(self, google_id):
         GoogleSync._google_delete.assert_called()
