@@ -198,5 +198,54 @@
             <field name="display_name">Border Bottom</field>
             <field name="value">border-bottom</field>
         </record>
+        <!-- Footer Template Options -->
+        <record id="design_option_footertemplate_default" model="website.design.option">
+            <field name="name">footer__template</field>
+            <field name="display_name">Default</field>
+            <field name="value">default</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.footer_custom')])]"/>
+        </record>
+        <record id="design_option_footertemplate_descriptive" model="website.design.option">
+            <field name="name">footer__template</field>
+            <field name="display_name">Descriptive</field>
+            <field name="value">descriptive</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_footer_descriptive')])]"/>
+        </record>
+        <record id="design_option_footertemplate_centered" model="website.design.option">
+            <field name="name">footer__template</field>
+            <field name="display_name">Centered</field>
+            <field name="value">centered</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_footer_centered')])]"/>
+        </record>
+        <record id="design_option_footertemplate_links" model="website.design.option">
+            <field name="name">footer__template</field>
+            <field name="display_name">Links</field>
+            <field name="value">links</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_footer_links')])]"/>
+        </record>
+        <record id="design_option_footertemplate_minimalist" model="website.design.option">
+            <field name="name">footer__template</field>
+            <field name="display_name">Minimalist</field>
+            <field name="value">minimalist</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_footer_minimalist')])]"/>
+        </record>
+        <record id="design_option_footertemplate_contact" model="website.design.option">
+            <field name="name">footer__template</field>
+            <field name="display_name">Contact</field>
+            <field name="value">contact</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_footer_contact')])]"/>
+        </record>
+        <record id="design_option_footertemplate_calltoaction" model="website.design.option">
+            <field name="name">footer__template</field>
+            <field name="display_name">Call-to-action</field>
+            <field name="value">call_to_action</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_footer_call_to_action')])]"/>
+        </record>
+        <record id="design_option_footertemplate_headline" model="website.design.option">
+            <field name="name">footer__template</field>
+            <field name="display_name">Headline</field>
+            <field name="value">headline</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_footer_headline')])]"/>
+        </record>
     </data>
 </odoo>

@@ -1014,42 +1014,16 @@
          groups="website.group_website_designer">
 
         <!-- Layouts -->
-        <we-select string="Template"
-            data-variable="footer-template"
-            data-reload="/">
-            <we-button title="Default"
-                       data-customize-website-views="website.footer_custom"
-                       data-customize-website-variable="'default'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_default.svg"/>
-            <we-button title="Descriptive"
-                       data-customize-website-views="website.template_footer_descriptive"
-                       data-customize-website-variable="'descriptive'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_descriptive.svg"/>
-            <we-button title="Centered"
-                       data-customize-website-views="website.template_footer_centered"
-                       data-customize-website-variable="'centered'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_centered.svg"/>
-            <we-button title="Links"
-                       data-customize-website-views="website.template_footer_links"
-                       data-customize-website-variable="'links'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_links.svg"/>
-            <we-button title="Minimalist"
-                       data-customize-website-views="website.template_footer_minimalist"
-                       data-customize-website-variable="'minimalist'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_minimalist.svg"/>
-            <we-button title="Contact"
-                       data-customize-website-views="website.template_footer_contact"
-                       data-customize-website-variable="'contact'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_contact.svg"/>
-            <we-button title="Call-to-action"
-                       data-customize-website-views="website.template_footer_call_to_action"
-                       data-customize-website-variable="'call_to_action'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_call_to_action.svg"/>
-            <we-button title="Headline"
-                       data-customize-website-views="website.template_footer_headline"
-                       data-customize-website-variable="'headline'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_headline.svg"/>
-        </we-select>
+        <we-designoptionselector string="Template" data-variable="footer__template" data-reload="/" data-text-mode="title">
+            <attribute target="[data-name='footer__template_default_opt']" name="data-img" value="/website/static/src/img/snippets_options/footer_template_default.svg"/>
+            <attribute target="[data-name='footer__template_descriptive_opt']" name="data-img" value="/website/static/src/img/snippets_options/footer_template_descriptive.svg"/>
+            <attribute target="[data-name='footer__template_centered_opt']" name="data-img" value="/website/static/src/img/snippets_options/footer_template_centered.svg"/>
+            <attribute target="[data-name='footer__template_links_opt']" name="data-img" value="/website/static/src/img/snippets_options/footer_template_links.svg"/>
+            <attribute target="[data-name='footer__template_minimalist_opt']" name="data-img" value="/website/static/src/img/snippets_options/footer_template_minimalist.svg"/>
+            <attribute target="[data-name='footer__template_contact_opt']" name="data-img" value="/website/static/src/img/snippets_options/footer_template_contact.svg"/>
+            <attribute target="[data-name='footer__template_call_to_action_opt']" name="data-img" value="/website/static/src/img/snippets_options/footer_template_call_to_action.svg"/>
+            <attribute target="[data-name='footer__template_headline_opt']" name="data-img" value="/website/static/src/img/snippets_options/footer_template_headline.svg"/>
+        </we-designoptionselector>
         <!-- Colors -->
         <we-colorpicker string="Colors"
                         data-customize-website-color="" data-color="footer"
