@@ -2388,7 +2388,7 @@ const Wysiwyg = Widget.extend({
         }
     },
     _onSelectionChange() {
-        if (this.odooEditor.autohideToolbar && this.linkPopover) {
+        if (this.linkPopover) {
             const selectionInLink = getInSelection(this.odooEditor.document, 'a') === this.linkPopover.target;
             const isVisible = this.linkPopover.el.offsetParent;
             if (isVisible && !selectionInLink) {
