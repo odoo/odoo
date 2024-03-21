@@ -45,6 +45,7 @@ export class PosStore extends Reactive {
         "ui",
         "pos_data",
         "dialog",
+        "notification",
         "printer",
         "action",
     ];
@@ -61,6 +62,7 @@ export class PosStore extends Reactive {
             barcode_reader,
             ui,
             dialog,
+            notification,
             printer,
             bus_service,
             pos_data,
@@ -76,6 +78,7 @@ export class PosStore extends Reactive {
         this.bus = bus_service;
         this.data = pos_data;
         this.action = action;
+        this.notification = notification;
         this.unwatched = markRaw({});
         this.pushOrderMutex = new Mutex();
 

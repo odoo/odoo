@@ -1,12 +1,9 @@
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
-import * as ReceiptScreenPos from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
-import * as ReceiptScreenSale from "@pos_sale/../tests/tours/utils/receipt_screen_util";
-import * as ProductScreenPos from "@point_of_sale/../tests/tours/utils/product_screen_util";
-import * as ProductScreenSale from "@pos_sale/../tests/tours/utils/product_screen_util";
-const ProductScreen = { ...ProductScreenPos, ...ProductScreenSale };
-const ReceiptScreen = { ...ReceiptScreenPos, ...ReceiptScreenSale };
+import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
+import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
+import * as PosSale from "@pos_sale/../tests/tours/utils/pos_sale_utils";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 import { registry } from "@web/core/registry";
@@ -16,8 +13,7 @@ registry.category("web_tour.tours").add("PosSettleOrder", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickControlButton("Quotation/Order"),
-            ProductScreen.selectFirstOrder(),
+            PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("Pizza Chicken", 9),
             ProductScreen.clickNumpad("Qty", "2"), // Change the quantity of the product to 2
             ProductScreen.selectedOrderlineHas("Pizza Chicken", 2),
@@ -34,17 +30,15 @@ registry.category("web_tour.tours").add("PosSettleOrderIncompatiblePartner", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickControlButton("Quotation/Order"),
             // The second item in the list is the first sale.order.
-            ProductScreen.selectNthOrder(2),
+            PosSale.settleNthOrder(2),
             ProductScreen.selectedOrderlineHas("product1", 1),
             ProductScreen.totalAmountIs("10.00"),
 
-            ProductScreen.clickControlButton("Quotation/Order"),
             // The first item in the list is the second sale.order.
             // Selecting the 2nd sale.order should use a new order,
             // therefore, the total amount will change.
-            ProductScreen.selectNthOrder(1),
+            PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("product2", 1),
             ProductScreen.totalAmountIs("11.00"),
         ].flat(),
@@ -55,8 +49,7 @@ registry.category("web_tour.tours").add("PosSettleOrder2", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickControlButton("Quotation/Order"),
-            ProductScreen.selectFirstOrder(),
+            PosSale.settleNthOrder(1),
             ProductScreen.clickOrderline("Product A", "1"),
             ProductScreen.selectedOrderlineHas("Product A", "1.00"),
             ProductScreen.clickOrderline("Product B", "1"),
@@ -74,8 +67,7 @@ registry.category("web_tour.tours").add("PosRefundDownpayment", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickControlButton("Quotation/Order"),
-            ProductScreen.downPaymentFirstOrder(),
+            PosSale.downPaymentFirstOrder(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
@@ -103,8 +95,7 @@ registry.category("web_tour.tours").add("PosSettleOrderRealTime", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickControlButton("Quotation/Order"),
-            ProductScreen.selectFirstOrder(),
+            PosSale.settleNthOrder(1),
             ProductScreen.totalAmountIs(40),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
@@ -118,8 +109,7 @@ registry.category("web_tour.tours").add("PosSettleOrder3", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickControlButton("Quotation/Order"),
-            ProductScreen.selectFirstOrder(),
+            PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("Product A", "1.00"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
@@ -133,8 +123,7 @@ registry.category("web_tour.tours").add("PosSettleOrderNotGroupable", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickControlButton("Quotation/Order"),
-            ProductScreen.selectFirstOrder(),
+            PosSale.settleNthOrder(1),
             ProductScreen.totalAmountIs(32.2), // 3.5 * 8 * 1.15
             ProductScreen.selectedOrderlineHas("Product A", "0.50"),
             ProductScreen.checkOrderlinesNumber(4),
@@ -146,13 +135,17 @@ registry.category("web_tour.tours").add("PosSettleOrderWithNote", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickControlButton("Quotation/Order"),
-            ProductScreen.selectFirstOrder(),
-            ProductScreen.checkCustomerNotes("Customer note 2--Customer note 3"),
+            PosSale.settleNthOrder(1),
+            Order.hasLine({
+                customerNote: "Customer note 2--Customer note 3",
+            }),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.checkCustomerNotes("Customer note 2--Customer note 3"),
+            // Check in the receipt
+            Order.hasLine({
+                customerNote: "Customer note 2--Customer note 3",
+            }),
             ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
@@ -162,8 +155,8 @@ registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickControlButton("Quotation/Order"),
-            ProductScreen.selectFirstOrder(),
+            PosSale.settleNthOrder(1),
+            Order.hasLine({}),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickInvoiceButton(),
