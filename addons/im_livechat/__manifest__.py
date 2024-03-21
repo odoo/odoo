@@ -164,6 +164,7 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/legacy/js/core/concurrency.js',
             'web/static/src/legacy/js/core/cookie_utils.js',
             'web/static/src/legacy/js/core/utils.js',
+            'web/static/src/legacy/js/core/minimal_dom.js',
             'web/static/src/legacy/js/core/dom.js',
             'web/static/src/legacy/js/core/qweb.js',
             'web/static/src/legacy/js/core/bus.js',
