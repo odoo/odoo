@@ -126,6 +126,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/module_loader.js',
             'web/static/src/session.js',
             'web/static/src/core/browser/cookie.js',
+            'web/static/src/core/utils/ui.js',
+            'web/static/src/legacy/js/core/minimal_dom.js',
             'web/static/src/legacy/js/public/lazyloader.js',
         ],
         'web.assets_frontend': [
@@ -198,7 +200,7 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/src/env.js',
             'web/static/src/core/utils/transitions.scss',  # included early because used by other files
-            'web/static/src/core/**/*',
+            'web/static/src/core/**/*',  # Note that 'web/static/src/core/utils/ui.js' is included in assets_frontend_minimal already
             ('remove', 'web/static/src/core/commands/**/*'),
             ('remove', 'web/static/src/core/debug/debug_menu.js'),
             ('remove', 'web/static/src/core/file_viewer/file_viewer.dark.scss'),
@@ -222,6 +224,8 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/module_loader.js'),
             ('remove', 'web/static/src/session.js'),
             ('remove', 'web/static/src/core/browser/cookie.js'),
+            ('remove', 'web/static/src/core/utils/ui.js'),
+            ('remove', 'web/static/src/legacy/js/core/minimal_dom.js'),
             ('remove', 'web/static/src/legacy/js/public/lazyloader.js'),
         ],
         # Optional Bundle for PDFJS lib
