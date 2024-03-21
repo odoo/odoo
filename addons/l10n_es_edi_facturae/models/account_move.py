@@ -136,6 +136,11 @@ class AccountMove(models.Model):
     def _l10n_es_edi_facturae_get_corrective_data(self):
         self.ensure_one()
         if self.move_type.endswith('refund'):
+            if not self.reversed_entry_id:
+                raise UserError(_("The credit note/refund appears to have been issued manually. For the purpose of "
+                                  "generating a Facturae document, it's necessary that the credit note/refund is created "
+                                  "directly from the associated invoice/bill."))
+
             refunded_invoice = self.env['account.move'].browse(self._l10n_es_edi_facturae_get_refunded_invoices()[self.id])
             tax_period = refunded_invoice._l10n_es_edi_facturae_get_tax_period()
 
