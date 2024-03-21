@@ -27,34 +27,36 @@ class StockForecasted(models.AbstractModel):
             return [('product_tmpl_id', 'in', product_template_ids)]
         return [('product_id', 'in', product_ids)]
 
-    def _move_domain(self, product_template_ids, product_ids, wh_location_ids):
+    def _move_domain(self, product_template_ids, product_ids, wh_view_location_id):
         move_domain = self._product_domain(product_template_ids, product_ids)
         move_domain += [('product_uom_qty', '!=', 0)]
+        view_loc = self.env['stock.location'].browse(wh_view_location_id)
+        wh_parent_path_pattern = view_loc.parent_path + "%"
         out_domain = move_domain + [
             '&',
-            ('location_id', 'in', wh_location_ids),
-            ('location_dest_id', 'not in', wh_location_ids),
+            ('location_id.parent_path', 'like', wh_parent_path_pattern),
+            ('location_dest_id.parent_path', 'not like', wh_parent_path_pattern),
         ]
         in_domain = move_domain + [
             '&',
-            ('location_id', 'not in', wh_location_ids),
-            ('location_dest_id', 'in', wh_location_ids),
+            ('location_id.parent_path', 'not like', wh_parent_path_pattern),
+            ('location_dest_id.parent_path', 'like', wh_parent_path_pattern),
         ]
         return in_domain, out_domain
 
-    def _move_draft_domain(self, product_template_ids, product_ids, wh_location_ids):
-        in_domain, out_domain = self._move_domain(product_template_ids, product_ids, wh_location_ids)
+    def _move_draft_domain(self, product_template_ids, product_ids, wh_view_location_id):
+        in_domain, out_domain = self._move_domain(product_template_ids, product_ids, wh_view_location_id)
         in_domain += [('state', '=', 'draft')]
         out_domain += [('state', '=', 'draft')]
         return in_domain, out_domain
 
-    def _move_confirmed_domain(self, product_template_ids, product_ids, wh_location_ids):
-        in_domain, out_domain = self._move_domain(product_template_ids, product_ids, wh_location_ids)
+    def _move_confirmed_domain(self, product_template_ids, product_ids, wh_view_location_id):
+        in_domain, out_domain = self._move_domain(product_template_ids, product_ids, wh_view_location_id)
         out_domain += [('state', 'not in', ['draft', 'cancel', 'done'])]
         in_domain += [('state', 'not in', ['draft', 'cancel', 'done'])]
         return in_domain, out_domain
 
-    def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
+    def _get_report_header(self, product_template_ids, product_ids, wh_view_location_id):
         # Get the products we're working, fill the rendering context with some of their attributes.
         res = {}
         if product_template_ids:
@@ -84,7 +86,7 @@ class StockForecasted(models.AbstractModel):
         res['incoming_qty'] = sum(products.mapped('incoming_qty'))
         res['outgoing_qty'] = sum(products.mapped('outgoing_qty'))
 
-        in_domain, out_domain = self._move_draft_domain(product_template_ids, product_ids, wh_location_ids)
+        in_domain, out_domain = self._move_draft_domain(product_template_ids, product_ids, wh_view_location_id)
         [in_sum] = self.env['stock.move']._read_group(in_domain, aggregates=['product_qty:sum'])[0]
         [out_sum] = self.env['stock.move']._read_group(out_domain, aggregates=['product_qty:sum'])[0]
 
@@ -116,16 +118,13 @@ class StockForecasted(models.AbstractModel):
         else:
             warehouse = self.env['stock.warehouse'].search([['active', '=', True]])[0]
 
-        wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
-            [('id', 'child_of', warehouse.view_location_id.id)],
-            ['id'],
-        )]
+        wh_view_location_id = warehouse.view_location_id.id
         # any quantities in this location will be considered free stock, others are free stock in transit
         wh_stock_location = warehouse.lot_stock_id
 
-        res.update(self._get_report_header(product_template_ids, product_ids, wh_location_ids))
+        res.update(self._get_report_header(product_template_ids, product_ids, wh_view_location_id))
 
-        res['lines'] = self._get_report_lines(product_template_ids, product_ids, wh_location_ids, wh_stock_location)
+        res['lines'] = self._get_report_lines(product_template_ids, product_ids, wh_view_location_id, wh_stock_location)
         return res
 
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
@@ -183,7 +182,7 @@ class StockForecasted(models.AbstractModel):
                 })
         return line
 
-    def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_location, read=True):
+    def _get_report_lines(self, product_template_ids, product_ids, wh_view_location_id, wh_stock_location, read=True):
 
         def _get_out_move_reserved_data(out, ins, used_reserved_moves, currents):
             reserved_out = 0
@@ -266,7 +265,7 @@ class StockForecasted(models.AbstractModel):
             return demand
 
         in_domain, out_domain = self._move_confirmed_domain(
-            product_template_ids, product_ids, wh_location_ids
+            product_template_ids, product_ids, wh_view_location_id
         )
         past_domain = [('reservation_date', '<=', date.today())]
         future_domain = ['|', ('reservation_date', '>', date.today()), ('reservation_date', '=', False)]
@@ -289,7 +288,9 @@ class StockForecasted(models.AbstractModel):
                 'move_dests': in_._rollup_move_dests()
             })
 
-        qties = self.env['stock.quant']._read_group([('location_id', 'in', wh_location_ids), ('quantity', '>', 0), ('product_id', 'in', outs.product_id.ids)],
+        view_loc = self.env['stock.location'].browse(wh_view_location_id)
+        wh_parent_path_pattern = view_loc.parent_path + "%"
+        qties = self.env['stock.quant']._read_group([('location_id.parent_path', 'like', wh_parent_path_pattern), ('quantity', '>', 0), ('product_id', 'in', outs.product_id.ids)],
                                                     ['product_id', 'location_id'], ['quantity:sum'])
         wh_stock_sub_location_ids = wh_stock_location.search([('id', 'child_of', wh_stock_location.id)]).ids
         currents = defaultdict(float)

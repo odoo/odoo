@@ -689,8 +689,7 @@ class ReportMoOverview(models.AbstractModel):
         unknown_products = products.filtered(lambda product: product.id not in replenish_data.get('products', {}))
         if unknown_products:
             warehouse = production.warehouse_id
-            wh_location_ids = self._get_warehouse_locations(warehouse, replenish_data)
-            forecast_lines = self.env['stock.forecasted_product_product']._get_report_lines(False, unknown_products.ids, wh_location_ids, warehouse.lot_stock_id, read=False)
+            forecast_lines = self.env['stock.forecasted_product_product']._get_report_lines(False, unknown_products.ids, warehouse.view_location_id.id, warehouse.lot_stock_id, read=False)
             forecast_lines = self._add_origins_to_forecast(forecast_lines)
             for product in unknown_products:
                 extra_docs = self._get_extra_replenishments(product)
@@ -845,18 +844,21 @@ class ReportMoOverview(models.AbstractModel):
             }
         return False
 
-    def _get_warehouse_locations(self, warehouse, replenish_data):
+    def _get_warehouse_location(self, warehouse, replenish_data):
         if not replenish_data['warehouses'].get(warehouse.id):
-            replenish_data['warehouses'][warehouse.id] = [loc['id'] for loc in self.env['stock.location'].search_read(
-                [('id', 'child_of', warehouse.view_location_id.id)],
-                ['id']
-            )]
+            replenish_data['warehouses'][warehouse.id] = warehouse.view_location_id.id
         return replenish_data['warehouses'][warehouse.id]
 
     def _get_reserved_qty(self, move_raw, warehouse, replenish_data):
         if not replenish_data['qty_reserved'].get(move_raw):
             total_reserved = 0
-            wh_location_ids = self._get_warehouse_locations(warehouse, replenish_data)
+            wh_view_location_id = self._get_warehouse_location(warehouse, replenish_data)
+            wh_location_ids = [
+                loc['id'] for loc in self.env['stock.location'].search_read(
+                    [('id', 'child_of', wh_view_location_id)],
+                    ['id']
+                )
+            ]
             linked_moves = self.env['stock.move'].browse(move_raw._rollup_move_origs()).filtered(lambda m: m.location_id.id in wh_location_ids)
             for move in linked_moves:
                 if move.state not in ('partially_available', 'assigned'):
