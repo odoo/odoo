@@ -45,7 +45,7 @@ function getPivotId(pivotFormulaId, getters) {
 function assertMeasureExist(pivotId, measure, getters) {
     const { measures } = getters.getPivotDefinition(pivotId);
     if (!measures.includes(measure)) {
-        const validMeasures = `(${measures.map((m) => m.name).join(", ")})`;
+        const validMeasures = `(${measures.join(", ")})`;
         throw new EvaluationError(
             sprintf(
                 _t("The argument %s is not a valid measure. Here are the measures: %s"),
