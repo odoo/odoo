@@ -993,6 +993,7 @@ class TestReorderingRule(TransactionCase):
             'product_min_qty': 0,
             'product_max_qty': 0,
             'visibility_days': 10,
+            'trigger': 'manual',
         })
 
         # out move on January 20th
