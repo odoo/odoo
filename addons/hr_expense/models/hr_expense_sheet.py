@@ -384,7 +384,10 @@ class HrExpenseSheet(models.Model):
     @api.depends_context('uid')
     @api.depends('employee_id', 'user_id', 'state')
     def _compute_is_editable(self):
-        is_hr_admin = self.env.user.has_group('hr_expense.group_hr_expense_manager')
+        is_hr_admin = (
+                self.env.user.has_group('hr_expense.group_hr_expense_manager')
+                or self.env.user.has_group('base.group_system')
+        )
         is_approver = self.env.user.has_group('hr_expense.group_hr_expense_user')
         for sheet in self:
             if sheet.state not in {'draft', 'submit', 'approve'}:
@@ -392,7 +395,7 @@ class HrExpenseSheet(models.Model):
                 sheet.is_editable = False
                 continue
 
-            if is_hr_admin:
+            if is_hr_admin or self.env.su:
                 # Administrator-level users are not restricted
                 sheet.is_editable = True
                 continue
