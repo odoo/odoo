@@ -11,7 +11,9 @@ export class RadioSelectionFieldWithFilter extends RadioField {
     };
 
     get items() {
-        return this.props.allowed_selection;
+        return super.items.filter(([value, label]) => {
+            return this.props.allowed_selection.includes(value);
+        });
     }
 }
 
