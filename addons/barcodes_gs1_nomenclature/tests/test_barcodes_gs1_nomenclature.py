@@ -132,8 +132,10 @@ class TestBarcodeGS1Nomenclature(TransactionCase):
     def test_gs1_skip_rules(self):
         """ Ensures a GS1 barcode can be parsed when it includes a GS1 AI not unsed by Odoo."""
         barcode_nomenclature = self.env.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature')
-        # Rule for AI 20 should be skip.
-        self.env.ref('barcodes_gs1_nomenclature.barcode_rule_gs1_20').type = 'skip'
+        # Rule for AI 20 should be skip (we active it since this rule is inactive by default.)
+        internal_product_variant_rule = self.env.ref('barcodes_gs1_nomenclature.barcode_rule_gs1_20')
+        internal_product_variant_rule.type = 'skip'
+        internal_product_variant_rule.active = True
         # Barcode for 12x product using barcode 94019097685457, internal variant code: 12.
         # (01)94019097685457(20)12(30)00000050
         barcode = "019401909768545720123000000050"
