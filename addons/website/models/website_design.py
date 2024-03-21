@@ -19,6 +19,7 @@ class WebsiteDesign(models.Model):
     link_underline = fields.Many2one('website.design.option', string='Link Underline', default=lambda self: self.env.ref('website.design_option_linkunderline_hover'))
     header_template = fields.Many2one('website.design.option', string='Header Template', default=lambda self: self.env.ref('website.design_option_headertemplate_default'))
     header_links_style = fields.Many2one('website.design.option', string='Header Links Style', default=lambda self: self.env.ref('website.design_option_headerlinksstyle_default'))
+    hamburger_position = fields.Many2one('website.design.option', string='Hamburger Position', default=lambda self: self.env.ref('website.design_option_hamburgerposition_left'))
 
     paragraph_margin_top = fields.Char(string='Paragraph Margin Top', default='0')
     paragraph_margin_bottom = fields.Char(string='Paragraph Margin Bottom', default='16px')
