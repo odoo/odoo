@@ -917,17 +917,18 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id', 'state', 'qty_invoiced', 'qty_delivered')
     def _compute_product_updatable(self):
+        self.product_updatable = True
         for line in self:
-            if line.state == 'cancel':
-                line.product_updatable = False
-            elif line.state == 'sale' and (
-                line.order_id.locked
-                or line.qty_invoiced > 0
-                or line.qty_delivered > 0
+            if (
+                line.is_downpayment
+                or line.state == 'cancel'
+                or line.state == 'sale' and (
+                    line.order_id.locked
+                    or line.qty_invoiced > 0
+                    or line.qty_delivered > 0
+                )
             ):
                 line.product_updatable = False
-            else:
-                line.product_updatable = True
 
     @api.depends('state')
     def _compute_product_uom_readonly(self):
