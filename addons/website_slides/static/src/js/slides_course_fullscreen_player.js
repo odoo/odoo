@@ -555,6 +555,10 @@
             var slide = this.get('slide');
             var $content = this.$('.o_wslides_fs_content');
             $content.empty();
+            if (this.websiteAnimateWidget) {
+                this.websiteAnimateWidget.destroy()
+                this.websiteAnimateWidget = null;
+            }
 
             // display quiz slide, or quiz attached to a slide
             if (slide.type === 'quiz' || slide.isQuiz) {
@@ -570,12 +574,14 @@
                 this.videoPlayer = new VideoPlayer(this, slide);
                 return this.videoPlayer.appendTo($content);
             } else if (slide.type === 'webpage'){
+                this.websiteAnimateWidget = new publicWidget.registry.WebsiteAnimate();
                 var $wpContainer = $('<div>').addClass('o_wslide_fs_webpage_content bg-white block w-100 overflow-auto');
                 $(slide.htmlContent).appendTo($wpContainer);
                 $content.append($wpContainer);
                 this.trigger_up('widgets_start_request', {
                     $target: $content,
                 });
+                this.websiteAnimateWidget.attachTo($wpContainer);
             }
             return Promise.resolve();
         },
