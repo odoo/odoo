@@ -539,7 +539,7 @@ class AccountJournal(models.Model):
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
             if 'restrict_mode_hash_table' in vals and not vals.get('restrict_mode_hash_table'):
                 domain = self.env['account.move']._get_move_hash_domain(
-                    common_domain=[('journal_id', '=', self.id), ('inalterable_hash', '!=', False)]
+                    common_domain=[('journal_id', '=', journal.id), ('inalterable_hash', '!=', False)]
                 )
                 journal_entry = self.env['account.move'].sudo().search_count(domain, limit=1)
                 if journal_entry:
