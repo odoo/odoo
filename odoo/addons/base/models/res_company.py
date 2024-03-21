@@ -42,6 +42,7 @@ class Company(models.Model):
     report_footer = fields.Html(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
     company_details = fields.Html(string='Company Details', translate=True, help="Header text displayed at the top of all reports.")
     is_company_details_empty = fields.Boolean(compute='_compute_empty_company_details')
+    is_snail_mail_installed = fields.Boolean(compute='_compute_is_snail_mail_installed')
     logo = fields.Binary(related='partner_id.image_1920', default=_get_logo, string="Company Logo", readonly=False)
     # logo_web: do not store in attachments, since the image is retrieved in SQL for
     # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
@@ -264,6 +265,11 @@ class Company(models.Model):
         # but when company details is empty we want to put the info of the company
         for record in self:
             record.is_company_details_empty = not html2plaintext(record.company_details or '')
+
+    def _compute_is_snail_mail_installed(self):
+        snail_mail = self.env['ir.module.module'].search([('state', '=', 'installed'), ('name', '=', 'snailmail')])
+        for record in self:
+            record.is_snail_mail_installed = snail_mail
 
     @api.model_create_multi
     def create(self, vals_list):

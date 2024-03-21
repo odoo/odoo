@@ -63,6 +63,7 @@ class BaseDocumentLayout(models.TransientModel):
     report_footer = fields.Html(related='company_id.report_footer', readonly=False, default=_default_report_footer)
     company_details = fields.Html(related='company_id.company_details', readonly=False, default=_default_company_details)
     is_company_details_empty = fields.Boolean(compute='_compute_empty_company_details')
+    is_snail_mail_installed = fields.Boolean(compute='_compute_is_snail_mail_installed')
 
     # The paper format changes won't be reflected in the preview.
     paperformat_id = fields.Many2one(related='company_id.paperformat_id', readonly=False)
@@ -309,3 +310,10 @@ class BaseDocumentLayout(models.TransientModel):
         # but when company details is empty we want to put the info of the company
         for record in self:
             record.is_company_details_empty = not html2plaintext(record.company_details or '')
+
+
+    @api.depends('report_layout_id')
+    def _compute_is_snail_mail_installed(self):
+        snail_mail = self.env['ir.module.module'].search([('state', '=', 'installed'), ('name', '=', 'snailmail')])
+        for record in self:
+            record.is_snail_mail_installed = snail_mail

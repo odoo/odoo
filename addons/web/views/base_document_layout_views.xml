@@ -28,10 +28,10 @@
                                     <field name="custom_colors" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" nolabel="1"/>
                                 </a>
                             </div>
-
                             <field name="company_details" string="Address" options="{'resizable': false}"/>
                             <field name="report_header" string="Tagline" placeholder="e.g. Global Business Solutions" options="{'resizable': false}"/>
                             <field name="report_footer" placeholder="Write your phone, email, bank account, tax ID, ..." string="Footer" options="{'resizable': false}"/>
+                            <field name="paperformat_id" widget="selection" required="1" domain="[('report_ids', '=', False)]"/>
                         </group>
                         <div class="o_preview">
                             <field name="preview" widget="iframe_wrapper" class="preview_document_layout"/>
