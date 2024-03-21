@@ -6,7 +6,8 @@ export class DiscussChannelMember extends models.ServerModel {
     _name = "discuss.channel.member";
 
     fold_state = fields.Generic({ default: "closed" });
-    is_pinned = fields.Generic({ default: true });
+    is_pinned = fields.Generic({ compute: "_compute_is_pinned" });
+    unpin_dt = fields.Datetime({ string: "Unpin date" });
     message_unread_counter = fields.Generic({ default: 0 });
     last_interest_dt = fields.Datetime({ default: () => serializeDateTime(today()) });
 
@@ -35,6 +36,16 @@ export class DiscussChannelMember extends models.ServerModel {
             notifications.push([channel.uuid, "discuss.channel.member/typing_status", data]);
         }
         BusBus._sendmany(notifications);
+    }
+
+    _compute_is_pinned() {
+        for (const member of this) {
+            const [channel] = this.env["discuss.channel"]._filter([["id", "=", member.channel_id]]);
+            member.is_pinned =
+                !member.unpin_dt ||
+                member?.last_interest_dt >= member.unpin_dt ||
+                channel?.last_interest_dt >= member.unpin_dt;
+        }
     }
 
     /**
@@ -100,6 +111,7 @@ export class DiscussChannelMember extends models.ServerModel {
                 create_date: member.create_date,
                 thread: { id: member.channel_id, model: "discuss.channel" },
                 id: member.id,
+                last_interest_dt: member.last_interest_dt,
                 persona,
                 seen_message_id: member.seen_message_id ? { id: member.seen_message_id } : false,
                 fetched_message_id: member.fetched_message_id

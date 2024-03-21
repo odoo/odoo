@@ -36,6 +36,7 @@ export class DiscussChannel extends models.ServerModel {
     uuid = fields.Generic({
         default: () => uniqueId("discuss.channel_uuid-"),
     });
+    last_interest_dt = fields.Datetime({ string: "Last Interest" });
 
     /** @param {number[]} ids */
     action_unfollow(ids) {
@@ -222,6 +223,7 @@ export class DiscussChannel extends models.ServerModel {
             "create_uid",
             "description",
             "id",
+            "last_interest_dt",
             "name",
             "uuid",
         ]);
@@ -409,7 +411,6 @@ export class DiscussChannel extends models.ServerModel {
             if (memberOfCurrentUser) {
                 Object.assign(res, {
                     is_pinned: memberOfCurrentUser.is_pinned,
-                    last_interest_dt: memberOfCurrentUser.last_interest_dt,
                     message_unread_counter: memberOfCurrentUser.message_unread_counter,
                     state: memberOfCurrentUser.fold_state || "closed",
                 });
@@ -480,7 +481,7 @@ export class DiscussChannel extends models.ServerModel {
         const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
         if (memberOfCurrentUser && memberOfCurrentUser.is_pinned !== pinned) {
             DiscussChannelMember.write([memberOfCurrentUser.id], {
-                is_pinned: pinned,
+                unpin_dt: pinned ? false : serializeDateTime(today())
             });
         }
         const [partner] = ResPartner.read(this.env.user.partner_id);
@@ -780,10 +781,8 @@ export class DiscussChannel extends models.ServerModel {
 
         kwargs.message_type ||= "notification";
         const channel = this._filter([["id", "=", id]])[0];
-        const members = DiscussChannelMember.search([["channel_id", "=", channel.id]]);
-        DiscussChannelMember.write(members, {
+        this.write([id], {
             last_interest_dt: serializeDateTime(today()),
-            is_pinned: true,
         });
         const messageData = MailThread.message_post.call(this, [id], kwargs);
         if (kwargs.author_id === this.env.user?.partner_id) {
