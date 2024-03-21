@@ -431,7 +431,7 @@
         border-bottom-width: 1px;
 
         &:not(.o_selected_row):not(.o_data_row_selected):focus-within > * {
-            $-focus-bg: mix($table-color, $table-bg, percentage($table-hover-bg-factor + 0.1));
+            $-focus-bg: rgba(var(--#{$variable-prefix}emphasis-color-rgb), #{$table-hover-bg-factor * 2});
 
             --#{$variable-prefix}table-accent-bg: #{$-focus-bg};
         }
