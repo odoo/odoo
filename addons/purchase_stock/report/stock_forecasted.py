@@ -7,8 +7,8 @@ from odoo import models
 class StockForecasted(models.AbstractModel):
     _inherit = 'stock.forecasted_product_product'
 
-    def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
-        res = super()._get_report_header(product_template_ids, product_ids, wh_location_ids)
+    def _get_report_header(self, product_template_ids, product_ids, wh_view_location_id):
+        res = super()._get_report_header(product_template_ids, product_ids, wh_view_location_id)
         domain = [('state', 'in', ['draft', 'sent', 'to approve'])]
         domain += self._product_purchase_domain(product_template_ids, product_ids)
         warehouse_id = self.env.context.get('warehouse', False)

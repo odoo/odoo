@@ -16,27 +16,30 @@ class StockForecasted(models.AbstractModel):
         line['move_out']['raw_material_production_id'] = move_out.raw_material_production_id.read(fields=['id', 'unreserve_visible', 'reserve_visible', 'priority'])[0]
         return line
 
-    def _move_draft_domain(self, product_template_ids, product_ids, wh_location_ids):
-        in_domain, out_domain = super()._move_draft_domain(product_template_ids, product_ids, wh_location_ids)
+    def _move_draft_domain(self, product_template_ids, product_ids, wh_view_location_id):
+        in_domain, out_domain = super()._move_draft_domain(product_template_ids, product_ids, wh_view_location_id)
         in_domain += [('production_id', '=', False)]
         out_domain += [('raw_material_production_id', '=', False)]
         return in_domain, out_domain
 
-    def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
-        res = super()._get_report_header(product_template_ids, product_ids, wh_location_ids)
+    def _get_report_header(self, product_template_ids, product_ids, wh_view_location_id):
+        res = super()._get_report_header(product_template_ids, product_ids, wh_view_location_id)
         res['draft_production_qty'] = {}
         domain = self._product_domain(product_template_ids, product_ids)
         domain += [('state', '=', 'draft')]
 
+        view_loc = self.env['stock.location'].browse(wh_view_location_id)
+        wh_parent_path_pattern = view_loc.parent_path + '%'
+
         # Pending incoming quantity.
-        mo_domain = domain + [('location_dest_id', 'in', wh_location_ids)]
+        mo_domain = domain + [('location_dest_id.parent_path', 'like', wh_parent_path_pattern)]
         [product_qty] = self.env['mrp.production']._read_group(mo_domain, aggregates=['product_qty:sum'])[0]
         res['draft_production_qty']['in'] = product_qty or 0.0
 
         # Pending outgoing quantity.
         move_domain = domain + [
             ('raw_material_production_id', '!=', False),
-            ('location_id', 'in', wh_location_ids),
+            ('location_id.parent_path', 'like', wh_parent_path_pattern),
         ]
         [product_qty] = self.env['stock.move']._read_group(move_domain, aggregates=['product_qty:sum'])[0]
         res['draft_production_qty']['out'] = product_qty or 0.0

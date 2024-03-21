@@ -30,8 +30,8 @@ class StockForecasted(models.AbstractModel):
             })
         return line
 
-    def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
-        res = super()._get_report_header(product_template_ids, product_ids, wh_location_ids)
+    def _get_report_header(self, product_template_ids, product_ids, wh_view_location_id):
+        res = super()._get_report_header(product_template_ids, product_ids, wh_view_location_id)
         domain = self._product_sale_domain(product_template_ids, product_ids)
         so_lines = self.env['sale.order.line'].search(domain)
         out_sum = 0

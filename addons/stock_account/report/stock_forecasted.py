@@ -8,17 +8,19 @@ from odoo.tools.float_utils import float_is_zero, float_repr
 class StockForecasted(models.AbstractModel):
     _inherit = 'stock.forecasted_product_product'
 
-    def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
+    def _get_report_header(self, product_template_ids, product_ids, wh_view_location_id):
         """ Overrides to computes the valuations of the stock. """
-        res = super()._get_report_header(product_template_ids, product_ids, wh_location_ids)
+        res = super()._get_report_header(product_template_ids, product_ids, wh_view_location_id)
         if not self.env.user.has_group('stock.group_stock_manager'):
             return res
         domain = self._product_domain(product_template_ids, product_ids)
-        company = self.env['stock.location'].browse(wh_location_ids[0]).company_id
+        view_loc = self.env['stock.location'].browse(wh_view_location_id)
+        company = view_loc.company_id
+        wh_parent_path_pattern = view_loc.parent_path + '%'
         svl = self.env['stock.valuation.layer'].search(domain + [('company_id', '=', company.id)])
         domain_quants = [
             ('company_id', '=', company.id),
-            ('location_id', 'in', wh_location_ids)
+            ('location_id.parent_path', 'like', wh_parent_path_pattern)
         ]
         if product_template_ids:
             domain_quants += [('product_id.product_tmpl_id', 'in', product_template_ids)]
