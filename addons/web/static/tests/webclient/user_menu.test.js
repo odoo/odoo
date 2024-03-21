@@ -14,6 +14,7 @@ import {
     onRpc,
     patchWithCleanup,
     serverState,
+    stepAllNetworkCalls,
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -152,15 +153,13 @@ test("click on odoo account item", async () => {
     patchWithCleanup(browser, {
         open: (url) => expect.step(`open ${url}`),
     });
-    onRpc("/*", (mock) => {
-        expect.step(new URL(mock.url).pathname);
-        return new Error("not found");
-    });
     userMenuRegistry.add("odoo_account", odooAccountItem);
     await mountWithCleanup(UserMenu);
+    onRpc("/web/session/account", () => "https://account-url.com");
+    stepAllNetworkCalls();
     await contains("button.dropdown-toggle").click();
     expect(".o-dropdown--menu .dropdown-item").toHaveCount(1);
     expect(".o-dropdown--menu .dropdown-item").toHaveText("My Odoo.com account");
     await contains(".o-dropdown--menu .dropdown-item").click();
-    expect(["/web/session/account", "open https://accounts.odoo.com/account"]).toVerifySteps();
+    expect(["/web/session/account", "open https://account-url.com"]).toVerifySteps();
 });
