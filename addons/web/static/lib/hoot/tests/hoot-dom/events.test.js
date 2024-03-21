@@ -1027,7 +1027,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("special keys modifiers: Windows", async () => {
-        mockUserAgent("Windows");
+        mockUserAgent("windows");
 
         await mountOnFixture(/* xml */ `<input />`);
 
@@ -1053,7 +1053,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("special keys modifiers: Mac", async () => {
-        mockUserAgent("Macintosh");
+        mockUserAgent("mac");
 
         await mountOnFixture(/* xml */ `<input />`);
 
