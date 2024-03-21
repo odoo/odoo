@@ -89,7 +89,6 @@
         <field name="arch" type="xml">
             <form string="Allocation Request">
                 <field name="can_approve" invisible="1"/>
-                <field name="holiday_type" invisible="1" readonly="state not in ['confirm']"/>
                 <field name="validation_type" invisible="1"/>
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="confirm,validate,validate1" invisible="validation_type != 'both'"/>
@@ -189,41 +188,10 @@
                     <h2><field name="name" placeholder="e.g. Time Off type (From validity start to validity end / no limit)" required="1"/></h2>
                 </div>
             </div>
-            <field name="employee_id" position="before">
-                <field name="holiday_type" string="Mode" groups="hr_holidays.group_hr_holidays_user" context="{'employee_id':employee_id}"  readonly="state not in ['confirm']"/>
-            </field>
             <field name="employee_id" position="replace">
-                <!-- :TestLeaveRequests.test_allocation_request -->
-                <field name="employee_id" invisible="1" readonly="state in ['refuse', 'validate']"/>
-                <field name="multi_employee" invisible="1" force_save="1"/>
-                <!-- Employee id is only visible if the allocation is created specifically for that user in `_action_validate_create_childs` -->
-                <field name="employee_id" groups="hr_holidays.group_hr_holidays_user"
-                    invisible="holiday_type != 'employee' or not employee_id or state == 'confirm'"
+                <field name="employee_id"
                     readonly="state in ['refuse', 'validate']"
                     widget="many2one_avatar_employee"/>
-                <field name="employee_ids" widget="many2many_avatar_employee"
-                    groups="hr_holidays.group_hr_holidays_user"
-                    invisible="holiday_type != 'employee' or state != 'confirm' and employee_id"
-                    readonly="state in ['refuse', 'validate']"
-                    required="holiday_type == 'employee' and state == 'confirm'"/>
-            </field>
-            <field name="employee_id" position="after">
-                <field name="category_id"
-                    invisible="holiday_type != 'category'"
-                    readonly="state in ['refuse', 'validate']"
-                    required="holiday_type == 'category'"/>
-            </field>
-            <field name="department_id" position="replace">
-                <field name="department_id" groups="hr_holidays.group_hr_holidays_user"
-                    invisible="holiday_type != 'department'"
-                    readonly="state not in ['confirm']"
-                    required="holiday_type == 'department'"/>
-            </field>
-            <field name="department_id" position="after">
-                <field name="mode_company_id" string="Company" groups="hr_holidays.group_hr_holidays_user"
-                    invisible="holiday_type != 'company'"
-                    readonly="state in ['refuse', 'validate']"
-                    required="holiday_type == 'company'"/>
             </field>
             <field name="allocation_type" position="attributes">
                 <attribute name="invisible">0</attribute>

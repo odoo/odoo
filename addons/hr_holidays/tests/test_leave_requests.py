@@ -540,13 +540,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     def test_company_leaves(self):
         # First expired allocation
-        self.env['hr.leave.allocation'].create({
+        self.env['hr.leave.allocation.generate.multi.wizard'].create({
             'name': 'Allocation',
-            'holiday_type': 'company',
-            'mode_company_id': self.env.company.id,
+            'company_id': self.env.company.id,
             'holiday_status_id': self.holidays_type_1.id,
-            'number_of_days': 20,
-            'state': 'confirm',
+            'duration': 20,
             'date_from': '2021-01-01',
         })
 

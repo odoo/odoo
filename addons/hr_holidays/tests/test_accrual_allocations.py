@@ -1500,7 +1500,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'holiday_status_id': leave_type.id,
                 'number_of_days': 0.125,
                 'allocation_type': 'accrual',
-                'holiday_type': 'employee',
             })
             allocation.action_validate()
             allocation_data = leave_type.get_allocation_data(self.employee_emp, datetime.date(2024, 2, 1))
@@ -1663,7 +1662,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             with Form(self.env['hr.leave.allocation']) as f:
                 f.allocation_type = "accrual"
                 f.accrual_plan_id = accrual_plan
-                f.employee_ids.add(self.employee_emp)
+                f.employee_id = self.employee_emp
                 f.holiday_status_id = self.leave_type
                 f.date_from = '2024-01-01'
                 f.name = "Employee Allocation"
