@@ -2593,6 +2593,16 @@ export class OdooEditor extends EventTarget {
                     insertText(selection, ev.data === null ? ev.dataTransfer.getData('text/plain') : ev.data);
                     selection.collapseToEnd();
                 }
+                // Removes zero-width spaces added at the time of Enter,
+                // and preserves the cursor position.
+                const sel = this.document.getSelection();
+                const restoreCursor = preserveCursor(this.document);
+                const emptyElement = closestElement(sel.anchorNode, '[oe-zws-empty-inline]');
+                if (emptyElement && !isZWS(emptyElement)) {
+                    cleanZWS(emptyElement);
+                    emptyElement.removeAttribute('oe-zws-empty-inline');
+                }
+                restoreCursor();
                 // Check for url after user insert a space so we won't transform an incomplete url.
                 if (
                     ev.data &&
