@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+<<<<<<< HEAD
     <t t-name="mail.ActivityCell">
         <div class="h-100 cursor-pointer p-1 d-flex flex-column justify-content-between" t-on-click="onClick">
             <div class="d-flex align-items-center justify-content-center position-relative" t-ref="content">
@@ -37,6 +38,19 @@
                     </t>
                 </div>
                 <div t-else=""/>
+||||||| parent of d31ed7bd3d05 (temp)
+    <t t-name="mail.ActivityCell" owl="1">
+        <div class="h-100 cursor-pointer p-3" t-on-click="onClick">
+            <div class="h-100 d-flex align-items-center justify-content-center position-relative" t-ref="content">
+                <div class="o-mail-ActivityCell-deadline text-white" t-out="closestDeadlineFormatted"/>
+                <span t-if="props.activityIds.length > 1" class="o-mail-ActivityCell-counter badge bg-light rounded-pill border-0" t-out="props.activityIds.length"/>
+=======
+    <t t-name="mail.ActivityCell" owl="1">
+        <div class="h-100 cursor-pointer p-3" t-on-click="onClick">
+            <div class="h-100 d-flex align-items-center justify-content-center ms-2 text-nowrap" t-ref="content">
+                <div class="o-mail-ActivityCell-deadline text-white" t-out="closestDeadlineFormatted"/>
+                <span t-if="props.activityIds.length > 1" class="o-mail-ActivityCell-counter badge bg-light rounded-pill ms-2 border-0" t-out="props.activityIds.length"/>
+>>>>>>> d31ed7bd3d05 (temp)
             </div>
         </div>
     </t>
