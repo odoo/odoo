@@ -234,8 +234,7 @@
             </div>
             <!-- === Payment method logo === -->
             <div t-call="payment.form_logo">
-                <t t-set="logo" t-value="token_sudo.payment_method_id.image_payment_form"/>
-                <t t-set="title" t-value="token_sudo.payment_method_id.name"/>
+                <t t-set="logo_pm_sudo" t-value="token_sudo.payment_method_id"/>
             </div>
         </div>
         <!-- === Inline form === -->
@@ -315,8 +314,7 @@
                         <t t-set="pm_index" t-value="0"/>
                         <t t-foreach="pms_to_display_sudo" t-as="pm_to_display_sudo">
                             <t t-if="pm_index &lt; 4" t-call="payment.form_logo">
-                                <t t-set="logo" t-value="pm_to_display_sudo.image_payment_form"/>
-                                <t t-set="title" t-value="pm_to_display_sudo.name"/>
+                                <t t-set="logo_pm_sudo" t-value="pm_to_display_sudo"/>
                             </t>
                             <t t-set="pm_index" t-value="pm_index + 1"/>
                         </t>
@@ -390,13 +388,13 @@
 
     <template id="payment.form_logo" name="Form Logo">
         <!-- Parameters description:
-            - logo: The logo to display, as an `Image` field.
-            - title: The title to display on hover.
+            - logo_pm_sudo: The payment method whose logo to display, as a sudoed `payment.method`
+                            record.
         -->
-        <span t-out="logo"
+        <span t-field="logo_pm_sudo.image_payment_form"
               t-options="{'widget': 'image', 'alt-field': 'name'}"
               class="position-relative d-block rounded overflow-hidden z-index-1 shadow-sm"
-              t-att-title="title"
+              t-att-title="logo_pm_sudo.name"
               data-bs-toggle="tooltip"
               data-bs-placement="top"
               data-bs-delay="0"
