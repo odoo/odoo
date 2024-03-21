@@ -574,7 +574,6 @@ class Repair(models.Model):
         repairs_to_confirm.move_ids._check_company()
         repairs_to_confirm.move_ids._adjust_procure_method()
         repairs_to_confirm.move_ids._action_confirm()
-        repairs_to_confirm.move_ids._trigger_scheduler()
         repairs_to_confirm.write({'state': 'confirmed'})
         return True
 
