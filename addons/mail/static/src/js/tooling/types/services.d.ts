@@ -24,27 +24,27 @@ declare module "services" {
     import { threadService } from "@mail/core/common/thread_service";
 
     export interface Services {
-        "discuss.channel.member": ReturnType<typeof channelMemberService.start>;
-        "discuss.core.common": ReturnType<typeof discussCoreCommon.start>;
-        "discuss.core.public": ReturnType<typeof discussCorePublic.start>;
-        "discuss.core.web": ReturnType<typeof discussCoreWeb.start>;
-        "discuss.message.pin": ReturnType<typeof messagePinService.start>;
-        "discuss.rtc": ReturnType<typeof rtcService.start>;
-        "discuss.typing": ReturnType<typeof discussTypingService.start>;
-        "mail.activity": ReturnType<typeof activityService.start>;
-        "mail.attachment": ReturnType<typeof attachmentService.start>;
-        "mail.attachment_upload": ReturnType<typeof attachmentUploadService.start>;
-        "mail.chat_window": ReturnType<typeof chatWindowService.start>;
-        "mail.core.common": ReturnType<typeof mailCoreCommon.start>;
-        "mail.core.web": ReturnType<typeof mailCoreWeb.start>;
-        "mail.message": ReturnType<typeof messageService.start>;
-        "mail.messaging": ReturnType<typeof messagingService.start>;
-        "mail.notification.permission": ReturnType<typeof notificationPermissionService.start>;
-        "mail.out_of_focus": ReturnType<typeof outOfFocusService.start>;
-        "mail.persona": ReturnType<typeof personaService.start>;
-        "mail.sound_effects": ReturnType<typeof soundEffects.start>;
-        "mail.store": ReturnType<typeof storeService.start>;
-        "mail.suggestion": ReturnType<typeof suggestionService.start>;
-        "mail.thread": ReturnType<typeof threadService.start>;
+        "discuss.channel.member": typeof channelMemberService;
+        "discuss.core.common": typeof discussCoreCommon;
+        "discuss.core.public": typeof discussCorePublic;
+        "discuss.core.web": typeof discussCoreWeb;
+        "discuss.message.pin": typeof messagePinService;
+        "discuss.rtc": typeof rtcService;
+        "discuss.typing": typeof discussTypingService;
+        "mail.activity": typeof activityService;
+        "mail.attachment": typeof attachmentService;
+        "mail.attachment_upload": typeof attachmentUploadService;
+        "mail.chat_window": typeof chatWindowService;
+        "mail.core.common": typeof mailCoreCommon;
+        "mail.core.web": typeof mailCoreWeb;
+        "mail.message": typeof messageService;
+        "mail.messaging": typeof messagingService;
+        "mail.notification.permission": typeof notificationPermissionService;
+        "mail.out_of_focus": typeof outOfFocusService;
+        "mail.persona": typeof personaService;
+        "mail.sound_effects": typeof soundEffects;
+        "mail.store": typeof storeService;
+        "mail.suggestion": typeof suggestionService;
+        "mail.thread": typeof threadService;
     }
 }

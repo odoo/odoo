@@ -9,12 +9,12 @@ declare module "services" {
     import { soundService } from "@point_of_sale/app/sound/sound_service";
 
     export interface Services {
-        barcode_reader: Resolved<ReturnType<typeof barcodeReaderService.start>>;
-        debug: ReturnType<typeof barcodeReaderService.start>;
-        hardware_proxy: ReturnType<typeof hardwareProxyService.start>;
-        number_buffer: ReturnType<typeof numberBufferService.start>;
-        customer_display: ReturnType<typeof customerDisplayService.start>;
-        report: ReturnType<typeof reportService.start>;
-        sound: ReturnType<typeof soundService.start>;
+        barcode_reader: typeof barcodeReaderService;
+        debug: typeof debugService;
+        hardware_proxy: typeof hardwareProxyService;
+        number_buffer: typeof numberBufferService;
+        customer_display: typeof customerDisplayService;
+        report: typeof reportService;
+        sound: typeof soundService;
     }
 }

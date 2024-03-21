@@ -7,7 +7,7 @@ import { EventBus, reactive } from "@odoo/owl";
 
 const systrayRegistry = registry.category("systray");
 
-const profilingService = {
+export const profilingService = {
     dependencies: ["orm"],
     start(env, { orm }) {
         // Only set up profiling when in debug mode
@@ -17,7 +17,7 @@ const profilingService = {
 
         function notify() {
             if (systrayRegistry.contains("web.profiling") && state.isEnabled === false) {
-                systrayRegistry.remove("web.profiling", profilingSystrayItem);
+                systrayRegistry.remove("web.profiling");
             }
             if (!systrayRegistry.contains("web.profiling") && state.isEnabled === true) {
                 systrayRegistry.add("web.profiling", profilingSystrayItem, { sequence: 99 });
