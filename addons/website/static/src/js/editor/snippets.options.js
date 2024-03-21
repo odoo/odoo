@@ -1685,25 +1685,9 @@ options.registry.Carousel = options.Class.extend({
         // the slide overlay) + See "CarouselItem" option.
         this.$controls.addClass('o_we_no_overlay');
 
-        let _slideTimestamp;
-        this.$target.on('slide.bs.carousel.carousel_option', () => {
-            _slideTimestamp = window.performance.now();
-            setTimeout(() => this.trigger_up('hide_overlay'));
-        });
-        this.$target.on('slid.bs.carousel.carousel_option', () => {
-            // slid.bs.carousel is most of the time fired too soon by bootstrap
-            // since it emulates the transitionEnd with a setTimeout. We wait
-            // here an extra 20% of the time before retargeting edition, which
-            // should be enough...
-            const _slideDuration = (window.performance.now() - _slideTimestamp);
-            setTimeout(() => {
-                this.trigger_up('activate_snippet', {
-                    $snippet: this.$target.find('.carousel-item.active'),
-                    ifInactiveOptions: true,
-                });
-                this.$target.trigger('active_slide_targeted');
-            }, 0.2 * _slideDuration);
-        });
+        // Handle the sliding manually.
+        this.__onControlClick = _.throttle(this._onControlClick.bind(this), 1000);
+        this.$controls.on("click.carousel_option", this.__onControlClick);
 
         return this._super.apply(this, arguments);
     },
@@ -1713,6 +1697,7 @@ options.registry.Carousel = options.Class.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         this.$target.off('.carousel_option');
+        this.$controls.off(".carousel_option");
     },
     /**
      * @override
@@ -1729,10 +1714,12 @@ options.registry.Carousel = options.Class.extend({
     /**
      * @override
      */
-    notify: function (name, data) {
+    notify(name, data) {
         this._super(...arguments);
         if (name === 'add_slide') {
-            this._addSlide();
+            this._addSlide().then(data.onSuccess);
+        } else if (name === "slide") {
+            this._slide(data.direction).then(data.onSuccess);
         }
     },
 
@@ -1744,7 +1731,7 @@ options.registry.Carousel = options.Class.extend({
      * @see this.selectClass for parameters
      */
     addSlide(previewMode, widgetValue, params) {
-        this._addSlide();
+        return this._addSlide();
     },
 
     //--------------------------------------------------------------------------
@@ -1775,20 +1762,93 @@ options.registry.Carousel = options.Class.extend({
      *
      * @private
      */
-    _addSlide() {
+    async _addSlide() {
+        this.options.wysiwyg.odooEditor.historyPauseSteps();
         const $items = this.$target.find('.carousel-item');
         this.$controls.removeClass('d-none');
         const $active = $items.filter('.active');
         this.$indicators.append($('<li>', {
             'data-target': '#' + this.$target.attr('id'),
-            'data-slide-to': $items.length,
         }));
         this.$indicators.append(' ');
         // Need to remove editor data from the clone so it gets its own.
         $active.clone(false)
             .removeClass('active')
             .insertAfter($active);
-        this.$target.carousel('next');
+        await this._slide("next");
+        this.options.wysiwyg.odooEditor.historyUnpauseSteps();
+    },
+    /**
+     * Slides the carousel in the given direction.
+     *
+     * @private
+     * @param {String|Number} direction the direction in which to slide:
+     *     - "prev": the previous slide;
+     *     - "next": the next slide;
+     *     - number: a slide number.
+     * @returns {Promise}
+     */
+    _slide(direction) {
+        this.trigger_up("disable_loading_effect");
+        let _slideTimestamp;
+        this.$target.one("slide.bs.carousel", () => {
+            _slideTimestamp = window.performance.now();
+            setTimeout(() => this.trigger_up('hide_overlay'));
+        });
+
+        return new Promise(resolve => {
+            this.$target.one("slid.bs.carousel", () => {
+                // slid.bs.carousel is most of the time fired too soon by bootstrap
+                // since it emulates the transitionEnd with a setTimeout. We wait
+                // here an extra 20% of the time before retargeting edition, which
+                // should be enough...
+                const _slideDuration = (window.performance.now() - _slideTimestamp);
+                setTimeout(() => {
+                    this.trigger_up("activate_snippet", {
+                        $snippet: this.$target.find(".carousel-item.active"),
+                        ifInactiveOptions: true,
+                    });
+                    this.$target.trigger("active_slide_targeted"); // TODO remove in master: kept for compatibility.
+                    this.trigger_up("enable_loading_effect");
+                    resolve();
+                }, 0.2 * _slideDuration);
+            });
+
+            this.$target.carousel(direction);
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Slides the carousel when clicking on the carousel controls. This handler
+     * allows to put the sliding in the mutex, to avoid race conditions.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onControlClick(ev) {
+        // Compute to which slide the carousel will slide.
+        const controlEl = ev.currentTarget;
+        let direction;
+        if (controlEl.classList.contains("carousel-control-prev")) {
+            direction = "prev";
+        } else if (controlEl.classList.contains("carousel-control-next")) {
+            direction = "next";
+        } else {
+            const indicatorEl = ev.target;
+            if (!indicatorEl.matches("li") || indicatorEl.classList.contains("active")) {
+                return;
+            }
+            direction = [...controlEl.children].indexOf(indicatorEl);
+        }
+
+        // Slide the carousel.
+        this.trigger_up("snippet_edition_request", {exec: async () => {
+            await this._slide(direction);
+        }});
     },
 });
 
@@ -1815,6 +1875,14 @@ options.registry.CarouselItem = options.Class.extend({
      * @override
      */
     destroy: function () {
+        // Activate the active slide after removing a slide.
+        if (this.hasRemovedSlide) {
+            this.trigger_up("activate_snippet", {
+                $snippet: this.$carousel.find(".carousel-item.active"),
+                ifInactiveOptions: true,
+            });
+            this.hasRemovedSlide = false;
+        }
         this._super(...arguments);
         this.$carousel.off('.carousel_item_option');
     },
@@ -1844,9 +1912,14 @@ options.registry.CarouselItem = options.Class.extend({
      * @see this.selectClass for parameters
      */
     addSlideItem(previewMode, widgetValue, params) {
-        this.trigger_up('option_update', {
-            optionName: 'Carousel',
-            name: 'add_slide',
+        return new Promise(resolve => {
+            this.trigger_up("option_update", {
+                optionName: "Carousel",
+                name: "add_slide",
+                data: {
+                    onSuccess: () => resolve(),
+                },
+            });
         });
     },
     /**
@@ -1854,43 +1927,56 @@ options.registry.CarouselItem = options.Class.extend({
      *
      * @see this.selectClass for parameters.
      */
-    removeSlide: function (previewMode) {
+    async removeSlide(previewMode) {
+        this.options.wysiwyg.odooEditor.historyPauseSteps();
         const $items = this.$carousel.find('.carousel-item');
         const newLength = $items.length - 1;
         if (!this.removing && newLength > 0) {
             // The active indicator is deleted to ensure that the other
             // indicators will still work after the deletion.
             const $toDelete = $items.filter('.active').add(this.$indicators.find('.active'));
-            this.$carousel.one('active_slide_targeted.carousel_item_option', () => {
-                $toDelete.remove();
-                // To ensure the proper functioning of the indicators, their
-                // attributes must reflect the position of the slides.
-                const indicatorsEls = this.$indicators[0].querySelectorAll('li');
-                for (let i = 0; i < indicatorsEls.length; i++) {
-                    indicatorsEls[i].setAttribute('data-slide-to', i);
-                }
-                this.$controls.toggleClass('d-none', newLength === 1);
-                this.$carousel.trigger('content_changed');
-                this.removing = false;
+            this.removing = true; // TODO remove in master: kept for stable.
+            // Go to the previous slide.
+            await new Promise(resolve => {
+                this.trigger_up("option_update", {
+                    optionName: "Carousel",
+                    name: "slide",
+                    data: {
+                        direction: "prev",
+                        onSuccess: () => resolve(),
+                    },
+                });
             });
-            this.removing = true;
-            this.$carousel.carousel('prev');
+            // Remove the slide.
+            $toDelete.remove();
+            this.$controls.toggleClass("d-none", newLength === 1);
+            this.$carousel.trigger("content_changed");
+            this.removing = false;
         }
+        this.options.wysiwyg.odooEditor.historyUnpauseSteps();
+        this.hasRemovedSlide = true;
     },
     /**
      * Goes to next slide or previous slide.
      *
      * @see this.selectClass for parameters
      */
-    slide: function (previewMode, widgetValue, params) {
-        switch (widgetValue) {
-            case 'left':
-                this.$controls.filter('.carousel-control-prev')[0].click();
-                break;
-            case 'right':
-                this.$controls.filter('.carousel-control-next')[0].click();
-                break;
-        }
+    slide(previewMode, widgetValue, params) {
+        this.options.wysiwyg.odooEditor.historyPauseSteps();
+        const direction = widgetValue === "left" ? "prev" : "next";
+        return new Promise(resolve => {
+            this.trigger_up("option_update", {
+                optionName: "Carousel",
+                name: "slide",
+                data: {
+                    direction: direction,
+                    onSuccess: () => {
+                        this.options.wysiwyg.odooEditor.historyUnpauseSteps();
+                        resolve();
+                    },
+                },
+            });
+        });
     },
 });
 
