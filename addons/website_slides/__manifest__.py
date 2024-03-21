@@ -217,6 +217,7 @@ Featuring
             'web/static/src/legacy/xml/dialog.xml',
             'web/static/src/legacy/js/core/owl_dialog.js',
             'web/static/src/legacy/js/core/popover.js',
+            'web/static/src/legacy/js/core/minimal_dom.js',
             'web/static/src/legacy/js/core/dom.js',
             'web/static/src/legacy/js/core/local_storage.js',
             'web/static/src/legacy/js/core/mixins.js',
