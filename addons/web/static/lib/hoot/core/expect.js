@@ -82,6 +82,7 @@ import { Test } from "./test";
 //-----------------------------------------------------------------------------
 
 const {
+    Array: { isArray: $isArray },
     Boolean,
     Error,
     Object: {
@@ -325,6 +326,19 @@ const formatStack = (stack) => {
 };
 
 /**
+ * @param {Iterable<any> | Record<any, any>} object
+ */
+const getLength = (object) => {
+    if (typeof object === "string" || $isArray(object)) {
+        return object.length;
+    }
+    if (isIterable(object)) {
+        return [...object].length;
+    }
+    return $keys(object).length;
+};
+
+/**
  * @param {Node} node
  * @param {string[]} keys
  * @returns {Record<string, string>}
@@ -355,6 +369,29 @@ const hasStyle = (node, styleDef) => {
         }
     }
     return true;
+};
+
+/**
+ * @param {Iterable<any> | Record<any, any>} object
+ * @param {any} item
+ * @returns {boolean}
+ */
+const includes = (object, item) => {
+    if (typeof object === "string") {
+        return object.includes(item);
+    }
+    if ($isArray(object)) {
+        // Standard case: array
+        return object.some((i) => deepEqual(i, item));
+    }
+    if (isIterable(object)) {
+        // Iterables: cast to array
+        return includes([...object], item);
+    }
+    if ($isArray(item) && item.length === 2) {
+        return includes($entries(object), item);
+    }
+    return includes($keys(object), item);
 };
 
 /**
@@ -909,6 +946,90 @@ export class Matchers {
                 }
                 return details;
             },
+        });
+    }
+
+    /**
+     * Expects the received value to have a length of the given `length`.
+     *
+     * Received value can be a string, an iterable or an object.
+     *
+     * @param {number} length
+     * @param {ExpectOptions} options
+     * @example
+     *  expect("foo").toHaveLength(3);
+     * @example
+     *  expect([1, 2, 3]).toHaveLength(3);
+     * @example
+     *  expect({ foo: 1, bar: 2 }).toHaveLength(2);
+     * @example
+     *  expect(new Set([1, 2])).toHaveLength(2);
+     */
+    toHaveLength(length, options) {
+        this.#saveStack();
+
+        ensureArguments([
+            [length, "integer"],
+            [options, ["object", null]],
+        ]);
+
+        return this.#resolve({
+            name: "toHaveLength",
+            acceptedType: ["string", "array", "object"],
+            predicate: (actual) => getLength(actual) === length,
+            message: (pass) =>
+                options?.message ||
+                (pass
+                    ? `%actual% has[! not] a length of ${formatHumanReadable(length)}`
+                    : `expected value[! not] to have the given length`),
+            details: (actual) => [
+                [Markup.green("Expected length:"), length],
+                [Markup.red("Received:"), getLength(actual)],
+            ],
+        });
+    }
+
+    /**
+     * Expects the received value to include an `item` of a given shape.
+     *
+     * Received value can be an iterable or an object (in case it is an object,
+     * the `item` should be a key or a tuple representing an entry in that object).
+     *
+     * Note that it is NOT a strict comparison: the item will be matched for deep
+     * equality against each item of the iterable.
+     *
+     * @param {keyof R | R[number]} item
+     * @param {ExpectOptions} options
+     * @example
+     *  expect([1, 2, 3]).toInclude(2);
+     * @example
+     *  expect({ foo: 1, bar: 2 }).toInclude("foo");
+     * @example
+     *  expect({ foo: 1, bar: 2 }).toInclude(["foo", 1]);
+     * @example
+     *  expect(new Set([{ foo: 1 }, { bar: 2 }])).toInclude({ bar: 2 });
+     */
+    toInclude(item, options) {
+        this.#saveStack();
+
+        ensureArguments([
+            [item, "any"],
+            [options, ["object", null]],
+        ]);
+
+        return this.#resolve({
+            name: "toInclude",
+            acceptedType: ["string", "any[]", "object"],
+            predicate: (actual) => includes(actual, item),
+            message: (pass) =>
+                options?.message ||
+                (pass
+                    ? `%actual% [includes!does not include] ${formatHumanReadable(item)}`
+                    : `expected object[! not] to include the given item`),
+            details: (actual) => [
+                [Markup.green("Object:"), actual],
+                [Markup.red("Item:"), item],
+            ],
         });
     }
 
