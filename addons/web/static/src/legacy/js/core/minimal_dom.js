@@ -3,6 +3,7 @@
 import { addLoadingEffect } from '@web/core/utils/ui';
 
 export const DEBOUNCE = 400;
+export const BUTTON_HANDLER_SELECTOR = 'a, button, input[type="submit"], input[type="button"], .btn';
 
 /**
  * Protects a function which is to be used as a handler by preventing its
@@ -20,8 +21,9 @@ export const DEBOUNCE = 400;
  *      finished. Otherwise, the return is used as jQuery uses it.
  * @param {function|boolean} preventDefault
  * @param {function|boolean} stopPropagation
+ * @param {function|boolean} stopImmediatePropagation
  */
-export function makeAsyncHandler(fct, preventDefault, stopPropagation) {
+export function makeAsyncHandler(fct, preventDefault, stopPropagation, stopImmediatePropagation) {
     let pending = false;
     function _isLocked() {
         return pending;
@@ -38,6 +40,9 @@ export function makeAsyncHandler(fct, preventDefault, stopPropagation) {
         }
         if (stopPropagation === true || stopPropagation && stopPropagation()) {
             ev.stopPropagation();
+        }
+        if (stopImmediatePropagation === true || stopImmediatePropagation && stopImmediatePropagation()) {
+            ev.stopImmediatePropagation();
         }
 
         if (_isLocked()) {
@@ -66,17 +71,20 @@ export function makeAsyncHandler(fct, preventDefault, stopPropagation) {
  *      The function which is to be used as a button click handler. If a
  *      promise is returned, it is used to determine when the button can be
  *      re-enabled. Otherwise, the return is used as jQuery uses it.
+ * @param {function|boolean} preventDefault
+ * @param {function|boolean} stopPropagation
+ * @param {function|boolean} stopImmediatePropagation
  */
-export function makeButtonHandler(fct) {
+export function makeButtonHandler(fct, preventDefault, stopPropagation, stopImmediatePropagation) {
     // Fallback: if the final handler is not bound to a button, at least
     // make it an async handler (also handles the case where some events
     // might ignore the disabled state of the button).
-    fct = makeAsyncHandler(fct);
+    fct = makeAsyncHandler(fct, preventDefault, stopPropagation, stopImmediatePropagation);
 
     return function (ev) {
         const result = fct.apply(this, arguments);
 
-        const buttonEl = ev.target.closest(".btn");
+        const buttonEl = ev.target.closest(BUTTON_HANDLER_SELECTOR);
         if (!(buttonEl instanceof HTMLElement)) {
             return result;
         }
