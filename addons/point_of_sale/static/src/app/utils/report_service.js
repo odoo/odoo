@@ -7,8 +7,8 @@ import { user } from "@web/core/user";
 import { downloadReport } from "@web/webclient/actions/reports/utils";
 
 export const reportService = {
-    dependencies: ["ui", "orm"],
-    start(env, { ui, orm }) {
+    dependencies: ["ui", "orm", "pos"],
+    start(env, { ui, orm, pos }) {
         const reportActionsCache = {};
         return {
             async doAction(reportXmlId, active_ids) {
