@@ -107,6 +107,7 @@ class SaleReport(models.Model):
         return filled_fields
 
     def _from_pos(self):
+        currency_table_sql = self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today())
         return """
             pos_order_line l
             JOIN pos_order pos ON l.order_id = pos.id
@@ -119,7 +120,7 @@ class SaleReport(models.Model):
             LEFT JOIN stock_picking_type picking ON picking.id = config.picking_type_id
             JOIN {currency_table} ON currency_table.company_id = pos.company_id
             """.format(
-            currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today())
+            currency_table=self.env.cr.mogrify(currency_table_sql).decode(self.env.cr.connection.encoding),
             )
 
     def _where_pos(self):
