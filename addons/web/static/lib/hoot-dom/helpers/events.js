@@ -372,8 +372,6 @@ const hasTagName = (node, ...tagNames) => tagNames.includes(getTag(node));
 const hasTouch = () =>
     globalThis.ontouchstart !== undefined || globalThis.matchMedia("(pointer:coarse)").matches;
 
-const isMacOS = () => /Mac/i.test(globalThis.navigator.userAgent);
-
 /**
  * @param {unknown} value
  */

@@ -49,7 +49,6 @@ import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
  * @typedef {import("./job").JobConfig} JobConfig
  *
  * @typedef {{
- *  browser?: import("../mock/navigator").Browser;
  *  icon?: string;
  *  label: string;
  *  platform?: import("../mock/navigator").Platform;
@@ -151,7 +150,6 @@ const getDefaultPresets = () =>
         [
             "desktop",
             {
-                browser: "chrome",
                 icon: "fa-desktop",
                 label: "Desktop",
                 platform: "linux",
@@ -162,7 +160,6 @@ const getDefaultPresets = () =>
         [
             "mobile",
             {
-                browser: "chrome",
                 icon: "fa-mobile",
                 label: "Mobile",
                 platform: "android",
@@ -1257,9 +1254,8 @@ export class TestRunner {
         if (preset.tags?.length) {
             this.#include("tags", preset.tags, true);
         }
-        const { browser, platform } = preset;
-        if (browser || platform) {
-            mockUserAgent(browser, platform);
+        if (preset.platform) {
+            mockUserAgent(preset.platform);
         }
 
         if (typeof preset.touch === "boolean") {

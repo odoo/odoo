@@ -4,8 +4,6 @@
 import { createMock, makePublicListeners } from "../hoot_utils";
 
 /**
- * @typedef {"chrome" | "firefox" | "safari"} Browser
- *
  * @typedef {"android" | "ios" | "linux" | "mac" | "windows"} Platform
  */
 
@@ -20,10 +18,23 @@ const {
     Set,
     TypeError,
 } = globalThis;
+const { userAgent: $userAgent } = navigator;
 
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
+
+const getUserAgentBrowser = () => {
+    if (/Firefox/i.test($userAgent)) {
+        return "Gecko/20100101 Firefox/1000.0"; // Firefox
+    }
+    if (/Chrome/i.test($userAgent)) {
+        return "AppleWebKit/1000.00 (KHTML, like Gecko) Chrome/1000.00 Safari/1000.00"; // Chrome
+    }
+    if (/Safari/i.test($userAgent)) {
+        return "AppleWebKit/1000.00 (KHTML, like Gecko) Version/1000.00 Safari/1000.00"; // Safari
+    }
+};
 
 /**
  * @returns {Record<PermissionName, { name: string; state: PermissionState }>}
@@ -97,9 +108,8 @@ const getPermissions = () => ({
 
 /**
  * @param {Platform} platform
- * @param {Browser} browser
  */
-const makeUserAgent = (platform, browser) => {
+const makeUserAgent = (platform) => {
     const userAgent = ["Mozilla/5.0"];
     switch (platform.toLowerCase()) {
         case "android": {
@@ -114,10 +124,12 @@ const makeUserAgent = (platform, browser) => {
             userAgent.push("(X11; Linux x86_64)");
             break;
         }
-        case "mac": {
+        case "mac":
+        case "macintosh": {
             userAgent.push("(Macintosh; Intel Mac OS X 10_15_7)");
             break;
         }
+        case "win":
         case "windows": {
             userAgent.push("(Windows NT 10.0; Win64; x64)");
             break;
@@ -126,31 +138,16 @@ const makeUserAgent = (platform, browser) => {
             userAgent.push(platform);
         }
     }
-    switch (browser.toLowerCase()) {
-        case "chrome": {
-            userAgent.push("AppleWebKit/1000.00 (KHTML, like Gecko) Chrome/1000.00 Safari/1000.00");
-            break;
-        }
-        case "firefox": {
-            userAgent.push("Gecko/20100101 Firefox/1000.0");
-            break;
-        }
-        case "safari": {
-            userAgent.push(
-                "AppleWebKit/1000.00 (KHTML, like Gecko) Version/1000.00 Safari/1000.00"
-            );
-            break;
-        }
-        default: {
-            userAgent.push(browser);
-        }
+    if (userAgentBrowser) {
+        userAgent.push(userAgentBrowser);
     }
     return userAgent.join(" ");
 };
 
 /** @type {Set<MockPermissionStatus>} */
 const permissionStatuses = new Set();
-let currentUserAgent = makeUserAgent("linux", "chrome");
+const userAgentBrowser = getUserAgentBrowser();
+let currentUserAgent = makeUserAgent("linux");
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -275,7 +272,7 @@ export const mockNavigator = createMock(navigator, {
 export function cleanupNavigator() {
     permissionStatuses.clear();
     $assign(currentPermissions, getPermissions());
-    currentUserAgent = makeUserAgent("linux", "chrome");
+    currentUserAgent = makeUserAgent("linux");
 }
 
 /**
@@ -299,9 +296,8 @@ export function mockPermission(name, value) {
 }
 
 /**
- * @param {Browser} browser
  * @param {Platform} platform
  */
-export function mockUserAgent(browser = "chrome", platform = "linux") {
-    currentUserAgent = makeUserAgent(platform, browser);
+export function mockUserAgent(platform = "linux") {
+    currentUserAgent = makeUserAgent(platform);
 }
