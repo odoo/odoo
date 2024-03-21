@@ -354,7 +354,9 @@ export class PosData extends Reactive {
                 idsMap[model] = idsMap[model] = new Set([...idsMap[model], ...ids]);
             }
 
-            const data = await this.orm.read(model, Array.from(ids), [], { load: false });
+            const data = await this.orm.read(model, Array.from(ids), this.fields[model], {
+                load: false,
+            });
             newRecordMap[model] = data;
         }
 
