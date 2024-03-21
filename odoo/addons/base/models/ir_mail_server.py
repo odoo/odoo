@@ -136,6 +136,14 @@ class IrMailServer(models.Model):
                                                                   "is used. Default priority is 10 (smaller number = higher priority)")
     active = fields.Boolean(default=True)
 
+    _sql_constraints = [
+        (
+            'certificate_requires_tls',
+            "CHECK(smtp_encryption != 'none' OR smtp_authentication != 'certificate')",
+            "Certificate-based authentication requires a TLS transport"
+        ),
+    ]
+
     @api.depends('smtp_authentication')
     def _compute_smtp_authentication_info(self):
         for server in self:
