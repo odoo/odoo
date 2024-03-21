@@ -923,7 +923,7 @@ export function getOffsetAndCharSize(nodeValue, offset, direction) {
 // Format utils
 //------------------------------------------------------------------------------
 
-const formatsSpecs = {
+export const formatsSpecs = {
     italic: {
         tagName: 'em',
         isFormatted: isItalic,
