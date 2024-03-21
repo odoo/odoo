@@ -340,7 +340,7 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         for (const [key, value] of params) {
             if (key in trackingFields) {
                 // Using same cookie expiration value as in python side
-                setCookie(trackingFields[key], value, 31 * 24 * 60 * 60, "required");
+                setCookie(trackingFields[key], value, 31 * 24 * 60 * 60, "optional");
             }
         }
         setUtmsHtmlDataset();

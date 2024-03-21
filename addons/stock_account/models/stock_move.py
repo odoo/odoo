@@ -555,6 +555,14 @@ class StockMove(models.Model):
             self.env['stock.move'].browse(
                 move_id).analytic_account_line_id = analytic_line
 
+    def _should_exclude_for_valuation(self):
+        """Determines if this move should be excluded from valuation based on its partner.
+        :return: True if the move's restrict_partner_id is different from the company's partner (indicating
+                it should be excluded from valuation), False otherwise.
+        """
+        self.ensure_one()
+        return self.restrict_partner_id and self.restrict_partner_id != self.company_id.partner_id
+
     def _account_entry_move(self, qty, description, svl_id, cost):
         """ Accounting Valuation Entries """
         self.ensure_one()
@@ -562,8 +570,7 @@ class StockMove(models.Model):
         if self.product_id.type != 'product':
             # no stock valuation for consumable products
             return am_vals
-        if self.restrict_partner_id and self.restrict_partner_id != self.company_id.partner_id:
-            # if the move isn't owned by the company, we don't make any valuation
+        if self._should_exclude_for_valuation():
             return am_vals
 
         company_from = self._is_out() and self.mapped('move_line_ids.location_id.company_id') or False
