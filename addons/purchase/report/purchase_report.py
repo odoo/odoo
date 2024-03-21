@@ -53,12 +53,13 @@ class PurchaseReport(models.Model):
     qty_to_be_billed = fields.Float('Qty to be Billed', readonly=True)
 
     @property
-    def _table_query(self):
+    def _table_query(self) -> SQL:
         ''' Report needs to be dynamic to take into account multi-company selected + multi-currency rates '''
-        return '%s %s %s %s' % (self._select(), self._from(), self._where(), self._group_by())
+        return SQL("%s %s %s %s", self._select(), self._from(), self._where(), self._group_by())
 
-    def _select(self):
-        select_str = """
+    def _select(self) -> SQL:
+        return SQL(
+            """
                 SELECT
                     po.id as order_id,
                     min(l.id) as id,
@@ -92,11 +93,12 @@ class PurchaseReport(models.Model):
                          then sum(l.product_qty / line_uom.factor * product_uom.factor) - sum(l.qty_invoiced / line_uom.factor * product_uom.factor)
                          else sum(l.qty_received / line_uom.factor * product_uom.factor) - sum(l.qty_invoiced / line_uom.factor * product_uom.factor)
                     end as qty_to_be_billed
-        """
-        return select_str
+            """,
+        )
 
-    def _from(self):
-        from_str = """
+    def _from(self) -> SQL:
+        return SQL(
+            """
             FROM
             purchase_order_line l
                 join purchase_order po on (l.order_id=po.id)
@@ -106,20 +108,22 @@ class PurchaseReport(models.Model):
                 left join res_company C ON C.id = po.company_id
                 left join uom_uom line_uom on (line_uom.id=l.product_uom)
                 left join uom_uom product_uom on (product_uom.id=t.uom_id)
-                left join {currency_table} ON currency_table.company_id = po.company_id
-        """.format(
-            currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today())
+                left join %(currency_table)s ON currency_table.company_id = po.company_id
+            """,
+            currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today()),
         )
-        return from_str
 
-    def _where(self):
-        return """
+    def _where(self) -> SQL:
+        return SQL(
+            """
             WHERE
                 l.display_type IS NULL
-        """
+            """,
+        )
 
-    def _group_by(self):
-        group_by_str = """
+    def _group_by(self) -> SQL:
+        return SQL(
+            """
             GROUP BY
                 po.company_id,
                 po.user_id,
@@ -147,8 +151,8 @@ class PurchaseReport(models.Model):
                 partner.commercial_partner_id,
                 po.id,
                 currency_table.rate
-        """
-        return group_by_str
+            """,
+        )
 
     def _read_group_select(self, aggregate_spec: str, query: Query) -> SQL:
         """ This override allows us to correctly calculate the average price of products. """

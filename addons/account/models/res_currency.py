@@ -3,6 +3,7 @@
 
 from odoo import api, models, fields, _
 from odoo.exceptions import UserError
+from odoo.tools import SQL
 
 
 class ResCurrency(models.Model):
@@ -39,7 +40,7 @@ class ResCurrency(models.Model):
         return bool(self.env['account.move.line'].sudo().search_count(['|', ('currency_id', '=', self.id), ('company_currency_id', '=', self.id)]))
 
     @api.model
-    def _get_query_currency_table(self, company_ids, conversion_date):
+    def _get_query_currency_table(self, company_ids, conversion_date) -> SQL:
         ''' Construct the currency table as a mapping company -> rate to convert the amount to the user's company
         currency in a multi-company/multi-currency environment.
         The currency_table is a small postgresql table construct with VALUES.
@@ -63,4 +64,4 @@ class ResCurrency(models.Model):
                 user_company.currency_id.decimal_places,
             ))
         query = '(VALUES %s) AS currency_table(company_id, rate, precision)' % ','.join('(%s, %s, %s)' for i in companies)
-        return self.env.cr.mogrify(query, conversion_rates).decode(self.env.cr.connection.encoding)
+        return SQL(query, *conversion_rates)

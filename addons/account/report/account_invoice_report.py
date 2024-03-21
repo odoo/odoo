@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from odoo.tools import SQL
 from odoo.addons.account.models.account_move import PAYMENT_STATE_SELECTION
 
 from functools import lru_cache
@@ -69,12 +70,13 @@ class AccountInvoiceReport(models.Model):
     }
 
     @property
-    def _table_query(self):
-        return '%s %s %s' % (self._select(), self._from(), self._where())
+    def _table_query(self) -> SQL:
+        return SQL('%s %s %s', self._select(), self._from(), self._where())
 
     @api.model
-    def _select(self):
-        return '''
+    def _select(self) -> SQL:
+        return SQL(
+            '''
             SELECT
                 line.id,
                 line.move_id,
@@ -115,11 +117,13 @@ class AccountInvoiceReport(models.Model):
                     * product_standard_price.value_float                    AS inventory_value,
                 COALESCE(partner.country_id, commercial_partner.country_id) AS country_id,
                 line.currency_id                                            AS currency_id
-        '''
+            ''',
+        )
 
     @api.model
-    def _from(self):
-        return '''
+    def _from(self) -> SQL:
+        return SQL(
+            '''
             FROM account_move_line line
                 LEFT JOIN res_partner partner ON partner.id = line.partner_id
                 LEFT JOIN product_product product ON product.id = line.product_id
@@ -133,18 +137,20 @@ class AccountInvoiceReport(models.Model):
                     ON product_standard_price.res_id = CONCAT('product.product,', product.id)
                     AND product_standard_price.name = 'standard_price'
                     AND product_standard_price.company_id = line.company_id
-                JOIN {currency_table} ON currency_table.company_id = line.company_id
-        '''.format(
-            currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today())
+                JOIN %(currency_table)s ON currency_table.company_id = line.company_id
+            ''',
+            currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today()),
         )
 
     @api.model
-    def _where(self):
-        return '''
+    def _where(self) -> SQL:
+        return SQL(
+            '''
             WHERE move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
                 AND line.account_id IS NOT NULL
                 AND line.display_type = 'product'
-        '''
+            ''',
+        )
 
 
 class ReportInvoiceWithoutPayment(models.AbstractModel):
