@@ -29,12 +29,13 @@
                         </p>
                     </div>
                     <field name="rule_ids">
-                        <list string='Tables'>
+                        <list string='Tables' decoration-muted="not active">
                             <field name="sequence" widget="handle"/>
                             <field name="name"/>
                             <field name="type"/>
                             <field name="encoding"/>
                             <field name="pattern"/>
+                            <field name="active" widget="boolean_toggle"/>
                         </list>
                     </field>
                 </sheet>
@@ -59,6 +60,7 @@
         <field name="name">Barcode Nomenclatures</field>
         <field name="res_model">barcode.nomenclature</field>
         <field name="view_mode">list,kanban,form</field>
+        <field name="context">{'active_test': False}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Add a new barcode nomenclature
