@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="discuss.PinnedMessagesPanel">
         <ActionPanel title="title">
-            <MessageCardList emptyText="emptyText" messages="messagePinService.getPinnedMessages(props.thread)" thread="props.thread" mode="'pin'" onClickUnpin="(message) => this.onClickUnpin(message)"/>
+            <MessageCardList emptyText="emptyText" messages="props.thread.pinnedMessages" thread="props.thread" mode="'pin'"/>
         </ActionPanel>
     </t>
 </templates>
