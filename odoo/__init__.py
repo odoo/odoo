@@ -81,6 +81,7 @@ try:
         zobj = zlib.decompressobj()
         return zobj.decompress(data)
 
+    import PyPDF2.filters  # needed after PyPDF2 2.0.0 and before 2.11.0
     PyPDF2.filters.decompress = _decompress
 except ImportError:
     pass # no fix required
