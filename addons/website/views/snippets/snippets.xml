@@ -941,18 +941,13 @@
             <!-- Generic alignment option controling all the template at once. -->
             <!-- Currently needed to be this way as the SCSS variable controls -->
             <!-- the mobile alignement which is the same for all templates. -->
-            <we-select class="o_we_icon_select" data-name="header_alignment_opt" data-variable="hamburger-position" data-reload="/" title="Alignment" data-dependencies="header_default_opt, header_hamburger_opt, header_boxed_opt, header_stretch_opt, header_search_opt, header_sales_one_opt, header_sales_two_opt, header_sales_four_opt, header_sidebar_opt">
-                <we-button data-customize-website-views=""
-                           data-customize-website-variable="'left'"
-                           data-icon="fa-align-left"/>
-                <we-button data-customize-website-views="website.template_header_default_align_center, website.template_header_boxed_align_center, website.template_header_stretch_align_center, website.template_header_search_align_center, website.template_header_sales_one_align_center, website.template_header_sales_two_align_center, website.template_header_sales_four_align_center, website.template_header_sidebar_align_center"
-                           data-customize-website-variable="'center'"
-                           data-icon="fa-align-center"
-                           data-dependencies="!header_hamburger_opt"/>
-                <we-button data-customize-website-views="website.template_header_default_align_right, website.template_header_hamburger_align_right, website.template_header_boxed_align_right, website.template_header_stretch_align_right, website.template_header_search_align_right, website.template_header_sales_one_align_right, website.template_header_sales_two_align_right, website.template_header_sales_four_align_right, website.template_header_sidebar_align_right"
-                           data-customize-website-variable="'right'"
-                           data-icon="fa-align-right"/>
-            </we-select>
+            <we-designoptionselector class="o_we_icon_select" data-variable="hamburger__position" data-reload="/" title="Alignment" data-text-mode="data-no-text"
+                                     data-dependencies="header__template_default_opt, header__template_hamburger_opt, header__template_boxed_opt, header__template_stretch_opt, header__template_search_opt, header__template_sales_one_opt, header__template_sales_two_opt, header__template_sales_four_opt, header__template_sidebar_opt">
+                <attribute target="[data-name='hamburger__position_left_opt']" name="data-icon" value="fa-align-left"/>
+                <attribute target="[data-name='hamburger__position_center_opt']" name="data-icon" value="fa-align-center"/>
+                <attribute target="[data-name='hamburger__position_center_opt']" name="data-dependencies" value="header__template_hamburger_opt"/>
+                <attribute target="[data-name='hamburger__position_right_opt']" name="data-icon" value="fa-align-right"/>
+            </we-designoptionselector>
         </we-row>
 
         <we-designoptionselector string="Links Style" data-variable="header__links__style" data-reload="/" data-dependencies="!header__template_stretch_opt"/>
