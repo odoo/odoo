@@ -4064,6 +4064,7 @@ class BaseModel(metaclass=MetaModel):
             return [('company_id', '=', False)]
         return ['|', ('company_id', '=', False), ('company_id', 'in', to_company_ids(companies))]
 
+    @api.required_data
     def _check_company(self, fnames=None):
         """ Check the companies of the values of the given field names.
 
@@ -4216,6 +4217,7 @@ class BaseModel(metaclass=MetaModel):
         dom = self.env['ir.rule']._compute_domain(self._name, operation)
         return self.sudo().filtered_domain(dom or [])
 
+    @api.required_data
     def unlink(self):
         """ unlink()
 
@@ -4317,6 +4319,7 @@ class BaseModel(metaclass=MetaModel):
 
         return True
 
+    @api.required_data
     def write(self, vals):
         """ write(vals)
 
@@ -4505,6 +4508,7 @@ class BaseModel(metaclass=MetaModel):
             self._check_company()
         return True
 
+    @api.required_data
     def _write(self, vals):
         """ Low-level implementation of write()
 
@@ -4561,6 +4565,7 @@ class BaseModel(metaclass=MetaModel):
         if parent_records:
             parent_records._parent_store_update()
 
+    @api.required_data
     @api.model_create_multi
     def create(self, vals_list):
         """ create(vals_list) -> records
@@ -5420,6 +5425,7 @@ class BaseModel(metaclass=MetaModel):
         query.set_result_ids(self._ids, ordered)
         return query
 
+    @api.required_data
     def copy_data(self, default=None):
         """
         Copy given record's data with all its fields values
@@ -5543,6 +5549,7 @@ class BaseModel(metaclass=MetaModel):
                             translations[lang][from_lang_term] = to_lang_term
                     new.update_field_translations(name, translations)
 
+    @api.required_data
     @api.returns('self')
     def copy(self, default=None):
         """ copy(default=None)
@@ -5555,6 +5562,8 @@ class BaseModel(metaclass=MetaModel):
 
         """
         vals_list = self.with_context(active_test=False).copy_data(default)
+        if not vals_list:
+            return self.browse()
         new_records = self.create(vals_list)
         for old_record, new_record in zip(self, new_records):
             old_record.copy_translations(new_record, excluded=default or ())

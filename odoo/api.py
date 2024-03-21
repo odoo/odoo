@@ -10,8 +10,9 @@ from __future__ import annotations
 __all__ = [
     'Environment',
     'Meta',
-    'model',
-    'constrains', 'depends', 'onchange', 'returns',
+    'model', 'model_create_multi', 'readonly',
+    'constrains', 'depends', 'depends_context', 'onchange', 'returns', 'ondelete',
+    'required_data',
     'call_kw',
 ]
 
@@ -52,6 +53,7 @@ _logger = logging.getLogger(__name__)
 #
 
 INHERITED_ATTRS = ('_returns',)
+INHERITED_DECORS = (('required_data', '_default_return'),)
 
 
 class Params(object):
@@ -81,7 +83,8 @@ class Meta(type):
         for key, value in list(attrs.items()):
             if not key.startswith('__') and callable(value):
                 # make the method inherit from decorators
-                value = propagate(getattr(parent, key, None), value)
+                value = propagate_attributes(getattr(parent, key, None), value)
+                value = propagate_decorators(getattr(parent, key, None), value)
                 attrs[key] = value
 
         return type.__new__(meta, name, bases, attrs)
@@ -91,8 +94,8 @@ def attrsetter(attr, value):
     """ Return a function that sets ``attr`` on its argument and returns it. """
     return lambda method: setattr(method, attr, value) or method
 
-def propagate(method1, method2):
-    """ Propagate decorators from ``method1`` to ``method2``, and return the
+def propagate_attributes(method1, method2):
+    """ Propagate decorator attributes from ``method1`` to ``method2``, and return the
         resulting method.
     """
     if method1:
@@ -100,6 +103,18 @@ def propagate(method1, method2):
             if hasattr(method1, attr) and not hasattr(method2, attr):
                 setattr(method2, attr, getattr(method1, attr))
     return method2
+
+
+def propagate_decorators(method1, method2):
+    """ Propagate decorator function from ``method1`` to ``method2`` if detected specific attribute, and
+        return the resulting method.
+    """
+    wrapper = method2
+    if method1:
+        for decor, attr in INHERITED_DECORS:
+            if hasattr(method1, attr) and not hasattr(wrapper, attr):
+                wrapper = eval(decor)(wrapper)
+    return wrapper
 
 
 def constrains(*args):
@@ -377,7 +392,7 @@ def model(method):
 
 def readonly(method):
     """ Decorate a record-style method where ``self.env.cr`` can be a
-        readonly cursor when called trough a rpc call.
+        readonly cursor when called through a rpc call.
 
             @api.readonly
             def method(self, args):
@@ -431,6 +446,82 @@ def model_create_multi(method):
     """
     wrapper = _model_create_multi(method) # pylint: disable=no-value-for-parameter
     wrapper._api = 'model_create'
+    return wrapper
+
+
+@decorator
+def _required_data_create(method, self, arg):
+    method._default_return = self.browse()
+    if not arg:
+        return method._default_return
+    else:
+        return method(self, arg)
+
+
+@decorator
+def _required_data_write(method, self, arg):
+    if not self:
+        return method._default_return
+    return method(self, arg)
+
+
+@decorator
+def _required_data_unlink(method, self):
+    if not self:
+        return method._default_return
+    return method(self)
+
+
+@decorator
+def _required_data_copy(method, self, default=None):
+    method._default_return = self.browse()
+    if not self:
+        return method._default_return
+    return method(self, default)
+
+
+@decorator
+def _required_data_copy_data(method, self, default=None):
+    if not self:
+        return method._default_return
+    return method(self, default)
+
+
+@decorator
+def _required_data__check_company(method, self, fnames=None):
+    if not self:
+        return method._default_return
+    return method(self, fnames)
+
+
+def required_data(method):
+    """
+    Self is required (or data is required in `create` case).
+    """
+    default_return_mapper = {
+        'create': 'self.browse()',
+        'write': True,
+        '_write': None,
+        'unlink': True,
+        'copy': 'self.browse()',
+        'copy_data': [],
+        '_check_company': None,
+    }
+    name = method.__name__
+    method._default_return = default_return_mapper[name]
+    wrapper = method
+    if name == 'create':
+        wrapper = _required_data_create(method)  # pylint: disable=no-value-for-parameter
+    elif name in ('write', '_write'):
+        wrapper = _required_data_write(method)  # pylint: disable=no-value-for-parameter
+    elif name == 'unlink':
+        wrapper = _required_data_unlink(method)  # pylint: disable=no-value-for-parameter
+    elif name == 'copy':
+        wrapper = _required_data_copy(method)  # pylint: disable=no-value-for-parameter
+    elif name == 'copy_data':
+        wrapper = _required_data_copy_data(method)  # pylint: disable=no-value-for-parameter
+    elif name == '_check_company':
+        wrapper = _required_data__check_company(method)  # pylint: disable=no-value-for-parameter
     return wrapper
 
 
