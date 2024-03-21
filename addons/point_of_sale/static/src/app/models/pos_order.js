@@ -1,4 +1,7 @@
-/** @odoo-module */
+/* eslint { "no-restricted-syntax": [ "error", {
+    "selector": "MemberExpression[object.type=ThisExpression][property.name=pos]",
+    "message": "Using this.pos in models is deprecated and about to be removed, for any question ask PoS team." }]}*/
+
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
@@ -113,16 +116,16 @@ export class PosOrder extends Base {
             pos_qr_code:
                 this.company.point_of_sale_use_ticket_qr_code &&
                 qrCodeSrc(
-                    `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}`
+                    `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}` // eslint-disable-line
                 ),
             ticket_code: this.company.point_of_sale_ticket_unique_code && this.ticketCode,
-            base_url: this.pos.base_url,
+            base_url: this.pos.base_url, // eslint-disable-line
             footer: this.config.receipt_footer,
             // FIXME: isn't there a better way to handle this date?
             shippingDate:
                 this.shippingDate && formatDate(DateTime.fromJSDate(new Date(this.shippingDate))),
             headerData: {
-                ...this.pos.getReceiptHeaderData(this),
+                ...this.pos.getReceiptHeaderData(this), // eslint-disable-line
                 trackingNumber: this.trackingNumber,
             },
         };
@@ -436,8 +439,8 @@ export class PosOrder extends Base {
     removeOrderline(line) {
         const linesToRemove = line.getAllLinesInCombo();
         for (const lineToRemove of linesToRemove) {
-            if (lineToRemove.refunded_orderline_id?.uuid in this.pos.lineToRefund) {
-                delete this.pos.lineToRefund[lineToRemove.refunded_orderline_id.uuid];
+            if (lineToRemove.refunded_orderline_id?.uuid in this.pos.lineToRefund) { // eslint-disable-line
+                delete this.pos.lineToRefund[lineToRemove.refunded_orderline_id.uuid]; // eslint-disable-line
             }
 
             if (this.assert_editable()) {
@@ -483,7 +486,7 @@ export class PosOrder extends Base {
             this.uiState.selected_orderline_uuid = undefined;
         }
 
-        this.pos.numpadMode = "quantity";
+        this.pos.numpadMode = "quantity"; // eslint-disable-line
     }
 
     deselect_orderline() {

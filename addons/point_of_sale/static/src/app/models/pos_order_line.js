@@ -1,4 +1,6 @@
-/** @odoo-module */
+/* eslint { "no-restricted-syntax": [ "error", {
+    "selector": "MemberExpression[object.type=ThisExpression][property.name=pos]",
+    "message": "Using this.pos in models is deprecated and about to be removed, for any question ask PoS team." }]}*/
 import { registry } from "@web/core/registry";
 import { constructFullProductName, uuidv4 } from "@point_of_sale/utils";
 import { Base } from "./related_models";
@@ -195,8 +197,8 @@ export class PosOrderline extends Base {
         const quant =
             typeof quantity === "number" ? quantity : parseFloat("" + (quantity ? quantity : 0));
 
-        if (this.refunded_orderline_id?.uuid in this.pos.lineToRefund) {
-            const refundDetails = this.pos.lineToRefund[this.refunded_orderline_id.uuid];
+        if (this.refunded_orderline_id?.uuid in this.pos.lineToRefund) { // eslint-disable-line
+            const refundDetails = this.pos.lineToRefund[this.refunded_orderline_id.uuid]; // eslint-disable-line
             const maxQtyToRefund = refundDetails.line.qty - refundDetails.line.refunded_qty;
             if (quant > 0) {
                 return {

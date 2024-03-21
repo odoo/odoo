@@ -1,4 +1,6 @@
-/** @odoo-module */
+/* eslint { "no-restricted-syntax": [ "error", {
+    "selector": "MemberExpression[object.type=ThisExpression][property.name=pos]",
+    "message": "Using this.pos in models is deprecated and about to be removed, for any question ask PoS team." }]}*/
 
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
@@ -291,7 +293,7 @@ patch(PosOrder.prototype, {
                 (elem) => !this.models["loyalty.card"].get(elem)
             );
             if (couponsToFetch.length) {
-                await this.pos.fetchCoupons([["id", "in", couponsToFetch]], couponsToFetch.length);
+                await this.pos.fetchCoupons([["id", "in", couponsToFetch]], couponsToFetch.length); // eslint-disable-line no-restricted-syntax
                 // Remove coupons that could not be loaded from the db
                 // TODO JCB: The following commented code doesn't seem to be necessary. Code activated coupons will always come from the backend.
                 // this.uiState.codeActivatedCoupons = this.uiState.codeActivatedCoupons.filter(
@@ -576,7 +578,7 @@ patch(PosOrder.prototype, {
     // FIXME use of pos
     async _couponForProgram(program) {
         if (program.is_nominative) {
-            return this.pos.fetchLoyaltyCard(program.id, this.get_partner().id);
+            return this.pos.fetchLoyaltyCard(program.id, this.get_partner().id); // eslint-disable-line no-restricted-syntax
         }
         // This type of coupons don't need to really exist up until validating the order, so no need to cache
         return this.models["loyalty.card"].create({
@@ -1474,22 +1476,20 @@ patch(PosOrder.prototype, {
                 return _t("That coupon code has already been scanned and activated.");
             }
             const customerId = this.get_partner() ? this.get_partner().id : false;
-            const { successful, payload } = await this.pos.data.call(
-                "pos.config",
-                "use_coupon_code",
-                [
-                    [this.config.id],
-                    code,
-                    this.date_order,
-                    customerId,
-                    this.pricelist_id ? this.pricelist_id.id : false,
-                ]
-            );
+            const call = this.pos.data.call; // eslint-disable-line no-restricted-syntax
+            const { successful, payload } = await call("pos.config", "use_coupon_code", [
+                [this.config.id],
+                code,
+                this.date_order,
+                customerId,
+                this.pricelist_id ? this.pricelist_id.id : false,
+            ]);
             if (successful) {
                 // Allow rejecting a gift card that is not yet paid.
                 const program = this.models["loyalty.program"].get(payload.program_id);
                 if (program && program.program_type === "gift_card" && !payload.has_source_order) {
-                    const confirmed = await ask(this.pos.env.services.dialog, {
+                    const dialog = this.pos.env.services.dialog; // eslint-disable-line no-restricted-syntax
+                    const confirmed = await ask(dialog, {
                         title: _t("Unpaid gift card"),
                         body: _t(
                             "This gift card is not linked to any order. Do you really want to apply its reward?"

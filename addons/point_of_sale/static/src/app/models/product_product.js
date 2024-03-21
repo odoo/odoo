@@ -1,4 +1,7 @@
-/** @odoo-module */
+/* eslint { "no-restricted-syntax": [ "error", {
+    "selector": "MemberExpression[object.type=ThisExpression][property.name=pos]",
+    "message": "Using this.pos in models is deprecated and about to be removed, for any question ask PoS team." }]}*/
+
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { deserializeDate } from "@web/core/l10n/dates";

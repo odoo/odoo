@@ -1,4 +1,6 @@
-/** @odoo-module */
+/* eslint { "no-restricted-syntax": [ "error", {
+    "selector": "MemberExpression[object.type=ThisExpression][property.name=pos]",
+    "message": "Using this.pos in models is deprecated and about to be removed, for any question ask PoS team." }]}*/
 
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
@@ -22,7 +24,7 @@ patch(PosOrder.prototype, {
     },
     _prepareL10nInHsnSummary() {
         const hsnSummary = {};
-        const accountTagByXmlRefId = this.pos.account_tag_by_xml_ref_id;
+        const accountTagByXmlRefId = this.pos.account_tag_by_xml_ref_id; // eslint-disable-line no-restricted-syntax
         const fiscalPosition = this.fiscal_position_id;
         this.orderlines.forEach((line) => {
             const hsnCode = line.get_product()?.l10n_in_hsn_code;
