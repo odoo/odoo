@@ -72,7 +72,8 @@ test("Do not show channel when visitor is typing", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({
-                is_pinned: false,
+                unpin_dt: "2021-01-01 12:00:00",
+                last_interest_dt: "2021-01-01 10:00:00",
                 partner_id: serverState.partnerId,
             }),
             Command.create({ guest_id: guestId }),

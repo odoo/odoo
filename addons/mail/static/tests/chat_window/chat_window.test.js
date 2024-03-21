@@ -615,7 +615,8 @@ test("new message separator is shown in a chat window of a chat on receiving new
         channel_member_ids: [
             Command.create({
                 fold_state: "open",
-                is_pinned: false,
+                unpin_dt: "2021-01-01 12:00:00",
+                last_interest_dt: "2021-01-01 10:00:00",
                 partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
@@ -694,7 +695,11 @@ test("chat window should open when receiving a new DM", async () => {
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ is_pinned: false, partner_id: serverState.partnerId }),
+            Command.create({
+                unpin_dt: "2021-01-01 12:00:00",
+                last_interest_dt: "2021-01-01 10:00:00",
+                partner_id: serverState.partnerId
+            }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -717,7 +722,11 @@ test("chat window should not open when receiving a new DM from odoobot", async (
     const userId = pyEnv["res.users"].create({ partner_id: serverState.odoobotId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ is_pinned: false, partner_id: serverState.partnerId }),
+            Command.create({
+                unpin_dt: "2021-01-01 12:00:00",
+                last_interest_dt: "2021-01-01 10:00:00",
+                partner_id: serverState.partnerId
+            }),
             Command.create({ partner_id: serverState.odoobotId }),
         ],
         channel_type: "chat",
