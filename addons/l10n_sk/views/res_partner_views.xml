@@ -5,7 +5,7 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='vat']" position="after">
+            <xpath expr="//field[@name='vat']" position="before">
                 <field name="company_registry" invisible="country_code != 'SK' or parent_id"/>
             </xpath>
         </field>
