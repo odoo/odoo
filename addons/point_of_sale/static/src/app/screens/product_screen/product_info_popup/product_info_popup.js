@@ -13,7 +13,13 @@ export class ProductInfoPopup extends Component {
         this.pos = usePos();
     }
     searchProduct(productName) {
+<<<<<<< HEAD
         this.pos.setSelectedCategory(0);
+||||||| parent of 2e0dfa1af139 (temp)
+        this.pos.setSelectedCategoryId(0);
+=======
+        this.pos.selectedCategoryId = 0;
+>>>>>>> 2e0dfa1af139 (temp)
         this.pos.searchProductWord = productName;
         this.props.close();
     }
