@@ -14903,4 +14903,36 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".my_widget");
         assert.containsOnce(target, ".o_notebook_headers .nav-item");
     });
+
+    QUnit.test("form with node with invisible and advanced attributes", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="bar"/>
+                    <span class="hello" invisible="bar" advanced="1">Hello</span>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.containsOnce(target, ".o_field_widget[name=bar] input:checked");
+        assert.deepEqual(features.advanced, false);
+        assert.containsNone(target, "span.hello");
+        
+        features.advanced = true;
+        await nextTick();
+        
+        assert.containsNone(target, "span.hello");
+        
+        await click(target.querySelector(".o_field_widget[name=bar] input:checked"));
+        
+        assert.containsOnce(target, "span.hello");
+        
+        features.advanced = false;
+        await nextTick();
+        
+        assert.containsNone(target, "span.hello");
+    });
 });

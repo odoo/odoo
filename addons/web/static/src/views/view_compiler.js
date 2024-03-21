@@ -293,7 +293,11 @@ export class ViewCompiler {
 
         if (node.hasAttribute("advanced")) {
             const advanced = archParseBoolean(node.getAttribute("advanced"));
-            compiledNode.setAttribute("t-if", (advanced ? "" : "!") + "__comp__.features.advanced");
+            const ifParts = [(advanced ? "" : "!") + "__comp__.features.advanced"];
+            if (compiledNode.hasAttribute("t-if")) {
+                ifParts.push(compiledNode.getAttribute("t-if"));
+            }
+            combineAttributes(compiledNode, "t-if", ifParts, " and ");
         }
 
         return compiledNode;
