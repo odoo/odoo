@@ -24,10 +24,10 @@ class TestEventMenus(OnlineEventCase):
         self.assertTrue(event.location_menu)
         self.assertTrue(event.register_menu)
         self.assertFalse(event.community_menu)
-        self._assert_website_menus(event, ['Introduction', 'Location', 'Register'], menus_out=['Community'])
+        self._assert_website_menus(event, ['Introduction', 'Location', 'Info'], menus_out=['Community'])
 
         event.community_menu = True
-        self._assert_website_menus(event, ['Introduction', 'Location', 'Register', 'Community'])
+        self._assert_website_menus(event, ['Introduction', 'Location', 'Info', 'Community'])
 
         # test create without any requested menus
         event = self.env['event.event'].create({
@@ -45,7 +45,7 @@ class TestEventMenus(OnlineEventCase):
 
         # test update of website_menu triggering 3 sub menus
         event.write({'website_menu': True})
-        self._assert_website_menus(event, ['Introduction', 'Location', 'Register'], menus_out=['Community'])
+        self._assert_website_menus(event, ['Introduction', 'Location', 'Info'], menus_out=['Community'])
 
     @users('user_event_web_manager')
     def test_menu_management_frontend(self):
@@ -56,14 +56,14 @@ class TestEventMenus(OnlineEventCase):
             'website_menu': True,
             'community_menu': False,
         })
-        self._assert_website_menus(event, ['Introduction', 'Location', 'Register'], menus_out=['Community'])
+        self._assert_website_menus(event, ['Introduction', 'Location', 'Info'], menus_out=['Community'])
 
         # simulate menu removal from frontend: aka unlinking a menu
         event.menu_id.child_id.filtered(lambda menu: menu.name == 'Introduction').unlink()
 
         self.assertTrue(event.website_menu)
-        self._assert_website_menus(event, ['Location', 'Register'], menus_out=['Introduction', 'Community'])
+        self._assert_website_menus(event, ['Location', 'Info'], menus_out=['Introduction', 'Community'])
 
         # re-created from backend
         event.introduction_menu = True
-        self._assert_website_menus(event, ['Introduction', 'Location', 'Register'], menus_out=['Community'])
+        self._assert_website_menus(event, ['Introduction', 'Location', 'Info'], menus_out=['Community'])

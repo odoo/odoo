@@ -78,9 +78,6 @@ var discoverRoomSteps = function (roomName) {
  */
 
 var registerSteps = [{
-    content: 'Go on Register',
-    trigger: 'a.btn-primary[href$="/register"]',
-}, {
     content: 'Open ticket modal',
     trigger: 'button.btn-primary:contains("Register")',
 }, {

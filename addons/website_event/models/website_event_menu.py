@@ -16,7 +16,7 @@ class EventMenu(models.Model):
         [('community', 'Community Menu'),
          ('introduction', 'Introduction'),
          ('location', 'Location'),
-         ('register', 'Register'),
+         ('register', 'Info'),
         ], string="Menu Type", required=True)
 
     def unlink(self):
