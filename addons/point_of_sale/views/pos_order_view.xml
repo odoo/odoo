@@ -105,8 +105,11 @@
                                    nolabel="1"
                                    class="oe_subtotal_footer_separator"
                                    widget="monetary"/>
+                            <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                <label class="o_form_label_readonly" for="amount_paid" string="Total Paid (with rounding)"/>
+                            </div>
                             <field name="amount_paid"
-                                string="Total Paid (with rounding)"
+                                nolabel="1"
                                 class="oe_subtotal_footer_separator"
                                 widget="monetary"
                                 invisible="amount_paid == 'amount_total'"
@@ -117,7 +120,7 @@
                                 <span class="oe_inline" invisible="not is_total_cost_computed">
                                     (<field name="margin_percent" nolabel="1" class="oe_inline" widget="percentage"/>)
                                 </span>
-                                <span invisible="is_total_cost_computed">TBD</span>
+                                <span class="float-end" invisible="is_total_cost_computed">To be determined</span>
                             </div>
                             <field name="is_total_cost_computed" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
