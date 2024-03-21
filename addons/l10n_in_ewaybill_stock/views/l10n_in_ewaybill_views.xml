@@ -8,6 +8,7 @@
                 <header>
                     <button name="generate_ewaybill" string="Generate e-Waybill" class="oe_highlight" type="object" invisible="state != 'pending'" data-hotkey="g"/>
                     <button name="cancel_ewaybill" string="Cancel e-Waybill" class="oe_highlight" type="object" invisible="state != 'generated'" data-hotkey="c"/>
+                    <button name="reset_to_pending" string="Reset to Pending" type="object" invisible="state != 'cancel'" data-hotkey="r" confirm="Are you sure you want to re-send the e-Waybill?"/>
                     <button name="action_export_json" string="Download JSON" class="oe_highlight" type="object" invisible="not error_message" groups="base.group_no_one"/>
                     <field name="state" widget="statusbar" statusbar_visible="pending,generated"/>
                 </header>
@@ -49,25 +50,30 @@
                         <field name="is_ship_to_editable" invisible="1"/>
                         <field name="is_ship_from_editable" invisible="1"/>
                         <group>
-                            <field name="transaction_type" readonly="state != 'pending'"/>
+                            <field name="transaction_type" readonly="state != 'pending'" invisible="1"/>
                         </group>
                         <group>
                         </group>
                         <group>
-                            <field name="partner_bill_to_id" force_save="1" readonly="state == 'pending' and not is_bill_to_editable or state != 'pending'"/>
                             <field name="partner_bill_from_id" force_save="1" readonly="state == 'pending' and not is_bill_from_editable or state != 'pending'"/>
+                            <field name="partner_bill_to_id" force_save="1" readonly="state == 'pending' and not is_bill_to_editable or state != 'pending'"/>
                         </group>
                         <group>
-                            <field name="partner_ship_to_id" force_save="1" readonly="state == 'pending' and not is_ship_to_editable or state != 'pending'"/>
                             <field name="partner_ship_from_id" force_save="1" readonly="state == 'pending' and not is_ship_from_editable or state != 'pending'"/>
+                            <field name="partner_ship_to_id" force_save="1" readonly="state == 'pending' and not is_ship_to_editable or state != 'pending'"/>
                         </group>
                     </group>
-                    <group name="part_b" string="Transportation Details">
+                    <group name="transporter" string="Transporter Details">
+                        <group>
+                            <field name="transporter_id" readonly="state != 'pending'" required="not mode"/>
+                        </group>
+                        <group/>
+                    </group>
+                    <group name="part_b" string="Transportation Details (Part B)">
                         <group>
                             <field name="mode" readonly="state != 'pending'"/>
-                            <field name="vehicle_type" invisible="mode != '1'" required="mode == '1'" readonly="state != 'pending'"/>
-                            <field name="vehicle_no" invisible="mode != '1'" required="mode == '1'" readonly="state != 'pending'"/>
-                            <field name="transporter_id" readonly="state != 'pending'" required="mode == '0'" domain="[('country_id.code','=','IN')]" invisible="mode != '0'"/>
+                            <field name="vehicle_type" invisible="mode not in ('1','4')" required="mode == '1'" readonly="state != 'pending'"/>
+                            <field name="vehicle_no" invisible="mode not in ('1','4')" required="mode == '1'" readonly="state != 'pending'"/>
                             <label for="distance" readonly="state != 'pending'"/>
                             <div class="o_row" name="distance">
                                 <field name="distance" readonly="state != 'pending'"/>
@@ -75,8 +81,22 @@
                             </div>
                         </group>
                         <group>
-                            <field name="transportation_doc_no" required="mode in ['2','3','4']" readonly="state != 'pending'" invisible="mode not in ['2', '3', '4']"/>
-                            <field name="transportation_doc_date" required="mode in ['2','3','4']" readonly="state != 'pending'" invisible="mode not in ['2', '3', '4']"/>
+                            <label for="transportation_doc_no" invisible="mode != '1' or not mode"/>
+                            <label for="transportation_doc_no" invisible="mode != '2'" string="RR No"/>
+                            <label for="transportation_doc_no" invisible="mode != '3'" string="Airway Bill"/>
+                            <label for="transportation_doc_no" invisible="mode != '4'" string="Bill of lading No"/>
+                            <div class="o_row">
+                                <field name="transportation_doc_no" readonly="state != 'pending'" required="mode in ('2', '3', '4')"/>
+                            </div>
+
+
+                            <label for="transportation_doc_date" invisible="mode != '1' or not mode"/>
+                            <label for="transportation_doc_date" invisible="mode != '2'" string="RR Date"/>
+                            <label for="transportation_doc_date" invisible="mode != '3'" string="Airway Bill Date"/>
+                            <label for="transportation_doc_date" invisible="mode != '4'" string="Bill of lading Date"/>
+                            <div class="o_row">
+                                <field name="transportation_doc_date" readonly="state != 'pending'" required="mode in ('2', '3', '4')"/>
+                            </div>
                         </group>
                     </group>
                     <group name="cancel_ewaybill" string="Cancel details" invisible="state != 'cancel'">

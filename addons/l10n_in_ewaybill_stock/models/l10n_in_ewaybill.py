@@ -21,9 +21,9 @@ class Ewaybill(models.Model):
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
 
     # Ewaybill details generated from the API
-    name = fields.Char("e-Way bill Number", copy=False, readonly=True)
-    ewaybill_date = fields.Date("e-Way bill Date", copy=False, readonly=True)
-    ewaybill_expiry_date = fields.Date("e-Way bill Valid Upto", copy=False, readonly=True)
+    name = fields.Char("e-Way bill Number", copy=False, readonly=True, tracking=True)
+    ewaybill_date = fields.Date("e-Way bill Date", copy=False, readonly=True, tracking=True)
+    ewaybill_expiry_date = fields.Date("e-Way bill Valid Upto", copy=False, readonly=True,tracking=True)
 
     state = fields.Selection(string='Status', selection=[
         ('pending', 'Pending'),
@@ -40,14 +40,15 @@ class Ewaybill(models.Model):
     document_date = fields.Datetime("Document Date", compute="_compute_document_details", store=True)
     document_number = fields.Char("Document", compute="_compute_document_details", store=True)
     company_id = fields.Many2one("res.company", compute="_compute_document_details", store=True)
+    company_currency_id = fields.Many2one(related="company_id.currency_id")
     supply_type = fields.Selection(string="Supply Type", selection=[
         ("O", "Outward"),
         ("I", "Inward")
     ], compute="_compute_supply_type")
-    partner_bill_to_id = fields.Many2one("res.partner", string='Bill To', compute="_compute_document_partners_details", store=True, readonly=False)
     partner_bill_from_id = fields.Many2one("res.partner", string='Bill From', compute="_compute_document_partners_details", store=True, readonly=False)
+    partner_bill_to_id = fields.Many2one("res.partner", string='Bill To', compute="_compute_document_partners_details", store=True, readonly=False)
+    partner_ship_from_id = fields.Many2one("res.partner", string='Dispatch From', compute="_compute_document_partners_details", store=True, readonly=False)
     partner_ship_to_id = fields.Many2one('res.partner', string='Ship To', compute='_compute_document_partners_details', store=True, readonly=False)
-    partner_ship_from_id = fields.Many2one("res.partner", string='Ship From', compute="_compute_document_partners_details", store=True, readonly=False)
 
     # Fields to determine which partner details are editable
     is_bill_to_editable = fields.Boolean(compute="_compute_is_editable")
@@ -67,35 +68,32 @@ class Ewaybill(models.Model):
     )
 
     # E-waybill Document Type
-    type_id = fields.Many2one("l10n.in.ewaybill.type", "E-waybill Document Type", tracking=True, required=True)
+    type_id = fields.Many2one("l10n.in.ewaybill.type", "Document Type", tracking=True, required=True)
     sub_type_code = fields.Char(related="type_id.sub_type_code")
     type_description = fields.Char(string="Description")
 
     # Transportation details
     distance = fields.Integer("Distance", tracking=True)
     mode = fields.Selection([
-        ("0", "Managed by Transporter"),
         ("1", "By Road"),
         ("2", "Rail"),
         ("3", "Air"),
-        ("4", "Ship")
-    ], string="Transportation Mode", copy=False, tracking=True, required=True)
+        ("4", "Ship or Ship Cum Road/Rail")
+    ], string="Transportation Mode", copy=False, tracking=True, default="1")
 
     # Vehicle Number and Type required when transportation mode is By Road.
     vehicle_no = fields.Char("Vehicle Number", copy=False, tracking=True)
     vehicle_type = fields.Selection([
         ("R", "Regular"),
-        ("O", "ODC")],
+        ("O", "Over Dimensional Cargo")],
         string="Vehicle Type", copy=False, tracking=True)
 
     # Document number and date required in case of transportation mode is Rail, Air or Ship.
     transportation_doc_no = fields.Char(
-        string="Transporter's Doc No",
-        help="""Transport document number. If it is more than 15 chars, last 15 chars may be entered""",
+        string="Transporter Doc No",
         copy=False, tracking=True)
     transportation_doc_date = fields.Date(
-        string="Transporter's Doc Date",
-        help="Date on the transporter document",
+        string="Transporter Doc Date",
         copy=False,
         tracking=True)
 
@@ -169,6 +167,12 @@ class Ewaybill(models.Model):
         for ewaybill in self:
             ewaybill.display_name = ewaybill.name or _('Pending')
 
+    @api.onchange('mode')
+    def _onchange_mode(self):
+        """when transportation mode is ship then vehicle type should be Over Dimensional Cargo (ODC)"""
+        if self.mode == "4":
+            self.vehicle_type = 'O'
+
     def action_export_json(self):
         self.ensure_one()
         return {
@@ -196,6 +200,11 @@ class Ewaybill(models.Model):
             'type': 'ir.actions.act_window',
         }
 
+    def reset_to_pending(self):
+        if self.state != 'cancel':
+            raise UserError(_("Only Cancelled E-waybill can be resent."))
+        self.state = 'pending'
+
     def _is_overseas(self):
         self.ensure_one()
         gst_treatment = self._get_gst_treatment()[1]
@@ -217,9 +226,12 @@ class Ewaybill(models.Model):
         return error_message
 
     def _check_transporter(self):
-        if self.mode == '0' and self.transporter_id and not self.transporter_id.vat:
-            return [_("- Transporter %s does not have GST Number", self.transporter_id.name)]
-        return []
+        error_message = []
+        if self.transporter_id and not self.transporter_id.vat:
+            error_message.append(_("- Transporter %s does not have GST Number", self.transporter_id.name))
+        if self.mode == "4" and self.vehicle_no and self.vehicle_type == "R":
+            error_message.append(_("- Vehicle type can not be regular when transportation mode is ship"))
+        return error_message
 
     def _check_partners(self):
         error_message = []
@@ -270,7 +282,7 @@ class Ewaybill(models.Model):
             partner = self.partner_bill_from_id
         else:
             partner = self.partner_bill_to_id
-        return partner, gst_treatment
+        return partner, partner.l10n_in_gst_treatment
 
     def _write_error(self, error_message, blocking_level='error'):
         self.write({
@@ -481,7 +493,7 @@ class Ewaybill(models.Model):
             "quantity": line.quantity,
             "qtyUnit": line.product_id.uom_id.l10n_in_code and line.product_id.uom_id.l10n_in_code.split("-")[
                 0] or "OTH",
-            "taxableAmount": round_value(line.ewaybill_price_unit),
+            "taxableAmount": round_value(tax_details['total_excluded']),
         }
         if tax_details.get('igst_rate'):
             line_details.update({"igstRate": round_value(tax_details.get("igst_rate", 0.00))})
@@ -492,6 +504,8 @@ class Ewaybill(models.Model):
             })
         if tax_details.get("cess_rate"):
             line_details.update({"cessRate": round_value(tax_details.get("cess_rate", 0.00))})
+        if tax_details.get("cess_non_advol_amount"):
+            line_details.update({"cessNonadvol": round_value(tax_details.get("cess_non_advol_amount", 0.00))})
         return line_details
 
     def _ewaybill_generate_direct_json(self):
@@ -532,7 +546,7 @@ class Ewaybill(models.Model):
                 # Ship from
                 "fromAddr1": partner_ship_from_id.street and partner_ship_from_id.street[:120] or "",
                 "fromAddr2": partner_ship_from_id.street2 and partner_ship_from_id.street2[:120] or "",
-                "fromPlace": partner_ship_from_id.city and partner_ship_from_id.city[:50] else "",
+                "fromPlace": partner_ship_from_id.city and partner_ship_from_id.city[:50] or "",
                 "fromPincode": self._get_partner_zip(partner_ship_from_id),
                 "actFromStateCode": self._get_partner_state_code(partner_ship_from_id),
                 # Bill to
@@ -546,27 +560,19 @@ class Ewaybill(models.Model):
                 "toStateCode": self._get_partner_state_code(partner_ship_to_id),
                 "toPincode": self._get_partner_zip(partner_ship_to_id),
             }
-            if self.sub_type_code == '8':
-                json_payload.update({
-                    "subSupplyDesc": self.type_description,
-                })
-            if self.mode == "0":
-                json_payload.update({
-                    "transporterId": self.transporter_id.vat,
-                    "transporterName": self.transporter_id.name or "",
-                })
-            elif self.mode in ("2", "3", "4"):
-                json_payload.update({
-                    "transMode": self.mode,
-                    "transDocNo": self.transportation_doc_no,
-                    "transDocDate": self.transportation_doc_date.strftime("%d/%m/%Y"),
-                })
-            elif self.mode == "1":
-                json_payload.update({
-                    "transMode": self.mode,
-                    "vehicleNo": self.vehicle_no,
-                    "vehicleType": self.vehicle_type,
-                })
+
+            transportations_details = {
+                "transporterId": self.transporter_id.vat or "",
+                "transporterName": self.transporter_id.name or "",
+                "transMode": self.mode or "",
+                "transDocNo": self.transportation_doc_no or "",
+                "transDocDate": self.transportation_doc_date and self.transportation_doc_date.strftime("%d/%m/%Y") or "",
+                "vehicleNo": self.vehicle_no or "",
+                "vehicleType": self.vehicle_type or "",
+            }
+            # only pass transporter details when value is exist
+            json_payload.update({k: v for k, v in transportations_details.items() if v})
+
             tax_details = self._l10n_in_tax_details(ewaybill)
             round_value = self._l10n_in_round_value
             json_payload.update({

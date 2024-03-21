@@ -19,9 +19,9 @@ class StockMove(models.Model):
         related='company_id.currency_id')
 
     # Need to store values because we send it to the ewaybill and we need to keep the same value
-    ewaybill_price_unit = fields.Float(
+    ewaybill_price_unit = fields.Monetary(
         compute='_compute_ewaybill_price_unit',
-        digits='Product Price',
+        currency_field='ewaybill_company_currency_id',
         store=True)
     ewaybill_tax_ids = fields.Many2many(
         comodel_name='account.tax',

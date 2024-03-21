@@ -27,7 +27,7 @@ class EWayBillApi:
     def _l10n_in_set_missing_error_message(self, response):
         for error in response.get('error', []):
             if error.get('code') and not error.get('message'):
-                error['message'] = self._l10n_in_edi_ewaybill_get_error_message(error.get('code'))
+                error['message'] = self.env['account.edi.format']._l10n_in_edi_ewaybill_get_error_message(error.get('code'))
         return response
 
     def _ewaybill_connect_to_server(self, url_path, params):
