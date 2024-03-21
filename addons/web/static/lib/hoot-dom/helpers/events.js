@@ -716,6 +716,12 @@ const _fill = (target, value, options) => {
 
     if (getTag(target) === "input") {
         switch (target.type) {
+            case "color": {
+                target.value = String(value);
+                dispatch(target, "input");
+                dispatch(target, "change");
+                return;
+            }
             case "file": {
                 const dataTransfer = new DataTransfer();
                 const files = ensureArray(value);
