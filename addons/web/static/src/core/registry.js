@@ -8,6 +8,27 @@ export class KeyNotFoundError extends Error {}
 export class DuplicatedKeyError extends Error {}
 
 /**
+ * @template S
+ * @template C
+ * @typedef {import("registries").RegistryData<S, C>} RegistryData
+ */
+
+/**
+ * @template T
+ * @typedef {T extends RegistryData<any, any> ? T : RegistryData<T, {}>} ToRegistryData
+ */
+
+/**
+ * @template T
+ * @typedef {ToRegistryData<T>["__itemShape"]} GetRegistryItemShape
+ */
+
+/**
+ * @template T
+ * @typedef {ToRegistryData<T>["__categories"]} GetRegistryCategories
+ */
+
+/**
  * Registry
  *
  * The Registry class is basically just a mapping from a string key to an object.
@@ -19,8 +40,7 @@ export class DuplicatedKeyError extends Error {}
  * 2. it throws an error when the get operation fails
  * 3. it provides a chained API to add items to the registry.
  *
- * @template [K=string] keys type
- * @template [V=any] values type
+ * @template T
  */
 export class Registry extends EventBus {
     /**
@@ -28,9 +48,13 @@ export class Registry extends EventBus {
      */
     constructor(name) {
         super();
+        /** @type {Record<string, [number, GetRegistryItemShape<T>]>}*/
         this.content = {};
+        /** @type {{ [P in keyof GetRegistryCategories<T>]?: Registry<GetRegistryCategories<T>[P]> }} */
         this.subRegistries = {};
+        /** @type {GetRegistryItemShape<T>[]}*/
         this.elements = null;
+        /** @type {[string, GetRegistryItemShape<T>][]}*/
         this.entries = null;
         this.name = name;
 
@@ -47,10 +71,10 @@ export class Registry extends EventBus {
      * Note that this also returns the registry, so another add method call can
      * be chained
      *
-     * @param {K} key
-     * @param {{test: boolean, steps: (function(): [{run: *, trigger: string, content: string}]), url: string}} value
-     * @param {{ force?: boolean; sequence?: number }} [options]
-     * @returns {Registry<K, V>}
+     * @param {string} key
+     * @param {GetRegistryItemShape<T>} value
+     * @param {{force?: boolean, sequence?: number}} [options]
+     * @returns {Registry<T>}
      */
     add(key, value, { force, sequence } = {}) {
         if (!force && key in this.content) {
@@ -73,8 +97,8 @@ export class Registry extends EventBus {
     /**
      * Get an item from the registry
      *
-     * @param {K} key
-     * @returns {V}
+     * @param {string} key
+     * @returns {GetRegistryItemShape<T>}
      */
     get(key, defaultValue) {
         if (arguments.length < 2 && !(key in this.content)) {
@@ -87,7 +111,7 @@ export class Registry extends EventBus {
     /**
      * Check the presence of a key in the registry
      *
-     * @param {K} key
+     * @param {string} key
      * @returns {boolean}
      */
     contains(key) {
@@ -98,7 +122,7 @@ export class Registry extends EventBus {
      * Get a list of all elements in the registry. Note that it is ordered
      * according to the sequence numbers.
      *
-     * @returns {V[]}
+     * @returns {GetRegistryItemShape<T>[]}
      */
     getAll() {
         if (!this.elements) {
@@ -111,7 +135,7 @@ export class Registry extends EventBus {
     /**
      * Return a list of all entries, ordered by sequence numbers.
      *
-     * @returns {[K, V][]}
+     * @returns {[string, GetRegistryItemShape<T>][]}
      */
     getEntries() {
         if (!this.entries) {
@@ -124,7 +148,7 @@ export class Registry extends EventBus {
     /**
      * Remove an item from the registry
      *
-     * @param {K} key
+     * @param {string} key
      */
     remove(key) {
         const value = this.content[key];
@@ -136,10 +160,9 @@ export class Registry extends EventBus {
     /**
      * Open a sub registry (and create it if necessary)
      *
-     * @template [SK=string]
-     * @template [SV=any]
-     * @param {string} subcategory
-     * @returns {Registry<SK, SV>}
+     * @template {keyof GetRegistryCategories<T> & string} K
+     * @param {K} subcategory
+     * @returns {Registry<GetRegistryCategories<T>[K]>}
      */
     category(subcategory) {
         if (!(subcategory in this.subRegistries)) {
@@ -149,4 +172,5 @@ export class Registry extends EventBus {
     }
 }
 
+/** @type {Registry<import("registries").GlobalRegistry>} */
 export const registry = new Registry();

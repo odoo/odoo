@@ -126,7 +126,7 @@ function _protectMethod(component, fn) {
  *
  * @template {keyof import("services").Services} K
  * @param {K} serviceName
- * @returns {import("services").Services[K]}
+ * @returns {import("services").ExtractServiceType<import("services").Services[K]>}
  */
 export function useService(serviceName) {
     const component = useComponent();
