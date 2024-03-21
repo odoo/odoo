@@ -149,6 +149,7 @@ class GoogleSync(models.AbstractModel):
         """
         existing = google_events.exists(self.env)
         new = google_events - existing - google_events.cancelled()
+        write_dates = self._context.get('write_dates', {})
 
         odoo_values = [
             dict(self._odoo_values(e, default_reminders), need_sync=False)
@@ -176,8 +177,10 @@ class GoogleSync(models.AbstractModel):
             # This could be dangerous if google server time and odoo server time are different
             updated = parse(gevent.updated)
             odoo_record = self.browse(gevent.odoo_id(self.env))
+            # Use the record's write_date to apply Google updates only if they are newer than Odoo's write_date.
+            odoo_record_write_date = write_dates.get(odoo_record.id, odoo_record.write_date)
             # Migration from 13.4 does not fill write_date. Therefore, we force the update from Google.
-            if not odoo_record.write_date or updated >= pytz.utc.localize(odoo_record.write_date):
+            if not odoo_record_write_date or updated >= pytz.utc.localize(odoo_record_write_date):
                 vals = dict(self._odoo_values(gevent, default_reminders), need_sync=False)
                 odoo_record.with_context(dont_notify=True)._write_from_google(gevent, vals)
                 synced_records |= odoo_record
