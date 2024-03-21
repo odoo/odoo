@@ -29,7 +29,7 @@
 <template id="session_topbar" name="Tracks Tools">
     <div>
         <div class="o_wesession_topbar_filters o_wevent_index_topbar_filters d-print-none d-flex flex-wrap align-items-center justify-content-end gap-2 w-100 mb-3">
-            <h3 class="my-0 me-auto pe-sm-4">Talks</h3>
+            <h3 class="mt-3 mb-3 me-auto pe-sm-4">Talks</h3>
             <!-- Optional wishlist filter -->
             <div t-if="option_track_wishlist" class="dropdown d-none d-lg-block">
                 <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
@@ -66,14 +66,14 @@
             </div>
         </div>
         <!-- Off canvas filters on mobile-->
-        <div id="o_wevent_talk_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
+        <div id="o_wevent_talk_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible mw-75">
             <div class="offcanvas-header">
                 <h5 class="offcanvas-title">Filters</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
             </div>
             <div class="offcanvas-body p-0">
                 <div class="accordion accordion-flush">
-                    <div class="accordion-item">
+                    <div t-if="option_track_wishlist" class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed"
                                 type="button"
@@ -88,19 +88,21 @@
                             <div class="accordion-body pt-0">
                                 <ul class="list-group list-group-flush">
                                     <!-- Optional wishlist filter -->
-                                    <li t-if="option_track_wishlist" class="list-group-item">                         
+                                    <li class="list-group-item border-0 px-0">
                                         <a t-att-href="'/event/%s/track?%s' % (
                                                 slug(event),
                                                 keep_query('*', search_wishlist='')
                                             )"
-                                            class="d-flex align-items-center justify-content-between">
+                                            class="d-flex align-items-center justify-content-between text-reset">
                                             All Talks
                                         </a>
+                                    </li>
+                                    <li class="list-group-item border-0 px-0">
                                         <a t-att-href="'/event/%s/track?%s' % (
                                                 slug(event),
                                                 keep_query('*', search_wishlist='1')
                                             )"
-                                            t-attf-class="d-flex align-items-center justify-content-between #{'active' if search_wishlist else ''}">
+                                            t-attf-class="d-flex align-items-center justify-content-between text-reset #{'active' if search_wishlist else ''}">
                                             Favorites
                                         </a>
                                     </li>
@@ -111,7 +113,7 @@
                     <t t-foreach="tag_categories" t-as="tag_category">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
-                            <button class="accordion-button border-top collapsed"
+                            <button class="accordion-button collapsed"
                                 type="button"
                                 data-bs-toggle="collapse"
                                 t-att-data-bs-target="'.o_wevent_offcanvas_tag_%s' % tag_category.name"
@@ -122,18 +124,18 @@
                         <div t-attf-class="o_wevent_offcanvas_tag_#{tag_category.name} accordion-collapse collapse">
                             <div class="accordion-body pt-0">
                                 <ul class="list-group list-group-flush">
-                                        <li t-if="tag_category.tag_ids and any(tag.color for tag in tag_category.tag_ids)" class="list-group-item">
-                                            <t t-foreach="tag_category.tag_ids" t-as="tag">
+                                    <t t-if="tag_category.tag_ids and any(tag.color for tag in tag_category.tag_ids)" t-foreach="tag_category.tag_ids" t-as="tag">
+                                        <li class="list-group-item border-0 px-0">
                                                 <a t-att-href="'/event/%s/track?%s' % (
                                                         slug(event),
                                                         keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))
                                                     )"
                                                     t-if="tag.color"
-                                                    t-attf-class="d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
+                                                    t-attf-class="d-flex align-items-center justify-content-between text-reset #{'active' if tag in search_tags else ''}">
                                                     <t t-out="tag.name"/>
                                                 </a>
-                                            </t>
                                         </li>
+                                    </t>
                                 </ul>
                             </div>
                         </div>
@@ -239,7 +241,7 @@
                 <t t-set="tracks_header_name" t-value="tracks_info['name']"/>
                 <t t-set="tracks" t-value="tracks_info['tracks']"/>
                 <!-- DAY HEADER -->
-                <div t-attf-class="o_we_track_day_header d-flex align-items-center py-3">
+                <div class="o_we_track_day_header d-flex align-items-center position-relative py-3">
                     <div class="d-flex flex-grow-1 flex-column" t-if="tracks_date">
                         <span class="m-0 fw-bold" t-out="tracks_date"
                             t-options="{'widget': 'date', 'format': 'EEEE '}"/>
@@ -250,10 +252,10 @@
                         </div>
                     </div>
                     <div class="d-flex flex-grow-1" t-elif="tracks_header_name">
-                        <span class="h1 m-0 fw-bold"
+                        <span class="h4 m-0"
                             t-out="tracks_header_name"/>
                     </div>
-                    <a t-attf-class="my-auto align-self-start text-black {{ 'collapsed' if tracks_info['default_collapsed'] else '' }}"
+                    <a t-attf-class="o_wevent_collapse_link my-auto align-self-start stretched-link text-reset {{ 'collapsed' if tracks_info['default_collapsed'] else '' }}"
                         t-attf-href="#collapse_session_list_{{ tracks_info_index }}"
                         t-attf-aria-controls="collapse_session_list_{{ tracks_info_index }}"
                         t-att-aria-expanded="'false' if tracks_info['default_collapsed'] else 'true'"
@@ -273,16 +275,16 @@
                                 <div t-if="tracks_date and today_tz &lt;= tracks_date"
                                     >
                                     <span t-if="track.is_track_live and not track.is_track_done"
-                                        class="badge text-bg-danger">Live</span>
-                                    <span t-elif="not track.is_track_done and track.is_track_soon">
+                                        class="alert alert-danger px-2 py-1">Live</span>
+                                    <span class="fw-bold" t-elif="not track.is_track_done and track.is_track_soon">
                                         <span t-out="track.track_start_remaining"
                                             t-options="{'widget': 'duration', 'digital': False, 'format': 'narrow',
                                                         'add_direction': True, 'unit': 'second', 'round': 'minute'}"/>
                                     </span>
-                                    <span t-elif="not track.is_track_done and not track.is_track_soon"
+                                    <span class="fw-bold" t-elif="not track.is_track_done and not track.is_track_soon"
                                         t-out="track.date"
                                         t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short', 'tz_name': event.date_tz}"/>
-                                    <span t-else="" class="badge text-bg-info">Finished</span>
+                                    <span t-else="" class="alert alert-dark px-2 py-1 small">Finished</span>
                                 </div>
                                 <!-- reminder -->
                                 <div t-if="not event.is_done and (not track.date or today_tz &lt;= tracks_date) and option_track_wishlist"
@@ -295,14 +297,14 @@
                             </div>
                             <!-- Main column: name, speaker -->
                             <div class="col-12">
-                                <span class="h5 mb0">
+                                <span class="fw-bold mb0">
                                     <a t-if="track.website_published or is_event_user"
-                                        class="me-2"
+                                        class="text-reset me-2"
                                         t-att-href="track.website_url">
                                         <span t-field="track.name"/>
                                     </a>
                                     <t t-else="">
-                                        <span class="me-2" t-field="track.name"/>
+                                        <span class="text-reset me-2" t-field="track.name"/>
                                     </t>
                                     <span t-if="not track.website_published and is_event_user"
                                         class="badge text-bg-danger o_wevent_online_badge_unpublished">
@@ -346,7 +348,7 @@
 <template id="track_cards_section" name="Track Cards">
     <div t-foreach="tracks" t-as="track" class="col-md-6 col-lg-4 col-xl-3 mb-4">
         <t t-if="track.website_published or is_event_user">
-            <a t-att-href="'/event/%s/track/%s' % (slug(track.event_id), slug(track))" class="text-decoration-none">
+            <a t-att-href="'/event/%s/track/%s' % (slug(track.event_id), slug(track))" class="text-decoration-none text-reset">
                 <t t-call="website_event_track.track_card"/>
             </a>
         </t>
@@ -386,7 +388,7 @@
             <div class="col-12">
                 <main class="card-body">
                     <!-- Tags> -->
-                    <div class="mb-2">
+                    <div class="mb-2 d-flex flex-wrap gap-1">
                         <t t-foreach="track.tag_ids" t-as="tag">
                             <t t-if="tag.color" t-call="website_event_track.track_tag_badge_info"/>
                         </t>
@@ -401,15 +403,15 @@
             <footer class="small align-self-end w-100 p-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <!-- Speaker -->
-                    <span class="text-muted text-truncate" t-field="track.partner_name" itemprop="performer"/>
+                    <span class="opacity-75 text-truncate" t-field="track.partner_name" itemprop="performer"/>
                     <!-- Starts -->
-                    <span class="text-muted ms-auto">
+                    <span class="opacity-75 ms-auto">
                         <t t-if="track.track_start_remaining &gt;= 60">In
-                            <span class="text-muted ms-auto" t-field="track.track_start_remaining" itemprop="duration"
+                            <span class="ms-auto" t-field="track.track_start_remaining" itemprop="duration"
                                 t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'second', 'round': 'minute'}"/>
                         </t>
                         <t t-elif="track.track_start_relative &gt;= 60">
-                            <span class="text-muted ms-auto" t-field="track.track_start_relative" itemprop="duration"
+                            <span class="ms-auto" t-field="track.track_start_relative" itemprop="duration"
                                 t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'second', 'round': 'minute'}"/>
                             ago
                         </t>
@@ -425,7 +427,7 @@
 
 <!-- Searched tags -->
 <template id="tracks_search" name="Tracks: search tags">
-    <div t-if="search_wishlist or search_tags" class="d-flex align-items-center my-3">
+    <div t-if="search_wishlist or search_tags" class="d-flex flex-wrap align-items-center my-3 gap-2">
         <span t-if="search_wishlist"
             class="align-items-baseline border d-inline-flex rounded">
             <i class="fa fa-bell mx-2 text-muted"/> Favorite Talks
@@ -458,14 +460,14 @@
             slug(event),
             keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))
         )"
-        t-att-class="'badge %s' % ('text-bg-primary' if tag in search_tags else 'o_tag_color_hovered_0')"
+        t-att-class="'badge rounded-pill text-decoration-none %s' % ('text-bg-primary opacity-75-hover' if tag in search_tags else 'o_tag_color_hovered_0')"
         t-out="tag.name"/>
     <a t-else=""
         t-att-href="'/event/%s/track?%s'% (
             slug(event),
             keep_query('*', tags=str(tag.ids))
         )"
-        t-att-class="'badge o_tag_color_hovered_%s' % (tag.color)"
+        t-att-class="'badge rounded-pill text-decoration-none o_tag_color_hovered_%s' % (tag.color)"
         t-out="tag.name"/>
 </template>
 
@@ -474,7 +476,7 @@
         t-att-class="'badge %s' % ('text-bg-primary' if tag in search_tags else 'o_tag_color_0')"
         t-out="tag.name"/>
     <span t-else=""
-        t-att-class="'badge o_tag_color_%s' % (tag.color)"
+        t-att-class="'badge rounded-pill o_tag_color_%s' % (tag.color)"
         t-out="tag.name"/>
 </template>
 
