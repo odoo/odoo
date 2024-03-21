@@ -203,7 +203,11 @@ class Ewaybill(models.Model):
     def reset_to_pending(self):
         if self.state != 'cancel':
             raise UserError(_("Only Cancelled E-waybill can be resent."))
-        self.state = 'pending'
+        self.write({
+            'state': 'pending',
+            'cancel_reason': False,
+            'cancel_remarks': False,
+            })
 
     def _is_overseas(self):
         self.ensure_one()
