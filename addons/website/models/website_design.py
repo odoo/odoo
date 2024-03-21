@@ -12,6 +12,7 @@ class WebsiteDesign(models.Model):
     # DESIGN VARIABLES
 
     layout = fields.Many2one('website.design.option', string='Layout', default=lambda self: self.env.ref('website.design_option_layout_full'))
+    footer_template = fields.Many2one('website.design.option', string='Footer Template', default=lambda self: self.env.ref('website.design_option_footertemplate_default'))
     footer_effect = fields.Many2one('website.design.option', string='Footer Effect', default=lambda self: self.env.ref('website.design_option_footereffect_none'))
     btn_ripple = fields.Many2one('website.design.option', string='Button Ripple', default=lambda self: self.env.ref('website.design_option_btnripple_false'))
     header_scroll_effect = fields.Many2one('website.design.option', string='Header Scroll Effect', default=lambda self: self.env.ref('website.design_option_headerscrolleffect_standard'))
