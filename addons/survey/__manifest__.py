@@ -108,6 +108,9 @@ sent mails with personal token for the invitation of the survey.
         'web.qunit_suite_tests': [
             'survey/static/tests/components/*.js',
         ],
+        'web.assets_unit_tests': [
+            'survey/static/tests/fields/*.test.js',
+        ],
         'web.assets_frontend': [
             'survey/static/src/js/tours/survey_tour.js',
         ],
