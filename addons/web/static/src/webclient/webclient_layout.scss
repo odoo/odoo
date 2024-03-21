@@ -35,9 +35,6 @@ html {
           flex: 0 0 auto;
         }
         .o_content {
-          flex: 1 1 auto;
-          position: relative; // Allow to redistribute the 100% height to its child
-          overflow: auto;
           height: 100%;
         }
 
@@ -67,6 +64,7 @@ html {
       direction: ltr; //Define direction attribute here so when rtlcss preprocessor run, it converts it to rtl
       flex: 1 1 auto;
       position: relative; // Allow to redistribute the 100% height to its child
+      overflow: auto;
 
       > .o_view_controller {
         position: absolute; // Get the 100% height of its flex parent
