@@ -110,7 +110,6 @@ export class PosStore extends Reactive {
         this.ui = ui;
         this.dialog = dialog;
         this.printer = printer;
-        this.db = new PosDB(); // a local database used to search trough products and categories & store pending orders
         this.data = pos_data;
         this.unwatched = markRaw({});
         this.pushOrderMutex = new Mutex();
@@ -188,6 +187,7 @@ export class PosStore extends Reactive {
 
     async initServerData() {
         await this.processServerData();
+        this.db = new PosDB({ uuid: this.config.uuid }); // a local database used to search trough products and categories & store pending orders
         return await this.afterProcessServerData();
     }
 
