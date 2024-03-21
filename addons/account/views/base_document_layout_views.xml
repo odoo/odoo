@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="web.view_base_document_layout"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='report_footer']" position="after">
+                <xpath expr="//field[@name='paperformat_id']" position="after">
                     <field name="from_invoice" invisible="1"/>
                     <field name="qr_code" string="QR Code" invisible="not from_invoice"/>
                     <field name="account_number" string="IBAN" invisible="not qr_code" required="qr_code" placeholder="BE71096123456769"/>
