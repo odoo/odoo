@@ -1,12 +1,10 @@
-import { after, createJobScopedGetter, globals, registerDebugInfo } from "@odoo/hoot";
+import { after, createJobScopedGetter, expect, globals, registerDebugInfo } from "@odoo/hoot";
 import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
-import { assets } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { isIterable } from "@web/core/utils/arrays";
 import { deepCopy, isObject } from "@web/core/utils/objects";
 import { serverState } from "../mock_server_state.hoot";
 import { fetchModelDefinitions } from "../module_set.hoot";
-import { patchWithCleanup } from "../patch_test_helpers";
 import { DEFAULT_FIELD_VALUES, FIELD_SYMBOL } from "./mock_fields";
 import {
     FIELD_NOT_FOUND,
@@ -27,11 +25,11 @@ const { fetch: realFetch } = globals;
  *
  * @typedef {{
  *  actionID?: string | number;
- *  appID?: number;
+ *  appID?: number | "root";
  *  children?: MenuDefinition[];
  *  id: Number | "root";
  *  name: string;
- *  xmlId: string;
+ *  xmlId?: string;
  * }} MenuDefinition
  *
  * @typedef {MockServerBaseEnvironment & { [modelName: string]: Model }} MockServerEnvironment
@@ -233,8 +231,8 @@ export class MockServer {
     modelNamesToFetch = new Set();
 
     // Routes
-    /** @type {Record<string, [RegExp, string[], RouteCallback]>} */
-    routes = {};
+    /** @type {[RegExp, string[], RouteCallback][]} */
+    routes = [];
     started = false;
     /** @type {[string, OrmCallback][]>} */
     ormListeners = [];
@@ -242,12 +240,6 @@ export class MockServer {
     // WebSocket connections
     /** @type {import("@odoo/hoot-mock").ServerWebSocket[]} */
     websockets = [];
-
-    /**
-     * Current request
-     * @type {Request | null}
-     */
-    currentRequest = null;
 
     /**
      * @param {ServerParams} [params]
@@ -281,28 +273,6 @@ export class MockServer {
         if (params) {
             this.configure(params);
         }
-
-        const { loadCSS, loadJS } = assets;
-        patchWithCleanup(assets, {
-            loadJS: async (url) => {
-                if (url.startsWith("/web/static/lib")) {
-                    // Bypass `onRpc` for libs
-                    return loadJS(url);
-                }
-                const res = await this.handle(url, {});
-                if (!res.ok) {
-                    return loadJS(url);
-                }
-                return res;
-            },
-            loadCSS: async (url) => {
-                const res = await this.handle(url, {});
-                if (!res.ok) {
-                    return loadCSS(url);
-                }
-                return res;
-            },
-        });
 
         const restoreFetch = mockFetch((input, init) => this.handle(input, init));
         const restoreWebSocket = mockWebSocket((ws) => this.websockets.push(ws));
@@ -348,7 +318,7 @@ export class MockServer {
             }
         }
 
-        throw new MockServerError(`unimplemented server route: ${route}`);
+        throw new MockServerError(`unimplemented ORM method: ${modelName}.${method}`);
     }
 
     /**
@@ -412,21 +382,21 @@ export class MockServer {
 
     /**
      * @param {string} route
-     * @returns {[RouteCallback, Record<string, string>]}
+     * @returns {[RouteCallback, Record<string, string>][]}
      */
-    findRoute(route) {
-        // Look in own routes
-        for (const [, [regex, params, options, fn]] of Object.entries(this.routes)) {
+    findRouteListeners(route) {
+        const listeners = [];
+        for (const [regex, params, options, fn] of this.routes) {
             const match = route.match(regex);
             if (match) {
                 const routeParams = {};
                 for (let i = 0; i < params.length; i++) {
                     routeParams[params[i]] = match[i + 1];
                 }
-                return [fn, routeParams, options || {}];
+                listeners.unshift([fn, routeParams, options || {}]);
             }
         }
-        return [null, {}, {}];
+        return listeners;
     }
 
     generateRecords() {
@@ -548,46 +518,37 @@ export class MockServer {
         }
 
         const method = init?.method?.toUpperCase() || (init?.body ? "POST" : "GET");
-        this.currentRequest = new Request(url, { method, ...(init || {}) });
+        const request = new Request(url, { method, ...(init || {}) });
 
-        const route = new URL(this.currentRequest.url).pathname;
-        const [routeFn, routeParams, routeOptions] = this.findRoute(route);
-        const pure = options.pure || routeOptions.pure;
-        if (!routeFn) {
-            const message = `unimplemented server route: ${route}`;
-            const body = pure
-                ? "not found"
-                : JSON.stringify({
-                      error: {
-                          code: 404,
-                          data: { name: "not found" },
-                          message,
-                      },
-                      result: null,
-                  });
-            return new Response(body, { status: 404 });
+        const route = new URL(request.url).pathname;
+        const listeners = this.findRouteListeners(route);
+        if (!listeners.length) {
+            throw new MockServerError(`unimplemented server route: ${route}`);
         }
-
-        const result = await routeFn.call(this, this.currentRequest, routeParams);
-
-        this.currentRequest = null;
-
-        if (pure) {
-            return result;
+        for (const [routeFn, routeParams, routeOptions] of listeners) {
+            const pure = options.pure || routeOptions.pure;
+            const result = await routeFn.call(this, request, routeParams);
+            // mockCallKw will throw if no method is found, if it didn't we hit a method that returns nothing
+            if (result !== undefined || route.startsWith("/web/dataset/call_kw")) {
+                if (pure) {
+                    return result;
+                }
+                if (result instanceof Error) {
+                    return {
+                        result: null,
+                        error: {
+                            code: 418,
+                            data: result,
+                            message: result.message,
+                            type: result.name,
+                        },
+                    };
+                }
+                return { result, error: null };
+            }
         }
-        if (result instanceof Error) {
-            return {
-                result: null,
-                error: {
-                    code: 418,
-                    data: result,
-                    message: result.message,
-                    type: result.name,
-                },
-            };
-        } else {
-            return { result, error: null };
-        }
+        // There was a matching controller that wasn't call_kw but it didn't return anything: treat it as JSON
+        return { error: null };
     }
 
     async loadModels() {
@@ -727,8 +688,8 @@ export class MockServer {
     }
 
     /**
-     * @param {string} [method]
-     * @param {OrmCallback} callback
+     * @param {string | OrmCallback} [method]
+     * @param {OrmCallback} [callback]
      */
     onOrmMethod(method, callback) {
         if (typeof method === "function") {
@@ -754,36 +715,14 @@ export class MockServer {
             })}`,
             "i"
         );
-        const routeItem = [routeRegex, routeParams, options, callback];
-
-        // Route already exists: replace it
-        if (this.routes[route]) {
-            this.routes[route] = routeItem;
-            return;
-        }
-
-        // Sort routes by length descending
-        const entries = Object.entries(this.routes);
-        let inserted = false;
-        for (let i = 0; i < entries.length; i++) {
-            const [entryRoute] = entries[i];
-            if (route.length >= entryRoute.length) {
-                entries.splice(i, 0, [route, routeItem]);
-                inserted = true;
-                break;
-            }
-        }
-        if (!inserted) {
-            entries.push([route, routeItem]);
-        }
-        this.routes = Object.fromEntries(entries);
+        this.routes.push([routeRegex, routeParams, options, callback]);
     }
 
     /**
-     * @template {string} R
+     * @template {string | OrmCallback} R
      * @param {R} route
-     * @param {R extends `/${string}` ? RouteCallback : OrmCallback} callback
-     * @param {RpcOptions} options
+     * @param {R extends `/${string}` ? RouteCallback : OrmCallback} [callback]
+     * @param {RpcOptions} [options]
      */
     onRpc(route, callback, options) {
         if (typeof route === "string" && route.startsWith("/")) {
@@ -1058,6 +997,31 @@ export async function makeMockServer(params) {
  */
 export function onRpc(method, callback, options) {
     return defineParams({ routes: [[method, callback, options]] }, "add").routes;
+}
+
+/**
+ * calls expect.step for all network calls. Because of how the mock server
+ * works, you need to call this *after* all your custom mockRPCs that return
+ * something, otherwise the mock server will not call this function's handler.
+ *
+ * @returns {void}
+ */
+export function stepAllNetworkCalls() {
+    onRpc("/*", async function (request) {
+        const route = new URL(request.url).pathname;
+        if (route === "/web/dataset/call_kw") {
+            const {
+                params: { method },
+            } = await request.json();
+            expect.step(method);
+        } else if (route.startsWith("/web/webclient/load_menus")) {
+            expect.step("/web/webclient/load_menus"); // ignore unique
+        } else if (route.startsWith("/web/webclient/translations")) {
+            expect.step("/web/webclient/translations"); // ignore unique
+        } else {
+            expect.step(route);
+        }
+    });
 }
 
 /**
