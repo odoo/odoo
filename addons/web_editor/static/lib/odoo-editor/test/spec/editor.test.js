@@ -2900,6 +2900,7 @@ X[]
                         contentBefore: '<p><b>[]abc</b></p>',
                         stepFunction: insertParagraphBreak,
                         contentAfterEdit: '<p><b oe-zws-empty-inline="">\u200B</b></p><p><b>[]abc</b></p>',
+                        contentAfter: '<p><br></p><p><b>[]abc</b></p>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><b>[] abc</b></p>',
@@ -2907,6 +2908,7 @@ X[]
                         // The space should have been parsed away.
                         // JW cAfter: '<p><br></p><p><b>[]abc</b></p>',
                         contentAfterEdit: '<p><b oe-zws-empty-inline="">\u200B</b></p><p><b>[] abc</b></p>',
+                        contentAfter: '<p><br></p><p><b>[] abc</b></p>',
                     });
                 });
                 it('should split a paragraph within a format node', async () => {
@@ -2941,12 +2943,14 @@ X[]
                         contentBefore: '<p><b>abc[]</b></p>',
                         stepFunction: insertParagraphBreak,
                         contentAfterEdit: '<p><b>abc</b></p><p><b oe-zws-empty-inline="">[]\u200B</b></p>',
+                        contentAfter: '<p><b>abc</b></p><p>[]<br></p>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><b>abc[] </b></p>',
                         stepFunction: insertParagraphBreak,
                         // The space should have been parsed away.
                         contentAfterEdit: '<p><b>abc</b></p><p><b oe-zws-empty-inline="">[]\u200B</b></p>',
+                        contentAfter: '<p><b>abc</b></p><p>[]<br></p>',
                     });
                 });
                 it('should insert line breaks outside the edges of an anchor in unbreakable', async () => {

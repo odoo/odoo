@@ -2954,6 +2954,7 @@ export class OdooEditor extends EventTarget {
         // we only remove the attribute to ensure we don't break some style.
         // Otherwise we remove the entire inline element.
         for (const emptyElement of element.querySelectorAll('[oe-zws-empty-inline]')) {
+            const blockEl = closestBlock(emptyElement);
             if (isZWS(emptyElement)) {
                 if (emptyElement.classList.length > 0) {
                     emptyElement.removeAttribute('oe-zws-empty-inline');
@@ -2963,6 +2964,9 @@ export class OdooEditor extends EventTarget {
             } else {
                 cleanZWS(emptyElement);
                 emptyElement.removeAttribute('oe-zws-empty-inline');
+            }
+            if (blockEl) {
+                fillEmpty(blockEl);
             }
         }
         sanitize(element);

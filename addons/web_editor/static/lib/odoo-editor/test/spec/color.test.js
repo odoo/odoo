@@ -46,7 +46,7 @@ describe('applyColor', () => {
             contentAfterEdit: '<p>[<font oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>' +
                               '<p><font oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>' +
                               '<p>]<font oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>',
-            contentAfter: '<p>[</p><p></p><p>]</p>',
+            contentAfter: '<p>[<br></p><p><br></p><p>]<br></p>',
         });
     });
     it('should apply a background color on empty selection', async () => {
@@ -56,7 +56,7 @@ describe('applyColor', () => {
             contentAfterEdit: '<p>[<font oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>' +
                               '<p><font oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>' +
                               '<p>]<font oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>',
-            contentAfter: '<p>[</p><p></p><p>]</p>',
+            contentAfter: '<p>[<br></p><p><br></p><p>]<br></p>',
         });
     });
     it('should not merge line on background color change', async () => {
@@ -127,6 +127,10 @@ describe('keep styles', () => {
             contentAfterEdit: '<p><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);">abc</font></p>' +
                                 '<p><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);">x</font></p>' +
                                 '<p><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);" oe-zws-empty-inline="">[]\u200b</font></p>',
+
+            contentAfter: '<p><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);">abc</font></p>' +
+                            '<p><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);">x</font></p>' +
+                            '<p>[]<br></p>',
         });
         await testEditor(BasicEditor, {
             contentBefore: '<h1><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);">abc[]</font></h1>',
@@ -138,6 +142,10 @@ describe('keep styles', () => {
             contentAfterEdit: '<h1><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);">abc</font></h1>' +
                             '<p><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);">x</font></p>' +
                             '<p><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);" oe-zws-empty-inline="">[]\u200b</font></p>',
+
+            contentAfter: '<h1><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);">abc</font></h1>' +
+                            '<p><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);">x</font></p>' +
+                            '<p>[]<br></p>',
         });
     });
     it('should split a paragraph and also keep styles on enter', async () => {
@@ -148,6 +156,8 @@ describe('keep styles', () => {
             },
             contentAfterEdit: '<p><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);">abc</font></p>' +
                             '<p><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);" oe-zws-empty-inline="">[]\u200b</font>cd</p>',
+            contentAfter: '<p><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);">abc</font></p>' +
+                            '<p>[]cd</p>',
         });
         await testEditor(BasicEditor, {
             contentBefore: '<h1><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);">abc[]</font>cd</h1>',
@@ -156,6 +166,8 @@ describe('keep styles', () => {
             },
             contentAfterEdit: '<h1><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);">abc</font></h1>' +
                                 '<h1><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);" oe-zws-empty-inline="">[]\u200b</font>cd</h1>',
+            contentAfter: '<h1><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);">abc</font></h1>' +
+                            '<h1>[]cd</h1>',
         });
         await testEditor(BasicEditor, {
             contentBefore: '<p><font style="color: rgb(0, 255, 0) background-color: rgb(255, 0, 0);">abc[] </font>cd</p>',
