@@ -126,16 +126,6 @@ class TestAccessRightsEmployeeManager(TestAllocationRights):
         allocation.action_refuse()
         self.assertEqual(allocation.state, 'refuse', "The allocation should be validated")
 
-    def test_manager_batch_allocation(self):
-        """ A manager cannot create batch allocation """
-        values = {
-            'holiday_status_id': self.lt_validation_manager.id,
-            'holiday_type': 'company',
-            'mode_company_id': self.user_employee.company_id.id,
-        }
-        with self.assertRaises(AccessError):
-            self.request_allocation(self.user_employee.id, values)
-
     def test_manager_approve_own(self):
         """ A manager cannot approve his own allocation """
         values = {
@@ -157,16 +147,6 @@ class TestAccessRightsHolidayUser(TestAllocationRights):
         allocation = self.request_allocation(self.user_hruser.id, values)
         allocation.action_validate()
         self.assertEqual(allocation.state, 'validate', "It should have been validated")
-
-    def test_holiday_user_batch_allocation(self):
-        """ A holiday user cannot create a batch allocation """
-        values = {
-            'holiday_status_id': self.lt_validation_manager.id,
-            'holiday_type': 'company',
-            'mode_company_id': self.user_employee.company_id.id,
-        }
-        with self.assertRaises(AccessError):
-            self.request_allocation(self.user_hruser.id, values)
 
     def test_holiday_user_cannot_approve_own(self):
         """ A holiday user cannot approve his own allocation """

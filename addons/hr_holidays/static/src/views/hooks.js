@@ -54,7 +54,6 @@ export function useNewAllocationRequest() {
         };
         if (employeeId) {
             context["default_employee_id"] = employeeId;
-            context["default_employee_ids"] = [employeeId];
             context["form_view_ref"] =
                 "hr_holidays.hr_leave_allocation_view_form_manager_dashboard";
         }
