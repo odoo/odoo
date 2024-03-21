@@ -40,7 +40,7 @@ patch(Order.prototype, {
                 price_unit: line.get_unit_price(),
                 quantity: line.get_quantity(),
                 uom: null,
-                taxes: this.pos.mapTaxValues(taxes),
+                tax_values_list: this.pos.mapTaxValues(taxes),
             });
         });
 
