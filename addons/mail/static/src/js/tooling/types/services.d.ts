@@ -11,7 +11,6 @@ declare module "services" {
     import { discussTypingService } from "@mail/discuss/typing/common/typing_service"
     import { mailCoreCommon } from "@mail/core/common/mail_core_common_service";
     import { mailCoreWeb } from "@mail/core/web/mail_core_web_service";
-    import { messagePinService } from "@mail/discuss/message_pin/common/message_pin_service"
     import { messageService } from "@mail/core/common/message_service";
     import { messagingService } from "@mail/core/common/messaging_service";
     import { notificationPermissionService } from "@mail/core/common/notification_permission_service";
@@ -28,7 +27,6 @@ declare module "services" {
         "discuss.core.common": typeof discussCoreCommon;
         "discuss.core.public": typeof discussCorePublic;
         "discuss.core.web": typeof discussCoreWeb;
-        "discuss.message.pin": typeof messagePinService;
         "discuss.rtc": typeof rtcService;
         "discuss.typing": typeof discussTypingService;
         "mail.activity": typeof activityService;
