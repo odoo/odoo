@@ -2560,6 +2560,7 @@ export class OdooEditor extends EventTarget {
                 this._compositionStep();
                 this.historyRollback();
                 ev.preventDefault();
+                getDeepRange(this.editable, { select: true });
                 if (this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
                     this._applyCommand('oShiftEnter');
                 }
@@ -2692,6 +2693,7 @@ export class OdooEditor extends EventTarget {
             ev.stopPropagation();
         } else if (ev.shiftKey && ev.key === "Enter") {
             ev.preventDefault();
+            getDeepRange(this.editable, { select: true });
             this._applyCommand('oShiftEnter');
         } else if (IS_KEYBOARD_EVENT_UNDO(ev)) {
             // Ctrl-Z
