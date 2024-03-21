@@ -197,6 +197,7 @@ export class EpsonPrinter extends BasePrinter {
         }
         return {
             successful: false,
+            errorCode: errorCode,
             message: {
                 title: _t("Printing failed"),
                 body: message,
