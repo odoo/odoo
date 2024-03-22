@@ -14,7 +14,10 @@ class StockForecasted(models.AbstractModel):
         if not self.user_has_groups('stock.group_stock_manager') or not wh_location_ids:
             return res
         domain = self._product_domain(product_template_ids, product_ids)
-        company = self.env['stock.location'].browse(wh_location_ids[0]).company_id
+        stock_location_id=self.env['stock.location'].browse(wh_location_ids[0])
+        if not stock_location_id:
+            raise Exception("Could not find record for model 'stock.location' with id %s" % stock_location_id)
+        company = stock_location_id.company_id
         svl = self.env['stock.valuation.layer'].search(domain + [('company_id', '=', company.id)])
         domain_quants = [
             ('company_id', '=', company.id),
