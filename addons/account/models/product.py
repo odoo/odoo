@@ -149,9 +149,9 @@ class ProductProduct(models.Model):
         return self.product_tmpl_id._get_product_accounts()
 
     def _get_tax_included_unit_price(self, company, currency, document_date, document_type,
-            is_refund_document=False, product_uom=None, product_currency=None,
-            product_price_unit=None, product_taxes=None, fiscal_position=None
-        ):
+        is_refund_document=False, product_uom=None, product_currency=None,
+        product_price_unit=None, product_taxes=None, fiscal_position=None
+    ):
         """ Helper to get the price unit from different models.
             This is needed to compute the same unit price in different models (sale order, account move, etc.) with same parameters.
         """
@@ -187,24 +187,48 @@ class ProductProduct(models.Model):
 
         # Apply fiscal position.
         if product_taxes and fiscal_position:
-            product_taxes_after_fp = fiscal_position.map_tax(product_taxes)
-            original_taxes_data = product_taxes._convert_to_dict_for_taxes_computation()
-            new_taxes_data = product_taxes_after_fp._convert_to_dict_for_taxes_computation()
-            product_values = product_taxes._eval_taxes_computation_turn_to_product_values(
-                original_taxes_data + new_taxes_data,
-                product=product,
-            )
-            product_price_unit = product_taxes._adapt_price_unit_to_another_taxes(
-                price_unit=product_price_unit,
-                product_values=product_values,
-                original_taxes_data=original_taxes_data,
-                new_taxes_data=new_taxes_data,
+            product_price_unit = self._get_tax_included_unit_price_from_price(
+                product_price_unit,
+                currency,
+                product_taxes,
+                fiscal_position=fiscal_position,
+                is_refund_document=is_refund_document,
             )
 
         # Apply currency rate.
         if currency != product_currency:
             product_price_unit = product_currency._convert(product_price_unit, currency, company, document_date, round=False)
 
+        return product_price_unit
+
+    @api.model  # the product is optional for `compute_all`
+    def _get_tax_included_unit_price_from_price(
+        self, product_price_unit, currency, product_taxes,
+        fiscal_position=None,
+        product_taxes_after_fp=None,
+        is_refund_document=False,
+    ):
+        if not product_taxes:
+            return product_price_unit
+
+        if product_taxes_after_fp is None:
+            if not fiscal_position:
+                return product_price_unit
+
+            product_taxes_after_fp = fiscal_position.map_tax(product_taxes)
+
+        original_taxes_data = product_taxes._convert_to_dict_for_taxes_computation()
+        new_taxes_data = product_taxes_after_fp._convert_to_dict_for_taxes_computation()
+        product_values = product_taxes._eval_taxes_computation_turn_to_product_values(
+            original_taxes_data + new_taxes_data,
+            product=product,
+        )
+        product_price_unit = product_taxes._adapt_price_unit_to_another_taxes(
+            price_unit=product_price_unit,
+            product_values=product_values,
+            original_taxes_data=original_taxes_data,
+            new_taxes_data=new_taxes_data,
+        )
         return product_price_unit
 
     @api.depends('lst_price', 'product_tmpl_id', 'taxes_id')
