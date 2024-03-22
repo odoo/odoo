@@ -11,7 +11,7 @@ patch(PosOrder.prototype, {
         const french_countries = ["FR", "MF", "MQ", "NC", "PF", "RE", "GF", "GP", "TF"];
         return french_countries.includes(this.company.country_id?.code);
     },
-    export_for_printing() {
+    export_for_printing(baseUrl, headerData) {
         const result = super.export_for_printing(...arguments);
         result.l10n_fr_hash = this.l10n_fr_hash;
         return result;

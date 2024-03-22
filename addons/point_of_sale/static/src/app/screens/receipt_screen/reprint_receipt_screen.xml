@@ -17,7 +17,7 @@
                     </button>
                     <div class="pos-receipt-container mt-2 bg-200 text-center overflow-y-auto">
                         <div class="d-inline-block m-3 p-3 border rounded bg-view text-start overflow-hidden">
-                            <OrderReceipt data="props.order.export_for_printing()" formatCurrency="env.utils.formatCurrency" />
+                            <OrderReceipt data="pos.orderExportForPrinting(props.order)" formatCurrency="env.utils.formatCurrency" />
                         </div>
                     </div>
                 </div>
