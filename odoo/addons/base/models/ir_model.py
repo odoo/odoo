@@ -778,14 +778,14 @@ class IrModelFields(models.Model):
                     'message': _("The table %r if used for other, possibly incompatible fields.", self.relation_table),
                 }}
 
-    @api.onchange('required', 'ttype', 'on_delete')
-    def _onchange_required(self):
+    @api.constrains('required', 'ttype', 'on_delete')
+    def _check_on_delete_required_m2o(self):
         for rec in self:
             if rec.ttype == 'many2one' and rec.required and rec.on_delete == 'set null':
-                return {'warning': {'title': _("Warning"), 'message': _(
+                raise ValidationError(_(
                     "The m2o field %s is required but declares its ondelete policy "
                     "as being 'set null'. Only 'restrict' and 'cascade' make sense.", rec.name,
-                )}}
+                ))
 
     def _get(self, model_name, name):
         """ Return the (sudoed) `ir.model.fields` record with the given model and name.
