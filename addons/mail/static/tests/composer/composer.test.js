@@ -727,10 +727,7 @@ test("Replying on a channel should focus composer initially", async () => {
 test("remove an uploading attachment", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    onRpc("/mail/attachment/upload", async (route, args) => {
-        // simulates uploading indefinitely
-        await new Deferred();
-    });
+    onRpc("/mail/attachment/upload", () => new Deferred()); // simulates uploading indefinitely
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
@@ -773,7 +770,9 @@ test("Show recipient list when there is more than 5 followers.", async () => {
     await contains("li", { text: "test4@odoo.com" });
     await contains("li", { text: "test5@odoo.com" });
     await contains("li", { text: "test6@odoo.com" });
-    await contains(".o-mail-Chatter", { text: "To: test1, test2, test3, test4, test5, and 1 more" });
+    await contains(".o-mail-Chatter", {
+        text: "To: test1, test2, test3, test4, test5, and 1 more",
+    });
 });
 
 test("Show 'No recipient found.' with 0 followers.", async () => {
@@ -788,9 +787,7 @@ test("Show 'No recipient found.' with 0 followers.", async () => {
 test("Uploading multiple files in the composer create multiple temporary attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    onRpc("/mail/attachment/upload", async (route, args) => {
-        await new Deferred();
-    });
+    onRpc("/mail/attachment/upload", () => new Deferred());
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
