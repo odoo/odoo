@@ -53,8 +53,9 @@ class Crawler(HttpCaseWithUserDemo):
         if seen is None:
             seen = set()
 
-        url_slug = re.sub(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", '/<slug>/', url)
-        url_slug = re.sub(r"([^/=?&]+)=[^/=?&]+", r'\g<1>=param', url_slug)
+        url_slug = re.sub(r"[/](([^/=?&]+-)?[0-9]+)([/]|$|\?|#)", r"/<slug>\3", url)
+        url_slug = re.sub(r"([^/=?&]+)=[^/=?&]+", r'\g<1>=param', url_slug).rstrip('/?#')
+
         if url_slug in seen:
             return seen
         else:
@@ -88,7 +89,7 @@ class Crawler(HttpCaseWithUserDemo):
                     parts.path == '/web' or\
                     parts.path.startswith('/web/') or \
                     parts.path.startswith('/en_US/') or \
-                    (parts.scheme and parts.scheme not in ('http', 'https')):
+                   (parts.scheme and parts.scheme not in ('http', 'https')):
                     continue
 
                 self.crawl(href, seen, msg)
