@@ -41,6 +41,7 @@ export class ResUsers extends webModels.ResUsers {
                 self: {
                     id: this.env.user?.partner_id,
                     isAdmin: true, // mock server simplification
+                    active: true,
                     isInternalUser: !this.env.user?.share,
                     name: this.env.user?.name,
                     notification_preference: this.env.user?.notification_type,
