@@ -33,11 +33,7 @@ class CustomerPortal(sale_portal.CustomerPortal):
                 'product_template_id': line.product_id.product_tmpl_id.id,
                 'product_id': line.product_id.id,
                 'combination': combination.ids,
-                'no_variant_attribute_values': [
-                    { # Same input format as provided by product configurator
-                        'value': ptav.id,
-                    } for ptav in line.product_no_variant_attribute_value_ids
-                ],
+                'no_variant_attribute_value_ids': line.product_no_variant_attribute_value_ids.ids,
                 'product_custom_attribute_values': [
                     { # Same input format as provided by product configurator
                         'custom_product_template_attribute_value_id': pcav.custom_product_template_attribute_value_id.id,

@@ -111,7 +111,10 @@ class WebsiteSaleProductConfiguratorController(WebsiteSale):
                 product_id=main_product['product_id'],
                 add_qty=main_product['quantity'],
                 product_custom_attribute_values=main_product['product_custom_attribute_values'],
-                no_variant_attribute_values=main_product['no_variant_attribute_values'],
+                no_variant_attribute_value_ids=[
+                    int(ptav_data['value'])
+                    for ptav_data in main_product['no_variant_attribute_values']
+                ],
                 **kwargs
             )
 
@@ -127,7 +130,10 @@ class WebsiteSaleProductConfiguratorController(WebsiteSale):
                         set_qty=option['quantity'],
                         linked_line_id=option_parent[parent_unique_id],
                         product_custom_attribute_values=option['product_custom_attribute_values'],
-                        no_variant_attribute_values=option['no_variant_attribute_values'],
+                        no_variant_attribute_value_ids=[
+                            int(ptav_data['value'])
+                            for ptav_data in option['no_variant_attribute_values']
+                        ],
                         **kwargs
                     )
                     option_parent[option['unique_id']] = option_values['line_id']

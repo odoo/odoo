@@ -775,7 +775,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True)
     def cart_update(
         self, product_id, add_qty=1, set_qty=0,
-        product_custom_attribute_values=None, no_variant_attribute_values=None,
+        product_custom_attribute_values=None, no_variant_attribute_value_ids=None,
         express=False, **kwargs
     ):
         """This route is called when adding a product to cart (no options)."""
@@ -787,15 +787,20 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if product_custom_attribute_values:
             product_custom_attribute_values = json_scriptsafe.loads(product_custom_attribute_values)
 
-        if no_variant_attribute_values:
-            no_variant_attribute_values = json_scriptsafe.loads(no_variant_attribute_values)
+        # old API, will be dropped soon with product configurator refactorings
+        no_variant_attribute_values = kwargs.pop('no_variant_attribute_values', None)
+        if no_variant_attribute_values and no_variant_attribute_value_ids is None:
+            no_variants_attribute_values_data = json_scriptsafe.loads(no_variant_attribute_values)
+            no_variant_attribute_value_ids = [
+                int(ptav_data['value']) for ptav_data in no_variants_attribute_values_data
+            ]
 
         sale_order._cart_update(
             product_id=int(product_id),
             add_qty=add_qty,
             set_qty=set_qty,
             product_custom_attribute_values=product_custom_attribute_values,
-            no_variant_attribute_values=no_variant_attribute_values,
+            no_variant_attribute_value_ids=no_variant_attribute_value_ids,
             **kwargs
         )
 
@@ -809,7 +814,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
     def cart_update_json(
         self, product_id, line_id=None, add_qty=None, set_qty=None, display=True,
-        product_custom_attribute_values=None, no_variant_attribute_values=None, **kw
+        product_custom_attribute_values=None, no_variant_attribute_value_ids=None, **kwargs
     ):
         """
         This route is called :
@@ -820,7 +825,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         order = request.website.sale_get_order(force_create=True)
         if order.state != 'draft':
             request.website.sale_reset()
-            if kw.get('force_create'):
+            if kwargs.get('force_create'):
                 order = request.website.sale_get_order(force_create=True)
             else:
                 return {}
@@ -828,8 +833,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if product_custom_attribute_values:
             product_custom_attribute_values = json_scriptsafe.loads(product_custom_attribute_values)
 
-        if no_variant_attribute_values:
-            no_variant_attribute_values = json_scriptsafe.loads(no_variant_attribute_values)
+        # old API, will be dropped soon with product configurator refactorings
+        no_variant_attribute_values = kwargs.pop('no_variant_attribute_values', None)
+        if no_variant_attribute_values and no_variant_attribute_value_ids is None:
+            no_variants_attribute_values_data = json_scriptsafe.loads(no_variant_attribute_values)
+            no_variant_attribute_value_ids = [
+                int(ptav_data['value']) for ptav_data in no_variants_attribute_values_data
+            ]
 
         values = order._cart_update(
             product_id=product_id,
@@ -837,8 +847,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             add_qty=add_qty,
             set_qty=set_qty,
             product_custom_attribute_values=product_custom_attribute_values,
-            no_variant_attribute_values=no_variant_attribute_values,
-            **kw
+            no_variant_attribute_value_ids=no_variant_attribute_value_ids,
+            **kwargs
         )
 
         values['notification_info'] = self._get_cart_notification_information(order, [values['line_id']])

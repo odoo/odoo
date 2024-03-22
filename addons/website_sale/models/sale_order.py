@@ -1,12 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
+
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Command
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import float_is_zero
@@ -374,46 +376,57 @@ class SaleOrder(models.Model):
         }
 
     def _cart_find_product_line(
-            self,
-            product_id,
-            line_id=None,
-            linked_line_id=False,
-            optional_product_ids=None,
-            **kwargs
-        ):
+        self,
+        product_id,
+        line_id=None,
+        linked_line_id=False,
+        no_variant_attribute_value_ids=None,
+        **kwargs
+    ):
         """Find the cart line matching the given parameters.
 
-        If a product_id is given, the line will match the product only if the
-        line also has the same special attributes: `no_variant` attributes and
-        `is_custom` values.
+        Custom attributes won't be matched (but no_variant & dynamic ones will be)
+
+        :param int product_id: the product being added/removed, as a `product.product` id
+        :param int line_id: optional, the line the customer wants to edit (/shop/cart page), as a
+            `sale.order.line` id
+        :param int linked_line_id: optional, the parent line (for optional products), as a
+            `sale.order.line` id
+        :param list optional_product_ids: optional, the optional products of the line, as a list
+            of `product.product` ids
+        :param list no_variant_attribute_value_ids: list of `product.template.attribute.value` ids
+            whose attribute is configured as `no_variant`
+        :param dict kwargs: unused parameters, maybe used in overrides or other cart update methods
         """
         self.ensure_one()
-        SaleOrderLine = self.env['sale.order.line']
 
         if not self.order_line:
-            return SaleOrderLine
+            return self.env['sale.order.line']
+
+        if line_id:
+            # If we update a specific line, there is no need to filter anything else
+            return self.order_line.filtered(
+                lambda sol: sol.product_id.id == product_id and sol.id == line_id
+            )
+
+        domain = [
+            ('product_id', '=', product_id),
+            ('product_custom_attribute_value_ids', '=', False),
+            ('linked_line_id', '=', linked_line_id),
+        ]
+
+        filtered_sol = self.order_line.filtered_domain(domain)
+        if not filtered_sol:
+            return self.env['sale.order.line']
 
         product = self.env['product.product'].browse(product_id)
-        if not line_id and (
-            product.product_tmpl_id.has_dynamic_attributes()
-            or product.product_tmpl_id._has_no_variant_attributes()
-        ):
-            return SaleOrderLine
+        if product.product_tmpl_id._has_no_variant_attributes():
+            filtered_sol = filtered_sol.filtered(
+                lambda sol:
+                    sol.product_no_variant_attribute_value_ids.ids == no_variant_attribute_value_ids
+            )
 
-        domain = [('order_id', '=', self.id), ('product_id', '=', product_id)]
-        if line_id:
-            domain += [('id', '=', line_id)]
-        else:
-            domain += [
-                ('product_custom_attribute_value_ids', '=', False),
-                ('linked_line_id', '=', linked_line_id)
-            ]
-            if optional_product_ids:
-                domain += [('option_line_ids.product_id', 'in', optional_product_ids)]
-            else:
-                domain += [('option_line_ids', '=', False)]
-
-        return SaleOrderLine.search(domain)
+        return filtered_sol
 
     # hook to be overridden
     def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
@@ -421,18 +434,16 @@ class SaleOrder(models.Model):
 
     def _prepare_order_line_values(
         self, product_id, quantity, linked_line_id=False,
-        no_variant_attribute_values=None, product_custom_attribute_values=None,
+        no_variant_attribute_value_ids=None, product_custom_attribute_values=None,
         **kwargs
     ):
         self.ensure_one()
         product = self.env['product.product'].browse(product_id)
 
-        no_variant_attribute_values = no_variant_attribute_values or []
-        received_no_variant_values = product.env['product.template.attribute.value'].browse([
-            int(ptav['value'])
-            for ptav in no_variant_attribute_values
-        ])
-        received_combination = product.product_template_attribute_value_ids | received_no_variant_values
+        no_variant_attribute_values = product.env['product.template.attribute.value'].browse(
+            no_variant_attribute_value_ids
+        )
+        received_combination = product.product_template_attribute_value_ids | no_variant_attribute_values
         product_template = product.product_tmpl_id
 
         # handle all cases where incorrect or incomplete data are received
@@ -452,17 +463,12 @@ class SaleOrder(models.Model):
         }
 
         # add no_variant attributes that were not received
-        for ptav in combination.filtered(
-            lambda ptav: ptav.attribute_id.create_variant == 'no_variant' and ptav not in received_no_variant_values
-        ):
-            no_variant_attribute_values.append({
-                'value': ptav.id,
-            })
+        no_variant_attribute_values |= combination.filtered(
+            lambda ptav: ptav.attribute_id.create_variant == 'no_variant'
+        )
 
         if no_variant_attribute_values:
-            values['product_no_variant_attribute_value_ids'] = [
-                fields.Command.set([int(attribute['value']) for attribute in no_variant_attribute_values])
-            ]
+            values['product_no_variant_attribute_value_ids'] = [Command.set(no_variant_attribute_values.ids)]
 
         # add is_custom attribute values that were not received
         custom_values = product_custom_attribute_values or []
