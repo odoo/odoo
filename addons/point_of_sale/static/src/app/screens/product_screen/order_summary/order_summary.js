@@ -47,7 +47,7 @@ export class OrderSummary extends Component {
 
     selectLine(orderline) {
         this.numberBuffer.reset();
-        this.currentOrder.select_orderline(orderline);
+        this.pos.selectOrderLine(this.currentOrder, orderline);
     }
 
     async updateSelectedOrderline({ buffer, key }) {

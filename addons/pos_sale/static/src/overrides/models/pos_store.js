@@ -8,4 +8,14 @@ patch(PosStore.prototype, {
         this.orderManagement = { searchString: "", selectedOrder: null };
         return await super.setup(...args);
     },
+    selectOrderLine(order, line) {
+        super.selectOrderLine(...arguments);
+        if (
+            line &&
+            this.config.down_payment_product_id &&
+            line.product_id.id === this.config.down_payment_product_id.id
+        ) {
+            this.numpadMode = "price";
+        }
+    },
 });
