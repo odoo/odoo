@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 import { formatFloat } from "@web/core/utils/numbers";
 
 patch(PosOrder.prototype, {
-    export_for_printing() {
+    export_for_printing(baseUrl, headerData) {
         const result = super.export_for_printing(...arguments);
         if (this.get_partner()) {
             result.partner = this.get_partner();

@@ -21,7 +21,7 @@ patch(PosOrder.prototype, {
             return this.table_id;
         }
     },
-    export_for_printing() {
+    export_for_printing(baseUrl, headerData) {
         return {
             ...super.export_for_printing(...arguments),
             set_tip_after_payment: this.config.set_tip_after_payment,

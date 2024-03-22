@@ -7,7 +7,7 @@ patch(PosOrder.prototype, {
     is_colombian_country() {
         return this.company.country_id?.code === "CO";
     },
-    export_for_printing() {
+    export_for_printing(baseUrl, headerData) {
         const result = super.export_for_printing(...arguments);
         result.l10n_co_dian = this.name;
         return result;

@@ -90,7 +90,7 @@ export class PosOrder extends Base {
         return [_t("the receipt")].concat(this.is_to_invoice() ? [_t("the invoice")] : []);
     }
 
-    export_for_printing() {
+    export_for_printing(baseUrl, headerData) {
         const paymentlines = this.payment_ids
             .filter((p) => !p.is_change)
             .map((p) => p.export_for_printing());
@@ -112,17 +112,15 @@ export class PosOrder extends Base {
             date: this.receiptDate,
             pos_qr_code:
                 this.company.point_of_sale_use_ticket_qr_code &&
-                qrCodeSrc(
-                    `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}`
-                ),
+                qrCodeSrc(`${baseUrl}/pos/ticket/validate?access_token=${this.access_token}`),
             ticket_code: this.company.point_of_sale_ticket_unique_code && this.ticketCode,
-            base_url: this.pos.base_url,
+            base_url: baseUrl,
             footer: this.config.receipt_footer,
             // FIXME: isn't there a better way to handle this date?
             shippingDate:
                 this.shippingDate && formatDate(DateTime.fromJSDate(new Date(this.shippingDate))),
             headerData: {
-                ...this.pos.getReceiptHeaderData(this),
+                ...headerData,
                 trackingNumber: this.trackingNumber,
             },
         };
