@@ -312,19 +312,22 @@ class TestPrivateReadGroup(common.TransactionCase):
             )
 
     def test_malformed_params(self):
-        Model = self.env['test_read_group.fill_temporal']
+        Model = self.env['test_read_group.order.line']
         # Test malformed groupby clause
         with self.assertRaises(ValueError):
-            Model._read_group([], ['date:bad_granularity'])
+            Model._read_group([], ['create_date:bad_granularity'])
 
         with self.assertRaises(ValueError):
-            Model._read_group([], ['Other stuff date:week'])
+            Model._read_group([], ['Other stuff create_date:week'])
 
         with self.assertRaises(ValueError):
-            Model._read_group([], ['date'])  # No granularity
+            Model._read_group([], ['create_date'])  # No granularity
 
         with self.assertRaises(ValueError):
-            Model._read_group([], ['"date:week'])
+            Model._read_group([], ['"create_date:week'])
+
+        with self.assertRaises(ValueError):
+            Model._read_group([], ['order_id.id'])
 
         # Test malformed aggregate clause
         with self.assertRaises(ValueError):
@@ -347,6 +350,9 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         with self.assertRaises(ValueError):
             Model._read_group([], aggregates=['label:sum(value)'])
+
+        with self.assertWarns(Warning):
+            Model._read_group([], aggregates=['order_id.create_date:min'])
 
         # Test malformed having clause
         with self.assertRaises(ValueError):
