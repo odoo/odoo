@@ -34,6 +34,7 @@ patch(ControlButtons.prototype, {
                     this.pos.showScreen("FloorScreen");
                 }
                 this.currentOrder.setCustomerCount(guestCount);
+                this.pos.addPendingOrder([this.currentOrder.id]);
             },
         });
     },
