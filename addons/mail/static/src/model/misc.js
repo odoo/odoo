@@ -1,6 +1,9 @@
 import { markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
+/** @typedef {import("./record").Record} Record */
+/** @typedef {import("./record_list").RecordList} RecordList */
+
 export const modelRegistry = registry.category("discuss.model");
 
 /**
@@ -29,9 +32,6 @@ export function OR(...args) {
     return [OR_SYM, ...args];
 }
 
-export function isAttr(definition) {
-    return Boolean(definition?.[ATTR_SYM]);
-}
 export function isCommand(data) {
     return ["ADD", "DELETE", "ADD.noinv", "DELETE.noinv"].includes(data?.[0]?.[0]);
 }
@@ -49,11 +49,13 @@ export function isOne(Model, fieldName) {
 export function isMany(Model, fieldName) {
     return Model._.fieldsMany.get(fieldName);
 }
+/** @param {Record} record */
 export function isRecord(record) {
-    return Boolean(record?.[IS_RECORD_SYM]);
+    return Boolean(record?._?.[IS_RECORD_SYM]);
 }
+/** @param {RecordList} recordList */
 export function isRecordList(recordList) {
-    return Boolean(recordList?.[IS_RECORD_LIST_SYM]);
+    return Boolean(recordList?._?.[IS_RECORD_LIST_SYM]);
 }
 /**
  * @param {typeof import("./record").Record} Model
@@ -61,10 +63,6 @@ export function isRecordList(recordList) {
  */
 export function isRelation(Model, fieldName) {
     return isMany(Model, fieldName) || isOne(Model, fieldName);
-}
-/** @param {FIELD_SYM} SYM */
-export function isField(SYM) {
-    return [MANY_SYM, ONE_SYM, ATTR_SYM].includes(SYM);
 }
 export function isFieldDefinition(val) {
     return val?.[FIELD_DEFINITION_SYM];

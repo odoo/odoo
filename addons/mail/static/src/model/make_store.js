@@ -1,13 +1,6 @@
 import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { Store } from "./store";
-import {
-    IS_RECORD_SYM,
-    STORE_SYM,
-    isFieldDefinition,
-    isMany,
-    isRelation,
-    modelRegistry,
-} from "./misc";
+import { STORE_SYM, isFieldDefinition, isMany, isRelation, modelRegistry } from "./misc";
 import { Record } from "./record";
 import { StoreInternal } from "./store_internal";
 import { ModelInternal } from "./model_internal";
@@ -45,7 +38,6 @@ export function makeStore(env, { localRegistry } = {}) {
         // Produce another class with changed prototype, so that there are automatic get/set on relational fields
         const Class = {
             [OgClass.name]: class extends OgClass {
-                [IS_RECORD_SYM] = true;
                 constructor() {
                     super();
                     const record = this;
@@ -62,6 +54,9 @@ export function makeStore(env, { localRegistry } = {}) {
                          */
                         get(record, name, recordFullProxy) {
                             recordFullProxy = record._.downgradeProxy(record, recordFullProxy);
+                            if (record._.gettingField || !Model._.fields.get(name)) {
+                                return Reflect.get(...arguments);
+                            }
                             if (Model._.fieldsCompute.get(name) && !Model._.fieldsEager.get(name)) {
                                 record._.fieldsComputeInNeed.set(name, true);
                                 if (record._.fieldsComputeOnNeed.get(name)) {
@@ -74,9 +69,11 @@ export function makeStore(env, { localRegistry } = {}) {
                                     record._.sort(record, name);
                                 }
                             }
+                            record._.gettingField = true;
+                            const val = recordFullProxy[name];
+                            record._.gettingField = false;
                             if (isRelation(Model, name)) {
-                                const recordListFullProxy =
-                                    recordFullProxy._fieldsValue.get(name)._proxy;
+                                const recordListFullProxy = val._proxy;
                                 if (isMany(Model, name)) {
                                     return recordListFullProxy;
                                 }
@@ -91,7 +88,7 @@ export function makeStore(env, { localRegistry } = {}) {
                         deleteProperty(record, name) {
                             return store.MAKE_UPDATE(function recordDeleteProperty() {
                                 if (isRelation(Model, name)) {
-                                    const recordList = record._fieldsValue.get(name);
+                                    const recordList = record[name];
                                     recordList.clear();
                                     return true;
                                 }
