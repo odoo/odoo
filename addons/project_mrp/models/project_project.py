@@ -8,9 +8,7 @@ from odoo.osv import expression
 class Project(models.Model):
     _inherit = "project.project"
 
-    production_count = fields.Integer(related="analytic_account_id.production_count", groups='mrp.group_mrp_user', export_string_translation=False)
-    workorder_count = fields.Integer(related="analytic_account_id.workorder_count", groups='mrp.group_mrp_user', export_string_translation=False)
-    bom_count = fields.Integer(related="analytic_account_id.bom_count", groups='mrp.group_mrp_user', export_string_translation=False)
+    production_count = fields.Integer(related="analytic_account_id.production_count", compute_sudo=False, groups='mrp.group_mrp_user', export_string_translation=False)
 
     def action_view_mrp_production(self):
         self.ensure_one()
@@ -26,20 +24,6 @@ class Project(models.Model):
                     for view_id, view_type in action['views']
                     if view_type == 'form'
                 ] or [False, 'form']
-        return action
-
-    def action_view_mrp_bom(self):
-        self.ensure_one()
-        action = self.analytic_account_id.action_view_mrp_bom()
-        if self.bom_count > 1:
-            action['view_mode'] = 'tree,form,kanban'
-        return action
-
-    def action_view_workorder(self):
-        self.ensure_one()
-        action = self.analytic_account_id.action_view_workorder()
-        if self.workorder_count > 1:
-            action['view_mode'] = 'tree,form,kanban,calendar,pivot,graph'
         return action
 
     # ----------------------------
@@ -92,23 +76,13 @@ class Project(models.Model):
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
         if self.env.user.has_group('mrp.group_mrp_user'):
-            self_sudo = self.sudo()
-            buttons.extend([{
-                'icon': 'flask',
-                'text': _lt('Bills of Materials'),
-                'number': self_sudo.bom_count,
-                'action_type': 'object',
-                'action': 'action_view_mrp_bom',
-                'show': self_sudo.bom_count > 0,
-                'sequence': 35,
-            },
-            {
+            buttons.append({
                 'icon': 'wrench',
                 'text': _lt('Manufacturing Orders'),
-                'number': self_sudo.production_count,
+                'number': self.production_count,
                 'action_type': 'object',
                 'action': 'action_view_mrp_production',
-                'show': self_sudo.production_count > 0,
+                'show': self.production_count > 0,
                 'sequence': 46,
-            }])
+            })
         return buttons
