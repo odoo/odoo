@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, mount, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     clear,
     click,

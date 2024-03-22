@@ -10,10 +10,6 @@ import { HootDomError, getTag, isFirefox, isIterable, parseRegExp } from "../hoo
  *  height?: number;
  * }} Dimensions
  *
- * @typedef {{
- *  size?: Dimensions;
- * }} FixtureOptions
- *
  * @typedef {(node: Node, selector: string) => Node[]} NodeGetter
  *
  * @typedef {string | string[] | number | boolean | File[]} NodeValue
