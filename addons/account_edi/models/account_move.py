@@ -169,22 +169,6 @@ class AccountMove(models.Model):
                                         grouping_key to aggregate tax values together. The returned dictionary is added
                                         to each tax details in order to retrieve the full grouping_key later.
 
-        :param compute_mode:            Optional parameter to specify the method used to allocate the tax line amounts
-                                        among the invoice lines:
-                                        'tax_details' (the default) uses the AccountMove._get_query_tax_details method.
-                                        'compute_all' uses the AccountTax._compute_all method.
-
-                                        The 'tax_details' method takes the tax line balance and allocates it among the
-                                        invoice lines to which that tax applies, proportionately to the invoice lines'
-                                        base amounts. This always ensures that the sum of the tax amounts equals the
-                                        tax line's balance, which, depending on the constraints of a particular
-                                        localization, can be more appropriate when 'Round Globally' is set.
-
-                                        The 'compute_all' method returns, for each invoice line, the exact tax amounts
-                                        corresponding to the taxes applied to the invoice line. Depending on the
-                                        constraints of the particular localization, this can be more appropriate when
-                                        'Round per Line' is set.
-
         :return:                        The full tax details for the current invoice and for each invoice line
                                         separately. The returned dictionary is the following:
 
