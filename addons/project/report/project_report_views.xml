@@ -74,6 +74,7 @@
        <record id="action_project_task_user_tree" model="ir.actions.act_window">
             <field name="name">Tasks Analysis</field>
             <field name="res_model">report.project.task.user</field>
+            <field name="path">tasks-analysis</field>
             <field name="view_mode">graph,pivot</field>
             <field name="search_view_id" ref="view_task_project_user_search"/>
             <field name="context">{'group_by':[], 'graph_measure': '__count__'}</field>

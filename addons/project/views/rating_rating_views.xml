@@ -252,6 +252,7 @@
     <record id="rating_rating_action_project_report" model="ir.actions.act_window">
         <field name="name">Customer Ratings</field>
         <field name="res_model">rating.rating</field>
+        <field name="path">task-ratings</field>
         <field name="view_mode">kanban,list,pivot,graph,form</field>
         <field name="domain">[('parent_res_model','=','project.project'), ('consumed', '=', True)]</field>
         <field name="search_view_id" ref="rating_rating_view_search_project"/>
