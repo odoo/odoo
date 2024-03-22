@@ -156,7 +156,7 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
 
 test("handle CONNECTION_LOST_ERROR", async () => {
     mockService("notification", () => ({
-        add(message, options) {
+        add(message) {
             expect.step(`create (${message})`);
             return () => {
                 expect.step(`close`);
@@ -164,11 +164,11 @@ test("handle CONNECTION_LOST_ERROR", async () => {
         },
     }));
     const values = [false, true]; // simulate the 'back online status' after 2 'version_info' calls
-    onRpc("/web/webclient/version_info", async (route, args) => {
+    onRpc("/web/webclient/version_info", async () => {
         expect.step("version_info");
         const online = values.shift();
         if (online) {
-            return Promise.resolve(true);
+            return true;
         } else {
             return Promise.reject();
         }

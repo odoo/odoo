@@ -277,9 +277,10 @@ test("domain field: handle false domain as []", async function () {
         },
     ];
 
-    onRpc("search_count", (_, { args }) => {
+    onRpc("search_count", ({ args }) => {
         expect(args[0]).toEqual([], { message: "should send a valid domain" });
     });
+
     await mountView({
         type: "form",
         resModel: "partner",
@@ -380,7 +381,7 @@ test("domain field: manually edit domain with textarea", async function () {
         search: `<search />`,
     };
 
-    onRpc("search_count", (_, { args }) => {
+    onRpc("search_count", ({ args }) => {
         expect.step(JSON.stringify(args[0]));
     });
     onRpc("/web/domain/validate", () => {
@@ -434,7 +435,7 @@ test("domain field: manually set an invalid domain with textarea", async functio
         return JSON.stringify(params.domain) === '[["abc","=",1]]';
     });
 
-    onRpc((_, { method, args }) => {
+    onRpc(({ args, method }) => {
         if (method === "search_count") {
             expect.step(JSON.stringify(args[0]));
         }
@@ -442,6 +443,7 @@ test("domain field: manually set an invalid domain with textarea", async functio
             throw new Error("should not save");
         }
     });
+
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
         name: "test",
@@ -496,7 +498,7 @@ test("domain field: reload count by clicking on the refresh button", async funct
     };
 
     onRpc("/web/domain/validate", () => true);
-    onRpc("search_count", (_, { args }) => {
+    onRpc("search_count", ({ args }) => {
         expect.step(JSON.stringify(args[0]));
     });
     await mountWithCleanup(WebClient);
@@ -532,9 +534,8 @@ test("domain field: does not wait for the count to render", async function () {
     ];
 
     const def = new Deferred();
-    onRpc("search_count", async () => {
-        await def;
-    });
+    onRpc("search_count", () => def);
+
     await mountView({
         type: "form",
         resModel: "partner",
@@ -580,7 +581,7 @@ test("domain field: edit domain with dynamic content", async function () {
         search: `<search />`,
     };
 
-    onRpc("web_save", (_, { args }) => {
+    onRpc("web_save", ({ args }) => {
         expect(args[1].foo).toBe(rawDomain);
     });
     onRpc("/web/domain/validate", () => true);
@@ -624,9 +625,8 @@ test("domain field: edit through selector (dynamic content)", async function () 
         search: `<search />`,
     };
 
-    onRpc((route, { method }) => {
-        expect.step(method || route);
-    });
+    onRpc(({ method }) => expect.step(method));
+
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
         name: "test",
@@ -668,7 +668,7 @@ test("domain field: edit through selector (dynamic content)", async function () 
 test("domain field without model", async function () {
     Partner._fields.model_name = fields.Char({ string: "Model name" });
 
-    onRpc("search_count", (_, { model }) => {
+    onRpc("search_count", ({ model }) => {
         expect.step(model);
     });
     await mountView({

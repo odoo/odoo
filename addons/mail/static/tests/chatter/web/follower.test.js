@@ -186,11 +186,7 @@ test("removing a follower should reload form view", async function () {
         res_id: threadId,
         res_model: "res.partner",
     });
-    onRpc((route, args) => {
-        if (route === "/web/dataset/call_kw/res.partner/web_read") {
-            step(`read ${args.args[0][0]}`);
-        }
-    });
+    onRpc("res.partner", "web_read", ({ args }) => step(`read ${args[0][0]}`));
     await start();
     await openFormView("res.partner", threadId);
     await contains(".o-mail-Followers-button");

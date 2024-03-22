@@ -135,11 +135,9 @@ test("click on remove follower", async () => {
             return res;
         },
     });
-    onRpc((route, args) => {
-        if (route === "/web/dataset/call_kw/res.partner/message_unsubscribe") {
-            step("message_unsubscribe");
-            expect(args.args).toEqual([[partnerId_1], [partnerId_2]]);
-        }
+    onRpc("res.partner", "message_unsubscribe", ({ args, method }) => {
+        step(method);
+        expect(args).toEqual([[partnerId_1], [partnerId_2]]);
     });
     await start();
     await openFormView("res.partner", partnerId_1);

@@ -45,16 +45,22 @@ const { fetch: realFetch } = globals;
  *
  * @typedef {import("./mock_model").ModelConstructor} ModelConstructor
  *
- * @typedef {(route: string, params: OrmParams) => any} OrmCallback
+ * @typedef {(params: OrmParams) => any} OrmCallback
  *
  * @typedef {{
  *  args: any[];
  *  kwargs: KwArgs;
  *  method: string;
  *  model: string;
+ *  parent: () => any;
+ *  request: Request;
+ *  route: string;
  * }} OrmParams
  *
- * @typedef {{ pure?: boolean }} RpcOptions
+ * @typedef {{
+ *  alwaysReturns?: boolean;
+ *  pure?: boolean;
+ * }} RouteOptions
  *
  * @typedef {{
  *  actions?: Partial<typeof MockServer["prototype"]["actions"]>;
@@ -117,6 +123,26 @@ const getCurrentParams = createJobScopedGetter(
         routes: [...(previous?.routes || [])], // functions, no need to deep copy
     })
 );
+
+/**
+ * @param {unknown} value
+ */
+const isNil = (value) => value === null || value === undefined;
+
+/**
+ * @param {string} target
+ * @param {string | RegExp} matcher
+ */
+const match = (target, matcher) => {
+    if (matcher === "*") {
+        return true;
+    }
+    if (matcher instanceof RegExp) {
+        return matcher.test(target);
+    } else {
+        return target === matcher;
+    }
+};
 
 /**
  * @param {string} modelName
@@ -191,6 +217,8 @@ const DEFAULT_MENU = {
     children: [],
     name: "App0",
 };
+const R_DATASET_ROUTE = /\/web\/dataset\/call_(button|kw)\/[\w.-]+\/(?<step>\w+)/;
+const R_WEBCLIENT_ROUTE = /(?<step>\/web\/webclient\/\w+)/;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -238,10 +266,10 @@ export class MockServer {
     modelNamesToFetch = new Set();
 
     // Routes
-    /** @type {[RegExp, string[], RouteCallback][]} */
+    /** @type {[RegExp, string[], RouteCallback, RouteOptions][]} */
     routes = [];
     started = false;
-    /** @type {[string, OrmCallback][]>} */
+    /** @type {[string, string, OrmCallback][]>} */
     ormListeners = [];
 
     // WebSocket connections
@@ -263,16 +291,17 @@ export class MockServer {
         // Set default routes
         this.onRpc("/web/action/load", this.mockActionLoad);
         this.onRpc("/web/bundle", this.mockBundle, { pure: true });
-        this.onRpc("/web/dataset/call_kw", this.mockCallKw);
-        this.onRpc("/web/dataset/call_button", this.mockCallKw);
+        this.onRpc("/web/dataset/call_kw", this.mockCallKw, { alwaysReturns: true });
+        this.onRpc("/web/dataset/call_button", this.mockCallKw, { alwaysReturns: true });
         this.onRpc("/web/dataset/resequence", this.mockResequence);
         this.onRpc("/web/image/:model/:id/:field", this.mockImage, { pure: true });
         this.onRpc("/web/webclient/load_menus", this.mockLoadMenus, { pure: true });
         this.onRpc("/web/webclient/translations", this.mockLoadTranslations, { pure: true });
-        // Register "mock_rpc" registry items
-        for (const [rpcRoute, rpcFn] of registry.category("mock_rpc").getEntries()) {
-            if (typeof rpcFn === "function") {
-                this.onRpc(rpcRoute, rpcFn);
+
+        // Add routes from "mock_rpc" registry
+        for (const [route, callback] of registry.category("mock_rpc").getEntries()) {
+            if (typeof callback === "function") {
+                this.onRpc(route, callback);
             }
         }
 
@@ -365,8 +394,8 @@ export class MockServer {
             this.registerTranslations("web", params.translations);
         }
         if (params.routes) {
-            for (const [route, callback, options] of params.routes) {
-                this.onRpc(route, callback, options);
+            for (const args of params.routes) {
+                this.onRpc(...args);
             }
         }
 
@@ -374,13 +403,13 @@ export class MockServer {
     }
 
     /**
-     * @param {string} method
+     * @param {OrmParams} params
      */
-    findOrmListeners(method) {
+    findOrmListeners({ method, model }) {
         /** @type {OrmCallback[]} */
         const callbacks = [];
-        for (const [listenerMethod, callback] of this.ormListeners) {
-            if (listenerMethod === method || listenerMethod === "*") {
+        for (const [listenerModel, listenerMethod, callback] of this.ormListeners) {
+            if (match(model, listenerModel) && match(method, listenerMethod)) {
                 callbacks.unshift(callback);
             }
         }
@@ -389,18 +418,18 @@ export class MockServer {
 
     /**
      * @param {string} route
-     * @returns {[RouteCallback, Record<string, string>][]}
      */
     findRouteListeners(route) {
+        /** @type {[RouteCallback, Record<string, string>, RouteOptions][]} */
         const listeners = [];
-        for (const [regex, params, options, fn] of this.routes) {
+        for (const [regex, params, callback, options] of this.routes) {
             const match = route.match(regex);
             if (match) {
                 const routeParams = {};
                 for (let i = 0; i < params.length; i++) {
                     routeParams[params[i]] = match[i + 1];
                 }
-                listeners.unshift([fn, routeParams, options || {}]);
+                listeners.unshift([callback, routeParams, options]);
             }
         }
         return listeners;
@@ -515,7 +544,7 @@ export class MockServer {
     /**
      * @param {string} url
      * @param {RequestInit} init
-     * @param {RpcOptions} [options]
+     * @param {RouteOptions} [options]
      */
     async handle(url, init, options = {}) {
         if (!this.started) {
@@ -532,30 +561,31 @@ export class MockServer {
         if (!listeners.length) {
             throw new MockServerError(`unimplemented server route: ${route}`);
         }
-        for (const [routeFn, routeParams, routeOptions] of listeners) {
-            const pure = options.pure || routeOptions.pure;
-            const result = await routeFn.call(this, request, routeParams);
-            // mockCallKw will throw if no method is found, if it didn't we hit a method that returns nothing
-            if (result !== undefined || route.startsWith("/web/dataset/call_kw")) {
-                if (pure) {
+
+        let result = null;
+        for (const [callback, routeParams, routeOptions] of listeners) {
+            result = await callback.call(this, request, routeParams);
+            if (!isNil(result) || (options.alwaysReturns ?? routeOptions.alwaysReturns)) {
+                if (options.pure ?? routeOptions.pure) {
                     return result;
                 }
                 if (result instanceof Error) {
                     return {
-                        result: null,
                         error: {
                             code: 418,
                             data: result,
                             message: result.message,
                             type: result.name,
                         },
+                        result: null,
                     };
                 }
-                return { result, error: null };
+                return { error: null, result };
             }
         }
+
         // There was a matching controller that wasn't call_kw but it didn't return anything: treat it as JSON
-        return { error: null };
+        return { error: null, result };
     }
 
     async loadModels() {
@@ -695,23 +725,36 @@ export class MockServer {
     }
 
     /**
+     * @overload
+     * @param {OrmCallback} callback
+     */
+    /**
+     * @overload
+     * @param {string} method
+     * @param {OrmCallback} callback
+     */
+    /**
+     * @overload
+     * @param {string} model
+     * @param {string} method
+     * @param {OrmCallback} callback
+     */
+    /**
+     * @param {string | OrmCallback} model
      * @param {string | OrmCallback} [method]
      * @param {OrmCallback} [callback]
      */
-    onOrmMethod(method, callback) {
-        if (typeof method === "function") {
-            callback = method;
-            method = "*";
-        } else if (!method) {
-            method = "*";
-        }
-        this.ormListeners.push([method, callback]);
+    onOrmMethod(...args) {
+        const callback = args.pop();
+        const method = args.pop() || "*";
+        const model = args.pop() || "*";
+        this.ormListeners.push([model, method, callback]);
     }
 
     /**
      * @param {`/${string}`} route
      * @param {RouteCallback} callback
-     * @param {RpcOptions} options
+     * @param {RouteOptions} options
      */
     onRoute(route, callback, options) {
         const routeParams = [];
@@ -722,20 +765,40 @@ export class MockServer {
             })}`,
             "i"
         );
-        this.routes.push([routeRegex, routeParams, options, callback]);
+        this.routes.push([routeRegex, routeParams, callback, options || {}]);
     }
 
     /**
-     * @template {string | OrmCallback} R
-     * @param {R} route
-     * @param {R extends `/${string}` ? RouteCallback : OrmCallback} [callback]
-     * @param {RpcOptions} [options]
+     * @overload
+     * @param {OrmCallback} callback
      */
-    onRpc(route, callback, options) {
-        if (typeof route === "string" && route.startsWith("/")) {
-            this.onRoute(route, callback, options);
+    /**
+     * @overload
+     * @param {`/${string}`} route
+     * @param {RouteCallback} callback
+     * @param {RouteOptions} [options]
+     */
+    /**
+     * @overload
+     * @param {string | RegExp} method
+     * @param {OrmCallback} callback
+     */
+    /**
+     * @overload
+     * @param {string} model
+     * @param {string | RegExp} method
+     * @param {OrmCallback} callback
+     */
+    /**
+     * @param {string | OrmCallback | RegExp} route
+     * @param {RouteCallback | OrmCallback | string | RegExp} [callback]
+     * @param {RouteOptions | OrmCallback} [options]
+     */
+    onRpc(...args) {
+        if (typeof args[0] === "string" && args[0].startsWith("/")) {
+            this.onRoute(...args);
         } else {
-            this.onOrmMethod(route, callback);
+            this.onOrmMethod(...args);
         }
         return this;
     }
@@ -810,23 +873,18 @@ export class MockServer {
         const { params } = await request.json();
         const route = new URL(request.url).pathname;
 
-        let result;
-        // Check own routes
-        for (const fn of this.findOrmListeners(params.method)) {
+        const parent = () => this.callOrm(route, params);
+        const callbackParams = { parent, request, route, ...params };
+        let result = null;
+        for (const callback of [...this.findOrmListeners(params), parent]) {
             try {
-                result ??= await fn.call(this, route, params);
+                result = await callback.call(this, callbackParams);
             } catch (error) {
                 return ensureError(error);
             }
-            if (result !== undefined && result !== null) {
-                break;
+            if (!isNil(result)) {
+                return result;
             }
-        }
-        // Check ORM methods
-        try {
-            result ??= await this.callOrm(route, params);
-        } catch (error) {
-            return ensureError(error);
         }
         return result;
     }
@@ -1000,12 +1058,33 @@ export async function makeMockServer(params) {
 }
 
 /**
+ * @overload
+ * @param {OrmCallback} callback
+ */
+/**
+ * @overload
+ * @param {`/${string}`} route
+ * @param {RouteCallback} callback
+ * @param {RouteOptions} [options]
+ */
+/**
+ * @overload
+ * @param {string | RegExp} method
+ * @param {OrmCallback} callback
+ */
+/**
+ * @overload
+ * @param {string} model
+ * @param {string | RegExp} method
+ * @param {OrmCallback} callback
+ */
+/**
  * Registers an RPC handler on the current/future {@link MockServer} instance.
  *
- * @type {typeof MockServer["prototype"]["onRpc"]}
+ * @type {MockServer["onRpc"]}
  */
-export function onRpc(method, callback, options) {
-    return defineParams({ routes: [[method, callback, options]] }, "add").routes;
+export function onRpc(...args) {
+    return defineParams({ routes: [args] }, "add").routes;
 }
 
 /**
@@ -1016,20 +1095,17 @@ export function onRpc(method, callback, options) {
  * @returns {void}
  */
 export function stepAllNetworkCalls() {
-    onRpc("/*", async function (request) {
+    onRpc("/", (request) => {
         const route = new URL(request.url).pathname;
-        if (route === "/web/dataset/call_kw") {
-            const {
-                params: { method },
-            } = await request.json();
-            expect.step(method);
-        } else if (route.startsWith("/web/webclient/load_menus")) {
-            expect.step("/web/webclient/load_menus"); // ignore unique
-        } else if (route.startsWith("/web/webclient/translations")) {
-            expect.step("/web/webclient/translations"); // ignore unique
-        } else {
-            expect.step(route);
+        let match = route.match(R_DATASET_ROUTE);
+        if (match) {
+            return void expect.step(match.groups?.step || route);
         }
+        match = route.match(R_WEBCLIENT_ROUTE);
+        if (match) {
+            return void expect.step(match.groups?.step || route);
+        }
+        return void expect.step(route);
     });
 }
 

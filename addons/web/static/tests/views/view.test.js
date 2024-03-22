@@ -102,7 +102,7 @@ test("simple rendering", async function () {
             expect(this.env.config.viewId).toBe(false);
         },
     });
-    onRpc("get_views", (_, { model, kwargs }) => {
+    onRpc("get_views", ({ model, kwargs }) => {
         expect(model).toBe("animal");
         expect(kwargs.views).toEqual([[false, "toy"]]);
         expect(pick(kwargs.options, "action_id", "load_filters", "toolbar")).toEqual({
@@ -128,7 +128,7 @@ test("rendering with given viewId", async function () {
             expect(this.env.config.viewId).toBe(1);
         },
     });
-    onRpc("get_views", (_, { kwargs }) => {
+    onRpc("get_views", ({ kwargs }) => {
         expect(kwargs.views).toEqual([[1, "toy"]]);
         expect(pick(kwargs.options, "action_id", "load_filters", "toolbar")).toEqual({
             action_id: false,
@@ -153,7 +153,7 @@ test("rendering with given 'views' param", async function () {
             expect(this.env.config.viewId).toBe(1);
         },
     });
-    onRpc("get_views", (_, { kwargs }) => {
+    onRpc("get_views", ({ kwargs }) => {
         expect(kwargs.views).toEqual([[1, "toy"]]);
         expect(pick(kwargs.options, "action_id", "load_filters", "toolbar")).toEqual({
             action_id: false,
@@ -179,7 +179,7 @@ test("rendering with given 'views' param not containing view id", async function
             expect(this.env.config.viewId).toBe(false);
         },
     });
-    onRpc("get_views", (_, { kwargs }) => {
+    onRpc("get_views", ({ kwargs }) => {
         expect(kwargs.views).toEqual([
             [false, "other"],
             [false, "toy"],
@@ -208,7 +208,7 @@ test("viewId defined as prop and in 'views' prop", async function () {
             expect(this.env.config.viewId).toBe(1);
         },
     });
-    onRpc("get_views", (_, { kwargs }) => {
+    onRpc("get_views", ({ kwargs }) => {
         expect(kwargs.views).toEqual([
             [1, "toy"],
             [false, "other"],
@@ -271,7 +271,7 @@ test("rendering with loadActionMenus='true'", async function () {
             expect(this.env.config.viewId).toBe(false);
         },
     });
-    onRpc("get_views", (_, { kwargs }) => {
+    onRpc("get_views", ({ kwargs }) => {
         expect(kwargs.views).toEqual([[false, "toy"]]);
         expect(pick(kwargs.options, "action_id", "load_filters", "toolbar")).toEqual({
             action_id: false,
@@ -298,7 +298,7 @@ test("rendering with given arch, fields, and loadActionMenus='true'", async func
             expect(this.env.config.viewId).toBe(false);
         },
     });
-    onRpc("get_views", (_, { kwargs }) => {
+    onRpc("get_views", ({ kwargs }) => {
         expect(kwargs.views).toEqual([[false, "toy"]]);
         expect(pick(kwargs.options, "action_id", "load_filters", "toolbar")).toEqual({
             action_id: false,
@@ -435,7 +435,7 @@ test("rendering with given searchViewId", async function () {
             expect(irFilters).toBe(undefined);
         },
     });
-    onRpc("get_views", (_, { kwargs }) => {
+    onRpc("get_views", ({ kwargs }) => {
         expect(kwargs.views).toEqual([
             [false, "toy"],
             [false, "search"],
@@ -534,7 +534,7 @@ test("rendering with given arch, fields, searchViewId, searchViewArch, searchVie
             ]);
         },
     });
-    onRpc("get_views", (_, { kwargs }) => {
+    onRpc("get_views", ({ kwargs }) => {
         expect(kwargs.views).toEqual([
             [false, "toy"],
             [false, "search"],
@@ -838,11 +838,9 @@ test("click on action-bound links in banner (concurrency)", async () => {
             <a type="action" data-method="setTheControl" data-model="animal">link</a>
         </toy>
     `;
-    onRpc("/banner_route", () => {
-        return {
-            html: `<div><a type="action" data-method="heartOfTheSun" data-model="animal">link</a></div>`,
-        };
-    });
+    onRpc("/banner_route", () => ({
+        html: `<div><a type="action" data-method="heartOfTheSun" data-model="animal">link</a></div>`,
+    }));
     onRpc("setTheControl", async () => {
         await prom;
         return {
@@ -850,12 +848,10 @@ test("click on action-bound links in banner (concurrency)", async () => {
             tag: "toug",
         };
     });
-    onRpc("heartOfTheSun", () => {
-        return {
-            type: "ir.actions.client",
-            tag: "gout",
-        };
-    });
+    onRpc("heartOfTheSun", () => ({
+        type: "ir.actions.client",
+        tag: "gout",
+    }));
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
     click("a[data-method='setTheControl']");
     await animationFrame();
@@ -930,7 +926,7 @@ test("real life banner", async () => {
 
 test("rendering with given jsClass", async function () {
     expect.assertions(4);
-    onRpc("get_views", (_, { kwargs }) => {
+    onRpc("get_views", ({ kwargs }) => {
         expect(kwargs.views).toEqual([[false, "toy"]]);
         expect(pick(kwargs.options, "action_id", "load_filters", "toolbar")).toEqual({
             action_id: false,
@@ -946,7 +942,7 @@ test("rendering with given jsClass", async function () {
 
 test("rendering with loaded arch attribute 'js_class'", async function () {
     expect.assertions(4);
-    onRpc("get_views", (_, { kwargs }) => {
+    onRpc("get_views", ({ kwargs }) => {
         expect(kwargs.views).toEqual([[2, "toy"]]);
         expect(pick(kwargs.options, "action_id", "load_filters", "toolbar")).toEqual({
             action_id: false,
@@ -986,7 +982,7 @@ test("rendering with loaded arch attribute 'js_class' and given jsClass", async 
             static type = "toy";
         },
     });
-    onRpc("get_views", (_, { kwargs }) => {
+    onRpc("get_views", ({ kwargs }) => {
         expect(kwargs.views).toEqual([[2, "toy"]]);
         expect(pick(kwargs.options, "action_id", "load_filters", "toolbar")).toEqual({
             action_id: false,

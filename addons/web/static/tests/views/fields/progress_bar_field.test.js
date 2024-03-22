@@ -1,3 +1,6 @@
+import { expect, test } from "@odoo/hoot";
+import { click, edit, queryOne, queryText, queryValue } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
     defineModels,
@@ -7,9 +10,6 @@ import {
     mountView,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-import { expect, test } from "@odoo/hoot";
-import { click, edit, queryOne, queryText, queryValue } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
 
 class Partner extends models.Model {
     name = fields.Char({ string: "Display Name" });
@@ -43,7 +43,7 @@ test("ProgressBarField: max_value should update", async () => {
         record.float_field = 5;
     };
 
-    onRpc("web_save", (_route, { args }) => {
+    onRpc("web_save", ({ args }) => {
         expect(args[1]).toEqual(
             { int_field: 999, float_field: 5, name: "new name" },
             { message: "New value of progress bar saved" }
@@ -72,7 +72,7 @@ test("ProgressBarField: max_value should update", async () => {
 test("ProgressBarField: value should update in edit mode when typing in input", async () => {
     expect.assertions(4);
     Partner._records[0].int_field = 99;
-    onRpc("web_save", (_route, { args }) => expect(args[1].int_field).toBe(69));
+    onRpc("web_save", ({ args }) => expect(args[1].int_field).toBe(69));
     await mountView({
         type: "form",
         resModel: "partner",
@@ -107,7 +107,7 @@ test("ProgressBarField: value should update in edit mode when typing in input wi
     expect.assertions(4);
     Partner._records[0].int_field = 99;
 
-    onRpc("web_save", (_route, { args }) => expect(args[1].int_field).toBe(69));
+    onRpc("web_save", ({ args }) => expect(args[1].int_field).toBe(69));
 
     await mountView({
         type: "form",
@@ -141,7 +141,7 @@ test("ProgressBarField: max value should update in edit mode when typing in inpu
     expect.assertions(5);
     Partner._records[0].int_field = 99;
 
-    onRpc("web_save", (_route, { args }) => expect(args[1].float_field).toBe(69));
+    onRpc("web_save", ({ args }) => expect(args[1].float_field).toBe(69));
     await mountView({
         type: "form",
         resModel: "partner",
@@ -179,7 +179,7 @@ test("ProgressBarField: max value should update in edit mode when typing in inpu
 test("ProgressBarField: Standard readonly mode is readonly", async () => {
     Partner._records[0].int_field = 99;
 
-    onRpc((route) => expect.step(route));
+    onRpc(({ method }) => expect.step(method));
     await mountView({
         type: "form",
         resModel: "partner",
@@ -201,17 +201,14 @@ test("ProgressBarField: Standard readonly mode is readonly", async () => {
     expect(".o_progressbar_value .o_input").toHaveCount(0, {
         message: "no input in readonly mode",
     });
-    expect([
-        "/web/dataset/call_kw/partner/get_views",
-        "/web/dataset/call_kw/partner/web_read",
-    ]).toVerifySteps();
+    expect(["get_views", "web_read"]).toVerifySteps();
 });
 
 test("ProgressBarField: field is editable in kanban", async () => {
     expect.assertions(7);
     Partner._records[0].int_field = 99;
 
-    onRpc("web_save", (_route, { args }) => expect(args[1].int_field).toBe(69));
+    onRpc("web_save", ({ args }) => expect(args[1].int_field).toBe(69));
     await mountView({
         type: "kanban",
         resModel: "partner",
@@ -324,7 +321,7 @@ test("ProgressBarField: write float instead of int works, in locale", async () =
             thousands_sep: "#",
         },
     });
-    onRpc("web_save", (_route, { args }) => expect(args[1].int_field).toBe(1037));
+    onRpc("web_save", ({ args }) => expect(args[1].int_field).toBe(1037));
     await mountView({
         type: "form",
         resModel: "partner",

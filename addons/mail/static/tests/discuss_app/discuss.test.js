@@ -66,11 +66,9 @@ test("can change the thread name of #general [REQUIRE FOCUS]", async () => {
         channel_type: "channel",
         create_uid: serverState.userId,
     });
-    onRpc((route, args) => {
-        if (route === "/web/dataset/call_kw/discuss.channel/channel_rename") {
-            step(route);
-        }
-    });
+
+    onRpc("discuss.channel", "channel_rename", ({ route }) => step(route));
+
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input:focus");
@@ -106,11 +104,9 @@ test("can change the thread description of #general [REQUIRE FOCUS]", async () =
         description: "General announcements...",
         create_uid: serverState.userId,
     });
-    onRpc((route, args) => {
-        if (route === "/web/dataset/call_kw/discuss.channel/channel_change_description") {
-            step(route);
-        }
-    });
+
+    onRpc("discuss.channel", "channel_change_description", ({ route }) => step(route));
+
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input:focus");
@@ -1374,11 +1370,9 @@ test("Thread avatar image is displayed in top bar of channels of type 'group'", 
 test("Do not trigger chat name server update when it is unchanged", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
-    onRpc((route, args) => {
-        if (route === "/web/dataset/call_kw/discuss.channel/channel_set_custom_name") {
-            step(args.method);
-        }
-    });
+
+    onRpc("discuss.channel", "channel_set_custom_name", ({ method }) => step(method));
+
     await start();
     await openDiscuss(channelId);
     await insertText("input.o-mail-Discuss-threadName:enabled", "Mitchell Admin", {
@@ -1394,11 +1388,9 @@ test("Do not trigger channel description server update when channel has no descr
         create_uid: serverState.userId,
         name: "General",
     });
-    onRpc((route, args) => {
-        if (route === "/web/dataset/call_kw/discuss.channel/channel_change_description") {
-            step(args.method);
-        }
-    });
+
+    onRpc("discuss.channel", "channel_change_description", ({ method }) => step(method));
+
     await start();
     await openDiscuss(channelId);
     await insertText("input.o-mail-Discuss-threadDescription", "");
@@ -1591,7 +1583,9 @@ test("failure on loading messages should display error", async () => {
         channel_type: "channel",
         name: "General",
     });
-    onRpc("/discuss/channel/messages", (route, args) => Promise.reject());
+
+    onRpc("/discuss/channel/messages", () => Promise.reject());
+
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Thread", { text: "An error occurred while fetching messages." });
@@ -1603,7 +1597,9 @@ test("failure on loading messages should prompt retry button", async () => {
         channel_type: "channel",
         name: "General",
     });
-    onRpc("/discuss/channel/messages", (route, args) => Promise.reject());
+
+    onRpc("/discuss/channel/messages", () => Promise.reject());
+
     await start();
     await openDiscuss(channelId);
     await contains("button", { text: "Click here to retry" });
@@ -1889,19 +1885,19 @@ test("Chats input should wait until the previous RPC is done before starting a n
     pyEnv["res.users"].create([{ partner_id: partnerId1 }, { partner_id: partnerId2 }]);
     const deferred1 = new Deferred();
     const deferred2 = new Deferred();
-    onRpc(async (route, { args }) => {
-        if (route === "/web/dataset/call_kw/res.partner/im_search") {
-            if (args[0] === "m") {
-                await deferred1;
-                step("First RPC");
-            } else if (args[0] === "mar") {
-                await deferred2;
-                step("Second RPC");
-            } else {
-                throw Error(`Unexpected search term: ${args[0]}`);
-            }
+
+    onRpc("res.partner", "im_search", async ({ args }) => {
+        if (args[0] === "m") {
+            await deferred1;
+            step("First RPC");
+        } else if (args[0] === "mar") {
+            await deferred2;
+            step("Second RPC");
+        } else {
+            throw new Error(`Unexpected search term: ${args[0]}`);
         }
     });
+
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarCategory-add[title='Start a conversation']");

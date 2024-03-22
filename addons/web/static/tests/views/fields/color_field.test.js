@@ -52,7 +52,7 @@ test("field contains a color input", async () => {
     Color._fields.hex_color = fields.Char({ string: "hexadecimal color", onChange: () => {} });
     await mountView({ type: "form", resModel: "color", resId: 1 });
 
-    onRpc("onchange", (route, { args }) => {
+    onRpc("onchange", ({ args }) => {
         expect.step(`onchange ${JSON.stringify(args)}`);
     });
 
@@ -121,10 +121,8 @@ test("color field change via anoter field's onchange", async () => {
     `,
     });
 
-    onRpc(async (route, { method, args }) => {
-        if (method === "onchange") {
-            expect.step(`onchange ${JSON.stringify(args)}`);
-        }
+    onRpc("onchange", ({ args }) => {
+        expect.step(`onchange ${JSON.stringify(args)}`);
     });
 
     expect(".o_field_color div").toHaveStyle(

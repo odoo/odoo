@@ -114,7 +114,7 @@ test("date field in form view (with positive time zone offset)", async () => {
     mockTimeZone(2); // should be ignored by date fields
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 
-    onRpc("web_save", async (_, { args }) => {
+    onRpc("web_save", ({ args }) => {
         expect.step(args[1].date);
     });
 
@@ -301,7 +301,7 @@ test.tags("desktop")("multi edition of date field in list view: clear date in in
 
 test("date field remove value", async () => {
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
-    onRpc("web_save", async (_, { args }) => {
+    onRpc("web_save", ({ args }) => {
         expect.step(JSON.stringify(args[1].date));
     });
 

@@ -184,27 +184,25 @@ defineModels([Partner, PartnerType, Product, Turtle, Users]);
 test.tags("desktop")("many2many kanban: edition", async () => {
     expect.assertions(24);
 
-    onRpc("web_save", (_route, { args, model }) => {
-        if (model === "res.partner.type") {
-            if (args[0].length) {
-                expect(args[1].name).toBe("new name");
-            } else {
-                expect(args[1].name).toBe("A new type");
-            }
+    onRpc("res.partner.type", "web_save", ({ args }) => {
+        if (args[0].length) {
+            expect(args[1].name).toBe("new name");
+        } else {
+            expect(args[1].name).toBe("A new type");
         }
-        if (model === "res.partner" && args[0].length) {
-            const commands = args[1].timmy;
-            const [record] = MockServer.env["res.partner.type"].search_read([
-                ["display_name", "=", "A new type"],
-            ]);
-            // get the created type's id
-            expect(commands).toEqual([
-                Command.link(3),
-                Command.link(4),
-                Command.link(record.id),
-                Command.unlink(2),
-            ]);
-        }
+    });
+    onRpc("res.partner", "web_save", ({ args }) => {
+        const commands = args[1].timmy;
+        const [record] = MockServer.env["res.partner.type"].search_read([
+            ["display_name", "=", "A new type"],
+        ]);
+        // get the created type's id
+        expect(commands).toEqual([
+            Command.link(3),
+            Command.link(4),
+            Command.link(record.id),
+            Command.unlink(2),
+        ]);
     });
 
     Partner._records[0].timmy = [1, 2];

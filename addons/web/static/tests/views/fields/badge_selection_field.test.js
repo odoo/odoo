@@ -36,7 +36,7 @@ class Product extends models.Model {
 defineModels([Partner, Product]);
 
 test("BadgeSelectionField widget on a many2one in a new record", async () => {
-    onRpc("web_save", (_, { args }) => {
+    onRpc("web_save", ({ args }) => {
         expect.step(`saved product_id: ${args[1]["product_id"]}`);
     });
 
@@ -63,7 +63,7 @@ test("BadgeSelectionField widget on a many2one in a new record", async () => {
 });
 
 test("BadgeSelectionField widget on a selection in a new record", async () => {
-    onRpc("web_save", (_, { args }) => {
+    onRpc("web_save", ({ args }) => {
         expect.step(`saved color: ${args[1]["color"]}`);
     });
     await mountView({

@@ -271,12 +271,9 @@ test("mark channel as fetched when a new message is loaded and as seen when focu
         expect(args.channel_id).toBe(channelId);
         step("rpc:set_last_seen_message");
     });
-    onRpc((route, args) => {
-        if (route === "/web/dataset/call_kw/discuss.channel/channel_fetched") {
-            expect(args.args[0][0]).toBe(channelId);
-            expect(args.model).toBe("discuss.channel");
-            step("rpc:channel_fetch");
-        }
+    onRpc("discuss.channel", "channel_fetched", ({ args }) => {
+        expect(args[0][0]).toBe(channelId);
+        step("rpc:channel_fetch");
     });
     const env = await start();
     rpc = rpcWithEnv(env);
@@ -320,13 +317,11 @@ test("mark channel as fetched and seen when a new message is loaded if composer 
         expect(args.channel_id).toBe(channelId);
         step("rpc:set_last_seen_message");
     });
-    onRpc((route, args) => {
-        if (route === "/web/dataset/call_kw/discuss.channel/channel_fetched") {
-            if (args.args[0] === channelId) {
-                throw new Error(
-                    "'channel_fetched' RPC must not be called for created channel as message is directly seen"
-                );
-            }
+    onRpc("discuss.channel", "channel_fetched", ({ args }) => {
+        if (args[0] === channelId) {
+            throw new Error(
+                "'channel_fetched' RPC must not be called for created channel as message is directly seen"
+            );
         }
     });
     const env = await start();
@@ -875,14 +870,12 @@ test("Opening thread with needaction messages should mark all messages of thread
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    onRpc((route, args) => {
-        if (route === "/web/dataset/call_kw/mail.message/mark_all_as_read") {
-            step("mark-all-messages-as-read");
-            expect(args.args[0]).toEqual([
-                ["model", "=", "discuss.channel"],
-                ["res_id", "=", channelId],
-            ]);
-        }
+    onRpc("mail.message", "mark_all_as_read", ({ args }) => {
+        step("mark-all-messages-as-read");
+        expect(args[0]).toEqual([
+            ["model", "=", "discuss.channel"],
+            ["res_id", "=", channelId],
+        ]);
     });
     const env = await start();
     await openDiscuss(channelId);
@@ -920,11 +913,7 @@ test("Opening thread with needaction messages should mark all messages of thread
 test("[technical] Opening thread without needaction messages should not mark all messages of thread as read", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    onRpc((route) => {
-        if (route === "/web/dataset/call_kw/mail.message/mark_all_as_read") {
-            step("mark-all-messages-as-read");
-        }
-    });
+    onRpc("mail.message", "mark_all_as_read", () => step("mark-all-messages-as-read"));
     const env = await start();
     rpc = rpcWithEnv(env);
     await openDiscuss(channelId);
@@ -959,11 +948,7 @@ test("can be marked as read while loading", async () => {
         res_id: channelId,
     });
     const loadDeferred = new Deferred();
-    onRpc(async (route) => {
-        if (route === "/discuss/channel/messages") {
-            await loadDeferred;
-        }
-    });
+    onRpc("/discuss/channel/messages", () => loadDeferred);
     await start();
     await openDiscuss(undefined);
     await contains(".o-discuss-badge", { text: "1" });

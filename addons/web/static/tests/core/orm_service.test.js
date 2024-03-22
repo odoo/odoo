@@ -1,17 +1,20 @@
 import { after, describe, expect, test } from "@odoo/hoot";
 import { on } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
-
 import { getService, makeMockEnv, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
+
 import { rpcBus } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
+import { pick } from "@web/core/utils/objects";
 
 describe.current.tags("headless");
 
+const getRelevantParams = (params) => pick(params, "args", "kwargs", "method", "model");
+
 test("add user context to a simple read request", async () => {
-    onRpc(async (route, params) => {
-        expect.step(route);
-        expect(params).toEqual({
+    onRpc(async (params) => {
+        expect.step(params.route);
+        expect(getRelevantParams(params)).toEqual({
             args: [[3], ["id", "descr"]],
             kwargs: {
                 context: {
@@ -34,9 +37,9 @@ test("add user context to a simple read request", async () => {
 });
 
 test("context is combined with user context in read request", async () => {
-    onRpc(async (route, params) => {
-        expect.step(route);
-        expect(params).toEqual({
+    onRpc(async (params) => {
+        expect.step(params.route);
+        expect(getRelevantParams(params)).toEqual({
             args: [[3], ["id", "descr"]],
             kwargs: {
                 context: {
@@ -64,9 +67,9 @@ test("context is combined with user context in read request", async () => {
 });
 
 test("basic method call of model", async () => {
-    onRpc(async (route, params) => {
-        expect.step(route);
-        expect(params).toEqual({
+    onRpc(async (params) => {
+        expect.step(params.route);
+        expect(getRelevantParams(params)).toEqual({
             args: [],
             kwargs: {
                 context: {
@@ -90,9 +93,9 @@ test("basic method call of model", async () => {
 });
 
 test("create method: one record", async () => {
-    onRpc(async (route, params) => {
-        expect.step(route);
-        expect(params).toEqual({
+    onRpc(async (params) => {
+        expect.step(params.route);
+        expect(getRelevantParams(params)).toEqual({
             args: [[{ color: "red" }]],
             kwargs: {
                 context: {
@@ -115,9 +118,9 @@ test("create method: one record", async () => {
 });
 
 test("create method: several records", async () => {
-    onRpc(async (route, params) => {
-        expect.step(route);
-        expect(params).toEqual({
+    onRpc(async (params) => {
+        expect.step(params.route);
+        expect(getRelevantParams(params)).toEqual({
             args: [[{ color: "red" }, { color: "green" }]],
             kwargs: {
                 context: {
@@ -140,9 +143,9 @@ test("create method: several records", async () => {
 });
 
 test("read method", async () => {
-    onRpc(async (route, params) => {
-        expect.step(route);
-        expect(params).toEqual({
+    onRpc(async (params) => {
+        expect.step(params.route);
+        expect(getRelevantParams(params)).toEqual({
             args: [
                 [2, 5],
                 ["name", "amount"],
@@ -173,9 +176,9 @@ test("read method", async () => {
 });
 
 test("unlink method", async () => {
-    onRpc(async (route, params) => {
-        expect.step(route);
-        expect(params).toEqual({
+    onRpc(async (params) => {
+        expect.step(params.route);
+        expect(getRelevantParams(params)).toEqual({
             args: [[43]],
             kwargs: {
                 context: {
@@ -198,9 +201,9 @@ test("unlink method", async () => {
 });
 
 test("write method", async () => {
-    onRpc(async (route, params) => {
-        expect.step(route);
-        expect(params).toEqual({
+    onRpc(async (params) => {
+        expect.step(params.route);
+        expect(getRelevantParams(params)).toEqual({
             args: [[43, 14], { active: false }],
             kwargs: {
                 context: {
@@ -223,9 +226,9 @@ test("write method", async () => {
 });
 
 test("webReadGroup method", async () => {
-    onRpc(async (route, params) => {
-        expect.step(route);
-        expect(params).toEqual({
+    onRpc(async (params) => {
+        expect.step(params.route);
+        expect(getRelevantParams(params)).toEqual({
             args: [],
             kwargs: {
                 domain: [["user_id", "=", 2]],
@@ -258,9 +261,9 @@ test("webReadGroup method", async () => {
 });
 
 test("readGroup method", async () => {
-    onRpc(async (route, params) => {
-        expect.step(route);
-        expect(params).toEqual({
+    onRpc(async (params) => {
+        expect.step(params.route);
+        expect(getRelevantParams(params)).toEqual({
             args: [],
             kwargs: {
                 domain: [["user_id", "=", 2]],
@@ -293,9 +296,9 @@ test("readGroup method", async () => {
 });
 
 test("test readGroup method removes duplicate values from groupby", async () => {
-    onRpc(async (route, params) => {
-        expect.step(route);
-        expect(params.kwargs.groupby).toEqual(["date_order:month"], {
+    onRpc(async (params) => {
+        expect.step(params.route);
+        expect(getRelevantParams(params).kwargs.groupby).toEqual(["date_order:month"], {
             message: "Duplicate values should be removed from groupby",
         });
         return false;
@@ -314,9 +317,9 @@ test("test readGroup method removes duplicate values from groupby", async () => 
 });
 
 test("search_read method", async () => {
-    onRpc(async (route, params) => {
-        expect.step(route);
-        expect(params).toEqual({
+    onRpc(async (params) => {
+        expect.step(params.route);
+        expect(getRelevantParams(params)).toEqual({
             args: [],
             kwargs: {
                 context: {
@@ -341,9 +344,9 @@ test("search_read method", async () => {
 });
 
 test("search_count method", async () => {
-    onRpc(async (route, params) => {
-        expect.step(route);
-        expect(params).toEqual({
+    onRpc(async (params) => {
+        expect.step(params.route);
+        expect(getRelevantParams(params)).toEqual({
             args: [[["user_id", "=", 2]]],
             kwargs: {
                 context: {
@@ -366,9 +369,9 @@ test("search_count method", async () => {
 });
 
 test("webRead method", async () => {
-    onRpc(async (route, params) => {
-        expect.step(route);
-        expect(params).toEqual({
+    onRpc(async (params) => {
+        expect.step(params.route);
+        expect(getRelevantParams(params)).toEqual({
             args: [[2, 5]],
             kwargs: {
                 specification: { name: {}, amount: {} },
@@ -396,9 +399,9 @@ test("webRead method", async () => {
 });
 
 test("webSearchRead method", async () => {
-    onRpc(async (route, params) => {
-        expect.step(route);
-        expect(params).toEqual({
+    onRpc(async (params) => {
+        expect.step(params.route);
+        expect(getRelevantParams(params)).toEqual({
             args: [],
             kwargs: {
                 context: {
@@ -441,8 +444,8 @@ test("orm is specialized for component", async () => {
 });
 
 test("silent mode", async () => {
-    onRpc((route) => {
-        expect.step(route);
+    onRpc((params) => {
+        expect.step(params.route);
         return false;
     });
 
@@ -490,8 +493,8 @@ test("validate some obviously wrong calls", async () => {
 });
 
 test("optimize read and unlink if no ids", async () => {
-    onRpc((route) => {
-        expect.step(route);
+    onRpc((params) => {
+        expect.step(params.route);
         return false;
     });
 
