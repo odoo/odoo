@@ -127,20 +127,11 @@ const baseNotificationMethods = {
                 );
             return;
         }
-        if (debugShowLog) console.log(`%cisOfferRacing: ${isOfferRacing}`, 'background: red;');
-
-        if (isOfferRacing) {
-            if (debugShowLog)
-                console.log(`%c SETREMOTEDESCRIPTION 1`, 'background: navy; color:white;');
-            await Promise.all([
-                pc.setLocalDescription({ type: 'rollback' }),
-                pc.setRemoteDescription(description),
-            ]);
-        } else {
-            if (debugShowLog)
-                console.log(`%c SETREMOTEDESCRIPTION 2`, 'background: navy; color:white;');
-            await pc.setRemoteDescription(description);
+        if (debugShowLog) {
+            console.log(`%cisOfferRacing: ${isOfferRacing}`, 'background: red;');
+            console.log(`%c SETREMOTEDESCRIPTION`, 'background: navy; color:white;');
         }
+        await pc.setRemoteDescription(description);
         if (clientInfos.iceCandidateBuffer.length) {
             for (const candidate of clientInfos.iceCandidateBuffer) {
                 await this._addIceCandidate(clientInfos, candidate);
