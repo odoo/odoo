@@ -572,7 +572,7 @@ class ReportBomStructure(models.AbstractModel):
     def _get_resupply_route_info(self, warehouse, product, quantity, product_info, bom=False, parent_bom=False, parent_product=False):
         found_rules = []
         if self._need_special_rules(product_info, parent_bom, parent_product):
-            found_rules = self._find_special_rules(product, product_info, parent_bom, parent_product)
+            found_rules = self._find_special_rules(product, product_info, bom, parent_bom, parent_product)
         if not found_rules:
             found_rules = product._get_rules_from_location(warehouse.lot_stock_id)
         if not found_rules:
@@ -581,11 +581,15 @@ class ReportBomStructure(models.AbstractModel):
         return self.with_context(parent_bom=parent_bom)._format_route_info(found_rules, rules_delay, warehouse, product, bom, quantity)
 
     @api.model
+    def _is_resupply_rules(self, rules, bom):
+        return bom and any(rule.action == 'manufacture' for rule in rules)
+
+    @api.model
     def _need_special_rules(self, product_info, parent_bom=False, parent_product=False):
         return False
 
     @api.model
-    def _find_special_rules(self, product, product_info, parent_bom=False, parent_product=False):
+    def _find_special_rules(self, product, product_info, current_bom=False, parent_bom=False, parent_product=False):
         return False
 
     @api.model
