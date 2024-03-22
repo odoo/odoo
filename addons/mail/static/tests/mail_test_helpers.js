@@ -46,7 +46,7 @@ import { browser } from "@web/core/browser/browser";
 import {
     getMockEnv,
     makeMockEnv,
-    restoreRegistryFromBeforeTest,
+    restoreRegistry,
 } from "@web/../tests/_framework/env_test_helpers";
 import { cancelAllTimers } from "@odoo/hoot-mock";
 import { after, before, getFixture } from "@odoo/hoot";
@@ -260,7 +260,7 @@ export async function start({ asTab = false } = {}) {
     }
     let env;
     if (asTab) {
-        restoreRegistryFromBeforeTest(registry, { withSubRegistries: true });
+        restoreRegistry(registry);
         const rootTarget = target;
         target = document.createElement("div");
         target.style.width = "100%";
