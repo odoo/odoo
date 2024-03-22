@@ -258,6 +258,16 @@ class PurchaseOrder(models.Model):
             best_price_unit_ids.update(lines.ids)
         return list(best_price_ids), list(best_date_ids), list(best_price_unit_ids)
 
+    def _prepare_grouped_data(self, rfq):
+        match_fields = super()._prepare_grouped_data(rfq)
+        return match_fields + (rfq.requisition_id.id,)
+
+    def _check_alternative_purchase_orders(self, rfqs, oldest_rfq):
+        if self.env.user.has_group('purchase_requisition.group_purchase_alternatives'):
+            super()._check_alternative_purchase_orders(rfqs, oldest_rfq)
+            oldest_rfq.alternative_po_ids += rfqs.mapped('alternative_po_ids')
+            rfqs.mapped('alternative_po_ids').filtered(lambda po: po.state == 'cancel').unlink()
+
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
