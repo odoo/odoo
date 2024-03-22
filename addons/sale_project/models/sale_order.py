@@ -197,7 +197,6 @@ class SaleOrder(models.Model):
         default_project_id = default_line.project_id.id or self.project_id.id or self.project_ids[:1].id
 
         action['context'] = {
-            'search_default_sale_order_id': self.id,
             'default_sale_order_id': self.id,
             'default_sale_line_id': default_line.id,
             'default_partner_id': self.partner_id.id,
