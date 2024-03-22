@@ -103,7 +103,7 @@ test("save filter", async () => {
             });
         }
     }
-    onRpc("create_or_replace", (route, { args }) => {
+    onRpc("create_or_replace", ({ args, route }) => {
         expect.step(route);
         const irFilter = args[0];
         expect(irFilter.context).toEqual({ group_by: [], someKey: "foo" });
@@ -128,7 +128,7 @@ test("save filter", async () => {
 });
 
 test("dynamic filters are saved dynamic", async () => {
-    onRpc("create_or_replace", (route, { args }) => {
+    onRpc("create_or_replace", ({ args, route }) => {
         expect.step(route);
         const irFilter = args[0];
         expect(irFilter.domain).toBe(
@@ -136,6 +136,7 @@ test("dynamic filters are saved dynamic", async () => {
         );
         return 7; // fake serverSideId
     });
+
     await mountWithSearch(SearchBar, {
         resModel: "foo",
         context: { search_default_filter: 1 },
@@ -158,12 +159,13 @@ test("dynamic filters are saved dynamic", async () => {
 });
 
 test("save filters created via autocompletion works", async () => {
-    onRpc("create_or_replace", (route, { args }) => {
+    onRpc("create_or_replace", ({ args, route }) => {
         expect.step(route);
         const irFilter = args[0];
         expect(irFilter.domain).toBe(`[("foo", "ilike", "a")]`);
         return 7; // fake serverSideId
     });
+
     await mountWithSearch(SearchBar, {
         resModel: "foo",
         searchMenuTypes: ["favorite"],
@@ -192,7 +194,8 @@ test("favorites have unique descriptions (the submenus of the favorite menu are 
             expect(options).toEqual({ type: "danger" });
         },
     }));
-    onRpc("create_or_replace", (route, { args }) => {
+
+    onRpc("create_or_replace", ({ args, route }) => {
         expect.step(route);
         expect(args[0]).toEqual({
             action_id: false,
@@ -206,6 +209,7 @@ test("favorites have unique descriptions (the submenus of the favorite menu are 
         });
         return 2; // fake serverSideId
     });
+
     await mountWithSearch(SearchBar, {
         resModel: "foo",
         searchMenuTypes: ["favorite"],
@@ -250,9 +254,9 @@ test("undefined name for filter shows notification and not error", async () => {
             expect(options).toEqual({ type: "danger" });
         },
     }));
-    onRpc("create_or_replace", (route, { args }) => {
-        return 7; // fake serverSideId
-    });
+
+    onRpc("create_or_replace", () => 7); // fake serverSideId
+
     await mountWithSearch(SearchBarMenu, {
         resModel: "foo",
         searchViewId: false,

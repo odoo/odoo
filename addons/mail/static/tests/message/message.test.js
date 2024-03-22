@@ -1,7 +1,12 @@
 import { describe, expect, test } from "@odoo/hoot";
 
+import { Deferred, mockDate, mockTimeZone, tick } from "@odoo/hoot-mock";
+import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+import { Command, mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
+import { actionService } from "@web/webclient/actions/action_service";
 import {
     SIZES,
     assertSteps,
@@ -18,11 +23,6 @@ import {
     step,
     triggerHotkey,
 } from "../mail_test_helpers";
-import { Command, mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
-import { Deferred, mockDate, mockTimeZone, tick } from "@odoo/hoot-mock";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { actionService } from "@web/webclient/actions/action_service";
-import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
 
 const { DateTime } = luxon;
 
@@ -832,11 +832,9 @@ test("toggle_star message", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    onRpc((route, args) => {
-        if (route === "/web/dataset/call_kw/mail.message/toggle_message_starred") {
-            step("rpc:toggle_message_starred");
-            expect(args.args[0][0]).toBe(messageId);
-        }
+    onRpc("mail.message", "toggle_message_starred", ({ args }) => {
+        step("rpc:toggle_message_starred");
+        expect(args[0][0]).toBe(messageId);
     });
     await start();
     await openDiscuss(channelId);

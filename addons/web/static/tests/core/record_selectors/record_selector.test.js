@@ -86,11 +86,10 @@ test("Can be updated from autocomplete", async () => {
 });
 
 test("Display name is correctly fetched", async () => {
-    expect.assertions(4);
-    onRpc("web_search_read", (route, args) => {
+    expect.assertions(3);
+    onRpc("partner", "web_search_read", ({ kwargs }) => {
         expect.step("web_search_read");
-        expect(args.model).toBe("partner");
-        expect(args.kwargs.domain).toEqual([["id", "in", [1]]]);
+        expect(kwargs.domain).toEqual([["id", "in", [1]]]);
     });
     await mountRecordSelector({
         resModel: "partner",
@@ -102,17 +101,11 @@ test("Display name is correctly fetched", async () => {
 });
 
 test("Can give domain and context props for the name search", async () => {
-    expect.assertions(6);
-    onRpc("name_search", (route, args) => {
+    expect.assertions(5);
+    onRpc("partner", "name_search", ({ kwargs }) => {
         expect.step("name_search");
-        expect(args.model).toBe("partner");
-        expect(args.kwargs.args).toEqual([
-            "&",
-            ["display_name", "=", "Bob"],
-            "!",
-            ["id", "in", []],
-        ]);
-        expect(args.kwargs.context.blip).toBe("blop");
+        expect(kwargs.args).toEqual(["&", ["display_name", "=", "Bob"], "!", ["id", "in", []]]);
+        expect(kwargs.context.blip).toBe("blop");
     });
     await mountRecordSelector({
         resModel: "partner",

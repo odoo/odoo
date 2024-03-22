@@ -92,7 +92,7 @@ test("PriorityField tooltip", async () => {
 test("PriorityField in form view", async () => {
     expect.assertions(8);
 
-    onRpc("web_save", (_route, { args }) => {
+    onRpc("web_save", ({ args }) => {
         expect(args).toEqual([[1], { selection: "done" }]);
     });
     await mountView({
@@ -174,7 +174,7 @@ test("PriorityField can write after adding a record -- kanban", async () => {
     });
     Partner._records[0].selection = "0";
     Partner._views[["form", "myquickview"]] = /* xml */ `<form/>`;
-    onRpc("web_save", (_, { args }) => expect.step(`web_save ${JSON.stringify(args)}`));
+    onRpc("web_save", ({ args }) => expect.step(`web_save ${JSON.stringify(args)}`));
     await mountView({
         type: "kanban",
         resModel: "partner",

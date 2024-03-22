@@ -275,11 +275,9 @@ test("sidebar: open channel and leave it", async () => {
             }),
         ],
     });
-    onRpc((route, args) => {
-        if (route === "/web/dataset/call_kw/discuss.channel/action_unfollow") {
-            step("action_unfollow");
-            expect(args.args[0]).toBe(channelId);
-        }
+    onRpc("discuss.channel", "action_unfollow", ({ args }) => {
+        step("action_unfollow");
+        expect(args[0]).toBe(channelId);
     });
     await start();
     await openDiscuss();

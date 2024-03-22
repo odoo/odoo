@@ -227,13 +227,12 @@ test("chatter: drop attachment should refresh thread data with hasParentReloadOn
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
 
-    onRpc((route) => {
+    onRpc(async ({ route }) => {
         if (route === "/mail/attachment/upload") {
             const attachmentId = pyEnv["ir.attachment"].create([
                 { res_id: partnerId, res_model: "res.partner", mimetype: "application/pdf" },
             ]);
             pyEnv["res.partner"].write([partnerId], { message_main_attachment_id: attachmentId });
-            return Promise.resolve();
         }
     });
     await start();

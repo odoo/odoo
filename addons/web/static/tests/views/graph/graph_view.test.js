@@ -2508,7 +2508,7 @@ test("save params succeeds", async () => {
     ];
 
     let serverId = 1;
-    onRpc("create_or_replace", (_route, { args }) => {
+    onRpc("create_or_replace", ({ args }) => {
         expect(args[0].context).toEqual(expectedContexts.shift());
         return serverId++;
     });
@@ -2707,7 +2707,7 @@ test("the active measure description is the arch string attribute in priority", 
 test("reload graph with correct fields", async () => {
     expect.assertions(2);
 
-    onRpc("web_read_group", (_route, { kwargs }) => {
+    onRpc("web_read_group", ({ kwargs }) => {
         expect(kwargs.fields).toEqual(["__count", "foo:sum"]);
     });
 
@@ -2733,7 +2733,7 @@ test("reload graph with correct fields", async () => {
 test("initial groupby is kept when reloading", async () => {
     expect.assertions(8);
 
-    onRpc("web_read_group", (_route, { kwargs }) => {
+    onRpc("web_read_group", ({ kwargs }) => {
         expect(kwargs.groupby).toEqual(["product_id"]);
     });
     const view = await mountView({
@@ -3506,7 +3506,7 @@ test("fallback on initial groupby when the groupby from control panel has 0 leng
 });
 
 test("change mode, stacked, or order via the graph buttons does not reload datapoints, change measure does", async () => {
-    onRpc("web_read_group", (_route, { kwargs }) => {
+    onRpc("web_read_group", ({ kwargs }) => {
         expect.step(JSON.stringify(kwargs.fields));
     });
     const view = await mountView({
@@ -3692,7 +3692,7 @@ test("only process most recent data for concurrent groupby", async () => {
 test("fill_temporal is true by default", async () => {
     expect.assertions(1);
 
-    onRpc("web_read_group", (_route, { kwargs }) => {
+    onRpc("web_read_group", ({ kwargs }) => {
         expect(kwargs.context.fill_temporal).toBe(true, {
             message: "The observable state of fill_temporal should be true",
         });
@@ -3704,7 +3704,7 @@ test("fill_temporal is true by default", async () => {
 test("fill_temporal can be changed throught the context", async () => {
     expect.assertions(1);
 
-    onRpc("web_read_group", (_route, { kwargs }) => {
+    onRpc("web_read_group", ({ kwargs }) => {
         expect(kwargs.context.fill_temporal).toBe(false, {
             message: "The observable state of fill_temporal should be false",
         });

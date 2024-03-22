@@ -13,6 +13,7 @@ import {
     triggerHotkey,
 } from "../../../mail_test_helpers";
 import { onRpc, serverState } from "@web/../tests/web_test_helpers";
+import { pick } from "@web/core/utils/objects";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -24,14 +25,16 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
             step(`${route} - ${JSON.stringify(args)}`);
         }
     });
-    onRpc((route, args) => {
+    onRpc((params) => {
         if (
-            [
-                "/web/dataset/call_kw/discuss.channel/search_read",
-                "/web/dataset/call_kw/discuss.channel/channel_create",
-            ].includes(route)
+            params.model === "discuss.channel" &&
+            ["search_read", "channel_create"].includes(params.method)
         ) {
-            step(`${route} - ${JSON.stringify(args)}`);
+            step(
+                `${params.route} - ${JSON.stringify(
+                    pick(params, "args", "kwargs", "method", "model")
+                )}`
+            );
         }
     });
     await start();
@@ -56,8 +59,6 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
     await insertText(".o-discuss-ChannelSelector input", "abc");
     await assertSteps([
         `/web/dataset/call_kw/discuss.channel/search_read - ${JSON.stringify({
-            model: "discuss.channel",
-            method: "search_read",
             args: [],
             kwargs: {
                 limit: 10,
@@ -73,6 +74,8 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
                     allowed_company_ids: [1],
                 },
             },
+            method: "search_read",
+            model: "discuss.channel",
         })}`,
     ]);
     await click(".o-discuss-ChannelSelector-suggestion");
@@ -81,8 +84,6 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
     const channelId = pyEnv["discuss.channel"].search([["name", "=", "abc"]]);
     await assertSteps([
         `/web/dataset/call_kw/discuss.channel/channel_create - ${JSON.stringify({
-            model: "discuss.channel",
-            method: "channel_create",
             args: ["abc", null],
             kwargs: {
                 context: {
@@ -92,6 +93,8 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
                     allowed_company_ids: [1],
                 },
             },
+            method: "channel_create",
+            model: "discuss.channel",
         })}`,
         `/discuss/channel/messages - {"channel_id":${channelId},"limit":30}`,
     ]);
@@ -126,15 +129,16 @@ test("can join a chat conversation", async () => {
             step(`${route} - ${JSON.stringify(args)}`);
         }
     });
-    onRpc((route, args) => {
+    onRpc((params) => {
         if (
-            [
-                "/web/dataset/call_kw/discuss.channel/search_read",
-                "/web/dataset/call_kw/discuss.channel/channel_create",
-                "/web/dataset/call_kw/discuss.channel/channel_get",
-            ].includes(route)
+            params.model === "discuss.channel" &&
+            ["search_read", "channel_create", "channel_get"].includes(params.method)
         ) {
-            step(`${route} - ${JSON.stringify(args)}`);
+            step(
+                `${params.route} - ${JSON.stringify(
+                    pick(params, "args", "kwargs", "method", "model")
+                )}`
+            );
         }
     });
     await start();
@@ -162,8 +166,6 @@ test("can join a chat conversation", async () => {
     triggerHotkey("Enter");
     await assertSteps([
         `/web/dataset/call_kw/discuss.channel/channel_get - ${JSON.stringify({
-            model: "discuss.channel",
-            method: "channel_get",
             args: [],
             kwargs: {
                 partners_to: [partnerId],
@@ -175,6 +177,8 @@ test("can join a chat conversation", async () => {
                     allowed_company_ids: [1],
                 },
             },
+            method: "channel_get",
+            model: "discuss.channel",
         })}`,
     ]);
     await contains(".o-mail-DiscussSidebarChannel");

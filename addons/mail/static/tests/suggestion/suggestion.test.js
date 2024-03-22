@@ -184,11 +184,9 @@ test("Channel suggestions do not crash after rpc returns", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const deferred = new Deferred();
-    onRpc((route, args) => {
-        if (route === "/web/dataset/call_kw/discuss.channel/get_mention_suggestions") {
-            step("get_mention_suggestions");
-            deferred.resolve();
-        }
+    onRpc("discuss.channel", "get_mention_suggestions", () => {
+        step("get_mention_suggestions");
+        deferred.resolve();
     });
     await start();
     await openDiscuss(channelId);

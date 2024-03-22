@@ -219,10 +219,8 @@ test("radio field with numerical keys encoded as strings", async () => {
         ],
     };
 
-    onRpc((route, { args, method, model }) => {
-        if (model === "partner" && method === "web_save") {
-            expect(args[1].selection).toBe("1", { message: "should write correct value" });
-        }
+    onRpc("partner", "web_save", ({ args }) => {
+        expect(args[1].selection).toBe("1", { message: "should write correct value" });
     });
 
     await mountView({

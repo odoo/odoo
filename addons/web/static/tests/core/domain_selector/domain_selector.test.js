@@ -391,11 +391,8 @@ test("operator fallback (mode readonly)", async () => {
 });
 
 test("cache fields_get", async () => {
-    onRpc((_, { method }) => {
-        if (method === "fields_get") {
-            expect.step("fields_get");
-        }
-    });
+    onRpc("fields_get", ({ method }) => expect.step(method));
+
     await makeDomainSelector({
         domain: "['&', ['foo', '=', 'kikou'], ['bar', '=', 'true']]",
     });

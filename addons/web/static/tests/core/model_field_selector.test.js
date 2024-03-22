@@ -264,11 +264,9 @@ test("cache fields_get", async () => {
         relation: "partner",
         searchable: true,
     });
-    onRpc((_, { method }) => {
-        if (method === "fields_get") {
-            expect.step("fields_get");
-        }
-    });
+
+    onRpc("fields_get", ({ method }) => expect.step(method));
+
     await mountWithCleanup(ModelFieldSelector, {
         props: {
             readonly: false,
