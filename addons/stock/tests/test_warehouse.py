@@ -643,13 +643,13 @@ class TestWarehouse(TestStockCommon):
         wh.name = "Chicago"
         wh.code = "chic"
         warehouse = wh.save()
-        self.assertEqual(warehouse.int_type_id.barcode, 'CHIC-INTERNAL')
+        self.assertEqual(warehouse.int_type_id.barcode, 'CHICINT')
         self.assertEqual(warehouse.int_type_id.sequence_id.prefix, 'chic/INT/')
 
         wh = Form(warehouse)
         wh.code = 'CH'
         wh.save()
-        self.assertEqual(warehouse.int_type_id.barcode, 'CH-INTERNAL')
+        self.assertEqual(warehouse.int_type_id.barcode, 'CHINT')
         self.assertEqual(warehouse.int_type_id.sequence_id.prefix, 'CH/INT/')
 
     def test_location_warehouse(self):

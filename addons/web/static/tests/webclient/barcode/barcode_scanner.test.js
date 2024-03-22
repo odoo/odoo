@@ -18,7 +18,7 @@ test("Barcode scanner crop overlay", async () => {
     await mountWithCleanup(WebClient, { env });
 
     const firstBarcodeValue = "Odoo";
-    const secondBarcodeValue = "O-CMD-TEST";
+    const secondBarcodeValue = "OCDTEST";
 
     let barcodeToGenerate = firstBarcodeValue;
     let videoReady = new Deferred();

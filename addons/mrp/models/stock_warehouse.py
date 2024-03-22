@@ -173,13 +173,13 @@ class StockWarehouse(models.Model):
                 'name': _('Pre-Production'),
                 'active': manufacture_steps in ('pbm', 'pbm_sam'),
                 'usage': 'internal',
-                'barcode': self._valid_barcode(code + '-PREPRODUCTION', company_id)
+                'barcode': self._valid_barcode(code + 'PREPRODUCTION', company_id)
             },
             'sam_loc_id': {
                 'name': _('Post-Production'),
                 'active': manufacture_steps == 'pbm_sam',
                 'usage': 'internal',
-                'barcode': self._valid_barcode(code + '-POSTPRODUCTION', company_id)
+                'barcode': self._valid_barcode(code + 'POSTPRODUCTION', company_id)
             },
         })
         return values
@@ -235,15 +235,15 @@ class StockWarehouse(models.Model):
         data.update({
             'pbm_type_id': {
                 'active': self.manufacture_to_resupply and self.manufacture_steps in ('pbm', 'pbm_sam') and self.active,
-                'barcode': self.code.replace(" ", "").upper() + "-PC",
+                'barcode': self.code.replace(" ", "").upper() + "PC",
             },
             'sam_type_id': {
                 'active': self.manufacture_to_resupply and self.manufacture_steps == 'pbm_sam' and self.active,
-                'barcode': self.code.replace(" ", "").upper() + "-SFP",
+                'barcode': self.code.replace(" ", "").upper() + "SFP",
             },
             'manu_type_id': {
                 'active': self.manufacture_to_resupply and self.active,
-                'barcode': self.code.replace(" ", "").upper() + "-MANUFACTURING",
+                'barcode': self.code.replace(" ", "").upper() + "MANUF",
                 'default_location_src_id': self.manufacture_steps in ('pbm', 'pbm_sam') and self.pbm_loc_id.id or self.lot_stock_id.id,
                 'default_location_dest_id': self.manufacture_steps == 'pbm_sam' and self.sam_loc_id.id or self.lot_stock_id.id,
             },

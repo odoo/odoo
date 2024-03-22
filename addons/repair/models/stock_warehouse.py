@@ -45,7 +45,7 @@ class StockWarehouse(models.Model):
         data.update({
             'repair_type_id': {
                 'active': self.active,
-                'barcode': self.code.replace(" ", "").upper() + "-RO",
+                'barcode': self.code.replace(" ", "").upper() + "RO",
             },
         })
         return data
