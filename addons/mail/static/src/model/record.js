@@ -326,8 +326,6 @@ export class Record {
         return Model.get.call(ModelFullProxy, data) ?? Model.new(data);
     }
 
-    /** @type {Map<string, RecordList>} */
-    _fieldsValue = new Map();
     /** @returns {import("models").Store} */
     get _store() {
         return toRaw(this)._raw.Model._rawStore._proxy;
@@ -427,12 +425,12 @@ export class Record {
         const data = { ...recordProxy };
         for (const name of Model._.fields.keys()) {
             if (isMany(Model, name)) {
-                data[name] = record[name].map((recordProxy) => {
+                data[name] = record._proxyInternal[name].map((recordProxy) => {
                     const record = toRaw(recordProxy)._raw;
                     return record.toIdData.call(record._proxyInternal);
                 });
             } else if (isOne(Model, name)) {
-                const otherRecord = toRaw(record[name])?._raw;
+                const otherRecord = toRaw(record._proxyInternal[name])?._raw;
                 data[name] = otherRecord?.toIdData.call(record._proxyInternal);
             } else {
                 data[name] = recordProxy[name]; // Record.attr()

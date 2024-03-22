@@ -632,16 +632,16 @@ test("lazy sort should re-sort while they are observed", async () => {
     observe = false;
     message.sequence = 10;
     expect(
-        `${toRaw(thread)
-            ._raw._fieldsValue.get("messages")
-            .data.map((localId) => toRaw(thread)._raw._store.get(localId).id)}`
+        `${toRaw(thread)._raw.messages.data.map(
+            (localId) => toRaw(thread)._raw._store.get(localId).id
+        )}`
     ).toBe("2,1", { message: "observed one last time when it changes" });
     expect([]).toVerifySteps();
     message.sequence = 1;
     expect(
-        `${toRaw(thread)
-            ._raw._fieldsValue.get("messages")
-            .data.map((localId) => toRaw(thread)._raw._store.get(localId).id)}`
+        `${toRaw(thread)._raw.messages.data.map(
+            (localId) => toRaw(thread)._raw._store.get(localId).id
+        )}`
     ).toBe("2,1", { message: "no longer observed" });
     expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
     observe = true;

@@ -135,7 +135,7 @@ export class StoreInternal extends RecordInternal {
         const recordList = toRaw(recordListFullProxy)._raw;
         // sort on copy of list so that reactive observers not triggered while sorting
         const recordsFullProxy = recordListFullProxy.data.map((localId) =>
-            recordListFullProxy.store.recordByLocalId.get(localId)
+            recordListFullProxy._store.recordByLocalId.get(localId)
         );
         recordsFullProxy.sort(func);
         const data = recordsFullProxy.map((recordFullProxy) => toRaw(recordFullProxy)._raw.localId);
@@ -201,7 +201,7 @@ export class StoreInternal extends RecordInternal {
      */
     updateRelation(record, fieldName, value) {
         /** @type {RecordList<Record>} */
-        const recordList = record._fieldsValue.get(fieldName);
+        const recordList = record[fieldName];
         if (isMany(record.Model, fieldName)) {
             this.updateRelationMany(recordList, value);
         } else {
@@ -220,9 +220,9 @@ export class StoreInternal extends RecordInternal {
                         if (cmd === "ADD") {
                             recordList.add(item);
                         } else if (cmd === "ADD.noinv") {
-                            recordList._addNoinv(item);
+                            recordList._.addNoinv(recordList, item);
                         } else if (cmd === "DELETE.noinv") {
-                            recordList._deleteNoinv(item);
+                            recordList._.deleteNoinv(recordList, item);
                         } else {
                             recordList.delete(item);
                         }
@@ -231,9 +231,9 @@ export class StoreInternal extends RecordInternal {
                     if (cmd === "ADD") {
                         recordList.add(cmdData);
                     } else if (cmd === "ADD.noinv") {
-                        recordList._addNoinv(cmdData);
+                        recordList._.addNoinv(recordList, cmdData);
                     } else if (cmd === "DELETE.noinv") {
-                        recordList._deleteNoinv(cmdData);
+                        recordList._.deleteNoinv(recordList, cmdData);
                     } else {
                         recordList.delete(cmdData);
                     }
@@ -242,9 +242,9 @@ export class StoreInternal extends RecordInternal {
         } else if ([null, false, undefined].includes(value)) {
             recordList.clear();
         } else if (!Array.isArray(value)) {
-            recordList.assign([value]);
+            recordList._.assign(recordList, [value]);
         } else {
-            recordList.assign(value);
+            recordList._.assign(recordList, value);
         }
     }
     /**
@@ -258,9 +258,9 @@ export class StoreInternal extends RecordInternal {
             if (cmd === "ADD") {
                 recordList.add(cmdData);
             } else if (cmd === "ADD.noinv") {
-                recordList._addNoinv(cmdData);
+                recordList._.addNoinv(recordList, cmdData);
             } else if (cmd === "DELETE.noinv") {
-                recordList._deleteNoinv(cmdData);
+                recordList._.deleteNoinv(recordList, cmdData);
             } else {
                 recordList.delete(cmdData);
             }

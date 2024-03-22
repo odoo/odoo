@@ -2,19 +2,13 @@
 /** @typedef {import("./record_list").RecordList} RecordList */
 
 import { onChange } from "@mail/utils/common/misc";
-import {
-    ATTR_SYM,
-    IS_DELETED_SYM,
-    IS_RECORD_LIST_SYM,
-    MANY_SYM,
-    ONE_SYM,
-    isRelation,
-} from "./misc";
+import { IS_DELETED_SYM, IS_RECORD_SYM, isRelation } from "./misc";
 import { RecordList } from "./record_list";
 import { reactive, toRaw } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
 
 export class RecordInternal {
+    [IS_RECORD_SYM] = true;
     [IS_DELETED_SYM] = false;
     // Note: state of fields in Maps rather than object is intentional for improved performance.
     /**
@@ -68,6 +62,7 @@ export class RecordInternal {
     proxyUsed = new Map();
     /** @type {string} */
     localId;
+    gettingField = false;
 
     /**
      * @param {Record} record
@@ -84,17 +79,15 @@ export class RecordInternal {
             // - 'many' fields => RecordList
             // record[name]?.[0] is ONE_SYM or MANY_SYM
             const recordList = new RecordList();
-            Object.assign(recordList, {
-                [IS_RECORD_LIST_SYM]: true,
-                [ATTR_SYM]: Model._.fieldsAttr.get(fieldName),
-                [ONE_SYM]: Model._.fieldsOne.get(fieldName),
-                [MANY_SYM]: Model._.fieldsMany.get(fieldName),
+            Object.assign(recordList._, {
                 name: fieldName,
                 owner: record,
-                _raw: recordList,
             });
-            recordList.store = record._store;
-            record._fieldsValue.set(fieldName, recordList);
+            Object.assign(recordList, {
+                _raw: recordList,
+                _store: record._store,
+            });
+            record[fieldName] = recordList;
         } else {
             record[fieldName] = Model._.fieldsDefault.get(fieldName);
         }
@@ -219,7 +212,7 @@ export class RecordInternal {
         const proxy2Sort = this.fieldsSortProxy2.get(fieldName);
         const func = Model._.fieldsSort.get(fieldName).bind(proxy2Sort);
         if (isRelation(Model, fieldName)) {
-            store._.sortRecordList(proxy2Sort._fieldsValue.get(fieldName)._proxy, func);
+            store._.sortRecordList(proxy2Sort[fieldName]._proxy, func);
         } else {
             // sort on copy of list so that reactive observers not triggered while sorting
             const copy = [...proxy2Sort[fieldName]];
