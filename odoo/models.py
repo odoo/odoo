@@ -3189,7 +3189,7 @@ class BaseModel(metaclass=MetaModel):
                 conname = hashed_conname
             else:
                 current_definition = tools.constraint_definition(cr, self._table, conname)
-            if current_definition == definition:
+            if current_definition == definition.replace("%", "%%"):
                 continue
 
             if current_definition:
