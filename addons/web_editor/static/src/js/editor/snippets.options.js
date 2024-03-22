@@ -5398,6 +5398,7 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         const newColumnEl = document.createElement('div');
         newColumnEl.classList.add('o_grid_item');
         let numberColumns, numberRows;
+        let imageLoadedPromise;
 
         if (elementType === 'image') {
             // Set the columns properties.
@@ -5412,6 +5413,9 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
                     onlyImages: true,
                     save: imageEl => {
                         isImageSaved = true;
+                        imageLoadedPromise = new Promise(resolve => {
+                            imageEl.addEventListener("load", () => resolve(), {once: true});
+                        });
                         // Adds the image to the new column.
                         newColumnEl.appendChild(imageEl);
                     },
@@ -5464,6 +5468,20 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         // Add the new column and update the grid height.
         rowEl.appendChild(newColumnEl);
         gridUtils._resizeGrid(rowEl);
+
+        // Scroll to the new column if more than half of it is hidden (= out of
+        // the viewport or hidden by an other element).
+        if (elementType === "image") {
+            // If an image was added, wait for it to be loaded before scrolling.
+            await imageLoadedPromise;
+        }
+        const newColumnPosition = newColumnEl.getBoundingClientRect();
+        const middleX = (newColumnPosition.left + newColumnPosition.right) / 2;
+        const middleY = (newColumnPosition.top + newColumnPosition.bottom) / 2;
+        const sameCoordinatesEl = this.ownerDocument.elementFromPoint(middleX, middleY);
+        if (!sameCoordinatesEl || !newColumnEl.contains(sameCoordinatesEl)) {
+            newColumnEl.scrollIntoView({behavior: "smooth", block: "center"});
+        }
         this.trigger_up('activate_snippet', {$snippet: $(newColumnEl)});
     },
     /**
