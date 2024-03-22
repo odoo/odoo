@@ -357,6 +357,10 @@ export class PosStore extends Reactive {
         return line;
     }
 
+    selectOrderLine(order, line) {
+        order.select_orderline(line);
+        this.numpadMode = "quantity";
+    }
     // This method should be called every time a product is added to an order.
     // The configure parameter is available if the orderline already contains all
     // the information without having to be calculated. For example, importing a SO.
@@ -563,7 +567,7 @@ export class PosStore extends Reactive {
 
         const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
         line.setOptions(options);
-        order.select_orderline(line);
+        this.selectOrderLine(order, line);
         this.numberBuffer.reset();
 
         const selectedOrderline = order.get_selected_orderline();
@@ -586,9 +590,9 @@ export class PosStore extends Reactive {
         if (to_merge_orderline) {
             to_merge_orderline.merge(line);
             line.delete();
-            order.select_orderline(to_merge_orderline);
+            this.selectOrderLine(order, to_merge_orderline);
         } else if (!selectedOrderline) {
-            order.select_orderline(order.get_last_orderline());
+            this.selectOrderLine(order, order.get_last_orderline());
         }
 
         this.numberBuffer.reset();
