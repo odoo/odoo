@@ -322,3 +322,40 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
 
         line = sale_order.order_line.filtered('is_delivery')
         self.assertEqual(line.price_unit, self.normal_delivery.fixed_price)
+
+    def test_price_with_weight_volume_variable(self):
+        """ Test that the price is correctly computed when the variable is weight*volume. """
+        qty = 3
+        list_price = 2
+        volume = 2.5
+        weight = 1.5
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_4.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.env['product.product'].create({
+                        'name': 'wv',
+                        'weight': weight,
+                        'volume': volume,
+                    }).id,
+                    'product_uom_qty': qty,
+                }),
+            ],
+        })
+        delivery = self.env['delivery.carrier'].create({
+            'name': 'Delivery Charges',
+            'delivery_type': 'base_on_rule',
+            'product_id': self.product_delivery_normal.id,
+            'price_rule_ids': [(0, 0, {
+                'variable': 'price',
+                'operator': '>=',
+                'max_value': 0,
+                'list_price': list_price,
+                'variable_factor': 'wv',
+            })]
+        })
+        self.assertEqual(
+            delivery._get_price_available(sale_order),
+            qty * list_price * weight * volume,
+            "The shipping price is not correctly computed with variable weight*volume.",
+        )
