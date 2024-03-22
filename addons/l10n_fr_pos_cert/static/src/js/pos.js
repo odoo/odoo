@@ -56,6 +56,13 @@ const L10nFrOrder = (Order) => class L10nFrOrder extends Order {
       result = Boolean(result || this.pos.is_french_country());
       return result;
     }
+    _get_qr_code_data() {
+      if (this.pos.is_french_country()){
+        return false;
+      } else {
+        return super._get_qr_code_data(...arguments);
+      }
+  }
 }
 Registries.Model.extend(Order, L10nFrOrder);
 
