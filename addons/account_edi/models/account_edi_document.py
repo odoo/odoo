@@ -137,7 +137,7 @@ class AccountEdiDocument(models.Model):
 
             # Attachments that are not explicitly linked to a business model could be removed because they are not
             # supposed to have any traceability from the user.
-            attachments_to_unlink.unlink()
+            attachments_to_unlink.sudo().unlink()
 
         def _postprocess_cancel_edi_results(documents, edi_result):
             move_ids_to_cancel = set()  # Avoid duplicates
