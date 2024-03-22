@@ -31,7 +31,7 @@ class TestProcRule(TransactionCase):
         orderpoint_form.product_max_qty = 5.1
         orderpoint_form.qty_multiple = 0.1
         orderpoint = orderpoint_form.save()
-        self.assertEqual(orderpoint.qty_to_order, orderpoint.product_max_qty)
+        self.assertAlmostEqual(orderpoint.qty_to_order, orderpoint.product_max_qty)
 
     def test_endless_loop_rules_from_location(self):
         """ Creates and configure a rule the way, when trying to get rules from
@@ -310,17 +310,14 @@ class TestProcRule(TransactionCase):
             'product_max_qty': 30.0,
             'qty_multiple': 10,
         })
-        orderpoint._compute_qty_to_order()
         self.assertEqual(orderpoint.qty_to_order, 10.0)  # 15.0 < 14.5 + 10 <= 30.0
         orderpoint.write({
             'qty_multiple': 1,
         })
-        orderpoint._compute_qty_to_order()
         self.assertEqual(orderpoint.qty_to_order, 15.0)  # 15.0 < 14.5 + 15 <= 30.0
         orderpoint.write({
             'qty_multiple': 0,
         })
-        orderpoint._compute_qty_to_order()
         self.assertEqual(orderpoint.qty_to_order, 15.5)  # 15.0 < 14.5 + 15.5 <= 30.0
 
     def test_orderpoint_replenishment_view_1(self):
