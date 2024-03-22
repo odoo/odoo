@@ -34,6 +34,7 @@ export class PosOrder extends Base {
 
         // !!Keep all uiState in one object!!
         this.uiState = {
+            lineToRefund: {},
             displayed: true,
             booked: false,
             screen_data: {},
@@ -428,8 +429,8 @@ export class PosOrder extends Base {
     removeOrderline(line) {
         const linesToRemove = line.getAllLinesInCombo();
         for (const lineToRemove of linesToRemove) {
-            if (lineToRemove.refunded_orderline_id?.uuid in this.pos.lineToRefund) {
-                delete this.pos.lineToRefund[lineToRemove.refunded_orderline_id.uuid];
+            if (lineToRemove.refunded_orderline_id?.uuid in this.uiState.lineToRefund) {
+                delete this.uiState.lineToRefund[lineToRemove.refunded_orderline_id.uuid];
             }
 
             if (this.assert_editable()) {

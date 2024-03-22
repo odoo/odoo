@@ -123,8 +123,6 @@ export class PosStore extends Reactive {
         this.ticket_screen_mobile_pane = "left";
         this.productListView = window.localStorage.getItem("productListView") || "grid";
 
-        // Record<orderlineId, { 'qty': number, 'orderline': { qty: number, refundedQty: number, orderUid: string }, 'destinationOrderUid': string }>
-        this.lineToRefund = {};
         this.ticketScreenState = {
             offsetByDomain: {},
             totalCount: 0,
@@ -910,11 +908,12 @@ export class PosStore extends Reactive {
                 }
 
                 for (const line of serverO.lines) {
-                    const refundDetail = this.lineToRefund[line.refunded_orderline_id?.uuid];
-                    if (refundDetail) {
-                        const currRefund = line.refunded_orderline_id.refunded_qty || 0;
-                        line.refunded_orderline_id.refunded_qty = currRefund + refundDetail.qty;
-                        delete this.lineToRefund[refundDetail.line_uuid];
+                    const refundedOrderLine = line.refunded_orderline_id;
+
+                    if (refundedOrderLine) {
+                        const order = refundedOrderLine.order_id;
+                        delete order.uiState.lineToRefund[refundedOrderLine.uuid];
+                        refundedOrderLine.refunded_qty += Math.abs(line.qty);
                     }
                 }
             }
@@ -1287,6 +1286,13 @@ export class PosStore extends Reactive {
             const result = service[payload.method].apply(service, ev.data.args || []);
             payload.callback(result);
         }
+    }
+
+    get linesToRefund() {
+        return this.models["pos.order"].reduce((acc, order) => {
+            acc.push(...Object.values(order.uiState.lineToRefund));
+            return acc;
+        }, []);
     }
 
     isProductQtyZero(qty) {

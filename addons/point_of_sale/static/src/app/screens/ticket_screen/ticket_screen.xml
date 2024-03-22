@@ -141,19 +141,19 @@
                             <Orderline line="line.getDisplayData()"
                                 class="{'selected': line.id === getSelectedOrderlineId()}"
                                 t-on-click="() => this.onClickOrderline(line)">
-                                <t t-set="toRefundDetail" t-value="line.pos.lineToRefund[line.uuid]" />
-                                <li t-if="!line.pos.isProductQtyZero(line.refunded_qty)"
+                                <t t-set="toRefundDetail" t-value="line.order_id.uiState.lineToRefund[line.uuid]" />
+                                <li t-if="!pos.isProductQtyZero(line.refunded_qty)"
                                     class="info refund-note mt-1">
                                     <strong t-esc="env.utils.formatProductQty(line.refunded_qty)" />
                                     <span> Refunded</span>
                                 </li>
-                                <li t-if="!line.pos.isProductQtyZero(toRefundDetail?.qty)" class="info to-refund-highlight refund-note mt-1 fw-bold text-primary">
+                                <li t-if="!pos.isProductQtyZero(toRefundDetail?.qty)" class="info to-refund-highlight refund-note mt-1 fw-bold text-primary">
                                     <t t-set="_destinationOrderUid" t-value="toRefundDetail.destination_order_uuid"/>
                                     <t t-set="refundQty" t-value="env.utils.formatProductQty(toRefundDetail.qty)"/>
                                     <t t-if="_destinationOrderUid">
-                                        Refunding <t t-esc="refundQty" /> in 
+                                        Refunding <t t-esc="refundQty" /> in
                                         <span t-esc="_destinationOrderUid"
-                                            class="order-link ms-1 text-decoration-underline cursor-pointer" 
+                                            class="order-link ms-1 text-decoration-underline cursor-pointer"
                                             t-on-click.stop="() => this.onClickRefundOrderUid(_destinationOrderUid)" />
                                     </t>
                                     <t t-else="">
