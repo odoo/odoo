@@ -45,7 +45,7 @@ patch(PosOrder.prototype, {
                 price_unit: priceUnit,
                 quantity: line.get_quantity(),
                 uom: null,
-                tax_values_list: getTaxesValues(
+                taxes_data: getTaxesValues(
                     taxes,
                     priceUnit,
                     1,

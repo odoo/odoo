@@ -18,7 +18,7 @@ class TestTax(TestTaxCommon):
             {
                 'total_included': 252.22,
                 'total_excluded': 200.0,
-                'tax_values_list': (
+                'taxes_data': (
                     (200.0, 22.22),
                     (200.0, 10.0),
                     (200.0, 20.0),
@@ -36,7 +36,7 @@ class TestTax(TestTaxCommon):
             {
                 'total_included': 124.4,
                 'total_excluded': 115.19,
-                'tax_values_list': (
+                'taxes_data': (
                     (115.19, 0.0),
                     (115.19, 9.21),
                 ),
@@ -55,7 +55,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 124.40,
                     'total_excluded': 115.19,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (115.19, 9.21),
                         (115.19, 0.0),
                     ),
@@ -68,7 +68,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 124.40,
                     'total_excluded': 115.185185,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (115.185185, 9.214815),
                         (115.185185, 0.0),
                     ),
@@ -89,7 +89,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 5.0,
                     'total_excluded': 4.75,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (4.75, 0.25),
                     ),
                 },
@@ -101,7 +101,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 10.0,
                     'total_excluded': 9.5,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (9.5, 0.5),
                     ),
                 },
@@ -113,7 +113,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 50.0,
                     'total_excluded': 47.6,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (47.6, 2.4),
                     ),
                 },
@@ -125,7 +125,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 5.0,
                     'total_excluded': 4.761905,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (4.761905, 0.238095),
                     ),
                 },
@@ -137,7 +137,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 10.0,
                     'total_excluded': 9.52381,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (9.52381, 0.47619),
                     ),
                 },
@@ -149,7 +149,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 50.0,
                     'total_excluded': 47.619048,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (47.619048, 2.380952),
                     ),
                 },
@@ -169,7 +169,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 2627.01,
                     'total_excluded': 2180.09,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (2180.09, 327.01),
                         (2180.09, 119.91),
                     ),
@@ -182,7 +182,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 2627.014218,
                     'total_excluded': 2180.094787,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (2180.094787, 327.014218),
                         (2180.094787, 119.905213),
                     ),
@@ -202,7 +202,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 52.50,
                     'total_excluded': 46.87,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (46.87, 5.63),
                     ),
                 },
@@ -214,7 +214,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 52.50,
                     'total_excluded': 46.875,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (46.875, 5.625),
                     ),
                 },
@@ -235,7 +235,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 27000.0,
                     'total_excluded': 22689.0,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (22689, 4311),
                     ),
                 },
@@ -247,7 +247,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 10919.0,
                     'total_excluded': 9176.0,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (9176, 1743),
                     ),
                 },
@@ -259,7 +259,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 27000.0,
                     'total_excluded': 22689.0,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (22689.0, 4311.0),
                     ),
                 },
@@ -271,7 +271,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 10920.0,
                     'total_excluded': 9176.0,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (9176.0, 1744.0),
                     ),
                 },
@@ -283,7 +283,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 26999.91,
                     'total_excluded': 22689.0,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (22689, 4310.91),
                     ),
                 },
@@ -295,7 +295,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 10919.44,
                     'total_excluded': 9176.0,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (9176, 1743.44),
                     ),
                 },
@@ -307,7 +307,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 27000.0,
                     'total_excluded': 22689.07563,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (22689.07563, 4310.92437),
                     ),
                 },
@@ -319,7 +319,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 10920.0,
                     'total_excluded': 9176.470588,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (9176.470588, 1743.529412),
                     ),
                 },
@@ -339,7 +339,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 399.999999,
                     'total_excluded': 333.333332,
-                    'tax_values_list': (
+                    'taxes_data': (
                         # 399.999999 / 1.20 * 0.20 ~= 66.666667
                         # 399.999999 - 66.666667 = 333.333332
                         (333.333332, 66.666667),
@@ -353,7 +353,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 399.999999,
                     'total_excluded': 333.3333325,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (333.3333325, 66.6666665),
                     ),
                 },
@@ -373,7 +373,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 11.90,
                     'total_excluded': 9.83,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (9.83, 2.07),
                     ),
                 },
@@ -385,7 +385,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 2.80,
                     'total_excluded': 2.31,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (2.31, 0.49),
                     ),
                 },
@@ -397,7 +397,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 7.0,
                     'total_excluded': 5.785124,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (5.785124, 1.214876),
                     ),
                 },
@@ -409,7 +409,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 11.90,
                     'total_excluded': 9.834711,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (9.834711, 2.065289),
                     ),
                 },
@@ -421,7 +421,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 2.80,
                     'total_excluded': 2.31405,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (2.31405, 0.48595),
                     ),
                 },
@@ -433,7 +433,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 7.0,
                     'total_excluded': 5.785124,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (5.785124, 1.214876),
                     ),
                 },
@@ -455,7 +455,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 53.44,
                     'total_excluded': 50.0,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (50.0, -10.0),
                         (50.0, 2.0),
                         (52.0, 11.44),
@@ -474,7 +474,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 0.0,
                     'total_excluded': -0.05,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (-0.05, 0.05),
                     ),
                 },
@@ -494,7 +494,7 @@ class TestTax(TestTaxCommon):
             {
                 'total_included': 115.0,
                 'total_excluded': 100.0,
-                'tax_values_list': (
+                'taxes_data': (
                     (100.0, 6.0),
                     (100.0, 6.0),
                     (100.0, 3.0),
@@ -514,7 +514,7 @@ class TestTax(TestTaxCommon):
             {
                 'total_included': 115.54,
                 'total_excluded': 100.0,
-                'tax_values_list': (
+                'taxes_data': (
                     (100.0, 6.0),
                     (106.0, 6.36),
                     (106.0, 3.18),
@@ -534,7 +534,7 @@ class TestTax(TestTaxCommon):
             {
                 'total_included': 115.73,
                 'total_excluded': 100.0,
-                'tax_values_list': (
+                'taxes_data': (
                     (100.0, 6.0),
                     (106.0, 6.36),
                     (112.36, 3.37),
@@ -555,7 +555,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 115.36,
                     'total_excluded': 100.0,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (100.0, 6.0),
                         (100.0, 6.0),
                         (112.0, 3.36),
@@ -569,7 +569,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 115.36,
                     'total_excluded': 100.0,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (100.0, 6.0),
                         (100.0, 6.0),
                         (112.0, 3.36),
@@ -593,7 +593,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 115.36,
                     'total_excluded': 100.0,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (100.0, 6.0),
                         (100.0, 6.0),
                         (112.0, 3.36),
@@ -608,7 +608,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 17.79,
                     'total_excluded': 15.89,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (15.89, 0.95),
                         (15.89, 0.95),
                     ),
@@ -638,7 +638,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 48.0,
                     'total_excluded': 32.33,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (32.33, 2.4),
                         (32.33, 1.44),
                         (32.33, 0.31),
@@ -653,7 +653,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 1000.0,
                     'total_excluded': 836.7,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (836.7, 50.0),
                         (836.7, 30.0),
                         (836.7, 6.5),
@@ -675,7 +675,7 @@ class TestTax(TestTaxCommon):
             {
                 'total_included': 48.0,
                 'total_excluded': 32.33,
-                'tax_values_list': (
+                'taxes_data': (
                     (32.33, 2.4),
                     (32.33, 1.44),
                     (32.33, 0.31),
@@ -693,7 +693,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 1000.0,
                     'total_excluded': 836.7,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (836.7, 50.0),
                         (836.7, 30.0),
                         (836.7, 6.5),
@@ -710,7 +710,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 48.0,
                     'total_excluded': 32.3279999,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (32.3279999, 2.4),
                         (32.3279999, 1.44),
                         (32.3279999, 0.312),
@@ -726,7 +726,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 1000.0,
                     'total_excluded': 836.7,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (836.7, 50.0),
                         (836.7, 30.0),
                         (836.7, 6.5),
@@ -751,7 +751,7 @@ class TestTax(TestTaxCommon):
                 {
                     'total_included': 136.0,
                     'total_excluded': 100.0,
-                    'tax_values_list': (
+                    'taxes_data': (
                         (100.0, 5.0),
                         (100.0, 21.0),
                         (100.0, 10.0),
@@ -773,7 +773,7 @@ class TestTax(TestTaxCommon):
             {
                 'total_included': 131.0,
                 'total_excluded': 95.0,
-                'tax_values_list': (
+                'taxes_data': (
                     (95.0, 5.0),
                     (100.0, 21.0),
                     (100.0, 10.0),
@@ -794,7 +794,7 @@ class TestTax(TestTaxCommon):
             {
                 'total_included': 123.0,
                 'total_excluded': 99.0,
-                'tax_values_list': (
+                'taxes_data': (
                     (99.0, 1.0),
                     (100.0, 21.0),
                     (121.0, 2.0),
@@ -814,7 +814,7 @@ class TestTax(TestTaxCommon):
             {
                 'total_included': 123.0,
                 'total_excluded': 99.0,
-                'tax_values_list': (
+                'taxes_data': (
                     (99.0, 1.0),
                     (100.0, 21.0),
                     (121.0, 2.0),
@@ -834,7 +834,7 @@ class TestTax(TestTaxCommon):
             {
                 'total_included': 124.0,
                 'total_excluded': 100.0,
-                'tax_values_list': (
+                'taxes_data': (
                     (100.0, 1.0),
                     (100.0, 21.0),
                     (121.0, 2.0),
@@ -854,7 +854,7 @@ class TestTax(TestTaxCommon):
             {
                 'total_included': 123.0,
                 'total_excluded': 99.0,
-                'tax_values_list': (
+                'taxes_data': (
                     (99.0, 1.0),
                     (100.0, 21.0),
                     (121.0, 2.0),
@@ -874,7 +874,7 @@ class TestTax(TestTaxCommon):
             {
                 'total_included': 123.0,
                 'total_excluded': 99.0,
-                'tax_values_list': (
+                'taxes_data': (
                     (99.0, 1.0),
                     (100.0, 21.0),
                     (121.0, 2.0),

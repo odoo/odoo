@@ -11,22 +11,22 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
-    prepare_taxes_batches(tax_values_list) {
+    prepare_taxes_batches(taxes_data) {
         const batches = [];
 
         let current_batch = null;
         let is_base_affected = null;
-        for (const tax_values of tax_values_list.toReversed()) {
+        for (const tax_data of taxes_data.toReversed()) {
             if (current_batch !== null) {
-                const same_amount_type = tax_values.amount_type === current_batch.amount_type;
-                const same_price_include = tax_values.price_include === current_batch.price_include;
+                const same_amount_type = tax_data.amount_type === current_batch.amount_type;
+                const same_price_include = tax_data.price_include === current_batch.price_include;
                 const same_incl_base_amount_not_affected =
-                    tax_values.include_base_amount &&
-                    tax_values.include_base_amount === current_batch.include_base_amount &&
+                    tax_data.include_base_amount &&
+                    tax_data.include_base_amount === current_batch.include_base_amount &&
                     !is_base_affected;
                 const same_inc_base_amount =
-                    tax_values.include_base_amount === current_batch.include_base_amount &&
-                    !tax_values.include_base_amount;
+                    tax_data.include_base_amount === current_batch.include_base_amount &&
+                    !tax_data.include_base_amount;
                 const same_batch =
                     same_amount_type &&
                     same_price_include &&
@@ -40,14 +40,16 @@ export const accountTaxHelpers = {
             if (current_batch === null) {
                 current_batch = {
                     taxes: [],
-                    amount_type: tax_values.amount_type,
-                    include_base_amount: tax_values.include_base_amount,
-                    price_include: tax_values.price_include,
+                    amount_type: tax_data.amount_type,
+                    include_base_amount: tax_data.include_base_amount,
+                    price_include: tax_data.price_include,
+                    is_tax_computed: false,
+                    is_base_computed: false,
                 };
             }
 
-            is_base_affected = tax_values.is_base_affected;
-            current_batch.taxes.push(tax_values);
+            is_base_affected = tax_data.is_base_affected;
+            current_batch.taxes.push(tax_data);
         }
 
         if (current_batch !== null) {
@@ -57,8 +59,8 @@ export const accountTaxHelpers = {
         for (const batch of batches) {
             const batch_indexes = batch.taxes.map((x) => x.index);
             batch.taxes = batch.taxes.toReversed();
-            for (const tax_values of batch.taxes) {
-                tax_values.batch_indexes = batch_indexes;
+            for (const tax_data of batch.taxes) {
+                tax_data.batch_indexes = batch_indexes;
             }
         }
 
@@ -71,10 +73,10 @@ export const accountTaxHelpers = {
      */
     ascending_process_fixed_taxes_batch(batch) {
         if (batch.amount_type === "fixed") {
-            batch.computed = "tax";
-            for (const tax_values of batch.taxes) {
-                tax_values.evaluation_context.quantity_multiplicator =
-                    tax_values.amount * tax_values._factor;
+            batch.is_tax_computed = true;
+            for (const tax_data of batch.taxes) {
+                tax_data.evaluation_context.quantity_multiplicator =
+                    tax_data.amount * tax_data._factor;
             }
         }
     },
@@ -92,33 +94,35 @@ export const accountTaxHelpers = {
         }
 
         if (amount_type === "percent") {
-            batch.computed = true;
+            batch.is_base_computed = true;
+            batch.is_tax_computed = true;
 
             let total_reverse_percentage = 0.0;
-            for (const tax_values of batch.taxes) {
-                total_reverse_percentage += (tax_values.amount * tax_values._factor) / 100.0;
+            for (const tax_data of batch.taxes) {
+                total_reverse_percentage += (tax_data.amount * tax_data._factor) / 100.0;
             }
-            for (const tax_values of batch.taxes) {
-                const percentage = tax_values.amount / 100.0;
-                tax_values.evaluation_context.reverse_multiplicator = 1 + total_reverse_percentage;
-                tax_values.evaluation_context.multiplicator =
+            for (const tax_data of batch.taxes) {
+                const percentage = tax_data.amount / 100.0;
+                tax_data.evaluation_context.reverse_multiplicator = 1 + total_reverse_percentage;
+                tax_data.evaluation_context.multiplicator =
                     percentage / (1 + total_reverse_percentage);
             }
         } else if (amount_type === "division") {
-            batch.computed = true;
+            batch.is_base_computed = true;
+            batch.is_tax_computed = true;
 
             let total_reverse_percentage = 0.0;
-            for (const tax_values of batch.taxes) {
-                total_reverse_percentage += (tax_values.amount * tax_values._factor) / 100.0;
+            for (const tax_data of batch.taxes) {
+                total_reverse_percentage += (tax_data.amount * tax_data._factor) / 100.0;
             }
-            for (const tax_values of batch.taxes) {
-                const percentage = tax_values.amount / 100.0;
-                tax_values.evaluation_context.reverse_multiplicator =
+            for (const tax_data of batch.taxes) {
+                const percentage = tax_data.amount / 100.0;
+                tax_data.evaluation_context.reverse_multiplicator =
                     total_reverse_percentage === 1 ? 0.0 : 1 / (1 - total_reverse_percentage);
-                tax_values.evaluation_context.multiplicator = percentage;
+                tax_data.evaluation_context.multiplicator = percentage;
             }
         } else if (amount_type === "fixed") {
-            batch.computed = true;
+            batch.is_base_computed = true;
         }
     },
 
@@ -135,25 +139,27 @@ export const accountTaxHelpers = {
         }
 
         if (amount_type === "percent") {
-            batch.computed = true;
-            for (const tax_values of batch.taxes) {
-                tax_values.evaluation_context.multiplicator = tax_values.amount / 100.0;
+            batch.is_base_computed = true;
+            batch.is_tax_computed = true;
+            for (const tax_data of batch.taxes) {
+                tax_data.evaluation_context.multiplicator = tax_data.amount / 100.0;
             }
         } else if (amount_type === "division") {
-            batch.computed = true;
+            batch.is_base_computed = true;
+            batch.is_tax_computed = true;
 
             let total_percentage = 0.0;
-            for (const tax_values of batch.taxes) {
-                total_percentage += (tax_values.amount * tax_values._factor) / 100.0;
+            for (const tax_data of batch.taxes) {
+                total_percentage += (tax_data.amount * tax_data._factor) / 100.0;
             }
-            for (const tax_values of batch.taxes) {
-                const percentage = tax_values.amount / 100.0;
+            for (const tax_data of batch.taxes) {
+                const percentage = tax_data.amount / 100.0;
                 const reverse_multiplicator =
                     total_percentage === 1 ? 0.0 : 1 / (1 - total_percentage);
-                tax_values.evaluation_context.multiplicator = reverse_multiplicator * percentage;
+                tax_data.evaluation_context.multiplicator = reverse_multiplicator * percentage;
             }
         } else if (amount_type === "fixed") {
-            batch.computed = true;
+            batch.is_base_computed = true;
         }
     },
 
@@ -162,42 +168,42 @@ export const accountTaxHelpers = {
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
     prepare_taxes_computation(
-        tax_values_list,
+        taxes_data,
         { force_price_include = null, is_refund = false, include_caba_tags = false } = {}
     ) {
         // Flatten the taxes and order them.
-        const sorted_tax_values_list = tax_values_list.sort(
+        const sorted_taxes_data = taxes_data.sort(
             (v1, v2) => v1.sequence - v2.sequence || v1.id - v2.id
         );
-        let flatten_tax_values_list = [];
-        for (const tax_values of sorted_tax_values_list) {
-            if (tax_values.amount_type === "group") {
-                const sorted_children_tax_ids = tax_values._children_tax_ids.sort(
+        let flatten_taxes_data = [];
+        for (const tax_data of sorted_taxes_data) {
+            if (tax_data.amount_type === "group") {
+                const sorted_children_tax_ids = tax_data._children_tax_ids.sort(
                     (v1, v2) => v1.sequence - v2.sequence || v1.id - v2.id
                 );
-                for (const child_tax_values of sorted_children_tax_ids) {
-                    flatten_tax_values_list.push(child_tax_values);
+                for (const child_tax_data of sorted_children_tax_ids) {
+                    flatten_taxes_data.push(child_tax_data);
                 }
             } else {
-                flatten_tax_values_list.push(tax_values);
+                flatten_taxes_data.push(tax_data);
             }
         }
-        flatten_tax_values_list = flatten_tax_values_list.map((tax_values, index) =>
+        flatten_taxes_data = flatten_taxes_data.map((tax_data, index) =>
             Object.assign(
                 {
                     price_include:
                         force_price_include === null
-                            ? tax_values.price_include
+                            ? tax_data.price_include
                             : force_price_include,
                     index: index,
                     evaluation_context: {},
                 },
-                tax_values
+                tax_data
             )
         );
 
         // Group the taxes by batch of computation.
-        const descending_batches = this.prepare_taxes_batches(flatten_tax_values_list);
+        const descending_batches = this.prepare_taxes_batches(flatten_taxes_data);
         const ascending_batches = descending_batches.toReversed();
 
         // First ascending computation for fixed tax.
@@ -212,23 +218,23 @@ export const accountTaxHelpers = {
 
             // Build the expression representing the extra base as a sum.
             if (
-                [true, "tax"].includes(batch.computed) &&
+                batch.is_tax_computed &&
                 batch.include_base_amount &&
                 !batch.price_include
             ) {
-                for (const tax_values of batch.taxes) {
-                    ascending_extra_base.push([1, tax_values.index]);
+                for (const tax_data of batch.taxes) {
+                    ascending_extra_base.push([1, tax_data.index]);
                 }
             }
 
-            if ([true, "tax"].includes(batch.computed)) {
-                for (const tax_values of batch.taxes) {
-                    eval_order_indexes.push(["tax", tax_values.index]);
+            if (batch.is_tax_computed) {
+                for (const tax_data of batch.taxes) {
+                    eval_order_indexes.push(["tax", tax_data.index]);
                 }
             }
-            if (batch.computed === true) {
-                for (const tax_values of batch.taxes) {
-                    eval_order_indexes.push(["base", tax_values.index]);
+            if (batch.is_base_computed) {
+                for (const tax_data of batch.taxes) {
+                    eval_order_indexes.push(["base", tax_data.index]);
                 }
             }
         }
@@ -236,33 +242,34 @@ export const accountTaxHelpers = {
         // First descending computation to compute price_included values.
         const descending_extra_base = [];
         for (const batch of descending_batches) {
-            const computed = batch.computed;
+            const is_base_computed = batch.is_base_computed;
+            const is_tax_computed = batch.is_tax_computed;
             batch.descending_extra_base = [...descending_extra_base];
 
             // Build the expression representing the extra base as a sum.
-            if (!computed || computed === "tax") {
+            if (!is_base_computed) {
                 batch.extra_base_for_base = descending_extra_base.concat(
                     batch.ascending_extra_base
                 );
-                batch.extra_base_for_tax = computed === "tax" ? [] : batch.extra_base_for_base;
+                batch.extra_base_for_tax = is_tax_computed ? [] : batch.extra_base_for_base;
 
                 // Compute price-included taxes.
                 this.descending_process_price_included_taxes_batch(batch);
 
-                if (batch.computed === true) {
-                    for (const tax_values of batch.taxes) {
-                        descending_extra_base.push([-1, tax_values.index]);
+                if (batch.is_base_computed) {
+                    for (const tax_data of batch.taxes) {
+                        descending_extra_base.push([-1, tax_data.index]);
                     }
                 }
 
-                if (batch.computed === true && computed !== "tax") {
-                    for (const tax_values of batch.taxes) {
-                        eval_order_indexes.push(["tax", tax_values.index]);
+                if (batch.is_tax_computed && !is_tax_computed) {
+                    for (const tax_data of batch.taxes) {
+                        eval_order_indexes.push(["tax", tax_data.index]);
                     }
                 }
-                if (batch.computed === true) {
-                    for (const tax_values of batch.taxes) {
-                        eval_order_indexes.push(["base", tax_values.index]);
+                if (batch.is_base_computed) {
+                    for (const tax_data of batch.taxes) {
+                        eval_order_indexes.push(["base", tax_data.index]);
                     }
                 }
             }
@@ -272,33 +279,34 @@ export const accountTaxHelpers = {
         // Build the final results.
         const extra_base = [];
         for (const [i, batch] of ascending_batches.entries()) {
-            const computed = batch.computed;
-            if (computed !== true) {
+            const is_base_computed = batch.is_base_computed;
+            const is_tax_computed = batch.is_tax_computed;
+            if (!is_base_computed) {
                 // Build the expression representing the extra base as a sum.
                 batch.extra_base_for_base = extra_base.concat(
                     batch.ascending_extra_base,
                     batch.descending_extra_base
                 );
-                batch.extra_base_for_tax = computed === "tax" ? [] : batch.extra_base_for_base;
+                batch.extra_base_for_tax = is_tax_computed ? [] : batch.extra_base_for_base;
 
                 // Compute price-excluded taxes.
                 this.ascending_process_taxes_batch(batch);
 
                 // Update the base expression for the following taxes.
-                if (!computed && batch.include_base_amount) {
-                    for (const tax_values of batch.taxes) {
-                        extra_base.push([1, tax_values.index]);
+                if (!is_tax_computed && batch.include_base_amount) {
+                    for (const tax_data of batch.taxes) {
+                        extra_base.push([1, tax_data.index]);
                     }
                 }
 
-                if (batch.computed === true && computed !== "tax") {
-                    for (const tax_values of batch.taxes) {
-                        eval_order_indexes.push(["tax", tax_values.index]);
+                if (batch.is_tax_computed && !is_tax_computed) {
+                    for (const tax_data of batch.taxes) {
+                        eval_order_indexes.push(["tax", tax_data.index]);
                     }
                 }
-                if (batch.computed === true) {
-                    for (const tax_values of batch.taxes) {
-                        eval_order_indexes.push(["base", tax_values.index]);
+                if (batch.is_base_computed) {
+                    for (const tax_data of batch.taxes) {
+                        eval_order_indexes.push(["base", tax_data.index]);
                     }
                 }
             }
@@ -309,10 +317,10 @@ export const accountTaxHelpers = {
             const base_tags_field = is_refund ? "_refund_base_tag_ids" : "_invoice_base_tag_ids";
             if (batch.include_base_amount) {
                 for (const next_batch of ascending_batches.toSpliced(0, i + 1)) {
-                    for (const next_tax_values of next_batch.taxes) {
-                        subsequent_tax_ids.push(next_tax_values.id);
-                        if (include_caba_tags || next_tax_values.tax_exigibility !== "on_payment") {
-                            for (const tag_id of next_tax_values[base_tags_field]) {
+                    for (const next_tax_data of next_batch.taxes) {
+                        subsequent_tax_ids.push(next_tax_data.id);
+                        if (include_caba_tags || next_tax_data.tax_exigibility !== "on_payment") {
+                            for (const tag_id of next_tax_data[base_tags_field]) {
                                 subsequent_tag_ids.add(tag_id);
                             }
                         }
@@ -320,8 +328,8 @@ export const accountTaxHelpers = {
                 }
             }
 
-            for (const tax_values of batch.taxes) {
-                Object.assign(tax_values, {
+            for (const tax_data of batch.taxes) {
+                Object.assign(tax_data, {
                     tax_ids: subsequent_tax_ids,
                     tag_ids: [...subsequent_tag_ids],
                     extra_base_for_base: batch.extra_base_for_base,
@@ -331,7 +339,7 @@ export const accountTaxHelpers = {
         }
 
         return {
-            tax_values_list: flatten_tax_values_list,
+            taxes_data: flatten_taxes_data,
             eval_order_indexes: eval_order_indexes,
         };
     },
@@ -369,7 +377,7 @@ export const accountTaxHelpers = {
             price_unit: price_unit,
             quantity: quantity,
             rounding_method: rounding_method,
-            precision_rounding: rounding_method == "round_globally" ? null : precision_rounding,
+            precision_rounding: rounding_method === "round_globally" ? null : precision_rounding,
             reverse: reverse,
         };
     },
@@ -378,8 +386,8 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
-    eval_tax_amount(tax_values, evaluation_context) {
-        const amount_type = tax_values.amount_type;
+    eval_tax_amount(tax_data, evaluation_context) {
+        const amount_type = tax_data.amount_type;
         const reverse = evaluation_context.reverse;
         if (amount_type === "fixed") {
             return evaluation_context.quantity * evaluation_context.quantity_multiplicator;
@@ -398,9 +406,9 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
-    eval_tax_base_amount(tax_values, evaluation_context) {
-        const price_include = tax_values.price_include;
-        const amount_type = tax_values.amount_type;
+    eval_tax_base_amount(tax_data, evaluation_context) {
+        const price_include = tax_data.price_include;
+        const amount_type = tax_data.amount_type;
         const total_tax_amount = evaluation_context.total_tax_amount;
         const reverse = evaluation_context.reverse;
 
@@ -438,69 +446,69 @@ export const accountTaxHelpers = {
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
     eval_taxes_computation(taxes_computation, evaluation_context) {
-        const tax_values_list = taxes_computation.tax_values_list;
+        const taxes_data = taxes_computation.taxes_data;
         const eval_order_indexes = taxes_computation.eval_order_indexes;
         const rounding_method = evaluation_context.rounding_method;
         const prec_rounding = evaluation_context.precision_rounding;
         const reverse = evaluation_context.reverse;
-        let eval_tax_values_list = tax_values_list.map((tax_values) =>
-            Object.assign({}, tax_values)
+        let eval_taxes_data = taxes_data.map((tax_data) =>
+            Object.assign({}, tax_data)
         );
         const skipped = new Set();
         for (const [quid, index] of eval_order_indexes) {
-            const tax_values = eval_tax_values_list[index];
+            const tax_data = eval_taxes_data[index];
             if (quid === "tax") {
                 let extra_base = 0.0;
-                for (const [extra_base_sign, extra_base_index] of tax_values.extra_base_for_tax) {
-                    const target_tax_values = eval_tax_values_list[extra_base_index];
-                    if (!reverse || !target_tax_values.price_include) {
-                        extra_base += extra_base_sign * target_tax_values.tax_amount_factorized;
+                for (const [extra_base_sign, extra_base_index] of tax_data.extra_base_for_tax) {
+                    const target_tax_data = eval_taxes_data[extra_base_index];
+                    if (!reverse || !target_tax_data.price_include) {
+                        extra_base += extra_base_sign * target_tax_data.tax_amount_factorized;
                     }
                 }
-                let tax_amount = this.eval_tax_amount(tax_values, {
+                let tax_amount = this.eval_tax_amount(tax_data, {
                     ...evaluation_context,
-                    ...tax_values.evaluation_context,
+                    ...tax_data.evaluation_context,
                     extra_base: extra_base,
                     reverse: reverse,
                 });
                 if (tax_amount === undefined) {
-                    skipped.add(tax_values.id);
+                    skipped.add(tax_data.id);
                     tax_amount = 0.0;
                 }
-                tax_values.tax_amount = tax_amount;
-                tax_values.tax_amount_factorized = tax_values.tax_amount * tax_values._factor;
+                tax_data.tax_amount = tax_amount;
+                tax_data.tax_amount_factorized = tax_data.tax_amount * tax_data._factor;
                 if (rounding_method === "round_per_line") {
-                    tax_values.tax_amount_factorized = roundPrecision(
-                        tax_values.tax_amount_factorized,
+                    tax_data.tax_amount_factorized = roundPrecision(
+                        tax_data.tax_amount_factorized,
                         prec_rounding
                     );
                 }
             } else if (quid === "base") {
                 let extra_base = 0.0;
-                for (const [extra_base_sign, extra_base_index] of tax_values.extra_base_for_base) {
-                    const target_tax_values = eval_tax_values_list[extra_base_index];
-                    if (!reverse || !target_tax_values.price_include) {
-                        extra_base += extra_base_sign * target_tax_values.tax_amount_factorized;
+                for (const [extra_base_sign, extra_base_index] of tax_data.extra_base_for_base) {
+                    const target_tax_data = eval_taxes_data[extra_base_index];
+                    if (!reverse || !target_tax_data.price_include) {
+                        extra_base += extra_base_sign * target_tax_data.tax_amount_factorized;
                     }
                 }
                 let total_tax_amount = 0.0;
-                for (const batch_index of tax_values.batch_indexes) {
-                    total_tax_amount += eval_tax_values_list[batch_index].tax_amount_factorized;
+                for (const batch_index of tax_data.batch_indexes) {
+                    total_tax_amount += eval_taxes_data[batch_index].tax_amount_factorized;
                 }
                 Object.assign(
-                    tax_values,
-                    this.eval_tax_base_amount(tax_values, {
+                    tax_data,
+                    this.eval_tax_base_amount(tax_data, {
                         ...evaluation_context,
-                        ...tax_values.evaluation_context,
+                        ...tax_data.evaluation_context,
                         extra_base: extra_base,
                         total_tax_amount: total_tax_amount,
                         reverse: reverse,
                     })
                 );
                 if (rounding_method === "round_per_line") {
-                    tax_values.base = roundPrecision(tax_values.base, prec_rounding);
-                    tax_values.display_base = roundPrecision(
-                        tax_values.display_base,
+                    tax_data.base = roundPrecision(tax_data.base, prec_rounding);
+                    tax_data.display_base = roundPrecision(
+                        tax_data.display_base,
                         prec_rounding
                     );
                 }
@@ -508,18 +516,18 @@ export const accountTaxHelpers = {
         }
 
         if (skipped.length > 0) {
-            eval_tax_values_list = eval_tax_values_list.filter(
-                (tax_values) => !skipped.has(tax_values.id)
+            eval_taxes_data = eval_taxes_data.filter(
+                (tax_data) => !skipped.has(tax_data.id)
             );
         }
 
         let total_excluded = null;
         let total_included = null;
-        if (eval_tax_values_list.length > 0) {
-            total_excluded = eval_tax_values_list[0].base;
+        if (eval_taxes_data.length > 0) {
+            total_excluded = eval_taxes_data[0].base;
             let tax_amount = 0.0;
-            for (const tax_values of eval_tax_values_list) {
-                tax_amount += tax_values.tax_amount_factorized;
+            for (const tax_data of eval_taxes_data) {
+                tax_amount += tax_data.tax_amount_factorized;
             }
             total_included = total_excluded + tax_amount;
         } else {
@@ -531,7 +539,7 @@ export const accountTaxHelpers = {
         }
 
         return {
-            tax_values_list: eval_tax_values_list,
+            taxes_data: eval_taxes_data,
             total_excluded: total_excluded,
             total_included: total_included,
         };
@@ -544,20 +552,20 @@ export const accountTaxHelpers = {
     adapt_price_unit_to_another_taxes(
         price_unit,
         product_values,
-        original_tax_values_list,
-        new_tax_values_list
+        original_taxes_data,
+        new_taxes_data
     ) {
-        const original_tax_ids = new Set(original_tax_values_list.map((x) => x.id));
-        const new_tax_ids = new Set(new_tax_values_list.map((x) => x.id));
+        const original_tax_ids = new Set(original_taxes_data.map((x) => x.id));
+        const new_tax_ids = new Set(new_taxes_data.map((x) => x.id));
         if (
             (original_tax_ids.size === new_tax_ids.size &&
                 [...original_tax_ids].every((value) => new_tax_ids.has(value))) ||
-            original_tax_values_list.some((x) => !x.price_include)
+            original_taxes_data.some((x) => !x.price_include)
         ) {
             return price_unit;
         }
 
-        let taxes_computation = this.prepare_taxes_computation(original_tax_values_list);
+        let taxes_computation = this.prepare_taxes_computation(original_taxes_data);
         let evaluation_context = this.eval_taxes_computation_prepare_context(
             price_unit,
             1.0,
@@ -567,7 +575,7 @@ export const accountTaxHelpers = {
         taxes_computation = this.eval_taxes_computation(taxes_computation, evaluation_context);
         price_unit = taxes_computation.total_excluded;
 
-        taxes_computation = this.prepare_taxes_computation(new_tax_values_list);
+        taxes_computation = this.prepare_taxes_computation(new_taxes_data);
         evaluation_context = this.eval_taxes_computation_prepare_context(
             price_unit,
             1.0,
@@ -579,9 +587,9 @@ export const accountTaxHelpers = {
         );
         taxes_computation = this.eval_taxes_computation(taxes_computation, evaluation_context);
         let delta = 0.0;
-        for (const tax_values of taxes_computation.tax_values_list) {
-            if (tax_values.price_include) {
-                delta += tax_values.tax_amount_factorized;
+        for (const tax_data of taxes_computation.taxes_data) {
+            if (tax_data.price_include) {
+                delta += tax_data.tax_amount_factorized;
             }
         }
         return price_unit + delta;
@@ -592,11 +600,11 @@ export const accountTaxHelpers = {
     // -------------------------------------------------------------------------
 
     computeSingleLineTaxes(
-        tax_values_list,
+        taxes_data,
         evaluation_context,
         { force_price_include = false, is_refund = false, include_caba_tags = false } = {}
     ) {
-        const taxes_computation = this.prepare_taxes_computation(tax_values_list, {
+        const taxes_computation = this.prepare_taxes_computation(taxes_data, {
             force_price_include: force_price_include,
             is_refund: is_refund,
             include_caba_tags: include_caba_tags,
