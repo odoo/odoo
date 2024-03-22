@@ -579,6 +579,40 @@ test("grouped rendering with active field (archivable true)", async () => {
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(3);
 });
 
+test.tags("desktop")("empty group when grouped by date", async () => {
+    Partner._records[0].date = "2017-01-08";
+    Partner._records[1].date = "2017-02-09";
+    Partner._records[2].date = "2017-02-08";
+    Partner._records[3].date = "2017-02-10";
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `<kanban>
+            <field name="bar"/>
+            <field name="date"/>
+            <templates>
+                <t t-name="kanban-box">
+                    <field name="foo"/>
+                </t>
+            </templates>
+        </kanban>`,
+        groupBy: ["date:month"],
+    });
+
+    expect(queryAllTexts(".o_kanban_header")).toEqual(["January 2017", "February 2017"]);
+
+    Partner._records.shift(); // remove only record of the first group
+
+    press("Enter"); // reload
+    await animationFrame();
+
+    expect(queryAllTexts(".o_kanban_header")).toEqual(["January 2017", "February 2017"]);
+
+    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(0);
+    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(3);
+});
+
 test("grouped rendering with active field (archivable false)", async () => {
     // add active field on partner model and make all records active
     Partner._fields.active = fields.Boolean({ default: true });
