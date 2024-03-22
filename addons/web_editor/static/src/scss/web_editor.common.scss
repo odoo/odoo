@@ -90,6 +90,7 @@
     @include print-variable('h5-font-size', $h5-font-size);
     @include print-variable('h6-font-size', $h6-font-size);
     @include print-variable('font-size-base', $font-size-base);
+    @include print-variable('small-font-size', $small-font-size);
 }
 
 html, body {
@@ -275,7 +276,7 @@ img.ms-auto, img.mx-auto {
 // "o_small" class currently also changes the font-size only but this is to stay
 // consistent with the other classes which act that way (as display-x).
 .o_small-fs {
-    @extend %o-small-font-size;
+    @include font-size($small-font-size);
 }
 
 div.media_iframe_video {
