@@ -26,7 +26,7 @@ class TestTaxPython(TestTaxCommon):
             {
                 'total_included': 157.3,
                 'total_excluded': 130.0,
-                'tax_values_list': (
+                'taxes_data': (
                     (130.0, 27.3),
                 ),
             },
@@ -39,7 +39,7 @@ class TestTaxPython(TestTaxCommon):
             {
                 'total_included': 130.0,
                 'total_excluded': 102.7,
-                'tax_values_list': (
+                'taxes_data': (
                     (102.7, 27.3),
                 ),
             },
@@ -52,7 +52,7 @@ class TestTaxPython(TestTaxCommon):
             {
                 'total_included': 130.0,
                 'total_excluded': 130.0,
-                'tax_values_list': [],
+                'taxes_data': [],
             },
         ))
 
@@ -67,7 +67,7 @@ class TestTaxPython(TestTaxCommon):
             {
                 'total_included': 110.0,
                 'total_excluded': 100.0,
-                'tax_values_list': (
+                'taxes_data': (
                     (100.0, 10.0),
                 ),
             },
@@ -84,7 +84,7 @@ class TestTaxPython(TestTaxCommon):
             {
                 'total_included': 105.0,
                 'total_excluded': 100.0,
-                'tax_values_list': (
+                'taxes_data': (
                     (100.0, 5.0),
                 ),
             },
