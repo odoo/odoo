@@ -302,16 +302,23 @@ class EventRegistration(models.Model):
 
         onsubscribe_schedulers = self.env['event.mail'].sudo().search([
             ('event_id', 'in', open_registrations.event_id.ids),
-            ('interval_type', '=', 'after_sub')
+            ('interval_type', '=', 'after_sub'),
         ])
         if not onsubscribe_schedulers:
             return
 
         onsubscribe_schedulers.update({'mail_done': False})
-        # we could simply call _create_missing_mail_registrations and let cron do their job
-        # but it currently leads to several delays. We therefore call execute until
-        # cron triggers are correctly used
-        onsubscribe_schedulers.with_user(SUPERUSER_ID).execute()
+        # either trigger the cron, either run schedulers immediately (scaling choice)
+        async_scheduler = self.env['ir.config_parameter'].sudo().get_param('event.event_mail_async')
+        if async_scheduler:
+            self.env.ref('event.event_mail_scheduler')._trigger()
+        else:
+            # we could simply call _create_missing_mail_registrations and let cron do their job
+            # but it currently leads to several delays. We therefore call execute until
+            # cron triggers are correctly used
+            onsubscribe_schedulers.with_context(
+                event_mail_registration_ids=open_registrations.ids
+            ).with_user(SUPERUSER_ID).execute()
 
     # ------------------------------------------------------------
     # MAILING / GATEWAY
