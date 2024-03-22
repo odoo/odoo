@@ -78,7 +78,9 @@ class StockWarehouseOrderpoint(models.Model):
         'stock.route', string='Route', domain="[('product_selectable', '=', True)]")
     qty_on_hand = fields.Float('On Hand', readonly=True, compute='_compute_qty', digits='Product Unit of Measure')
     qty_forecast = fields.Float('Forecast', readonly=True, compute='_compute_qty', digits='Product Unit of Measure')
-    qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', store=True, readonly=False, digits='Product Unit of Measure')
+    qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', inverse='_inverse_qty_to_order', search='_search_qty_to_order', digits='Product Unit of Measure')
+    qty_to_order_computed = fields.Float('To Order Computed', compute='_compute_qty_to_order_computed', digits='Product Unit of Measure')
+    qty_to_order_manual = fields.Float('To Order Manual', digits='Product Unit of Measure')
 
     days_to_order = fields.Float(compute='_compute_days_to_order', help="Numbers of days  in advance that replenishments demands are created.")
     visibility_days = fields.Float(
@@ -239,7 +241,8 @@ class StockWarehouseOrderpoint(models.Model):
         if len(self) == 1:
             notification = self.with_context(written_after=now)._get_replenishment_order_notification()
         # Forced to call compute quantity because we don't have a link.
-        self._compute_qty()
+        self.action_remove_manual_qty_to_order()
+        self._compute_qty_to_order()
         self.filtered(lambda o: o.create_uid.id == SUPERUSER_ID and o.qty_to_order <= 0.0 and o.trigger == 'manual').unlink()
         return notification
 
@@ -268,11 +271,28 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_on_hand = products_qty[orderpoint.product_id.id]['qty_available']
                 orderpoint.qty_forecast = products_qty[orderpoint.product_id.id]['virtual_available'] + products_qty_in_progress[orderpoint.id]
 
-    @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
+    @api.depends('qty_to_order_manual', 'qty_to_order_computed')
     def _compute_qty_to_order(self):
         for orderpoint in self:
+            orderpoint.qty_to_order = orderpoint.qty_to_order_manual if orderpoint.qty_to_order_manual else orderpoint.qty_to_order_computed
+
+    def _inverse_qty_to_order(self):
+        for orderpoint in self:
+            orderpoint.qty_to_order_manual = orderpoint.qty_to_order
+
+    def _search_qty_to_order(self, operator, value):
+        records = self.search_fetch([('qty_to_order_manual', '=', '0')], ['qty_to_order_computed'])
+        matched_ids = records.filtered_domain([('qty_to_order_computed', operator, value)]).ids
+        return ['|',
+                    '&', ('qty_to_order_manual', '=', '0'), ('qty_to_order_manual', operator, value),
+                    ('id', 'in', matched_ids)
+                ]
+
+    @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
+    def _compute_qty_to_order_computed(self):
+        for orderpoint in self:
             if not orderpoint.product_id or not orderpoint.location_id:
-                orderpoint.qty_to_order = False
+                orderpoint.qty_to_order_computed = False
                 continue
             qty_to_order = 0.0
             rounding = orderpoint.product_uom.rounding
@@ -286,7 +306,7 @@ class StockWarehouseOrderpoint(models.Model):
                 if (float_compare(remainder, 0.0, precision_rounding=rounding) > 0
                         and float_compare(orderpoint.qty_multiple - remainder, 0.0, precision_rounding=rounding) > 0):
                     qty_to_order -= remainder
-            orderpoint.qty_to_order = qty_to_order
+            orderpoint.qty_to_order_computed = qty_to_order
 
     def _get_qty_multiple_to_order(self):
         """ Calculates the minimum quantity that can be ordered according to the PO UoM or BoM
@@ -409,10 +429,10 @@ class StockWarehouseOrderpoint(models.Model):
         orderpoint_by_product_location = self.env['stock.warehouse.orderpoint']._read_group(
             [('id', 'in', orderpoints.ids)],
             ['product_id', 'location_id'],
-            ['qty_to_order:sum'])
+            ['id:recordset'])
         orderpoint_by_product_location = {
-            (product.id, location.id): qty_to_order_sum
-            for product, location, qty_to_order_sum in orderpoint_by_product_location
+            (product.id, location.id): orderpoint.qty_to_order
+            for product, location, orderpoint in orderpoint_by_product_location
         }
         for (product, location), product_qty in to_refill.items():
             qty_in_progress = qty_by_product_loc.get((product, location)) or 0.0
@@ -454,6 +474,9 @@ class StockWarehouseOrderpoint(models.Model):
             orderpoint._set_default_route_id()
             orderpoint.qty_multiple = orderpoint._get_qty_multiple_to_order()
         return action
+
+    def action_remove_manual_qty_to_order(self):
+        self.qty_to_order_manual = 0
 
     @api.model
     def _get_orderpoint_values(self, product, location):
