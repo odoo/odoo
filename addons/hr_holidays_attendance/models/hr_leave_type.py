@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tools.misc import format_duration
+from odoo.tools import format_duration
 from odoo import _, api, fields, models
 
 

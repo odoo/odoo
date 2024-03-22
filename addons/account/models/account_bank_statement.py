@@ -3,7 +3,7 @@ from contextlib import contextmanager
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError
-from odoo.tools.misc import formatLang
+from odoo.tools import formatLang
 
 class AccountBankStatement(models.Model):
     _name = "account.bank.statement"

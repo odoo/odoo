@@ -17,8 +17,7 @@ import pytz
 from odoo import exceptions, http, fields, tools, _
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools import is_html_empty, plaintext2html
-from odoo.tools.misc import babel_locale_parse
+from odoo.tools import babel_locale_parse, is_html_empty, plaintext2html
 
 
 class EventTrackController(http.Controller):

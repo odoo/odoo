@@ -7,8 +7,8 @@ from freezegun import freeze_time
 from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import Form, users
-from odoo.tools.misc import format_date
 from odoo.tests.common import HttpCase, tagged
+from odoo.tools import format_date
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
 

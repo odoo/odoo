@@ -10,7 +10,7 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools.misc import get_lang
+from odoo.tools import get_lang
 
 
 class PortalMailGroup(http.Controller):

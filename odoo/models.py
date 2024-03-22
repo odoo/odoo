@@ -4357,8 +4357,8 @@ class BaseModel(metaclass=MetaModel):
 
             If a string is provided for Date(time) fields,
             it must be UTC-only and formatted according to
-            :const:`odoo.tools.misc.DEFAULT_SERVER_DATE_FORMAT` and
-            :const:`odoo.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT`
+            :const:`odoo.tools.i18n.DEFAULT_SERVER_DATE_FORMAT` and
+            :const:`odoo.tools.i18n.DEFAULT_SERVER_DATETIME_FORMAT`
 
         * Other non-relational fields use a string for value
         """

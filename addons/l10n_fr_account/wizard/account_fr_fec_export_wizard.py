@@ -4,7 +4,7 @@
 import io
 from odoo.tools import float_is_zero, pycompat, SQL
 from odoo import fields, models, api
-from odoo.tools.misc import get_lang
+from odoo.tools import get_lang
 from stdnum.fr import siren
 
 

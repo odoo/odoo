@@ -22,9 +22,8 @@ from odoo.addons.calendar.models.calendar_recurrence import (
     WEEKDAY_SELECTION,
     BYDAY_SELECTION
 )
+from odoo.tools import get_lang, html2plaintext, is_html_empty, pycompat, single_email_re
 from odoo.tools.translate import _
-from odoo.tools.misc import get_lang
-from odoo.tools import pycompat, html2plaintext, is_html_empty, single_email_re
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)

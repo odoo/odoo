@@ -4,7 +4,7 @@
 import odoo.http as http
 
 from odoo.http import request
-from odoo.tools.misc import get_lang
+from odoo.tools import get_lang
 
 
 class CalendarController(http.Controller):

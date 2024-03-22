@@ -3,7 +3,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
-from odoo.tools.misc import formatLang, format_date
+from odoo.tools import formatLang, format_date
 
 INV_LINES_PER_STUB = 9
 

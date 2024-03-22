@@ -4,7 +4,7 @@ from datetime import datetime
 from freezegun import freeze_time
 
 from odoo.addons.stock.tests.test_generate_serial_numbers import StockGenerateCommon
-from odoo.tools.misc import get_lang
+from odoo.tools import get_lang
 
 
 class TestStockLot(StockGenerateCommon):
