@@ -16,7 +16,8 @@ class Event(models.Model):
             'target': 'current',
             'context': {
                 'default_mailing_model_id': self.env.ref('event.model_event_registration').id,
-                'default_mailing_domain': repr([('event_id', 'in', self.ids), ('state', '!=', 'cancel')])
+                'default_mailing_domain': repr([('event_id', 'in', self.ids), ('state', '!=', 'cancel')]),
+                'default_subject': f"Event: {self.name}",
             },
         }
 
@@ -27,5 +28,8 @@ class Event(models.Model):
             'res_model': 'mailing.mailing',
             'view_mode': 'form',
             'target': 'current',
-            'context': {'default_mailing_model_id': self.env.ref('base.model_res_partner').id},
+            'context': {
+                'default_mailing_model_id': self.env.ref('base.model_res_partner').id,
+                'default_subject': f"Event: {self.name}",
+            },
         }

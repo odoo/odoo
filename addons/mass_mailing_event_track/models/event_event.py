@@ -17,6 +17,7 @@ class Event(models.Model):
             context=dict(
                 default_mailing_model_id=self.env.ref('website_event_track.model_event_track').id,
                 default_mailing_domain=repr([('event_id', 'in', self.ids), ('stage_id.is_cancel', '!=', True)]),
+                default_subject=f"Event: {self.name}",
             ),
         )
         return mass_mailing_action
