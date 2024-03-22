@@ -7480,6 +7480,10 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @returns {boolean}
      */
     _canHaveHoverEffect() {
+        // TODO Remove this comment in master:
+        // Note that this method does not ensure that a shape can be applied,
+        // which is required for hover effects. It should be preferably merged
+        // with the `_isImageSupportedForShapes()` method.
         return !this._isDeviceShape() && !this._isAnimatedShape();
     },
     /**
@@ -7639,6 +7643,16 @@ registry.ImageTools = ImageHandlerOption.extend({
                 clearTimeout(this.hoverTimeoutId);
             }
         }
+    },
+    /**
+     * Checks if a shape can be applied on the target.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isImageSupportedForShapes() {
+        const imgEl = this._getImg();
+        return imgEl.dataset.originalId && this._isImageSupportedForProcessing(imgEl);
     },
 
     //--------------------------------------------------------------------------
