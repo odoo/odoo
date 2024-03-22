@@ -61,7 +61,7 @@ export class HootPresets extends Component {
         </div>
     `;
 
-    refresh = refresh
+    refresh = refresh;
 
     get activePreset() {
         return this.env.runner.presets.get(this.config.preset);
