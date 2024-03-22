@@ -16,6 +16,7 @@ class PosOrder(models.Model):
         self.send_table_count_notification(tables)
         return order_ids
 
+    @api.model
     def sync_from_ui(self, orders):
         result = super().sync_from_ui(orders)
 

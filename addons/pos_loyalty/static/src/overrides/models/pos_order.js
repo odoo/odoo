@@ -148,7 +148,7 @@ patch(PosOrder.prototype, {
      *
      * @override
      */
-    export_for_printing() {
+    export_for_printing(baseUrl, headerData) {
         const result = super.export_for_printing(...arguments);
         if (this.get_partner()) {
             result.loyaltyStats = this.getLoyaltyPoints();

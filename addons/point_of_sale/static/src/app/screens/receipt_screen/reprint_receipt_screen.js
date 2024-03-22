@@ -25,7 +25,7 @@ export class ReprintReceiptScreen extends Component {
         this.printer.print(
             OrderReceipt,
             {
-                data: this.props.order.export_for_printing(),
+                data: this.pos.orderExportForPrinting(this.props.order),
                 formatCurrency: this.env.utils.formatCurrency,
             },
             { webPrintFallback: true }

@@ -309,7 +309,7 @@ export class PaymentScreen extends Component {
                 const printResult = await this.printer.print(
                     OrderReceipt,
                     {
-                        data: this.pos.get_order().export_for_printing(),
+                        data: this.pos.orderExportForPrinting(this.pos.get_order()),
                         formatCurrency: this.env.utils.formatCurrency,
                     },
                     { webPrintFallback: true }
