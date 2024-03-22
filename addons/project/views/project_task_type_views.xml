@@ -100,6 +100,7 @@
         <record id="open_task_type_form" model="ir.actions.act_window">
             <field name="name">Task Stages</field>
             <field name="res_model">project.task.type</field>
+            <field name="path">task-stages</field>
             <field name="view_mode">list,kanban,form</field>
             <field name="view_id" ref="task_type_tree_inherited"/>
             <field name="domain">[('user_id', '=', False)]</field>
