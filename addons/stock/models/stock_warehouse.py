@@ -636,31 +636,31 @@ class Warehouse(models.Model):
                 'active': True,
                 'usage': 'internal',
                 'replenish_location': True,
-                'barcode': self._valid_barcode(code + '-STOCK', company_id)
+                'barcode': self._valid_barcode(code + 'STOCK', company_id)
             },
             'wh_input_stock_loc_id': {
                 'name': _('Input'),
                 'active': reception_steps != 'one_step',
                 'usage': 'internal',
-                'barcode': self._valid_barcode(code + '-INPUT', company_id)
+                'barcode': self._valid_barcode(code + 'INPUT', company_id)
             },
             'wh_qc_stock_loc_id': {
                 'name': _('Quality Control'),
                 'active': reception_steps == 'three_steps',
                 'usage': 'internal',
-                'barcode': self._valid_barcode(code + '-QUALITY', company_id)
+                'barcode': self._valid_barcode(code + 'QUALITY', company_id)
             },
             'wh_output_stock_loc_id': {
                 'name': _('Output'),
                 'active': delivery_steps != 'ship_only',
                 'usage': 'internal',
-                'barcode': self._valid_barcode(code + '-OUTPUT', company_id)
+                'barcode': self._valid_barcode(code + 'OUTPUT', company_id)
             },
             'wh_pack_stock_loc_id': {
                 'name': _('Packing Zone'),
                 'active': delivery_steps == 'pick_pack_ship',
                 'usage': 'internal',
-                'barcode': self._valid_barcode(code + '-PACKING', company_id)
+                'barcode': self._valid_barcode(code + 'PACKING', company_id)
             },
         }
         return sub_locations
@@ -926,24 +926,24 @@ class Warehouse(models.Model):
         return {
             'in_type_id': {
                 'default_location_dest_id': input_loc.id,
-                'barcode': self.code.replace(" ", "").upper() + "-RECEIPTS",
+                'barcode': self.code.replace(" ", "").upper() + "IN",
             },
             'out_type_id': {
                 'default_location_src_id': output_loc.id,
-                'barcode': self.code.replace(" ", "").upper() + "-DELIVERY",
+                'barcode': self.code.replace(" ", "").upper() + "OUT",
             },
             'pick_type_id': {
                 'active': self.delivery_steps != 'ship_only' and self.active,
                 'default_location_dest_id': output_loc.id if self.delivery_steps == 'pick_ship' else self.wh_pack_stock_loc_id.id,
-                'barcode': self.code.replace(" ", "").upper() + "-PICK",
+                'barcode': self.code.replace(" ", "").upper() + "PICK",
             },
             'pack_type_id': {
                 'active': self.delivery_steps == 'pick_pack_ship' and self.active,
                 'default_location_dest_id': output_loc.id,
-                'barcode': self.code.replace(" ", "").upper() + "-PACK",
+                'barcode': self.code.replace(" ", "").upper() + "PACK",
             },
             'int_type_id': {
-                'barcode': self.code.replace(" ", "").upper() + "-INTERNAL",
+                'barcode': self.code.replace(" ", "").upper() + "INT",
             }
         }
 

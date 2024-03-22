@@ -131,7 +131,7 @@ QUnit.module("Fields", (hooks) => {
 
         // switch to next record
         simulateBarCode(
-            ["O", "-", "C", "M", "D", ".", "N", "E", "X", "T", "Enter"],
+            ["O", "C", "D", "N", "E", "X", "T", "Enter"],
             document.activeElement
         );
         await nextTick();
