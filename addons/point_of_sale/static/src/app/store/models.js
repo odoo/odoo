@@ -1093,13 +1093,22 @@ export class Orderline extends PosModel {
     isPartOfCombo() {
         return Boolean(this.comboParent || this.comboLines?.length);
     }
-    findAttribute(values) {
+    findAttribute(values, customAttributes) {
         const listOfAttributes = [];
         for (const value of values){
             for (const ptal_id of this.pos.ptal_ids_by_ptav_id[value]){
                 const attribute = this.pos.attributes_by_ptal_id[ptal_id]
                 const attFound = attribute.values.filter((target) => {
                     return Object.values(values).includes(target.id);
+                }).map(att => ({...att})); // make a copy
+                attFound.forEach((att) => {
+                    if (att.is_custom) {
+                        customAttributes.forEach((customAttribute) => {
+                            if (att.id === customAttribute.custom_product_template_attribute_value_id) {
+                                att.name = customAttribute.value;
+                            }
+                        });
+                    }
                 });
                 const modifiedAttribute = {
                     ...attribute,
@@ -1130,7 +1139,7 @@ export class Orderline extends PosModel {
                 this.getUnitDisplayPriceBeforeDiscount()
             ),
             attributes: this.attribute_value_ids
-                ? this.findAttribute(this.attribute_value_ids)
+                ? this.findAttribute(this.attribute_value_ids, this.custom_attribute_value_ids)
                 : [],
         };
     }
