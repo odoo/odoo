@@ -62,7 +62,6 @@ export class DataServiceOptions {
 
     get cascadeDeleteModels() {
         return [
-            "pos.order",
             "pos.order.line",
             "pos.payment",
             "product.attribute.custom.value",
