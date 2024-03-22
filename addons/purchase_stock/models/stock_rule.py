@@ -94,8 +94,11 @@ class StockRule(models.Model):
 
             # Get the set of procurement origin for the current domain.
             origins = set([p.origin for p in procurements])
-            # Check if a PO exists for the current domain.
-            po = self.env['purchase.order'].sudo().search([dom for dom in domain], limit=1)
+            # Check if a PO exists for the current domain or if a merge-able one exists (equal without respect group_id)
+            po = (
+                    self.env['purchase.order'].sudo().search(list(domain), limit=1) or
+                    self.env['purchase.order'].sudo().search([dom for dom in domain if dom[0] != 'group_id'], limit=1)
+            )
             company_id = procurements[0].company_id
             if not po:
                 positive_values = [p.values for p in procurements if float_compare(p.product_qty, 0.0, precision_rounding=p.product_uom.rounding) >= 0]

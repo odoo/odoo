@@ -462,3 +462,82 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(component_lines[0]['route_name'], 'Buy', 'Outside of the subcontracted context, it should try to resupply stock.')
         self.assertEqual(component_lines[1]['product_id'], compo_rr.id)
         self.assertEqual(component_lines[1]['route_name'], 'Buy')
+
+    def test_purchase_order_bundling_component_vendor(self):
+        buy_route = self.env['stock.route'].search([('name', '=', 'Buy')])
+        dropship_subcontractor_route = self.env['stock.route'].search(
+            [('name', '=', 'Dropship Subcontractor on Order')]
+        )
+        subcontractor, component_supplier = self.env['res.partner'].create([{
+            'name': 'Sketchy Supplier %d' % i
+        } for i in range(1, 3)])
+
+        prod1, prod2 = self.env['product.product'].create([{
+            'name': f'test-product-{i}',
+            'route_ids': [(4, buy_route.id)],
+        } for i in range(2)])
+
+        comp3 = self.env['product.product'].create({
+            'name': 'Component3',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        for comp in [self.comp1, self.comp2, comp3]:
+            comp.write({'route_ids': [(4, dropship_subcontractor_route.id), (4, buy_route.id)]})
+            self.env['stock.warehouse.orderpoint'].create({
+                'product_id': comp.id,
+                'route_id': buy_route.id,
+                'product_min_qty': 0,
+                'product_max_qty': 0,
+                'qty_to_order': 0,
+            })
+            self.env['product.supplierinfo'].create({
+                'partner_id': component_supplier.id,
+                'product_id': comp.id,
+            })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': prod1.product_tmpl_id.id,
+            'type': 'subcontract',
+            'subcontractor_ids': [(4, subcontractor.id)],
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.comp1.id}),
+                (0, 0, {'product_id': self.comp2.id})
+            ]
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': prod2.product_tmpl_id.id,
+            'type': 'subcontract',
+            'subcontractor_ids': [(4, subcontractor.id)],
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.comp2.id}),
+                (0, 0, {'product_id': comp3.id})
+            ]
+        })
+
+        self.env['product.supplierinfo'].create({
+            'partner_id': subcontractor.id,
+            'product_id': prod1.id,
+        })
+        self.env['product.supplierinfo'].create({
+            'partner_id': subcontractor.id,
+            'product_id': prod2.id,
+        })
+
+        rfq = self.env['purchase.order'].create({
+            'partner_id': subcontractor.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': prod1.id,
+                    'product_qty': 1,
+                }),
+                (0, 0, {
+                    'product_id': prod2.id,
+                    'product_qty': 1,
+                })
+            ]
+        })
+        rfq.button_confirm()
+
+        self.assertEqual(len(self.env['purchase.order'].search([('dest_address_id', '=', subcontractor.id)])), 1)
