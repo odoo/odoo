@@ -149,6 +149,11 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.display_invoice_amount_total_words',
         readonly=False
     )
+    display_invoice_tax_company_currency = fields.Boolean(
+        string="Taxes in company currency",
+        related='company_id.display_invoice_tax_company_currency',
+        readonly=False,
+    )
     preview_ready = fields.Boolean(string="Display preview button", compute='_compute_terms_preview')
 
     use_invoice_terms = fields.Boolean(
