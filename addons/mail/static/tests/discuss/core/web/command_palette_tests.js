@@ -98,10 +98,7 @@ QUnit.test("Channel mentions in the command palette of Discuss app with @", asyn
         ],
     });
     await contains(".o_command_palette .o_command_category", {
-        contains: [
-            [".o_command_name", { text: "Mario" }],
-            [".o_command_name", { text: "Mitchell Admin" }],
-        ],
+        contains: [[".o_command_name", { text: "Mitchell Admin" }]],
     });
     await click(".o_command.focused");
     await contains(".o-mail-ChatWindow", { text: "Mitchell Admin and Mario" });
@@ -123,4 +120,24 @@ QUnit.test("Max 3 most recent channels in command palette of Discuss app with #"
             [".o_command", { count: 3 }],
         ],
     });
+});
+
+QUnit.test("only partners with dedicated users will be displayed in command palette", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "test user" });
+    pyEnv["discuss.channel"].create({
+        name: "TestChanel",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const { advanceTime } = await start({ hasTimeControl: true });
+    triggerHotkey("control+k");
+    await insertText(".o_command_palette_search input", "@");
+    advanceTime(commandSetupRegistry.get("@").debounceDelay);
+    await contains(".o_command_name", { text: "Mitchell Admin" });
+    await contains(".o_command_name", { text: "OdooBot" });
+    await contains(".o_command_name", { text: "test user", count: 0 });
 });
