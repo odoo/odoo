@@ -39,17 +39,15 @@ test("simple week recurrence widget", async () => {
     expect.assertions(13);
     await makeMockServer({ lang_parameters: { week_start: 1 } });
     let writeCall = 0;
-    onRpc((route, { method, args }) => {
-        if (method === "web_save") {
-            writeCall++;
-            if (writeCall === 1) {
-                expect(args[1].sun).toBe(true);
-            }
-            if (writeCall === 2) {
-                expect(args[1].sun).not.toBe(true);
-                expect(args[1].mon).toBe(true);
-                expect(args[1].tue).toBe(true);
-            }
+    onRpc("web_save", ({ args }) => {
+        writeCall++;
+        if (writeCall === 1) {
+            expect(args[1].sun).toBe(true);
+        }
+        if (writeCall === 2) {
+            expect(args[1].sun).not.toBe(true);
+            expect(args[1].mon).toBe(true);
+            expect(args[1].tue).toBe(true);
         }
     });
 

@@ -22,7 +22,7 @@ defineModels([Partner]);
 test("PercentageField in form view", async () => {
     expect.assertions(5);
 
-    onRpc("web_save", async (_route, { args }) => {
+    onRpc("web_save", ({ args }) => {
         expect(args[1].float_field).toBe(0.24);
     });
 

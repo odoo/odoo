@@ -73,9 +73,7 @@ test("AceEditorField on html fields works", async () => {
     Partner._fields.html_field = fields.Html();
     Partner._records.push({ id: 3, html_field: `<p>My little HTML Test</p>` });
 
-    onRpc((_, { method }) => {
-        expect.step(method);
-    });
+    onRpc(({ method }) => expect.step(method));
 
     await mountView({
         resModel: "res.partner",
@@ -125,7 +123,7 @@ test("leaving an untouched record with an unset ace field should not write", asy
         record.foo = false;
     }
 
-    onRpc((_, { args, method }) => {
+    onRpc(({ args, method }) => {
         if (method) {
             expect.step(`${method}: ${JSON.stringify(args)}`);
         }
@@ -150,7 +148,7 @@ test("AceEditorField only trigger onchanges when blurred", async () => {
         record.foo = false;
     }
 
-    onRpc((_, { args, method }) => {
+    onRpc(({ args, method }) => {
         expect.step(`${method}: ${JSON.stringify(args)}`);
     });
 

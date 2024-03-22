@@ -82,7 +82,7 @@ test("SelectionField, edition and on many2one field", async () => {
     Partner._onChanges.product_id = () => {};
     Partner._records[0].product_id = 37;
     Partner._records[0].trululu = false;
-    onRpc((route, { method }) => expect.step(method));
+    onRpc(({ method }) => expect.step(method));
     await mountView({
         type: "form",
         resModel: "partner",
@@ -174,12 +174,10 @@ test("unset selection field with string keys", async () => {
 
 test("unset selection on a many2one field", async () => {
     expect.assertions(1);
-    onRpc((route, { args, method }) => {
-        if (method === "web_save") {
-            expect(args[1].trululu).toBe(false, {
-                message: "should send 'false' as trululu value",
-            });
-        }
+    onRpc("web_save", ({ args }) => {
+        expect(args[1].trululu).toBe(false, {
+            message: "should send 'false' as trululu value",
+        });
     });
     await mountView({
         type: "form",
@@ -343,11 +341,7 @@ test("SelectionField in kanban view", async () => {
 });
 
 test("SelectionField - auto save record in kanban view", async () => {
-    onRpc((_route, { method }) => {
-        if (method === "web_save") {
-            expect.step("web_save");
-        }
-    });
+    onRpc("web_save", ({ method }) => expect.step(method));
     await mountView({
         type: "kanban",
         resModel: "partner",

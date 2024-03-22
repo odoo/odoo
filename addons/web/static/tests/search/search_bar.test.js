@@ -15,6 +15,13 @@ import {
 import { Deferred, animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import { Component, onWillUpdateProps, xml } from "@odoo/owl";
 import {
+    SELECTORS,
+    clickOnButtonDeleteNode,
+    getCurrentOperator,
+    getCurrentPath,
+    getCurrentValue,
+} from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
+import {
     contains,
     defineActions,
     defineModels,
@@ -29,17 +36,11 @@ import {
     toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
-import {
-    SELECTORS,
-    clickOnButtonDeleteNode,
-    getCurrentOperator,
-    getCurrentPath,
-    getCurrentValue,
-} from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import { mountWithSearch } from "./helpers";
 
-import { SearchBar } from "@web/search/search_bar/search_bar";
 import { browser } from "@web/core/browser/browser";
+import { pick } from "@web/core/utils/objects";
+import { SearchBar } from "@web/search/search_bar/search_bar";
 
 class Partner extends models.Model {
     name = fields.Char();
@@ -674,8 +675,8 @@ test("many2one_reference fields are supported in search view", async () => {
 });
 
 test("check kwargs of a rpc call with a domain", async () => {
-    onRpc("name_search", (_, args) => {
-        expect(args).toEqual({
+    onRpc("name_search", (params) => {
+        expect(pick(params, "args", "kwargs", "method", "model")).toEqual({
             model: "partner",
             method: "name_search",
             args: [],
@@ -728,7 +729,7 @@ test("should wait label promises for one2many search defaults", async () => {
 });
 
 test("globalContext keys in name_search", async () => {
-    onRpc("name_search", (_, { kwargs }) => {
+    onRpc("name_search", ({ kwargs }) => {
         expect.step("name_search");
         expect(kwargs.context.specialKey).toBe("ABCD");
     });
@@ -751,7 +752,7 @@ test("globalContext keys in name_search", async () => {
 });
 
 test("search a property", async () => {
-    onRpc("web_search_read", (_, { kwargs }) => {
+    onRpc("web_search_read", ({ kwargs }) => {
         if (kwargs.specification.display_name && kwargs.specification.child_properties) {
             const definition1 = [
                 {
@@ -806,7 +807,7 @@ test("search a property", async () => {
             };
         }
     });
-    onRpc("name_search", (_, { kwargs }) => {
+    onRpc("name_search", ({ kwargs }) => {
         if (kwargs.name === "Bo") {
             return [
                 [5, "Bob"],
@@ -1103,7 +1104,7 @@ test("search a property", async () => {
 });
 
 test("search a property: definition record id in the context", async () => {
-    onRpc("web_search_read", (_, { kwargs }) => {
+    onRpc("web_search_read", ({ kwargs }) => {
         if (kwargs.specification.display_name && kwargs.specification.child_properties) {
             expect.step("web_search_read");
             expect(kwargs.domain).toEqual(["&", ["child_properties", "!=", false], ["id", "=", 2]]);
@@ -1334,12 +1335,10 @@ test("edit a field", async () => {
 
 test("no rpc for getting display_name for facets if known", async () => {
     onRpc("/web/domain/validate", () => true);
-    onRpc("name_search", (_, { kwargs }) => {
+    onRpc("name_search", ({ kwargs }) => {
         expect.step(JSON.stringify(kwargs.args /** domain */));
     });
-    onRpc("*", (route, { method }) => {
-        expect.step(method || route);
-    });
+    onRpc(({ method }) => expect.step(method));
 
     await mountWithSearch(SearchBar, {
         resModel: "partner",
@@ -1386,9 +1385,7 @@ test("clicking on the searchview icon trigger the search", async () => {
 });
 
 test("facets display with any / not any operator", async function () {
-    onRpc((route, { method }) => {
-        expect.step(method || route);
-    });
+    onRpc(({ method }) => expect.step(method));
     onRpc("/web/domain/validate", () => {
         expect.step("/web/domain/validate");
         return true;
@@ -1420,9 +1417,7 @@ test("facets display with any / not any operator", async function () {
 });
 
 test("facets display with any / not any operator (with a complex path)", async function () {
-    onRpc((route, { method }) => {
-        expect.step(method || route);
-    });
+    onRpc(({ method }) => expect.step(method));
     onRpc("/web/domain/validate", () => {
         expect.step("/web/domain/validate");
         return true;
@@ -1451,9 +1446,7 @@ test("facets display with any / not any operator (with a complex path)", async f
 });
 
 test("facets display with any / not any operator (with a or)", async function () {
-    onRpc((route, { method }) => {
-        expect.step(method || route);
-    });
+    onRpc(({ method }) => expect.step(method));
     onRpc("/web/domain/validate", () => {
         expect.step("/web/domain/validate");
         return true;
@@ -1482,9 +1475,7 @@ test("facets display with any / not any operator (with a or)", async function ()
 });
 
 test("facets display with any / not any operator (check brackets)", async function () {
-    onRpc((route, { method }) => {
-        expect.step(method || route);
-    });
+    onRpc(({ method }) => expect.step(method));
     onRpc("/web/domain/validate", () => {
         expect.step("/web/domain/validate");
         return true;
