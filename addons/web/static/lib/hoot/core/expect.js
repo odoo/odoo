@@ -248,7 +248,7 @@ const assertions = (expected) => {
  * @param {Test} test
  */
 const beforeTest = (test) => {
-    test.results.push(new TestResult());
+    test.results.push(new TestResult(test));
 
     // Must be retrieved from the list to be proxified
     currentResult = test.results.at(-1);
@@ -900,7 +900,7 @@ export class Matchers {
             predicate: (actual) => {
                 if (strictEqual(actual, expected)) {
                     logger.warn(
-                        `Called \`'toEqual()\` on strictly equal values. Did you mean to use \`toBe()\`?`
+                        `Called \`'toEqual()\` on strictly equal values in "${currentResult.test.fullName}". Did you mean to use \`toBe()\`?`
                     );
                     return true;
                 }
@@ -1840,4 +1840,11 @@ export class TestResult {
     /** @type {string[]} */
     steps = [];
     ts = $now();
+
+    /**
+     * @param {Test} test
+     */
+    constructor(test) {
+        this.test = test;
+    }
 }
