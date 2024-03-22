@@ -157,7 +157,7 @@ export class ReorderDialog extends Component {
             await rpc("/shop/cart/update_json", {
                 product_id: product.product_id,
                 add_qty: product.qty,
-                no_variant_attribute_values: JSON.stringify(product.no_variant_attribute_values),
+                no_variant_attribute_value_ids: product.no_variant_attribute_value_ids,
                 product_custom_attribute_values: JSON.stringify(product.product_custom_attribute_values),
                 display: false,
             });

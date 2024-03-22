@@ -7,6 +7,7 @@ from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import BaseUsersCommon
+from odoo.addons.product.tests.common import ProductAttributesCommon
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.controllers.payment import PaymentPortal
@@ -15,7 +16,7 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleCart(BaseUsersCommon, WebsiteSaleCommon):
+class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -288,3 +289,31 @@ class TestWebsiteSaleCart(BaseUsersCommon, WebsiteSaleCommon):
         so._recompute_taxes()
         so._cart_update(product_id=product.id, line_id=sol.id, set_qty=2)
         self.assertEqual(round(sol.price_total), 200, "200$ with public price+ 0% tax (mapped from fp 10% -> 0%)")
+
+    def test_cart_lines_aggregation(self):
+        # Adding a product with the same no_variant attributes combination twice should create only
+        # one SOLine
+        product_no_variants = self.env['product.template'].create({
+            'name': 'No variants product (TEST)',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.no_variant_attribute.id,
+                    'value_ids': [Command.set(self.no_variant_attribute.value_ids.ids)],
+                })
+            ]
+        })
+        no_variant_ptavs = product_no_variants.attribute_line_ids.product_template_value_ids
+        self.assertEqual(len(self.empty_cart.order_line), 0)
+        self.empty_cart._cart_update(
+            product_id=product_no_variants.product_variant_id.id,
+            add_qty=1,
+            no_variant_attribute_value_ids=no_variant_ptavs[0].ids,
+        )
+        self.assertEqual(len(self.empty_cart.order_line), 1)
+        self.empty_cart._cart_update(
+            product_id=product_no_variants.product_variant_id.id,
+            add_qty=1,
+            no_variant_attribute_value_ids=no_variant_ptavs[0].ids,
+        )
+        self.assertEqual(len(self.empty_cart.order_line), 1)
+        self.assertEqual(self.empty_cart.order_line.product_uom_qty, 2)
