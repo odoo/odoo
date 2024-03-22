@@ -2507,6 +2507,12 @@ class PropertiesGroupByCase(TestPropertiesMixin):
                 orderby='attributes.myinteger DESC'
             )
 
+        with self.assertRaises(ValueError), self.assertQueryCount(0):
+            Model._read_group(
+                domain=[],
+                aggregates=['attributes.myinteger:sum'],  # Aggregate is not supported
+            )
+
     @mute_logger('odoo.fields', 'odoo.models.unlink')
     def test_properties_field_read_group_many2many(self):
         Model = self.env['test_new_api.message']
