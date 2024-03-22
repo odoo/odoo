@@ -94,7 +94,7 @@ export class SplitBillScreen extends Component {
         this.newOrder.set_screen_data({ name: "PaymentScreen" });
         this.currentOrder.setCustomerCount(this.currentOrder.getCustomerCount() - 1);
         this.currentOrder.set_screen_data({ name: "ProductScreen" });
-
+        this.pos.addPendingOrder([this.currentOrder.id]);
         this.pos.selectedOrderUuid = this.newOrder.uuid;
         this.pos.showScreen("PaymentScreen");
     }
