@@ -8,18 +8,22 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { registry } from "@web/core/registry";
+import { advanceTime } from "@odoo/hoot-mock";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
+
+const commandSetupRegistry = registry.category("command_setup");
 
 test("open the chatWindow of a user from the command palette", async () => {
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
     await contains(".o_command", { count: 2 });
-    await click(".o_command.focused", { text: "OdooBot" });
-    await contains(".o-mail-ChatWindow", { text: "OdooBot" });
+    await click(".o_command.focused", { text: "Mitchell Admin" });
+    await contains(".o-mail-ChatWindow", { text: "Mitchell Admin" });
 });
 
 test("open the chatWindow of a channel from the command palette", async () => {
@@ -84,10 +88,7 @@ test("Channel mentions in the command palette of Discuss app with @", async () =
         ],
     });
     await contains(".o_command_palette .o_command_category", {
-        contains: [
-            [".o_command_name", { text: "Mario" }],
-            [".o_command_name", { text: "Mitchell Admin" }],
-        ],
+        contains: [[".o_command_name", { text: "Mitchell Admin" }]],
     });
     await click(".o_command.focused");
     await contains(".o-mail-ChatWindow", { text: "Mitchell Admin and Mario" });
@@ -108,4 +109,24 @@ test("Max 3 most recent channels in command palette of Discuss app with #", asyn
             [".o_command", { count: 3 }],
         ],
     });
+});
+
+test("only partners with dedicated users will be displayed in command palette", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "test user" });
+    pyEnv["discuss.channel"].create({
+        name: "TestChanel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    triggerHotkey("control+k");
+    await insertText(".o_command_palette_search input", "@");
+    advanceTime(commandSetupRegistry.get("@").debounceDelay);
+    await contains(".o_command_name", { text: "Mitchell Admin" });
+    await contains(".o_command_name", { text: "OdooBot" });
+    await contains(".o_command_name", { text: "test user", count: 0 });
 });
