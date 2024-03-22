@@ -1270,11 +1270,9 @@ const Wysiwyg = Widget.extend({
                         [anchorNode, focusNode] = isDirectionRight
                             ? [selection.anchorNode, selection.focusNode]
                             : [selection.focusNode, selection.anchorNode];
-                    } else {
-                        [anchorNode, focusNode] = [link, link];
                     }
                 }
-                if (!focusOffset) {
+                if (focusNode && !focusOffset) {
                     focusOffset = focusNode.childNodes.length || focusNode.length;
                 }
             }
