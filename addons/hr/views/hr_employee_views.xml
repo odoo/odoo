@@ -96,7 +96,7 @@
                             </group>
                             <group>
                                 <field name="department_id"/>
-                                <field name="job_id"/>
+                                <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}"/>
                                 <field name="parent_id" widget="many2one_avatar_user"/>
                                 <field name="coach_id" widget="many2one_avatar_user"/>
                             </group>
@@ -248,7 +248,7 @@
                     <field name="activity_date_deadline" widget="remaining_days" options="{'allow_order': '1'}" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
                     <field name="department_id"/>
-                    <field name="job_id"/>
+                    <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}"/>
                     <field name="parent_id" widget="many2one_avatar_user" optional="show"/>
                     <field name="address_id" column_invisible="True"/>
                     <field name="company_id" column_invisible="True"/>
