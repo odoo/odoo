@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.AvatarCardPopover" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o_avatar_card_buttons')]" position="inside">
-            <button class="btn btn-secondary btn-sm" t-if="user.employee_id" t-on-click.stop="onClickViewEmployee">View profile</button>
+            <button class="btn btn-secondary btn-sm" t-if="user.employee_ids?.length > 0" t-on-click.stop="onClickViewEmployee">View profile</button>
         </xpath>
     </t>
 

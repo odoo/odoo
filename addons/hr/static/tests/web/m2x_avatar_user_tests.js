@@ -80,7 +80,7 @@ QUnit.module("M2XAvatarUser", ({ beforeEach }) => {
                     "work_email",
                     "job_title",
                     "department_id",
-                    "employee_id",
+                    "employee_ids",
                 ]);
                 assert.step("user read");
             }
