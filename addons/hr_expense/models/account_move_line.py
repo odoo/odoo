@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools import SQL
 from odoo.tools.misc import frozendict
 
 
@@ -47,5 +48,5 @@ class AccountMoveLine(models.Model):
             result['extra_context']['force_price_include'] = True
         return result
 
-    def _get_extra_query_base_tax_line_mapping(self):
-        return ' AND (base_line.expense_id IS NULL OR account_move_line.expense_id = base_line.expense_id)'
+    def _get_extra_query_base_tax_line_mapping(self) -> SQL:
+        return SQL(' AND (base_line.expense_id IS NULL OR account_move_line.expense_id = base_line.expense_id)')
