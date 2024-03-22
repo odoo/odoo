@@ -1736,6 +1736,9 @@ export function splitAroundUntil(elements, limitAncestor) {
 }
 
 export function insertText(sel, content) {
+    if (!content) {
+        return;
+    }
     if (sel.anchorNode.nodeType === Node.TEXT_NODE) {
         const pos = [sel.anchorNode.parentElement, splitTextNode(sel.anchorNode, sel.anchorOffset)];
         setSelection(...pos, ...pos, false);
