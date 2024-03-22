@@ -742,6 +742,9 @@ class Channel(models.Model):
         if 'name' not in default:
             for channel, vals in zip(self, vals_list):
                 vals['name'] = f"{channel.name} ({_('copy')})"
+
+        if 'enroll' not in default and self.visibility == "members":
+            vals['enroll'] = 'invite'
         return vals_list
 
     def write(self, vals):
