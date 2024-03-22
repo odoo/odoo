@@ -726,13 +726,13 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         compute_kwargs = compute_kwargs or {}
         is_round_globally = evaluation_context_kwargs.get('rounding_method') == 'round_globally'
 
-        tax_values_list = taxes._convert_to_dict_for_taxes_computation()
-        product_values = taxes._eval_taxes_computation_turn_to_product_values(tax_values_list, product=product)
+        taxes_data = taxes._convert_to_dict_for_taxes_computation()
+        product_values = taxes._eval_taxes_computation_turn_to_product_values(taxes_data, product=product)
         return {
             'expected_values': expected_values,
             'params': {
                 'test': 'taxes_computation',
-                'tax_values_list': tax_values_list,
+                'taxes_data': taxes_data,
                 'price_unit': price_unit,
                 'quantity': quantity,
                 'product_values': product_values,
@@ -743,18 +743,18 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         }
 
     def _prepare_adapt_price_unit_to_another_taxes_test(self, price_unit, original_taxes, new_taxes, expected_price_unit, product=None):
-        original_tax_values_list = original_taxes._convert_to_dict_for_taxes_computation()
-        new_tax_values_list = new_taxes._convert_to_dict_for_taxes_computation()
+        original_taxes_data = original_taxes._convert_to_dict_for_taxes_computation()
+        new_taxes_data = new_taxes._convert_to_dict_for_taxes_computation()
         product_values = new_taxes._eval_taxes_computation_turn_to_product_values(
-            original_tax_values_list + new_tax_values_list,
+            original_taxes_data + new_taxes_data,
             product=product,
         )
         return {
             'expected_price_unit': expected_price_unit,
             'params': {
                 'test': 'adapt_price_unit_to_another_taxes',
-                'original_tax_values_list': original_tax_values_list,
-                'new_tax_values_list': new_tax_values_list,
+                'original_taxes_data': original_taxes_data,
+                'new_taxes_data': new_taxes_data,
                 'price_unit': price_unit,
                 'product_values': product_values,
             },
@@ -769,7 +769,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
                 params['product_values'],
                 **params['evaluation_context_kwargs'],
             )
-            taxes_computation = self.env['account.tax']._prepare_taxes_computation(params['tax_values_list'], **params['compute_kwargs'])
+            taxes_computation = self.env['account.tax']._prepare_taxes_computation(params['taxes_data'], **params['compute_kwargs'])
             test['py_results'] = {
                 'results': self.env['account.tax']._eval_taxes_computation(taxes_computation, evaluation_context),
             }
@@ -787,8 +787,8 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             test['py_results'] = self.env['account.tax']._adapt_price_unit_to_another_taxes(
                 params['price_unit'],
                 params['product_values'],
-                params['original_tax_values_list'],
-                params['new_tax_values_list'],
+                params['original_taxes_data'],
+                params['new_taxes_data'],
             )
         else:
             assert False, f"Unknown tax test method: {params['test']}"
@@ -821,14 +821,14 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
                 float_round(results['total_excluded'], precision_rounding=rounding),
                 float_round(expected_values['total_excluded'], precision_rounding=rounding),
             )
-            self.assertEqual(len(results['tax_values_list']), len(expected_values['tax_values_list']))
-            for tax_values, (expected_base, expected_tax) in zip(results['tax_values_list'], expected_values['tax_values_list']):
+            self.assertEqual(len(results['taxes_data']), len(expected_values['taxes_data']))
+            for tax_data, (expected_base, expected_tax) in zip(results['taxes_data'], expected_values['taxes_data']):
                 self.assertEqual(
-                    float_round(tax_values['base'], precision_rounding=rounding),
+                    float_round(tax_data['base'], precision_rounding=rounding),
                     float_round(expected_base, precision_rounding=rounding),
                 )
                 self.assertEqual(
-                    float_round(tax_values['tax_amount_factorized'], precision_rounding=rounding),
+                    float_round(tax_data['tax_amount_factorized'], precision_rounding=rounding),
                     float_round(expected_tax, precision_rounding=rounding),
                 )
 
@@ -840,7 +840,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         # Check the reverse in case of round_globally.
         if is_round_globally:
             compare_taxes_computation_values(results['reverse_results'], test['expected_values'], rounding)
-            delta = sum(x['tax_amount_factorized'] for x in results['reverse_results']['tax_values_list'] if x['price_include'])
+            delta = sum(x['tax_amount_factorized'] for x in results['reverse_results']['taxes_data'] if x['price_include'])
 
             self.assertEqual(
                 float_round(results['reverse_results']['total_excluded'] + delta, precision_rounding=rounding),

@@ -692,18 +692,17 @@ export class PosOrder extends Base {
     get_tax_details() {
         const taxDetails = {};
         for (const line of this.lines) {
-            const taxValuesList = line.get_all_prices().taxValuesList;
-            for (const taxValues of taxValuesList) {
-                const taxId = taxValues.id;
+            for (const taxData of line.get_all_prices().taxesData) {
+                const taxId = taxData.id;
                 if (!taxDetails[taxId]) {
-                    taxDetails[taxId] = Object.assign({}, taxValues, {
+                    taxDetails[taxId] = Object.assign({}, taxData, {
                         amount: 0.0,
                         base: 0.0,
-                        tax_percentage: taxValues.amount,
+                        tax_percentage: taxData.amount,
                     });
                 }
-                taxDetails[taxId].base += taxValues.display_base;
-                taxDetails[taxId].amount += taxValues.tax_amount_factorized;
+                taxDetails[taxId].base += taxData.display_base;
+                taxDetails[taxId].amount += taxData.tax_amount_factorized;
             }
         }
         return Object.values(taxDetails);

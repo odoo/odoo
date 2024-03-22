@@ -10,7 +10,7 @@ class AccountTax(models.Model):
 
     def _prepare_dict_for_taxes_computation(self):
         # EXTENDS 'account'
-        tax_values = super()._prepare_dict_for_taxes_computation()
+        tax_data = super()._prepare_dict_for_taxes_computation()
 
         if self.country_code == 'IN':
             l10n_in_tax_type = None
@@ -23,9 +23,9 @@ class AccountTax(models.Model):
                 l10n_in_tax_type = 'sgst'
             elif self.env.ref('l10n_in.tax_tag_cess') in tags:
                 l10n_in_tax_type = 'cess'
-            tax_values['_l10n_in_tax_type'] = l10n_in_tax_type
+            tax_data['_l10n_in_tax_type'] = l10n_in_tax_type
 
-        return tax_values
+        return tax_data
 
     # -------------------------------------------------------------------------
     # HELPERS IN BOTH PYTHON/JAVASCRIPT (hsn_summary.js / account_tax.py)
@@ -46,7 +46,7 @@ class AccountTax(models.Model):
             quantity = base_line['quantity']
             product_values = base_line['product_values']
             uom = base_line['uom'] or {}
-            tax_values_list = base_line['tax_values_list']
+            taxes_data = base_line['taxes_data']
 
             # Compute the taxes.
             evaluation_context = self.env['account.tax']._eval_taxes_computation_prepare_context(
@@ -57,15 +57,15 @@ class AccountTax(models.Model):
                 precision_rounding=0.01,
             )
             taxes_computation = self.env['account.tax']._eval_taxes_computation(
-                self.env['account.tax']._prepare_taxes_computation(tax_values_list),
+                self.env['account.tax']._prepare_taxes_computation(taxes_data),
                 evaluation_context,
             )
 
             # Rate.
             rate = sum(
-                tax_values['amount']
-                for tax_values in taxes_computation['tax_values_list']
-                if tax_values['_l10n_in_tax_type'] in ('igst', 'cgst', 'sgst')
+                tax_data['amount']
+                for tax_data in taxes_computation['taxes_data']
+                if tax_data['_l10n_in_tax_type'] in ('igst', 'cgst', 'sgst')
             )
 
             key = frozendict({
@@ -91,10 +91,10 @@ class AccountTax(models.Model):
                     },
                 }
 
-            for tax_values in taxes_computation['tax_values_list']:
-                l10n_in_tax_type = tax_values['_l10n_in_tax_type']
+            for tax_data in taxes_computation['taxes_data']:
+                l10n_in_tax_type = tax_data['_l10n_in_tax_type']
                 if l10n_in_tax_type:
-                    results_map[key]['tax_amounts'][l10n_in_tax_type] += tax_values['tax_amount_factorized']
+                    results_map[key]['tax_amounts'][l10n_in_tax_type] += tax_data['tax_amount_factorized']
                     l10n_in_tax_types.add(l10n_in_tax_type)
 
         items = [

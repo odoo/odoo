@@ -20,7 +20,7 @@ patch(accountTaxHelpers, {
             const quantity = base_line.quantity;
             const product_values = base_line.product_values;
             const uom = base_line.uom || {};
-            const tax_values_list = base_line.tax_values_list;
+            const taxes_data = base_line.taxes_data;
 
             // Compute the taxes.
             const evaluation_context = this.eval_taxes_computation_prepare_context(
@@ -33,12 +33,12 @@ patch(accountTaxHelpers, {
                 }
             );
             const taxes_computation = this.eval_taxes_computation(
-                this.prepare_taxes_computation(tax_values_list, evaluation_context),
+                this.prepare_taxes_computation(taxes_data, evaluation_context),
                 evaluation_context
             );
 
             // Rate.
-            const gst_tax_amounts = taxes_computation.tax_values_list
+            const gst_tax_amounts = taxes_computation.taxes_data
                 .filter((x) => ["igst", "cgst", "sgst"].includes(x._l10n_in_tax_type))
                 .map((x) => [x.id, x.amount]);
             let rate = 0;
@@ -70,11 +70,11 @@ patch(accountTaxHelpers, {
                 };
             }
 
-            for (const tax_values of taxes_computation.tax_values_list) {
-                if (tax_values._l10n_in_tax_type) {
-                    results_map[keyStr].tax_amounts[tax_values._l10n_in_tax_type] +=
-                        tax_values.tax_amount_factorized;
-                    l10n_in_tax_types.add(tax_values._l10n_in_tax_type);
+            for (const tax_data of taxes_computation.taxes_data) {
+                if (tax_data._l10n_in_tax_type) {
+                    results_map[keyStr].tax_amounts[tax_data._l10n_in_tax_type] +=
+                        tax_data.tax_amount_factorized;
+                    l10n_in_tax_types.add(tax_data._l10n_in_tax_type);
                 }
             }
         }

@@ -29,7 +29,7 @@ export class TestsSharedJsPython extends Component {
                 params.evaluation_context_kwargs
             );
             const taxesComputation = accountTaxHelpers.prepare_taxes_computation(
-                params.tax_values_list,
+                params.taxes_data,
                 params.compute_kwargs
             );
             jsResults.results = accountTaxHelpers.eval_taxes_computation(
@@ -55,8 +55,8 @@ export class TestsSharedJsPython extends Component {
             return accountTaxHelpers.adapt_price_unit_to_another_taxes(
                 params.price_unit,
                 params.product_values,
-                params.original_tax_values_list,
-                params.new_tax_values_list
+                params.original_taxes_data,
+                params.new_taxes_data
             );
         }
     }
