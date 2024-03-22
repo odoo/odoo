@@ -2126,3 +2126,34 @@ class TestTourBoM(HttpCase):
 
         self.start_tour(url, 'test_mrp_bom_product_catalog', login='admin')
         self.assertEqual(len(bom.bom_line_ids), 1)
+
+    def test_mrp_bom_overview_tour(self):
+        Product = self.env['product.product']
+        product_finish = Product.create({
+            'name': 'finish',
+            'type': 'product',
+            'tracking': 'none',
+            })
+        product_finish.product_tmpl_id.standard_price = 50
+        compo1 = Product.create({
+            'name': 'compo1',
+            'type': 'product',
+            'tracking': 'none',})
+        compo1.product_tmpl_id.standard_price = 10
+        compo2 = Product.create({
+            'name': 'compo2',
+            'type': 'product',
+            'tracking': 'none',})
+        compo2.product_tmpl_id.standard_price = 15
+        self.env['mrp.bom'].create({
+            'product_id': product_finish.id,
+            'product_tmpl_id': product_finish.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo1.id, 'product_qty': 2}),
+                (0, 0, {'product_id': compo2.id, 'product_qty': 1}),
+            ],
+        })
+
+        self.start_tour("/web", "test_bom_overview_tour", login="admin", step_delay=1000, watch=True)

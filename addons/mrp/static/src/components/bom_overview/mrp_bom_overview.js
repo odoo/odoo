@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { BomOverviewControlPanel } from "../bom_overview_control_panel/mrp_bom_overview_control_panel";
 import { BomOverviewTable } from "../bom_overview_table/mrp_bom_overview_table";
+import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { Component, EventBus, onWillStart, useSubEnv, useState } from "@odoo/owl";
 
 export class BomOverviewComponent extends Component {
@@ -13,6 +14,7 @@ export class BomOverviewComponent extends Component {
         BomOverviewTable,
     };
     static props = {
+        ...standardActionServiceProps,
         action: Object,
         actionId: { type: Number, optional: true },
         className: { type: String, optional: true },
