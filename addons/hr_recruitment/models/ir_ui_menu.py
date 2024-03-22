@@ -9,8 +9,12 @@ class IrUiMenu(models.Model):
 
     def _load_menus_blacklist(self):
         res = super()._load_menus_blacklist()
-        if self.env.user.has_group('hr_recruitment.group_hr_recruitment_interviewer') and not self.env.user.has_group('hr_recruitment.group_hr_recruitment_user'):
+        is_interviewer = self.env.user.has_group('hr_recruitment.group_hr_recruitment_interviewer')
+        is_user = self.env.user.has_group('hr_recruitment.group_hr_recruitment_user')
+        if not is_interviewer:
+            res.append(self.env.ref('hr.menu_view_hr_job').id)
+        elif is_interviewer and not is_user:
             res.append(self.env.ref('hr_recruitment.menu_hr_job_position').id)
-        elif self.env.user.has_group('hr_recruitment.group_hr_recruitment_user'):
+        else:
             res.append(self.env.ref('hr_recruitment.menu_hr_job_position_interviewer').id)
         return res
