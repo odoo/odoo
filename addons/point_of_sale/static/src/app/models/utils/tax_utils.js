@@ -2,7 +2,6 @@
 
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 
-
 export const getPriceUnitAfterFiscalPosition = (
     taxes,
     priceUnit,
@@ -18,7 +17,10 @@ export const getPriceUnitAfterFiscalPosition = (
     const newTaxes = getTaxesAfterFiscalPosition(taxes, fiscalPosition, models);
     return accountTaxHelpers.adapt_price_unit_to_another_taxes(
         priceUnit,
-        accountTaxHelpers.eval_taxes_computation_prepare_product_values(productDefaultValues, product),
+        accountTaxHelpers.eval_taxes_computation_prepare_product_values(
+            productDefaultValues,
+            product
+        ),
         taxes,
         newTaxes
     );
@@ -36,13 +38,16 @@ export const getTaxesValues = (
     const evalContext = accountTaxHelpers.eval_taxes_computation_prepare_context(
         priceUnit,
         quantity,
-        accountTaxHelpers.eval_taxes_computation_prepare_product_values(productDefaultValues, product),
+        accountTaxHelpers.eval_taxes_computation_prepare_product_values(
+            productDefaultValues,
+            product
+        ),
         {
             rounding_method: company.tax_calculation_rounding_method,
             precision_rounding: currency.rounding,
         }
     );
-    return computeSingleLineTaxes(taxes, evalContext);
+    return accountTaxHelpers.computeSingleLineTaxes(taxes, evalContext);
 };
 
 export const getTaxesAfterFiscalPosition = (taxes, fiscalPosition, models) => {

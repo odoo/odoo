@@ -3477,8 +3477,8 @@ class AccountMove(models.Model):
         #       The sum of the amounts on the tax lines belonging to the tax repartition line.
         #       These amounts may have been manually changed.
         #     * Computed tax amount:
-        #       The sum of the amounts on the items in 'tax_values_list' in 'to_process' belonging to the tax repartition line.
-        # This difference is then distributed evenly across the 'tax_values_list' in 'to_process'
+        #       The sum of the amounts on the items in 'taxes_data' in 'to_process' belonging to the tax repartition line.
+        # This difference is then distributed evenly across the 'taxes_data' in 'to_process'
         # such that the manual and computed tax amounts match.
         # The updated tax information is later used by '_aggregate_taxes' to compute the right tax amounts (consistently on all levels).
         tax_lines = self.line_ids.filtered(lambda x: x.display_type == 'tax')
@@ -3497,16 +3497,16 @@ class AccountMove(models.Model):
         # Collect the computed tax_amount_currency/tax_amount from the taxes computation.
         tax_details_per_rep_line = {}
         for _base_line, tax_details_results in to_process:
-            for tax_values in tax_details_results['tax_values_list']:
-                tax_rep = tax_values['tax_repartition_line']
+            for tax_data in tax_details_results['taxes_data']:
+                tax_rep = tax_data['tax_repartition_line']
                 tax_rep_amounts = tax_details_per_rep_line.setdefault(tax_rep.id, {
                     'tax_amount_currency': 0.0,
                     'tax_amount': 0.0,
                     'distribute_on': [],
                 })
-                tax_rep_amounts['tax_amount_currency'] += tax_values['tax_amount_currency']
-                tax_rep_amounts['tax_amount'] += tax_values['tax_amount']
-                tax_rep_amounts['distribute_on'].append(tax_values)
+                tax_rep_amounts['tax_amount_currency'] += tax_data['tax_amount_currency']
+                tax_rep_amounts['tax_amount'] += tax_data['tax_amount']
+                tax_rep_amounts['distribute_on'].append(tax_data)
 
         # Dispatch the delta on tax_values.
         for key, currency in (('tax_amount_currency', self.currency_id), ('tax_amount', self.company_currency_id)):
@@ -3522,7 +3522,7 @@ class AccountMove(models.Model):
                 nb_error = math.ceil(abs_diff / currency.rounding)
                 nb_cents_per_tax_values = math.floor(nb_error / len(computed_tax_rep_amounts['distribute_on']))
                 nb_extra_cent = nb_error % len(computed_tax_rep_amounts['distribute_on'])
-                for tax_values in computed_tax_rep_amounts['distribute_on']:
+                for tax_data in computed_tax_rep_amounts['distribute_on']:
 
                     if currency.is_zero(abs_diff):
                         break
@@ -3534,7 +3534,7 @@ class AccountMove(models.Model):
 
                     # We can have more than one cent to distribute on a single tax_values.
                     abs_delta_to_add = min(abs_diff, currency.rounding * nb_amount_curr_cent)
-                    tax_values[key] += diff_sign * abs_delta_to_add
+                    tax_data[key] += diff_sign * abs_delta_to_add
                     abs_diff -= abs_delta_to_add
 
         return self.env['account.tax']._aggregate_taxes(

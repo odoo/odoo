@@ -40,7 +40,7 @@ class AccountTaxPython(models.Model):
         super()._ascending_process_fixed_taxes_batch(batch)
 
         if batch['amount_type'] == 'code':
-            batch['computed'] = 'tax'
+            batch['is_tax_computed'] = True
 
     @api.model
     def _descending_process_price_included_taxes_batch(self, batch):
@@ -48,7 +48,7 @@ class AccountTaxPython(models.Model):
         super()._descending_process_price_included_taxes_batch(batch)
 
         if batch['price_include'] and batch['amount_type'] == 'code':
-            batch['computed'] = True
+            batch['is_base_computed'] = True
 
     @api.model
     def _ascending_process_taxes_batch(self, batch):
@@ -56,16 +56,16 @@ class AccountTaxPython(models.Model):
         super()._ascending_process_taxes_batch(batch)
 
         if not batch['price_include'] and batch['amount_type'] == 'code':
-            batch['computed'] = True
+            batch['is_base_computed'] = True
 
     @api.model
-    def _eval_taxes_computation_prepare_product_fields(self, tax_values_list):
+    def _eval_taxes_computation_prepare_product_fields(self, taxes_data):
         # EXTENDS 'account'
-        field_names = super()._eval_taxes_computation_prepare_product_fields(tax_values_list)
+        field_names = super()._eval_taxes_computation_prepare_product_fields(taxes_data)
         Product = self.env['product.product']
-        for tax_values in tax_values_list:
-            if tax_values['amount_type'] == 'code':
-                tax = self.browse(tax_values['id'])
+        for tax_data in taxes_data:
+            if tax_data['amount_type'] == 'code':
+                tax = self.browse(tax_data['id'])
                 for formula in ((tax.python_applicable or '').strip(), (tax.python_compute or '').strip()):
                     groups = REGEX_FORMULA_OBJECT.findall(formula)
                     if groups:
@@ -77,11 +77,11 @@ class AccountTaxPython(models.Model):
         return field_names
 
     @api.model
-    def _eval_tax_amount(self, tax_values, evaluation_context):
+    def _eval_tax_amount(self, tax_data, evaluation_context):
         # EXTENDS 'account'
-        amount_type = tax_values['amount_type']
+        amount_type = tax_data['amount_type']
         if amount_type == 'code':
-            tax = self.browse(tax_values['id'])
+            tax = self.browse(tax_data['id'])
             raw_base = (evaluation_context['quantity'] * evaluation_context['price_unit']) + evaluation_context['extra_base']
             local_dict = {**evaluation_context, 'base_amount': raw_base}
             json.dumps(local_dict) # Ensure it contains only json serializable data (security).
@@ -91,7 +91,7 @@ class AccountTaxPython(models.Model):
                 raise UserError(_(
                     "You entered invalid code %r in %r taxes\n\nError : %s",
                     tax.python_applicable,
-                    tax_values['name'],
+                    tax_data['name'],
                     e
                 )) from e
             is_applicable = local_dict.get('result', False)
@@ -104,8 +104,8 @@ class AccountTaxPython(models.Model):
                 raise UserError(_(
                     "You entered invalid code %r in %r taxes\n\nError : %s",
                     tax.python_compute,
-                    tax_values['name'],
+                    tax_data['name'],
                     e
                 )) from e
             return local_dict.get('result', 0.0)
-        return super()._eval_tax_amount(tax_values, evaluation_context)
+        return super()._eval_tax_amount(tax_data, evaluation_context)
