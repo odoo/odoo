@@ -480,8 +480,6 @@ export class PosOrder extends Base {
         } else {
             this.uiState.selected_orderline_uuid = undefined;
         }
-
-        this.pos.numpadMode = "quantity";
     }
 
     deselect_orderline() {
