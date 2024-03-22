@@ -494,10 +494,8 @@ export class TicketScreen extends Component {
         if (this._doesOrderHaveSoleItem(order)) {
             return true;
         }
-        const total = Object.values(this.pos.lineToRefund).reduce((acc, val) => {
-            if (val.line.order_id.id === order.id && !val.order_id) {
-                acc += val.qty;
-            }
+        const total = Object.values(order.uiState.lineToRefund).reduce((acc, val) => {
+            acc += val.qty;
             return acc;
         }, 0);
 
@@ -564,7 +562,7 @@ export class TicketScreen extends Component {
      * @returns
      */
     getToRefundDetail(orderline) {
-        const { lineToRefund } = this.pos;
+        const lineToRefund = orderline.order_id.uiState.lineToRefund;
 
         if (orderline.uuid in lineToRefund) {
             return lineToRefund[orderline.uuid];
@@ -593,12 +591,12 @@ export class TicketScreen extends Component {
      * @returns {Array} refundableDetails
      */
     _getRefundableDetails(partner, order) {
-        return Object.values(this.pos.lineToRefund).filter(
+        return Object.values(this.pos.linesToRefund).filter(
             (refund) =>
                 !this.pos.isProductQtyZero(refund.qty) &&
-                (partner ? refund.line.order_id.partner_id.id === partner.id : true) &&
-                !refund.destination_order_id &&
-                refund.line.order_id.uuid === order.uuid
+                refund.line.order_id.uuid === order.uuid &&
+                (partner ? refund.line.order_id.partner_id?.id === partner.id : true) &&
+                !refund.destination_order_id
         );
     }
 
