@@ -3,6 +3,7 @@
     <record id="mail_activity_type_action_config_project_types" model="ir.actions.act_window">
         <field name="name">Activity Types</field>
         <field name="res_model">mail.activity.type</field>
+        <field name="path">project-activity-types</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="domain">['|', ('res_model', '=', False), ('res_model', '=', 'project.task')]</field>
         <field name="context">{'default_res_model': 'project.task'}</field>
