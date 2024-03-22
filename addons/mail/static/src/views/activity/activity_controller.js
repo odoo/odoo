@@ -24,16 +24,9 @@ export class ActivityController extends Component {
     static template = "mail.ActivityController";
 
     setup() {
-        const { rootState } = this.props.state || {};
         this.model = useModel(
             this.props.Model,
-            {
-                activeFields: this.props.archInfo.activeFields,
-                resModel: this.props.resModel,
-                fields: this.props.fields,
-                viewMode: "activity",
-                rootState,
-            },
+            this.modelParams,
             { ignoreUseSampleModel: true }
         );
 
@@ -41,6 +34,17 @@ export class ActivityController extends Component {
         this.action = useService("action");
         this.messaging = useMessaging();
         this.activity = useService("mail.activity");
+    }
+    
+    get modelParams() {
+        const { rootState } = this.props.state || {};
+        return {
+            activeFields: this.props.archInfo.activeFields,
+            resModel: this.props.resModel,
+            fields: this.props.fields,
+            viewMode: "activity",
+            rootState,
+        };
     }
 
     scheduleActivity() {
