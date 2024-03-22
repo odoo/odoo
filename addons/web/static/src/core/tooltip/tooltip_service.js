@@ -125,6 +125,11 @@ export const tooltipService = {
          * @param {HTMLElement} el
          */
         function openElementsTooltip(el) {
+            // Fix weird behavior in Firefox where MouseEvent can be dispatched
+            // from TEXT_NODE, even if they shouldn't...
+            if (el.nodeType === Node.TEXT_NODE) {
+                return;
+            }
             if (elementsWithTooltips.has(el)) {
                 openTooltip(el, elementsWithTooltips.get(el));
             } else if (el.matches("[data-tooltip], [data-tooltip-template]")) {
