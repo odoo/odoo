@@ -52,6 +52,13 @@ patch(Order.prototype, "l10n_fr_pos_cert.Order", {
         result = Boolean(result || this.pos.is_french_country());
         return result;
     },
+    _get_qr_code_data() {
+        if (this.pos.is_french_country()){
+          return false;
+        } else {
+          return this._super(...arguments);
+        }
+    },
 });
 
 patch(Orderline.prototype, "l10n_fr_pos_cert.Orderline", {
