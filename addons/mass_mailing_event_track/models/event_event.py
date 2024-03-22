@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import models, _
 
 
 class Event(models.Model):
@@ -17,6 +17,7 @@ class Event(models.Model):
             context=dict(
                 default_mailing_model_id=self.env.ref('website_event_track.model_event_track').id,
                 default_mailing_domain=repr([('event_id', 'in', self.ids), ('stage_id.is_cancel', '!=', True)]),
+                default_subject=_("Event: %s", self.name),
             ),
         )
         return mass_mailing_action
