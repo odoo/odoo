@@ -2913,6 +2913,11 @@ export class OdooEditor extends EventTarget {
                     this.toolbar.style.visibility = show ? 'visible' : 'hidden';
                 }
                 if (show === false) {
+                    // close all dropdowns
+                    for (const dropdown of this.toolbar.querySelectorAll("ul.dropdown-menu.show")) {
+                        dropdown.classList.remove('show');
+                        dropdown.classList.add('hide');
+                    }
                     return;
                 }
             }
@@ -3632,9 +3637,13 @@ export class OdooEditor extends EventTarget {
             const ancestorsList = [commonAncestorElement, ...ancestors(commonAncestorElement, blockEl)];
             // Wrap rangeContent with clones of their ancestors to keep the styles.
             for (const ancestor of ancestorsList) {
-                const clone = ancestor.cloneNode();
-                clone.append(...rangeContent.childNodes);
-                rangeContent.appendChild(clone);
+                // Keep the formatting by keeping inline ancestors and paragraph
+                // related ones like headings etc.
+                if (!isBlock(ancestor) || paragraphRelatedElements.includes(ancestor.nodeName)) {
+                    const clone = ancestor.cloneNode();
+                    clone.append(...rangeContent.childNodes);
+                    rangeContent.appendChild(clone);
+                }
             }
         }
         const dataHtmlElement = document.createElement('data');
@@ -4566,6 +4575,12 @@ export class OdooEditor extends EventTarget {
             this._applyCommand("insert", text);
         } else if (odooEditorHtml) {
             const fragment = parseHTML(odooEditorHtml);
+            const selector = this.options.renderingClasses.map(c => `.${c}`).join(',');
+            if (selector) {
+                for (const element of fragment.querySelectorAll(selector)) {
+                    element.classList.remove(...this.options.renderingClasses);
+                }
+            }
             DOMPurify.sanitize(fragment, { IN_PLACE: true });
             if (fragment.hasChildNodes()) {
                 this._applyCommand('insert', fragment);

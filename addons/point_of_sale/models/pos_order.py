@@ -496,11 +496,10 @@ class PosOrder(models.Model):
         }
 
     def _is_pos_order_paid(self):
-        return float_is_zero(self._get_rounded_amount(self.amount_total) - self.amount_paid, precision_rounding=self.currency_id.rounding)
+        amount_total = -self.refunded_order_ids.amount_paid or self.amount_total
+        return float_is_zero(self._get_rounded_amount(amount_total) - self.amount_paid, precision_rounding=self.currency_id.rounding)
 
     def _get_rounded_amount(self, amount):
-        if self.config_id.cash_rounding:
-            amount = float_round(amount, precision_rounding=self.config_id.rounding_method.rounding, rounding_method=self.config_id.rounding_method.rounding_method)
         currency = self.currency_id
         return currency.round(amount) if currency else amount
 
@@ -720,7 +719,7 @@ class PosOrder(models.Model):
 
         # Cash rounding.
         cash_rounding = self.config_id.rounding_method
-        if self.config_id.cash_rounding and cash_rounding and not self.config_id.only_round_cash_method:
+        if self.config_id.cash_rounding and cash_rounding and (not self.config_id.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids)):
             amount_currency = cash_rounding.compute_difference(self.currency_id, total_amount_currency)
             if not self.currency_id.is_zero(amount_currency):
                 balance = company_currency.round(amount_currency * rate)

@@ -61,11 +61,9 @@
                                     <td>
                                         <span t-field="line.unit_amount"/>
                                     </td>
-                                    <td>
-                                        <t t-set="taxes" t-value="', '.join([(tax.description or tax.name) for tax in line.tax_ids])"/>
-                                        <td t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
-                                            <span t-out="taxes" id="line_tax_ids">Tax 15%</span>
-                                        </td>
+                                    <t t-set="taxes" t-value="', '.join([(tax.description or tax.name) for tax in line.tax_ids])"/>
+                                    <td t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                                        <span t-out="taxes" id="line_tax_ids">Tax 15%</span>
                                     </td>
                                     <td class="text-center">
                                         <span t-field="line.quantity"/>

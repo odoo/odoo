@@ -934,3 +934,58 @@ class StockQuant(TransactionCase):
         package.with_context(inventory_mode=True).unpack()
         self.assertFalse(quant.package_id)
         self.assertTrue(True)
+
+    def test_unpack_and_quants_history(self):
+        """
+        Test that after unpacking the quant history is preserved
+        """
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'type': 'product',
+            'tracking': 'lot',
+        })
+        lot_a = self.env['stock.lot'].create({
+            'name': 'A',
+            'product_id': product.id,
+            'product_qty': 5,
+        })
+        package = self.env['stock.quant.package'].create({
+            'name': 'Super Package',
+        })
+        stock_location = self.env['stock.warehouse'].search([], limit=1).lot_stock_id
+        dst_location = stock_location.child_ids[0]
+        picking_type = self.env.ref('stock.picking_type_internal')
+
+        self.env['stock.quant']._update_available_quantity(product, stock_location, 5.0, lot_id=lot_a, package_id=package)
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': picking_type.id,
+            'location_id': dst_location.id,
+            'location_dest_id': stock_location.id,
+            'move_ids': [(0, 0, {
+                'name': 'In 5 x %s' % product.name,
+                'product_id': product.id,
+                'location_id': stock_location.id,
+                'location_dest_id': dst_location.id,
+                'product_uom_qty': 5,
+                'product_uom': product.uom_id.id,
+            })],
+        })
+        picking.action_confirm()
+
+        picking.move_ids.move_line_ids.write({
+            'qty_done': 5,
+            'lot_id': lot_a.id,
+            'package_id': package.id,
+            'result_package_id': package.id,
+        })
+        picking.button_validate()
+        package.unpack()
+
+        quant = self.env['stock.quant'].search([
+            ('product_id', '=', product.id),
+            ('location_id', '=', dst_location.id),
+        ])
+        action = quant.action_view_stock_moves()
+        history = self.env['stock.move.line'].search(action['domain'])
+        self.assertTrue(history)
