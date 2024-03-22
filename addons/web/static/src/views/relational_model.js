@@ -2731,6 +2731,7 @@ export class Group extends DataPoint {
             groupDomain: this.groupDomain,
             listState: this.list.exportState(),
             groupFilterDomain: this.groupFilterDomain,
+            range: this.range,
         };
     }
 
