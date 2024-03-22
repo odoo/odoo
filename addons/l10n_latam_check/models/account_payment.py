@@ -32,7 +32,7 @@ class AccountPayment(models.Model):
             rec.amount = sum(self.l10n_latam_new_check_ids.mapped('amount'))
 
     def action_post(self):
-        for payment in self.filtered(lambda x: x.payment_method_code not in 'own_checks' and x.l10n_latam_new_check_ids):
+        for payment in self.filtered(lambda x: x.payment_method_code not in ['own_checks', 'new_third_party_checks'] and x.l10n_latam_new_check_ids):
             payment.l10n_latam_new_check_ids.unlink()
         super().action_post()
         self._l10n_latam_check_split_move()
@@ -48,6 +48,7 @@ class AccountPayment(models.Model):
         super().action_draft()
         # TODO : to look for another alternative.
         (self.l10n_latam_check_ids or self.l10n_latam_new_check_ids)._compute_check_info()
+
 
     def _l10n_latam_check_split_move(self):
         for payment in self.filtered(lambda x: x.payment_method_code == 'own_checks' and x.payment_type == 'outbound'):
