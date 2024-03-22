@@ -41,3 +41,15 @@ QUnit.test("open the chatWindow of a channel from the command palette", async ()
     await click(".o_command.focused", { text: "general" });
     await contains(".o-mail-ChatWindow", { text: "general" });
 });
+
+QUnit.test("only partners with dedicated users will be displayed in command palette", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].create({ name: "Demo Partner" });
+    const { advanceTime } = await start({ hasTimeControl: true });
+    triggerHotkey("control+k");
+    await insertText(".o_command_palette_search input", "@");
+    advanceTime(commandSetupRegistry.get("@").debounceDelay);
+    await contains(".o_command_name", { text: "Mitchell Admin" });
+    await contains(".o_command_name", { text: "OdooBot" });
+    await contains(".o_command_name", { text: "Demo Partner", count: 0 });
+});
