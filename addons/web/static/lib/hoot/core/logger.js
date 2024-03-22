@@ -157,26 +157,6 @@ export const logger = {
         }
         $debug(...styledArguments(args));
     },
-    async logRequest(getData) {
-        if (logger.level < logLevels.DEBUG) {
-            return;
-        }
-        const color = `color: #66e`;
-        const styles = [`${color}; font-weight: bold;`, color];
-        $groupCollapsed(`-> %c${prefix}#${id}%c<${title}>`, ...styles, await getData());
-        $trace(); // Using console to reduce stack trace noise
-        logger.groupEnd();
-    },
-    async logResponse(getData) {
-        if (logger.level < logLevels.DEBUG) {
-            return;
-        }
-        const color = `color: #f80`;
-        const styles = [`${color}; font-weight: bold;`, color];
-        $groupCollapsed(`<- %c${prefix}#${id}%c<${title}>`, ...styles, await getData());
-        $trace(); // Using console to reduce stack trace noise
-        logger.groupEnd();
-    },
     /**
      * @param {import("./test").Test} test
      */
