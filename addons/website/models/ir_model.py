@@ -3,6 +3,8 @@
 
 from odoo import models
 
+from odoo.addons.website.models import ir_http
+
 
 class BaseModel(models.AbstractModel):
     _inherit = 'base'
@@ -30,6 +32,10 @@ class BaseModel(models.AbstractModel):
             return self._get_http_domain() or super().get_base_url()
         if 'website_id' in self and self.website_id.domain:
             return self.website_id._get_http_domain()
+        # Before returning the ICP, use the related website if we are in the frontend
+        website = ir_http.get_request_website()
+        if website and website.domain:
+            return website._get_http_domain()
         if 'company_id' in self and self.company_id.website_id.domain:
             return self.company_id.website_id._get_http_domain()
         return super().get_base_url()

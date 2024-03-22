@@ -5,14 +5,21 @@ from lxml.html import document_fromstring
 
 import odoo.tests
 
+from odoo.addons.website.tools import MockRequest
+
 
 class TestUrlCommon(odoo.tests.HttpCase):
     def setUp(self):
         super(TestUrlCommon, self).setUp()
         self.domain = 'http://' + odoo.tests.HOST
+        self.domain2 = 'http://localhost'
         self.website = self.env['website'].create({
             'name': 'test base url',
             'domain': self.domain,
+        })
+        self.website2 = self.env['website'].create({
+            'name': 'test base url 2',
+            'domain': self.domain2,
         })
 
         lang_fr = self.env['res.lang']._activate_lang('fr_FR')
@@ -46,6 +53,10 @@ class TestBaseUrl(TestUrlCommon):
         with_website_id.website_id = False
         self.assertEqual(with_website_id.get_base_url(), icp_base_url)
 
+        # ...when no website is set on the model but we are in a website
+        with MockRequest(self.env, website=self.website):
+            self.assertEqual(with_website_id.get_base_url(), self.domain)
+
         # ...when the website is correctly set
         with_website_id.website_id = self.website
         self.assertEqual(with_website_id.get_base_url(), self.domain)
@@ -53,6 +64,10 @@ class TestBaseUrl(TestUrlCommon):
         # ...when the set website doesn't have a domain
         self.website.domain = False
         self.assertEqual(with_website_id.get_base_url(), icp_base_url)
+
+        # ...when the set website doesn't have a domain but we are in a different website
+        with MockRequest(self.env, website=self.website2):
+            self.assertEqual(with_website_id.get_base_url(), self.domain2)
 
         # Test URL is correct for the website itself when no domain is set
         self.assertEqual(self.website.get_base_url(), icp_base_url)
@@ -134,6 +149,10 @@ class TestGetBaseUrl(odoo.tests.TransactionCase):
         # .. on `sequence` write ..
         self.assertEqual(attach.get_base_url(), website_1_domain,
                          "Lowest sequence is now website_2, so record.company_id.website_id should be website_1 as cache should be invalidated.")
+        # .. when loaded with website_2 ..
+        with MockRequest(self.env, website=website_2):
+            self.assertEqual(attach.get_base_url(), website_2_domain,
+                             "We are in the frontend so we should get the domain from website_2")
         website_1.company_id = company_2.id
         # .. on `company_id` write..
         self.assertEqual(attach.get_base_url(), website_2_domain, "Cache should be recomputed, only website_1 remains for company_2.")
