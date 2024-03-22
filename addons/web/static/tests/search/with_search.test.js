@@ -103,8 +103,8 @@ test("do not load search view description by default", async () => {
         static template = xml`<div class="o_test_component">Test component content</div>`;
     }
 
-    onRpc("get_views", () => {
-        expect.step("get_views");
+    onRpc("get_views", ({ method }) => {
+        expect.step(method);
         throw new Error("No get_views should be done");
     });
     await mountWithSearch(TestComponent, {
@@ -119,8 +119,8 @@ test("load search view description if not provided and loadSearchView=true", asy
         static template = xml`<div class="o_test_component">Test component content</div>`;
     }
 
-    onRpc("get_views", (_, { kwargs }) => {
-        expect.step("get_views");
+    onRpc("get_views", ({ method, kwargs }) => {
+        expect.step(method);
         delete kwargs.options.mobile;
         expect(kwargs).toEqual({
             context: {
@@ -150,8 +150,8 @@ test("do not load the search view description if provided even if loadSearchView
         static template = xml`<div class="o_test_component">Test component content</div>`;
     }
 
-    onRpc("get_views", () => {
-        expect.step("get_views");
+    onRpc("get_views", ({ method }) => {
+        expect.step(method);
         throw new Error("No get_views should be done");
     });
     await mountWithSearch(TestComponent, {
@@ -169,8 +169,8 @@ test("load view description if it is not complete and loadSearchView=true", asyn
         static template = xml`<div class="o_test_component">Test component content</div>`;
     }
 
-    onRpc("get_views", (_, { kwargs }) => {
-        expect.step("get_views");
+    onRpc("get_views", ({ method, kwargs }) => {
+        expect.step(method);
         delete kwargs.options.mobile;
         expect(kwargs.options).toEqual({
             action_id: false,
@@ -195,8 +195,8 @@ test("load view description with given id if it is not provided and loadSearchVi
         static template = xml`<div class="o_test_component"><SearchBarMenu/></div>`;
     }
 
-    onRpc("get_views", (_, { kwargs }) => {
-        expect.step("get_views");
+    onRpc("get_views", ({ method, kwargs }) => {
+        expect.step(method);
         expect(kwargs.views).toEqual([[1, "search"]]);
     });
     await mountWithSearch(TestComponent, {

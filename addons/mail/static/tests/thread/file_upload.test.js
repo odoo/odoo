@@ -53,10 +53,7 @@ test("no conflicts between file uploads", async () => {
 test("Attachment shows spinner during upload", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "channel_1" });
-    onRpc("/mail/attachment/upload", async (route, args) => {
-        // never fulfill the attachment upload promise.
-        await new Deferred();
-    });
+    onRpc("/mail/attachment/upload", () => new Deferred()); // never fulfill the attachment upload promise.
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer input[type=file]", [

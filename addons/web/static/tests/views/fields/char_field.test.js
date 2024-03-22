@@ -159,7 +159,7 @@ test("setting a char field to empty string is saved as a false value", async () 
 
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 
-    onRpc("web_save", (_route, { args }) => {
+    onRpc("web_save", ({ args }) => {
         expect(args[1].name).toBe(false);
     });
     await fieldInput("name").clear();
@@ -223,7 +223,7 @@ test("char field translatable", async () => {
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 
     let call_get_field_translations = 0;
-    onRpc(async (_, { args, method, model }) => {
+    onRpc(async ({ args, method, model }) => {
         if (method === "get_installed" && model === "res.lang") {
             return [
                 ["en_US", "English"],
@@ -335,7 +335,7 @@ test("translation dialog should close if field is not there anymore", async () =
             </sheet>
         </form>`,
     });
-    onRpc(async (_, { method, model }) => {
+    onRpc(async ({ method, model }) => {
         if (method === "get_installed" && model === "res.lang") {
             return [
                 ["en_US", "English"],
@@ -378,7 +378,7 @@ test("html field translatable", async () => {
 
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 
-    onRpc(async (route, { args, method, model }) => {
+    onRpc(async ({ args, method, model }) => {
         if (method === "get_installed" && model === "res.lang") {
             return [
                 ["en_US", "English"],
@@ -516,11 +516,8 @@ test.tags("desktop")("input field: change value before pending onchange returns"
     });
 
     let def;
-    onRpc(async (route, { method }) => {
-        if (method === "onchange") {
-            await def;
-        }
-    });
+    onRpc("onchange", () => def);
+
     await contains(".o_field_x2many_list_row_add a").click();
     expect(".o_field_widget[name='name'] input").toHaveValue("My little Name Value", {
         message: "should contain the default value",
@@ -567,11 +564,7 @@ test("input field: change value before pending onchange returns (2)", async () =
         </form>`,
     });
 
-    onRpc(async (route, { method }) => {
-        if (method === "onchange") {
-            await def;
-        }
-    });
+    onRpc("onchange", () => def);
 
     expect(".o_field_widget[name='name'] input").toHaveValue("yop", {
         message: "should contain the correct value",
@@ -624,11 +617,7 @@ test.tags("desktop")(
         </form>`,
         });
 
-        onRpc(async (route, { method }) => {
-            if (method === "onchange") {
-                await def;
-            }
-        });
+        onRpc("onchange", () => def);
 
         await contains(".o_field_x2many_list_row_add a").click();
         expect(".o_field_widget[name='name'] input").toHaveValue("My little Name Value", {
@@ -691,11 +680,7 @@ test.tags("desktop")("input field: change value before pending onchange renaming
         </form>`,
     });
 
-    onRpc(async (route, { method }) => {
-        if (method === "onchange") {
-            await def;
-        }
-    });
+    onRpc("onchange", () => def);
 
     const def = new Deferred();
 
@@ -935,9 +920,9 @@ test("edit a char field should display the status indicator buttons without flic
             </field>
         </form>`,
     });
-    onRpc("onchange", async () => {
+    onRpc("onchange", () => {
         expect.step("onchange");
-        await def;
+        return def;
     });
     expect(".o_form_status_indicator_buttons").not.toBeVisible({
         message: "form view is not dirty",

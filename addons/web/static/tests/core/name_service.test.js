@@ -51,7 +51,7 @@ test("loadDisplayNames is done in silent mode", async () => {
 
 test("single loadDisplayNames following addDisplayNames", async () => {
     await makeMockEnv();
-    onRpc((_, { model, method, kwargs }) => {
+    onRpc(({ model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });
 
@@ -63,7 +63,7 @@ test("single loadDisplayNames following addDisplayNames", async () => {
 
 test("single loadDisplayNames following addDisplayNames (2)", async () => {
     await makeMockEnv();
-    onRpc((_, { model, method, kwargs }) => {
+    onRpc(({ model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });
 
@@ -75,7 +75,7 @@ test("single loadDisplayNames following addDisplayNames (2)", async () => {
 
 test("loadDisplayNames in batch", async () => {
     await makeMockEnv();
-    onRpc((_, { model, method, kwargs }) => {
+    onRpc(({ model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });
 
@@ -92,7 +92,7 @@ test("loadDisplayNames in batch", async () => {
 
 test("loadDisplayNames on different models", async () => {
     await makeMockEnv();
-    onRpc((_, { model, method, kwargs }) => {
+    onRpc(({ model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });
 
@@ -119,7 +119,7 @@ test("invalid id", async () => {
 
 test("inaccessible or missing id", async () => {
     await makeMockEnv();
-    onRpc((_, { model, method, kwargs }) => {
+    onRpc(({ model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });
 
@@ -130,7 +130,7 @@ test("inaccessible or missing id", async () => {
 
 test("batch + inaccessible/missing", async () => {
     await makeMockEnv();
-    onRpc((_, { model, method, kwargs }) => {
+    onRpc(({ model, method, kwargs }) => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });
 

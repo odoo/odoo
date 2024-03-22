@@ -57,11 +57,10 @@ test("PdfViewerField: basic rendering", async () => {
 test("PdfViewerField: upload rendering", async () => {
     expect.assertions(4);
 
-    onRpc(async (route, { method, args }) => {
-        if (method === "web_save") {
-            expect(args[1]).toEqual({ document: btoa("test") });
-        }
+    onRpc("web_save", ({ args }) => {
+        expect(args[1]).toEqual({ document: btoa("test") });
     });
+
     await mountView({
         type: "form",
         resModel: "partner",

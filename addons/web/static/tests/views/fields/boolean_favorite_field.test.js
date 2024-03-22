@@ -53,7 +53,7 @@ test("FavoriteField in kanban view", async () => {
 });
 
 test("FavoriteField saves changes by default", async () => {
-    onRpc("web_save", (_, { args }) => {
+    onRpc("web_save", ({ args }) => {
         expect.step("save");
         expect(args).toEqual([[1], { bar: false }]);
     });

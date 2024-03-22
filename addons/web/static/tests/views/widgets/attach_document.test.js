@@ -48,7 +48,7 @@ test("attach document widget calls action with attachment ids", async () => {
         },
     }));
 
-    onRpc(async (route, { args, kwargs, method, model }) => {
+    onRpc(async ({ args, kwargs, method, model }) => {
         expect.step(method);
         if (method === "my_action") {
             expect(model).toBe("partner");
@@ -107,7 +107,7 @@ test("attach document widget calls action with attachment ids on a new record", 
         },
     }));
 
-    onRpc(async (route, params) => {
+    onRpc(async (params) => {
         expect.step(params.method);
         if (params.method === "my_action") {
             expect(params.model).toBe("partner");
