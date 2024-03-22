@@ -105,7 +105,7 @@
 
         // ===  Adapt calendar table borders and general layout ===
         // ========================================================
-        --fc-page-bg-color: none;
+        --fc-page-bg-color: #{$o-view-background-color};
         --fc-border-color: var(--o-cw-border-color);
 
         .fc-body > tr > .fc-widget-content {
@@ -131,8 +131,6 @@
         }
 
         .fc-more-popover {
-            --fc-page-bg-color: #{$o-view-background-color};
-
             .fc-header {
                 padding-left: 1rem;
                 .fc-title {
