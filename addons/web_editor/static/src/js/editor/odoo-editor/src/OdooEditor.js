@@ -2645,6 +2645,11 @@ export class OdooEditor extends EventTarget {
             getDeepRange(this.editable, { select: true });
         }
         const [startTd, endTd] = [closestElement(selection.anchorNode, 'td'), closestElement(selection.focusNode, 'td')];
+        // Handle selection for the single cell.
+        if (startTd === endTd && !startTd.classList.contains('o_selected_td')) {
+            this._setSingleCellSelection(ev, selection, startTd);
+            return;
+        }
         const endCellPosition = { x: getRowIndex(endTd), y: getColumnIndex(endTd) };
         const tds = [...startTable.rows].map((row) => [...row.cells]);
         let targetTd, targetNode;
@@ -2683,6 +2688,29 @@ export class OdooEditor extends EventTarget {
         }
         ev.preventDefault();
     }
+    _setSingleCellSelection(ev = undefined, sel, td) {
+        const range = sel.rangeCount && sel.getRangeAt(0);
+        const { focusNode, focusOffset } = sel;
+        //Do not prevent default when there is a text in cell.
+        if (focusNode.nodeType === Node.TEXT_NODE) {
+            const textNodes = descendants(td).filter(node => node.nodeType === Node.TEXT_NODE);
+            const lastTextChild = textNodes.pop();
+            const firstTextChild = textNodes.shift();
+            const isAtTextBoundary = {
+                ArrowRight: nodeSize(focusNode) === focusOffset && focusNode === lastTextChild,
+                ArrowLeft: focusOffset === 0 && focusNode === firstTextChild,
+                ArrowUp: focusNode === firstTextChild,
+                ArrowDown: focusNode === lastTextChild,
+            };
+            if (isAtTextBoundary[ev.key]) {
+                ev.preventDefault();
+                this._selectTableCells(range);
+            }
+        } else {
+            ev.preventDefault();
+            this._selectTableCells(range); // If cell is empty then select it.
+        }
+    }
     /**
      * Handle the selection of table cells rectangularly (as opposed to line by
      * line from left to right then top to bottom). If such a special selection
@@ -2699,6 +2727,8 @@ export class OdooEditor extends EventTarget {
         if (anchorNode && !ancestors(anchorNode).includes(this.editable)) {
             return false;
         }
+        const selectSingleCell  = this._currentKeyPress?.isShiftKey && this._wasTableSelected;
+        delete this._wasTableSelected;
         const traversedNodes = getTraversedNodes(this.editable);
         if (this._isResizingTable || !traversedNodes.some(node => !!closestElement(node, 'td') && !isProtected(node))) {
             return false;
@@ -2736,10 +2766,12 @@ export class OdooEditor extends EventTarget {
         // Get the top table ancestors at range bounds.
         const startTable = ancestors(range.startContainer, this.editable).filter(node => node.nodeName === 'TABLE').pop();
         const endTable = ancestors(range.endContainer, this.editable).filter(node => node.nodeName === 'TABLE').pop();
-        if (startTd !== endTd && startTable === endTable) {
+        if ((startTd !== endTd || selectSingleCell) && startTable && startTable === endTable) {
             if (!isProtected(startTable)) {
                 // The selection goes through at least two different cells ->
                 // select cells.
+                // Select single cell if selection goes from two cells to
+                // one using shift + arrow key.
                 this._selectTableCells(range);
                 appliedCustomSelection = true;
             }
@@ -4132,7 +4164,7 @@ export class OdooEditor extends EventTarget {
         }
         this.keyboardType =
             ev.key === 'Unidentified' ? KEYBOARD_TYPES.VIRTUAL : KEYBOARD_TYPES.PHYSICAL;
-        this._currentKeyPress = ev.key;
+        this._currentKeyPress = { key: ev.key, isShiftKey: ev.shiftKey };
         // If the pressed key has a printed representation, the returned value
         // is a non-empty Unicode character string containing the printable
         // representation of the key. In this case, call `deleteRange` before
@@ -4406,7 +4438,6 @@ export class OdooEditor extends EventTarget {
      */
     _onSelectionChange() {
         const currentKeyPress = this._currentKeyPress;
-        delete this._currentKeyPress;
         const selection = this.document.getSelection();
         if (!selection) {
             // Because the `selectionchange` event is async, the selection can
@@ -4414,6 +4445,8 @@ export class OdooEditor extends EventTarget {
             // selection was moved and the moment the event is triggered.
             return;
         }
+        this._wasTableSelected = hasTableSelection(this.editable);
+        this.deselectTable();
         const anchorNode = selection.anchorNode;
         // Correct cursor if at editable root.
         if (
@@ -4421,16 +4454,13 @@ export class OdooEditor extends EventTarget {
             anchorNode === this.editable &&
             !this.options.allowInlineAtRoot
         ) {
-            this._fixSelectionOnEditableRoot(selection, currentKeyPress);
+            this._fixSelectionOnEditableRoot(selection, currentKeyPress?.key);
             // The _onSelectionChange handler is going to be triggered again.
             return;
         }
         let appliedCustomSelection = false;
         if (selection.rangeCount && selection.getRangeAt(0)) {
             appliedCustomSelection = this._handleSelectionInTable();
-            if (!appliedCustomSelection) {
-                this.deselectTable();
-            }
         }
         const isSelectionInEditable = this.isSelectionInEditable(selection);
         if (!appliedCustomSelection) {
@@ -4850,6 +4880,7 @@ export class OdooEditor extends EventTarget {
     }
 
     _onMouseDown(ev) {
+        delete this._currentKeyPress;
         this._currentMouseState = ev.type;
         this._lastMouseClickPosition = [ev.x, ev.y];
 
@@ -5027,6 +5058,7 @@ export class OdooEditor extends EventTarget {
     }
 
     _onMousemove(ev) {
+        delete this._currentKeyPress;
         if (this._currentMouseState === 'mousedown' && !this._isResizingTable) {
             this._handleSelectionInTable(ev);
         }
