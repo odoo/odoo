@@ -417,3 +417,37 @@ class TestReplenishWizard(TestStockCommon):
             })
             wizard.supplier_id = supplier
             self.assertEqual(fields.Datetime.from_string('2023-01-08 00:00:00'), wizard.date_planned)
+
+    def test_unit_price_expired_price_list(self):
+        vendor = self.env['res.partner'].create({
+            'name': 'Contact',
+            'type': 'contact',
+        })
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'standard_price': 60,
+            'seller_ids': [(0, 0, {
+                'partner_id': vendor.id,
+                'price': 1.0,
+                'date_end': '2019-01-01',
+            })],
+            'route_ids': [(6, 0, [
+                self.env.ref('purchase_stock.route_warehouse0_buy').id
+            ])],
+        })
+
+        replenish_wizard = self.env['product.replenish'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'quantity': 1,
+            'warehouse_id': self.wh.id,
+            'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id
+        })
+        replenish_wizard.launch_replenishment()
+        last_po_id = self.env['purchase.order'].search([
+            ('origin', 'ilike', '%Manual Replenishment%'),
+        ])[-1]
+
+        self.assertEqual(last_po_id.partner_id, vendor)
+        self.assertEqual(last_po_id.order_line.price_unit, 60)
