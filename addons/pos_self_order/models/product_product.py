@@ -96,7 +96,7 @@ class ProductProduct(models.Model):
         return [
             {
                 "price_info": product._get_price_info(pos_config),
-                "has_image": bool(product.image_1920),
+                "has_image": bool(product.product_tmpl_id.image_128 or product.image_variant_128),
                 "attributes": product._get_attributes(pos_config),
                 "name": product._get_name(),
                 "id": product.id,
