@@ -1192,7 +1192,7 @@ test("should auto-pin chat when receiving a new DM", async () => {
             Command.create({
                 unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
-                partner_id: serverState.partnerId
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
@@ -1736,7 +1736,7 @@ test("sidebar: cannot unpin channel group_based_subscription: mandatorily pinned
             Command.create({
                 unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
-                partner_id: serverState.partnerId
+                partner_id: serverState.partnerId,
             }),
         ],
         group_ids: [Command.create({ name: "test" })],
@@ -2049,4 +2049,43 @@ test("Newly created chat should be at the top of the direct message list", async
         text: "Jerry Golay",
         before: [".o-mail-DiscussSidebar-item", { text: "Albert" }],
     });
+});
+
+test("Read of unread chat where new message is deleted should mark as read.", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "Heyo",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], {
+        seen_message_id: messageId,
+        message_unread_counter: 1,
+    });
+    const env = await start();
+    rpc = rpcWithEnv(env);
+    await openDiscuss();
+    await contains("button", { text: "Marc Demo", contains: [".badge", { text: "1" }] });
+    // simulate deleted message
+    rpc("/mail/message/update_content", {
+        message_id: messageId,
+        body: "",
+        attachment_ids: [],
+    });
+    await click("button", { text: "Marc Demo" });
+    await contains("button", { text: "Marc Demo", contains: [".badge", { count: 0 }] });
 });
