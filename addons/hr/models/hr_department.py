@@ -135,6 +135,16 @@ class Department(models.Model):
     def get_children_department_ids(self):
         return self.env['hr.department'].search([('id', 'child_of', self.ids)])
 
+    def action_open_view_child_departments(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "hr.department",
+            "views": [[False, "kanban"], [False, "tree"], [False, "form"]],
+            "domain": [['id', 'in', self.get_children_department_ids().ids]],
+            "name": "Child departments",
+        }
+
     def get_department_hierarchy(self):
         if not self:
             return {}

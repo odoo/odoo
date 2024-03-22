@@ -63,9 +63,11 @@
                 </xpath>
 
                 <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
-                    <a role="menuitem" class="dropdown-item" name="%(hr_leave_action_action_department)d" type="action" groups="hr_holidays.group_hr_holidays_user">
-                        Time Off
-                    </a>
+                    <div role="menuitem">
+                        <a class="dropdown-item" name="%(hr_leave_action_action_department)d" type="action" groups="hr_holidays.group_hr_holidays_user">
+                            Time Off
+                        </a>
+                    </div>
                 </xpath>
             </data>
         </field>

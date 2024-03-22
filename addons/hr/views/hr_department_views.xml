@@ -41,7 +41,7 @@
             <field name="name">hr.department.tree</field>
             <field name="model">hr.department</field>
             <field name="arch" type="xml">
-                <tree string="Companies" sample="1" editable="bottom">
+                <tree string="Companies" multi_edit="1">
                     <field name="company_id" column_invisible="True"/>
                     <field name="name"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1"/>
@@ -77,17 +77,39 @@
                     <field name="manager_id"/>
                     <field name="color"/>
                     <field name="total_employee"/>
+                    <field name="active"/>
                     <templates>
                         <t t-name="kanban-menu" t-if="!selection_mode">
-                            <div class="o_kanban_card_manage_section">
-                                <div role="menuitem" class="o_kanban_manage_reports">
-                                    <div class="o_kanban_card_manage_title ps-4 pb-1">
-                                        <span class="fw-bolder">Reporting</span>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="o_kanban_card_manage_section o_kanban_manage_view col-6 o_kanban_manage_views">
+                                        <h5 role="menuitem" class="o_kanban_card_manage_title">
+                                            <span>View</span>
+                                        </h5>
+                                        <div role="menuitem">
+                                            <a name="%(act_employee_from_department)d" type="action">Employees</a>
+                                        </div>
+                                        <div role="menuitem">
+                                            <a name="action_open_view_child_departments" type="object">Child departments</a>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_card_manage_section o_kanban_manage_view col-6 o_kanban_manage_reports">
+                                        <h5 role="menuitem" class="o_kanban_card_manage_title">
+                                            <span>Reporting</span>
+                                        </h5>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_card_manage_settings row">
+                                    <div t-if="widget.editable" role="menuitem" aria-haspopup="true" class="col-6">
+                                        <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <a t-if="widget.editable" role="menuitem" class="dropdown-item" type="edit">Configuration</a>
+                                        <a t-if="record.active.raw_value" role="menuitem" type="archive" class="dropdown-item">Archive</a>
+                                        <a t-if="!record.active.raw_value" role="menuitem" type="unarchive" class="dropdown-item">Unarchive</a>
                                     </div>
                                 </div>
                             </div>
-                            <a t-if="widget.editable" role="menuitem" class="dropdown-item" type="edit">Configuration</a>
-                            <ul t-if="widget.editable" class="oe_kanban_colorpicker" data-field="color" role="menu"/>
                         </t>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">

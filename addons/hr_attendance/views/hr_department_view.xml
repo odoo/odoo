@@ -7,9 +7,11 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
-                    <a role="menuitem" class="dropdown-item" name="%(hr_attendance_reporting)d" type="action" groups="hr_attendance.group_hr_attendance_officer">
-                        Attendances
-                    </a>
+                    <div role="menuitem">
+                        <a class="dropdown-item" name="%(hr_attendance_reporting)d" type="action" groups="hr_attendance.group_hr_attendance_officer">
+                            Attendances
+                        </a>
+                    </div>
                 </xpath>
             </data>
         </field>
