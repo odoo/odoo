@@ -86,7 +86,7 @@ class ProviderGrid(models.Model):
         self.ensure_one()
         self = self.sudo()
         order = order.sudo()
-        total = weight = volume = quantity = 0
+        total = weight = volume = quantity = wv = 0
         total_delivery = 0.0
         for line in order.order_line:
             if line.state == 'cancel':
@@ -100,28 +100,29 @@ class ProviderGrid(models.Model):
             qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
             weight += (line.product_id.weight or 0.0) * qty
             volume += (line.product_id.volume or 0.0) * qty
+            wv += (line.product_id.weight or 0.0) * (line.product_id.volume or 0.0) * qty
             quantity += qty
         total = (order.amount_total or 0.0) - total_delivery
 
         total = self._compute_currency(order, total, 'pricelist_to_company')
 
-        return self._get_price_from_picking(total, weight, volume, quantity)
+        return self._get_price_from_picking(total, weight, volume, quantity, wv=wv)
 
-    def _get_price_dict(self, total, weight, volume, quantity):
+    def _get_price_dict(self, total, weight, volume, quantity, wv=0.):
         '''Hook allowing to retrieve dict to be used in _get_price_from_picking() function.
         Hook to be overridden when we need to add some field to product and use it in variable factor from price rules. '''
         return {
             'price': total,
             'volume': volume,
             'weight': weight,
-            'wv': volume * weight,
+            'wv': wv or volume * weight,
             'quantity': quantity
         }
 
-    def _get_price_from_picking(self, total, weight, volume, quantity):
+    def _get_price_from_picking(self, total, weight, volume, quantity, wv=0.):
         price = 0.0
         criteria_found = False
-        price_dict = self._get_price_dict(total, weight, volume, quantity)
+        price_dict = self._get_price_dict(total, weight, volume, quantity, wv=wv)
         if self.free_over and total >= self.amount:
             return 0
         for line in self.price_rule_ids:
