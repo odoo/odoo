@@ -184,7 +184,7 @@ class PosSelfOrderController(http.Controller):
                 "price_info": product.get_product_info_pos(
                                     product.lst_price, 1, int(pos_config_id)
                                 )["all_prices"],
-                "has_image": bool(product.image_1920),
+                "has_image": bool(product.product_tmpl_id.image_128 or product.image_variant_128),
                 **product.read(
                     [
                         "id",
