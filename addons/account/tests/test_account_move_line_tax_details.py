@@ -25,9 +25,9 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
 
     def _get_tax_details(self, fallback=False, extra_domain=None):
         domain = [('company_id', '=', self.env.company.id)] + (extra_domain or [])
-        tax_details_query, tax_details_params = self.env['account.move.line']._get_query_tax_details_from_domain(domain, fallback=fallback)
+        tax_details_query = self.env['account.move.line']._get_query_tax_details_from_domain(domain, fallback=fallback)
         self.env['account.move.line'].flush_model()
-        self.cr.execute(tax_details_query, tax_details_params)
+        self.cr.execute(tax_details_query)
         tax_details_res = self.cr.dictfetchall()
         return sorted(tax_details_res, key=lambda x: (x['base_line_id'], abs(x['base_amount']), abs(x['tax_amount'])))
 
