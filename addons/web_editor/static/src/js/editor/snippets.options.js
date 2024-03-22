@@ -7478,7 +7478,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @returns {boolean}
      */
     _canHaveHoverEffect() {
-        return !this._isDeviceShape() && !this._isAnimatedShape();
+        return !this._isDeviceShape() && !this._isAnimatedShape() && this._isImageSupportedForShapes();
     },
     /**
      * Adds hover effect to the SVG.
@@ -7637,6 +7637,16 @@ registry.ImageTools = ImageHandlerOption.extend({
                 clearTimeout(this.hoverTimeoutId);
             }
         }
+    },
+    /**
+     * Checks if a shape can be applied on the target.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isImageSupportedForShapes() {
+        const imgEl = this._getImg();
+        return imgEl.dataset.originalId && this._isImageSupportedForProcessing(imgEl);
     },
 
     //--------------------------------------------------------------------------
