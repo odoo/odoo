@@ -442,13 +442,25 @@ export class Thread extends Record {
         return [...this.messages].reverse().find((msg) => Number.isInteger(msg.id));
     }
 
-    newestPersistentNotEmptyOfAllMessage = Record.one("Message", {
+    newestPersistentAllMessages = Record.many("Message", {
         compute() {
-            const allPersistentMessages = this.allMessages.filter(
-                (message) => Number.isInteger(message.id) && !message.isEmpty
+            const allPersistentMessages = this.allMessages.filter((message) =>
+                Number.isInteger(message.id)
             );
             allPersistentMessages.sort((m1, m2) => m2.id - m1.id);
-            return allPersistentMessages[0];
+            return allPersistentMessages;
+        },
+    });
+
+    newestPersistentOfAllMessage = Record.one("Message", {
+        compute() {
+            return this.newestPersistentAllMessages[0];
+        },
+    });
+
+    newestPersistentNotEmptyOfAllMessage = Record.one("Message", {
+        compute() {
+            return this.newestPersistentAllMessages.find((message) => !message.isEmpty);
         },
     });
 

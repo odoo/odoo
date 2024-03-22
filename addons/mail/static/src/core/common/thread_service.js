@@ -62,7 +62,7 @@ export class ThreadService {
      * @param {import("models").Thread} thread
      */
     markAsRead(thread) {
-        const newestPersistentMessage = thread.newestPersistentNotEmptyOfAllMessage;
+        const newestPersistentMessage = thread.newestPersistentOfAllMessage;
         if (!newestPersistentMessage && !thread.isLoaded) {
             thread.isLoadedDeferred
                 .then(() => new Promise(setTimeout))
@@ -96,7 +96,7 @@ export class ThreadService {
         }
     }
 
-    updateSeen(thread, lastSeen = thread.newestPersistentNotEmptyOfAllMessage) {
+    updateSeen(thread, lastSeen = thread.newestPersistentOfAllMessage) {
         const lastReadIndex = thread.messages.findIndex((message) => message.eq(lastSeen));
         let newNeedactionCounter = 0;
         let newUnreadCounter = 0;
