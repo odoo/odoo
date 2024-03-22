@@ -400,3 +400,6 @@ class TestSequencing(slides_common.SlidesCase):
 
         self.assertEqual(channel.visibility, 'members')
         self.assertEqual(channel.enroll, 'invite')
+
+        copied_channel = channel.copy()
+        self.assertEqual(copied_channel.enroll, 'invite', "Copied channel should have the same enroll field value")
