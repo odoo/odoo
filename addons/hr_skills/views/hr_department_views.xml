@@ -6,9 +6,11 @@
         <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
-                <a role="menuitem" class="dropdown-item" name="%(action_open_skills_log_department)d" type="action">
-                    Skills History
-                </a>
+                <div role="menuitem">
+                    <a class="dropdown-item" name="%(action_open_skills_log_department)d" type="action">
+                        Skills History
+                    </a>
+                </div>
             </xpath>
         </field>
     </record>
