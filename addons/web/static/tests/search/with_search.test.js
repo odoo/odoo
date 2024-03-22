@@ -285,3 +285,66 @@ test("react to prop 'domain' changes", async () => {
     await animationFrame();
     expect(["willUpdateProps"]).toVerifySteps();
 });
+
+test("search defaults are removed from context at reload", async function () {
+    const context = {
+        search_default_x: true,
+        searchpanel_default_y: true,
+    };
+
+    class TestComponent extends Component {
+        static template = xml`<div class="o_test_component">Test component content</div>`;
+        static props = { context: Object };
+        setup() {
+            onWillStart(() => {
+                expect.step("willStart");
+                expect(this.props.context).toEqual({
+                    lang: "en",
+                    tz: "taht",
+                    uid: 7,
+                    allowed_company_ids: [1],
+                });
+            });
+            onWillUpdateProps((nextProps) => {
+                expect.step("willUpdateProps");
+                expect(nextProps.context).toEqual({
+                    lang: "en",
+                    tz: "taht",
+                    uid: 7,
+                    allowed_company_ids: [1],
+                });
+            });
+        }
+    }
+
+    class Parent extends Component {
+        static props = ["*"];
+        static template = xml`
+            <WithSearch t-props="searchState" t-slot-scope="search">
+                <TestComponent
+                    context="search.context"
+                />
+            </WithSearch>
+        `;
+        static components = { WithSearch, TestComponent };
+        setup() {
+            useSubEnv({ config: {} });
+            this.searchState = useState({
+                resModel: "animal",
+                domain: [["type", "=", "carnivorous"]],
+                context,
+            });
+        }
+    }
+
+    const parent = await mountWithCleanup(Parent);
+    expect(["willStart"]).toVerifySteps();
+
+    expect(parent.searchState.context).toEqual(context);
+
+    parent.searchState.domain = [["type", "=", "herbivorous"]];
+
+    await animationFrame();
+    expect(["willUpdateProps"]).toVerifySteps();
+    expect(parent.searchState.context).toEqual(context);
+});
