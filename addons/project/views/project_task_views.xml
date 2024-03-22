@@ -670,7 +670,7 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right" t-if="!selection_mode">
                                         <div  t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
-                                            <field name="user_ids" widget="many2many_avatar_user" domain="[('share', '=', False)]"/>
+                                            <field name="user_ids" widget="many2many_avatar_user"/>
                                         </div>
                                         <field name="state" widget="project_task_state_selection" options="{'is_toggle_mode': false}"/>
                                     </div>
