@@ -850,12 +850,21 @@ export class Orderline extends PosModel {
     isPartOfCombo() {
         return Boolean(this.combo_parent_id || this.combo_line_ids?.length);
     }
-    findAttribute(values) {
+    findAttribute(values, customAttributes) {
         const listOfAttributes = [];
         Object.values(this.pos.models['product.template.attribute.line'].getAll()).filter(
             (attribute) => {
                 const attFound = attribute.product_template_value_ids.filter((target) => {
                     return Object.values(values).includes(target.id);
+                }).map(att => ({...att})); // make a copy
+                attFound.forEach((att) => {
+                    if (att.is_custom) {
+                        customAttributes.forEach((customAttribute) => {
+                            if (att.id === customAttribute.custom_product_template_attribute_value_id) {
+                                att.name = customAttribute.value;
+                            }
+                        });
+                    }
                 });
                 if (attFound.length > 0) {
                     const modifiedAttribute = {
@@ -891,7 +900,7 @@ export class Orderline extends PosModel {
             price_without_discount: this.env.utils.formatCurrency(
                 this.getUnitDisplayPriceBeforeDiscount()
             ),
-            attributes: this.attribute_value_ids ? this.findAttribute(this.attribute_value_ids) : false
+            attributes: this.attribute_value_ids ? this.findAttribute(this.attribute_value_ids, this.custom_attribute_value_ids) : false
         };
     }
 }
