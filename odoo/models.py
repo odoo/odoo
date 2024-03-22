@@ -3025,7 +3025,7 @@ class BaseModel(metaclass=MetaModel):
         self.check_field_access_rights('write', [field_name])
         self.check_access_rule('write')
 
-        valid_langs = set(code for code, _ in self.env['res.lang'].get_installed()) | {'en_US'}
+        valid_langs = set(code for code, __ in self.env['res.lang'].get_installed()) | {'en_US'}
         missing_langs = set(translations) - valid_langs
         if missing_langs:
             raise UserError(
