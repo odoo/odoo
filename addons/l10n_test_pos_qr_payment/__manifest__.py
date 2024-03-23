@@ -8,7 +8,7 @@
     'sequence': 9876,
     'description': """
         This module contains tests related to point of sale QR code payment.
-        It tests all the supported qr codes: SEPA, Swiss QR and EMV QR (using the hk implementation)
+        It tests all the supported qr codes: SEPA, Swiss QR and EMV QR (using the hk and br implementation)
     """,
     'depends': [
         'point_of_sale',
@@ -16,6 +16,7 @@
         'l10n_be',
         'l10n_ch',
         'l10n_hk',
+        'l10n_br',
     ],
     'installable': True,
     'assets': {
