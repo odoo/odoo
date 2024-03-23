@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Group Category -->
+        <record id="group_category_national_id_approvers" model="ir.module.category">
+            <field name="name">National ID Approvers</field>
+            <field name="description">User groups related to approving national ID applications.</field>
+        </record>
+
+        <!-- Assign Groups to Category -->
+        <record id="group_first_approver" model="res.groups">
+            <field name="category_id" ref="group_category_national_id_approvers"/>
+            <field name="name">First Approver</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_system'))]"/>
+        </record>
+
+        <record id="group_second_approver" model="res.groups">
+            <field name="category_id" ref="group_category_national_id_approvers"/>
+            <field name="name">Second Approver</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_system'))]"/>
+        </record>
+    </data>
+</odoo>
