@@ -37,11 +37,15 @@
                 </div>
                 <div t-if="o.state in ['purchase','done'] and o.date_approve" class="col-3 bm-2">
                     <strong>Order Date:</strong>
-                    <p t-field="o.date_approve" class="m-0"/>
+                    <p t-field="o.date_approve" t-options='{"widget": "date"}' class="m-0"/>
                 </div>
                 <div t-elif="o.date_order" class="col-3 bm-2">
                     <strong>Order Deadline:</strong>
-                    <p t-field="o.date_order" class="m-0"/>
+                    <p t-field="o.date_order" t-options='{"widget": "date"}' class="m-0"/>
+                </div>
+                <div class="col-3 bm-2">
+                  <strong>Payment Terms:</strong>
+                  <p t-field="o.payment_term_id" class="m-0"/>
                 </div>
             </div>
 
@@ -73,7 +77,7 @@
                                     <span t-out="taxes">Tax 15%</span>
                                 </td>
                                 <td class="text-center">
-                                    <span t-field="line.date_planned"/>
+                                    <span t-field="line.date_planned" t-options='{"widget": "date"}'/>
                                 </td>
                                 <td class="text-end">
                                     <span t-field="line.product_qty"/>
