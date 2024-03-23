@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.actions.act_window" id="po_requisition_action">
+        <field name="name">Purchase Order Requisition</field>
+        <field name="res_model">po.requisition</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>You can start your Purchase requisition moves here</p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="all_po_requisition_action">
+        <field name="name">All Purchase Order Requisitions</field>
+        <field name="res_model">po.requisition</field>
+        <field name="view_mode">tree,form</field>
+        <!-- <field name="domain">[('state','=','draft')]</field> -->
+        <field name="help" type="html">
+            <p>You can start your Purchase requisition moves here</p>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="draft_po_requisition_action">
+        <field name="name">Draft Purchase Order Requisitions</field>
+        <field name="res_model">po.requisition</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','draft')]</field>
+        <field name="help" type="html">
+            <p>You can start your Purchase requisition moves here</p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="submitted_po_requisition_action">
+        <field name="name">Submitted Purchase Order Requisitions</field>
+        <field name="res_model">po.requisition</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','submitted')]</field>
+        <field name="help" type="html">
+            <p>You can start your Purchase requisition moves here</p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="approved_po_requisition_action">
+        <field name="name">Approved Purchase Order Requisitions</field>
+        <field name="res_model">po.requisition</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','approved')]</field>
+        <field name="help" type="html">
+            <p>You can start your Purchase requisition moves here</p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="done_po_requisition_action">
+        <field name="name">Done Purchase Order Requisitions</field>
+        <field name="res_model">po.requisition</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','done')]</field>
+        <field name="help" type="html">
+            <p>You can start your Purchase requisition moves here</p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="cancelled_po_requisition_action">
+        <field name="name">Cancelled Purchase Order Requisitions</field>
+        <field name="res_model">po.requisition</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','cancel')]</field>
+        <field name="help" type="html">
+            <p>You can start your Purchase requisition moves here</p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="rejected_po_requisition_action">
+        <field name="name">Rejected Purchase Order Requisitions</field>
+        <field name="res_model">po.requisition</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','rejected')]</field>
+        <field name="help" type="html">
+            <p>You can start your Purchase requisition moves here</p>
+        </field>
+    </record>
+
+    <menuitem id="po_requisition_menu" action="po_requisition_action"  name="Purchase Requisitions"  sequence="3"/>
+
+    <!-- Sub Menus -->
+    <menuitem id="all_po_requisition_menu" action="all_po_requisition_action" parent="po_requisition_menu" name="All Requisitions" sequence="-1"/>
+    <menuitem id="draft_po_requisition_menu" action="draft_po_requisition_action" parent="po_requisition_menu" name="Draft Requisitions" sequence="1"/>
+    <menuitem id="submitted_po_requisition_menu" action="submitted_po_requisition_action" parent="po_requisition_menu" name="Submitted Requisitions" sequence="2"/>
+    <menuitem id="approved_po_requisition_menu" action="approved_po_requisition_action" parent="po_requisition_menu" name="Approved Requisitions" sequence="3"/>
+    <menuitem id="done_po_requisition_menu" action="done_po_requisition_action" parent="po_requisition_menu" name="Done Requisitions" sequence="4"/>
+    <menuitem id="cancelled_po_requisition_menu" action="cancelled_po_requisition_action" parent="po_requisition_menu" name="Cancelled Requisitions" sequence="5"/>
+    <menuitem id="rejected_po_requisition_menu" action="rejected_po_requisition_action" parent="po_requisition_menu" name="Rejected Requisitions" sequence="6"/>
+
+    <menuitem id="all_po_requisition_menu2" action="all_po_requisition_action" parent="purchase.menu_purchase_root" name="Purchase Requisitions" sequence="2"/>
+</odoo>
