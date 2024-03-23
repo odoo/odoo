@@ -75,3 +75,11 @@ class TestL10nBrPix(AccountTestInvoicingCommon):
             self._get_qr_code_string(),
             "00020101021226580014br.gov.bcb.pix013671d6c6e1-64ea-4a11-9560-a10870c40ca2520400005303986540512.305802BR5914COMPANY_1_DATA62070503***6304B27F",
         )
+
+    def test_get_qr_vals_for_pos_default_qr(self):
+        self.partner_bank.include_reference = False
+        self.invoice.invoice_line_ids.write({"price_unit": 0})
+        self.assertEqual(
+            self._get_qr_code_string(),
+            "00020101021226580014br.gov.bcb.pix013671d6c6e1-64ea-4a11-9560-a10870c40ca25204000053039865802BR5914COMPANY_1_DATA62070503***63044FC8"
+        )
