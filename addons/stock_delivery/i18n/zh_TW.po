@@ -577,6 +577,16 @@ msgid "Weight:"
 msgstr "重量："
 
 #. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they have different "
+"carriers (i.e. check that all of their transfers have a carrier assigned and"
+" are using the same carrier)."
+msgstr "若產品的承運物流商不同，便不可包裝至同一個包裹中。（即是說，請檢查產品的所有轉移是否已有指定物流商並使用同一物流商。）"
+
+#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
 msgstr "您有多個追蹤器連結，它們在聊天中可用。"

@@ -378,7 +378,7 @@ msgstr "Kesalahan: metode pengiriman ini tidak tersedia untuk alamat ini."
 msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the "
 "shipping."
-msgstr ""
+msgstr "Estimasi Biaya: pelanggan akan difaktur estimasi biaya pengiriman"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -852,6 +852,14 @@ msgstr ""
 "\n"
 "Baris pengiriman berikut (produk, kuantitas difaktur dan harga) sudah diproses:\n"
 "\n"
+
+#. module: delivery
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
