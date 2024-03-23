@@ -2629,13 +2629,13 @@ msgstr "Importo:"
 #: model:ir.ui.menu,name:account.menu_action_open_payment_items
 #: model:ir.ui.menu,name:account.menu_action_open_sale_payment_items
 msgid "Amounts to Settle"
-msgstr "Importi da configurare"
+msgstr "Importi da liquidare"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_open_payment_items
 #: model_terms:ir.actions.act_window,help:account.action_open_sale_payment_items
 msgid "Amounts to settle"
-msgstr "Importi da configurare"
+msgstr "Importi da liquidare"
 
 #. module: account
 #. odoo-python
@@ -5056,7 +5056,7 @@ msgstr "Indirizzi cliente"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_sale_payment_items
 msgid "Customer Amounts to Settle"
-msgstr "Importi cliente da configurare"
+msgstr "Importi cliente da liquidare"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -17049,6 +17049,17 @@ msgid ""
 msgstr ""
 "Non puoi cancellare questa voce, poiché ha già consumato un numero di "
 "sequenza e non è l'ultima nella catena. Devi invece ripristinarla."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
+"Non è possibile eliminare questo rendiconto (%s). È utilizzato dal "
+"generatore PDF della contabilità."
 
 #. module: account
 #. odoo-python
