@@ -9457,7 +9457,7 @@ msgstr "No"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "No Bank Matching"
-msgstr "No hay conciliación bancaria"
+msgstr "Sin conciliación bancaria"
 
 #. module: account
 #. odoo-python
@@ -16400,6 +16400,17 @@ msgid ""
 msgstr ""
 "No puede eliminar este asiento pues ya consumió un número de secuencia y no "
 "es el último de la cadena. Debe revertirlo en su lugar."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
+"No puede eliminar este reporte (%s). El motor de generación de PDF de "
+"contabilidad lo utiliza."
 
 #. module: account
 #. odoo-python

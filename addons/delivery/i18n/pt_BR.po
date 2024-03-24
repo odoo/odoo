@@ -372,7 +372,7 @@ msgstr "Erro: este método de entrega não está disponível para este endereço
 msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the "
 "shipping."
-msgstr ""
+msgstr "Custo estimado: o cliente será cobrado pelo custo estimado do frete."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -849,6 +849,14 @@ msgstr ""
 "\n"
 "As seguintes linhas da entrega (produto, quantidade faturada e preço) já foram processadas:\n"
 "\n"
+
+#. module: delivery
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
