@@ -11256,6 +11256,8 @@ msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
 msgstr ""
+"A forma de pagamento selecionada não está disponível para este pagamento; "
+"selecione a forma de pagamento novamente."
 
 #. module: account
 #. odoo-python
@@ -16931,6 +16933,24 @@ msgid ""
 msgstr ""
 "Não é possível excluir esse lançamento, pois ele já consumiu um número de "
 "sequência e não é o último na cadeia. Em vez disso, tente revertê-lo."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
 
 #. module: account
 #. odoo-python

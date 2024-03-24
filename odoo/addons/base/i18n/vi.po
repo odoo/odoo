@@ -2915,7 +2915,7 @@ msgstr ""
 "    Sử dụng bộ lọc hoặc sắp xếp, chọn các khoản thanh toán cần thiết. \n"
 "    **Hành động* chọn *Tạo thanh toán hàng loạt*.\n"
 "\n"
-"- *Nhà cung cấp > Thanh toán Hàng loạt*\n"
+"- *Nhà cung cấp > Thanh toán hàng loạt*\n"
 "\n"
 "    Khi xác thực thanh toán hàng loạt, tệp ABA sẽ được tạo. Tệp này có thể \n"
 "    được tái tạo. Sau đó, bạn có thể tải tệp lên ngân hàng.\n"
@@ -32302,6 +32302,12 @@ msgid "Scheduled Actions Triggers"
 msgstr "Trình kích hoạt hành động đã lên lịch"
 
 #. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid "Scheduled action disabled"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
 msgid "Scheduler User"
 msgstr "Người lập kế hoạch"
@@ -35661,6 +35667,14 @@ msgid "Those modules cannot be uninstalled: %s"
 msgstr "Không thể gỡ cài đặt các module này: %s"
 
 #. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid ""
+"This scheduled action has been disabled because its interval number is not a"
+" strictly positive value."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
 msgid "Thousands Separator"
 msgstr "Dấu phân cách phần Nghìn"
@@ -38097,6 +38111,15 @@ msgstr ""
 #, python-format
 msgid "You cannot delete the %s record."
 msgstr "Bạn không thể xóa tập dữ liệu %s."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
+msgstr ""
 
 #. module: base
 #. odoo-python

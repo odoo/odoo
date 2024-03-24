@@ -19,6 +19,7 @@
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
 # Wil Odoo, 2023
 # Tomáš Píšek, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Tomáš Píšek, 2024\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3692,7 +3693,7 @@ msgstr ""
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
-msgstr ""
+msgstr "Neplatný pravý operand domény '%s'. Musí být typu Integer/Float"
 
 #. module: stock
 #. odoo-python
@@ -3701,6 +3702,8 @@ msgstr ""
 msgid ""
 "Invalid rule's configuration, the following rule causes an endless loop: %s"
 msgstr ""
+"Neplatné nastavení pravidla, následující pravidlo způsobuje nekonečnou "
+"smyčku: %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -3888,6 +3891,7 @@ msgid ""
 "It is not allowed to import reserved quantity, you have to use the quantity "
 "directly."
 msgstr ""
+"Není povoleno importovat rezervované množství, musíte použít množství přímo."
 
 #. module: stock
 #. odoo-python
@@ -6444,6 +6448,8 @@ msgid ""
 "Quants are auto-deleted when appropriate. If you must manually delete them, "
 "please ask a stock manager to do it."
 msgstr ""
+"Množství se v případě potřeby automaticky odstraní. Pokud je musíte "
+"odstranit ručně, požádejte o to správce skladu."
 
 #. module: stock
 #. odoo-python
@@ -8426,6 +8432,8 @@ msgid ""
 "This product's company cannot be changed as long as there are quantities of "
 "it belonging to another company."
 msgstr ""
+"Společnost tohoto produktu nelze změnit, pokud existuje množství patřící "
+"jiné společnosti."
 
 #. module: stock
 #. odoo-python
@@ -8435,6 +8443,8 @@ msgid ""
 "This product's company cannot be changed as long as there are stock moves of"
 " it belonging to another company."
 msgstr ""
+"Společnost tohoto produktu nelze změnit, pokud existují skladové přesuny "
+"patřící jiné společnosti."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -8897,7 +8907,7 @@ msgstr "Názov mernej jednotky"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
 msgid "Unit of measure"
-msgstr ""
+msgstr "Merná jednotka"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
