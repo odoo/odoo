@@ -16,6 +16,7 @@
 # Cécile Collart <cco@odoo.com>, 2023
 # Wil Odoo, 2023
 # Jolien De Paepe, 2023
+# Yassine KHATTABI, 2024
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 09:19+0000\n"
 "PO-Revision-Date: 2022-06-17 09:48+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Yassine KHATTABI, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2473,6 +2474,7 @@ msgstr "Devise"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_residual
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_residual
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Amount Due"
 msgstr "Montant dû"
@@ -16661,6 +16663,12 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas créer un mouvement déjà dans l'état posté. Veuillez créer"
 " un brouillon de mouvement et le poster après."
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr "Vous ne pouvez pas créer de groupes récursifs."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
