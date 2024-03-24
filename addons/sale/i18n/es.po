@@ -48,24 +48,6 @@ msgid "%(attribute)s: %(values)s"
 msgstr "%(attribute)s: %(values)s"
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order_line.py:0
-msgid "%(line_description)s (Cancelled)"
-msgstr "%(line_description)s (cancelado)"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order_line.py:0
-msgid "%(line_description)s (Draft)"
-msgstr "%(line_description)s (Borrador)"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order_line.py:0
-msgid "%(line_description)s (ref: %(reference)s on %(date)s)"
-msgstr "%(line_description)s (ref.: %(reference)s el %(date)s)"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid ""
 "%)\n"
@@ -733,6 +715,11 @@ msgstr "<i class=\"fa fa-fw fa-check\"/> Autorizado"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
 msgstr "<i class=\"fa fa-fw fa-check\"/> Pagado"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -2098,10 +2085,23 @@ msgstr "Dominio"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/sale_order_line.py:0
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount
 msgid "Down Payment"
 msgstr "Anticipo"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_line.py:0
+msgid "Down Payment (Cancelled)"
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_line.py:0
+msgid "Down Payment (ref: %(reference)s on %(date)s)"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
@@ -2110,14 +2110,14 @@ msgstr "Importe del anticipo (fijo)"
 
 #. module: sale
 #. odoo-python
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment: %(date)s (Draft)"
 msgstr "Anticipo: %(date)s (borrador)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payments"
 msgstr "Pagos anticipados"
 

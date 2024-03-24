@@ -178,7 +178,7 @@ msgstr "'ロット-シリアル - %s' % object.name"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_type_label
 msgid "'Operation-type - %s' % object.name"
-msgstr "操作タイプ-%s '%object.name"
+msgstr "'オペレーションタイプ - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_packages
@@ -586,7 +586,7 @@ msgstr "<span><strong>顧客アドレス:</strong></span>"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Delivery Address:</strong></span>"
-msgstr "<span><strong>お届け先:</strong></span>"
+msgstr "<span><strong>配送先アドレス:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -656,7 +656,7 @@ msgstr "<strong>配送</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery address</strong>"
-msgstr "<strong>配送先住所</strong>"
+msgstr "<strong>配送先</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -1581,7 +1581,7 @@ msgstr "この時点でこのレコードの会社を変更することは禁止
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Changing the operation type of this record is forbidden at this point."
-msgstr "この時点で、このレコードの操作タイプを変更することは禁止されています。"
+msgstr "この時点で、このレコードのオペレーションタイプを変更することは禁止されています。"
 
 #. module: stock
 #. odoo-python
@@ -1972,7 +1972,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
 msgid "Create a new operation type"
-msgstr "新しい操作タイプを作成します"
+msgstr "新しいオペレーションタイプを作成します"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_package_view
@@ -2522,7 +2522,7 @@ msgstr "配送"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Delivery Address"
-msgstr "配送住所"
+msgstr "配送先"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery
@@ -3757,7 +3757,7 @@ msgid ""
 "can also decide to not put lots in this operation type.  This means it will "
 "create stock with no lot or not put a restriction on the lot taken. "
 msgstr ""
-"これをチェックすると、ロット/シリアル番号を選択できるようになります。この操作タイプにロットを入れないこともできます。これは、ロットなしで在庫を作成するか、取得するロットに制限を設けないことを意味します。"
+"これをチェックすると、ロット/シリアル番号を選択できるようになります。このオペレーションタイプにロットを入れないこともできます。これは、ロットなしで在庫を作成するか、取得するロットに制限を設けないことを意味します。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__return_id
@@ -8719,7 +8719,7 @@ msgid ""
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
 msgstr ""
-"これは、この操作タイプを使用して手動でピッキングを作成する場合のデフォルトの宛先の場所です。ただし、変更したり、ルートが別の場所に配置したりすることは可能です。空の場合は、パートナーの顧客の場所を確認します。"
+"これは、このオペレーションタイプを使用して手動でピッキングを作成する場合のデフォルトの宛先の場所です。ただし、変更したり、ルートが別の場所に配置したりすることは可能です。空の場合は、パートナーの顧客の場所を確認します。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_return_id
@@ -8736,7 +8736,7 @@ msgid ""
 "put another location. If it is empty, it will check for the supplier "
 "location on the partner. "
 msgstr ""
-"これは、この操作タイプを使用して手動でピッキングを作成する場合のデフォルトのソースの場所です。ただし、変更したり、ルートが別の場所に配置したりすることは可能です。空の場合は、取引先のサプライヤの場所を確認します。"
+"これは、このオペレーションタイプを使用して手動でピッキングを作成する場合のデフォルトのソースの場所です。ただし、変更したり、ルートが別の場所に配置したりすることは可能です。空の場合は、取引先のサプライヤの場所を確認します。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -10283,7 +10283,7 @@ msgstr "この転送のオペレーション場所を更新した方が良いか
 msgid ""
 "You need to activate storage locations to be able to do internal operation "
 "types."
-msgstr "内部操作タイプを実行するため、保管場所をアクティブにする必要があります。"
+msgstr "内部オペレーションタイプを実行するため、保管場所をアクティブにする必要があります。"
 
 #. module: stock
 #. odoo-python
