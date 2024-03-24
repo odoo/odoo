@@ -14,6 +14,7 @@
 # Niyas Raphy, 2023
 # Wil Odoo, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Last-Translator: Mustafa J. Kadhem <safi2266@gmail.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11111,6 +11112,8 @@ msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
 msgstr ""
+"طريقة الدفع المختارة غير متاحة لهذه الدفعة، الرجاء اختر طريقة الدفع مرة "
+"أخرى."
 
 #. module: account
 #. odoo-python
@@ -16608,7 +16611,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot create recursive groups."
-msgstr ""
+msgstr "لا يمكنك إنشاء مجموعات متداخلة."
 
 #. module: account
 #. odoo-python
@@ -16643,6 +16646,24 @@ msgid ""
 msgstr ""
 "لا يمكنك حذف هذا القيد، حيث أنه استهلك رقم تسلسل بالفعل وليس الأخير في "
 "السلسلة. من الأفضل التراجع عوضاً عن ذلك. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
 
 #. module: account
 #. odoo-python

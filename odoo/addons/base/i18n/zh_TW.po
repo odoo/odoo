@@ -8281,7 +8281,7 @@ msgid ""
 "Shorten URLs and use them to track clicks and UTMs\n"
 msgstr ""
 "\n"
-"縮短 URL 並使用它們來追踪點擊次數和整合式威脅管理 \n"
+"縮短網址並使用它們追蹤點擊及 UTM\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_google_map
@@ -31549,6 +31549,12 @@ msgid "Scheduled Actions Triggers"
 msgstr "安排的動觸發"
 
 #. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid "Scheduled action disabled"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
 msgid "Scheduler User"
 msgstr "調度程式使用者"
@@ -34769,6 +34775,14 @@ msgid "Those modules cannot be uninstalled: %s"
 msgstr "這些模塊無法卸載：%s"
 
 #. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid ""
+"This scheduled action has been disabled because its interval number is not a"
+" strictly positive value."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
 msgid "Thousands Separator"
 msgstr "千位分隔符"
@@ -35345,7 +35359,7 @@ msgstr "UTM 追蹤器"
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_crm
 msgid "UTM and mass mailing on lead / opportunities"
-msgstr "批次郵寄潛在商機/商機"
+msgstr "潛在客戶/銷售機會 UTM 及群發郵件"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_sale
@@ -37109,6 +37123,15 @@ msgstr ""
 #, python-format
 msgid "You cannot delete the %s record."
 msgstr "不能刪除 %s 記錄。"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
+msgstr ""
 
 #. module: base
 #. odoo-python

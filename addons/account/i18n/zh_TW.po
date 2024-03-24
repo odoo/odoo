@@ -10849,7 +10849,7 @@ msgstr "請在您的付款中定義付款方式明細."
 msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
-msgstr ""
+msgstr "所選付款方式不適用於本次付款，請重新選擇付款方式。"
 
 #. module: account
 #. odoo-python
@@ -16158,6 +16158,24 @@ msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
 msgstr "您不能刪除此分錄，因為它已經消耗了一個序列號並且不是相應鏈中的最後一個. 你可能應該要還原它."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
 
 #. module: account
 #. odoo-python
