@@ -17,8 +17,8 @@
 # Tomaž Jug <tomaz@editor.si>, 2023
 # Neun Pro, 2023
 # Grega Vavtar <grega@hbs.si>, 2023
-# Katja Deržič, 2024
 # Jasmina Macur <jasmina@hbs.si>, 2024
+# Katja Deržič, 2024
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2024\n"
+"Last-Translator: Katja Deržič, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -473,7 +473,7 @@ msgstr "<span>Proizvodi brez dodeljenega paketa</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<span>Remaining quantities not yet delivered:</span>"
-msgstr ""
+msgstr "<span>Nedostavljene količine:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
@@ -506,7 +506,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Delivered</strong>"
-msgstr ""
+msgstr "<strong>Dostavljeno</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -556,7 +556,7 @@ msgstr "<strong>Ponudba:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Ordered</strong>"
-msgstr ""
+msgstr "<strong>Naročeno</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -2869,6 +2869,12 @@ msgid "Gives the sequence of this line when displaying the warehouses."
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -4468,6 +4474,12 @@ msgid "No Message"
 msgstr "Brez sporočila"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "No Stock On Hand"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__none
 msgid "No Tracking"
 msgstr "Brez sledenja"
@@ -4533,12 +4545,6 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
 msgid "No stock move found"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
-msgid "No Stock On Hand"
 msgstr ""
 
 #. module: stock
@@ -5735,14 +5741,6 @@ msgstr ""
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
-msgid ""
-"Quants are auto-deleted when appropriate. If you must manually delete them, "
-"please ask a stock manager to do it."
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
 msgstr ""
 
@@ -5891,6 +5889,14 @@ msgstr "Količina za tiskanje"
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Quants"
 msgstr "Kvanti"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7483,14 +7489,14 @@ msgid "The forecasted stock on the"
 msgstr "Napovedana zaloga na"
 
 #. module: stock
-#: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
-msgid "The inventory frequency (days) for a location must be non-negative"
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid "The inter-warehouse transfers have been generated"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_production_lot.py:0
-#, python-format
-msgid "The lot name must contain at least one digit."
+#: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
+msgid "The inventory frequency (days) for a location must be non-negative"
 msgstr ""
 
 #. module: stock
@@ -8152,6 +8158,11 @@ msgid "Unit of Measure"
 msgstr "Enota mere"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
+msgid "Unit of measure"
+msgstr ""
+
+#. module: stock
 #: model:product.product,uom_name:stock.product_cable_management_box
 #: model:product.template,uom_name:stock.product_cable_management_box_product_template
 msgid "Units"
@@ -8171,11 +8182,6 @@ msgstr "Merske enote"
 #: model:ir.ui.menu,name:stock.product_uom_menu
 msgid "Units of Measures"
 msgstr "Merske enote"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
-msgid "Unit of measure"
-msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8536,6 +8542,11 @@ msgid "Website communication history"
 msgstr "Kronologija komunikacij spletne strani"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
+msgid "Weight unit"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
 msgid "Weight unit of measure label"
 msgstr "Oznaka merske enote za težo"
@@ -8793,6 +8804,12 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
@@ -8853,6 +8870,22 @@ msgstr ""
 "razdeliti istega paketa na dve lokaciji."
 
 #. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from both "
+"immediate and planned transfers."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -8884,12 +8917,6 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You cannot change a cancelled stock move, create a new line instead."
 msgstr ""
 
 #. module: stock
@@ -9216,11 +9243,4 @@ msgstr ""
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_rule.py:0
-#, python-format
-msgid "Global Visibility Days"
 msgstr ""

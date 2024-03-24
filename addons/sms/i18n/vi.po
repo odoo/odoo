@@ -13,7 +13,7 @@
 # Dung Nguyen Thi <dungnt@trobz.com>, 2021
 # Trần Hà <tranthuha13590@gmail.com>, 2021
 # Vo Thanh Thuy, 2022
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,6 +65,7 @@ msgstr "%s invalid recipients"
 msgid ""
 "%s out of the %s selected SMS Text Messages have successfully been resent."
 msgstr ""
+"%s trong số %s Tin nhắn văn bản SMS được chọn đã được gửi lại thành công."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -274,12 +275,12 @@ msgstr "Khách hàng"
 #. module: sms
 #: model:sms.template,name:sms.sms_template_demo_0
 msgid "Customer: automated SMS"
-msgstr ""
+msgstr "Khách hàng: SMS tự động"
 
 #. module: sms
 #: model:sms.template,body:sms.sms_template_demo_0
 msgid "Dear {{ object.display_name }} this is an automated SMS."
-msgstr ""
+msgstr "Xin chào {{ object.display_name }} đây là một SMS tự động."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__null_value
@@ -557,6 +558,8 @@ msgstr ""
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
 msgid "Indicates if the SMS composer targets a single specific recipient"
 msgstr ""
+"Cho biết liệu trình soạn thảo SMS có nhắm mục tiêu đến một người nhận cụ thể"
+" hay không"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
@@ -757,6 +760,8 @@ msgid ""
 "Number of recipients that will receive the SMS if sent in mass mode, without"
 " applying the Active Domain value"
 msgstr ""
+"Số người nhận sẽ nhận được SMS nếu được gửi ở chế độ hàng loạt khi không áp "
+"dụng giá trị Miền hoạt động"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count
@@ -968,7 +973,7 @@ msgstr "Lỗi gửi SMS"
 #: code:addons/sms/static/src/models/notification_group/notification_group.js:0
 #, python-format
 msgid "SMS Failures"
-msgstr ""
+msgstr "Lỗi SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_number
@@ -1208,13 +1213,13 @@ msgstr "Các mẫu"
 #: code:addons/sms/models/sms_sms.py:0
 #, python-format
 msgid "The SMS Text Messages could not be resent."
-msgstr ""
+msgstr "Không thể gửi lại Tin nhắn văn bản SMS."
 
 #. module: sms
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "The number you're trying to reach is not correctly formatted."
-msgstr ""
+msgstr "Số bạn đang cố gắng liên hệ không được định dạng chính xác."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__model_id
@@ -1226,7 +1231,7 @@ msgstr "Kiểu tài liệu mà mẫu này có thể được sử dụng với"
 #: code:addons/sms/models/sms_sms.py:0
 #, python-format
 msgid "There are no SMS Text Messages to resend."
-msgstr ""
+msgstr "Không có Tin nhắn văn bản SMS nào để gửi lại."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
@@ -1365,13 +1370,13 @@ msgstr "You do not have access to the message and/or related document."
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "You don't have an eligible IAP account."
-msgstr ""
+msgstr "Bạn không có tài khoản IAP đủ điều kiện."
 
 #. module: sms
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "You don't have enough credits on your IAP account."
-msgstr ""
+msgstr "Bạn không có đủ tín dụng trên tài khoản IAP của mình."
 
 #. module: sms
 #. openerp-web
@@ -1380,6 +1385,8 @@ msgstr ""
 msgid ""
 "Your SMS Text Message must include at least one non-whitespace character"
 msgstr ""
+"Tin nhắn văn bản SMS của bạn phải bao gồm ít nhất một ký tự không phải dấu "
+"cách"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1394,7 +1401,7 @@ msgstr "VD: +1 415 555 0100"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. Calendar Reminder"
-msgstr ""
+msgstr "VD: Nhắc nhở lịch"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -1404,7 +1411,7 @@ msgstr "VD: Liên hệ"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. en_US or {{ object.partner_id.lang }}"
-msgstr ""
+msgstr "VD: en_US hoặc {{ object.partner_id.lang }}"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

@@ -27,6 +27,7 @@
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
 # Jolien De Paepe, 2024
+# Yassine KHATTABI, 2024
 # 
 msgid ""
 msgstr ""
@@ -34,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Jolien De Paepe, 2024\n"
+"Last-Translator: Yassine KHATTABI, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16480,13 +16481,21 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot create recursive groups."
-msgstr ""
+msgstr "Vous ne pouvez pas créer de groupes récursifs."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
 msgstr "Vous ne pouvez pas supprimer un élément lié à une entrée publiée."
+
+#. module: account
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16498,6 +16507,14 @@ msgstr ""
 "Vous ne pouvez pas supprimer cette écriture, car elle a déjà consommé un "
 "numéro de séquence et n'est pas la dernière de la chaîne. Vous devriez "
 "probablement le rétablir à la place."
+
+#. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0

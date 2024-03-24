@@ -21,8 +21,8 @@
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
 # Jiří Podhorecký, 2023
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Tomáš Píšek, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Tomáš Píšek, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2386,6 +2386,7 @@ msgstr "Měna množství"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_residual
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_residual
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Amount Due"
 msgstr "Částka splatná"
@@ -10361,6 +10362,16 @@ msgid "Please define a payment method line on your payment."
 msgstr "U platby prosím definujte řádek platební metody."
 
 #. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"Vybraná platební metoda není pro tuto platbu dostupná, vyberte prosím "
+"platební metodu znovu."
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Please first define a fiscal country for company %s."
@@ -16252,10 +16263,24 @@ msgstr ""
 "odešlete jej poté."
 
 #. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr "Nelze vytvářet rekurzivní skupiny."
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
 msgstr "Nelze odstranit položku spojenou s zaúčtovanou položkou."
+
+#. module: account
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16266,6 +16291,14 @@ msgid ""
 msgstr ""
 "Tuto položku nemůžete smazat, protože již spotřebovala pořadové číslo a není"
 " poslední v řetězci. Pravděpodobně byste ji měli vrátit."
+
+#. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0

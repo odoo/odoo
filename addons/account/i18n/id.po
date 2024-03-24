@@ -10321,6 +10321,8 @@ msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
 msgstr ""
+"Metode pembayaran yang dipilih tidak tersedia untuk pembayaran ini, silakan "
+"pilih metode pembayaran yang lain."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -16164,6 +16166,14 @@ msgid "You cannot delete an item linked to a posted entry."
 msgstr "Anda tidak dapat menghapus item yang di-link ke entri yang dipost."
 
 #. module: account
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -16173,6 +16183,14 @@ msgstr ""
 "Anda tidak dapat menghapus entri ini, karena sudah menggunakan nomor "
 "sequence dan bukan merupakan yang terakhir di rantai. Anda sebaiknya "
 "mengembalikkan hal tersebut terlebih dahulu."
+
+#. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
