@@ -373,6 +373,7 @@ export class OdooEditor extends EventTarget {
         this._tableUiContainer = this.document.createElement('div');
         this._tableUiContainer.classList.add('o_table_ui_container');
         const parser = new DOMParser();
+        const isRTL = this.options.direction === "rtl";
         for (const direction of ['row', 'column']) {
             // Create the containers and the menu toggler.
             const iconClass = (direction === 'row') ? 'fa-ellipsis-v' : 'fa-ellipsis-h';
@@ -383,13 +384,19 @@ export class OdooEditor extends EventTarget {
                 </div>
             </div>`, 'text/html').body.firstElementChild;
             const uiMenu = ui.querySelector('.o_table_ui_menu');
-
             // Create the move buttons.
             if (direction === 'column') {
-                uiMenu.append(...parser.parseFromString(`
-                    <div class="o_move_left"><span class="fa fa-chevron-left"></span>` + this.options._t('Move left') + `</div>
-                    <div class="o_move_right"><span class="fa fa-chevron-right"></span>` + this.options._t('Move right') + `</div>
-                `, 'text/html').body.children);
+                if (isRTL) {
+                    uiMenu.append(...parser.parseFromString(`
+                        <div class="o_move_right"><span class="fa fa-chevron-right"></span>` + this.options._t('Move left') + `</div>
+                        <div class="o_move_left"><span class="fa fa-chevron-left"></span>` + this.options._t('Move right') + `</div>
+                    `, 'text/html').body.children);
+                } else {
+                    uiMenu.append(...parser.parseFromString(`
+                        <div class="o_move_left"><span class="fa fa-chevron-left"></span>` + this.options._t('Move left') + `</div>
+                        <div class="o_move_right"><span class="fa fa-chevron-right"></span>` + this.options._t('Move right') + `</div>
+                    `, 'text/html').body.children);
+                }
                 this.addDomListener(uiMenu.querySelector('.o_move_left'), 'click', this._onTableMoveLeftClick);
                 this.addDomListener(uiMenu.querySelector('.o_move_right'), 'click', this._onTableMoveRightClick);
             } else {
@@ -403,10 +410,17 @@ export class OdooEditor extends EventTarget {
 
             // Create the add buttons.
             if (direction === 'column') {
-                uiMenu.append(...parser.parseFromString(`
-                    <div class="o_insert_left"><span class="fa fa-plus"></span>` + this.options._t('Insert left') + `</div>
-                    <div class="o_insert_right"><span class="fa fa-plus"></span>` + this.options._t('Insert right') +`</div>
-                `, 'text/html').body.children);
+                if (isRTL) {
+                    uiMenu.append(...parser.parseFromString(`
+                        <div class="o_insert_right"><span class="fa fa-plus"></span>` + this.options._t('Insert left') + `</div>
+                        <div class="o_insert_left"><span class="fa fa-plus"></span>` + this.options._t('Insert right') + `</div>
+                    `, 'text/html').body.children);
+                } else {
+                    uiMenu.append(...parser.parseFromString(`
+                        <div class="o_insert_left"><span class="fa fa-plus"></span>` + this.options._t('Insert left') + `</div>
+                        <div class="o_insert_right"><span class="fa fa-plus"></span>` + this.options._t('Insert right') + `</div>
+                    `, 'text/html').body.children);
+                }
                 this.addDomListener(uiMenu.querySelector('.o_insert_left'), 'click', () => this.execCommand('addColumn', 'before', this._columnUiTarget));
                 this.addDomListener(uiMenu.querySelector('.o_insert_right'), 'click', () => this.execCommand('addColumn', 'after', this._columnUiTarget));
             } else {
@@ -1173,7 +1187,10 @@ export class OdooEditor extends EventTarget {
                     toremove.remove();
                 }
             } else if (record.type === 'add') {
-                let node = this.idFind(record.oid) || this.unserializeNode(record.node);
+                let node = this.idFind(record.oid) || (record.node && this.unserializeNode(record.node));
+                if (!node) {
+                    continue;
+                }
                 if (this._collabClientId) {
                     const fakeNode = document.createElement('fake-el');
                     fakeNode.appendChild(node);
@@ -1326,6 +1343,9 @@ export class OdooEditor extends EventTarget {
                 case 'remove': {
                     let nodeToRemove = this.idFind(mutation.id);
                     if (!nodeToRemove) {
+                        if (!mutation.node) {
+                            continue;
+                        }
                         nodeToRemove = this.unserializeNode(mutation.node);
                         const fakeNode = document.createElement('fake-el');
                         fakeNode.appendChild(nodeToRemove);
@@ -2563,11 +2583,12 @@ export class OdooEditor extends EventTarget {
      */
     _resizeTable(ev, direction, target1, target2) {
         ev.preventDefault();
-        const position = target1 ? (target2 ? 'middle' : 'last') : 'first';
+        let position = target1 ? (target2 ? 'middle' : 'last') : 'first';
         let [item, neighbor] = [target1 || target2, target2];
         const table = closestElement(item, 'table');
         const [sizeProp, positionProp, clientPositionProp] = direction === 'col' ? ['width', 'x', 'clientX'] : ['height', 'y', 'clientY'];
 
+        const isRTL = this.options.direction === "rtl";
         // Preserve current width.
         if (sizeProp === 'width') {
             const tableRect = table.getBoundingClientRect();
@@ -2595,16 +2616,22 @@ export class OdooEditor extends EventTarget {
                     td.style.removeProperty(sizeProp);
                 }
             }
+            if (isRTL && position == "middle") {
+                [item, neighbor] = [neighbor, item];
+            }
         }
 
         const MIN_SIZE = 33; // TODO: ideally, find this value programmatically.
         switch (position) {
             case 'first': {
-                const marginProp = direction === 'col' ? 'marginLeft' : 'marginTop';
+                const marginProp = direction === 'col' ? (isRTL ? 'marginRight' : 'marginLeft') : 'marginTop';
                 const itemRect = item.getBoundingClientRect();
                 const tableStyle = getComputedStyle(table);
                 const currentMargin = pxToFloat(tableStyle[marginProp]);
-                const sizeDelta = itemRect[positionProp] - ev[clientPositionProp];
+                let sizeDelta = itemRect[positionProp] - ev[clientPositionProp];
+                if (direction === 'col' && isRTL) {
+                    sizeDelta = ev[clientPositionProp] - itemRect[positionProp] -itemRect[sizeProp] ;
+                }
                 const newMargin = currentMargin - sizeDelta;
                 const currentSize = itemRect[sizeProp];
                 const newSize = currentSize + sizeDelta;
@@ -2613,9 +2640,10 @@ export class OdooEditor extends EventTarget {
                     // Check if a nested table would overflow its parent cell.
                     const hostCell = closestElement(table.parentElement, 'td');
                     const childTable = item.querySelector('table');
+                    const endProp = isRTL ? 'left' : 'right'
                     if (direction === 'col' &&
-                        (hostCell && tableRect.right + sizeDelta > hostCell.getBoundingClientRect().right - 5 ||
-                        childTable && childTable.getBoundingClientRect().right > itemRect.right + sizeDelta - 5)) {
+                        (hostCell && tableRect[endProp] + sizeDelta > hostCell.getBoundingClientRect()[endProp] - 5 ||
+                        childTable && childTable.getBoundingClientRect()[endProp] > itemRect[endProp] + sizeDelta - 5)) {
                         break;
                     }
                     table.style[marginProp] = newMargin + 'px';
@@ -2659,7 +2687,10 @@ export class OdooEditor extends EventTarget {
             }
             case 'last': {
                 const itemRect = item.getBoundingClientRect();
-                const sizeDelta = ev[clientPositionProp] - (itemRect[positionProp] + itemRect[sizeProp]); // todo: rephrase
+                let sizeDelta = ev[clientPositionProp] - (itemRect[positionProp] + itemRect[sizeProp]); // todo: rephrase
+                if (direction === 'col' && isRTL) {
+                    sizeDelta = itemRect[positionProp] - ev[clientPositionProp];
+                }
                 const currentSize = itemRect[sizeProp];
                 const newSize = currentSize + sizeDelta;
                 if ((newSize >= 0 || direction === 'row') && newSize > MIN_SIZE) {
@@ -2667,9 +2698,10 @@ export class OdooEditor extends EventTarget {
                     // Check if a nested table would overflow its parent cell.
                     const hostCell = closestElement(table.parentElement, 'td');
                     const childTable = item.querySelector('table');
+                    const endProp = isRTL ? 'left' : 'right'
                     if (direction === 'col' &&
-                        (hostCell && tableRect.right + sizeDelta > hostCell.getBoundingClientRect().right - 5 ||
-                        childTable && childTable.getBoundingClientRect().right > itemRect.right + sizeDelta - 5)) {
+                        (hostCell && tableRect[endProp] + sizeDelta > hostCell.getBoundingClientRect()[endProp] - 5 ||
+                        childTable && childTable.getBoundingClientRect()[endProp] > itemRect[endProp] + sizeDelta - 5)) {
                         break
                     }
                     if (sizeProp === 'width') {
@@ -3439,7 +3471,7 @@ export class OdooEditor extends EventTarget {
                         // Since the unit test Event is not trusted by the browser, we don't
                         // need to undo the char during the unit tests.
                         // @see https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted
-                        this._applyRawCommand('oDeleteBackward');
+                        this._protect(() => this._applyRawCommand('oDeleteBackward'));
                     }
                     if (latestSelectionInsideEmptyTag) {
                         // Restore the selection inside the empty Element.
@@ -4404,6 +4436,7 @@ export class OdooEditor extends EventTarget {
         }
         // Handle table resizing.
         const isHoveringTdBorder = this._isHoveringTdBorder(ev);
+        const isRTL = this.options.direction === 'rtl';
         if (isHoveringTdBorder) {
             ev.preventDefault();
             const direction = { top: 'row', right: 'col', bottom: 'row', left: 'col' }[isHoveringTdBorder] || false;
@@ -4413,14 +4446,24 @@ export class OdooEditor extends EventTarget {
                 target1 = getAdjacentPreviousSiblings(column).find(node => node.nodeName === 'TR');
                 target2 = closestElement(ev.target, 'tr');
             } else if (isHoveringTdBorder === 'right') {
-                target1 = ev.target;
-                target2 = getAdjacentNextSiblings(ev.target).find(node => node.nodeName === 'TD');
+                if (isRTL) {
+                    target1 = getAdjacentPreviousSiblings(ev.target).find(node => node.nodeName === 'TD');
+                    target2 = ev.target;
+                } else {
+                    target1 = ev.target;
+                    target2 = getAdjacentNextSiblings(ev.target).find(node => node.nodeName === 'TD');
+                }
             } else if (isHoveringTdBorder === 'bottom' && column) {
                 target1 = closestElement(ev.target, 'tr');
                 target2 = getAdjacentNextSiblings(column).find(node => node.nodeName === 'TR');
             } else if (isHoveringTdBorder === 'left') {
-                target1 = getAdjacentPreviousSiblings(ev.target).find(node => node.nodeName === 'TD');
-                target2 = ev.target;
+                if (isRTL) {
+                    target1 = ev.target;
+                    target2 = getAdjacentNextSiblings(ev.target).find(node => node.nodeName === 'TD');
+                } else {
+                    target1 = getAdjacentPreviousSiblings(ev.target).find(node => node.nodeName === 'TD');
+                    target2 = ev.target;
+                }
             }
             this._isResizingTable = true;
             this._toggleTableResizeCursor(direction);
