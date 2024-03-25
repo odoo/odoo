@@ -591,7 +591,7 @@ class AccountJournal(models.Model):
         if jtype not in ('purchase', 'sale'):
             return False
 
-        alias_name = next(
+        base_alias_name = next(
             (
                 string for string in (alias_name, name, code, jtype)
                 if (string and self.env['mail.alias']._is_encodable(string) and
@@ -600,9 +600,19 @@ class AccountJournal(models.Model):
         )
         if company != self.env.ref('base.main_company'):
             company_identifier = company.name if self.env['mail.alias']._is_encodable(company.name) else company.id
-            if f'-{company_identifier}' not in alias_name:
-                alias_name = f"{alias_name}-{company_identifier}"
-        return self.env['mail.alias']._sanitize_alias_name(alias_name)
+            if f'-{company_identifier}' not in base_alias_name:
+                base_alias_name = f'{base_alias_name}-{company_identifier}'
+
+        # Check for duplicate alias, if exists append a suffix to ensure uniqueness
+        # It's not a duplicate if it's the same journal
+        sanitized_alias_name = self.env['mail.alias']._sanitize_alias_name(base_alias_name)
+        existing_alias = self.env['mail.alias'].search([('alias_name', '=', sanitized_alias_name)])
+        if len(existing_alias) and existing_alias.id != self.alias_id.id:
+            alias_name = f'{sanitized_alias_name}-{code}-{company.id}'
+        else:
+            alias_name = sanitized_alias_name
+
+        return alias_name
 
     @api.model
     def get_next_bank_cash_default_code(self, journal_type, company, cache=None, protected_codes=False):
