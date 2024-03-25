@@ -89,6 +89,34 @@
                 }
             }
         }
+
+        &:not(.o_event_dot) {
+            --o-overlay-opacity: .5;
+
+            &.o_event_hatched {
+                --o-bg-opacity: .5;
+            }
+        }
+
+        &.o_event_dot {
+            --o-overlay-opacity: .25;
+
+            display: flex;
+            align-items: center;
+            gap: map-get($spacers, 1);
+            border: none;
+
+            &:before {
+                z-index: 2;
+                display: inline-block;
+                font-family: Fontawesome;
+                content: '\f111'; // fa-circle
+            }
+
+            &:hover {
+                --o-bg-opacity: 1;
+            }
+        }
     }
 
     // Reset all link (A tag) the normal color (to override Bootstrap rule)
@@ -602,6 +630,9 @@
     .o_calendar_renderer .fc-view {
         .o_calendar_color_#{$i - 1} {
             --fc-event-bg-color: #{$color-subtle};
+            --o-event-bg: #{$color};
+            --o-event-bg--subtle-rgb: #{to-rgb($color-subtle)};
+
             &.fc-bg-event {
                 --fc-bg-event-color: #{$color-subtle};
             }
@@ -626,6 +657,14 @@
             &.fc-event:not(.o_event_dot):not(.fc-dragging) {
                 --fc-event-text-color: #{color-contrast($color-subtle)};
                 --fc-event-border-color: #{tint-color($color, 50%)};
+            }
+
+            &.o_event_dot {
+                background-color: rgba(var(--o-event-bg--subtle-rgb), var(--o-bg-opacity));
+
+                &:before {
+                    color: var(--o-event-bg, #{$info});
+                }
             }
         }
     }
