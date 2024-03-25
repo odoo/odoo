@@ -5,6 +5,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { ReceptionReportTable } from "../reception_report_table/stock_reception_report_table";
 import { Component, onWillStart, useState } from "@odoo/owl";
+import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
 export class ReceptionReportMain extends Component {
     static template = "stock.ReceptionReportMain";
@@ -12,11 +13,7 @@ export class ReceptionReportMain extends Component {
         ControlPanel,
         ReceptionReportTable,
     };
-    static props = {
-        action: Object,
-        actionId: { type: Number, optional: true },
-        className: { type: String, optional: true },
-    };
+    static props = { ...standardActionServiceProps };
 
     setup() {
         this.controlPanelDisplay = {};
