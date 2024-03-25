@@ -1124,9 +1124,23 @@ QUnit.test("no out-of-focus notification on receiving self messages in chat", as
 QUnit.test("receive new chat messages: out of odoo focus (tab title)", async (assert) => {
     let stepCount = 0;
     const pyEnv = await startServer();
+    const bobUserId = pyEnv["res.users"].create({ name: "bob" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "bob", user_ids: [bobUserId] });
     const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
-        { channel_type: "chat" },
-        { channel_type: "chat" },
+        {
+            channel_type: "chat",
+            channel_member_ids: [
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: bobPartnerId }),
+            ],
+        },
+        {
+            channel_type: "chat",
+            channel_member_ids: [
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: bobPartnerId }),
+            ],
+        },
     ]);
     const { env, openDiscuss } = await start({
         services: {
@@ -1152,39 +1166,34 @@ QUnit.test("receive new chat messages: out of odoo focus (tab title)", async (as
             }
         },
     });
-    const channel_1 = pyEnv["discuss.channel"].searchRead([["id", "=", channelId_1]])[0];
     // simulate receiving a new message in chat 1 with odoo out-of-focused
-    pyEnv["bus.bus"]._sendone(channel_1, "discuss.channel/new_message", {
-        id: channelId_1,
-        message: {
-            id: 126,
-            model: "discuss.channel",
-            res_id: channelId_1,
-        },
-    });
+    pyEnv.withUser(bobUserId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "Hello world!", message_type: "comment" },
+            thread_id: channelId_1,
+            thread_model: "discuss.channel",
+        })
+    );
     await assertSteps(["set_title_part"]);
 
-    const channel_2 = pyEnv["discuss.channel"].searchRead([["id", "=", channelId_2]])[0];
     // simulate receiving a new message in chat 2 with odoo out-of-focused
-    pyEnv["bus.bus"]._sendone(channel_2, "discuss.channel/new_message", {
-        id: channelId_2,
-        message: {
-            id: 127,
-            model: "discuss.channel",
-            res_id: channelId_2,
-        },
-    });
+    pyEnv.withUser(bobUserId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "Hello world!", message_type: "comment" },
+            thread_id: channelId_2,
+            thread_model: "discuss.channel",
+        })
+    );
     await assertSteps(["set_title_part"]);
 
     // simulate receiving another new message in chat 2 with odoo focused
-    pyEnv["bus.bus"]._sendone(channel_2, "discuss.channel/new_message", {
-        id: channelId_2,
-        message: {
-            id: 128,
-            model: "discuss.channel",
-            res_id: channelId_2,
-        },
-    });
+    pyEnv.withUser(bobUserId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "Hello world!", message_type: "comment" },
+            thread_id: channelId_2,
+            thread_model: "discuss.channel",
+        })
+    );
     await assertSteps(["set_title_part"]);
 });
 
