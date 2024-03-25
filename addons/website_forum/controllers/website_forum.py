@@ -594,19 +594,19 @@ class WebsiteForum(WebsiteProfile):
             url = f'/forum/{slug(forum)}/closed_posts'
         else:
             url = f'/forum/{slug(forum)}/validation_queue'
-        post.validate()
+        post._validate()
         return request.redirect(url)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/refuse', type='http', auth="user", website=True)
     def post_refuse(self, forum, post, **kwargs):
-        post.refuse()
+        post._refuse()
         return self.question_ask_for_close(forum, post)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/flag', type='json', auth="public", website=True)
     def post_flag(self, forum, post, **kwargs):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
-        return post.flag()[0]
+        return post._flag()[0]
 
     @http.route('/forum/<model("forum.post"):post>/ask_for_mark_as_offensive', type='json', auth="user", website=True)
     def post_json_ask_for_mark_as_offensive(self, post, **kwargs):
@@ -624,7 +624,7 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/mark_as_offensive', type='http', auth="user", methods=["POST"], website=True)
     def post_mark_as_offensive(self, forum, post, **kwargs):
-        post.mark_as_offensive(reason_id=int(kwargs.get('reason_id', False)))
+        post._mark_as_offensive(reason_id=int(kwargs.get('reason_id', False)))
         if post.parent_id:
             url = f'/forum/{slug(forum)}/{post.parent_id.id}/#answer-{post.id}'
         else:
