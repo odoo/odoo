@@ -6,13 +6,12 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Component, onWillStart, useEffect, useState } from "@odoo/owl";
 import { router } from "@web/core/browser/router";
+import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
 export class ViewHierarchy extends Component {
     static components = { Layout, HierarchyNavbar };
     static template = "website.view_hierarchy";
-    static props = {
-        action: Function,
-    };
+    static props = { ...standardActionServiceProps };
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");

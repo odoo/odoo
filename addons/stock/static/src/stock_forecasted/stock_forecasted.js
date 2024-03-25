@@ -11,6 +11,7 @@ import { ForecastedDetails } from "./forecasted_details";
 import { ForecastedHeader } from "./forecasted_header";
 import { ForecastedWarehouseFilter } from "./forecasted_warehouse_filter";
 import { Component, onWillStart, useState } from "@odoo/owl";
+import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
 export class StockForecasted extends Component {
     static template = "stock.Forecasted";
@@ -22,11 +23,7 @@ export class StockForecasted extends Component {
         View,
         ForecastedDetails,
     };
-    static props = {
-        action: Object,
-        actionId: { type: Number, optional: true },
-        className: { type: String, optional: true },
-    };
+    static props = { ...standardActionServiceProps };
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");

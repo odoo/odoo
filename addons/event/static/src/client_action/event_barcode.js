@@ -7,15 +7,12 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { EventRegistrationSummaryDialog } from "./event_registration_summary_dialog";
+import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
 export class EventScanView extends Component {
     static template = "event.EventScanView";
     static components = { BarcodeScanner };
-    static props = {
-        action: Object,
-        actionId: { type: Number, optional: true },
-        className: { type: String, optional: true },
-    };
+    static props = { ...standardActionServiceProps };
 
     setup() {
         this.actionService = useService("action");
