@@ -263,7 +263,6 @@ class ProductTemplate(models.Model):
             return {}
 
         pricelist and pricelist.ensure_one()
-        partner_sudo = self.env.user.partner_id
         pricelist = pricelist or self.env['product.pricelist']
         currency = pricelist.currency_id or self.env.company.currency_id
         date = fields.Date.context_today(self)
@@ -273,11 +272,6 @@ class ProductTemplate(models.Model):
         show_strike_price = self.env.user.has_group('website_sale.group_product_price_comparison')
 
         base_sales_prices = self._price_compute('list_price', currency=currency)
-        website = self.env['website'].get_current_website()
-        if website.show_line_subtotals_tax_selection == 'tax_excluded':
-            tax_display = 'total_excluded'
-        else:
-            tax_display = 'total_included'
 
         res = {}
         for template in self:
@@ -295,10 +289,10 @@ class ProductTemplate(models.Model):
                 if not price_list_contains_template:
                     price_reduce = base_sales_prices[template.id]
 
-                if template.currency_id != pricelist.currency_id:
+                if template.currency_id != currency:
                     base_price = template.currency_id._convert(
                         base_price,
-                        pricelist.currency_id,
+                        currency,
                         self.env.company,
                         date,
                         round=False
@@ -308,13 +302,13 @@ class ProductTemplate(models.Model):
                 base_price = base_sales_prices[template.id]
 
                 # Compare_list_price are never tax included
-                base_price = self.env['account.tax']._fix_tax_included_price_company(
-                    base_price, product_taxes, taxes, self.env.company)
-                base_price = taxes.compute_all(base_price, pricelist.currency_id, 1, template, partner_sudo)[tax_display]
+                base_price = self._apply_taxes_to_price(
+                    base_price, currency, product_taxes, taxes, self,
+                )
 
-            price_reduce = self.env['account.tax']._fix_tax_included_price_company(
-                price_reduce, product_taxes, taxes, self.env.company)
-            price_reduce = taxes.compute_all(price_reduce, pricelist.currency_id, 1, template, partner_sudo)[tax_display]
+            price_reduce = self._apply_taxes_to_price(
+                price_reduce, currency, product_taxes, taxes, self,
+            )
 
             template_price_vals = {
                 'price_reduce': price_reduce,
@@ -570,11 +564,11 @@ class ProductTemplate(models.Model):
     def _apply_taxes_to_price(
         self, price, currency, product_taxes, taxes, product_or_template,
     ):
-        # Ideally, we should use _get_tax_included_unit_price
-        #   but it doesn't allow to request tax-excluded amount.
         website = self.env['website'].get_current_website()
-        price = self.env['account.tax']._fix_tax_included_price_company(
-            price, product_taxes, taxes, self.env.company,
+        price = self.env['product.product']._get_tax_included_unit_price_from_price(
+            price,
+            product_taxes,
+            product_taxes_after_fp=taxes,
         )
         show_tax = website.show_line_subtotals_tax_selection
         tax_display = 'total_excluded' if show_tax == 'tax_excluded' else 'total_included'
