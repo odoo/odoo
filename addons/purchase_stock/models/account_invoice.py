@@ -134,6 +134,13 @@ class AccountMove(models.Model):
             if not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
                 product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
 
+        for (lot, company), dummy in groupby(stock_valuation_layers, key=lambda svl: (svl.lot_id, svl.company_id)):
+            if not lot:
+                continue
+            lot = lot.with_company(company.id)
+            if not float_is_zero(lot.quantity_svl, precision_rounding=lot.product_id.uom_id.rounding):
+                lot.sudo().with_context(disable_auto_svl=True).write({'standard_price': lot.value_svl / lot.quantity_svl})
+
         posted = super(AccountMove, self.with_context(skip_cogs_reconciliation=True))._post(soft)
 
         # The invoice reference is set during the super call

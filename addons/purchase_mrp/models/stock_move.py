@@ -36,7 +36,7 @@ class StockMove(models.Model):
         # Convert uom from bom_line_uom to product_uom for bom_line
         uom_factor = bom_line.product_id.uom_id._compute_quantity(uom_factor, bom_line.product_uom_id)
 
-        return float_round(kit_price_unit * cost_share * uom_factor * bom.product_qty / bom_line.product_qty, precision_digits=price_unit_prec)
+        return {self.env['stock.lot']: float_round(kit_price_unit * cost_share * uom_factor * bom.product_qty / bom_line.product_qty, precision_digits=price_unit_prec)}
 
     def _get_valuation_price_and_qty(self, related_aml, to_curr):
         valuation_price_unit_total, valuation_total_qty = super()._get_valuation_price_and_qty(related_aml, to_curr)

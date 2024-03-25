@@ -125,29 +125,53 @@ class StockLandedCost(models.Model):
             }
             valuation_layer_ids = []
             cost_to_add_byproduct = defaultdict(lambda: 0.0)
+            cost_to_add_bylot = defaultdict(lambda: 0.0)
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
                 remaining_qty = sum(line.move_id.stock_valuation_layer_ids.mapped('remaining_qty'))
-                linked_layer = line.move_id.stock_valuation_layer_ids[:1]
+                linked_layer = line.move_id.stock_valuation_layer_ids
 
                 # Prorate the value at what's still in stock
                 cost_to_add = (remaining_qty / line.move_id.quantity) * line.additional_landed_cost
-                if not cost.company_id.currency_id.is_zero(cost_to_add):
-                    valuation_layer = self.env['stock.valuation.layer'].create({
-                        'value': cost_to_add,
-                        'unit_cost': 0,
-                        'quantity': 0,
-                        'remaining_qty': 0,
-                        'stock_valuation_layer_id': linked_layer.id,
-                        'description': cost.name,
-                        'stock_move_id': line.move_id.id,
-                        'product_id': line.move_id.product_id.id,
-                        'stock_landed_cost_id': cost.id,
-                        'company_id': cost.company_id.id,
-                    })
-                    linked_layer.remaining_value += cost_to_add
-                    valuation_layer_ids.append(valuation_layer.id)
-                # Update the AVCO/FIFO
                 product = line.move_id.product_id
+                if not cost.company_id.currency_id.is_zero(cost_to_add):
+                    vals_list = []
+                    if line.move_id.product_id.lot_valuated:
+                        for lot_id, sml in line.move_id.move_line_ids.grouped('lot_id').items():
+                            lot_layer = linked_layer.filtered(lambda l: l.lot_id == lot_id)[:1]
+                            value = cost_to_add * sum(sml.mapped('quantity')) / line.move_id.quantity
+                            if product.cost_method in ['average', 'fifo']:
+                                cost_to_add_bylot[lot_id] += value
+                            vals_list.append({
+                                'value': value,
+                                'unit_cost': 0,
+                                'quantity': 0,
+                                'remaining_qty': 0,
+                                'stock_valuation_layer_id': lot_layer.id,
+                                'description': cost.name,
+                                'stock_move_id': line.move_id.id,
+                                'product_id': line.move_id.product_id.id,
+                                'stock_landed_cost_id': cost.id,
+                                'company_id': cost.company_id.id,
+                                'lot_id': lot_id.id,
+                            })
+                            lot_layer.remaining_value += value
+                    else:
+                        vals_list.append({
+                            'value': cost_to_add,
+                            'unit_cost': 0,
+                            'quantity': 0,
+                            'remaining_qty': 0,
+                            'stock_valuation_layer_id': linked_layer[:1].id,
+                            'description': cost.name,
+                            'stock_move_id': line.move_id.id,
+                            'product_id': line.move_id.product_id.id,
+                            'stock_landed_cost_id': cost.id,
+                            'company_id': cost.company_id.id,
+                        })
+                        linked_layer[:1].remaining_value += cost_to_add
+                    valuation_layer = self.env['stock.valuation.layer'].create(vals_list)
+                    valuation_layer_ids += valuation_layer.ids
+                # Update the AVCO/FIFO
                 if product.cost_method in ['average', 'fifo']:
                     cost_to_add_byproduct[product] += cost_to_add
                 # Products with manual inventory valuation are ignored because they do not need to create journal entries.
@@ -167,6 +191,11 @@ class StockLandedCost(models.Model):
             for product in products:  # iterate on recordset to prefetch efficiently quantity_svl
                 if not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
                     product.sudo().with_context(disable_auto_svl=True).standard_price += cost_to_add_byproduct[product] / product.quantity_svl
+                if product.lot_valuated:
+                    for lot, value in cost_to_add_bylot.items():
+                        if float_is_zero(lot.quantity_svl, precision_rounding=product.uom_id.rounding):
+                            continue
+                        lot.sudo().with_context(disable_auto_svl=True).standard_price += value / lot.quantity_svl
 
             move_vals['stock_valuation_layer_ids'] = [(6, None, valuation_layer_ids)]
             # We will only create the accounting entry when there are defined lines (the lines will be those linked to products of real_time valuation category).
