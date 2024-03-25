@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
@@ -106,23 +105,23 @@ class ProviderGrid(models.Model):
 
         total = self._compute_currency(order, total, 'pricelist_to_company')
 
-        return self._get_price_from_picking(total, weight, volume, quantity, wv=wv)
+        return self.with_context(wv=wv)._get_price_from_picking(total, weight, volume, quantity)
 
-    def _get_price_dict(self, total, weight, volume, quantity, wv=0.):
+    def _get_price_dict(self, total, weight, volume, quantity):
         '''Hook allowing to retrieve dict to be used in _get_price_from_picking() function.
         Hook to be overridden when we need to add some field to product and use it in variable factor from price rules. '''
         return {
             'price': total,
             'volume': volume,
             'weight': weight,
-            'wv': wv or volume * weight,
+            'wv': self.env.context.get('wv') or volume * weight,
             'quantity': quantity
         }
 
-    def _get_price_from_picking(self, total, weight, volume, quantity, wv=0.):
+    def _get_price_from_picking(self, total, weight, volume, quantity):
         price = 0.0
         criteria_found = False
-        price_dict = self._get_price_dict(total, weight, volume, quantity, wv=wv)
+        price_dict = self._get_price_dict(total, weight, volume, quantity)
         if self.free_over and total >= self.amount:
             return 0
         for line in self.price_rule_ids:
