@@ -67,6 +67,7 @@ class Order(models.Model):
     _description = 'Sales order'
 
     line_ids = fields.One2many('test_read_group.order.line', 'order_id')
+    date = fields.Date()
 
 
 class OrderLine(models.Model):
@@ -75,6 +76,7 @@ class OrderLine(models.Model):
 
     order_id = fields.Many2one('test_read_group.order', ondelete='cascade')
     value = fields.Integer()
+    date = fields.Date(related='order_id.date')
 
 
 class User(models.Model):
@@ -103,6 +105,7 @@ class Task(models.Model):
         'user_id',
         string="Collaborators",
     )
+    date = fields.Date()
 
 
 class Partner(models.Model):

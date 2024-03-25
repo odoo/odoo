@@ -349,6 +349,23 @@ READ_GROUP_TIME_GRANULARITY = {
     'year': dateutil.relativedelta.relativedelta(years=1)
 }
 
+READ_GROUP_NUMBER_GRANULARITY = {
+    'year_number': 'year',
+    'quarter_number': 'quarter',
+    'month_number': 'month',
+    'iso_week_number': 'week',  # ISO week number because anything else than ISO is nonsense
+    'day_of_year': 'doy',
+    'day_of_month': 'day',
+    'day_of_week': 'dow',
+    'hour_number': 'hour',
+    'minute_number': 'minute',
+    'second_number': 'second',
+}
+
+READ_GROUP_ALL_TIME_GRANULARITY = READ_GROUP_TIME_GRANULARITY | READ_GROUP_NUMBER_GRANULARITY
+
+
+
 # valid SQL aggregation functions
 READ_GROUP_AGGREGATE = {
     'sum': lambda table, expr: SQL('SUM(%s)', expr),
@@ -1980,7 +1997,7 @@ class BaseModel(metaclass=MetaModel):
         if field.type in ('datetime', 'date') or (field.type == 'properties' and granularity):
             if not granularity:
                 raise ValueError(f"Granularity not set on a date(time) field: {groupby_spec!r}")
-            if granularity not in READ_GROUP_TIME_GRANULARITY:
+            if granularity not in READ_GROUP_ALL_TIME_GRANULARITY:
                 raise ValueError(f"Granularity specification isn't correct: {granularity!r}")
 
             if granularity == 'week':
@@ -1992,10 +2009,32 @@ class BaseModel(metaclass=MetaModel):
                     "(date_trunc('week', %s::timestamp - INTERVAL %s) + INTERVAL %s)",
                     sql_expr, interval, interval,
                 )
+            elif spec := READ_GROUP_NUMBER_GRANULARITY.get(granularity):
+                if granularity == 'day_of_week':
+                    """
+                    formula: ((7 - first_day_of_week_in_odoo) + result_from_SQL) %  --> 0 based first day of week
+                                    week start on
+                                monday   sunday    sat
+                                  1     |  7    |  6   <-- first day of week in odoo
+                           SQL | -----------------------
+                    Monday  1  |  0     |  1    |  2
+                    tuesday 2  |  1     |  2    |  3
+                    wed     3  |  3     |  4    |  4
+                    thurs   4  |  3     |  4    |  5
+                    friday  5  |  4     |  5    |  6
+                    sat     6  |  6     |  0    |  0
+                    sun     7  |  0     |  1    |  1
+                    """
+                    first_week_day = int(get_lang(self.env, self.env.context.get('tz')).week_start)
+                    sql_expr = SQL("mod(7 - %s + date_part(%s, %s)::int, 7)", first_week_day, spec, sql_expr)
+                else:
+                    sql_expr = SQL("date_part(%s, %s)::int", spec, sql_expr)
             else:
                 sql_expr = SQL("date_trunc(%s, %s::timestamp)", granularity, sql_expr)
 
-            if field.type == 'date':
+            # If the granularity is a part number, the result is a number (double) so no conversion is needed
+            if field.type == 'date' and granularity not in READ_GROUP_NUMBER_GRANULARITY:
+                # If the granularity uses date_trunc, we need to convert the timestamp back to a date.
                 sql_expr = SQL("%s::date", sql_expr)
 
         elif field.type == 'boolean':
@@ -2427,11 +2466,11 @@ class BaseModel(metaclass=MetaModel):
             field = self._fields[field_name]
 
             if field.type in ('date', 'datetime'):
-                locale = get_lang(self.env).code
-                fmt = DEFAULT_SERVER_DATETIME_FORMAT if field.type == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
                 granularity = group.split(':')[1] if ':' in group else 'month'
-                interval = READ_GROUP_TIME_GRANULARITY[granularity]
-
+                if granularity in READ_GROUP_TIME_GRANULARITY:
+                    locale = get_lang(self.env).code
+                    fmt = DEFAULT_SERVER_DATETIME_FORMAT if field.type == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
+                    interval = READ_GROUP_TIME_GRANULARITY[granularity]
             elif field.type == "properties":
                 self._read_group_format_result_properties(rows_dict, group)
                 continue
@@ -2482,6 +2521,8 @@ class BaseModel(metaclass=MetaModel):
                                 (field_name, '>=', range_start),
                                 (field_name, '<', range_end),
                         ]
+                    elif value is not None and granularity in READ_GROUP_NUMBER_GRANULARITY:
+                        additional_domain = [(f"{field_name}.{granularity}", '=', value)]
                     elif not value:
                         # Set the __range of the group containing records with an unset
                         # date/datetime field value to False.
@@ -2621,10 +2662,12 @@ class BaseModel(metaclass=MetaModel):
                 `PostgreSQL <https://www.postgresql.org/docs/current/static/functions-aggregate.html>`_
                 and 'count_distinct', with the expected meaning.
         :param list groupby: list of groupby descriptions by which the records will be grouped.
-                A groupby description is either a field (then it will be grouped by that field)
-                or a string 'field:granularity'. Right now, the only supported granularities
-                are 'day', 'week', 'month', 'quarter' or 'year', and they only make sense for
-                date/datetime fields.
+                A groupby description is either a field (then it will be grouped by that field).
+                For the dates an datetime fields, you can specify a granularity using the syntax 'field:granularity'.
+                The supported granularities are 'hour', 'day', 'week', 'month', 'quarter' or 'year';
+                Read_group also supports integer date parts:
+                'year_number', 'quarter_number', 'month_number' 'iso_week_number', 'day_of_year', 'day_of_month',
+                'day_of_week', 'hour_number', 'minute_number' and 'second_number'.
         :param int offset: optional number of groups to skip
         :param int limit: optional max number of groups to return
         :param str orderby: optional ``order by`` specification, for

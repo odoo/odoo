@@ -114,18 +114,18 @@ import collections
 import collections.abc
 import json
 import logging
+import pytz
 import reprlib
 import traceback
 from datetime import date, datetime, time
 import warnings
 
 import odoo.modules
-from odoo.models import BaseModel, check_property_field_value_name
+from odoo.models import check_property_field_value_name, READ_GROUP_NUMBER_GRANULARITY
 from odoo.tools import (
     pycompat, pattern_to_translated_trigram_pattern, value_to_translated_trigram_pattern,
-    Query, SQL,
+    Query, SQL, get_lang,
 )
-
 
 # Domain operators.
 NOT_OPERATOR = '!'
@@ -1081,6 +1081,18 @@ class expression(object):
                             "((%s) %s (%s))",
                             unaccent(sql_left), sql_operator, unaccent(sql_right),
                         ))
+            elif field.type in ('datetime', 'date') and len(path) == 2:
+                if path[1] not in READ_GROUP_NUMBER_GRANULARITY:
+                    raise ValueError(f'Error when processing the field {field!r}, the granularity {path[1]} is not supported. Only {", ".join(READ_GROUP_NUMBER_GRANULARITY.keys())} are supported')
+                sql_field = model._field_to_sql(alias, field.name, self.query)
+                if model._context.get('tz') in pytz.all_timezones_set and field.type == 'datetime':
+                    sql_field = SQL("timezone(%s, timezone('UTC', %s))", model._context['tz'], sql_field)
+                if path[1] == 'day_of_week':
+                    first_week_day = int(get_lang(model.env, model._context.get('tz')).week_start)
+                    sql = SQL("mod(7 - %s + date_part(%s, %s)::int, 7) %s %s", first_week_day, READ_GROUP_NUMBER_GRANULARITY[path[1]], sql_field, SQL_OPERATORS[operator], right)
+                else:
+                    sql = SQL('date_part(%s, %s) %s %s', READ_GROUP_NUMBER_GRANULARITY[path[1]], sql_field, SQL_OPERATORS[operator], right)
+                push_result(sql)
 
             # ----------------------------------------
             # PATH SPOTTED
