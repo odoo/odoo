@@ -54,9 +54,9 @@
         <field name="model">hr.leave.report</field>
         <field name="arch" type="xml">
             <graph string="Time off Summary" sample="1">
-                <field name="employee_id"/>
+                <field name="employee_id" type="row"/>
                 <field name="number_of_days" string="Duration (Days)" type="measure"/>
-                <field name="number_of_hours" string="Duration (Days)" type="measure"/>
+                <field name="number_of_hours" string="Duration (Hours)"/>
             </graph>
         </field>
     </record>
@@ -67,7 +67,7 @@
         <field name="arch" type="xml">
             <pivot string="Time off Summary" sample="1">
                 <field name="employee_id"/>
-                <field name="number_of_days" type="measure"/>
+                <field name="number_of_days"/>
                 <field name="number_of_hours" type="measure"/>
             </pivot>
         </field>
@@ -92,4 +92,22 @@
         </field>
     </record>
 
+    <record id="hr_leave_report_action" model="ir.actions.act_window">
+        <field name="name">Time Off Analysis</field>
+        <field name="res_model">hr.leave.report</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="context">{
+            'search_default_department_id': [active_id],
+            'default_department_id': active_id,
+            'search_default_group_employee': 1,
+            'search_default_group_type': 1,
+            'search_default_group_date_from': 'month',
+        }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
+    </record>
 </odoo>

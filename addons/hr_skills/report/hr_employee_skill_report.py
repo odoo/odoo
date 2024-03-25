@@ -5,12 +5,12 @@ from odoo import fields, models, tools
 class HrEmployeeSkillReport(models.BaseModel):
     _auto = False
     _name = 'hr.employee.skill.report'
+    _inherit = "hr.manager.department.report"
     _description = 'Employee Skills Report'
     _order = 'employee_id, level_progress desc'
 
     id = fields.Id()
     display_name = fields.Char(related='employee_id.name')
-    employee_id = fields.Many2one('hr.employee', readonly=True)
     company_id = fields.Many2one('res.company', readonly=True)
     department_id = fields.Many2one('hr.department', readonly=True)
 
