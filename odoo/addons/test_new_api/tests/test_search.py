@@ -1079,3 +1079,60 @@ class TestFlushSearch(TransactionCase):
         self.env['test_new_api.custom.table_query_sql'].invalidate_model()
         child.quantity = 25
         self.assertEqual(self.env['test_new_api.custom.table_query_sql'].search([]).sum_quantity, 25)
+
+
+class TestDatePartNumber(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.person = cls.env["test_new_api.person"].create({"name": "that person", "birthday": "1990-02-09"})
+        cls.lesson = cls.env["test_new_api.lesson"].create({"teacher_id": cls.person.id, "attendee_ids": [(4, cls.person.id)]})
+
+    def test_basic_cases(self):
+        with self.assertQueries(["""
+            SELECT "test_new_api_person"."id"
+            FROM "test_new_api_person"
+            WHERE date_part(%s, "test_new_api_person"."birthday") = %s
+            ORDER BY "test_new_api_person"."id"
+        """]):
+            result = self.env["test_new_api.person"].search([('birthday.month_number', '=', '2')])
+            self.assertEqual(result, self.person)
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_person"."id"
+            FROM "test_new_api_person"
+            WHERE date_part(%s, "test_new_api_person"."birthday") = %s
+            ORDER BY "test_new_api_person"."id"
+        """]):
+            result = self.env["test_new_api.person"].search([('birthday.quarter_number', '=', '1')])
+            self.assertEqual(result, self.person)
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_person"."id"
+            FROM "test_new_api_person"
+            WHERE date_part(%s, "test_new_api_person"."birthday") = %s
+            ORDER BY "test_new_api_person"."id"
+        """]):
+            result = self.env["test_new_api.person"].search([('birthday.iso_week_number', '=', '6')])
+            self.assertEqual(result, self.person)
+
+    def test_many2one(self):
+        result = self.env["test_new_api.lesson"].search([('teacher_id.birthday.month_number', '=', 2)])
+        self.assertEqual(result, self.lesson)
+
+    def test_many2many(self):
+        result = self.env["test_new_api.lesson"].search([('attendee_ids.birthday.month_number', '=', 2)])
+        self.assertEqual(result, self.lesson)
+
+    def test_related_field(self):
+        result = self.env["test_new_api.lesson"].search([('teacher_birthdate.month_number', '=', 2)])
+        self.assertEqual(result, self.lesson)
+
+    def test_inherit(self):
+        account = self.env["test_new_api.person.account"].create({"person_id": self.person.id, "activation_date": "2020-03-09"})
+
+        result = self.env["test_new_api.person.account"].search([('activation_date.quarter_number', '=', 1)])
+        self.assertEqual(result, account)
+
+        result = self.env["test_new_api.person.account"].search([('person_id.birthday.month_number', '=', 2)])
+        self.assertEqual(result, account)
