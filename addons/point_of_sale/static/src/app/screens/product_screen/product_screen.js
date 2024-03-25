@@ -113,9 +113,13 @@ export class ProductScreen extends Component {
 
     getNumpadButtons() {
         return getButtons(this.env, [
-            { value: "quantity", text: "Qty" },
-            { value: "discount", text: "% Disc", disabled: !this.pos.config.manual_discount },
-            { value: "price", text: "Price", disabled: !this.pos.cashierHasPriceControlRights() },
+            { value: "quantity", text: _t("Qty") },
+            { value: "discount", text: _t("% Disc"), disabled: !this.pos.config.manual_discount },
+            {
+                value: "price",
+                text: _t("Price"),
+                disabled: !this.pos.cashierHasPriceControlRights(),
+            },
             { value: "-", text: "+/-" },
         ]).map((button) => ({
             ...button,
