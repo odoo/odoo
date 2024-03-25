@@ -9,7 +9,7 @@
                     <field name="company_id" invisible="1"/>
                     <sheet>
                         <div class="oe_button_box" name="button_box" invisible="not id">
-                            <button class="oe_stat_button" type="action" name="%(hr.act_employee_from_department)d" icon="fa-users">
+                            <button class="oe_stat_button" name="action_employee_from_department" type="object" icon="fa-users">
                                 <field string="Employees" name="total_employee" widget="statinfo"/>
                             </button>
                             <button class="oe_stat_button" type="object" name="action_plan_from_department" icon="fa-list-ul">
@@ -25,7 +25,8 @@
                         </div>
                         <group>
                             <group>
-                                <field name="manager_id" widget="many2one_avatar_user"/>
+                                <field name="name"/>
+                                <field name="manager_id" widget="many2one_avatar_employee"/>
                                 <field name="parent_id"/>
                                 <field name="child_ids" invisible="1"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -49,7 +50,7 @@
                     <field name="company_id" column_invisible="True"/>
                     <field name="name"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1"/>
-                    <field name="manager_id" widget="many2one_avatar_user"/>
+                    <field name="manager_id" widget="many2one_avatar_employee"/>
                     <field name="total_employee" string="Employees"/>
                     <field name="parent_id"/>
                     <field name="color" widget="color_picker" string="Color"/>
@@ -91,7 +92,7 @@
                                             <span>View</span>
                                         </h5>
                                         <div role="menuitem">
-                                            <a name="%(act_employee_from_department)d" type="action">Employees</a>
+                                            <a name="action_employee_from_department" type="object">Employees</a>
                                         </div>
                                         <div role="menuitem">
                                             <a name="action_open_view_child_departments" type="object">Child departments</a>
@@ -103,7 +104,7 @@
                                         </h5>
                                     </div>
                                 </div>
-                                <div class="o_kanban_card_manage_settings row">
+                                <div class="o_kanban_card_manage_settings row" groups="hr.group_hr_user">
                                     <div t-if="widget.editable" role="menuitem" aria-haspopup="true" class="col-6">
                                         <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
                                     </div>
@@ -121,7 +122,7 @@
                                     <div class="o_kanban_card_header_title">
                                         <div class="o_primary"><a type="edit"><field name="name"/></a></div>
                                         <div class="text-muted">
-                                            <field name="manager_id" widget="many2one_avatar_user" options="{'display_avatar_name': True}" readonly="1"/>
+                                            <field name="manager_id" widget="many2one_avatar_employee" options="{'display_avatar_name': True}" readonly="1"/>
                                         </div>
                                         <div class="o_secondary" groups="base.group_multi_company">
                                             <small>
@@ -133,7 +134,7 @@
                                 <div class="container o_kanban_card_content" t-if="!selection_mode">
                                     <div class="row o_kanban_card_upper_content">
                                         <div class="col-6 o_kanban_primary_left">
-                                            <button class="btn btn-primary" name="%(act_employee_from_department)d" type="action">
+                                            <button class="btn btn-primary" name="action_employee_from_department" type="object">
                                                 <t t-out="record.total_employee.raw_value"/> Employees
                                             </button>
                                         </div>
@@ -156,6 +157,7 @@
             <field name="name">Departments</field>
             <field name="res_model">hr.department</field>
             <field name="search_view_id" ref="view_department_filter"/>
+            <field name="domain">[("has_read_access", "=", True)]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create a new department
@@ -189,6 +191,7 @@
             <field name="name">Departments</field>
             <field name="res_model">hr.department</field>
             <field name="path">departments</field>
+            <field name="domain">[("has_read_access", "=", True)]</field>
             <field name="search_view_id" ref="view_department_filter"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

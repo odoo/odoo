@@ -7,6 +7,7 @@ from odoo.tools.sql import drop_view_if_exists, SQL
 
 class TimesheetsAnalysisReport(models.Model):
     _name = "timesheets.analysis.report"
+    _inherit = "hr.manager.department.report"
     _description = "Timesheets Analysis Report"
     _auto = False
 
@@ -15,7 +16,6 @@ class TimesheetsAnalysisReport(models.Model):
     project_id = fields.Many2one("project.project", string="Project", readonly=True)
     task_id = fields.Many2one("project.task", string="Task", readonly=True)
     parent_task_id = fields.Many2one("project.task", string="Parent Task", readonly=True)
-    employee_id = fields.Many2one("hr.employee", string="Employee", readonly=True)
     manager_id = fields.Many2one("hr.employee", "Manager", readonly=True)
     company_id = fields.Many2one("res.company", string="Company", readonly=True)
     department_id = fields.Many2one("hr.department", string="Department", readonly=True)

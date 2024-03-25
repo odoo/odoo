@@ -436,27 +436,5 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
         </record>
-
-        <record id="act_employee_from_department" model="ir.actions.act_window">
-            <field name="name">Employees</field>
-            <field name="res_model">hr.employee</field>
-            <field name="view_mode">list,kanban,form</field>
-            <field name="search_view_id" ref="view_employee_filter"/>
-            <field name="context">{
-                "searchpanel_default_department_id": active_id,
-                "default_department_id": active_id,
-                "search_default_group_department": 1,
-                "search_default_department_id": active_id,
-                "expand": 1}
-            </field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Add a new employee
-                </p><p>
-                    Quickly find all the information you need for your employees such as contact data, job position, availability, etc.
-                </p>
-            </field>
-        </record>
-
     </data>
 </odoo>

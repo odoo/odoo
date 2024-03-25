@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools, _
@@ -8,10 +7,10 @@ from odoo.osv import expression
 class LeaveReport(models.Model):
     _name = "hr.leave.report"
     _description = 'Time Off Summary / Report'
+    _inherit = "hr.manager.department.report"
     _auto = False
     _order = "date_from DESC, employee_id"
 
-    employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
     leave_id = fields.Many2one('hr.leave', string="Time Off Request", readonly=True)
     allocation_id = fields.Many2one('hr.leave.allocation', string="Allocation Request", readonly=True)
     name = fields.Char('Description', readonly=True)

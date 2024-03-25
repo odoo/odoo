@@ -4,6 +4,7 @@
 from . import models
 from . import wizard
 from . import populate
+from . import report
 
 
 def _install_hr_localization(env):

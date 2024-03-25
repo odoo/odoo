@@ -271,7 +271,7 @@
     <record id="hr_leave_report_rule_group_user" model="ir.rule">
         <field name="name">Time Off Summary / Report: Internal User</field>
         <field name="model_id" ref="model_hr_leave_report"/>
-        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+        <field name="domain_force">[('has_department_manager_access', '=', True)]</field>
         <field name="perm_create" eval="False"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_unlink" eval="False"/>

@@ -12,6 +12,18 @@
         </field>
     </record>
 
+    <record id="hr_employee_skill_report_view_graph" model="ir.ui.view">
+        <field name="model">hr.employee.skill.report</field>
+        <field name="arch" type="xml">
+            <graph>
+                <field name="employee_id" type="row"/>
+                <field name="skill_type_id" type="col"/>
+                <field name="skill_id" type="col"/>
+                <field name="level_progress" type="measure" widget="percentage"/>
+            </graph>
+        </field>
+    </record>
+
     <record id="hr_employee_skill_report_view_list" model="ir.ui.view">
         <field name="model">hr.employee.skill.report</field>
         <field name="arch" type="xml">
@@ -57,6 +69,14 @@
             'search_default_employee': 1,
             'search_default_employees_with_skills': 1,
         }</field>
+    </record>
+
+    <record id="action_hr_employee_skill_log_department" model="ir.actions.act_window">
+        <field name="name">Skill History Report</field>
+        <field name="res_model">hr.employee.skill.report</field>
+        <field name="view_mode">graph,pivot,tree</field>
+        <field name="context">{'fill_temporal': 0, 'search_default_group_by_skill_type_id': 1, 'search_default_group_by_skill_id': 2}</field>
+        <field name="target">current</field>
     </record>
 
     <menuitem
