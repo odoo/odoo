@@ -53,6 +53,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         this._super(...arguments);
         this.notification = this.bindService("notification");
         this.dialog = this.bindService("dialog");
+        this._notActivableElementsSelector += ', .o_mega_menu_toggle';
     },
     /**
      * @override
@@ -138,6 +139,41 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         this.$body[0].removeEventListener("dragstart", this.__onDragStart);
         this.$body[0].classList.remove('o_animated_text_highlighted');
         clearTimeout(this._hideBackendNavbarTimeout);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async cleanForSave() {
+        this.textHighlightObserver.disconnect();
+        const getFromEditable = selector => this.options.editable[0].querySelectorAll(selector);
+        // Clean unstyled translations
+        return this._super(...arguments).then(() => {
+            for (const el of getFromEditable('.o_translation_without_style')) {
+                el.classList.remove('o_translation_without_style');
+                if (el.dataset.oeTranslationSaveSha) {
+                    el.dataset.oeTranslationInitialSha = el.dataset.oeTranslationSaveSha;
+                    delete el.dataset.oeTranslationSaveSha;
+                }
+            }
+            // Adapt translation values for `select` > `options`s and remove all
+            // temporary `.o_translation_select` elements.
+            for (const optionsEl of getFromEditable('.o_translation_select')) {
+                const selectEl = optionsEl.nextElementSibling;
+                const translatedOptions = optionsEl.children;
+                const selectOptions = selectEl.tagName === 'SELECT' ? [...selectEl.options] : [];
+                if (selectOptions.length === translatedOptions.length) {
+                    selectOptions.map((option, i) => {
+                        option.text = translatedOptions[i].textContent;
+                    });
+                }
+                optionsEl.remove();
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -490,6 +526,17 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         return this._super(...arguments) && !snippetsEditorRegistry.get("no_parent_editor_snippets")
             .some(snippetClass => $snippet[0].classList.contains(snippetClass));
     },
+    /**
+     * @override
+     */
+    _insertDropzone: function ($hook) {
+        var $hookParent = $hook.parent();
+        var $dropzone = this._super(...arguments);
+        $dropzone.attr('data-editor-message-default', $hookParent.attr('data-editor-message-default'));
+        $dropzone.attr('data-editor-message', $hookParent.attr('data-editor-message'));
+        $dropzone.attr('data-editor-sub-message', $hookParent.attr('data-editor-sub-message'));
+        return $dropzone;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -674,67 +721,6 @@ weSnippetEditor.SnippetEditor.include({
             };
         }
         return restore;
-    },
-});
-
-wSnippetMenu.include({
-    /**
-     * @override
-     */
-    init: function () {
-        this._super(...arguments);
-        this._notActivableElementsSelector += ', .o_mega_menu_toggle';
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async cleanForSave() {
-        this.textHighlightObserver.disconnect();
-        const getFromEditable = selector => this.options.editable[0].querySelectorAll(selector);
-        // Clean unstyled translations
-        return this._super(...arguments).then(() => {
-            for (const el of getFromEditable('.o_translation_without_style')) {
-                el.classList.remove('o_translation_without_style');
-                if (el.dataset.oeTranslationSaveSha) {
-                    el.dataset.oeTranslationInitialSha = el.dataset.oeTranslationSaveSha;
-                    delete el.dataset.oeTranslationSaveSha;
-                }
-            }
-            // Adapt translation values for `select` > `options`s and remove all
-            // temporary `.o_translation_select` elements.
-            for (const optionsEl of getFromEditable('.o_translation_select')) {
-                const selectEl = optionsEl.nextElementSibling;
-                const translatedOptions = optionsEl.children;
-                const selectOptions = selectEl.tagName === 'SELECT' ? [...selectEl.options] : [];
-                if (selectOptions.length === translatedOptions.length) {
-                    selectOptions.map((option, i) => {
-                        option.text = translatedOptions[i].textContent;
-                    });
-                }
-                optionsEl.remove();
-            }
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _insertDropzone: function ($hook) {
-        var $hookParent = $hook.parent();
-        var $dropzone = this._super(...arguments);
-        $dropzone.attr('data-editor-message-default', $hookParent.attr('data-editor-message-default'));
-        $dropzone.attr('data-editor-message', $hookParent.attr('data-editor-message'));
-        $dropzone.attr('data-editor-sub-message', $hookParent.attr('data-editor-sub-message'));
-        return $dropzone;
     },
 });
 
