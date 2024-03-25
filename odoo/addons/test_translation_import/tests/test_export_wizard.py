@@ -4,7 +4,7 @@ import base64
 from odoo.tests import common, tagged
 
 
-@tagged("post_install", "-at_install", "nightly_export")
+@tagged("post_install", "-at_install", "-standard", "nightly_export")
 class TestTranslationFlow(common.TransactionCase):
     def test_export_source(self):
         """Export the source terms for every module and save it"""
