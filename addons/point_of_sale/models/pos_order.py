@@ -848,11 +848,15 @@ class PosOrder(models.Model):
         })
         reversal_entry.action_post()
 
-        # Reconcile the new receivable line with the lines from the payment move.
         pos_account_receivable = self.company_id.account_default_pos_receivable_account_id
-        reversal_entry_receivable = reversal_entry.line_ids.filtered(lambda l: l.account_id == pos_account_receivable)
-        payment_receivable = payment_moves.line_ids.filtered(lambda l: l.account_id == pos_account_receivable)
-        (reversal_entry_receivable | payment_receivable).reconcile()
+        account_receivable = self.payment_ids.payment_method_id.receivable_account_id
+        reversal_entry_receivable = reversal_entry.line_ids.filtered(lambda l: l.account_id in (pos_account_receivable + account_receivable))
+        payment_receivable = payment_moves.line_ids.filtered(lambda l: l.account_id in (pos_account_receivable + account_receivable))
+        lines_to_reconcile = defaultdict(lambda: self.env['account.move.line'])
+        for line in (reversal_entry_receivable | payment_receivable):
+            lines_to_reconcile[line.account_id] |= line
+        for line in lines_to_reconcile.values():
+            line.filtered(lambda l: not l.reconciled).reconcile()
 
     def action_pos_order_invoice(self):
         if len(self.company_id) > 1:
@@ -882,7 +886,7 @@ class PosOrder(models.Model):
             new_move.sudo().with_company(order.company_id).with_context(skip_invoice_sync=True)._post()
 
             moves += new_move
-            payment_moves = order._apply_invoice_payments()
+            payment_moves = order._apply_invoice_payments(order.session_id.state == 'closed')
 
             # Send and Print
             if self.env.context.get('generate_pdf', True):
@@ -913,9 +917,9 @@ class PosOrder(models.Model):
     def action_pos_order_cancel(self):
         return self.write({'state': 'cancel'})
 
-    def _apply_invoice_payments(self):
+    def _apply_invoice_payments(self, is_reverse=False):
         receivable_account = self.env["res.partner"]._find_accounting_partner(self.partner_id).with_company(self.company_id).property_account_receivable_id
-        payment_moves = self.payment_ids.sudo().with_company(self.company_id)._create_payment_moves()
+        payment_moves = self.payment_ids.sudo().with_company(self.company_id)._create_payment_moves(is_reverse)
         if receivable_account.reconcile:
             invoice_receivables = self.account_move.line_ids.filtered(lambda line: line.account_id == receivable_account and not line.reconciled)
             if invoice_receivables:
