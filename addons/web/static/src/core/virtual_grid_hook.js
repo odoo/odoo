@@ -65,6 +65,10 @@ function getIndexes({ sizes, start, span, prevStartIndex, bufferCoef = BUFFER_CO
     if (!sizes || !sizes.length) {
         return [];
     }
+    if (sizes.at(-1) < span) {
+        // all items could be displayed
+        return [0, sizes.length - 1];
+    }
     const bufferSize = Math.round(span * bufferCoef);
     const bufferStart = start - bufferSize;
     const bufferEnd = start + span + bufferSize;
@@ -163,11 +167,13 @@ export function useVirtualGrid({ scrollableRef, initialScroll, onChange, bufferC
         setColumnsWidths(widths) {
             let acc = 0;
             current.summedColumnsWidths = widths.map((w) => (acc += w));
+            delete current.columnsIndexes;
             current.columnsIndexes = computeColumnsIndexes();
         },
         setRowsHeights(heights) {
             let acc = 0;
             current.summedRowsHeights = heights.map((h) => (acc += h));
+            delete current.rowsIndexes;
             current.rowsIndexes = computeRowsIndexes();
         },
     };
