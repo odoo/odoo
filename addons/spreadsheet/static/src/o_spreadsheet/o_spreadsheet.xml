@@ -496,7 +496,7 @@
           <span t-esc="context.functionName"/>
           (
           <t t-foreach="context.functionDescription.args" t-as="arg" t-key="arg.name">
-            <span t-if="arg_index > '0'">,&#xA0;</span>
+            <span t-if="arg_index > '0'" t-esc="formulaArgSeparator"/>
             <span t-att-class="{ 'o-formula-assistant-focus': context.argToFocus === arg_index }">
               <span>
                 <span t-if="arg.optional || arg.repeating || arg.default">[</span>
@@ -3957,7 +3957,7 @@ https://fontawesome.com/license -->
   </t>
 </odoo>
 <!--
-  __info__.version = '16.4.26';
-  __info__.date = '2024-03-15T12:11:36.358Z';
-  __info__.hash = 'b8caa0f';
+  __info__.version = '16.4.27';
+  __info__.date = '2024-03-25T11:03:57.224Z';
+  __info__.hash = '42e4252';
 -->
