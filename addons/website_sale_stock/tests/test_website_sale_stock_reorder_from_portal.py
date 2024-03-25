@@ -52,7 +52,7 @@ class TestWebsiteSaleStockReorderFromPortal(HttpCase):
                 })
             ]
         })
-        order.message_subscribe(user_admin.partner_id.ids)
+        order.message_subscribe({order.id: user_admin.partner_id.ids})
 
         cls.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': cls.available_product.id,

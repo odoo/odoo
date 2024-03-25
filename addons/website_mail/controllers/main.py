@@ -30,12 +30,12 @@ class WebsiteMail(http.Controller):
                 partner_ids = request.env['res.partner'].sudo().create({'name': name, 'email': email}).ids
         # add or remove follower
         if is_follower:
-            record.sudo().message_unsubscribe(partner_ids)
+            record.sudo().message_unsubscribe({record.id: partner_ids})
             return False
         else:
             # add partner to session
             request.session['partner_id'] = partner_ids[0]
-            record.sudo().message_subscribe(partner_ids)
+            record.sudo().message_subscribe({record.id: partner_ids})
             return True
 
     @http.route(['/website_mail/is_follower'], type='json', auth="public", website=True)

@@ -30,7 +30,7 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
         with self.assertRaises(AccessError, msg="%s should not be able to write on the project" % self.env.user.name):
             self.project_pigs.with_user(self.env.user).name = "Take over the world"
 
-        self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [self.env.user.partner_id.id]})
         with self.assertRaises(AccessError, msg="%s should not be able to write on the project" % self.env.user.name):
             self.project_pigs.with_user(self.env.user).name = "Take over the world"
 
@@ -40,7 +40,7 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
         with self.assertRaises(AccessError, msg="%s should not be able to unlink the project" % self.env.user.name):
             self.project_pigs.with_user(self.env.user).unlink()
 
-        self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [self.env.user.partner_id.id]})
         self.project_pigs.task_ids.unlink()
         with self.assertRaises(AccessError, msg="%s should not be able to unlink the project" % self.env.user.name):
             self.project_pigs.with_user(self.env.user).unlink()
@@ -53,14 +53,14 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
     @users('Portal user')
     def test_project_allowed_portal_no_read(self):
         self.project_pigs.privacy_visibility = 'portal'
-        self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [self.env.user.partner_id.id]})
         self.project_pigs.privacy_visibility = 'followers'
         with self.assertRaises(AccessError, msg="%s should not be able to read the project" % self.env.user.name):
             self.project_pigs.with_user(self.env.user).name
 
     @users('Internal user')
     def test_project_allowed_internal_read(self):
-        self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [self.env.user.partner_id.id]})
         self.project_pigs.flush_model()
         self.project_pigs.invalidate_model()
         self.project_pigs.with_user(self.env.user).name
@@ -73,14 +73,14 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
     @users('Portal user')
     def test_task_allowed_portal_no_read(self):
         self.project_pigs.privacy_visibility = 'portal'
-        self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [self.env.user.partner_id.id]})
         self.project_pigs.privacy_visibility = 'followers'
         with self.assertRaises(AccessError, msg="%s should not be able to read the task" % self.env.user.name):
             self.task.with_user(self.env.user).name
 
     @users('Internal user')
     def test_task_allowed_internal_read(self):
-        self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [self.env.user.partner_id.id]})
         self.task.flush_model()
         self.task.invalidate_model()
         self.task.with_user(self.env.user).name
@@ -90,7 +90,7 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
         with self.assertRaises(AccessError, msg="%s should not be able to write on the task" % self.env.user.name):
             self.task.with_user(self.env.user).name = "Paint the world in black & white"
 
-        self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [self.env.user.partner_id.id]})
         with self.assertRaises(AccessError, msg="%s should not be able to write on the task" % self.env.user.name):
             self.task.with_user(self.env.user).name = "Paint the world in black & white"
 
@@ -99,7 +99,7 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
         with self.assertRaises(AccessError, msg="%s should not be able to create a task" % self.env.user.name):
             self.create_task("Archive the world, it's not needed anymore")
 
-        self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [self.env.user.partner_id.id]})
         with self.assertRaises(AccessError, msg="%s should not be able to create a task" % self.env.user.name):
             self.create_task("Archive the world, it's not needed anymore")
 
@@ -108,7 +108,7 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
         with self.assertRaises(AccessError, msg="%s should not be able to unlink the task" % self.env.user.name):
             self.task.with_user(self.env.user).unlink()
 
-        self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [self.env.user.partner_id.id]})
         with self.assertRaises(AccessError, msg="%s should not be able to unlink the task" % self.env.user.name):
             self.task.with_user(self.env.user).unlink()
 
@@ -126,7 +126,7 @@ class TestCRUDVisibilityPortal(TestAccessRights):
 
     @users('Portal user')
     def test_task_allowed_portal_read(self):
-        self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [self.env.user.partner_id.id]})
         self.task.flush_model()
         self.task.invalidate_model()
         with self.assertRaises(AccessError, msg=f"{self.env.user.name} should not be able to read the task"):
@@ -149,7 +149,7 @@ class TestCRUDVisibilityEmployees(TestAccessRights):
         with self.assertRaises(AccessError, msg="%s should not be able to read the task" % self.env.user.name):
             self.task.with_user(self.env.user).name
 
-        self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [self.env.user.partner_id.id]})
         with self.assertRaises(AccessError, msg="%s should not be able to read the task" % self.env.user.name):
             self.task.with_user(self.env.user).name
 
@@ -166,46 +166,46 @@ class TestAllowedUsers(TestAccessRights):
         self.project_pigs.privacy_visibility = 'followers'
 
     def test_project_permission_added(self):
-        self.project_pigs.message_subscribe(partner_ids=[self.user.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [self.user.partner_id.id]})
         self.assertIn(self.user.partner_id, self.project_pigs.message_partner_ids)
         # Subscribing to a project should not cause subscription to existing tasks in the project.
         self.assertNotIn(self.user.partner_id, self.task.message_partner_ids)
 
     def test_project_default_permission(self):
-        self.project_pigs.message_subscribe(partner_ids=[self.user.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [self.user.partner_id.id]})
         created_task = self.create_task("Review the end of the world")
         # Subscribing to a project should cause subscription to new tasks in the project.
         self.assertIn(self.user.partner_id, created_task.message_partner_ids)
 
     def test_project_default_customer_permission(self):
         self.project_pigs.privacy_visibility = 'portal'
-        self.project_pigs.message_subscribe(partner_ids=[self.portal.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [self.portal.partner_id.id]})
         # Subscribing a default customer to a project should not cause its subscription to existing tasks in the project.
         self.assertNotIn(self.portal.partner_id, self.task.message_partner_ids)
         self.assertIn(self.portal.partner_id, self.project_pigs.message_partner_ids)
 
     def test_project_permission_removed(self):
-        self.project_pigs.message_subscribe(partner_ids=[self.user.partner_id.id])
-        self.project_pigs.message_unsubscribe(partner_ids=[self.user.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [self.user.partner_id.id]})
+        self.project_pigs.message_unsubscribe(partner_ids={self.project_pigs.id: [self.user.partner_id.id]})
         # Unsubscribing to a project should not cause unsubscription of existing tasks in the project.
         self.assertNotIn(self.user.partner_id, self.project_pigs.message_partner_ids)
 
     def test_project_specific_permission(self):
-        self.project_pigs.message_subscribe(partner_ids=[self.user.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [self.user.partner_id.id]})
         john = mail_new_test_user(self.env, 'John')
-        self.project_pigs.message_subscribe(partner_ids=[john.partner_id.id])
-        self.project_pigs.message_unsubscribe(partner_ids=[self.user.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [john.partner_id.id]})
+        self.project_pigs.message_unsubscribe(partner_ids={self.project_pigs.id: [self.user.partner_id.id]})
         # User specific subscribing to a project should not cause its subscription to existing tasks in the project.
         self.assertNotIn(john.partner_id, self.task.message_partner_ids, "John should not be allowed to read the task")
         task = self.create_task("New task")
         self.assertIn(john.partner_id, task.message_partner_ids, "John should allowed to read the task")
 
     def test_project_specific_remove_mutliple_tasks(self):
-        self.project_pigs.message_subscribe(partner_ids=[self.user.partner_id.id])
+        self.project_pigs.message_subscribe(partner_ids={self.project_pigs.id: [self.user.partner_id.id]})
         john = mail_new_test_user(self.env, 'John')
         task = self.create_task('task')
-        self.task.message_subscribe(partner_ids=[john.partner_id.id])
-        self.project_pigs.message_unsubscribe(partner_ids=[self.user.partner_id.id])
+        self.task.message_subscribe(partner_ids={self.task.id: [john.partner_id.id]})
+        self.project_pigs.message_unsubscribe(partner_ids={self.project_pigs.id: [self.user.partner_id.id]})
         self.assertIn(john.partner_id, self.task.message_partner_ids)
         self.assertNotIn(john.partner_id, task.message_partner_ids)
         # Unsubscribing to a project should not cause unsubscription of existing tasks in the project.
@@ -214,7 +214,7 @@ class TestAllowedUsers(TestAccessRights):
 
     def test_visibility_changed(self):
         self.project_pigs.privacy_visibility = 'portal'
-        self.task.message_subscribe(partner_ids=[self.portal.partner_id.id])
+        self.task.message_subscribe(partner_ids={self.task.id: [self.portal.partner_id.id]})
         self.assertNotIn(self.user.partner_id, self.task.message_partner_ids, "Internal user should have been removed from allowed users")
         self.project_pigs.write({'privacy_visibility': 'employees'})
         self.assertNotIn(self.portal.partner_id, self.task.message_partner_ids, "Portal user should have been removed from allowed users")
@@ -222,7 +222,7 @@ class TestAllowedUsers(TestAccessRights):
     def test_write_task(self):
         self.user.groups_id |= self.env.ref('project.group_project_user')
         self.assertNotIn(self.user.partner_id, self.project_pigs.message_partner_ids)
-        self.task.message_subscribe(partner_ids=[self.user.partner_id.id])
+        self.task.message_subscribe(partner_ids={self.task.id: [self.user.partner_id.id]})
         self.project_pigs.invalidate_model()
         self.task.invalidate_model()
         self.task.with_user(self.user).name = "I can edit a task!"
@@ -304,7 +304,7 @@ class TestPortalProject(TestProjectPortalCommon):
         # Do: Donovan reads project -> ko (public ko employee)
         self.assertRaises(AccessError, pigs.with_user(self.user_public).read, ['user_id'])
 
-        pigs.message_subscribe(partner_ids=[self.user_projectuser.partner_id.id])
+        pigs.message_subscribe(partner_ids={pigs.id: [self.user_projectuser.partner_id.id]})
 
         # Do: Alfred reads project -> ok (follower ok followers)
         donkey = pigs.with_user(self.user_projectuser)
@@ -318,7 +318,7 @@ class TestPortalProject(TestProjectPortalCommon):
             'name': 'Pigs task', 'project_id': pigs.id
         })
         # not follower user should not be able to create a task
-        pigs.with_user(self.user_projectuser).message_unsubscribe(partner_ids=[self.user_projectuser.partner_id.id])
+        pigs.with_user(self.user_projectuser).message_unsubscribe(partner_ids={pigs.id: [self.user_projectuser.partner_id.id]})
         self.assertRaises(AccessError, self.env['project.task'].with_user(self.user_projectuser).with_context({
             'mail_create_nolog': True}).create, {'name': 'Pigs task', 'project_id': pigs.id})
 

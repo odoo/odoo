@@ -275,7 +275,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             'default_res_model': 'mail.test.activity',
         })
 
-        with self.assertQueryCount(admin=6, employee=6):
+        with self.assertQueryCount(admin=7, employee=7):
             activity = MailActivity.create({
                 'summary': 'Test Activity',
                 'res_id': record.id,
@@ -312,7 +312,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_activity_mixin(self):
         record = self.env['mail.test.activity'].create({'name': 'Test'})
 
-        with self.assertQueryCount(admin=5, employee=5):
+        with self.assertQueryCount(admin=6, employee=6):
             activity = record.action_start('Test Start')
             # read activity_type to normalize cache between enterprise and community
             # voip module read activity_type during create leading to one less query in enterprise on action_close
@@ -338,7 +338,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             for values in self.test_attachments_vals
         ])
 
-        with self.assertQueryCount(admin=5, employee=5):
+        with self.assertQueryCount(admin=6, employee=6):
             activity = record.action_start('Test Start')
             #read activity_type to normalize cache between enterprise and community
             #voip module read activity_type during create leading to one less query in enterprise on action_close
@@ -439,7 +439,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 'default_template_id': test_template.id,
             }).create({})
 
-        with self.assertQueryCount(admin=88, employee=91), self.mock_mail_gateway():
+        with self.assertQueryCount(admin=88, employee=89), self.mock_mail_gateway():
             composer._action_send_mail()
 
         self.assertEqual(len(self._new_mails), 10)
@@ -701,10 +701,10 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
         with self.assertQueryCount(admin=6, employee=6):
-            record.message_subscribe(partner_ids=self.user_test.partner_id.ids)
+            record.message_subscribe(partner_ids={record.id: self.user_test.partner_id.ids})
 
         with self.assertQueryCount(admin=3, employee=3):
-            record.message_subscribe(partner_ids=self.user_test.partner_id.ids)
+            record.message_subscribe(partner_ids={record.id: self.user_test.partner_id.ids})
 
     @mute_logger('odoo.models.unlink')
     @users('admin', 'employee')
@@ -714,10 +714,10 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         subtype_ids = (self.env.ref('test_mail.st_mail_test_simple_external') | self.env.ref('mail.mt_comment')).ids
 
         with self.assertQueryCount(admin=5, employee=5):
-            record.message_subscribe(partner_ids=self.user_test.partner_id.ids, subtype_ids=subtype_ids)
+            record.message_subscribe(partner_ids={record.id: self.user_test.partner_id.ids}, subtype_ids=subtype_ids)
 
         with self.assertQueryCount(admin=2, employee=2):
-            record.message_subscribe(partner_ids=self.user_test.partner_id.ids, subtype_ids=subtype_ids)
+            record.message_subscribe(partner_ids={record.id: self.user_test.partner_id.ids}, subtype_ids=subtype_ids)
 
     @mute_logger('odoo.models.unlink')
     @users('admin', 'employee')
@@ -789,7 +789,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             }
             for idx in range(10)
         ])
-        cls.container.message_subscribe(cls.partners.ids, subtype_ids=[
+        cls.container.message_subscribe({cls.container.id: cls.partners.ids}, subtype_ids=[
             cls.env.ref('mail.mt_comment').id,
             cls.env.ref('test_mail.st_mail_test_container_child_full').id
         ])
@@ -873,7 +873,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @users('admin', 'employee')
     @warmup
     def test_message_post(self):
-        self.container.message_subscribe(self.user_portal.partner_id.ids)
+        self.container.message_subscribe({self.container.id: self.user_portal.partner_id.ids})
         record = self.container.with_user(self.env.user)
 
         # about 20 (19?) queries per additional customer group
@@ -890,7 +890,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @users('admin', 'employee')
     @warmup
     def test_message_post_template(self):
-        self.container.message_subscribe(self.user_portal.partner_id.ids)
+        self.container.message_subscribe({self.container.id: self.user_portal.partner_id.ids})
         record = self.container.with_user(self.env.user)
         template = self.env.ref('test_mail.mail_test_container_tpl')
 
@@ -948,7 +948,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         # subscribe new followers with forced given subtypes
         with self.assertQueryCount(admin=4, employee=4):
             rec.message_subscribe(
-                partner_ids=pids[:4],
+                partner_ids={rec.id: pids[:4]},
                 subtype_ids=subtype_ids
             )
 
@@ -957,7 +957,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         # subscribe existing and new followers with force=False, meaning only some new followers will be added
         with self.assertQueryCount(admin=5, employee=5):
             rec.message_subscribe(
-                partner_ids=pids[:6],
+                partner_ids={rec.id: pids[:6]},
                 subtype_ids=None
             )
 
@@ -966,7 +966,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         # subscribe existing and new followers with force=True, meaning all will have the same subtypes
         with self.assertQueryCount(admin=4, employee=4):
             rec.message_subscribe(
-                partner_ids=pids,
+                partner_ids={rec.id: pids},
                 subtype_ids=subtype_ids
             )
 
@@ -1005,7 +1005,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(admin=101, employee=101):
+        with self.assertQueryCount(admin=100, employee=100):
             rec = self.env['mail.test.ticket'].create({
                 'name': 'Test',
                 'container_id': container_id,
@@ -1148,7 +1148,7 @@ class TestMailFormattersPerformance(BaseMailPerformance):
             }
             for idx in range(10)
         ])
-        cls.containers.message_subscribe(cls.partners.ids, subtype_ids=[
+        cls.containers.message_subscribe({c.id: cls.partners.ids for c in cls.containers}, subtype_ids=[
             cls.env.ref('mail.mt_comment').id,
             cls.env.ref('test_mail.st_mail_test_container_child_full').id
         ])
@@ -1340,11 +1340,11 @@ class TestPerformance(BaseMailPerformance):
             'name': 'partner_follower',
             'email': 'partner_follower@example.com',
         })
-        self.record_container.message_subscribe([
+        self.record_container.message_subscribe({self.record_container.id: [
             self.partner_follower.id,
             self.user_follower_inbox.partner_id.id,
             self.user_follower_email.partner_id.id
-        ])
+        ]})
 
         # partner_ids
         self.user_inbox = self.env['res.users'].with_context(self._test_context).create({

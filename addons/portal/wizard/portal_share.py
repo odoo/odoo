@@ -109,6 +109,6 @@ class PortalShare(models.TransientModel):
 
         # subscribe all recipients so that they receive future communication (better than
         # using autofollow as more precise)
-        self.resource_ref.message_subscribe(partner_ids=self.partner_ids.ids)
+        self.resource_ref.message_subscribe(partner_ids={self.resource_ref.id: self.partner_ids.ids})
 
         return {'type': 'ir.actions.act_window_close'}

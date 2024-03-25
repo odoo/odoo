@@ -45,7 +45,7 @@ class BaseFollowersTest(MailCommon):
         test_record = self.test_record.with_user(self.user_employee)
         followed_before = test_record.search([('message_is_follower', '=', True)])
         self.assertFalse(test_record.message_is_follower)
-        test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id])
+        test_record.message_subscribe(partner_ids={test_record.id: [self.user_employee.partner_id.id]})
         followed_after = test_record.search([('message_is_follower', '=', True)])
         self.assertTrue(test_record.message_is_follower)
         self.assertEqual(followed_before | test_record, followed_after)
@@ -56,14 +56,14 @@ class BaseFollowersTest(MailCommon):
         followed_before = self.env['mail.test.simple'].search([('message_partner_ids', 'in', partner.ids)])
         self.assertFalse(partner in test_record.message_partner_ids)
         self.assertNotIn(test_record, followed_before)
-        test_record.message_subscribe(partner_ids=[partner.id])
+        test_record.message_subscribe(partner_ids={test_record.id: [partner.id]})
         followed_after = self.env['mail.test.simple'].search([('message_partner_ids', 'in', partner.ids)])
         self.assertTrue(partner in test_record.message_partner_ids)
         self.assertEqual(followed_before + test_record, followed_after)
 
     def test_field_followers(self):
         test_record = self.test_record.with_user(self.user_employee)
-        test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id, self.user_admin.partner_id.id])
+        test_record.message_subscribe(partner_ids={self.test_record.id: [self.user_employee.partner_id.id, self.user_admin.partner_id.id]})
         followers = self.env['mail.followers'].search([
             ('res_model', '=', 'mail.test.simple'),
             ('res_id', '=', test_record.id)])
@@ -72,7 +72,7 @@ class BaseFollowersTest(MailCommon):
 
     def test_followers_subtypes_default(self):
         test_record = self.test_record.with_user(self.user_employee)
-        test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id])
+        test_record.message_subscribe(partner_ids={self.test_record.id: [self.user_employee.partner_id.id]})
         self.assertEqual(test_record.message_partner_ids, self.user_employee.partner_id)
         follower = self.env['mail.followers'].search([
             ('res_model', '=', 'mail.test.simple'),
@@ -83,7 +83,7 @@ class BaseFollowersTest(MailCommon):
 
     def test_followers_subtypes_default_internal(self):
         test_record = self.test_record.with_user(self.user_employee)
-        test_record.message_subscribe(partner_ids=[self.partner_portal.id])
+        test_record.message_subscribe(partner_ids={self.test_record.id: [self.partner_portal.id]})
         self.assertEqual(test_record.message_partner_ids, self.partner_portal)
         follower = self.env['mail.followers'].search([
             ('res_model', '=', 'mail.test.simple'),
@@ -93,7 +93,7 @@ class BaseFollowersTest(MailCommon):
 
     def test_followers_subtypes_specified(self):
         test_record = self.test_record.with_user(self.user_employee)
-        test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id], subtype_ids=[self.mt_mg_nodef.id])
+        test_record.message_subscribe(partner_ids={self.test_record.id: [self.user_employee.partner_id.id]}, subtype_ids=[self.mt_mg_nodef.id])
         self.assertEqual(test_record.message_partner_ids, self.user_employee.partner_id)
         follower = self.env['mail.followers'].search([
             ('res_model', '=', 'mail.test.simple'),
@@ -105,11 +105,11 @@ class BaseFollowersTest(MailCommon):
     def test_followers_multiple_subscription_force(self):
         test_record = self.test_record.with_user(self.user_employee)
 
-        test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id])
+        test_record.message_subscribe(partner_ids={test_record.id: [self.user_admin.partner_id.id]}, subtype_ids=[self.mt_mg_nodef.id])
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
         self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef)
 
-        test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id, self.mt_al_nodef.id])
+        test_record.message_subscribe(partner_ids={test_record.id: [self.user_admin.partner_id.id]}, subtype_ids=[self.mt_mg_nodef.id, self.mt_al_nodef.id])
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
         self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
 
@@ -117,19 +117,19 @@ class BaseFollowersTest(MailCommon):
         """ Calling message_subscribe without subtypes on an existing subscription should not do anything (default < existing) """
         test_record = self.test_record.with_user(self.user_employee)
 
-        test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id, self.mt_al_nodef.id])
+        test_record.message_subscribe(partner_ids={test_record.id: [self.user_admin.partner_id.id]}, subtype_ids=[self.mt_mg_nodef.id, self.mt_al_nodef.id])
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
         self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
 
         # set new subtypes with force=False, meaning no rewriting of the subscription is done -> result should not change
-        test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
+        test_record.message_subscribe(partner_ids={test_record.id: [self.user_admin.partner_id.id]})
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
         self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
 
     def test_followers_multiple_subscription_update(self):
         """ Calling message_subscribe with subtypes on an existing subscription should replace them (new > existing) """
         test_record = self.test_record.with_user(self.user_employee)
-        test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id], subtype_ids=[self.mt_mg_def.id, self.mt_cl_def.id])
+        test_record.message_subscribe(partner_ids={test_record.id: [self.user_employee.partner_id.id]}, subtype_ids=[self.mt_mg_def.id, self.mt_cl_def.id])
         self.assertEqual(test_record.message_partner_ids, self.user_employee.partner_id)
         follower = self.env['mail.followers'].search([
             ('res_model', '=', 'mail.test.simple'),
@@ -139,7 +139,7 @@ class BaseFollowersTest(MailCommon):
         self.assertEqual(follower.subtype_ids, self.mt_mg_def | self.mt_cl_def)
 
         # remove one subtype `mt_mg_def` and set new subtype `mt_al_def`
-        test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id], subtype_ids=[self.mt_cl_def.id, self.mt_al_def.id])
+        test_record.message_subscribe(partner_ids={test_record.id: [self.user_employee.partner_id.id]}, subtype_ids=[self.mt_cl_def.id, self.mt_al_def.id])
         self.assertEqual(follower.subtype_ids, self.mt_cl_def | self.mt_al_def)
 
     @users('employee')
@@ -154,12 +154,12 @@ class BaseFollowersTest(MailCommon):
         })
         document = self.env['mail.test.simple'].browse(self.test_record.id)
         self.assertEqual(document.message_partner_ids, self.env['res.partner'])
-        document.message_subscribe(partner_ids=(self.partner_portal | customer).ids)
+        document.message_subscribe(partner_ids={document.id: (self.partner_portal | customer).ids})
         self.assertEqual(document.message_partner_ids, self.partner_portal)
         self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal)
 
         # works through low-level API
-        document._message_subscribe(partner_ids=(self.partner_portal | customer).ids)
+        document._message_subscribe(partners_mapping={document.id: (self.partner_portal | customer).ids})
         self.assertEqual(document.message_partner_ids, self.partner_portal, 'No active test: customer not visible')
         self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal | customer)
 
@@ -174,7 +174,7 @@ class BaseFollowersTest(MailCommon):
         self.assertFalse(test_record.message_partner_ids)
 
         # fillup with API
-        test_record.message_subscribe(partner_ids=partner3.ids)
+        test_record.message_subscribe(partner_ids={test_record.id: partner3.ids})
         self.assertEqual(test_record.message_follower_ids.partner_id, partner3)
         # set empty
         test_record.message_partner_ids = None
@@ -234,11 +234,11 @@ class BaseFollowersTest(MailCommon):
         })
         self.env.user.write({'company_ids': [(3, other_company.id)]})
         document = self.env['mail.test.simple'].browse(self.test_record.id)
-        document.message_subscribe(partner_ids=(self.partner_portal | private_address).ids)
+        document.message_subscribe(partner_ids={document.id: (self.partner_portal | private_address).ids})
         self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal | private_address)
 
         # works through low-level API
-        document._message_subscribe(partner_ids=(self.partner_portal | private_address).ids)
+        document._message_subscribe(partners_mapping={document.id: (self.partner_portal | private_address).ids})
         self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal | private_address)
 
     @users('employee')
@@ -254,7 +254,7 @@ class BaseFollowersTest(MailCommon):
         test_record = self.test_record
         test_record_copy = self.test_record.copy()
         test_records = test_record + test_record_copy
-        test_record.message_subscribe([self.user_employee.partner_id.id])
+        test_record.message_subscribe({test_record.id: self.user_employee.partner_id.ids})
         subscription_data = self.env['mail.followers']._get_subscription_data([(test_records._name, test_records.ids)], None)
         self.assertEqual(len(subscription_data), 1)
         self.assertEqual(subscription_data[0][1], test_record.id)
@@ -411,8 +411,8 @@ class AdvancedFollowersTest(MailCommon):
         self.assertFalse(user_root.active)
         self.assertFalse(user_root.partner_id.active)
 
-        container.message_subscribe(partner_ids=(self.partner_portal | user_root.partner_id).ids)
-        container.message_subscribe(partner_ids=self.partner_admin.ids, subtype_ids=(self.sub_comment | self.umb_autosub_nodef | self.sub_generic_int_nodef).ids)
+        container.message_subscribe(partner_ids={container.id: (self.partner_portal | user_root.partner_id).ids})
+        container.message_subscribe(partner_ids={container.id: self.partner_admin.ids}, subtype_ids=(self.sub_comment | self.umb_autosub_nodef | self.sub_generic_int_nodef).ids)
         self.assertEqual(container.message_partner_ids, self.partner_portal | self.partner_admin)
         follower_por = container.message_follower_ids.filtered(lambda f: f.partner_id == self.partner_portal)
         follower_adm = container.message_follower_ids.filtered(lambda f: f.partner_id == self.partner_admin)
@@ -450,8 +450,8 @@ class AdvancedFollowersTest(MailCommon):
         )
 
         # check portal generic subscribe
-        sub1.message_unsubscribe(partner_ids=self.partner_portal.ids)
-        sub1.message_subscribe(partner_ids=self.partner_portal.ids)
+        sub1.message_unsubscribe(partner_ids={sub1.id: self.partner_portal.ids})
+        sub1.message_subscribe(partner_ids={sub1.id: self.partner_portal.ids})
         follower_por = sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.partner_portal)
 
         self.assertEqual(
@@ -461,7 +461,7 @@ class AdvancedFollowersTest(MailCommon):
 
         # check auto subscribe as creator + auto subscribe as parent follower takes both subtypes
         container.message_subscribe(
-            partner_ids=self.user_employee.partner_id.ids,
+            partner_ids={container.id: self.user_employee.partner_id.ids},
             subtype_ids=(self.sub_comment | self.sub_generic_int_nodef | self.umb_autosub_nodef).ids)
         sub2 = self.env['mail.test.track'].with_user(self.user_employee).create({
             'name': 'Task-Like Test',
@@ -720,7 +720,7 @@ class RecipientsNotificationTest(MailCommon):
         for test_record in test_records:
             self.assertEqual(test_record.message_partner_ids, self.env.user.partner_id)
 
-        test_records[0].message_subscribe(self.partner_portal.ids)
+        test_records.message_subscribe({test_records[0].id: self.partner_portal.ids})
         self.assertNotIn(
             self.env.ref('mail.mt_note'),
             test_records[0].message_follower_ids.filtered(lambda fol: fol.partner_id == self.partner_portal).subtype_ids,
@@ -767,8 +767,8 @@ class RecipientsNotificationTest(MailCommon):
         self.assertRecipientsData(recipients_data, test_records[0], self.common_partner + self.partner_admin)
 
         # multi mode
-        test_records[1].message_subscribe(self.partner_portal.ids)
-        test_records[0:4].message_subscribe(self.common_partner.ids)
+        test_records.message_subscribe({test_records[1].id: self.partner_portal.ids})
+        test_records.message_subscribe({r.id: self.common_partner.ids for r in test_records[0:4]})
         recipients_data = self.env['mail.followers']._get_recipient_data(
             test_records, 'comment', self.env.ref('mail.mt_comment').id,
             pids=self.partner_admin.ids
@@ -817,7 +817,7 @@ class UnfollowUnreadableRecordTest(MailCommon):
             raise AccessError('Unreadable')
 
         with patch.object(self.test_record.__class__, override_check, side_effect=raise_access_error):
-            self.test_record.with_user(user).message_unsubscribe(user.partner_id.ids)
+            self.test_record.with_user(user).message_unsubscribe({self.test_record.id: user.partner_id.ids})
 
     def test_initial_data(self):
         """ Test some initial value. """
@@ -832,14 +832,14 @@ class UnfollowUnreadableRecordTest(MailCommon):
             record_portal.check_access_rule('write')
 
     def test_internal_user_can_unsubscribe_from_unreadable_record(self):
-        self.test_record._message_subscribe(partner_ids=self.partner_employee.ids)
+        self.test_record._message_subscribe(partners_mapping={self.test_record.id: self.partner_employee.ids})
 
         self.assertIn(self.partner_employee, self.test_record.message_follower_ids.mapped('partner_id'))
         self._message_unsubscribe_unreadable_record(self.user_employee)
         self.assertNotIn(self.partner_employee, self.test_record.message_follower_ids.mapped('partner_id'))
 
     def test_portal_user_cannot_unsubscribe_from_unreadable_record(self):
-        self.test_record._message_subscribe(partner_ids=self.partner_portal.ids)
+        self.test_record._message_subscribe(partners_mapping={self.test_record.id: self.partner_portal.ids})
 
         self.assertIn(self.partner_portal, self.test_record.message_follower_ids.mapped('partner_id'))
         with self.assertRaises(AccessError):
@@ -886,7 +886,7 @@ class UnfollowFromInboxTest(MailCommon):
         self.assertFalse('follower_id_by_partner_id' in messages[0])
 
         # The user follows the record
-        test_record._message_subscribe(partner_ids=self.partner_employee.ids)
+        test_record._message_subscribe(partners_mapping={test_record.id: self.partner_employee.ids})
         messages = self._fetch_inbox_message(message.id)
         self.assertEqual(len(messages), 1)
         follower_id = messages[0]['thread']['selfFollower']['id']
@@ -898,7 +898,7 @@ class UnfollowFromInboxTest(MailCommon):
         self.assertEqual(follower.partner_id, self.partner_employee)
 
         # The user doesn't follow the record anymore
-        test_record.message_unsubscribe(partner_ids=self.partner_employee.ids)
+        test_record.message_unsubscribe(partner_ids={test_record.id: self.partner_employee.ids})
         messages = self._fetch_inbox_message(message.id)
         self.assertFalse(messages[0].get('thread').get('selfFollower'))
 
@@ -970,13 +970,13 @@ class UnfollowFromEmailTest(MailCommon, HttpCase):
                 self.assertIn(partner, record.message_partner_ids)
 
         with self.subTest('Tampered partner id'):
-            record._message_subscribe(partner_ids=self.partner_admin.ids)
+            record._message_subscribe(partners_mapping={record.id: self.partner_admin.ids})
             tampered_unfollow_url = self._url_with_query_parameters_overridden(unfollow_url, pid=self.partner_admin.id)
             response = self.url_open(tampered_unfollow_url)
             self.assertEqual(response.status_code, 403)
             self.assertIn(partner, record.message_partner_ids)
             self.assertIn(self.partner_admin, record.message_partner_ids)
-            record.message_unsubscribe(partner_ids=self.partner_admin.ids)
+            record.message_unsubscribe(partner_ids={record.id: self.partner_admin.ids})
 
     def _test_unfollow_url(self, record, unfollow_url, partner):
         """ Test that the unfollow url works.
@@ -995,7 +995,7 @@ class UnfollowFromEmailTest(MailCommon, HttpCase):
                     self.assertIn("You are no longer following the document", response.text)
                     self.assertIn('o_access_record_link', response.text)
                 finally:
-                    record._message_subscribe(partner_ids=partner.ids)
+                    record._message_subscribe(partners_mapping={record.id: partner.ids})
 
     def test_initial_data(self):
         """ Test some initial value. """
@@ -1023,7 +1023,7 @@ class UnfollowFromEmailTest(MailCommon, HttpCase):
         test_record = self.test_record
 
         # Test that the user receives an unfollow URL when following the record
-        test_record._message_subscribe(partner_ids=test_partner.ids)
+        test_record._message_subscribe(partners_mapping={test_record.id: test_partner.ids})
         with self.subTest('Internal user receives unfollow URL'):
             unfollow_url = self._post_message_and_get_unfollow_urls(test_record, test_partner)[0]
             self.assertTrue(unfollow_url)
@@ -1037,7 +1037,7 @@ class UnfollowFromEmailTest(MailCommon, HttpCase):
         self._test_unfollow_url(test_record, unfollow_url, test_partner)
 
         # Test that the user doesn't receive the unfollow URL when not following the record
-        test_record.message_unsubscribe(partner_ids=test_partner.ids)
+        test_record.message_unsubscribe(partner_ids={test_record.id: test_partner.ids})
         with self.subTest('Internal user simple notification (without unfollow URL)'):
             unfollow_url = self._post_message_and_get_unfollow_urls(test_record, test_partner)[0]
             self.assertFalse(unfollow_url)
@@ -1048,7 +1048,7 @@ class UnfollowFromEmailTest(MailCommon, HttpCase):
         test_partner = self.partner_without_user
         test_record = self.test_record
 
-        test_record._message_subscribe(partner_ids=test_partner.ids)
+        test_record._message_subscribe(partners_mapping={test_record.id: test_partner.ids})
         with self.subTest('External partner must not receive an unfollow URL'):
             unfollow_url = self._post_message_and_get_unfollow_urls(test_record, test_partner)[0]
             self.assertFalse(unfollow_url)
@@ -1063,7 +1063,7 @@ class UnfollowFromEmailTest(MailCommon, HttpCase):
                                     ('Portal partner without access', self.partner_portal)):
             with self.subTest(descr):
                 # Test that the user receives an unfollow URL when following the record
-                test_record._message_subscribe(partner_ids=test_partner.ids)
+                test_record._message_subscribe(partners_mapping={test_record.id: test_partner.ids})
                 with self.subTest('External partner receives an unfollow URL'):
                     unfollow_url = self._post_message_and_get_unfollow_urls(test_record, test_partner)[0]
                     self.assertTrue(unfollow_url)
@@ -1073,7 +1073,7 @@ class UnfollowFromEmailTest(MailCommon, HttpCase):
                 self._test_tampered_unfollow_url(test_record, unfollow_url, test_partner)
 
                 # Test that the user doesn't receive the unfollow URL when not following the record
-                test_record.message_unsubscribe(partner_ids=test_partner.ids)
+                test_record.message_unsubscribe(partner_ids={test_record.id: test_partner.ids})
                 with self.subTest('External partner not following must not receive unfollow URL'):
                     unfollow_url = self._post_message_and_get_unfollow_urls(test_record, test_partner)[0]
                     self.assertFalse(unfollow_url)
@@ -1083,7 +1083,7 @@ class UnfollowFromEmailTest(MailCommon, HttpCase):
         # On a record with unfollow attribute disabled.
         test_record = self.test_record
         partners = self.partner_without_user + self.partner_portal + self.partner_employee
-        test_record._message_subscribe(partner_ids=partners.ids)
+        test_record._message_subscribe(partners_mapping={test_record.id: partners.ids})
         urls = self._post_message_and_get_unfollow_urls(test_record, partners)
         url_partner_without_user, url_partner_portal, url_employee = urls[0], urls[1], urls[2]
 
@@ -1094,7 +1094,7 @@ class UnfollowFromEmailTest(MailCommon, HttpCase):
 
         # On a record with unfollow attribute enabled.
         test_record = self.test_record_unfollow
-        test_record._message_subscribe(partner_ids=partners.ids)
+        test_record._message_subscribe(partners_mapping={test_record.id: partners.ids})
         urls = self._post_message_and_get_unfollow_urls(test_record, partners)
         url_partner_without_user, url_partner_portal, url_employee = urls[0], urls[1], urls[2]
 

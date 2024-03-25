@@ -484,6 +484,7 @@ class PurchaseOrder(models.Model):
         return {}
 
     def button_confirm(self):
+        subscribe_mapping = {}
         for order in self:
             if order.state not in ['draft', 'sent']:
                 continue
@@ -495,7 +496,9 @@ class PurchaseOrder(models.Model):
             else:
                 order.write({'state': 'to approve'})
             if order.partner_id not in order.message_partner_ids:
-                order.message_subscribe([order.partner_id.id])
+                subscribe_mapping[order.id] = [order.partner_id.id]
+        if subscribe_mapping:
+            self.message_subscribe(subscribe_mapping)
         return True
 
     def button_cancel(self):

@@ -995,7 +995,7 @@ class TestCompute(common.TransactionCase):
         internal_partner = self.env["res.users"].browse(2).partner_id
 
         obj = self.env["base.automation.lead.thread.test"].create({"name": "test"})
-        obj.message_subscribe([ext_partner.id, internal_partner.id])
+        obj.message_subscribe({obj.id: [ext_partner.id, internal_partner.id]})
 
         obj.message_post(author_id=internal_partner.id, message_type="comment", subtype_xmlid="mail.mt_comment")
         self.assertFalse(obj.active)
@@ -1050,7 +1050,7 @@ class TestCompute(common.TransactionCase):
         internal_partner = self.env["res.users"].browse(2).partner_id
 
         obj = self.env["base.automation.lead.thread.test"].create({"name": "test"})
-        obj.message_subscribe([ext_partner.id, internal_partner.id])
+        obj.message_subscribe({obj.id: [ext_partner.id, internal_partner.id]})
 
         obj.message_post(author_id=internal_partner.id, message_type="comment", subtype_xmlid="mail.mt_comment")
         self.assertFalse(obj.active)

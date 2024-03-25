@@ -351,7 +351,7 @@ class Channel(models.Model):
         self._action_unfollow(self.env.user.partner_id)
 
     def _action_unfollow(self, partner):
-        self.message_unsubscribe(partner.ids)
+        self.message_unsubscribe({c.id: partner.ids for c in self})
         member = self.env['discuss.channel.member'].search([('channel_id', '=', self.id), ('partner_id', '=', partner.id)])
         if not member:
             return True

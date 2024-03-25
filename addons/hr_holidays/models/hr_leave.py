@@ -827,11 +827,6 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             self = self.with_context(employee_id=employee_id)
         return super().onchange(values, field_names, fields_spec)
 
-    def add_follower(self, employee_id):
-        employee = self.env['hr.employee'].browse(employee_id)
-        if employee.user_id:
-            self.message_subscribe(partner_ids=employee.user_id.partner_id.ids)
-
     @api.constrains('date_from', 'date_to')
     def _check_mandatory_day(self):
         is_leave_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
@@ -886,23 +881,26 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         holidays = super(HolidaysRequest, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         holidays._check_validity()
 
-        for holiday in holidays:
-            if not self._context.get('leave_fast_create'):
+        if not self._context.get('leave_fast_create'):
+            partners_mapping = defaultdict(list)
+            for holiday in holidays:
                 # Everything that is done here must be done using sudo because we might
                 # have different create and write rights
                 # eg : holidays_user can create a leave request with validation_type = 'manager' for someone else
                 # but they can only write on it if they are leave_manager_id
                 holiday_sudo = holiday.sudo()
-                holiday_sudo.add_follower(employee_id)
+                if holiday_sudo.employee_id.user_id:
+                    partners_mapping[holiday_sudo.id] += holiday_sudo.employee_id.user_id.partner_id.ids
                 if holiday.validation_type == 'manager':
-                    holiday_sudo.message_subscribe(partner_ids=holiday.employee_id.leave_manager_id.partner_id.ids)
+                    partners_mapping[holiday_sudo.id] += holiday.employee_id.leave_manager_id.partner_id.ids
                 if holiday.validation_type == 'no_validation':
                     # Automatic validation should be done in sudo, because user might not have the rights to do it by himself
                     holiday_sudo.action_validate()
-                    holiday_sudo.message_subscribe(partner_ids=holiday._get_responsible_for_approval().partner_id.ids)
+                    partners_mapping[holiday_sudo.id] += holiday._get_responsible_for_approval().partner_id.ids
                     holiday_sudo.message_post(body=_("The time off has been automatically approved"), subtype_xmlid="mail.mt_comment") # Message from OdooBot (sudo)
                 elif not self._context.get('import_file'):
                     holiday_sudo.activity_update()
+            holidays.sudo().message_subscribe(partners_mapping)
         return holidays
 
     def write(self, values):
@@ -936,10 +934,11 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'holiday_status_id', 'employee_id']):
             self._check_validity()
         if not self.env.context.get('leave_fast_create'):
-            for holiday in self:
-                if employee_id:
-                    holiday.add_follower(employee_id)
-
+            if employee_id:
+                employee = self.env['hr.employee'].browse(employee_id)
+                if employee.user_id:
+                    partner_ids = employee.user_id.partner_id.ids
+                    self.message_subscribe(partner_ids={h.id: partner_ids for h in self})
         return result
 
     @api.ondelete(at_uninstall=False)

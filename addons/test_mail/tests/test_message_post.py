@@ -585,7 +585,7 @@ class TestMessageLog(TestMessagePostCommon):
     @users('employee')
     def test_message_log(self):
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
-        test_record.message_subscribe(self.partner_employee_2.ids)
+        test_record.message_subscribe({test_record.id: self.partner_employee_2.ids})
 
         with self.mock_mail_gateway():
             new_note = test_record._message_log(
@@ -615,7 +615,7 @@ class TestMessageLog(TestMessagePostCommon):
     @users('employee')
     def test_message_log_batch(self):
         test_records = self.test_records.with_env(self.env)
-        test_records.message_subscribe(self.partner_employee_2.ids)
+        test_records.message_subscribe({r.id: self.partner_employee_2.ids for r in test_records})
 
         with self.mock_mail_gateway():
             new_notes = test_records._message_log_batch(
@@ -651,7 +651,7 @@ class TestMessageLog(TestMessagePostCommon):
         """ Partners can be given to log, but this should not generate any
         notification. """
         test_records = self.test_records.with_env(self.env)
-        test_records.message_subscribe(self.partner_employee_2.ids)
+        test_records.message_subscribe({r.id: self.partner_employee_2.ids for r in test_records})
 
         with self.mock_mail_gateway():
             new_notes = test_records._message_log_batch(
@@ -686,7 +686,7 @@ class TestMessageLog(TestMessagePostCommon):
     @users('employee')
     def test_message_log_with_view(self):
         test_records = self.test_records.with_env(self.env)
-        test_records.message_subscribe(self.partner_employee_2.ids)
+        test_records.message_subscribe({r.id: self.partner_employee_2.ids for r in test_records})
 
         with self.mock_mail_gateway():
             new_notes = test_records._message_log_with_view(
@@ -757,7 +757,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertEqual(test_record.message_partner_ids, self.partner_employee)
 
         # subscribe partner_1, check notifications
-        test_record.message_subscribe(self.partner_1.ids)
+        test_record.message_subscribe({test_record.id: self.partner_1.ids})
         with self.assertSinglePostNotifications(
                 [{'partner': self.partner_employee_2, 'type': 'inbox'},
                  {'partner': self.partner_1, 'type': 'email'}],
@@ -834,7 +834,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                          'Real author is added in followers, not message author')
 
         # should be skipped with notifications
-        test_record.message_unsubscribe(partner_ids=self.partner_employee.ids)
+        test_record.message_unsubscribe(partner_ids={test_record.id: self.partner_employee.ids})
         _new_message = test_record.message_post(
             author_id=self.partner_employee_2.id,
             body='Body',
@@ -915,7 +915,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
     def test_message_post_inactive_follower(self):
         """ Test posting with inactive followers does not notify them (e.g. odoobot) """
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
-        test_record._message_subscribe(self.user_employee_2.partner_id.ids)
+        test_record._message_subscribe({test_record.id: self.user_employee_2.partner_id.ids})
         self.user_employee_2.write({'active': False})
         self.partner_employee_2.write({'active': False})
 
@@ -930,7 +930,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
     @users('employee')
     def test_message_post_keep_emails(self):
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
-        test_record.message_subscribe(partner_ids=self.partner_employee_2.ids)
+        test_record.message_subscribe(partner_ids={test_record.id: self.partner_employee_2.ids})
 
         with self.mock_mail_gateway(mail_unlink_sent=True):
             msg = test_record.message_post(
@@ -1054,7 +1054,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.user_admin.write({'notification_type': 'inbox'})
 
         test_record = self.test_record.with_env(self.env)
-        test_record.message_subscribe((self.partner_1 | self.partner_admin).ids)
+        test_record.message_subscribe({test_record.id: (self.partner_1 | self.partner_admin).ids})
 
         with self.mock_datetime_and_now(now), \
              self.assertMsgWithoutNotifications(), \
@@ -1130,7 +1130,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.user_admin.write({'notification_type': 'inbox'})
 
         test_record = self.test_record.with_env(self.env)
-        test_record.message_subscribe((self.partner_1 | self.partner_admin).ids)
+        test_record.message_subscribe({test_record.id: (self.partner_1 | self.partner_admin).ids})
 
         with freeze_time(now), \
              self.assertMsgWithoutNotifications():
@@ -1304,7 +1304,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.mail.models.mail_mail')
     def test_portal_acls(self):
-        self.test_record.message_subscribe((self.partner_1 | self.user_employee.partner_id).ids)
+        self.test_record.message_subscribe({self.test_record.id: (self.partner_1 | self.user_employee.partner_id).ids})
 
         with self.assertPostNotifications(
                 [{'content': '<p>Test</p>', 'notif': [
@@ -1394,7 +1394,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
     def test_post_internal(self):
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
 
-        test_record.message_subscribe([self.user_admin.partner_id.id])
+        test_record.message_subscribe({test_record.id: self.user_admin.partner_id.ids})
         with self.mock_mail_gateway():
             msg = test_record.message_post(
                 body='My Body',
@@ -1529,8 +1529,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
     def test_message_mail_with_view(self):
         """ Test sending a mass mailing on documents based on a view """
         test_records = self.test_records.with_env(self.env)
-        for test_record in test_records:
-            test_record.message_subscribe(test_record.customer_id.ids)
+        test_records.message_subscribe({r.id: r.customer_id.ids for r in test_records})
 
         with self.mock_mail_gateway():
             new_mails = test_records.message_mail_with_source(
@@ -1583,7 +1582,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
     def test_message_post_with_template(self):
         """ Test posting on a document based on a template content """
         test_record = self.test_records.with_env(self.env)[0]
-        test_record.message_subscribe(test_record.customer_id.ids)
+        test_record.message_subscribe({test_record.id: test_record.customer_id.ids})
         test_template = self.test_template.with_env(self.env)
         with self.mock_mail_gateway():
             new_message = test_record.with_user(self.user_employee).message_post_with_source(
@@ -1627,7 +1626,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
     def test_message_post_with_template_defaults(self):
         """ Test default values, notably subtype being a comment """
         test_record = self.test_records.with_env(self.env)[0]
-        test_record.message_subscribe(test_record.customer_id.ids)
+        test_record.message_subscribe({test_record.id: test_record.customer_id.ids})
         test_template = self.test_template.with_env(self.env)
         with self.mock_mail_gateway():
             new_message = test_record.with_user(self.user_employee).message_post_with_source(
@@ -1666,7 +1665,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
     def test_message_post_with_view(self):
         """ Test posting on documents based on a view """
         test_record = self.test_records.with_env(self.env)[0]
-        test_record.message_subscribe(test_record.customer_id.ids)
+        test_record.message_subscribe({test_record.id: test_record.customer_id.ids})
 
         with self.mock_mail_gateway():
             new_message = test_record.message_post_with_source(
@@ -1700,7 +1699,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
     def test_message_post_with_view_defaults(self):
         """ Test posting on documents based on a view, check default values """
         test_record = self.test_records.with_env(self.env)[0]
-        test_record.message_subscribe(test_record.customer_id.ids)
+        test_record.message_subscribe({test_record.id: test_record.customer_id.ids})
 
         # defaults is a note, take into account specified recipients
         with self.mock_mail_gateway():
@@ -1914,7 +1913,7 @@ class TestMessagePostLang(MailCommon, TestRecipients):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_layout_email_lang_context(self):
         test_records = self.test_records.with_user(self.env.user).with_context(lang='es_ES')
-        test_records[1].message_subscribe(self.partner_2.ids)
+        test_records.message_subscribe({test_records[1].id: self.partner_2.ids})
 
         with self.mock_mail_gateway():
             test_records[1].message_post(
@@ -2027,7 +2026,7 @@ class TestMessagePostLang(MailCommon, TestRecipients):
           * partner2: en
         """
         test_records = self.test_records.with_env(self.env)
-        test_records.message_subscribe(partner_ids=(self.partner_1 + self.partner_2).ids)
+        test_records.message_subscribe(partner_ids={r.id: (self.partner_1 + self.partner_2).ids for r in test_records})
 
         for employee_lang, email_layout_xmlid in product(
             ('en_US', 'es_ES'),

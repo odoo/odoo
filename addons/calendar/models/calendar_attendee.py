@@ -77,19 +77,21 @@ class Attendee(models.Model):
         raise UserError(_('You cannot duplicate a calendar attendee.'))
 
     def _subscribe_partner(self):
-        mapped_followers = defaultdict(lambda: self.env['calendar.event'])
+        partners_mapping = defaultdict(list)
         for event in self.event_id:
             partners = (event.attendee_ids & self).partner_id - event.message_partner_ids
             # current user is automatically added as followers, don't add it twice.
             partners -= self.env.user.partner_id
-            mapped_followers[partners] |= event
-        for partners, events in mapped_followers.items():
-            events.message_subscribe(partner_ids=partners.ids)
+            partners_mapping[event.id] += partners.ids
+        self.event_id.message_subscribe(partner_ids=partners_mapping)
 
     def _unsubscribe_partner(self):
+        unsubscribe_mapping = {}
         for event in self.event_id:
             partners = (event.attendee_ids & self).partner_id & event.message_partner_ids
-            event.message_unsubscribe(partner_ids=partners.ids)
+            unsubscribe_mapping[event.id] = partners.ids
+        if unsubscribe_mapping:
+            self.env['calendar.event'].message_unsubscribe(unsubscribe_mapping)
 
     def _send_invitation_emails(self):
         """ Hook to be able to override the invitation email sending process.

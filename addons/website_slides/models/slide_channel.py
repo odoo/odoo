@@ -948,12 +948,11 @@ class Channel(models.Model):
         if member_status == 'joined':
             result_channel_partners_map = defaultdict(list)
             for channel_partner in result_channel_partners:
-                result_channel_partners_map[channel_partner.channel_id].append(channel_partner.partner_id.id)
-            for channel, partner_ids in result_channel_partners_map.items():
-                channel.message_subscribe(
-                    partner_ids=partner_ids,
-                    subtype_ids=[self.env.ref('website_slides.mt_channel_slide_published').id]
-                )
+                result_channel_partners_map[channel_partner.channel_id.id].append(channel_partner.partner_id.id)
+            self.message_subscribe(
+                partner_ids=result_channel_partners_map,
+                subtype_ids=[self.env.ref('website_slides.mt_channel_slide_published').id]
+            )
         return result_channel_partners
 
     def _filter_add_members(self, target_partners, raise_on_access=False):
@@ -1032,7 +1031,7 @@ class Channel(models.Model):
                  ('channel_id', '=', channel.id)]
             ])
 
-        self.message_unsubscribe(partner_ids=partner_ids)
+        self.message_unsubscribe(partner_ids={c.id: partner_ids for c in self})
         if removed_channel_partner_domain:
             removed_channel_partner = self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain)
             if removed_channel_partner:

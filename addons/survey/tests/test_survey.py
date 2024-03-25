@@ -685,7 +685,7 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
         survey_participation_subtype = self.env.ref('survey.mt_survey_survey_user_input_completed')
         user_input_participation_subtype = self.env.ref('survey.mt_survey_user_input_completed')
         # Make survey_user (group_survey_user) follow participation to survey (they follow), not survey 2 (no followers)
-        self.survey.message_subscribe(partner_ids=self.survey_user.partner_id.ids, subtype_ids=survey_participation_subtype.ids)
+        self.survey.message_subscribe(partner_ids={self.survey.id: self.survey_user.partner_id.ids}, subtype_ids=survey_participation_subtype.ids)
         # Complete a participation for both surveys, only one should trigger a notification for followers
         user_inputs = self.env['survey.user_input'].create([{'survey_id': survey.id} for survey in (self.survey, survey_2)])
         with self.mock_mail_app():

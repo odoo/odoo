@@ -4172,12 +4172,9 @@ class AccountMove(models.Model):
         draft_reverse_moves.reversed_entry_id._reconcile_reversed_moves(draft_reverse_moves, self._context.get('move_reverse_cancel', False))
         to_post.line_ids._reconcile_marked()
 
-        for invoice in to_post:
-            invoice.message_subscribe([
-                p.id
-                for p in [invoice.partner_id]
-                if p not in invoice.sudo().message_partner_ids
-            ])
+        to_post.message_subscribe({
+            i.id: [i.partner_id.id] for i in to_post.sudo() if i.partner_id not in i.message_partner_ids
+        })
 
         customer_count, supplier_count = defaultdict(int), defaultdict(int)
         for invoice in to_post:
@@ -4960,7 +4957,7 @@ class AccountMove(models.Model):
 
         # Assign followers.
         all_followers_ids = set(partner.id for partner in followers + senders + partners if is_internal_partner(partner))
-        move.message_subscribe(list(all_followers_ids))
+        move.message_subscribe({move.id: list(all_followers_ids)})
         return move
 
     def _message_post_after_hook(self, new_message, message_values):

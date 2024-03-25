@@ -211,8 +211,7 @@ class Challenge(models.Model):
 
         if vals.get('report_message_frequency', 'never') != 'never':
             # _recompute_challenge_users do not set users for challenges with no reports, subscribing them now
-            for challenge in self:
-                challenge.message_subscribe([user.partner_id.id for user in challenge.user_ids])
+            self.message_subscribe({challenge.id: challenge.user_ids.partner_id.ids for challenge in self})
 
         if vals.get('state') == 'inprogress':
             self._recompute_challenge_users()

@@ -9,6 +9,7 @@ import email
 import email.policy
 import hashlib
 import hmac
+import itertools
 import json
 import lxml
 import logging
@@ -17,7 +18,7 @@ import re
 import time
 import threading
 
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 from email.message import EmailMessage
 from email import message_from_string
 from lxml import etree
@@ -122,15 +123,23 @@ class MailThread(models.AbstractModel):
             thread.message_partner_ids = thread.message_follower_ids.mapped('partner_id')
 
     def _inverse_message_partner_ids(self):
+        subscribe_mapping = {}
+        unsubscribe_mapping = {}
+
         for thread in self:
-            new_partners_ids = thread.message_partner_ids
-            previous_partners_ids = thread.message_follower_ids.partner_id
-            removed_partners_ids = previous_partners_ids - new_partners_ids
-            added_patners_ids = new_partners_ids - previous_partners_ids
-            if added_patners_ids:
-                thread.message_subscribe(added_patners_ids.ids)
-            if removed_partners_ids:
-                thread.message_unsubscribe(removed_partners_ids.ids)
+            new_partners = thread.message_partner_ids
+            previous_partners = thread.message_follower_ids.partner_id
+            removed_partners = previous_partners - new_partners
+            added_patners = new_partners - previous_partners
+            if added_patners:
+                subscribe_mapping[thread.id] = added_patners.ids
+            if removed_partners:
+                unsubscribe_mapping[thread.id] = removed_partners.ids
+
+        if subscribe_mapping:
+            self.message_subscribe(subscribe_mapping)
+        if unsubscribe_mapping:
+            self.message_unsubscribe(unsubscribe_mapping)
 
     @api.model
     def _search_message_partner_ids(self, operator, operand):
@@ -261,9 +270,9 @@ class MailThread(models.AbstractModel):
         threads = super(MailThread, self).create(vals_list)
         # subscribe uid unless asked not to
         if not self._context.get('mail_create_nosubscribe') and threads and self.env.user.active:
+            partners_mapping = {t.id: self.env.user.partner_id.ids for t in threads}
             self.env['mail.followers']._insert_followers(
-                threads._name, threads.ids,
-                self.env.user.partner_id.ids, subtypes=None,
+                threads._name, partners_mapping, subtypes=None,
                 customer_ids=[],
                 check_existing=False
             )
@@ -2123,7 +2132,7 @@ class MailThread(models.AbstractModel):
 
         # automatically subscribe recipients if asked to
         if self._context.get('mail_post_autofollow') and partner_ids:
-            self.message_subscribe(partner_ids=list(partner_ids))
+            self.message_subscribe(partner_ids={r.id: list(partner_ids) for r in self})
 
         msg_values = dict(msg_kwargs)
         if 'email_add_signature' not in msg_values:
@@ -2184,7 +2193,7 @@ class MailThread(models.AbstractModel):
                 if author.active:
                     real_author_id = author.id
             if real_author_id:
-                self._message_subscribe(partner_ids=[real_author_id])
+                self._message_subscribe(partners_mapping={r.id: [real_author_id] for r in self})
 
         self._message_post_after_hook(new_message, msg_values)
         self._notify_thread(new_message, msg_values, **notif_kwargs)
@@ -4124,30 +4133,61 @@ class MailThread(models.AbstractModel):
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         """ Main public API to add followers to a record set. Its main purpose is
         to perform access rights checks before calling ``_message_subscribe``. """
-        if not self or not partner_ids:
+        if not partner_ids:
             return True
 
-        partner_ids = partner_ids or []
-        adding_current = set(partner_ids) == set([self.env.user.partner_id.id])
-        customer_ids = [] if adding_current else None
-
-        if partner_ids and adding_current:
-            try:
-                self.check_access_rights('read')
-                self.check_access_rule('read')
-            except exceptions.AccessError:
-                return False
+        if isinstance(partner_ids, (list, tuple)):
+            _logger.warning("message_subscribe now expects a dict mapping res_id:partner_ids instead of a simple partner_ids list", stack_info=True)
+            if not self:
+                return True
+            mapping = {record.id: partner_ids for record in self}
         else:
-            self.check_access_rights('write')
-            self.check_access_rule('write')
+            mapping = {record_id: pids or [] for record_id, pids in partner_ids.items()}
 
         # filter inactive and private addresses
-        if partner_ids and not adding_current:
-            partner_ids = self.env['res.partner'].sudo().search([('id', 'in', partner_ids), ('active', '=', True)]).ids
+        all_partner_ids = list(set(itertools.chain.from_iterable(mapping.values())))
+        all_partner_ids = self.env['res.partner'].sudo().search([('id', 'in', all_partner_ids), ('active', '=', True)]).ids
+        all_partner_set = set(all_partner_ids)
 
-        return self._message_subscribe(partner_ids, subtype_ids, customer_ids=customer_ids)
+        record_ids_to_check_read = []
+        record_ids_to_check_write = []
 
-    def _message_subscribe(self, partner_ids=None, subtype_ids=None, customer_ids=None):
+        mapping_adding_current = {}
+        mapping_not_adding_current = {}
+
+        current_user_partner_set = set([self.env.user.partner_id.id])
+        for record_id, pids in mapping.items():
+            adding_current = set(pids) == current_user_partner_set
+            pids = list(all_partner_set.intersection(pids))
+            if adding_current:
+                mapping_adding_current[record_id] = pids
+            else:
+                mapping_not_adding_current[record_id] = pids
+
+            if pids and adding_current:
+                record_ids_to_check_read.append(record_id)
+            else:
+                record_ids_to_check_write.append(record_id)
+
+        if record_ids_to_check_read:
+            try:
+                records_to_check_read = self.env[self._name].browse(record_ids_to_check_read)
+                records_to_check_read.check_access_rights('read')
+                records_to_check_read.check_access_rule('read')
+            except exceptions.AccessError:
+                return False
+        if record_ids_to_check_write:
+            records_to_check_write = self.env[self._name].browse(record_ids_to_check_write)
+            records_to_check_write.check_access_rights('write')
+            records_to_check_write.check_access_rule('write')
+
+        if mapping_adding_current:
+            self._message_subscribe(mapping_adding_current, subtype_ids, customer_ids=[])
+        if mapping_not_adding_current:
+            self._message_subscribe(mapping_not_adding_current, subtype_ids, customer_ids=None)
+        return True
+
+    def _message_subscribe(self, partners_mapping=None, subtype_ids=None, customer_ids=None):
         """ Main private API to add followers to a record set. This method adds
         partners and channels, given their IDs, as followers of all records
         contained in the record set.
@@ -4160,20 +4200,20 @@ class MailThread(models.AbstractModel):
         ``message_subscribe`` public API when not sure about access rights.
 
         :param customer_ids: see ``_insert_followers`` """
-        if not self:
+        if not partners_mapping:
             return True
 
         if not subtype_ids:
             self.env['mail.followers']._insert_followers(
-                self._name, self.ids,
-                partner_ids, subtypes=None,
+                self._name, partners_mapping,
+                subtypes=None,
                 customer_ids=customer_ids, check_existing=True, existing_policy='skip')
         else:
+            all_partner_ids = list(set(itertools.chain.from_iterable(partners_mapping.values())))
             self.env['mail.followers']._insert_followers(
-                self._name, self.ids,
-                partner_ids, subtypes=dict((pid, subtype_ids) for pid in partner_ids),
+                self._name, partners_mapping,
+                subtypes=dict((pid, subtype_ids) for pid in all_partner_ids),
                 customer_ids=customer_ids, check_existing=True, existing_policy='replace')
-
         return True
 
     def message_unsubscribe(self, partner_ids=None):
@@ -4181,20 +4221,51 @@ class MailThread(models.AbstractModel):
         # not necessary for computation, but saves an access right check
         if not partner_ids:
             return True
+
+        if isinstance(partner_ids, (list, tuple)):
+            _logger.warning("message_unsubscribe now expects a dict mapping res_id:partner_ids instead of a simple partner_ids list", stack_info=True)
+            mapping = {record.id: partner_ids for record in self}
+        else:
+            mapping = {record_id: pids or [] for record_id, pids in partner_ids.items()}
+
         # To support unfollowing a document in the inbox no matter the current
         # company, we allow internal users to unsubscribe themselves without
         # checking any rights.
-        if set(partner_ids) != {self.env.user.partner_id.id}:
-            self.check_access_rights('write')
-            self.check_access_rule('write')
-        elif not self.env.user._is_internal():
-            self.check_access_rights('read')
-            self.check_access_rule('read')
-        self.env['mail.followers'].sudo().search([
-            ('res_model', '=', self._name),
-            ('res_id', 'in', self.ids),
-            ('partner_id', 'in', partner_ids),
-        ]).unlink()
+        record_ids_to_check_read = []
+        record_ids_to_check_write = []
+
+        not_internal = not self.env.user._is_internal()
+        for record_id, pids in mapping.items():
+            if set(pids) != {self.env.user.partner_id.id}:
+                record_ids_to_check_write.append(record_id)
+            elif not_internal:
+                record_ids_to_check_read.append(record_id)
+        if record_ids_to_check_read:
+            records_to_check_read = self.env[self._name].browse(record_ids_to_check_read)
+            records_to_check_read.check_access_rights('read')
+            records_to_check_read.check_access_rule('read')
+        if record_ids_to_check_write:
+            records_to_check_write = self.env[self._name].browse(record_ids_to_check_write)
+            records_to_check_write.check_access_rights('write')
+            records_to_check_write.check_access_rule('write')
+
+        # Regroup records on which we remove the same followers
+        res_ids_by_partners = defaultdict(list)
+        for res_id, pids in mapping.items():
+            if not pids:
+                continue
+            res_ids_by_partners[frozenset(pids)].append(res_id)
+
+        domain = expression.AND([
+            [('res_model', '=', self._name)],
+            expression.OR([
+                [
+                    ('res_id', 'in', res_ids),
+                    ('partner_id', 'in', list(partner_ids)),
+                ] for partner_ids, res_ids in res_ids_by_partners.items()
+            ])
+        ])
+        self.env['mail.followers'].sudo().search(domain).unlink()
 
     def _message_auto_subscribe_followers(self, updated_values, default_subtype_ids):
         """ Optional method to override in addons inheriting from mail.thread.
@@ -4323,9 +4394,9 @@ class MailThread(models.AbstractModel):
                 lang = partner.lang if partner else None
                 notify_data.setdefault((template, lang), list()).append(partner_id)
 
+        partners_mapping = {r.id: list(new_partner_subtypes) for r in self}
         self.env['mail.followers']._insert_followers(
-            self._name, self.ids,
-            list(new_partner_subtypes), subtypes=new_partner_subtypes,
+            self._name, partners_mapping, subtypes=new_partner_subtypes,
             check_existing=True, existing_policy=followers_existing_policy)
 
         # notify people from auto subscription, for example like assignation

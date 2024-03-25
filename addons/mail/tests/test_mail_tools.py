@@ -84,13 +84,13 @@ class TestMailTools(MailCommon):
             'email': self._test_email,
             'name': 'Duplicated, follower of record',
         })
-        linked_record.message_subscribe(partner_ids=follower_partner.ids)
+        linked_record.message_subscribe(partner_ids={r.id: follower_partner.ids for r in linked_record})
         test_partner = self.test_partner.with_env(self.env)
 
         # standard test, no multi-email, to assert base behavior
         sources = [(self._test_email, True), (self._test_email, False),]
-        expected = [follower_partner, test_partner]
-        for (source, follower_check), expected in zip(sources, expected):
+        expecteds = [follower_partner, test_partner]
+        for (source, follower_check), expected in zip(sources, expecteds):
             with self.subTest(source=source, follower_check=follower_check):
                 partner = self.env['res.partner']._mail_find_partner_from_emails(
                     [source], records=linked_record if follower_check else None

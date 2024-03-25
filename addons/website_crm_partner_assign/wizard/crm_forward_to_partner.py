@@ -85,6 +85,7 @@ class CrmLeadForwardToPartner(models.TransientModel):
                 else:
                     partners_leads[partner.id] = {'partner': partner, 'leads': [lead_details]}
 
+        partners_mapping = {}
         for partner_id, partner_leads in partners_leads.items():
             in_portal = False
             if portal_group:
@@ -100,7 +101,9 @@ class CrmLeadForwardToPartner(models.TransientModel):
                 leads |= lead_data['lead_id']
             values = {'partner_assigned_id': partner_id, 'user_id': partner_leads['partner'].user_id.id}
             leads.with_context(mail_auto_subscribe_no_notify=1).write(values)
-            self.env['crm.lead'].message_subscribe([partner_id])
+            partners_mapping.update({l.id: [partner_id] for l in leads})
+        if partners_mapping:
+            self.env['crm.lead'].message_subscribe(partners_mapping)
         return True
 
     def get_lead_portal_url(self, lead):

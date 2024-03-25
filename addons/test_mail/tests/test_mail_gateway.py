@@ -386,16 +386,16 @@ class TestMailgateway(MailCommon):
 
         self.format_and_process(MAIL_TEMPLATE, from_1.email_formatted, f'groups@{self.alias_domain}')
         self.assertEqual(self.test_record.message_ids[0].author_id, from_1)
-        self.test_record.message_unsubscribe([from_1.id])
+        self.test_record.message_unsubscribe({self.test_record.id: [from_1.id]})
 
         from_2 = mail_new_test_user(self.env, login='B', groups='base.group_user', name='User Denisse', email='from.test@example.com')
 
         self.format_and_process(MAIL_TEMPLATE, from_1.email_formatted, f'groups@{self.alias_domain}')
         self.assertEqual(self.test_record.message_ids[0].author_id, from_2.partner_id)
-        self.test_record.message_unsubscribe([from_2.partner_id.id])
+        self.test_record.message_unsubscribe({self.test_record.id: [from_2.partner_id.id]})
 
         from_3 = self.env['res.partner'].create({'name': 'FOllower Denisse', 'email': 'from.test@example.com'})
-        self.test_record.message_subscribe([from_3.id])
+        self.test_record.message_subscribe({self.test_record.id: [from_3.id]})
 
         self.format_and_process(MAIL_TEMPLATE, from_1.email_formatted, f'groups@{self.alias_domain}')
         self.assertEqual(self.test_record.message_ids[0].author_id, from_3)
@@ -438,7 +438,7 @@ class TestMailgateway(MailCommon):
             'alias_name': 'author-partner',
         })
 
-        test_record.message_subscribe((author_partner | self.user_employee.partner_id).ids)
+        test_record.message_subscribe({test_record.id: (author_partner | self.user_employee.partner_id).ids})
 
         messages = test_record.message_ids
 
@@ -688,7 +688,7 @@ class TestMailgateway(MailCommon):
             'alias_parent_model_id': self.env['ir.model']._get('mail.test.gateway').id,
             'alias_parent_thread_id': self.test_record.id,
         })
-        self.test_record.message_subscribe(partner_ids=[self.partner_1.id])
+        self.test_record.message_subscribe(partner_ids={self.test_record.id: [self.partner_1.id]})
         record = self.format_and_process(MAIL_TEMPLATE, self.partner_1.email_formatted, f'groups@{self.alias_domain}')
 
         # Test: one group created by Raoul (or Sylvie maybe, if we implement it)
@@ -704,7 +704,7 @@ class TestMailgateway(MailCommon):
             'alias_parent_model_id': self.env['ir.model']._get('mail.test.gateway').id,
             'alias_parent_thread_id': self.test_record.id,
         })
-        self.test_record.message_subscribe(partner_ids=[self.partner_1.id])
+        self.test_record.message_subscribe(partner_ids={self.test_record.id: [self.partner_1.id]})
         email_from = formataddr(("Another Name", self.partner_1.email_normalized))
 
         for partner_email, passed in [
@@ -732,7 +732,7 @@ class TestMailgateway(MailCommon):
         """ Incoming email update discussion + notification email """
         self.alias.write({'alias_force_thread_id': self.test_record.id})
 
-        self.test_record.message_subscribe(partner_ids=[self.partner_1.id])
+        self.test_record.message_subscribe(partner_ids={self.test_record.id: [self.partner_1.id]})
         with self.mock_mail_gateway():
             record = self.format_and_process(
                 MAIL_TEMPLATE, self.email_from, f'groups@{self.alias_domain}',
@@ -796,7 +796,7 @@ class TestMailgateway(MailCommon):
             'alias_parent_thread_id': self.test_record.id,
         })
         follower_user = mail_new_test_user(self.env, login='better', groups='base.group_user', name='Ernest Follower', email=self.user_employee.email)
-        self.test_record.message_subscribe(follower_user.partner_id.ids)
+        self.test_record.message_subscribe({self.test_record.id: follower_user.partner_id.ids})
 
         record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_formatted, f'groups@{self.alias_domain}', subject='FollowerWinner')
         self.assertEqual(record.create_uid, follower_user)
@@ -805,7 +805,7 @@ class TestMailgateway(MailCommon):
         self.assertEqual(record.message_ids[0].author_id, follower_user.partner_id)
 
         # name order win
-        self.test_record.message_unsubscribe(follower_user.partner_id.ids)
+        self.test_record.message_unsubscribe({self.test_record.id: follower_user.partner_id.ids})
         self.test_record.flush_recordset()
         record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_formatted, f'groups@{self.alias_domain}', subject='FirstFoundWinner')
         self.assertEqual(record.create_uid, self.user_employee)

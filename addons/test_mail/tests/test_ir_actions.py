@@ -52,7 +52,7 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         self.assertFalse(self.test_partner.message_partner_ids)
 
     def test_action_followers(self):
-        self.test_partner.message_unsubscribe(self.test_partner.message_partner_ids.ids)
+        self.test_partner.message_unsubscribe({self.test_partner.id: self.test_partner.message_partner_ids.ids})
         random_partner = self.env['res.partner'].create({'name': 'Thierry Wololo'})
         self.action.write({
             'state': 'followers',

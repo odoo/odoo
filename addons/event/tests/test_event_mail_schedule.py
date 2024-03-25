@@ -356,8 +356,8 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
             }),
         ]})
         self.env.invalidate_all()
-        # com 148, event 99
-        with self.assertQueryCount(153), \
+        # com 148, event 134
+        with self.assertQueryCount(149), \
              self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
              self.mock_mail_gateway():
             _new = self.env['event.registration'].create([

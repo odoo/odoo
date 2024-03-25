@@ -331,6 +331,7 @@ class Followers(models.Model):
 
         return doc_infos
 
+    @api.model
     def _get_subscription_data(self, doc_data, pids, include_pshare=False, include_active=False):
         """ Private method allowing to fetch follower data from several documents of a given model.
         Followers can be filtered given partner IDs and channel IDs.
@@ -387,8 +388,7 @@ GROUP BY fol.id%s%s""" % (
     # Private tools methods to generate new subscription
     # --------------------------------------------------
 
-    def _insert_followers(self, res_model, res_ids,
-                          partner_ids, subtypes=None,
+    def _insert_followers(self, res_model, partners_mapping, subtypes=None,
                           customer_ids=None, check_existing=True, existing_policy='skip'):
         """ Main internal method allowing to create or update followers for documents, given a
         res_model and the document res_ids. This method does not handle access rights. This is the
@@ -402,14 +402,13 @@ GROUP BY fol.id%s%s""" % (
         sudo_self = self.sudo().with_context(default_partner_id=False)
         if not subtypes:  # no subtypes -> default computation, no force, skip existing
             new, upd = self._add_default_followers(
-                res_model, res_ids, partner_ids,
+                res_model, partners_mapping,
                 customer_ids=customer_ids,
                 check_existing=check_existing,
                 existing_policy=existing_policy)
         else:
             new, upd = self._add_followers(
-                res_model, res_ids,
-                partner_ids, subtypes,
+                res_model, partners_mapping, subtypes,
                 check_existing=check_existing,
                 existing_policy=existing_policy)
         if new:
@@ -421,7 +420,7 @@ GROUP BY fol.id%s%s""" % (
         for fol_id, values in upd.items():
             sudo_self.browse(fol_id).write(values)
 
-    def _add_default_followers(self, res_model, res_ids, partner_ids, customer_ids=None,
+    def _add_default_followers(self, res_model, partners_mapping, customer_ids=None,
                                check_existing=True, existing_policy='skip'):
         """ Shortcut to ``_add_followers`` that computes default subtypes. Existing
         followers are skipped as their subscription is considered as more important
@@ -435,18 +434,20 @@ GROUP BY fol.id%s%s""" % (
 
         :return: see ``_add_followers``
         """
-        if not partner_ids:
+        if not partners_mapping:
             return dict(), dict()
 
         default, _, external = self.env['mail.message.subtype'].default_subtypes(res_model)
-        if partner_ids and customer_ids is None:
-            customer_ids = self.env['res.partner'].sudo().search([('id', 'in', partner_ids), ('partner_share', '=', True)]).ids
 
-        p_stypes = dict((pid, external.ids if pid in customer_ids else default.ids) for pid in partner_ids)
+        all_partner_ids = list(set(itertools.chain.from_iterable(partners_mapping.values())))
+        if all_partner_ids and customer_ids is None:
+            customer_ids = self.env['res.partner'].sudo().search([('id', 'in', all_partner_ids), ('partner_share', '=', True)]).ids
 
-        return self._add_followers(res_model, res_ids, partner_ids, p_stypes, check_existing=check_existing, existing_policy=existing_policy)
+        p_stypes = dict((pid, external.ids if pid in customer_ids else default.ids) for pid in all_partner_ids)
 
-    def _add_followers(self, res_model, res_ids, partner_ids, subtypes,
+        return self._add_followers(res_model, partners_mapping, p_stypes, check_existing=check_existing, existing_policy=existing_policy)
+
+    def _add_followers(self, res_model, partners_mapping, subtypes,
                        check_existing=False, existing_policy='skip'):
         """ Internal method that generates values to insert or update followers. Callers have to
         handle the result, for example by making a valid ORM command, inserting or updating directly
@@ -475,39 +476,49 @@ GROUP BY fol.id%s%s""" % (
           * replace: replace existing with new subtypes (like force without old / new follower);
           * update: gives an update dict allowing to add missing subtypes (no subtype removal);
         """
-        _res_ids = res_ids or [0]
-        data_fols, doc_pids = dict(), dict((i, set()) for i in _res_ids)
 
-        if check_existing and res_ids:
-            for fid, rid, pid, sids in self._get_subscription_data([(res_model, res_ids)], partner_ids or None):
-                if existing_policy != 'force':
-                    if pid:
-                        doc_pids[rid].add(pid)
-                data_fols[fid] = (rid, pid, sids)
-
-            if existing_policy == 'force':
-                self.sudo().browse(data_fols.keys()).unlink()
+        # Regroup records on which we add the same followers
+        res_ids_by_partners = defaultdict(list)
+        for res_id, partner_ids in partners_mapping.items():
+            if not partner_ids:
+                continue
+            res_ids_by_partners[frozenset(partner_ids)].append(res_id)
 
         new, update = dict(), dict()
-        for res_id in _res_ids:
-            for partner_id in set(partner_ids or []):
-                if partner_id not in doc_pids[res_id]:
-                    new.setdefault(res_id, list()).append({
-                        'res_model': res_model,
-                        'partner_id': partner_id,
-                        'subtype_ids': [Command.set(subtypes[partner_id])],
-                    })
-                elif existing_policy in ('replace', 'update'):
-                    fol_id, sids = next(((key, val[2]) for key, val in data_fols.items() if val[0] == res_id and val[1] == partner_id), (False, []))
-                    new_sids = set(subtypes[partner_id]) - set(sids)
-                    old_sids = set(sids) - set(subtypes[partner_id])
-                    update_cmd = []
-                    if fol_id and new_sids:
-                        update_cmd += [Command.link(sid) for sid in new_sids]
-                    if fol_id and old_sids and existing_policy == 'replace':
-                        update_cmd += [Command.unlink(sid) for sid in old_sids]
-                    if update_cmd:
-                        update[fol_id] = {'subtype_ids': update_cmd}
+
+        for partner_ids, res_ids in res_ids_by_partners.items():
+            _res_ids = res_ids or [0]
+            data_fols, doc_pids = dict(), dict((i, set()) for i in _res_ids)
+
+            if check_existing and res_ids:
+                for fid, rid, pid, sids in self._get_subscription_data([(res_model, res_ids)], partner_ids or None):
+                    if existing_policy != 'force':
+                        if pid:
+                            doc_pids[rid].add(pid)
+                    data_fols[fid] = (rid, pid, sids)
+
+                if existing_policy == 'force':
+                    self.sudo().browse(data_fols.keys()).unlink()
+
+            for res_id in _res_ids:
+                for partner_id in set(partner_ids or []):
+                    if partner_id not in doc_pids[res_id]:
+                        new.setdefault(res_id, list()).append({
+                            'res_model': res_model,
+                            'partner_id': partner_id,
+                            'subtype_ids': [Command.set(subtypes[partner_id])],
+                        })
+                    elif existing_policy in ('replace', 'update'):
+                        fol_id, sids = next(((key, val[2]) for key, val in data_fols.items() if val[0] == res_id and val[1] == partner_id), (False, []))
+                        new_sids = set(subtypes[partner_id]) - set(sids)
+                        old_sids = set(sids) - set(subtypes[partner_id])
+                        update_cmd = []
+                        if fol_id and new_sids:
+                            update_cmd += [Command.link(sid) for sid in new_sids]
+                        if fol_id and old_sids and existing_policy == 'replace':
+                            update_cmd += [Command.unlink(sid) for sid in old_sids]
+                        if update_cmd:
+                            update[fol_id] = {'subtype_ids': update_cmd}
 
         return new, update
 
