@@ -82,11 +82,6 @@ export class PosOrderline extends Base {
         return qtyStr;
     }
 
-    get pos() {
-        //REVIEW - will this works with self order ?
-        return this.models["pos.store"].getFirst().pos;
-    }
-
     get company() {
         return this.models["res.company"].getFirst();
     }
