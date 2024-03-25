@@ -84,14 +84,14 @@ patch(OrderSummary.prototype, {
             super._setValue(val);
         }
         if (!selectedLine.is_reward_line || (selectedLine.is_reward_line && val === "remove")) {
-            this.currentOrder._updateRewards();
+            this.pos.updateRewards();
         }
     },
 
     async _showDecreaseQuantityPopup() {
         const result = await super._showDecreaseQuantityPopup();
         if (result) {
-            this.currentOrder._updateRewards();
+            this.pos.updateRewards();
         }
     },
 });

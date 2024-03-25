@@ -38,10 +38,9 @@ patch(PosOrderline, {
 });
 
 patch(PosOrderline.prototype, {
-    serialize() {
-        const isNegativeCoupon = this.coupon_id?.id < 0;
+    serialize(options = {}) {
         const json = super.serialize(...arguments);
-        if (isNegativeCoupon) {
+        if (options.orm && json.coupon_id < 0) {
             json.coupon_id = undefined;
         }
         return json;
@@ -76,7 +75,7 @@ patch(PosOrderline.prototype, {
     },
     getGiftCardOrEWalletBalance() {
         const coupon = this.coupon_id;
-        return formatCurrency(coupon?.point || 0, this.currency);
+        return formatCurrency(coupon?.points || 0, this.currency);
     },
     getDisplayClasses() {
         return {

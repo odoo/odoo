@@ -121,7 +121,7 @@ export default class IndexedDB {
         if (!transaction && retry < 5) {
             return this.readAll(storeName, retry + 1);
         } else if (!transaction) {
-            return false;
+            return new Promise((reject) => reject(false));
         }
 
         const promises = storeNames.map(

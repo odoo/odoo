@@ -100,11 +100,14 @@ export class ControlButtons extends Component {
             });
         }
 
-        this.dialog.add(SelectionPopup, {
+        const payload = await makeAwaitable(this.dialog, SelectionPopup, {
             title: _t("Select the pricelist"),
             list: selectionList,
-            getPayload: (x) => this.currentOrder.set_pricelist(x),
         });
+
+        if (payload) {
+            this.pos.selectPricelist(payload);
+        }
     }
 
     clickRefund() {

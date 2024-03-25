@@ -22,6 +22,6 @@ patch(ProductScreen.prototype, {
     },
     async _barcodeProductAction(code) {
         await super._barcodeProductAction(code);
-        this.currentOrder._updateRewards();
+        this.pos.updateRewards();
     },
 });

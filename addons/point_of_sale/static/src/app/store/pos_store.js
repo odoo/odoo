@@ -180,12 +180,6 @@ export class PosStore extends Reactive {
         this.currency = this.data.models["res.currency"].getFirst();
         this.pickingType = this.data.models["stock.picking.type"].getFirst();
 
-        // Little hack to make the pos store accessible from the models
-        // without having to pass it as a parameter to each model
-        // FIXME: we should not access pos_store from models
-        const modelPos = this.data.models.loadData({ "pos.store": [{ id: 1 }] });
-        modelPos.results["pos.store"][0].init(this);
-
         // Custom data
         this.partner_commercial_fields = this.data.custom.partner_commercial_fields;
         this.server_version = this.data.custom.server_version;
@@ -848,10 +842,14 @@ export class PosStore extends Reactive {
         };
     }
 
+    // There for override
+    preSyncAllOrders(orders) {}
+    postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         try {
             const { orderToCreate, orderToUpdate } = this.getPendingOrder();
             const orders = [...orderToCreate, ...orderToUpdate];
+            this.preSyncAllOrders(orders);
             const idsToDelete = [...this.pendingOrder.delete];
             const context = this.getSyncAllOrdersContext(orders);
 
@@ -927,6 +925,7 @@ export class PosStore extends Reactive {
                 this.data.localDeleteCascade(orderToDel, true);
             }
 
+            this.postSyncAllOrders(serverOrders);
             return serverOrders;
         } catch (error) {
             console.warn("Offline mode active, order will be synced later");
@@ -1340,7 +1339,7 @@ export class PosStore extends Reactive {
         const isPrinted = await this.printer.print(
             OrderReceipt,
             {
-                data: this.orderExportForPrinting(),
+                data: this.orderExportForPrinting(this.get_order()),
                 formatCurrency: this.env.utils.formatCurrency,
             },
             { webPrintFallback: true }
@@ -1458,6 +1457,9 @@ export class PosStore extends Reactive {
     shouldShowNavbarButtons() {
         return true;
     }
+    async selectPricelist(pricelist) {
+        await this.get_order().set_pricelist(pricelist);
+    }
     async selectPartner({ missingFields = [] } = {}) {
         // FIXME, find order to refund when we are in the ticketscreen.
         const currentOrder = this.get_order();
@@ -1475,11 +1477,17 @@ export class PosStore extends Reactive {
             });
             return;
         }
-        this.dialog.add(PartnerList, {
+        const payload = await makeAwaitable(this.dialog, PartnerList, {
             partner: currentPartner,
             missingFields,
-            getPayload: (newPartner) => currentOrder.set_partner(newPartner),
         });
+
+        if (payload) {
+            currentOrder.set_partner(payload);
+        } else {
+            currentOrder.set_partner(false);
+        }
+
         return currentPartner;
     }
     // FIXME: POSREF, method exist only to be overrided

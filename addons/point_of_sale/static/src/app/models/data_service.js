@@ -82,11 +82,6 @@ export class PosData extends Reactive {
                         acc.put.push(dataFormatter(record));
                     }
 
-                    if (finalizedState === undefined) {
-                        // console.info(
-                        //     `Record ${record.id} of model ${record.modelName} has no orders associated with it. It will be removed from the local database.`
-                        // );
-                    }
                     return acc;
                 },
                 { put: [], remove: [] }
@@ -112,6 +107,23 @@ export class PosData extends Reactive {
             this.indexedDB.create(model.name, data.put);
             this.indexedDB.delete(model.name, data.remove);
         }
+
+        this.indexedDB.readAll(this.opts.databaseTable.map((db) => db.name)).then((data) => {
+            if (!data) {
+                return;
+            }
+
+            for (const [model, records] of Object.entries(data)) {
+                const key = this.opts.databaseTable.find((db) => db.name === model).key;
+                for (const record of records) {
+                    const localRecord = this.models[model].get(record.id);
+
+                    if (!localRecord) {
+                        this.indexedDB.delete(model, [record[key]]);
+                    }
+                }
+            }
+        });
     }
 
     async loadIndexedDBData() {
